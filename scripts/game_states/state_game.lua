@@ -101,7 +101,7 @@ StateGame.on_enter = function (self, parent, params)
 		network_transmit_function = function (dt)
 			Network.update_transmit()
 		end,
-		vo_sources_cache = self._vo_sources_cache,
+		vo_sources_cache = self._vo_sources_cache
 	}
 
 	self:_init_managers(params.package_manager, params.localization_manager, event_delegate, approve_channel_delegate)
@@ -158,16 +158,16 @@ local function _connection_options(is_dedicated_hub_server, is_dedicated_mission
 	if GameParameters.network_wan or GameParameters.prod_like_backend then
 		if DEDICATED_SERVER then
 			options = {
-				network_platform = "wan_server",
 				project_hash = "bishop",
+				network_platform = "wan_server",
 				wan_port = GameParameters.wan_server_port,
-				argument_hash = DevParameters.network_hash,
+				argument_hash = DevParameters.network_hash
 			}
 		else
 			options = {
-				network_platform = "wan_client",
 				project_hash = "bishop",
-				argument_hash = DevParameters.network_hash,
+				network_platform = "wan_client",
+				argument_hash = DevParameters.network_hash
 			}
 		end
 	end
@@ -220,7 +220,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 			["request-id"] = math.uuid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
-			["is-modded"] = GameParameters.is_modded_crashify_property or nil,
+			["is-modded"] = GameParameters.is_modded_crashify_property or nil
 		}
 	end)
 	Managers.steam = SteamManager:new()
@@ -242,7 +242,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 
 	Managers.mechanism = MechanismManager:new(event_delegate, mechanism_name, {
-		mission_name = GameParameters.mission,
+		mission_name = GameParameters.mission
 	})
 	Managers.connection = ConnectionManager:new(_connection_options(is_dedicated_hub_server, is_dedicated_mission_server), event_delegate, approve_channel_delegate)
 	Managers.multiplayer_session = MultiplayerSessionManager:new()
@@ -476,7 +476,7 @@ StateGame._on_pre_suspend = function (self)
 	local error_state = CLASSES.StateError
 	local params = {}
 	local exit_params = {
-		on_suspend = true,
+		on_suspend = true
 	}
 
 	self._sm:force_change_state(error_state, params, exit_params)

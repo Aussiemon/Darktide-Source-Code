@@ -92,41 +92,41 @@ end
 
 NetworkedUniqueRandomize.component_data = {
 	min_rand = {
-		max = 18,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Min Randomize",
-		ui_type = "number",
 		value = 1,
+		ui_name = "Min Randomize",
+		max = 18
 	},
 	max_rand = {
-		max = 18,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Max Randomize",
-		ui_type = "number",
 		value = 18,
+		ui_name = "Max Randomize",
+		max = 18
 	},
 	queue_loop = {
-		ui_name = "Queue Loop",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Queue Loop"
 	},
 	inputs = {
 		get_next = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		reset = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		new_table = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
-	extensions = {},
+	extensions = {}
 }
 
 return NetworkedUniqueRandomize

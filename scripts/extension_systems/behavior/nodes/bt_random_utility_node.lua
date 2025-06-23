@@ -28,7 +28,7 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 
 	node_data[node_identifier] = {
 		fail_cooldown_t = 0,
-		utility_node_data = utility_node_data,
+		utility_node_data = utility_node_data
 	}
 
 	for identifier, node in pairs(children) do
@@ -39,7 +39,7 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 
 		utility_node_data[identifier] = {
 			last_time = -math.huge,
-			last_done_time = -math.huge,
+			last_done_time = -math.huge
 		}
 	end
 end

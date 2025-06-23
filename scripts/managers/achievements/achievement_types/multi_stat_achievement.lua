@@ -23,7 +23,7 @@ end
 
 MultiStatAchievements.setup = function (achievement_definition, scratch_pad, player_id)
 	local _scratch_pad = {
-		__size = 0,
+		__size = 0
 	}
 	local stats = achievement_definition.stats
 

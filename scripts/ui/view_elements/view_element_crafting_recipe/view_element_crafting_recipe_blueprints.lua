@@ -3,9 +3,7 @@
 local Items = require("scripts/utilities/items")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local InputUtils = require("scripts/managers/input/input_utils")
+local Colors = require("scripts/utilities/ui/colors")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -31,7 +29,7 @@ local function highlight_color_change_function(content, style)
 	local is_highlighted = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
 	local progress = is_highlighted and content.highlight_progress or 0
 
-	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+	Colors.color_lerp(default_color, hover_color, progress, color)
 end
 
 local ViewElementCraftingRecipeBlueprints = {}
@@ -39,20 +37,20 @@ local ViewElementCraftingRecipeBlueprints = {}
 ViewElementCraftingRecipeBlueprints.spacing_vertical_small = {
 	size = {
 		430,
-		5,
-	},
+		5
+	}
 }
 ViewElementCraftingRecipeBlueprints.spacing_vertical = {
 	size = {
 		430,
-		20,
-	},
+		20
+	}
 }
 ViewElementCraftingRecipeBlueprints.spacing_vertical_large = {
 	size = {
 		430,
-		50,
-	},
+		50
+	}
 }
 
 local navigation_button_pass_template = table.merge({}, ButtonPassTemplates.terminal_list_button_with_background_and_icon)
@@ -61,31 +59,31 @@ navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 	pass_type = "text",
 	value = Localize("loc_action_interaction_coming_soon"),
 	style = {
-		font_size = 20,
-		font_type = "proxima_nova_bold",
 		material = "content/ui/materials/font_gradients/slug_font_gradient_header",
-		text_horizontal_alignment = "right",
+		font_size = 20,
 		text_vertical_alignment = "center",
+		font_type = "proxima_nova_bold",
+		text_horizontal_alignment = "right",
 		text_color = Color.cheeseburger(255, true),
 		offset = {
 			-65,
 			2,
-			3,
-		},
+			3
+		}
 	},
 	visibility_function = function (content)
 		return content.coming_soon
-	end,
+	end
 }
 navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 	pass_type = "text",
-	value = "",
 	value_id = "error_text",
+	value = "",
 	style = {
 		font_size = 18,
-		font_type = "proxima_nova_bold",
-		text_horizontal_alignment = "left",
 		text_vertical_alignment = "bottom",
+		text_horizontal_alignment = "left",
+		font_type = "proxima_nova_bold",
 		incomplete_color = Color.light_gray(255, true),
 		complete_color = Color.terminal_text_key_value(255, true),
 		default_color = Color.ui_red_medium(255, true),
@@ -93,12 +91,12 @@ navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 		offset = {
 			70,
 			-5,
-			3,
+			3
 		},
 		size_addition = {
 			-80,
-			0,
-		},
+			0
+		}
 	},
 	change_function = function (content, style)
 		if content.error_type == "complete" then
@@ -108,12 +106,12 @@ navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 		else
 			style.text_color = table.clone(style.default_color)
 		end
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.navigation_button = {
 	size = {
 		430,
-		64,
+		64
 	},
 	pass_template = navigation_button_pass_template,
 	init = function (parent, widget, config, callback_name)
@@ -145,7 +143,7 @@ ViewElementCraftingRecipeBlueprints.navigation_button = {
 		if validation_function and item then
 			local item = parent.content.item
 			local is_valid_item, reason, error_type = validation_function(item, {
-				expertise_data = content.expertise_data,
+				expertise_data = content.expertise_data
 			})
 
 			content.hotspot.disabled = not is_valid_item
@@ -153,12 +151,12 @@ ViewElementCraftingRecipeBlueprints.navigation_button = {
 			content.error_type = error_type
 			style.text.offset[2] = content.error_text ~= "" and -10 or 0
 		end
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.craft_button = {
 	size = {
 		430,
-		64,
+		64
 	},
 	pass_template = ButtonPassTemplates.terminal_button,
 	init = function (parent, widget, config, callback_name)
@@ -174,26 +172,26 @@ ViewElementCraftingRecipeBlueprints.craft_button = {
 	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
 		widget.content.hotspot.disabled = not parent.content.can_craft
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.title = {
 	size = {
 		430,
-		30,
+		30
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			value = "text",
 			value_id = "text",
+			pass_type = "text",
 			style = table.merge({
-				text_horizontal_alignment = "center",
-			}, UIFontSettings.terminal_header_3),
-		},
+				text_horizontal_alignment = "center"
+			}, UIFontSettings.terminal_header_3)
+		}
 	},
 	init = function (parent, widget, config)
 		widget.content.text = config.unlocalized_text or config.text and Localize(config.text) or ""
-	end,
+	end
 }
 
 local description_text_style = UIFontSettings.body_small
@@ -201,7 +199,7 @@ local description_text_style = UIFontSettings.body_small
 ViewElementCraftingRecipeBlueprints.description = {
 	size = {
 		430,
-		128,
+		128
 	},
 	size_function = function (parent, config, ui_renderer)
 		local style = description_text_style
@@ -212,17 +210,17 @@ ViewElementCraftingRecipeBlueprints.description = {
 
 		return {
 			430,
-			text_height + 8,
+			text_height + 8
 		}
 	end,
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "text",
 			value_id = "text",
-			style = description_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "text",
+			style = description_text_style
+		}
 	},
 	init = function (parent, widget, config)
 		widget.content.text = config.unlocalized_text or config.text and Localize(config.text) or ""
@@ -232,7 +230,7 @@ ViewElementCraftingRecipeBlueprints.description = {
 		if override_color then
 			widget.style.text.text_color = override_color
 		end
-	end,
+	end
 }
 
 local function item_selection_button_change_function(content, style)
@@ -258,7 +256,7 @@ local function item_selection_button_change_function(content, style)
 	end
 
 	if color then
-		ColorUtilities.color_copy(color, style.color)
+		Colors.color_copy(color, style.color)
 	end
 end
 
@@ -273,11 +271,11 @@ local weapon_perk_style = table.clone(UIFontSettings.body)
 weapon_perk_style.offset = {
 	45,
 	0,
-	10,
+	10
 }
 weapon_perk_style.size_addition = {
 	-105,
-	0,
+	0
 }
 weapon_perk_style.font_size = 18
 weapon_perk_style.text_horizontal_alignment = "left"
@@ -286,25 +284,25 @@ weapon_perk_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_perk_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_perk_style.hover_color = Color.white(255, true)
 weapon_perk_style.disabled_color = {
 	255,
 	60,
 	60,
-	60,
+	60
 }
 ViewElementCraftingRecipeBlueprints.perk_button = {
 	size = {
 		340,
-		54,
+		54
 	},
 	size_function = function (parent, config, ui_renderer)
 		local style = weapon_perk_style
@@ -314,158 +312,158 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 		local size_addition = style.size_addition
 		local actual_text_size = {
 			430 + (size_addition[1] or 0),
-			size[2] + (size_addition[2] or 0),
+			size[2] + (size_addition[2] or 0)
 		}
 		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, actual_text_size, text_options)
 
 		return {
 			430,
-			20 + math.max(20, text_height),
+			20 + math.max(20, text_height)
 		}
 	end,
 	pass_template = {
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select,
-			},
+				on_pressed_sound = UISoundEvents.default_select
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
 			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				color = Color.black(100, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_dashed_animated",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					8,
+					8
 				},
 				color = Color.terminal_corner_selected(nil, true),
 				default_color = Color.terminal_corner_selected(0, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
 			},
 			visibility_function = function (content, style)
 				return content.marked
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				default_color = Color.terminal_background_gradient(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true)
 			},
 			change_function = function (content, style)
 				item_selection_button_change_function(content, style)
 				item_selection_button_hover_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "button_frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "button_corner",
 			value = "content/ui/materials/frames/frame_corner_2px",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				default_color = Color.terminal_corner(nil, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/perks/perk_level_01",
 			value_id = "rank",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
 				size = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					14,
 					0,
-					10,
+					10
 				},
-				color = Color.terminal_icon(255, true),
-			},
+				color = Color.terminal_icon(255, true)
+			}
 		},
 		{
+			value_id = "description",
 			pass_type = "text",
 			value = "n/a",
-			value_id = "description",
 			style = weapon_perk_style,
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -474,9 +472,9 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end,
-		},
+				Colors.color_lerp(default_color, hover_color, progress, text_color)
+			end
+		}
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
@@ -486,7 +484,7 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 		content.description = Items.trait_description(item, rarity, config.value)
 		content.rank = Items.perk_textures(item, rarity)
 		content.hotspot.pressed_callback = callback(parent, secondary_callback_name, widget, config)
-	end,
+	end
 }
 
 local weapon_traits_style = table.clone(UIFontSettings.header_3)
@@ -494,10 +492,10 @@ local weapon_traits_style = table.clone(UIFontSettings.header_3)
 weapon_traits_style.offset = {
 	98,
 	10,
-	10,
+	10
 }
 weapon_traits_style.size = {
-	324,
+	324
 }
 weapon_traits_style.font_size = 18
 weapon_traits_style.text_horizontal_alignment = "left"
@@ -506,20 +504,20 @@ weapon_traits_style.text_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_traits_style.default_color = {
 	255,
 	216,
 	229,
-	207,
+	207
 }
 weapon_traits_style.hover_color = Color.white(255, true)
 weapon_traits_style.disabled_color = {
 	255,
 	60,
 	60,
-	60,
+	60
 }
 
 local weapon_traits_description_style = table.clone(UIFontSettings.body)
@@ -527,11 +525,11 @@ local weapon_traits_description_style = table.clone(UIFontSettings.body)
 weapon_traits_description_style.offset = {
 	98,
 	30,
-	11,
+	11
 }
 weapon_traits_description_style.size = {
 	274,
-	500,
+	500
 }
 weapon_traits_description_style.font_size = 18
 weapon_traits_description_style.text_horizontal_alignment = "left"
@@ -543,7 +541,7 @@ weapon_traits_description_style.disabled_color = {
 	255,
 	60,
 	60,
-	60,
+	60
 }
 ViewElementCraftingRecipeBlueprints.trait_button = {
 	size_function = function (parent, config, ui_renderer)
@@ -554,160 +552,160 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 
 		return {
 			430,
-			20 + math.max(68, text_height + 25),
+			20 + math.max(68, text_height + 25)
 		}
 	end,
 	pass_template = {
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select,
-			},
+				on_pressed_sound = UISoundEvents.default_select
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
 			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				color = Color.black(100, true),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_dashed_animated",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					8,
+					8
 				},
 				color = Color.terminal_corner_selected(nil, true),
 				default_color = Color.terminal_corner_selected(0, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
 			},
 			visibility_function = function (content, style)
 				return content.marked
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/default_square",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				default_color = Color.terminal_background_gradient(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
-				disabled_color = Color.ui_grey_medium(255, true),
+				disabled_color = Color.ui_grey_medium(255, true)
 			},
 			change_function = function (content, style)
 				item_selection_button_change_function(content, style)
 				item_selection_button_hover_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "button_frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "button_corner",
 			value = "content/ui/materials/frames/frame_corner_2px",
 			style = {
-				horizontal_alignment = "right",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
-					4,
+					4
 				},
 				default_color = Color.terminal_corner(nil, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
 			},
-			change_function = item_selection_button_change_function,
+			change_function = item_selection_button_change_function
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon",
 			value = "content/ui/materials/icons/traits/traits_container",
+			style_id = "icon",
+			pass_type = "texture",
 			style = {
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					20,
 					10,
-					10,
+					10
 				},
-				color = Color.terminal_icon(255, true),
-			},
+				color = Color.terminal_icon(255, true)
+			}
 		},
 		{
-			pass_type = "text",
 			value = "n/a",
+			pass_type = "text",
 			value_id = "display_name",
-			style = weapon_traits_style,
+			style = weapon_traits_style
 		},
 		{
-			pass_type = "text",
-			style_id = "description",
-			value = "n/a",
 			value_id = "description",
+			pass_type = "text",
+			value = "n/a",
+			style_id = "description",
 			style = weapon_traits_description_style,
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -716,9 +714,9 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end,
-		},
+				Colors.color_lerp(default_color, hover_color, progress, text_color)
+			end
+		}
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
@@ -735,7 +733,7 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 		local icon_material_values = style.icon.material_values
 
 		icon_material_values.icon, icon_material_values.frame = Items.trait_textures(item, rarity)
-	end,
+	end
 }
 
 local warning_text_style = table.clone(UIFontSettings.body_small)
@@ -746,7 +744,7 @@ warning_text_style.default_color = Color.ui_red_medium(255, true)
 ViewElementCraftingRecipeBlueprints.warning = {
 	size = {
 		430,
-		30,
+		30
 	},
 	size_function = function (parent, config, ui_renderer)
 		local style = description_text_style
@@ -757,17 +755,17 @@ ViewElementCraftingRecipeBlueprints.warning = {
 
 		return {
 			430,
-			text_height + 8,
+			text_height + 8
 		}
 	end,
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "text",
 			value_id = "text",
-			style = warning_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "text",
+			style = warning_text_style
+		}
 	},
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
 		local parent_content = parent.content
@@ -788,12 +786,12 @@ ViewElementCraftingRecipeBlueprints.warning = {
 				widget.style.text.text_color = table.clone(widget.style.text.default_color)
 			end
 		end
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.recipe_costs = {
 	size = {
 		430,
-		32,
+		32
 	},
 	pass_template_function = function (self, config, ui_renderer)
 		local passes = {}
@@ -801,7 +799,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 		passes[#passes + 1] = {
 			pass_type = "text",
 			value = Localize("loc_price"),
-			style = UIFontSettings.body,
+			style = UIFontSettings.body
 		}
 
 		local x_offset = 0
@@ -818,7 +816,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			price_style.offset = {
 				x_offset,
 				0,
-				10,
+				10
 			}
 			price_style.default_material = wallet_settings.font_gradient_material
 			price_style.insufficient_material = wallet_settings.font_gradient_material_insufficient_funds
@@ -827,14 +825,14 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 				255,
 				255,
 				255,
-				255,
+				255
 			}
 			passes[#passes + 1] = {
 				pass_type = "text",
 				value_id = cost_type,
 				value = amount_label,
 				style_id = cost_type,
-				style = price_style,
+				style = price_style
 			}
 
 			local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
@@ -848,14 +846,14 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 					horizontal_alignment = "right",
 					size = {
 						28,
-						20,
+						20
 					},
 					offset = {
 						x_offset,
 						5,
-						0,
-					},
-				},
+						0
+					}
+				}
 			}
 			x_offset = x_offset - 28 - 12
 		end
@@ -905,7 +903,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			style[cost_type].visible = has_cost
 			style["icon_" .. i].visible = has_cost
 		end
-	end,
+	end
 }
 
 local TEMP_TABLE = {}
@@ -913,83 +911,83 @@ local TEMP_TABLE = {}
 ViewElementCraftingRecipeBlueprints.trait_background = {
 	size = {
 		440,
-		120,
+		120
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "trait_background",
-			value = "content/ui/materials/frames/trait_merge_overlay",
 			value_id = "trait_background",
+			style_id = "trait_background",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/trait_merge_overlay",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
-				color = Color.terminal_frame(255, true),
-			},
+				horizontal_alignment = "center",
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
+					110
 				},
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
-			content_id = "hotspot_1",
-			pass_type = "hotspot",
 			style_id = "hotspot_1",
+			pass_type = "hotspot",
+			content_id = "hotspot_1",
 			content = {
 				hover_progress = 0,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select,
+				on_pressed_sound = UISoundEvents.default_select
 			},
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
-				},
+					110
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 5
 
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					102,
-					102,
+					102
 				},
-				color = Color.terminal_grid_background(255, true),
+				color = Color.terminal_grid_background(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local has_ingredient = content.ingredients.trait_ids[1]
@@ -1001,142 +999,142 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 
 					style.color[1] = 255 * value
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-151.4,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
+					110
 				},
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_1",
 			value = "content/ui/materials/icons/traits/traits_container",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					-110,
 					0,
-					5,
+					5
 				},
 				color = Color.terminal_grid_background(255, true),
 				unfilled_color = Color.terminal_grid_background(255, true),
-				filled_color = Color.white(255, true),
+				filled_color = Color.white(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
 				local has_ingredient = ingredients.trait_ids[1]
 
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
-			end,
+			end
 		},
 		{
-			pass_type = "text",
-			style_id = "percentage_1",
-			value = "",
 			value_id = "percentage_1",
+			style_id = "percentage_1",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 15,
+				text_vertical_alignment = "bottom",
 				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
 				text_color = Color.ui_hud_green_super_light(255, true),
 				disabled_color = Color.terminal_frame(255, true),
 				enabled_color = Color.ui_hud_green_super_light(255, true),
 				offset = {
 					62,
 					-13,
-					10,
-				},
+					10
+				}
 			},
 			visibility_function = function (content)
 				local ingredients = content.ingredients
 
 				return table.size(ingredients.trait_ids) == 3
-			end,
+			end
 		},
 		{
-			content_id = "hotspot_2",
-			pass_type = "hotspot",
 			style_id = "hotspot_2",
+			pass_type = "hotspot",
+			content_id = "hotspot_2",
 			content = {
 				hover_progress = 0,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select,
+				on_pressed_sound = UISoundEvents.default_select
 			},
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
-				},
+					110
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 3
 
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					-5,
-					3,
+					3
 				},
 				size = {
 					102,
-					102,
+					102
 				},
-				color = Color.terminal_grid_background(255, true),
+				color = Color.terminal_grid_background(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
@@ -1149,160 +1147,160 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 
 					style.color[1] = 255 * value
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-41.4,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					-31.4,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
+					110
 				},
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_2",
 			value = "content/ui/materials/icons/traits/traits_container",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
 				color = Color.terminal_grid_background(255, true),
 				unfilled_color = Color.terminal_grid_background(255, true),
-				filled_color = Color.white(255, true),
+				filled_color = Color.white(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
 				local has_ingredient = ingredients.trait_ids[2]
 
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
-			end,
+			end
 		},
 		{
-			pass_type = "text",
-			style_id = "percentage_2",
-			value = "",
 			value_id = "percentage_2",
+			style_id = "percentage_2",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 15,
+				text_vertical_alignment = "bottom",
 				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
 				text_color = Color.ui_hud_green_super_light(255, true),
 				disabled_color = Color.terminal_frame(255, true),
 				enabled_color = Color.ui_hud_green_super_light(255, true),
 				offset = {
 					172,
 					-13,
-					10,
-				},
+					10
+				}
 			},
 			visibility_function = function (content)
 				local ingredients = content.ingredients
 
 				return table.size(ingredients.trait_ids) == 3
-			end,
+			end
 		},
 		{
-			content_id = "hotspot_3",
-			pass_type = "hotspot",
 			style_id = "hotspot_3",
+			pass_type = "hotspot",
+			content_id = "hotspot_3",
 			content = {
 				hover_progress = 0,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_select,
+				on_pressed_sound = UISoundEvents.default_select
 			},
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					110,
-					110,
-				},
+					110
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				local lerp_direction = content.is_hover and 1 or -1
 				local speed = 3
 
 				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					110,
 					-5,
-					3,
+					3
 				},
 				size = {
 					102,
-					102,
+					102
 				},
-				color = Color.terminal_grid_background(255, true),
+				color = Color.terminal_grid_background(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local has_ingredient = content.ingredients.trait_ids[3]
@@ -1314,82 +1312,82 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 
 					style.color[1] = 255 * value
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					68.6,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					78.6,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					88.6,
 					-37,
-					3,
+					3
 				},
 				size = {
 					108,
-					72,
+					72
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon_3",
 			value = "content/ui/materials/icons/traits/traits_container",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				material_values = {},
 				size = {
 					64,
-					64,
+					64
 				},
 				offset = {
 					110,
 					0,
-					5,
+					5
 				},
 				color = Color.terminal_grid_background(255, true),
 				unfilled_color = Color.terminal_grid_background(255, true),
-				filled_color = Color.white(255, true),
+				filled_color = Color.white(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local ingredients = content.ingredients
@@ -1397,33 +1395,33 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 				local has_ingredient = ingredients.trait_ids[3]
 
 				style.color = has_ingredient and style.filled_color or style.unfilled_color
-			end,
+			end
 		},
 		{
-			pass_type = "text",
-			style_id = "percentage_3",
-			value = "",
 			value_id = "percentage_3",
+			style_id = "percentage_3",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 15,
+				text_vertical_alignment = "bottom",
 				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "bottom",
 				text_color = Color.ui_hud_green_super_light(255, true),
 				disabled_color = Color.terminal_frame(255, true),
 				enabled_color = Color.ui_hud_green_super_light(255, true),
 				offset = {
 					282,
 					-13,
-					10,
-				},
+					10
+				}
 			},
 			visibility_function = function (content)
 				local ingredients = content.ingredients
 
 				return table.size(ingredients.trait_ids) == 3
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, config, callback_name)
 		local content = widget.content
@@ -1514,12 +1512,12 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 				style[id].text_color = style[id].disabled_color
 			end
 		end
-	end,
+	end
 }
 
 local counter_size = {
 	430,
-	90,
+	90
 }
 
 ViewElementCraftingRecipeBlueprints.modifications_counter = {
@@ -1528,59 +1526,59 @@ ViewElementCraftingRecipeBlueprints.modifications_counter = {
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.terminal_frame(255, true),
-			},
+				color = Color.terminal_frame(255, true)
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "counter",
-			value = "",
 			value_id = "counter",
+			style_id = "counter",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 28,
-				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "top",
 				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "top",
 				vertical_alignment = "center",
+				font_type = "proxima_nova_bold",
 				text_color = Color.ui_hud_green_super_light(255, true),
 				disabled_color = Color.terminal_frame(255, true),
 				enabled_color = Color.ui_hud_green_super_light(255, true),
 				size = {
 					counter_size[1] - 30,
-					counter_size[2] - 30,
+					counter_size[2] - 30
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "description",
 			value_id = "description",
+			style_id = "description",
+			pass_type = "text",
 			value = Localize("loc_crafting_item_modifications_text"),
 			style = {
 				font_size = 18,
-				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "bottom",
 				vertical_alignment = "center",
+				font_type = "proxima_nova_bold",
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					counter_size[1] - 30,
-					counter_size[2] - 30,
+					counter_size[2] - 30
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, callback_name)
 		local item = config.item or parent.content.item
@@ -1595,7 +1593,7 @@ ViewElementCraftingRecipeBlueprints.modifications_counter = {
 		if item ~= widget.content.item then
 			-- Nothing
 		end
-	end,
+	end
 }
 
 local SLIDER_TRACK_HEIGHT = 20
@@ -1614,18 +1612,18 @@ local thumb_highlight_expanded_size = THUMB_HIGHLIGHT_SIZE + highlight_size_addi
 local value_font_style = table.clone(UIFontSettings.list_button)
 
 value_font_style.size = {
-	LABEL_WIDTH,
+	LABEL_WIDTH
 }
 value_font_style.offset = {
 	slider_horizontal_offset - (LABEL_WIDTH + 10),
 	0,
-	8,
+	8
 }
 value_font_style.text_horizontal_alignment = "right"
 ViewElementCraftingRecipeBlueprints.slider = {
 	size = {
 		settings_area_width,
-		counter_size[2],
+		counter_size[2]
 	},
 	pass_template = {
 		{
@@ -1694,11 +1692,11 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				end
 
 				content.slider_value = slider_value
-			end,
+			end
 		},
 		{
-			pass_type = "logic",
 			style_id = "mouse_scroll",
+			pass_type = "logic",
 			visibility_function = function (content, style)
 				return content.exclusive_focus or content.hotspot.is_hover
 			end,
@@ -1749,28 +1747,28 @@ ViewElementCraftingRecipeBlueprints.slider = {
 
 					content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 				end
-			end,
+			end
 		},
 		{
-			content_id = "track_hotspot",
-			pass_type = "hotspot",
 			style_id = "track_hotspot",
+			pass_type = "hotspot",
+			content_id = "track_hotspot",
 			style = {
-				anim_focus_speed = 8,
-				anim_hover_speed = 8,
+				vertical_alignment = "center",
 				anim_input_speed = 8,
+				anim_hover_speed = 8,
+				anim_focus_speed = 8,
 				anim_select_speed = 8,
 				horizontal_alignment = "right",
-				vertical_alignment = "center",
 				size = {
 					settings_area_width,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				offset = {
 					slider_horizontal_offset,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.parent.hotspot.disabled
@@ -1779,45 +1777,45 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				local slider_value = content.parent.slider_value or 0
 
 				content.parent.slider_horizontal_offset = slider_horizontal_offset + slider_value * slider_area_width
-			end,
+			end
 		},
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
 			style_id = "hotspot",
+			content_id = "hotspot",
 			content = {
-				use_is_focused = true,
-			},
+				use_is_focused = true
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "slider_track_background",
 			value = "content/ui/materials/buttons/background_selected",
+			style_id = "slider_track_background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					slider_horizontal_offset,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_endplate_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -1825,21 +1823,21 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_endplate_right",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -1847,21 +1845,21 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					slider_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -1869,25 +1867,25 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = content.slider_value * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					slider_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -1895,58 +1893,58 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = (1 - content.slider_value) * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_line",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					slider_horizontal_offset,
 					0,
-					7,
+					7
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
-				hover_color = Color.terminal_corner_hover(255, true),
+				hover_color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_fill",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
 				offset = {
 					slider_horizontal_offset,
 					0,
-					6,
+					6
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.black(255, true),
+				color = Color.black(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
@@ -1956,13 +1954,13 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset,
 					0,
-					9,
+					9
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.terminal_corner_hover(255, true),
+				color = Color.terminal_corner_hover(255, true)
 			},
 			visibility_function = function (content, style)
 				local highlight_progress = content.highlight_progress or 0
@@ -1988,7 +1986,7 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				local axis = content.axis or 1
 
 				style.offset[axis] = style.offset[axis] - offset_addition
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
@@ -1996,20 +1994,20 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				horizontal_alignment = "center",
 				size = {
 					80,
-					40,
+					40
 				},
 				color = Color.terminal_text_body_dark(255, true),
 				offset = {
 					slider_horizontal_offset,
 					-30,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "value_text",
+			pass_type = "text",
 			style = {
 				font_size = 24,
 				text_horizontal_alignment = "center",
@@ -2017,38 +2015,38 @@ ViewElementCraftingRecipeBlueprints.slider = {
 				offset = {
 					slider_horizontal_offset,
 					-23,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "start",
+			pass_type = "text",
 			style = {
 				text_horizontal_alignment = "left",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					slider_horizontal_offset - 80,
 					30,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "current_max",
+			pass_type = "text",
 			style = {
 				text_horizontal_alignment = "right",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					70 + slider_horizontal_offset,
 					30,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	},
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
@@ -2142,12 +2140,12 @@ ViewElementCraftingRecipeBlueprints.slider = {
 		end
 
 		return pass_input
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.max_expertise_reached = {
 	size = {
 		counter_size[1],
-		counter_size[2] - 30,
+		counter_size[2] - 30
 	},
 	pass_template = {
 		{
@@ -2156,20 +2154,20 @@ ViewElementCraftingRecipeBlueprints.max_expertise_reached = {
 				horizontal_alignment = "center",
 				size = {
 					80,
-					40,
+					40
 				},
 				color = Color.terminal_text_body_dark(255, true),
 				offset = {
 					0,
 					-10,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "value_text",
+			pass_type = "text",
 			style = {
 				font_size = 24,
 				text_horizontal_alignment = "center",
@@ -2177,10 +2175,10 @@ ViewElementCraftingRecipeBlueprints.max_expertise_reached = {
 				offset = {
 					0,
 					-3,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	},
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content
@@ -2195,7 +2193,7 @@ ViewElementCraftingRecipeBlueprints.max_expertise_reached = {
 
 		content.start = start or 0
 		content.current_max = current_max or 0
-	end,
+	end
 }
 
 local stat_title_size = 150
@@ -2208,10 +2206,10 @@ local weapon_stat_text_style = table.clone(UIFontSettings.body)
 weapon_stat_text_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 weapon_stat_text_style.size = {
-	stat_title_size,
+	stat_title_size
 }
 weapon_stat_text_style.font_size = 18
 weapon_stat_text_style.text_horizontal_alignment = "left"
@@ -2224,10 +2222,10 @@ local weapon_stat_title_style = table.clone(UIFontSettings.body)
 weapon_stat_title_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 weapon_stat_title_style.size = {
-	stat_title_size,
+	stat_title_size
 }
 weapon_stat_title_style.font_size = 16
 weapon_stat_title_style.text_horizontal_alignment = "left"
@@ -2240,10 +2238,10 @@ local max_value_style = table.clone(UIFontSettings.body)
 max_value_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 max_value_style.size = {
-	max_value_size,
+	max_value_size
 }
 max_value_style.font_size = 18
 max_value_style.text_horizontal_alignment = "right"
@@ -2256,12 +2254,12 @@ local stat_value_style = table.clone(max_value_style)
 
 stat_value_style.text_color = Color.ui_blue_light(255, true)
 stat_value_style.size = {
-	stats_value_size,
+	stats_value_size
 }
 stat_value_style.offset = {
 	-(max_value_size + content_margin),
 	0,
-	4,
+	4
 }
 stat_value_style.font_size = 20
 
@@ -2271,20 +2269,20 @@ local bar_offset = (stat_grid_width - bar_size - content_margin * 2) * 0.5
 ViewElementCraftingRecipeBlueprints.stat_title = {
 	size = {
 		stat_grid_width,
-		20,
+		20
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			style_id = "modifiers",
 			value_id = "modifiers",
+			pass_type = "text",
 			value = Localize("loc_item_information_stats_title_modifiers"),
-			style = weapon_stat_title_style,
+			style = weapon_stat_title_style
 		},
 		{
-			pass_type = "text",
 			style_id = "changes",
 			value_id = "changes",
+			pass_type = "text",
 			value = Localize("loc_expertise_crafting_modifiers_changes"),
 			style = table.merge(table.clone(weapon_stat_title_style), {
 				horizontal_alignment = "center",
@@ -2292,14 +2290,14 @@ ViewElementCraftingRecipeBlueprints.stat_title = {
 				offset = {
 					weapon_stat_title_style.offset[1] + 70,
 					weapon_stat_title_style.offset[2],
-					weapon_stat_title_style.offset[3],
-				},
-			}),
+					weapon_stat_title_style.offset[3]
+				}
+			})
 		},
 		{
-			pass_type = "text",
 			style_id = "max",
 			value_id = "max",
+			pass_type = "text",
 			value = Localize("loc_expertise_crafting_modifiers_max"),
 			style = table.merge(table.clone(weapon_stat_title_style), {
 				horizontal_alignment = "right",
@@ -2307,83 +2305,83 @@ ViewElementCraftingRecipeBlueprints.stat_title = {
 				offset = {
 					weapon_stat_title_style.offset[1] - 10,
 					weapon_stat_title_style.offset[2],
-					weapon_stat_title_style.offset[3],
-				},
-			}),
-		},
-	},
+					weapon_stat_title_style.offset[3]
+				}
+			})
+		}
+	}
 }
 ViewElementCraftingRecipeBlueprints.stat = {
 	size = {
 		stat_grid_width,
-		30,
+		30
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			style_id = "text",
-			value = "n/a",
 			value_id = "text",
-			style = weapon_stat_text_style,
+			pass_type = "text",
+			value = "n/a",
+			style = weapon_stat_text_style
 		},
 		{
-			pass_type = "text",
 			style_id = "start_percentage",
-			value = "0%",
 			value_id = "start_percentage",
+			pass_type = "text",
+			value = "0%",
 			style = table.merge(table.clone(stat_value_style), {
 				offset = {
 					stat_value_style.offset[1] - 90,
 					stat_value_style.offset[2],
-					stat_value_style.offset[3],
+					stat_value_style.offset[3]
 				},
-				text_color = Color.white(255, true),
-			}),
+				text_color = Color.white(255, true)
+			})
 		},
 		{
-			pass_type = "text",
 			style_id = "end_percentage",
-			value = "100%",
 			value_id = "end_percentage",
-			style = stat_value_style,
-		},
-		{
 			pass_type = "text",
-			style_id = "max_percentage",
-			value = "[100%]",
-			value_id = "max_percentage",
-			style = max_value_style,
+			value = "100%",
+			style = stat_value_style
 		},
 		{
-			pass_type = "rect",
+			style_id = "max_percentage",
+			value_id = "max_percentage",
+			pass_type = "text",
+			value = "[100%]",
+			style = max_value_style
+		},
+		{
 			style_id = "background",
+			pass_type = "rect",
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				color = Color.terminal_text_body_sub_header(51, true),
 				size_addition = {
 					20,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/generic/animated/progression_arrows",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					38.4,
-					32.4,
+					32.4
 				},
 				offset = {
 					-130,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	},
 	init = function (parent, widget, element, callback_name)
 		local content = widget.content
@@ -2404,25 +2402,25 @@ ViewElementCraftingRecipeBlueprints.stat = {
 		content[start_percentage_id] = start_stat.value .. "%"
 		content[end_percentage_id] = end_stat.value .. "%"
 		content[max_percentage_id] = string.format("[%s]", max_stat.value .. "%")
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.stat_title_max = {
 	size = {
 		stat_grid_width,
-		20,
+		20
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			style_id = "modifiers",
 			value_id = "modifiers",
+			pass_type = "text",
 			value = Localize("loc_item_information_stats_title_modifiers"),
-			style = weapon_stat_title_style,
+			style = weapon_stat_title_style
 		},
 		{
-			pass_type = "text",
 			style_id = "max",
 			value_id = "max",
+			pass_type = "text",
 			value = Localize("loc_expertise_crafting_modifiers_max"),
 			style = table.merge(table.clone(weapon_stat_title_style), {
 				horizontal_alignment = "right",
@@ -2430,46 +2428,46 @@ ViewElementCraftingRecipeBlueprints.stat_title_max = {
 				offset = {
 					weapon_stat_title_style.offset[1] - 10,
 					weapon_stat_title_style.offset[2],
-					weapon_stat_title_style.offset[3],
-				},
-			}),
-		},
-	},
+					weapon_stat_title_style.offset[3]
+				}
+			})
+		}
+	}
 }
 ViewElementCraftingRecipeBlueprints.stat_max = {
 	size = {
 		stat_grid_width,
-		30,
+		30
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			style_id = "text",
-			value = "n/a",
 			value_id = "text",
-			style = weapon_stat_text_style,
+			pass_type = "text",
+			value = "n/a",
+			style = weapon_stat_text_style
 		},
 		{
-			pass_type = "text",
 			style_id = "start_percentage",
-			value = "0%",
 			value_id = "start_percentage",
+			pass_type = "text",
+			value = "0%",
 			style = table.merge(table.clone(stat_value_style), {
 				offset = {
 					stat_value_style.offset[1] - 90,
 					stat_value_style.offset[2],
-					stat_value_style.offset[3],
+					stat_value_style.offset[3]
 				},
-				text_color = Color.white(255, true),
-			}),
+				text_color = Color.white(255, true)
+			})
 		},
 		{
-			pass_type = "text",
 			style_id = "max_percentage",
-			value = "[100%]",
 			value_id = "max_percentage",
-			style = max_value_style,
-		},
+			pass_type = "text",
+			value = "[100%]",
+			style = max_value_style
+		}
 	},
 	init = function (parent, widget, element, callback_name)
 		local content = widget.content
@@ -2487,135 +2485,135 @@ ViewElementCraftingRecipeBlueprints.stat_max = {
 		widget.content.text = display_name and Localize(display_name) or ""
 		content[start_percentage_id] = start_value .. "%"
 		content[max_percentage_id] = string.format("[%s]", max_value .. "%")
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.expertise_value = {
 	size = {
 		stat_grid_width,
-		50,
+		50
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "frame",
 			value = "content/ui/materials/frames/line_thin_sharp_edges",
+			style_id = "frame",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					stat_grid_width - 100,
-					50,
+					50
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "inner_frame",
 			value = "content/ui/materials/frames/line_thin_sharp_edges_fill",
+			style_id = "inner_frame",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					stat_grid_width - 100,
-					50,
+					50
 				},
 				color = {
 					255,
 					25,
 					31,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = {
 					stat_grid_width + 20,
-					1,
+					1
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "value_text_start",
+			pass_type = "text",
 			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
 				font_size = 30,
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "center",
-				vertical_alignment = "center",
 				text_color = Color.white(255, true),
 				size = {
 					120,
-					45,
+					45
 				},
 				offset = {
 					70,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/icons/generic/animated/progression_arrows",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = {
 					51.2,
-					43.2,
+					43.2
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "value_text_current",
+			pass_type = "text",
 			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
 				font_size = 30,
 				horizontal_alignment = "right",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "center",
-				vertical_alignment = "center",
 				text_color = Color.ui_blue_light(255, true),
 				size = {
 					120,
-					45,
+					45
 				},
 				offset = {
 					-80,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	},
 	init = function (parent, widget, element, callback_name)
 		local content = widget.content
@@ -2640,96 +2638,96 @@ ViewElementCraftingRecipeBlueprints.expertise_value = {
 			content.value_text_start = string.format(" %s", display_value_start or 0)
 			content.value_text_current = display_value_current or 0
 		end
-	end,
+	end
 }
 ViewElementCraftingRecipeBlueprints.expertise_value_max = {
 	size = {
 		stat_grid_width,
-		50,
+		50
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "frame",
 			value = "content/ui/materials/frames/line_thin_sharp_edges",
+			style_id = "frame",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					stat_grid_width - 100,
-					50,
+					50
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "inner_frame",
 			value = "content/ui/materials/frames/line_thin_sharp_edges_fill",
+			style_id = "inner_frame",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					stat_grid_width - 100,
-					50,
+					50
 				},
 				color = {
 					255,
 					25,
 					31,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = {
 					stat_grid_width + 20,
-					1,
+					1
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "value_text_start",
+			pass_type = "text",
 			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
 				font_size = 30,
 				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "center",
-				vertical_alignment = "center",
 				text_color = Color.white(255, true),
 				size = {
 					120,
-					45,
+					45
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	},
 	init = function (parent, widget, element, callback_name)
 		local content = widget.content
@@ -2741,7 +2739,7 @@ ViewElementCraftingRecipeBlueprints.expertise_value_max = {
 
 			content.value_text_start = string.format(" %s", display_value_start or 0)
 		end
-	end,
+	end
 }
 
 return ViewElementCraftingRecipeBlueprints

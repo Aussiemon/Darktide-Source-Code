@@ -126,7 +126,7 @@ StoreFront.get_refund_cost = function (self, config, rerolls_this_week)
 
 	local cost = {
 		amount = reroll_config.cost.amount + reroll_config.costScalingFactor * (rerolls_this_week * reroll_config.cost.amount),
-		type = reroll_config.cost.type,
+		type = reroll_config.cost.type
 	}
 
 	return cost

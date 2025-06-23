@@ -104,7 +104,7 @@ string.encode_base64 = function (data)
 	end) .. ({
 		"",
 		"==",
-		"=",
+		"="
 	})[#data % 3 + 1]
 end
 

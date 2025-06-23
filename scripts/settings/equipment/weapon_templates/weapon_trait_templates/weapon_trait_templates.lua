@@ -20,7 +20,7 @@ local template_type_paths = {
 	[template_types.sway] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/sway_trait_templates",
 	[template_types.warp_charge] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/warp_charge_trait_templates",
 	[template_types.weapon_handling] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_handling_trait_templates",
-	[template_types.weapon_shout] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_shout_trait_templates",
+	[template_types.weapon_shout] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_shout_trait_templates"
 }
 local templates = {}
 local entries_to_duplicate = {}
@@ -45,7 +45,7 @@ local function _inject_weapon_movement_states(template)
 
 		for weapon_movement_state, _ in pairs(weapon_movement_states) do
 			local copied_entry = {
-				weapon_movement_state,
+				weapon_movement_state
 			}
 
 			for i = 2, depth do
@@ -76,7 +76,7 @@ local function _test_template(template, name, template_type)
 			local path = entry[path_index]
 
 			if type(path) ~= "table" then
-				local var_1_0 = false
+				local var_2_0 = false
 			else
 				local is_table = true
 			end
@@ -94,12 +94,12 @@ local function _test_template(template, name, template_type)
 				-- Nothing
 			end
 
-			::label_1_0::
+			::label_2_0::
 
 			local have_lerp_values = have_min
 		end
 
-		::label_1_1::
+		::label_2_1::
 	end
 
 	local default_lerp_value = template.DEFAULT_LERP_VALUE

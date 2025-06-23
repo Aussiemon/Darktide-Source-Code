@@ -12,18 +12,18 @@ local panel_spacing = HudElementTeamPanelHandlerSettings.panel_spacing
 local start_offset = {
 	17,
 	-50,
-	0,
+	0
 }
 local personal_player_panel_size = HudElementPersonalPlayerPanelSettings.size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	local_player = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "left",
 		position = start_offset,
-		size = personal_player_panel_size,
-	},
+		size = personal_player_panel_size
+	}
 }
 local widget_definitions = {}
 local position_x = start_offset[1] + panel_offset[1]
@@ -34,15 +34,15 @@ for i = 1, max_panels - 1 do
 	local position = {
 		position_x,
 		position_y,
-		panel_offset[3],
+		panel_offset[3]
 	}
 
 	scenegraph_definition[scenegraph_id] = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = panel_size,
-		position = position,
+		position = position
 	}
 	position_x = position_x + panel_spacing[1]
 	position_y = position_y - (panel_size[2] + panel_spacing[2])
@@ -50,5 +50,5 @@ end
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

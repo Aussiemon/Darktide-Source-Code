@@ -6,19 +6,19 @@ local SFX_AMBIENCE_START = "wwise/events/world/play_corruptor_ambience"
 local SFX_AMBIENCE_STOP = "wwise/events/world/stop_corruptor_ambience"
 local ON_SCREEN_PARTICLE_EFFECT = "content/fx/particles/screenspace/screen_corruptor_distortion"
 local sfx_distance_settings = {
-	max = 100,
-	min = 5,
 	multiplier = 1,
+	min = 5,
+	max = 100
 }
 local vfx_distance_settings = {
-	max = 14,
-	min = 4,
 	multiplier = 0.5,
+	min = 4,
+	max = 14
 }
 local resources = {
 	sfx_idle_start = SFX_AMBIENCE_START,
 	sfx_idle_stop = SFX_AMBIENCE_STOP,
-	on_screen_particle_effect = ON_SCREEN_PARTICLE_EFFECT,
+	on_screen_particle_effect = ON_SCREEN_PARTICLE_EFFECT
 }
 local _distance_to_local_player_or_nil
 local effect_template = {
@@ -76,7 +76,7 @@ local effect_template = {
 
 		WwiseWorld.trigger_resource_event(wwise_world, SFX_AMBIENCE_STOP, source_id)
 		WwiseWorld.destroy_manual_source(wwise_world, source_id)
-	end,
+	end
 }
 
 function _distance_to_local_player_or_nil(position)

@@ -9,7 +9,7 @@ PlayerHubInspectInteraction._start = function (self, interactor_unit, interactee
 
 	Managers.ui:open_view("player_character_options_view", nil, nil, nil, nil, {
 		is_readonly = true,
-		player = player,
+		player = player
 	})
 end
 

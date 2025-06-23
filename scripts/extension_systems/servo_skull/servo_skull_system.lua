@@ -8,7 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_servo_skull_do_pulse_fx",
 	"rpc_servo_skull_player_nearby",
 	"rpc_servo_skull_activator_set_visibility",
-	"rpc_servo_skull_set_scanning_active",
+	"rpc_servo_skull_set_scanning_active"
 }
 
 ServoSkullSystem.init = function (self, context, system_init_data, ...)
@@ -22,13 +22,7 @@ ServoSkullSystem.init = function (self, context, system_init_data, ...)
 end
 
 ServoSkullSystem.on_gameplay_post_init = function (self, level)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		if extension.on_gameplay_post_init then
-			extension:on_gameplay_post_init(level)
-		end
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 ServoSkullSystem.hot_join_sync = function (self, sender, channel)

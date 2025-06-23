@@ -35,7 +35,7 @@ VotingNotificationHandler._get_text = function (self, voting_id)
 	end
 
 	local texts = {
-		data.title,
+		data.title
 	}
 
 	table.append(texts, data.lines)
@@ -64,7 +64,7 @@ VotingNotificationHandler.create = function (self, voting_id, data)
 	end
 
 	Managers.event:trigger("event_add_notification_message", "voting", {
-		texts = self:_get_text(voting_id),
+		texts = self:_get_text(voting_id)
 	}, function (id)
 		notification.id = id
 	end)

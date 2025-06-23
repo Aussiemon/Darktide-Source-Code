@@ -53,7 +53,7 @@ end
 AccountProfilePopupView._start_fade_animation = function (self, name, on_done_callback)
 	local animation_parameters = {
 		start_height = self._start_height,
-		popup_area_height = self._menu_height,
+		popup_area_height = self._menu_height
 	}
 
 	self:_start_animation(name, nil, animation_parameters, on_done_callback)

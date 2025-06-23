@@ -227,58 +227,58 @@ end
 
 WwisePortalVolume.component_data = {
 	start_enabled = {
-		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Start Enabled"
 	},
 	register_portal = {
-		ui_name = "Register Portal",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Register Portal"
 	},
 	min_obstruction = {
-		decimals = 2,
-		max = 1,
+		ui_type = "number",
 		min = 0,
 		step = 0.01,
-		ui_name = "Lowest Possible Obstruction & Occlusion Ratio",
-		ui_type = "number",
+		decimals = 2,
 		value = 0,
+		ui_name = "Lowest Possible Obstruction & Occlusion Ratio",
+		max = 1
 	},
 	max_obstruction = {
-		decimals = 2,
-		max = 1,
+		ui_type = "number",
 		min = 0,
 		step = 0.01,
-		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
-		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
+		max = 1
 	},
 	adjust_open_anim_time = {
-		category = "Adjust Open Anim",
-		ui_name = "Adjust Open Anim Time Calculation",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Adjust Open Anim Time Calculation",
+		category = "Adjust Open Anim"
 	},
 	actual_open_time = {
-		category = "Adjust Open Anim",
-		decimals = 2,
-		min = 0,
-		step = 0.01,
-		ui_name = "Actual Open Start Time (in sec.)",
 		ui_type = "number",
+		min = 0,
+		decimals = 2,
+		category = "Adjust Open Anim",
 		value = 0,
+		ui_name = "Actual Open Start Time (in sec.)",
+		step = 0.01
 	},
 	inputs = {
 		flow_enable = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		flow_disable = {
 			accessibility = "private",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return WwisePortalVolume

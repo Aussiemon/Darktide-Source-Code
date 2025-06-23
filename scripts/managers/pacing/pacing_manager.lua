@@ -18,7 +18,7 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	self._ramp_up_enabled = true
 	self._switch_state_conditions = {
 		back = {},
-		next = {},
+		next = {}
 	}
 	self._world = world
 
@@ -345,7 +345,7 @@ PacingManager.spawn_type_enabled = function (self, spawn_type)
 		return false, "paused"
 	end
 
-	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] then
+	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] and not self._use_heat then
 		return false, "not_allowed"
 	end
 
@@ -431,32 +431,32 @@ local MAX_OUT_TENSION_BY_CHALLENGE = {
 		true,
 		true,
 		true,
-		false,
+		false
 	},
 	{
 		true,
 		true,
 		true,
-		false,
+		false
 	},
 	{
 		true,
 		true,
 		true,
-		false,
+		false
 	},
 	{
 		true,
 		true,
 		false,
-		false,
+		false
 	},
 	{
 		false,
 		false,
 		false,
-		false,
-	},
+		false
+	}
 }
 
 PacingManager.player_died = function (self, player_unit)

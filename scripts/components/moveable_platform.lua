@@ -413,148 +413,148 @@ end
 MoveablePlatform.teleport_bots_to_node = function (self, node_name)
 	local moveable_platform_extension = self._moveable_platform_extension
 
-	if moveable_platform_extension then
+	if moveable_platform_extension and self._is_server then
 		moveable_platform_extension:teleport_bots_to_node(node_name)
 	end
 end
 
 MoveablePlatform.component_data = {
 	story = {
-		category = "Story",
-		ui_name = "Story",
 		ui_type = "text_box",
 		value = "story_name",
+		ui_name = "Story",
+		category = "Story"
 	},
 	story_start_immediately = {
-		category = "Story",
-		ui_name = "Start Immediately",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Start Immediately",
+		category = "Story"
 	},
 	story_loop_mode = {
+		value = 0,
+		ui_type = "combo_box",
 		category = "Story",
 		ui_name = "Loop Mode",
-		ui_type = "combo_box",
-		value = 0,
 		options_keys = {
 			"None",
 			"Loop",
-			"Ping Pong",
+			"Ping Pong"
 		},
 		options_values = {
 			0,
 			1,
-			2,
-		},
+			2
+		}
 	},
 	story_override_forward = {
-		category = "Story",
-		ui_name = "Override Forward Story Time",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Override Forward Story Time",
+		category = "Story"
 	},
 	story_time_forward = {
-		category = "Story",
-		decimals = 100,
-		step = 0.1,
-		ui_name = "Forward Play Time (sec.)",
 		ui_type = "number",
+		decimals = 100,
+		category = "Story",
 		value = 0,
+		ui_name = "Forward Play Time (sec.)",
+		step = 0.1
 	},
 	story_override_backward = {
-		category = "Story",
-		ui_name = "Override Backward Story Time",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Override Backward Story Time",
+		category = "Story"
 	},
 	story_time_backward = {
-		category = "Story",
-		decimals = 100,
-		step = 0.1,
-		ui_name = "Backward Story Time (sec.)",
 		ui_type = "number",
+		decimals = 100,
+		category = "Story",
 		value = 0,
+		ui_name = "Backward Story Time (sec.)",
+		step = 0.1
 	},
 	player_side = {
-		ui_name = "Player Side",
 		ui_type = "text_box",
 		value = "heroes",
+		ui_name = "Player Side"
 	},
 	walls_collision = {
-		ui_name = "Walls Collision",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Walls Collision"
 	},
 	walls_collision_filter = {
-		ui_name = "Walls Collision Filter",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Walls Collision Filter"
 	},
 	require_all_players_onboard = {
-		ui_name = "Require All Players Onboard",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Require All Players Onboard"
 	},
 	end_sound_time = {
-		ui_name = "End Sound Time",
 		ui_type = "number",
 		value = 0,
+		ui_name = "End Sound Time"
 	},
 	interactable_story_actions = {
-		category = "Interactables",
+		ui_type = "text_box_array",
 		size = 0,
 		ui_name = "Story Actions",
-		ui_type = "text_box_array",
+		category = "Interactables"
 	},
 	interactable_hud_descriptions = {
-		category = "Interactables",
+		ui_type = "text_box_array",
 		size = 0,
 		ui_name = "HUD Descriptions",
-		ui_type = "text_box_array",
+		category = "Interactables"
 	},
 	nav_handling_enabled = {
-		category = "Nav",
-		ui_name = "Nav Handling",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Nav Handling",
+		category = "Nav"
 	},
 	stop_unit = {
-		category = "Nav",
-		filter = "unit",
-		preview = true,
-		ui_name = "Stop Unit",
 		ui_type = "resource",
+		preview = true,
+		category = "Nav",
 		value = "",
+		ui_name = "Stop Unit",
+		filter = "unit"
 	},
 	stop_position = {
-		category = "Nav",
-		step = 0.1,
-		ui_name = "Stop Position",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		category = "Nav",
+		ui_name = "Stop Position",
+		step = 0.1,
+		value = Vector3Box(0, 0, 0)
 	},
 	inputs = {
 		move_forward = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		move_backward = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		platform_toggle_loop = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_require_all_players_onboard = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
 		"MoveablePlatformExtension",
-		"InteracteeExtension",
-	},
+		"InteracteeExtension"
+	}
 }
 
 return MoveablePlatform

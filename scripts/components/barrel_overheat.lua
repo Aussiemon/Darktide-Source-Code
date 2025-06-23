@@ -43,29 +43,29 @@ end
 
 BarrelOverheat.component_data = {
 	overheat_min = {
-		decimals = 2,
-		max = 3,
+		ui_type = "slider",
 		min = 0,
 		step = 0.01,
-		ui_name = "Blur min",
-		ui_type = "slider",
+		decimals = 2,
 		value = 0,
+		ui_name = "Blur min",
+		max = 3
 	},
 	overheat_max = {
-		decimals = 2,
-		max = 1,
+		ui_type = "slider",
 		min = 0,
 		step = 0.01,
-		ui_name = "Blur max",
-		ui_type = "slider",
+		decimals = 2,
 		value = 1,
+		ui_name = "Blur max",
+		max = 1
 	},
 	inputs = {
 		set_barrel_overheat = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return BarrelOverheat

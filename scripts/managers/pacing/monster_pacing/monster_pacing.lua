@@ -42,12 +42,34 @@ end
 
 MonsterPacing.on_gameplay_post_init = function (self, level, template)
 	self._template = template
+	self._pacing_type = self._template.pacing_type or "default"
 
-	local success = self:_generate_spawns(template)
+	local pacing_type = self._pacing_type
 
-	if not success then
-		self._disabled = true
+	if pacing_type == "default" then
+		local success = self:_generate_spawns(template)
+
+		if not success then
+			self._disabled = true
+		end
+	elseif pacing_type == "timer_based" then
+		self._setup_timer_based_monsters = true
+		self._alive_monsters = {}
 	end
+end
+
+MonsterPacing._setup_timer_based_monster_pacing = function (self, dt, t, side_id, target_side_id)
+	local template = self._template
+	local monster_timer_ranges = template.monster_timer_range
+	local random_monster_timer = math.random(monster_timer_ranges[1], monster_timer_ranges[2])
+
+	self._next_monster_at_t = random_monster_timer
+	self._monster_timer = 0
+	self._currently_spawned_by_timer = {
+		boss_patrols = {},
+		monsters = {}
+	}
+	self._amount_allowed_by_type = {}
 end
 
 local function _sort_spawners(spawner_1, spawner_2)
@@ -188,7 +210,7 @@ MonsterPacing._generate_spawns = function (self, template)
 					position = position,
 					section = section_index,
 					despawn_distance_when_passive = despawn_distance_when_passive,
-					spawn_type = spawn_type,
+					spawn_type = spawn_type
 				}
 
 				monsters[#monsters + 1] = monster
@@ -220,7 +242,7 @@ MonsterPacing._generate_spawns = function (self, template)
 					distance = travel_distance - sound_data.distance,
 					vo_event = sound_data.vo_event,
 					voice_profile = sound_data.voice_profile,
-					breed_name = sound_data.breed_name,
+					breed_name = sound_data.breed_name
 				}
 			end
 		end
@@ -258,7 +280,7 @@ MonsterPacing._generate_spawns = function (self, template)
 				breed_list = breed_list,
 				section = section_index,
 				spawn_point_travel_distance = spawn_point_travel_distance,
-				sound_events = sound_events,
+				sound_events = sound_events
 			}
 
 			boss_patrols[#boss_patrols + 1] = boss_patrol
@@ -348,7 +370,7 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 						breed_name = monster_breed_name,
 						position = position,
 						section = i,
-						spawn_type = spawn_type,
+						spawn_type = spawn_type
 					}
 
 					monsters[#monsters + 1] = monster
@@ -417,7 +439,7 @@ MonsterPacing.fill_boss_patrols_by_travel_distance = function (self, per_travel_
 						breed_list = breed_list,
 						section = i,
 						spawn_point_travel_distance = spawn_point_travel_distance,
-						sound_events = sound_events,
+						sound_events = sound_events
 					}
 
 					boss_patrols[#boss_patrols + 1] = boss_patrol
@@ -429,13 +451,87 @@ MonsterPacing.fill_boss_patrols_by_travel_distance = function (self, per_travel_
 	self._boss_patrols = boss_patrols
 end
 
+local monster_types = {
+	"boss_patrols",
+	"monsters"
+}
+
+MonsterPacing._fill_spawns_by_timer = function (self, dt, t, side_id, target_side_id)
+	local template = self._template
+	local side_system = Managers.state.extension:system("side_system")
+	local player_side = side_system:get_side(side_id)
+	local valid_player_positions = player_side.valid_enemy_human_units_positions
+	local possible_spawns_by_type = {}
+
+	for i = 1, #monster_types do
+		local monster_type = monster_types[i]
+		local allowed_for_type = self._amount_allowed_by_type[monster_type]
+
+		for ii = 1, allowed_for_type do
+			possible_spawns_by_type[#possible_spawns_by_type + 1] = monster_type
+		end
+	end
+
+	table.shuffle(possible_spawns_by_type)
+
+	local random_index = math.random(1, #possible_spawns_by_type)
+	local type_to_spawn = possible_spawns_by_type[random_index]
+	local random_player = math.random(1, #valid_player_positions)
+	local spawn_position = valid_player_positions[random_player]
+	local main_path_manager = Managers.state.main_path
+	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
+	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, spawn_position, 5, 5, 5)
+
+	if not position_on_navmesh then
+		return false
+	end
+
+	local random_occluded_position = SpawnPointQueries.get_random_occluded_position(nav_world, nav_spawn_points, position_on_navmesh, player_side, 10, 1, 50)
+
+	if not random_occluded_position then
+		return
+	end
+
+	if type_to_spawn == "monsters" then
+		local possible_breeds = self._template.breed_names.monsters
+		local random = math.random(1, #possible_breeds)
+		local choosen_breed = possible_breeds[random]
+		local monster = {
+			breed_name = choosen_breed,
+			position = Vector3Box(random_occluded_position)
+		}
+
+		self:_spawn_monster(monster, nil, side_id)
+	elseif type_to_spawn == "boss_patrols" then
+		local boss_patrol_settings = template.boss_patrols
+
+		if boss_patrol_settings then
+			local enemy_side_id = 1
+			local _, _, ahead_position = main_path_manager:ahead_unit(enemy_side_id)
+			local breed_list = boss_patrol_settings.breed_lists
+			local boss_patrol = {
+				breed_list = breed_list,
+				spawn_position = Vector3Box(random_occluded_position)
+			}
+
+			self:_spawn_boss_patrol(boss_patrol, ahead_position, side_id)
+		end
+	end
+
+	local monster_timer_ranges = template.monster_timer_range
+	local random_monster_timer = math.random(monster_timer_ranges[1], monster_timer_ranges[2])
+
+	self._next_monster_at_t = random_monster_timer
+	self._monster_timer = 0
+end
+
 MonsterPacing.set_health_modifier = function (self, modifier)
 	self._health_modifier = modifier
 end
 
 MonsterPacing.add_spawn_point = function (self, unit, position, path_position, travel_distance, section_index, spawn_type)
 	local above, below, horizontal, nav_world = 1, 1, 1, self._nav_world
-	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, above, below, horizontal)
+	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, above, below, 5)
 
 	if not position_on_navmesh then
 		Log.warning("MonsterPacing", "Monster spawner at position(%.2f, %.2f, %.2f) is not on navmesh!", position[1], position[2], position[3])
@@ -451,14 +547,14 @@ MonsterPacing.add_spawn_point = function (self, unit, position, path_position, t
 		position = Vector3Box(position_on_navmesh),
 		spawn_travel_distance = wanted_distance,
 		spawn_type = spawn_type,
-		spawn_point_travel_distance = travel_distance,
+		spawn_point_travel_distance = travel_distance
 	}
 
 	if spawn_point_section then
 		spawn_point_section[#spawn_point_section + 1] = spawn_point
 	else
 		spawn_point_sections[section_index] = {
-			spawn_point,
+			spawn_point
 		}
 		self._num_spawn_type_sections[spawn_type] = self._num_spawn_type_sections[spawn_type] + 1
 	end
@@ -471,8 +567,8 @@ MonsterPacing.add_spawn_point = function (self, unit, position, path_position, t
 end
 
 local captain_breeds = {
-	cultist = "cultist_captain",
 	renegade = "renegade_captain",
+	cultist = "cultist_captain"
 }
 
 MonsterPacing._get_captain_faction = function (self, monster)
@@ -489,7 +585,71 @@ MonsterPacing._get_captain_faction = function (self, monster)
 	return monster
 end
 
+MonsterPacing._update_timer = function (self, dt, t, side_id, target_side_id)
+	self._monster_timer = self._monster_timer + dt
+end
+
+local names = {
+	"monsters",
+	"boss_patrols"
+}
+
+MonsterPacing._check_alive = function (self)
+	for i = 1, #names do
+		local name = names[i]
+		local spawned_type = self._currently_spawned_by_timer[name]
+
+		for ii = 1, #spawned_type do
+			if name == "monsters" then
+				local monster_unit = spawned_type[ii]
+
+				if not HEALTH_ALIVE[monster_unit] then
+					spawned_type[ii] = nil
+				end
+			elseif name == "boss_patrols" then
+				local group_id = spawned_type[ii]
+				local group_system = Managers.state.extension:system("group_system")
+				local group = group_system:group_from_id(group_id)
+
+				if group and #group.members == 0 or not group then
+					spawned_type[ii] = nil
+				end
+			end
+		end
+	end
+end
+
+MonsterPacing._update_allowance = function (self, dt, t, side_id, target_side_id)
+	local template = self._template
+	local max_allowed_by_current_heat_level = Managers.state.pacing:get_table_entry_by_heat_stage(template.max_allowed_by_heat)
+
+	self:_check_alive()
+
+	local total_allowed = 0
+
+	for name, template_amount in pairs(max_allowed_by_current_heat_level) do
+		local amount = template_amount - #self._currently_spawned_by_timer[name]
+
+		total_allowed = total_allowed + amount
+		self._amount_allowed_by_type[name] = amount
+	end
+
+	self._amount_allowed_by_type.total = total_allowed
+
+	if total_allowed > 0 then
+		return true
+	end
+
+	return false
+end
+
 MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
+	if self._setup_timer_based_monsters then
+		self._setup_timer_based_monsters = false
+
+		self:_setup_timer_based_monster_pacing(dt, t, side_id, target_side_id)
+	end
+
 	local disabled = self._disabled
 
 	if disabled then
@@ -505,61 +665,73 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 	local monsters_allowed = Managers.state.pacing:spawn_type_enabled("monsters")
 
 	if monsters_allowed then
-		local monsters = self._monsters
-		local num_monsters = #monsters
+		local pacing_type = self._pacing_type
 
-		for i = 1, num_monsters do
-			local monster = monsters[i]
-			local spawn_travel_distance = monster.travel_distance
+		if pacing_type == "default" then
+			local monsters = self._monsters
+			local num_monsters = #monsters
 
-			if spawn_travel_distance <= ahead_travel_distance then
-				monster = self:_get_captain_faction(monster)
-
-				self:_spawn_monster(monster, ahead_target_unit, side_id)
-				table.remove(monsters, i)
-
-				break
-			end
-		end
-
-		local boss_patrols = self._boss_patrols
-
-		if boss_patrols then
-			local num_boss_patrols = #boss_patrols
-
-			for i = 1, num_boss_patrols do
-				local boss_patrol = boss_patrols[i]
-				local spawn_travel_distance = boss_patrol.travel_distance
+			for i = 1, num_monsters do
+				local monster = monsters[i]
+				local spawn_travel_distance = monster.travel_distance
 
 				if spawn_travel_distance <= ahead_travel_distance then
-					self:_spawn_boss_patrol(boss_patrol, ahead_travel_distance, side_id)
-					table.remove(boss_patrols, i)
+					monster = self:_get_captain_faction(monster)
+
+					self:_spawn_monster(monster, ahead_target_unit, side_id)
+					table.remove(monsters, i)
 
 					break
 				end
 			end
-		end
 
-		if self._main_path_sound_events and #self._main_path_sound_events > 0 then
-			local next_mainpath_event = self._main_path_sound_events[1]
+			local boss_patrols = self._boss_patrols
 
-			if ahead_travel_distance >= next_mainpath_event.distance then
-				local switch = math.random()
+			if boss_patrols then
+				local num_boss_patrols = #boss_patrols
 
-				if switch > 0.5 then
+				for i = 1, num_boss_patrols do
+					local boss_patrol = boss_patrols[i]
+					local spawn_travel_distance = boss_patrol.travel_distance
+
+					if spawn_travel_distance <= ahead_travel_distance then
+						self:_spawn_boss_patrol(boss_patrol, ahead_travel_distance, side_id)
+						table.remove(boss_patrols, i)
+
+						break
+					end
+				end
+			end
+
+			if self._main_path_sound_events and #self._main_path_sound_events > 0 then
+				local next_mainpath_event = self._main_path_sound_events[1]
+
+				if ahead_travel_distance >= next_mainpath_event.distance then
 					local optional_ambisonics = true
 
 					self._fx_system:trigger_wwise_event(next_mainpath_event.event, nil, nil, nil, nil, nil, optional_ambisonics)
-				else
-					Vo.enemy_generic_vo_event_2d(next_mainpath_event.voice_profile, next_mainpath_event.vo_event, next_mainpath_event.breed_name)
+					table.remove(self._main_path_sound_events, 1)
 				end
+			end
+		elseif pacing_type == "timer_based" then
+			local allowed = self:_update_allowance(dt, t, side_id, target_side_id)
 
-				table.remove(self._main_path_sound_events, 1)
+			if allowed then
+				self:_update_timer(dt, t, side_id, target_side_id)
+
+				if self._monster_timer >= self._next_monster_at_t then
+					self:_fill_spawns_by_timer(dt, t, side_id, target_side_id)
+				end
 			end
 		end
 	end
 
 	local alive_monsters = self._alive_monsters
+
+	if not alive_monsters then
+		return
+	end
+
 	local aggroed_monster_units = self._aggroed_monster_units
 	local _, behind_travel_distance = Managers.state.main_path:behind_unit(target_side_id)
 
@@ -672,11 +844,20 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local spawn_max_health_modifier = self._health_modifier
 	local minion_spawn_manager = Managers.state.minion_spawn
 	local param_table = minion_spawn_manager:request_param_table()
+	local pacing_type = self._pacing_type
+	local should_patrol = aggro_state == "passive" and pacing_type == "timer_based"
+
+	if should_patrol then
+		local group_system = Managers.state.extension:system("group_system")
+		local group_id = group_system:generate_group_id()
+
+		param_table.optional_group_id = group_id
+	end
 
 	param_table.optional_health_modifier = spawn_max_health_modifier
 
 	if aggro_state then
-		param_table.optional_aggro_state = aggro_states.aggroed
+		param_table.optional_aggro_state = aggro_state
 		param_table.optional_target_unit = ahead_target_unit
 		spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
 
@@ -721,10 +902,31 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 		end
 	end
 
+	if should_patrol then
+		local main_path_manager = Managers.state.main_path
+		local enemy_side_id = 1
+		local _, _, ahead_position = main_path_manager:ahead_unit(enemy_side_id)
+		local blackboard = BLACKBOARDS[spawned_unit]
+		local patrol_component = Blackboard.write_component(blackboard, "patrol")
+
+		patrol_component.walk_position:store(ahead_position)
+
+		patrol_component.should_patrol = true
+		patrol_component.patrol_index = 1
+		patrol_component.auto_patrol = true
+	end
+
 	Log.info("MonsterPacing", "Spawned monster %s successfully.", breed_name)
 
 	monster.spawned_unit = spawned_unit
-	self._alive_monsters[#self._alive_monsters + 1] = monster
+
+	if pacing_type == "default" then
+		self._alive_monsters[#self._alive_monsters + 1] = monster
+	end
+
+	if pacing_type == "timer_based" then
+		self._currently_spawned_by_timer.monsters[#self._currently_spawned_by_timer.monsters + 1] = spawned_unit
+	end
 end
 
 MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_distance, side_id)
@@ -735,23 +937,38 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 	local spawn_list = boss_patrol_challenge_breed_list[math.random(1, #boss_patrol_challenge_breed_list)]
 	local num_to_spawn = #spawn_list
 	local nav_world = self._nav_world
-	local spawn_point_travel_distance = boss_patrol.spawn_point_travel_distance
-	local spawn_point_main_path_position = MainPathQueries.position_from_distance(spawn_point_travel_distance)
-	local target_main_path_position = MainPathQueries.position_from_distance(ahead_travel_distance)
-	local minion_spawn_manager = Managers.state.minion_spawn
 	local flood_fill_positions = {}
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local num_positions, walk_position
 	local below, above = 2, 2
-	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, spawn_point_main_path_position, above, below, num_to_spawn, flood_fill_positions)
+	local pacing_type = self._pacing_type
 
-	for i = 1, num_positions do
-		local position = flood_fill_positions[i]
+	if pacing_type == "default" then
+		local spawn_point_travel_distance = boss_patrol.spawn_point_travel_distance
+		local spawn_point_main_path_position = MainPathQueries.position_from_distance(spawn_point_travel_distance)
 
-		flood_fill_positions[#flood_fill_positions + 1] = position
+		walk_position = MainPathQueries.position_from_distance(ahead_travel_distance)
+		num_positions = GwNavQueries.flood_fill_from_position(nav_world, spawn_point_main_path_position, above, below, num_to_spawn, flood_fill_positions)
+
+		for i = 1, num_positions do
+			local position = flood_fill_positions[i]
+
+			flood_fill_positions[#flood_fill_positions + 1] = position
+		end
+	elseif pacing_type == "timer_based" then
+		local spawn_position = boss_patrol.spawn_position:unbox()
+
+		walk_position = ahead_travel_distance
+		num_positions = GwNavQueries.flood_fill_from_position(nav_world, spawn_position, above, below, num_to_spawn, flood_fill_positions)
 	end
 
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
 	local spawned_minions = {}
+
+	if pacing_type == "timer_based" then
+		self._currently_spawned_by_timer.boss_patrols[#self._currently_spawned_by_timer.boss_patrols + 1] = group_id
+	end
 
 	for i = 1, num_positions do
 		local breed_name = spawn_list[i]
@@ -766,7 +983,7 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 		local patrol_component = Blackboard.write_component(blackboard, "patrol")
 
 		if i == 1 then
-			patrol_component.walk_position:store(target_main_path_position)
+			patrol_component.walk_position:store(walk_position)
 
 			patrol_component.should_patrol = true
 			patrol_component.patrol_index = i
@@ -807,32 +1024,29 @@ MonsterPacing.remove_monsters_behind_pos = function (self, position)
 
 	if target_navmesh_position then
 		local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
+		local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
+		local end_index = start_index + 1
+		local _, distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+		local monsters = self._monsters
 
-		if group_index then
-			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-			local end_index = start_index + 1
-			local _, distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
-			local monsters = self._monsters
+		if monsters then
+			for i = #monsters, 1, -1 do
+				local monster = monsters[i]
 
-			if monsters then
-				for i = #monsters, 1, -1 do
-					local monster = monsters[i]
-
-					if distance >= monster.travel_distance then
-						table.remove(monsters, i)
-					end
+				if distance >= monster.travel_distance then
+					table.remove(monsters, i)
 				end
 			end
+		end
 
-			local boss_patrols = self._boss_patrols
+		local boss_patrols = self._boss_patrols
 
-			if boss_patrols then
-				for i = #boss_patrols, 1, -1 do
-					local boss_patrol = boss_patrols[i]
+		if boss_patrols then
+			for i = #boss_patrols, 1, -1 do
+				local boss_patrol = boss_patrols[i]
 
-					if distance >= boss_patrol.travel_distance then
-						table.remove(boss_patrols, i)
-					end
+				if distance >= boss_patrol.travel_distance then
+					table.remove(boss_patrols, i)
 				end
 			end
 		end

@@ -30,7 +30,7 @@ local action_sweep_settings = {
 		[hit_zone_names.center_mass] = 6,
 		[hit_zone_names.corruptor_armor] = 6,
 		[hit_zone_names.right_shoulderguard] = 6,
-		[hit_zone_names.delayed_gib] = 6,
+		[hit_zone_names.delayed_gib] = 6
 	},
 	hit_zone_priority_functions = {
 		[hit_zone_names.shield] = function (unit, attacking_unit_position, current_hit_zone_priority)
@@ -57,9 +57,9 @@ local action_sweep_settings = {
 			else
 				return WORST_HIT_ZONE_PRIORITY
 			end
-		end,
+		end
 	},
-	multi_sweep_process_mode = table.enum("shared", "separate"),
+	multi_sweep_process_mode = table.enum("shared", "separate")
 }
 
 return settings("ActionSweepSettings", action_sweep_settings)

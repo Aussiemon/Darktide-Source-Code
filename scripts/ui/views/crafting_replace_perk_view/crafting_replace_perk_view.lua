@@ -2,9 +2,6 @@
 
 local CraftingReplacePerkViewDefinitions = require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
-local ItemUtils = require("scripts/utilities/items")
-local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
 local InputDevice = require("scripts/managers/input/input_device")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
@@ -23,10 +20,10 @@ CraftingReplacePerkView.init = function (self, settings, context)
 		item = self._item,
 		perk_ids = {},
 		perk_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		perk_items = {},
+		perk_items = {}
 	}
 end
 
@@ -209,7 +206,7 @@ CraftingReplacePerkView.cb_on_perk_selected = function (self, widget, config)
 		self._perform_perk_selection_data = {
 			widget = widget,
 			config = config,
-			remove_perk_items_focus = remove_perks_focus,
+			remove_perk_items_focus = remove_perks_focus
 		}
 	end
 end

@@ -12,7 +12,7 @@ local PlayerCharacterStateWarpGrabbed = class("PlayerCharacterStateWarpGrabbed",
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "warp_grabbed",
+	stinger_type = "warp_grabbed"
 }
 
 PlayerCharacterStateWarpGrabbed.init = function (self, character_state_init_context, ...)

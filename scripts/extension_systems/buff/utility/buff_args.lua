@@ -4,25 +4,25 @@ local BuffArgs = {}
 local ARGS = {
 	{
 		block_prediction = true,
-		name = "buff_lerp_value",
+		name = "buff_lerp_value"
 	},
 	{
 		block_prediction = true,
-		name = "item_slot_name",
+		name = "item_slot_name"
 	},
 	{
 		block_prediction = true,
-		name = "parent_buff_template",
+		name = "parent_buff_template"
 	},
 	{
-		name = "owner_unit",
+		name = "owner_unit"
 	},
 	{
-		name = "source_item",
+		name = "source_item"
 	},
 	{
-		name = "from_talent",
-	},
+		name = "from_talent"
+	}
 }
 local NUM_ARGS = #ARGS
 

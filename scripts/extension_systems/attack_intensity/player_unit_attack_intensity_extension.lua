@@ -25,6 +25,7 @@ PlayerUnitAttackIntensityExtension.init = function (self, extension_init_context
 	self._locked_in_melee_timer = 0
 	self._next_locked_in_melee_update = 0
 	self._attack_allowed_timer = 0
+	self._in_combat_timer = 0
 	self._num_attacks_in_melee = 0
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -46,9 +47,9 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 		local difficulty_settings = Managers.state.difficulty:get_table_entry_by_challenge(settings)
 
 		intensity_data[intensity_type] = {
-			attack_allowed = true,
-			decay_grace_timer = 0,
 			intensity = 0,
+			decay_grace_timer = 0,
+			attack_allowed = true,
 			threshold = difficulty_settings.threshold,
 			decay_grace = difficulty_settings.decay_grace,
 			decay = difficulty_settings.decay,
@@ -56,16 +57,16 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 			attack_allowed_decay_multiplier = difficulty_settings.attack_allowed_decay_multiplier,
 			ignored_movement_states = difficulty_settings.ignored_movement_states,
 			locked_in_melee_check = difficulty_settings.locked_in_melee_check,
-			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp,
+			attack_intensity_clamp = difficulty_settings.attack_intensity_clamp
 		}
 	end
 end
 
 local DISALLOWED_CHARACTER_STATES = {
-	consumed = true,
 	grabbed = true,
 	mutant_charged = true,
 	pounced = true,
+	consumed = true
 }
 
 PlayerUnitAttackIntensityExtension.update = function (self, unit, dt, t, context)
@@ -299,12 +300,39 @@ PlayerUnitAttackIntensityExtension.set_attacked = function (self)
 	local diff_attacked_allowed_time_range = Managers.state.difficulty:get_table_entry_by_challenge(attacked_allowed_time_range)
 
 	self._attack_allowed_timer = t + math.random_range(diff_attacked_allowed_time_range[1], diff_attacked_allowed_time_range[2])
+	self._in_combat_timer = t + 8
 end
 
 PlayerUnitAttackIntensityExtension.recently_attacked = function (self)
 	local t = Managers.time:time("gameplay")
 
 	return t < self._attack_allowed_timer
+end
+
+local non_aggressive_level_names = {
+	om_basic_combat_01 = true,
+	tg_shooting_range = true
+}
+
+PlayerUnitAttackIntensityExtension.in_combat_for_companion = function (self)
+	local mission_name = Managers.state.mission:mission_name()
+
+	if non_aggressive_level_names[mission_name] then
+		return false
+	end
+
+	local t = Managers.time:time("gameplay")
+	local in_combat_time = t < self._in_combat_timer
+	local monster_chasing = self:monster_attacker()
+	local in_combat = in_combat_time or monster_chasing
+
+	return in_combat
+end
+
+PlayerUnitAttackIntensityExtension.set_damage_dealt = function (self)
+	local t = Managers.time:time("gameplay")
+
+	self._in_combat_timer = t + 8
 end
 
 PlayerUnitAttackIntensityExtension.set_attacked_melee = function (self)

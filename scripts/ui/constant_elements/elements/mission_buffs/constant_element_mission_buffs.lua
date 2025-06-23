@@ -37,10 +37,10 @@ MissionBuffs.init = function (self, parent, draw_layer, start_scale)
 	self._queue_context = {}
 	self._is_cutscene_active = false
 	self._states = {
-		blur = "inactive",
+		view = "inactive",
 		buffs = "inactive",
 		text = "inactive",
-		view = "inactive",
+		blur = "inactive"
 	}
 	self._tactical_overlay_active = false
 
@@ -183,7 +183,7 @@ MissionBuffs._present_buffs = function (self, ui_renderer)
 						sub_title = sub_title,
 						description = description,
 						buff_icon_texture = icon,
-						buff_icon_gradient_map = gradient,
+						buff_icon_gradient_map = gradient
 					}
 				end
 			end
@@ -203,7 +203,7 @@ MissionBuffs._present_buffs = function (self, ui_renderer)
 				is_family = self._context.is_buff_family,
 				is_first = i == 1,
 				is_last = i == buffs_size,
-				sub_buff = sub_buff,
+				sub_buff = sub_buff
 			}
 
 			Log.info("ConstantElementMissionBuffs", "Present Buff Card: BuffName[%s]", buff_name)
@@ -254,11 +254,11 @@ MissionBuffs._generate_buffs_widgets = function (self, layout, ui_renderer)
 
 	local card_size = {
 		450,
-		335,
+		335
 	}
 	local grid_size = {
 		total_width,
-		card_size[2],
+		card_size[2]
 	}
 
 	self:_set_scenegraph_size("buffs_area", grid_size[1], grid_size[2])
@@ -534,19 +534,19 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 			if title_text ~= "" then
 				local text_width, text_height = _calculate_text_size(self._widgets_by_name.title, "text", {
 					1920,
-					200,
+					200
 				}, ui_renderer)
 
 				self._widgets_by_name.title.content.size = {
 					text_width,
-					text_height,
+					text_height
 				}
 
 				self:_set_scenegraph_size("title", text_width, text_height)
 
 				self._widgets_by_name.title.style.text_background.size_addition = {
 					text_width * 0.5,
-					text_height * 0.5,
+					text_height * 0.5
 				}
 			end
 		end
@@ -557,19 +557,19 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 			if sub_title_text ~= "" then
 				local text_width, text_height = _calculate_text_size(self._widgets_by_name.sub_title, "text", {
 					1920,
-					200,
+					200
 				}, ui_renderer)
 
 				self._widgets_by_name.sub_title.content.size = {
 					text_width,
-					text_height,
+					text_height
 				}
 
 				self:_set_scenegraph_size("sub_title", text_width, text_height)
 
 				self._widgets_by_name.sub_title.style.text_background.size_addition = {
 					text_width * 0.5,
-					text_height * 0.5,
+					text_height * 0.5
 				}
 			end
 		end
@@ -610,7 +610,7 @@ MissionBuffs._update_buffs_state = function (self, dt, ui_renderer)
 			self:_reset_buff_animations()
 
 			self._buff_anim_id = self:_start_animation("on_buff_enter", self._widgets_by_name, {
-				buff_widgets = self._buff_widgets,
+				buff_widgets = self._buff_widgets
 			})
 			self._states.buffs = "starting"
 		end
@@ -636,7 +636,7 @@ MissionBuffs._update_buffs_state = function (self, dt, ui_renderer)
 			self:_reset_buff_animations()
 
 			self._buff_anim_id = self:_start_animation("on_buff_exit", self._widgets_by_name, {
-				buff_widgets = self._buff_widgets,
+				buff_widgets = self._buff_widgets
 			})
 			self._states.buffs = "closing"
 		elseif not self._buffs_timer then
@@ -880,7 +880,7 @@ MissionBuffs._update_presentation = function (self, context)
 
 		for i = 1, #context.buffs do
 			buffs_data[#buffs_data + 1] = {
-				buff_name = context.buffs[i],
+				buff_name = context.buffs[i]
 			}
 		end
 	end
@@ -904,7 +904,7 @@ MissionBuffs._update_presentation = function (self, context)
 
 	if context.wave_num and context.state == "completed" and buffs_data and #buffs_data > 1 then
 		pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
-			wave = context.wave_num or 1,
+			wave = context.wave_num or 1
 		})
 		is_wave_title = true
 
@@ -915,12 +915,12 @@ MissionBuffs._update_presentation = function (self, context)
 		end
 	elseif context.wave_num and context.state == "completed" then
 		pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
-			wave = context.wave_num or 1,
+			wave = context.wave_num or 1
 		})
 		is_wave_title = true
 	elseif context.wave_num then
 		queue_context.title = Localize("loc_horde_wave_start", true, {
-			wave = context.wave_num,
+			wave = context.wave_num
 		})
 		is_wave_title = true
 	elseif buffs_data and context.is_buff_family then
@@ -932,7 +932,7 @@ MissionBuffs._update_presentation = function (self, context)
 		queue_context.use_timer = true
 	elseif not is_before_first_wave_start and not is_after_last_wave_end and timer > DEFAULT_TIMER or is_catchup then
 		queue_context.sub_title = Localize("loc_horde_buff_big_time", true, {
-			wave = context.wave_num and context.wave_num + 1 or 1,
+			wave = context.wave_num and context.wave_num + 1 or 1
 		})
 		queue_context.use_timer = true
 	elseif context and buffs_data and #buffs_data == 1 then
@@ -1024,7 +1024,7 @@ MissionBuffs._handle_choice_resolution = function (self, choice_index, is_random
 
 		for _, buff_data in ipairs(self._context.buffs) do
 			table.insert(options, {
-				buff_name = buff_data.buff_name,
+				buff_name = buff_data.buff_name
 			})
 		end
 

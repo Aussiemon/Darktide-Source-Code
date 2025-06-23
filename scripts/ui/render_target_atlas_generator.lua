@@ -128,12 +128,12 @@ RenderTargetAtlasGenerator._create_uv_grid = function (self, grid_size, slot_siz
 			local uvs = {
 				{
 					x_start,
-					y_start,
+					y_start
 				},
 				{
 					x_end,
-					y_end,
-				},
+					y_end
+				}
 			}
 			local grid_index = #uv_grid + 1
 
@@ -148,18 +148,18 @@ RenderTargetAtlasGenerator._create_atlas_grid = function (self, slot_width, slot
 	local atlas_id = math.uuid()
 	local slot_size = {
 		slot_width,
-		slot_height,
+		slot_height
 	}
 	local default_atlas_rows = self._default_atlas_rows
 	local default_atlas_columns = self._default_atlas_columns
 	local atlas_size = {
 		optional_atlas_width or slot_width * default_atlas_rows,
-		optional_atlas_height or slot_height * default_atlas_columns,
+		optional_atlas_height or slot_height * default_atlas_columns
 	}
 	local uv_grid, num_rows, num_columns = self:_create_uv_grid(atlas_size, slot_size)
 	local atlas = {
-		num_used_grid_slots = 0,
 		slot_id_generator_counter = 0,
+		num_used_grid_slots = 0,
 		id = atlas_id,
 		slot_size = slot_size,
 		atlas_size = atlas_size,
@@ -168,7 +168,7 @@ RenderTargetAtlasGenerator._create_atlas_grid = function (self, slot_width, slot
 		uv_grid = uv_grid,
 		render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, atlas_size[1], atlas_size[2], atlas_id),
 		occupied_grid_slots = {},
-		max_grid_slots = num_columns * num_rows,
+		max_grid_slots = num_columns * num_rows
 	}
 
 	self._atlases[#self._atlases + 1] = atlas

@@ -25,19 +25,19 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 			action_input_type = "weapon",
 			debug_draw = true,
 			templates = WeaponTemplates,
-			action_extension = weapon_extension,
+			action_extension = weapon_extension
 		},
 		combat_ability_action = {
 			action_input_type = "ability",
 			debug_draw = true,
 			templates = AbilityTemplates,
-			action_extension = ability_extension,
+			action_extension = ability_extension
 		},
 		grenade_ability_action = {
 			action_input_type = "ability",
 			templates = AbilityTemplates,
-			action_extension = ability_extension,
-		},
+			action_extension = ability_extension
+		}
 	}
 	local network_data_cache = {}
 
@@ -68,7 +68,7 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				input_queue_produced_by_hierarchy = string.format("%s_input_queue_produced_by_hierarchy", action_component_name),
 				input_queue_hierarchy_position = string.format("%s_input_queue_hierarchy_position", action_component_name),
 				input_queue_first_entry_became_first_entry_t = string.format("%s_input_queue_first_entry_became_first_entry_t", action_component_name),
-				hierarchy_position = string.format("%s_hierarchy_position", action_component_name),
+				hierarchy_position = string.format("%s_hierarchy_position", action_component_name)
 			}
 
 			network_data_cache_configs[action_component_name] = cache_config

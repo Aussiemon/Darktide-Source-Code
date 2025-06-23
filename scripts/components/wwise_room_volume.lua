@@ -4,7 +4,6 @@ local WwiseRoomVolume = component("WwiseRoomVolume")
 
 WwiseRoomVolume.init = function (self, unit)
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
-	self._room_id = -1
 
 	if not Unit.has_volume(unit, "room_volume") then
 		return false
@@ -59,36 +58,36 @@ end
 
 WwiseRoomVolume.component_data = {
 	priority = {
-		decimals = 0,
-		max = 1024,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Priority",
-		ui_type = "number",
+		decimals = 0,
 		value = 1,
+		ui_name = "Priority",
+		max = 1024
 	},
 	wall_occlusion = {
-		decimals = 2,
-		max = 1,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Wall Occlusion",
-		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Wall Occlusion",
+		max = 1
 	},
 	aux_send_to_self = {
-		decimals = 2,
-		max = 1,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Aux send to self",
-		ui_type = "number",
+		decimals = 2,
 		value = 0.25,
+		ui_name = "Aux send to self",
+		max = 1
 	},
 	reverb_aux_bus = {
-		ui_name = "Reverb aux bus",
 		ui_type = "combo_box",
 		value = "indoor_medium_3d",
+		ui_name = "Reverb aux bus",
 		options = {
 			"indoor_large_3d",
 			"indoor_medium_3d",
@@ -102,21 +101,21 @@ WwiseRoomVolume.component_data = {
 			"indoor_medium_hallway_3d",
 			"indoor_huge_cylinder_3d",
 			"indoor_small_hallway_3d",
-			"outside_huge_canyon_3d",
-		},
+			"outside_huge_canyon_3d"
+		}
 	},
 	ambient_event = {
-		filter = "wwise_event",
+		ui_type = "resource",
 		preview = true,
 		thumbnails = false,
-		ui_name = "Ambient event",
-		ui_type = "resource",
 		value = "",
+		ui_name = "Ambient event",
+		filter = "wwise_event"
 	},
 	environment_state = {
-		ui_name = "Environment state",
 		ui_type = "combo_box",
 		value = "indoor_medium",
+		ui_name = "Environment state",
 		options = {
 			"indoor_huge",
 			"indoor_large",
@@ -125,9 +124,9 @@ WwiseRoomVolume.component_data = {
 			"indoor_tiny",
 			"urban_large",
 			"urban_medium",
-			"urban_small",
-		},
-	},
+			"urban_small"
+		}
+	}
 }
 
 return WwiseRoomVolume

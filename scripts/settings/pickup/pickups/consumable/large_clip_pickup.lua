@@ -1,14 +1,14 @@
 ﻿-- chunkname: @scripts/settings/pickup/pickups/consumable/large_clip_pickup.lua
 
 local pickup_data = {
-	ammunition_percentage = 0.5,
 	description = "loc_pickup_consumable_large_clip_01",
+	name = "large_clip",
+	look_at_tag = "ammo",
+	smart_tag_target_type = "pickup",
 	group = "ammo",
 	interaction_type = "ammunition",
-	look_at_tag = "ammo",
-	name = "large_clip",
 	pickup_sound = "wwise/events/player/play_pick_up_ammo_02",
-	smart_tag_target_type = "pickup",
+	ammunition_percentage = 0.5,
 	unit_name = "content/pickups/consumables/ammo_02/consumable_ammo_02",
 	ammo_amount_func = function (max_ammunition_reserve, max_ammo_clip, pickup_data)
 		local modifier = pickup_data.modifier or 1
@@ -16,7 +16,7 @@ local pickup_data = {
 		local amount = math.ceil(percentage * max_ammunition_reserve)
 
 		return amount
-	end,
+	end
 }
 
 return pickup_data

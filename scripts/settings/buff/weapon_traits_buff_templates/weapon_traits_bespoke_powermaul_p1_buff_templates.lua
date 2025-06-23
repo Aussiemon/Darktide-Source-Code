@@ -27,16 +27,16 @@ templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent = tabl
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_powermaul_p1_windup_increases_power_child"
 templates.weapon_trait_bespoke_powermaul_p1_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
 templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
-	allow_proc_while_active = false,
 	child_buff_template = "block_has_chance_to_stun_child",
 	child_duration = 3,
-	class_name = "weapon_trait_parent_proc_buff",
 	predicted = false,
+	allow_proc_while_active = false,
+	class_name = "weapon_trait_parent_proc_buff",
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_perfect_block] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_perfect_block] = 1
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("block_has_chance_to_stun_child")
@@ -48,6 +48,9 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context, t)
 	end,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context)
+		return params.attack_type == "melee"
+	end,
 	proc_func = function (params, template_data, template_context, t)
 		local attacking_unit = params.attacking_unit
 		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
@@ -55,25 +58,25 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		if attacking_unit_buff_extension then
 			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
 		end
-	end,
+	end
 }
 templates.block_has_chance_to_stun_child = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
+	stack_offset = -1,
 	max_stacks = 1,
 	predicted = false,
-	stack_offset = -1,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.2,
+		[stat_buffs.melee_power_level_modifier] = 0.2
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun = {
-	class_name = "proc_buff",
 	cooldown_duration = 5,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -91,27 +94,27 @@ templates.weapon_trait_bespoke_powermaul_p1_staggering_hits_has_chance_to_stun =
 				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
 			end
 		end
-	end,
+	end
 }
 templates.weapon_trait_bespoke_powermaul_p1_damage_bonus_vs_electrocuted = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_vs_electrocuted] = 0.5,
+		[stat_buffs.damage_vs_electrocuted] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 	class_name = "proc_buff",
-	heavy_proc = 2,
-	hide_icon_in_hud = true,
 	light_proc = 1,
+	heavy_proc = 2,
 	predicted = false,
+	hide_icon_in_hud = true,
 	special_proc = 3,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -202,8 +205,8 @@ templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 			end
 
 			template_data.can_proc = false
-		end,
-	},
+		end
+	}
 }
 
 return templates

@@ -36,14 +36,14 @@ end
 
 PropShield.component_data = {
 	actor_names = {
+		ui_type = "text_box_array",
 		size = 0,
 		ui_name = "Shield Actors",
-		ui_type = "text_box_array",
-		values = {},
+		values = {}
 	},
 	extensions = {
-		"PropShieldExtension",
-	},
+		"PropShieldExtension"
+	}
 }
 
 return PropShield

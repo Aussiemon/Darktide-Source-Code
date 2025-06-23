@@ -59,7 +59,7 @@ HudElementDamageIndicator._spawn_indicator = function (self, angle, attack_resul
 		angle = player_angle + angle,
 		time = t + duration,
 		duration = duration,
-		attack_result = attack_result,
+		attack_result = attack_result
 	}
 end
 

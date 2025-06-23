@@ -15,21 +15,21 @@ templates.weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = table.cl
 templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = table.clone(BaseWeaponTraitBuffTemplates.stagger_count_bonus_damage)
 
 local _shooting_actions = {
-	action_shoot_hip_charged = true,
 	action_shoot_hip_quick = true,
-	action_shoot_hip_start = true,
 	action_shoot_zoomed_start = true,
 	action_zoom_shoot_charged = true,
+	action_shoot_hip_charged = true,
 	action_zoom_shoot_quick = true,
+	action_shoot_hip_start = true
 }
 
 templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_attacks = {
-	class_name = "stepped_stat_buff",
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
+	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
-		[stat_buffs.charge_up_time] = -0.04,
+		[stat_buffs.charge_up_time] = -0.04
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -54,7 +54,7 @@ templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_atta
 		end
 
 		return 0
-	end,
+	end
 }
 templates.weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff_on_charged_shots)
 templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = table.clone(BaseWeaponTraitBuffTemplates.target_hit_mass_reduction_on_weakspot_hits)

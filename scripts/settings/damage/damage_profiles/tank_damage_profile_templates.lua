@@ -19,7 +19,7 @@ damage_templates.heavy_tank = {
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.4,
-		impact = 0.5,
+		impact = 0.5
 	},
 	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -35,7 +35,7 @@ damage_templates.heavy_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 1.5,
-					[armor_types.void_shield] = 1.5,
+					[armor_types.void_shield] = 1.5
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -45,34 +45,34 @@ damage_templates.heavy_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 1.5,
-					[armor_types.void_shield] = 1.5,
-				},
+					[armor_types.void_shield] = 1.5
+				}
 			},
 			power_distribution = {
 				attack = 0.5,
-				impact = 1.75,
-			},
+				impact = 1.75
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0.1,
-				impact = 1.5,
-			},
+				impact = 1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0.05,
-				impact = 1.5,
-			},
+				impact = 1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0,
-				impact = 1.5,
-			},
+				impact = 1.5
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
@@ -85,7 +85,7 @@ damage_templates.heavy_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0,
-					[armor_types.void_shield] = 0,
+					[armor_types.void_shield] = 0
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -95,16 +95,16 @@ damage_templates.heavy_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-				},
+					[armor_types.void_shield] = 1
+				}
 			},
 			power_distribution = {
 				attack = 0,
-				impact = 1,
+				impact = 1
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.heavy_tank_shotgun = table.clone(damage_templates.heavy_tank)
 damage_templates.shotgun_tank = {
@@ -113,7 +113,7 @@ damage_templates.shotgun_tank = {
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.1,
-		impact = 1,
+		impact = 1
 	},
 	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -129,7 +129,7 @@ damage_templates.shotgun_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0.8,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
+					[armor_types.void_shield] = 0.5
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -139,34 +139,34 @@ damage_templates.shotgun_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 1,
 					[armor_types.disgustingly_resilient] = 1.5,
-					[armor_types.void_shield] = 1.5,
-				},
+					[armor_types.void_shield] = 1.5
+				}
 			},
 			power_distribution = {
 				attack = 0.2,
-				impact = 1.75,
-			},
+				impact = 1.75
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0,
-				impact = 1.5,
-			},
+				impact = 1.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0,
-				impact = 1.25,
-			},
+				impact = 1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0,
-				impact = 0.75,
-			},
+				impact = 0.75
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
@@ -179,7 +179,7 @@ damage_templates.shotgun_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0,
-					[armor_types.void_shield] = 0,
+					[armor_types.void_shield] = 0
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -189,24 +189,24 @@ damage_templates.shotgun_tank = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.5,
-					[armor_types.void_shield] = 0.5,
-				},
+					[armor_types.void_shield] = 0.5
+				}
 			},
 			power_distribution = {
 				attack = 0,
-				impact = 0.5,
+				impact = 0.5
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.default_powersword_heavy = {
-	ignore_gib_push = true,
 	ragdoll_push_force = 750,
 	stagger_category = "melee",
+	ignore_gib_push = true,
 	cleave_distribution = {
 		attack = 0.75,
-		impact = 0.75,
+		impact = 0.75
 	},
 	gibbing_power = gibbing_power.heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -221,7 +221,7 @@ damage_templates.default_powersword_heavy = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -231,19 +231,19 @@ damage_templates.default_powersword_heavy = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-				},
+					[armor_types.void_shield] = 1
+				}
 			},
 			power_distribution = {
 				attack = 0.3,
-				impact = 1,
-			},
+				impact = 1
+			}
 		},
 		{
 			power_distribution = {
 				attack = 0.15,
-				impact = 0.75,
-			},
+				impact = 0.75
+			}
 		},
 		default_target = {
 			armor_damage_modifier = {
@@ -255,7 +255,7 @@ damage_templates.default_powersword_heavy = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 0.75,
-					[armor_types.void_shield] = 0.75,
+					[armor_types.void_shield] = 0.75
 				},
 				impact = {
 					[armor_types.unarmored] = 1,
@@ -265,19 +265,19 @@ damage_templates.default_powersword_heavy = {
 					[armor_types.berserker] = 0.5,
 					[armor_types.super_armor] = 0,
 					[armor_types.disgustingly_resilient] = 1,
-					[armor_types.void_shield] = 1,
-				},
+					[armor_types.void_shield] = 1
+				}
 			},
 			power_distribution = {
 				attack = 0.1,
-				impact = 0.5,
+				impact = 0.5
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

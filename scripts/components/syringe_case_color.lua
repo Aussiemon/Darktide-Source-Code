@@ -5,23 +5,23 @@ local COLORS = {
 	syringe_corruption_pocketable = {
 		emissive_multiplier = 1,
 		trim_color = Vector3Box(0, 0.5, 0),
-		emissive_color = Vector3Box(0.15, 0.8, 0.1),
+		emissive_color = Vector3Box(0.15, 0.8, 0.1)
 	},
 	syringe_ability_boost_pocketable = {
 		emissive_multiplier = 1,
 		trim_color = Vector3Box(1, 0.2, 0),
-		emissive_color = Vector3Box(0.9, 0.75, 0.05),
+		emissive_color = Vector3Box(0.9, 0.75, 0.05)
 	},
 	syringe_power_boost_pocketable = {
 		emissive_multiplier = 1,
 		trim_color = Vector3Box(0.75, 0, 0),
-		emissive_color = Vector3Box(0.8, 0.2, 0.1),
+		emissive_color = Vector3Box(0.8, 0.2, 0.1)
 	},
 	syringe_speed_boost_pocketable = {
 		emissive_multiplier = 1,
 		trim_color = Vector3Box(0, 0, 0.3),
-		emissive_color = Vector3Box(0, 0.5, 0.85),
-	},
+		emissive_color = Vector3Box(0, 0.5, 0.85)
+	}
 }
 
 SyringeCaseColor.init = function (self, unit)
@@ -78,57 +78,57 @@ end
 
 SyringeCaseColor.component_data = {
 	trim_material_slot_name = {
-		category = "Trim",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "syringe_case",
+		ui_name = "Material Slot Name",
+		category = "Trim"
 	},
 	trim_color_variable_name = {
-		category = "Trim",
-		ui_name = "Color Variable Name",
 		ui_type = "text_box",
 		value = "tint_color",
+		ui_name = "Color Variable Name",
+		category = "Trim"
 	},
 	trim_color = {
-		category = "Trim",
-		step = 0.001,
-		ui_name = "Color",
 		ui_type = "vector",
-		value = Vector3Box(0, 0.5, 0),
+		category = "Trim",
+		ui_name = "Color",
+		step = 0.001,
+		value = Vector3Box(0, 0.5, 0)
 	},
 	emissive_material_slot_name = {
-		category = "Emissive",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "syringe_case",
+		ui_name = "Material Slot Name",
+		category = "Emissive"
 	},
 	emissive_color_variable_name = {
-		category = "Emissive",
-		ui_name = "Color Variable Name",
 		ui_type = "text_box",
 		value = "emissive_color",
+		ui_name = "Color Variable Name",
+		category = "Emissive"
 	},
 	emissive_color = {
-		category = "Emissive",
-		step = 0.001,
-		ui_name = "Color",
 		ui_type = "vector",
-		value = Vector3Box(0.15, 0.8, 0.1),
+		category = "Emissive",
+		ui_name = "Color",
+		step = 0.001,
+		value = Vector3Box(0.15, 0.8, 0.1)
 	},
 	emissive_multiplier_variable_name = {
-		category = "Emissive",
-		ui_name = "Emissive Variable Name",
 		ui_type = "text_box",
 		value = "emissive_multiplier",
+		ui_name = "Emissive Variable Name",
+		category = "Emissive"
 	},
 	emissive_multiplier = {
-		category = "Emissive",
-		max = 10,
-		step = 0.1,
-		ui_name = "Multiplier",
 		ui_type = "slider",
+		step = 0.1,
+		category = "Emissive",
 		value = 0.25,
-	},
+		ui_name = "Multiplier",
+		max = 10
+	}
 }
 
 return SyringeCaseColor

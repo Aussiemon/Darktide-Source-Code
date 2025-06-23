@@ -66,7 +66,8 @@ ActionTargetedDashAim._find_target = function (self, time_in_action)
 
 		if valid_target then
 			local has_target = true
-			local lunge_distance = Lunge.distance(lunge_template, has_target)
+			local buff_extension = self._buff_extension
+			local lunge_distance = Lunge.distance(lunge_template, has_target, buff_extension)
 
 			if lunge_distance >= smart_targeting_data.distance then
 				new_target = smart_target_unit

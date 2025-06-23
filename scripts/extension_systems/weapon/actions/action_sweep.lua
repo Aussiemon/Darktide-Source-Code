@@ -31,8 +31,8 @@ local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local POWERED_WWISE_SWITCH = {
-	[false] = "false",
 	[true] = "true",
+	[false] = "false"
 }
 local _dot
 
@@ -138,7 +138,7 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 				hit_distance = 0,
 				hit_actor = ActorBox(),
 				hit_position = Vector3Box(),
-				hit_normal = Vector3Box(),
+				hit_normal = Vector3Box()
 			}
 		end
 	end
@@ -153,7 +153,7 @@ ActionSweep._init_splines = function (self, action_settings)
 	local spline_settings = action_settings.spline_settings
 	local sweep_process_mode = action_settings.sweep_process_mode or ActionSweepSettings.multi_sweep_process_mode.shared
 	local hit_units = {
-		{},
+		{}
 	}
 
 	if multi_sweep then
@@ -183,12 +183,12 @@ ActionSweep._init_splines = function (self, action_settings)
 			local anchor_point_offset = action_settings.spline_settings.anchor_point_offset
 
 			return {
-				SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset),
+				SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset)
 			}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
 		end
 
 		return {
-			SweepSpline:new(action_settings),
+			SweepSpline:new(action_settings)
 		}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
 	end
 end
@@ -231,6 +231,12 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	self._current_sticky_armor_type = nil
 
 	self:_reset_sweep_component()
+
+	if action_settings.activate_special_during_sweep then
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true)
+
+		self._weapon_action_component.special_active_at_start = true
+	end
 
 	local fx_extension = self._fx_extension
 	local special_active = self._inventory_slot_component.special_active
@@ -339,6 +345,11 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	end
 
 	local action_settings = self._action_settings
+
+	if action_settings.activate_special_during_sweep then
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false)
+	end
+
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
 	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 	local is_sticky = self:_is_currently_sticky()
@@ -643,7 +654,7 @@ end
 
 local stickyness_impact_fx_data = {
 	will_be_predicted = true,
-	source_parameters = {},
+	source_parameters = {}
 }
 
 ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_component, hit_stickyness_settings)
@@ -1250,7 +1261,7 @@ ActionSweep._current_max_hit_mass = function (self, weapon_action_component)
 end
 
 local attack_intensities = {
-	ranged = 15,
+	ranged = 15
 }
 
 ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal)
@@ -1385,8 +1396,8 @@ local impact_fx_data = {
 	will_be_predicted = true,
 	source_parameters = {
 		hit_mass_percentage = 0,
-		num_melee_hits = 0,
-	},
+		num_melee_hits = 0
+	}
 }
 
 ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_actor, hit_position, hit_normal, attack_direction, target_index, num_hit_enemies, hit_zone_name_or_nil, abort_attack, amount_of_mass_hit, damage_type, is_special_active)

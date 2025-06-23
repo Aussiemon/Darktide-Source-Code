@@ -45,9 +45,9 @@ SaveManager.save = function (self, optional_callback)
 		files = {
 			{
 				path = self._file_name,
-				data = self._save_data,
-			},
-		},
+				data = self._save_data
+			}
+		}
 	}
 
 	_info("SAVING...")
@@ -149,9 +149,9 @@ SaveManager.load = function (self, optional_callback)
 		name = self._folder_name,
 		files = {
 			{
-				path = self._file_name,
-			},
-		},
+				path = self._file_name
+			}
+		}
 	}
 
 	self._load_callback = optional_callback

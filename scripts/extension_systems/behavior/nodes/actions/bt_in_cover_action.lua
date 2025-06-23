@@ -54,11 +54,11 @@ end
 
 local DEFAULT_ABORTED_COVER_DISABLE_RANGE = {
 	3,
-	10,
+	10
 }
 local DEFAULT_DONE_COVER_DISABLE_RANGE = {
 	2,
-	5,
+	5
 }
 
 BtInCoverAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -167,7 +167,7 @@ end
 
 local DEFAULT_SUPPRESSED_DURATION = {
 	2,
-	3,
+	3
 }
 
 BtInCoverAction._start_suppressed = function (self, unit, scratchpad, action_data, t, delayed_suppresed_anim, teleport)

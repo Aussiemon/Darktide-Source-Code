@@ -66,9 +66,9 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 
 	self._line_of_sight_data = line_of_sight_data
 	self._processing_line_of_sight_data = {
-		main_index = 1,
 		offset_index = 1,
-		num_blocked_per_main_index = num_blocked_per_main_index,
+		main_index = 1,
+		num_blocked_per_main_index = num_blocked_per_main_index
 	}
 	self._line_of_sight_lookup_by_id = line_of_sight_lookup_by_id
 	self._last_los_positions = {}
@@ -711,11 +711,11 @@ end
 local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
 local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
-	mutator_darkness_los = 15,
 	mutator_ventilation_purge_los = 30,
+	mutator_darkness_los = 15
 }
 local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
-	concealed = 5,
+	concealed = 5
 }
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)

@@ -65,7 +65,7 @@ StoryMissionPlayView.on_enter = function (self)
 
 	local achievements = {
 		"mission_twins_win",
-		"difficult_mission_twins_win",
+		"difficult_mission_twins_win"
 	}
 
 	self:_populate_achievement_rewards(achievements)
@@ -198,7 +198,7 @@ StoryMissionPlayView._populate_achievement_rewards = function (self, achievement
 			if item_icon_size then
 				icon_style.size = {
 					item_icon_size[1],
-					item_icon_size[2],
+					item_icon_size[2]
 				}
 			end
 
@@ -215,7 +215,7 @@ StoryMissionPlayView._populate_achievement_rewards = function (self, achievement
 			if item_icon_size then
 				material_values.icon_size = {
 					item_icon_size[1],
-					item_icon_size[2],
+					item_icon_size[2]
 				}
 			end
 		end
@@ -265,8 +265,8 @@ StoryMissionPlayView._populate_achievement_rewards = function (self, achievement
 			local render_context = {
 				size = {
 					128,
-					128,
-				},
+					128
+				}
 			}
 
 			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
@@ -349,12 +349,12 @@ StoryMissionPlayView._assign_option_data = function (self, option_index, data)
 	local rewards = {
 		{
 			icon = "content/ui/materials/icons/currencies/credits_small",
-			amount = credits,
+			amount = credits
 		},
 		{
 			icon = "content/ui/materials/icons/currencies/experience_small",
-			amount = xp,
-		},
+			amount = xp
+		}
 	}
 	local ui_renderer = self:ui_renderer()
 	local reward_spacing = 15
@@ -378,7 +378,7 @@ StoryMissionPlayView._assign_option_data = function (self, option_index, data)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local text_width = UIRenderer.text_size(ui_renderer, amount_text, text_style.font_type, text_style.font_size, {
 			400,
-			30,
+			30
 		}, text_options)
 
 		text_style.offset[1] = text_style.default_offset[1] - total_reward_horizontal_offset
@@ -492,7 +492,7 @@ StoryMissionPlayView.draw = function (self, dt, t, input_service, layer)
 end
 
 local _required_level_loc_table = {
-	required_level = -1,
+	required_level = -1
 }
 
 StoryMissionPlayView._update_can_start_mission = function (self)
@@ -652,16 +652,16 @@ end
 
 StoryMissionPlayView._callback_open_options = function (self, region_data)
 	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
-		on_destroy_callback = callback(self, "_callback_close_options"),
+		on_destroy_callback = callback(self, "_callback_close_options")
 	})
 
 	local regions_latency = self._regions_latency
 	local presentation_data = {
 		{
+			widget_type = "dropdown",
 			display_name = "loc_mission_board_view_options_Matchmaking_Location",
 			id = "region_matchmaking",
 			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
-			widget_type = "dropdown",
 			validation_function = function ()
 				return
 			end,
@@ -700,7 +700,7 @@ StoryMissionPlayView._callback_open_options = function (self, region_data)
 						display_name = region_display_name,
 						ignore_localization = ignore_localization,
 						value = region_name,
-						latency_order = latency_data.min_latency,
+						latency_order = latency_data.min_latency
 					}
 				end
 
@@ -712,11 +712,11 @@ StoryMissionPlayView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				BackendUtilities.prefered_mission_region = value
-			end,
+			end
 		},
 		{
-			display_name = "loc_private_tag_name",
 			id = "private_match",
+			display_name = "loc_private_tag_name",
 			tooltip_text = "loc_mission_board_view_options_private_game_desc",
 			widget_type = "checkbox",
 			start_value = self._private_match,
@@ -728,8 +728,8 @@ StoryMissionPlayView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				self:_callback_toggle_private_matchmaking()
-			end,
-		},
+			end
+		}
 	}
 
 	self._mission_board_options:present(presentation_data)

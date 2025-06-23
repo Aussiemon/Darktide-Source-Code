@@ -183,17 +183,17 @@ local TAU = math.pi * 2
 local YAW_PER_SECOND_MIN = TAU / 128
 local YAW_PER_SECOND_MAX = TAU / 24
 local _internal = {
-	assisting = false,
-	finding_lock = false,
-	finding_lock_start_t = 0,
+	lock_start_t = 0,
+	previous_distance = 0,
 	has_lock = false,
+	finding_lock = false,
+	locking = false,
+	assisting = false,
+	finding_lock_start_t = 0,
 	lock_modifies_pitch = false,
 	lock_modifies_yaw = false,
-	lock_start_t = 0,
-	locking = false,
-	previous_distance = 0,
 	target_position = Vector3Box(Vector3.zero()),
-	lock_position = Vector3Box(Vector3.zero()),
+	lock_position = Vector3Box(Vector3.zero())
 }
 
 AimAssist.apply_movement_aim_assist = function (aim_assist_context, orientation, input, look_delta, dt, t)

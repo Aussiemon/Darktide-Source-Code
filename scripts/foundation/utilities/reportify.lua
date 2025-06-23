@@ -27,7 +27,7 @@ Reportify.get_data = function (self)
 		fields = {
 			customfield_10031 = self.content_revision,
 			customfield_10032 = self.engine_revision,
-			summary = mission_info,
+			summary = mission_info
 		},
 		custom = {
 			level = self:_get_level(),
@@ -37,8 +37,8 @@ Reportify.get_data = function (self)
 			archetype = player_info.archetype_name,
 			wielded_slot = player_info.wielded_slot,
 			primary_slot = player_info.primary_name,
-			secondary_slot = player_info.secondary_name,
-		},
+			secondary_slot = player_info.secondary_name
+		}
 	}
 
 	Application.console_send(console_command)
@@ -95,10 +95,10 @@ end
 
 Reportify._get_player_info = function (self)
 	local ret = {
-		archetype_name = "N/A",
-		primary_name = "N/A",
-		secondary_name = "N/A",
 		wielded_slot = "N/A",
+		primary_name = "N/A",
+		archetype_name = "N/A",
+		secondary_name = "N/A"
 	}
 
 	if not Managers.player then

@@ -58,53 +58,53 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 
 	value_font_style.size = {
 		LABEL_WIDTH,
-		height,
+		height
 	}
 	value_font_style.offset = {
 		slider_horizontal_offset - (LABEL_WIDTH + 10),
 		0,
-		8,
+		8
 	}
 	value_font_style.text_horizontal_alignment = "right"
 
 	local passes = ListHeaderPassTemplates.list_header(header_width - LABEL_WIDTH, height, use_is_focused, is_sub_setting)
 	local slider_passes = {
 		{
+			value_id = "value_text",
 			pass_type = "text",
 			value = "n/a",
-			value_id = "value_text",
 			style = value_font_style,
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
-			pass_type = "texture",
-			style_id = "slider_track_background",
 			value = "content/ui/materials/buttons/background_selected",
+			style_id = "slider_track_background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_endplate_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -112,21 +112,21 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_endplate_right",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -134,21 +134,21 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				offset = {
 					0,
 					0,
-					2,
-				},
+					2
+				}
 			},
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					slider_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -156,36 +156,36 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				offset = {
 					slider_horizontal_offset,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = content.slider_value * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "slider_action_gamepad",
+			pass_type = "text",
 			value = "",
 			value_id = "slider_action_gamepad",
 			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
 				horizontal_alignment = "right",
 				text_horizontal_alignment = "right",
-				text_vertical_alignment = "center",
-				vertical_alignment = "center",
 				text_color = {
 					255,
 					226,
 					199,
-					126,
+					126
 				},
 				offset = {
 					30,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				local gamepad_action = "confirm_pressed"
@@ -199,8 +199,8 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local is_highlighted = content.hotspot.is_selected or content.hotspot.is_focused
 
 				return content.is_gamepad_active and not content.exclusive_focus and is_highlighted
-			end,
-		},
+			end
+		}
 	}
 
 	if not is_percent_slider then
@@ -209,11 +209,11 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 			style_id = "slider_track",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					slider_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -221,14 +221,14 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				offset = {
 					-SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = (1 - content.slider_value) * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		}
 	end
 
@@ -299,11 +299,11 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				end
 
 				content.slider_value = slider_value
-			end,
+			end
 		},
 		{
-			pass_type = "logic",
 			style_id = "mouse_scroll",
+			pass_type = "logic",
 			visibility_function = function (content, style)
 				return content.exclusive_focus or content.hotspot.is_hover
 			end,
@@ -354,28 +354,28 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 
 					content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 				end
-			end,
+			end
 		},
 		{
-			content_id = "track_hotspot",
-			pass_type = "hotspot",
 			style_id = "track_hotspot",
+			pass_type = "hotspot",
+			content_id = "track_hotspot",
 			style = {
-				anim_focus_speed = 8,
-				anim_hover_speed = 8,
+				vertical_alignment = "center",
 				anim_input_speed = 8,
+				anim_hover_speed = 8,
+				anim_focus_speed = 8,
 				anim_select_speed = 8,
 				horizontal_alignment = "right",
-				vertical_alignment = "center",
 				size = {
 					settings_area_width,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.parent.hotspot.disabled
@@ -384,70 +384,70 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local slider_value = content.parent.slider_value or 0
 
 				content.parent.slider_horizontal_offset = slider_horizontal_offset + slider_value * slider_area_width
-			end,
-		},
+			end
+		}
 	}
 	local thumb_visual_passes = {
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_line",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
-				hover_color = Color.terminal_corner_hover(255, true),
+				hover_color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_fill",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.black(255, true),
+				color = Color.black(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_highlight",
 			style = {
-				hdr = true,
 				vertical_alignment = "center",
+				hdr = true,
 				offset = {
 					0,
 					0,
-					9,
+					9
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.terminal_corner_hover(255, true),
+				color = Color.terminal_corner_hover(255, true)
 			},
 			visibility_function = function (content, style)
 				local highlight_progress = content.highlight_progress or 0
@@ -473,8 +473,8 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				local axis = content.axis or 1
 
 				style.offset[axis] = style.offset[axis] - offset_addition
-			end,
-		},
+			end
+		}
 	}
 
 	table.append(passes, thumb_logic_passes)
@@ -495,28 +495,28 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 
 	value_font_style.size = {
 		label_width - SLIDER_ENDPLATE_WIDTH - 4,
-		height,
+		height
 	}
 	value_font_style.offset = {
 		0,
 		0,
-		8,
+		8
 	}
 	value_font_style.text_horizontal_alignment = "right"
 
 	local passes = {
 		{
-			content_id = "hotspot",
-			pass_type = "hotspot",
 			style_id = "hotspot",
+			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
-				use_is_focused = use_is_focused,
+				use_is_focused = use_is_focused
 			},
-			style = ListHeaderPassTemplates.default_hotspot_style,
+			style = ListHeaderPassTemplates.default_hotspot_style
 		},
 		{
-			pass_type = "logic",
 			style_id = "hotspot",
+			pass_type = "logic",
 			value = function (pass, renderer, style, content, position, size)
 				local hotspot = content.hotspot
 				local highlight_progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_focus_progress)
@@ -536,84 +536,84 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				end
 
 				content.anim_exclusive_focus_progress = anim_exclusive_focus_progress
-			end,
-		},
+			end
+		}
 	}
 	local slider_passes = {
 		{
+			value_id = "value_text",
 			pass_type = "text",
 			value = "n/a",
-			value_id = "value_text",
 			style = value_font_style,
-			change_function = highlight_color_change_function,
+			change_function = highlight_color_change_function
 		},
 		{
-			pass_type = "texture",
-			style_id = "slider_track_background",
 			value = "content/ui/materials/buttons/background_selected",
+			style_id = "slider_track_background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "slider_track_endplate_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
+			style_id = "slider_track_endplate_left",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "slider_track_endplate_right",
 			value = "content/ui/materials/buttons/background_selected_edge",
+			style_id = "slider_track_endplate_right",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					SLIDER_ENDPLATE_WIDTH,
-					SLIDER_TRACK_HEIGHT,
+					SLIDER_TRACK_HEIGHT
 				},
 				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "slider_track_left",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				size = {
 					settings_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -621,36 +621,36 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				offset = {
 					slider_horizontal_offset,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = content.slider_value * slider_area_width
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "slider_action_gamepad",
+			pass_type = "text",
 			value = "",
 			value_id = "slider_action_gamepad",
 			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
 				horizontal_alignment = "right",
 				text_horizontal_alignment = "right",
-				text_vertical_alignment = "center",
-				vertical_alignment = "center",
 				text_color = {
 					255,
 					226,
 					199,
-					126,
+					126
 				},
 				offset = {
 					30,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				local gamepad_action = "confirm_pressed"
@@ -664,8 +664,8 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				local is_highlighted = content.hotspot.is_selected or content.hotspot.is_focused
 
 				return content.is_gamepad_active and not content.exclusive_focus and is_highlighted
-			end,
-		},
+			end
+		}
 	}
 
 	if not is_percent_slider then
@@ -674,11 +674,11 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 			style_id = "slider_track",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					slider_area_width,
-					track_thickness,
+					track_thickness
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
@@ -686,14 +686,14 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				offset = {
 					-SLIDER_ENDPLATE_WIDTH,
 					0,
-					2,
-				},
+					2
+				}
 			},
 			change_function = function (content, style)
 				style.size[1] = (1 - content.slider_value) * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
-			end,
+			end
 		}
 	end
 
@@ -764,11 +764,11 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				end
 
 				content.slider_value = slider_value
-			end,
+			end
 		},
 		{
-			pass_type = "logic",
 			style_id = "mouse_scroll",
+			pass_type = "logic",
 			visibility_function = function (content, style)
 				return content.exclusive_focus or content.hotspot.is_hover
 			end,
@@ -819,28 +819,28 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 
 					content.slider_value = math.clamp(input_slider_value + step, 0, 1)
 				end
-			end,
+			end
 		},
 		{
-			content_id = "track_hotspot",
-			pass_type = "hotspot",
 			style_id = "track_hotspot",
+			pass_type = "hotspot",
+			content_id = "track_hotspot",
 			style = {
-				anim_focus_speed = 16,
-				anim_hover_speed = 16,
+				vertical_alignment = "center",
 				anim_input_speed = 16,
+				anim_hover_speed = 16,
+				anim_focus_speed = 16,
 				anim_select_speed = 16,
 				horizontal_alignment = "right",
-				vertical_alignment = "center",
 				size = {
 					settings_area_width,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
+					3
+				}
 			},
 			visibility_function = function (content, style)
 				return not content.parent.hotspot.disabled
@@ -849,70 +849,70 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				local slider_value = content.parent.slider_value or 0
 
 				content.parent.slider_horizontal_offset = slider_horizontal_offset + slider_value * slider_area_width
-			end,
-		},
+			end
+		}
 	}
 	local thumb_visual_passes = {
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_line",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
 				disabled_color = Color.terminal_text_body_dark(255, true),
 				default_color = Color.terminal_corner(255, true),
-				hover_color = Color.terminal_corner_hover(255, true),
+				hover_color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
 				highlight_color_change_function(content, style)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_fill",
+			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.black(255, true),
+				color = Color.black(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/buttons/slider_handle_highlight",
 			style = {
-				hdr = true,
 				vertical_alignment = "center",
+				hdr = true,
 				offset = {
 					0,
 					0,
-					9,
+					9
 				},
 				size = {
 					SLIDER_THUMB_SIZE,
-					SLIDER_THUMB_SIZE,
+					SLIDER_THUMB_SIZE
 				},
-				color = Color.terminal_corner_hover(255, true),
+				color = Color.terminal_corner_hover(255, true)
 			},
 			visibility_function = function (content, style)
 				local highlight_progress = content.highlight_progress or 0
@@ -938,8 +938,8 @@ SliderPassTemplates._slider = function (width, height, value_width, use_is_focus
 				local axis = content.axis or 1
 
 				style.offset[axis] = style.offset[axis] - offset_addition
-			end,
-		},
+			end
+		}
 	}
 
 	table.append(passes, thumb_logic_passes)

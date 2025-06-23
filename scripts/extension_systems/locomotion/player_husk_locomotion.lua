@@ -7,7 +7,7 @@ local ThirdPersonHubMovementDirectionAnimationControl = require("scripts/extensi
 local PlayerHuskLocomotionExtension = class("PlayerHuskLocomotionExtension")
 local RPCS = {
 	"rpc_set_player_link",
-	"rpc_player_unlink",
+	"rpc_player_unlink"
 }
 
 PlayerHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id, owner_id)
@@ -51,12 +51,12 @@ end
 
 PlayerHuskLocomotionExtension.extensions_ready = function (self, world, unit)
 	local init_context = {
-		is_husk = true,
 		is_local_unit = false,
+		is_husk = true,
 		is_server = false,
 		player_character_constants = PlayerCharacterConstants,
 		game_session = self._game_session,
-		game_object_id = self._game_object_id,
+		game_object_id = self._game_object_id
 	}
 
 	self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(unit, init_context)

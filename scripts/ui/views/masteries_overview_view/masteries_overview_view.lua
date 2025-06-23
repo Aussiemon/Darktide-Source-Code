@@ -13,7 +13,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 local FALLBACK_TEXTURE = "core/fallback_resources/missing_texture"
 local MasteriesOverviewView = class("MasteriesOverviewView", "BaseView")
 
@@ -104,7 +104,7 @@ MasteriesOverviewView._update_mastery_data = function (self, mastery_id)
 					if MasterItems.get_item(name) then
 						valid_traits[#valid_traits + 1] = {
 							trait_status = trait_data,
-							trait_name = name,
+							trait_name = name
 						}
 					end
 				end
@@ -245,7 +245,7 @@ MasteriesOverviewView._set_button_callbacks = function (self)
 			milestones = self._mastery_milestones[self._selected_pattern],
 			slot_type = slot_type,
 			traits_id = trait_category,
-			parent = self,
+			parent = self
 		})
 	end
 end
@@ -319,7 +319,7 @@ MasteriesOverviewView._setup_layout_entries = function (self)
 					expertise_level = expertise_level,
 					claimed_level = claimed_level,
 					mastery_max_level = mastery_max_level,
-					show_alert = points_available > 0,
+					show_alert = points_available > 0
 				}
 				masteries[id] = {
 					display_name = display_name,
@@ -336,7 +336,7 @@ MasteriesOverviewView._setup_layout_entries = function (self)
 					points_total = points_total,
 					points_used = points_spent,
 					points_available = points_available,
-					syncing = mastery_data.syncing,
+					syncing = mastery_data.syncing
 				}
 			end
 		until true
@@ -467,7 +467,7 @@ MasteriesOverviewView._setup_menu_tabs = function (self, content)
 
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	for i = 1, #tab_button_template do
@@ -539,7 +539,7 @@ MasteriesOverviewView._present_layout_by_slot_filter = function (self, slot_filt
 		local grid_settings = self._definitions.patterns_grid_settings
 		local grid_size = grid_settings.grid_size
 		local spacing_entry = {
-			widget_type = "spacing_vertical",
+			widget_type = "spacing_vertical"
 		}
 
 		table.insert(filtered_layout, 1, spacing_entry)
@@ -720,7 +720,7 @@ MasteriesOverviewView._present_mastery = function (self, mastery_id)
 		mastery_level_widget.content.mastery_level_next = string.format(" %d", mastery_next_level)
 		mastery_level_widget.content.description = Localize("loc_mastery_exp_current_next", true, {
 			current = mastery_current_xp_text,
-			next = mastery_end_exp_text,
+			next = mastery_end_exp_text
 		})
 
 		local max_bar_width = mastery_level_widget.style.experience_bar_background.size[1]
@@ -783,7 +783,7 @@ MasteriesOverviewView._get_milestones_data = function (self, mastery_id)
 				icon_size = milestone_ui_data.icon_size,
 				icon_color = milestone_ui_data.icon_color,
 				icon_material_values = milestone_ui_data.icon_material_values,
-				type = milestone_ui_data.type,
+				type = milestone_ui_data.type
 			}
 		end
 	end

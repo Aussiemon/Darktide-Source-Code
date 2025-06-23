@@ -68,8 +68,8 @@ Progression.level_up = function (self, entity_type, id, to_level)
 	local options = {
 		method = "PUT",
 		body = {
-			placeHolder = "might need something",
-		},
+			placeHolder = "might need something"
+		}
 	}
 	local account_id = entity_type == "account" and id or nil
 

@@ -20,8 +20,8 @@ end
 
 local DEFAULT_TARGET_DISABLED_WEIGHT = -2
 local DEFAULT_DISABLING_TYPE_WEIGHTS = {
-	consumed = -8000,
 	grabbed = -8000,
+	consumed = -8000
 }
 
 MinionTargetSelection.disabled_weight = function (target_selection_weights, target_unit, target_breed)
@@ -259,8 +259,8 @@ end
 local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
 local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS = {
-	mutator_darkness_los = 0.5,
 	mutator_ventilation_purge_los = 0.7,
+	mutator_darkness_los = 0.5
 }
 
 MinionTargetSelection.detection_radius = function (breed)

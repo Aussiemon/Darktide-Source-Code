@@ -88,7 +88,7 @@ HudElementObjectiveProgressBar.event_objective_progress_bar_open = function (sel
 	local target = {
 		objective = objective,
 		localized_display_name = localized_display_name,
-		bar_logic = bar_logic,
+		bar_logic = bar_logic
 	}
 
 	self._active_objective_size = self._active_objective_size + 1

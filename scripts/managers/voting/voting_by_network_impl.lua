@@ -10,7 +10,7 @@ local HOST_RPCS = {
 	"rpc_voting_client_ready",
 	"rpc_request_voting_no_params",
 	"rpc_request_voting_kick_player",
-	"rpc_request_vote",
+	"rpc_request_vote"
 }
 local CLIENT_RPCS = {
 	"rpc_start_voting_no_params",
@@ -24,7 +24,7 @@ local CLIENT_RPCS = {
 	"rpc_register_vote",
 	"rpc_vote_denied",
 	"rpc_voting_member_joined",
-	"rpc_voting_member_left",
+	"rpc_voting_member_left"
 }
 local VotingByNetworkImpl = class("VotingByNetworkImpl")
 
@@ -201,7 +201,7 @@ VotingByNetworkImpl.update = function (self, dt, t)
 			local result = voting:result()
 
 			self._voting_results[voting_id] = {
-				result = result,
+				result = result
 			}
 
 			local template = voting:template()
@@ -225,7 +225,7 @@ VotingByNetworkImpl.update = function (self, dt, t)
 			local abort_reason = voting:abort_reason()
 
 			self._voting_results[voting_id] = {
-				abort_reason = abort_reason,
+				abort_reason = abort_reason
 			}
 
 			local template = voting:template()

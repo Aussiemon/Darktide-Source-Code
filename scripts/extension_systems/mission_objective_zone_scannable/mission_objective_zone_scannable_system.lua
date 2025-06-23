@@ -5,7 +5,7 @@ require("scripts/extension_systems/mission_objective_zone_scannable/mission_obje
 local MissionObjectiveZoneScannableSystem = class("MissionObjectiveZoneScannableSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_mission_objective_zone_scannable_hot_join_sync",
-	"rpc_mission_objective_zone_scannable_set_active",
+	"rpc_mission_objective_zone_scannable_set_active"
 }
 
 MissionObjectiveZoneScannableSystem.init = function (self, context, system_init_data, ...)
@@ -21,11 +21,7 @@ MissionObjectiveZoneScannableSystem.init = function (self, context, system_init_
 end
 
 MissionObjectiveZoneScannableSystem.on_gameplay_post_init = function (self, level)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		extension:on_gameplay_post_init(level)
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 MissionObjectiveZoneScannableSystem.destroy = function (self)

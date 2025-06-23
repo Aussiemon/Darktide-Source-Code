@@ -8,7 +8,7 @@ local settings_list = {
 	"alpha_fade_delay",
 	"alpha_fade_duration",
 	"alpha_fade_min_value",
-	"animate_on_health_increase",
+	"animate_on_health_increase"
 }
 
 HudHealthBarLogic.init = function (self, settings)
@@ -19,7 +19,7 @@ HudHealthBarLogic.init = function (self, settings)
 	self._update_order = {
 		"health",
 		"health_ghost",
-		"health_max",
+		"health_max"
 	}
 	self._stored_fractions = {}
 
@@ -120,7 +120,7 @@ HudHealthBarLogic._set_bar_fraction = function (self, t, name, target_fraction, 
 			start_value = current_fraction,
 			end_value = target_fraction,
 			start_t = t,
-			delay = animation_delay or 0,
+			delay = animation_delay or 0
 		}
 		bar_animations[name] = anim_data
 	else

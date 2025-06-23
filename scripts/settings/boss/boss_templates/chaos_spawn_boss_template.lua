@@ -140,7 +140,7 @@ local template = {
 	end,
 	stop = function (template_data, template_context)
 		return
-	end,
+	end
 }
 
 return template

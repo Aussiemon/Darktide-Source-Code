@@ -34,13 +34,13 @@ end
 
 Chest.component_data = {
 	locked = {
-		ui_name = "Locked",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Locked"
 	},
 	extensions = {
-		"ChestExtension",
-	},
+		"ChestExtension"
+	}
 }
 
 return Chest

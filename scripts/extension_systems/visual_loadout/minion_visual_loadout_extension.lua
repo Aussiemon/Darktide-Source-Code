@@ -14,7 +14,7 @@ local CLIENT_RPCS = {
 	"rpc_minion_send_on_death_event",
 	"rpc_minion_unequip_slot",
 	"rpc_minion_set_slot_visibility",
-	"rpc_minion_gib",
+	"rpc_minion_gib"
 }
 local MinionVisualLoadoutExtension = class("MinionVisualLoadoutExtension")
 
@@ -25,10 +25,10 @@ local function _link_unit(world, item_unit, target_unit, attach_node_name, map_n
 end
 
 local _attach_settings = {
-	from_script_component = false,
-	from_ui_profile_spawner = false,
-	is_minion = true,
 	spawn_with_extensions = false,
+	from_script_component = false,
+	is_minion = true,
+	from_ui_profile_spawner = false
 }
 
 local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
@@ -75,13 +75,13 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 
 	local drop_on_death = item_slot_data.drop_on_death
 	local slot_entry = {
-		state = "unwielded",
 		visible = true,
+		state = "unwielded",
 		unit = item_unit,
 		attachments = attachments and attachments[item_unit],
 		item_data = item_data,
 		drop_on_death = drop_on_death,
-		starts_invisible = item_slot_data.starts_invisible,
+		starts_invisible = item_slot_data.starts_invisible
 	}
 
 	return slot_entry, new_seed
@@ -109,7 +109,7 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 	end
 
 	local slot_entry = {
-		item_data = item_data,
+		item_data = item_data
 	}
 
 	return slot_entry, new_seed

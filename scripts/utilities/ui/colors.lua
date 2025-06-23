@@ -21,7 +21,7 @@ ColorUtilities.format_color_to_material = function (source)
 		source[2] / 255,
 		source[3] / 255,
 		source[4] / 255,
-		source[1] / 255,
+		source[1] / 255
 	}
 end
 

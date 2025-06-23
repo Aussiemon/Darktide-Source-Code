@@ -157,7 +157,7 @@ BuffVolume._update_buffs = function (self, unit, dt, t, num_results)
 
 						buff_affected_units[affected_unit] = {
 							local_index = local_index,
-							component_index = component_index,
+							component_index = component_index
 						}
 					end
 				end
@@ -211,7 +211,7 @@ BuffVolume._update_inverse_buffs = function (self, unit, dt, t)
 
 					buff_affected_units[affected_unit] = {
 						local_index = local_index,
-						component_index = component_index,
+						component_index = component_index
 					}
 				end
 
@@ -386,65 +386,65 @@ end
 
 BuffVolume.component_data = {
 	start_enabled = {
-		ui_name = "start_enabled",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "start_enabled"
 	},
 	buff_template_name = {
-		ui_name = "Buff Name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Buff Name"
 	},
 	leaving_buff_template_name = {
-		ui_name = "Leaving Buff Name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Leaving Buff Name"
 	},
 	heroes_buff_template_name = {
-		ui_name = "Heroes Buff Name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Heroes Buff Name"
 	},
 	villains_buff_template_name = {
-		ui_name = "Villains Buff Name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Villains Buff Name"
 	},
 	forbidden_keyword = {
-		ui_name = "Forbidden Keyword",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Forbidden Keyword"
 	},
 	affected_side_name = {
-		ui_name = "Side",
-		ui_type = "combo_box",
 		value = "heroes",
+		ui_type = "combo_box",
+		ui_name = "Side",
 		options_keys = {
 			"Heroes",
 			"Villains",
-			"Both",
+			"Both"
 		},
 		options_values = {
 			"heroes",
 			"villains",
-			"both",
-		},
+			"both"
+		}
 	},
 	inverse = {
-		ui_name = "Inverse",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Inverse"
 	},
 	inputs = {
 		enable_buffs = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		disable_buffs = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return BuffVolume

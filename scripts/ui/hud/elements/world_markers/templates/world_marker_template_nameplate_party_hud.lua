@@ -7,7 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
-	20,
+	20
 }
 
 template.size = size
@@ -16,25 +16,25 @@ template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.4,
+	0.4
 }
 template.check_line_of_sight = false
 template.max_distance = 100
 template.screen_clamp = false
 template.start_layer = 300
 template.scale_settings = {
-	distance_max = 20,
-	distance_min = 10,
-	scale_from = 0.8,
 	scale_to = 1,
+	scale_from = 0.8,
+	distance_max = 20,
+	distance_min = 10
 }
 template.fade_settings = {
-	default_fade = 1,
-	fade_from = 0,
 	fade_to = 1,
+	fade_from = 0,
+	default_fade = 1,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -45,28 +45,28 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "text",
 			style_id = "header_text",
-			value = "<header_text>",
+			pass_type = "text",
 			value_id = "header_text",
+			value = "<header_text>",
 			style = {
 				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				text_horizontal_alignment = "center",
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = size,
-			},
-		},
+				size = size
+			}
+		}
 	}, scenegraph_id)
 end
 

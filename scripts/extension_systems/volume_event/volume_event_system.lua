@@ -83,9 +83,9 @@ VolumeEventSystem._create_event_volume_data = function (self, level_volumes)
 					connected_units = {},
 					levels = {},
 					level_names = {
-						[level_name] = true,
+						[level_name] = true
 					},
-					volume_ids = {},
+					volume_ids = {}
 				}
 				volumes_by_name[volume_name] = volume
 			else
@@ -117,7 +117,7 @@ VolumeEventSystem.on_gameplay_post_init = function (self, main_level)
 	end
 
 	local levels = {
-		main_level,
+		main_level
 	}
 
 	self:_add_nested_levels(main_level, levels)
@@ -165,7 +165,7 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 
 		local volume_data = {
 			params = params,
-			connected_units = connected_units,
+			connected_units = connected_units
 		}
 
 		if self._init_done then
@@ -194,7 +194,7 @@ VolumeEventSystem.register_unit_volume = function (self, unit, volume_name, exte
 	local params = event_settings.params
 	local volume_data = {
 		params = params,
-		connected_units = unit,
+		connected_units = unit
 	}
 	local volume_id = VolumeEvent.register_volume(engine_volume_event_system, unit, volume_name, extension_name, invert_volume, volume_data, on_enter, on_exit, filter)
 

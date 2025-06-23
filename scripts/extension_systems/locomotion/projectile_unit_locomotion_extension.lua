@@ -19,6 +19,8 @@ local MINIMUM_SPEED_TO_SLEEP = ProjectileLocomotionSettings.MINIMUM_SPEED_TO_SLE
 local ProjectileUnitLocomotionExtension = class("ProjectileUnitLocomotionExtension")
 
 ProjectileUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
+	self._soft_cap_out_of_bounds_units = extension_init_context.soft_cap_out_of_bounds_units
+
 	local owner_unit = extension_init_data.owner_unit
 
 	self._owner_unit = owner_unit
@@ -86,7 +88,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	self._snapshot_game_object_data = {
 		snapshot_id = 0,
 		position = {},
-		rotation = {},
+		rotation = {}
 	}
 
 	local level_id = Managers.state.unit_spawner:level_index(unit)
@@ -111,7 +113,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 
 	self._unit_rotation_offset = projectile_template.unit_rotation_offset
 
-	local want_sleep = starting_state == locomotion_states.none or starting_state == locomotion_states.sleep
+	local want_sleep = starting_state == locomotion_states.none or starting_state == locomotion_states.sleep or starting_state == locomotion_states.deployed
 
 	if want_sleep then
 		self:switch_to_sleep(position, rotation)
@@ -139,14 +141,13 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	game_object_data.projectile_locomotion_state_id = NetworkLookup.projectile_locomotion_states[self._current_state]
 
 	local gameplay_safe_extents = {
-		Vector3.to_elements(Managers.state.out_of_bounds:soft_cap_extents()),
+		Vector3.to_elements(Managers.state.out_of_bounds:soft_cap_extents())
 	}
 
 	self._gameplay_safe_extents = gameplay_safe_extents
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	self:_hide_grenade_pin()
-	Managers.state.out_of_bounds:register_soft_oob_unit(unit, self, "_cb_update_soft_oob")
 end
 
 ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -155,13 +156,8 @@ ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game
 	self._is_level_unit = false
 end
 
-ProjectileUnitLocomotionExtension.destroy = function (self)
-	Managers.state.out_of_bounds:unregister_soft_oob_unit(self._projectile_unit, self)
-end
-
 ProjectileUnitLocomotionExtension.mark_for_deletion = function (self)
 	if not self._marked_for_deletion then
-		Managers.state.out_of_bounds:unregister_soft_oob_unit(self._projectile_unit, self)
 		Managers.state.unit_spawner:mark_for_deletion(self._projectile_unit)
 
 		self._marked_for_deletion = true
@@ -222,19 +218,17 @@ ProjectileUnitLocomotionExtension._update_out_of_bounds = function (self)
 
 	for ii = 1, 3 do
 		if math.abs(position[ii]) > safe_extents[ii] then
-			self:_cb_update_soft_oob(unit)
+			self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
+
+			if self._handle_oob_despawning and not self._marked_for_deletion then
+				Log.info("ProjectileUnitLocomotionExtension", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
+				Managers.state.unit_spawner:mark_for_deletion(unit)
+
+				self._marked_for_deletion = true
+			end
 
 			break
 		end
-	end
-end
-
-ProjectileUnitLocomotionExtension._cb_update_soft_oob = function (self, unit)
-	self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
-
-	if self._handle_oob_despawning and not self._marked_for_deletion then
-		Log.info("ProjectileUnitLocomotionExtension", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
-		self:mark_for_deletion()
 	end
 end
 
@@ -344,9 +338,18 @@ ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit,
 	local hit_this_frame = old_collision_count < new_collision_count
 
 	if not integrate_this_frame then
-		local angular_momentum = integration_data.angular_velocity / integration_data.inertia
+		local projectile_template = self._projectile_template
+		local deployable_settings = projectile_template.deployable
+		local deploy_on_stop = deployable_settings ~= nil
 
-		self:switch_to_engine_physics(new_position, new_rotation, new_velocity, angular_momentum)
+		if deploy_on_stop then
+			self:switch_to_deployed(new_position, new_rotation)
+			deployable_settings.deploy_func(self._world, self._physics_world, unit)
+		else
+			local angular_momentum = integration_data.angular_velocity / integration_data.inertia
+
+			self:switch_to_engine_physics(new_position, new_rotation, new_velocity, angular_momentum)
+		end
 	else
 		if hit_this_frame then
 			Unit.flow_event(unit, "lua_manual_physics_collision")
@@ -390,7 +393,16 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 
 		self:_apply_changes(locomotion_states.manual_physics, new_position, new_rotation, new_velocity, Vector3.zero(), new_target_position, new_target_unit, new_target_hit_zone)
 	else
-		self:switch_to_sleep(new_position, new_rotation)
+		local projectile_template = self._projectile_template
+		local deployable_settings = projectile_template.deployable
+		local deploy_on_stop = deployable_settings ~= nil
+
+		if deploy_on_stop then
+			self:switch_to_deployed(new_position, new_rotation)
+			deployable_settings.deploy_func(self._world, self._physics_world, unit)
+		else
+			self:switch_to_sleep(new_position, new_rotation)
+		end
 	end
 
 	local time_without_target = integration_data.time_without_target
@@ -562,6 +574,11 @@ ProjectileUnitLocomotionExtension.switch_to_sleep = function (self, position, ro
 	self:_apply_changes(locomotion_states.sleep, position, rotation, Vector3.zero(), Vector3.zero(), nil, nil, nil)
 end
 
+ProjectileUnitLocomotionExtension.switch_to_deployed = function (self, position, rotation)
+	self:_set_state(locomotion_states.deployed)
+	self:_apply_changes(locomotion_states.deployed, position, rotation, Vector3.zero(), Vector3.zero(), nil, nil, nil)
+end
+
 ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 	local old_state = self._current_state
 
@@ -581,6 +598,8 @@ ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 		if new_state == locomotion_states.carried then
 			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
 		elseif new_state == locomotion_states.socket_lock then
+			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
+		elseif new_state == locomotion_states.deployed then
 			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
 		elseif old_state == locomotion_states.carried then
 			ProjectileLocomotion.activate_physics(projectile_unit)

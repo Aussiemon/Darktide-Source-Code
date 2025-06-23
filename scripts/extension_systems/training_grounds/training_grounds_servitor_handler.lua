@@ -37,7 +37,7 @@ TrainingGroundsServitorHandler.init = function (self, scripted_scenario_system, 
 	self._movement_state = MOVEMENT_STATES.still
 	self._lookat_data = {
 		use_velocity = true,
-		lookat_pos = Vector3Box(),
+		lookat_pos = Vector3Box()
 	}
 	self._stop_at_arrival = true
 	self._scripted_scenario_system = scripted_scenario_system
@@ -204,7 +204,7 @@ TrainingGroundsServitorHandler.move_to_unit_relative_arc = function (self, relat
 		relative_position = Vector3Box(relative_position),
 		rotate_position_relative_to_unit = rotate_position_relative_to_unit,
 		stop_at_arrival = stop_at_arrival,
-		lookat_unit = lookat_unit,
+		lookat_unit = lookat_unit
 	}
 	self._movement_state = MOVEMENT_STATES.arc
 end
@@ -300,7 +300,7 @@ TrainingGroundsServitorHandler.move_to_unit_relative_direct = function (self, re
 		relative_unit = relative_unit,
 		relative_position = Vector3Box(relative_position),
 		relative_to_unit_rotation = relative_to_unit_rotation,
-		stop_at_arrival = stop_at_arrival,
+		stop_at_arrival = stop_at_arrival
 	}
 	self._movement_state = MOVEMENT_STATES.direct
 end
@@ -342,7 +342,7 @@ end
 
 TrainingGroundsServitorHandler.move_idle = function (self, relative_unit, reset_lookat)
 	self._move_idle_data = {
-		relative_unit = relative_unit,
+		relative_unit = relative_unit
 	}
 	self._movement_state = MOVEMENT_STATES.idle
 

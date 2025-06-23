@@ -42,7 +42,7 @@ MinionSuppressionExtension._init_blackboard_components = function (self, blackbo
 	self._suppressed_immunity_t = 0
 	self._suppressed_immunity_duration = suppress_config.immunity_duration or {
 		0,
-		0,
+		0
 	}
 
 	local suppression_component = Blackboard.write_component(blackboard, "suppression")
@@ -93,15 +93,15 @@ end
 local DEFAULT_SUPPRESS_DECAY = 0.2
 local FLINCH_FREQUENCY_RANGE = {
 	0.4,
-	0.6,
+	0.6
 }
 local DEFAULT_DISABLE_COVER_TIME_RANGE = {
 	6,
-	10,
+	10
 }
 local DEFAULT_DISABLE_COVER_COOLDOWN_RANGE = {
 	2,
-	4,
+	4
 }
 
 MinionSuppressionExtension.add_suppress_value = function (self, value, suppression_type, attack_delay, direction, attacking_unit)
@@ -208,7 +208,7 @@ end
 local DEFAULT_FLINCH_ANIM_EVENTS = {
 	default = "flinch_reaction_down",
 	left = "flinch_reaction_right",
-	right = "flinch_reaction_left",
+	right = "flinch_reaction_left"
 }
 
 MinionSuppressionExtension._play_flinch_anim = function (self, breed, direction)

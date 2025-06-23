@@ -33,6 +33,10 @@ WeaponSpecialExplodeOnImpact.init = function (self, context, init_data)
 	self._num_hit_enemies = 0
 end
 
+WeaponSpecialExplodeOnImpact.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialExplodeOnImpact.fixed_update = function (self, dt, t)
 	if self._num_hit_enemies <= 0 then
 		WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension, self._weapon_extension)
@@ -41,7 +45,7 @@ end
 
 local extra_explosion_armor_types = {
 	[armor_types.armored] = true,
-	[armor_types.super_armor] = true,
+	[armor_types.super_armor] = true
 }
 
 WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)
@@ -70,6 +74,10 @@ WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_set
 
 		inventory_slot_component.num_special_charges = num_special_charges + 1
 	end
+end
+
+WeaponSpecialExplodeOnImpact.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialExplodeOnImpact.on_special_activation = function (self, t, num_hit_enemies)

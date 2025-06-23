@@ -187,7 +187,7 @@ end
 HealthStationExtension.track_for_telemetry = function (self, charges, plug)
 	local data = {
 		charges = charges,
-		has_battery = plug,
+		has_battery = plug
 	}
 
 	Managers.telemetry_events:health_station_spawned(self._unit, data)

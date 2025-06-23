@@ -6,17 +6,17 @@ local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local weapon_counter_template_overheat_lockout = {
-	data = {},
+	data = {}
 }
 local length = 200
 local thickness = 200
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 
 weapon_counter_template_overheat_lockout.name = "overheat_lockout"
@@ -61,33 +61,33 @@ weapon_counter_template_overheat_lockout.create_widget_defintion = function (sce
 	local charge_bar_offset_right = {
 		charge_bar_offset + center_half_width,
 		35,
-		1,
+		1
 	}
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			style_id = "charge_bar",
 			value = "content/ui/materials/effects/powersword_bar",
+			style_id = "charge_bar",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = charge_bar_offset_right,
 				size = {
 					size[1],
-					size[2],
+					size[2]
 				},
 				color = UIHudSettings.color_tint_main_1,
 				material_values = {
-					active = 0,
 					color_blend = 0,
-					fill_opacity = 1,
-					lockout = 0,
 					outline_opacity = 1,
+					fill_opacity = 1,
 					progress = 0,
-				},
-			},
-		},
+					active = 0,
+					lockout = 0
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 

@@ -29,25 +29,25 @@ ScriptedScenarioUtility.parse_condition_steps = function (steps)
 
 	steps.condition_else = {
 		condition_type = "else",
-		is_condition = true,
 		name = "condition_else",
+		is_condition = true,
 		condition_func = function ()
 			return true
-		end,
+		end
 	}
 	steps.condition_end = {
 		condition_type = "end",
-		is_condition = true,
 		name = "condition_end",
+		is_condition = true
 	}
 end
 
 ScriptedScenarioUtility.validate_steps = function (steps)
 	local ignored_templates = {
-		_condition = true,
-		condition_elseif = true,
 		condition_if = true,
 		dynamic = true,
+		condition_elseif = true,
+		_condition = true
 	}
 
 	for name, template in pairs(ShootingRangeSteps) do

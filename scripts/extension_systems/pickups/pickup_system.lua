@@ -15,7 +15,7 @@ local PICKUPS_BY_NAME = Pickups.by_name
 local PICKUP_SELECTOR = PickupSettings.pickup_selector
 local PickupSystem = class("PickupSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_player_collected_materials",
+	"rpc_player_collected_materials"
 }
 
 PickupSystem.init = function (self, context, system_init_data, ...)
@@ -121,11 +121,11 @@ end
 
 PickupSystem._create_game_object = function (self, game_session)
 	local game_object_data_table = {
-		diamantine_large = 0,
+		plasteel_small = 0,
 		diamantine_small = 0,
 		plasteel_large = 0,
-		plasteel_small = 0,
-		game_object_type = NetworkLookup.game_object_types.materials_collected,
+		diamantine_large = 0,
+		game_object_type = NetworkLookup.game_object_types.materials_collected
 	}
 
 	self._materials_collected_game_object_id = GameSession.create_game_object(game_session, "materials_collected", game_object_data_table)
@@ -156,10 +156,8 @@ PickupSystem.on_remove_extension = function (self, unit, ...)
 	PickupSystem.super.on_remove_extension(self, unit, ...)
 end
 
-PickupSystem.on_gameplay_post_init = function (self)
-	for unit, extension in pairs(self._unit_to_extension_map) do
-		extension:on_gameplay_post_init()
-	end
+PickupSystem.on_gameplay_post_init = function (self, level)
+	self:call_gameplay_post_init_on_extensions(level)
 
 	if self._is_server then
 		self:_populate_pickups()
@@ -1090,7 +1088,7 @@ PickupSystem._show_collected_materials_notification = function (self, peer_id, m
 		currency = material_type,
 		amount_size = material_size,
 		player_name = player_name,
-		optional_localization_key = optional_localization_key,
+		optional_localization_key = optional_localization_key
 	})
 end
 
@@ -1105,11 +1103,11 @@ PickupSystem.get_collected_materials = function (self)
 
 		self._material_collected.diamantine = {
 			small = diamantine_small,
-			large = diamantine_large,
+			large = diamantine_large
 		}
 		self._material_collected.plasteel = {
 			small = plasteel_small,
-			large = plasteel_large,
+			large = plasteel_large
 		}
 	end
 

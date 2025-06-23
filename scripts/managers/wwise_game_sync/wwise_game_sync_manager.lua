@@ -28,7 +28,7 @@ local WWISE_STATE_GROUP_SETTINGS = {
 	music_zone = WwiseStateGroupZone,
 	options = WwiseStateGroupOptions,
 	player_state = WwiseStateGroupPlayerState,
-	suppression_state = WwiseStateGroupSuppressionState,
+	suppression_state = WwiseStateGroupSuppressionState
 }
 
 WwiseGameSyncManager.init = function (self, world_manager)
@@ -105,11 +105,11 @@ WwiseGameSyncManager._create_world = function (self, world_manager)
 	local timer_name = "main"
 	local parameters = {
 		layer = world_layer,
-		timer_name = timer_name,
+		timer_name = timer_name
 	}
 	local flags = {
 		Application.DISABLE_PHYSICS,
-		Application.DISABLE_RENDERING,
+		Application.DISABLE_RENDERING
 	}
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
 

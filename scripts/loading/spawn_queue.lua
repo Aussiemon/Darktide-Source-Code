@@ -6,11 +6,11 @@ local SpawnQueue = class("SpawnQueue")
 SpawnQueue.init = function (self, group_delay)
 	self._delay = group_delay
 	self._waiting = {
-		peers = {},
+		peers = {}
 	}
 	self._waiting_group_id = nil
 	self._spawning = {
-		peers = {},
+		peers = {}
 	}
 	self._spawning_group_id = nil
 	self._spawned = {}

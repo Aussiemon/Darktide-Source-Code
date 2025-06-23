@@ -20,7 +20,7 @@ LocalWaitForClaimState.update = function (self, dt)
 		Log.info("LocalWaitForClaimState", "Timeout waiting for the game to get ready for claiming slots")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -30,7 +30,7 @@ LocalWaitForClaimState.update = function (self, dt)
 		Log.info("LocalWaitForClaimState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 end

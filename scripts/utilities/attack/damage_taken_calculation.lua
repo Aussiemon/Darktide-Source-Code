@@ -162,19 +162,19 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 	local buff_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.toughness_damage_taken_modifier or 1
 
 	if melee_attack then
-		local buff_melee_toughness_damage_taken_mulitpler = attacked_unit_stat_buffs and attacked_unit_stat_buffs.melee_toughness_damage_taken_multiplier or 1
+		local buff_melee_toughness_damage_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.melee_toughness_damage_taken_multiplier or 1
 
-		buff_toughness_damage_taken_multiplier = buff_toughness_damage_taken_multiplier * buff_melee_toughness_damage_taken_mulitpler
+		buff_toughness_damage_taken_multiplier = buff_toughness_damage_taken_multiplier * buff_melee_toughness_damage_taken_multiplier
 
-		local buff_melee_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.melee_toughness_damage_taken_modifier
+		local buff_melee_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.melee_toughness_damage_taken_modifier or 1
 
 		buff_toughness_damage_taken_modifier = buff_toughness_damage_taken_modifier + buff_melee_toughness_damage_taken_modifier - 1
 	elseif ranged_attack then
-		local buff_ranged_toughness_damage_taken_mulitpler = attacked_unit_stat_buffs and attacked_unit_stat_buffs.ranged_toughness_damage_taken_multiplier or 1
+		local buff_ranged_toughness_damage_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.ranged_toughness_damage_taken_multiplier or 1
 
-		buff_toughness_damage_taken_multiplier = buff_toughness_damage_taken_multiplier * buff_ranged_toughness_damage_taken_mulitpler
+		buff_toughness_damage_taken_multiplier = buff_toughness_damage_taken_multiplier * buff_ranged_toughness_damage_taken_multiplier
 
-		local buff_ranged_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.ranged_toughness_damage_taken_modifier
+		local buff_ranged_toughness_damage_taken_modifier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.ranged_toughness_damage_taken_modifier or 1
 
 		buff_toughness_damage_taken_modifier = buff_toughness_damage_taken_modifier + buff_ranged_toughness_damage_taken_modifier - 1
 	end
@@ -323,6 +323,14 @@ function _calculate_health_damage_player(damage_amount, damage_profile, damage_t
 
 			health_damage = health_damage * damage_taken_multiplier
 		end
+	end
+
+	local has_max_damage_taken_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken]
+
+	if not instakill and has_max_damage_taken_buff then
+		local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit
+
+		health_damage = math.min(health_damage, limit)
 	end
 
 	local remaining_health = max_health - current_health_damage - health_damage

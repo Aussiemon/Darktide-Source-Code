@@ -136,43 +136,43 @@ end
 
 PlacementVisibility.component_data = {
 	material_slots = {
-		category = "Material",
-		ui_name = "Material Slot",
 		ui_type = "text_box_array",
 		value = "",
+		ui_name = "Material Slot",
+		category = "Material"
 	},
 	main_materials = {
-		category = "Material",
-		filter = "material",
-		ui_name = "Main Material",
 		ui_type = "resource_array",
+		category = "Material",
 		value = "",
+		ui_name = "Main Material",
+		filter = "material"
 	},
 	ghost_material = {
-		category = "Material",
-		filter = "material",
-		ui_name = "Ghost Material",
 		ui_type = "resource",
+		category = "Material",
 		value = "",
+		ui_name = "Ghost Material",
+		filter = "material"
 	},
 	inputs = {
 		visibility_enable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		visibility_disable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		place = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		remove = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return PlacementVisibility

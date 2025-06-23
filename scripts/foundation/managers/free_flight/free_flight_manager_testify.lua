@@ -33,7 +33,7 @@ local FreeFlightManagerTestify = {
 	end,
 	free_flight_camera_is_arrived_end_of_main_path = function (free_flight_manager)
 		return free_flight_manager._follow_path:is_arrived()
-	end,
+	end
 }
 
 return FreeFlightManagerTestify

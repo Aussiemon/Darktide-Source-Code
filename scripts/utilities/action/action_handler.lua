@@ -52,7 +52,7 @@ ActionHandler.add_component = function (self, component_name)
 	component.combo_count = 0
 	self._registered_components[component_name] = {
 		id = component_name,
-		component = component,
+		component = component
 	}
 end
 
@@ -115,7 +115,7 @@ ActionHandler.update = function (self, dt, t)
 	end
 end
 
-ActionHandler.fixed_update = function (self, dt, t, condition_func_params)
+ActionHandler.fixed_update = function (self, dt, t, condition_func_params, frame)
 	local registered_components = self._registered_components
 	local action_input_extension = self._action_input_extension
 
@@ -124,7 +124,7 @@ ActionHandler.fixed_update = function (self, dt, t, condition_func_params)
 		local component = handler_data.component
 
 		if running_action then
-			local action_complete = self:_update_action(handler_data, running_action, dt, t)
+			local action_complete = self:_update_action(handler_data, running_action, dt, t, frame)
 
 			if action_complete then
 				local action_settings = running_action:action_settings()
@@ -147,11 +147,11 @@ ActionHandler.fixed_update = function (self, dt, t, condition_func_params)
 	end
 end
 
-ActionHandler._update_action = function (self, handler_data, action, dt, t)
+ActionHandler._update_action = function (self, handler_data, action, dt, t, frame)
 	local component = handler_data.component
 	local start_t = component.start_t
 	local time_in_action = t - start_t
-	local is_done = action:fixed_update(dt, t, time_in_action)
+	local is_done = action:fixed_update(dt, t, time_in_action, frame)
 	local is_infinite_duration = component.is_infinite_duration
 	local end_t = is_infinite_duration and math.huge or component.end_t
 
@@ -217,6 +217,12 @@ ActionHandler._finish_action = function (self, handler_data, reason, data, t, ne
 		end
 
 		buff_extension:add_proc_event(proc_events.on_action_finish, param_table)
+	end
+
+	local action_finish_func = action_settings.action_finish_func
+
+	if action_finish_func then
+		action_finish_func(reason, data, condition_func_params, t)
 	end
 
 	handler_data.running_action = nil
@@ -331,11 +337,11 @@ ActionHandler._create_action = function (self, action_context, action_params, ac
 end
 
 local wield_actions = {
-	ranged_wield = true,
-	unwield = true,
-	unwield_to_previous = true,
-	unwield_to_specific = true,
 	wield = true,
+	unwield = true,
+	ranged_wield = true,
+	unwield_to_specific = true,
+	unwield_to_previous = true
 }
 
 ActionHandler._calculate_time_scale = function (self, action_settings)
@@ -679,7 +685,7 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 
 	local action_condition_func = action_settings.action_condition_func
 
-	if action_condition_func and not action_condition_func(action_settings, condition_func_params, used_input) then
+	if action_condition_func and not action_condition_func(action_settings, condition_func_params, used_input, t) then
 		return false
 	end
 

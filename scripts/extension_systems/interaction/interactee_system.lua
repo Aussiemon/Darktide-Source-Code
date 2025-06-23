@@ -9,7 +9,7 @@ local RPCS = {
 	"rpc_interaction_stopped",
 	"rpc_interaction_set_active",
 	"rpc_interaction_set_missing_player",
-	"rpc_interaction_hot_join",
+	"rpc_interaction_hot_join"
 }
 
 InteracteeSystem.init = function (self, ...)

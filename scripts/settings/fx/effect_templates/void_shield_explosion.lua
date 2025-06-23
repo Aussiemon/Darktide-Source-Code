@@ -7,7 +7,7 @@ local SHIELD_EXPLOSION_SFX = "wwise/events/minions/play_traitor_captain_shield_o
 local _set_shield_wobble
 local resources = {
 	shield_explosion_vfx = SHIELD_EXPLOSION_VFX,
-	shield_explosion_sfx = SHIELD_EXPLOSION_SFX,
+	shield_explosion_sfx = SHIELD_EXPLOSION_SFX
 }
 local effect_template = {
 	name = "void_shield_explosion",
@@ -55,7 +55,7 @@ local effect_template = {
 		local source_id = template_data.source_id
 
 		WwiseWorld.destroy_manual_source(wwise_world, source_id)
-	end,
+	end
 }
 
 function _set_shield_wobble(shield_unit, wobble_amount)

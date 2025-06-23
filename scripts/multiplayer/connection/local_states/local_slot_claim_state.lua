@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_slot_claim_state.lua
 
 local RPCS = {
-	"rpc_claim_slot_reply",
+	"rpc_claim_slot_reply"
 }
 local LocalSlotClaimState = class("LocalSlotClaimState")
 
@@ -30,7 +30,7 @@ LocalSlotClaimState.update = function (self, dt)
 		Log.info("LocalSlotClaimState", "Timeout waiting for rpc_claim_slot_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -40,7 +40,7 @@ LocalSlotClaimState.update = function (self, dt)
 		Log.info("LocalSlotClaimState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -51,7 +51,7 @@ LocalSlotClaimState.update = function (self, dt)
 			Log.info("LocalSlotClaimState", "Slot claim rejected")
 
 			return "slot rejected", {
-				game_reason = "slot_rejected",
+				game_reason = "slot_rejected"
 			}
 		end
 	end

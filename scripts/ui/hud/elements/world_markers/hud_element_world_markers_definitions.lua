@@ -6,23 +6,23 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	pivot = {
-		horizontal_alignment = "top",
-		parent = "screen",
 		vertical_alignment = "left",
+		parent = "screen",
+		horizontal_alignment = "top",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

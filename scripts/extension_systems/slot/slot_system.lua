@@ -32,7 +32,7 @@ SlotSystem.init = function (self, extension_system_creation_context, ...)
 end
 
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/minion_no_destination",
+	"content/volume_types/nav_tag_volumes/minion_no_destination"
 }
 
 SlotSystem.on_gameplay_post_init = function (self, level)

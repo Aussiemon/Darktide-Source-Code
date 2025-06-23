@@ -8,7 +8,7 @@ local MoveablePlatformSystem = class("MoveablePlatformSystem", "ExtensionSystemB
 local CLIENT_RPCS = {
 	"rpc_moveable_platform_set_direction",
 	"rpc_moveable_platform_set_wall_collision",
-	"rpc_moveable_platform_set_story",
+	"rpc_moveable_platform_set_story"
 }
 
 MoveablePlatformSystem.init = function (self, context, ...)

@@ -4,7 +4,7 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local NetworkStoryManager = class("NetworkStoryManager")
 local CLIENT_RPCS = {
 	"rpc_network_story_sync",
-	"rpc_network_story_set_position_level",
+	"rpc_network_story_set_position_level"
 }
 
 NetworkStoryManager.NETWORK_STORY_STATES = table.enum("not_created", "none", "pause_at_start", "playing", "pause_at_end")
@@ -90,12 +90,12 @@ end
 NetworkStoryManager.register_story = function (self, story_name, story_level, state_change_callback)
 	self._levels[story_level] = self._levels[story_level] or {}
 	self._levels[story_level][story_name] = {
-		id = -1,
-		length = 0,
 		speed = 0,
+		length = 0,
+		id = -1,
 		level_id = ScriptWorld.level_id(self._world, story_level),
 		state = self.NETWORK_STORY_STATES.not_created,
-		state_change_callback = state_change_callback,
+		state_change_callback = state_change_callback
 	}
 
 	return -1

@@ -89,45 +89,45 @@ ItemPreviewer.preview = function (self, resource, return_data)
 				if table.array_contains(item_data.breeds, "human") then
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/human/attachment_base/female_torso",
+							item = "content/items/characters/player/human/attachment_base/female_torso"
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_legs",
+							item = "content/items/characters/player/human/attachment_base/female_legs"
 						},
 						{
-							item = "content/items/characters/player/human/attachment_base/female_arms",
+							item = "content/items/characters/player/human/attachment_base/female_arms"
 						},
 						{
-							item = "content/items/characters/player/human/faces/female_asian_face_01",
+							item = "content/items/characters/player/human/faces/female_asian_face_01"
 						},
 						{
-							item = item_data.prop_item,
+							item = item_data.prop_item
 						},
 						{
-							item = item_data.prop_item_2,
-						},
+							item = item_data.prop_item_2
+						}
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_gear_rig"
 				else
 					item_data.attachments = {
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_torso",
+							item = "content/items/characters/player/ogryn/attachment_base/male_torso"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_legs",
+							item = "content/items/characters/player/ogryn/attachment_base/male_legs"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_arms",
+							item = "content/items/characters/player/ogryn/attachment_base/male_arms"
 						},
 						{
-							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03",
+							item = "content/items/characters/player/ogryn/attachment_base/male_face_caucasian_03"
 						},
 						{
-							item = item_data.prop_item,
+							item = item_data.prop_item
 						},
 						{
-							item = item_data.prop_item_2,
-						},
+							item = item_data.prop_item_2
+						}
 					}
 					item_data.base_unit = "content/characters/player/ogryn/third_person/base_gear_rig"
 				end
@@ -250,7 +250,7 @@ ItemPreviewer._build_bounding_box = function (self, item_data)
 
 	self.preview_bounding_box = {
 		Matrix4x4Box(tm),
-		Vector3Box(half_extents),
+		Vector3Box(half_extents)
 	}
 end
 
@@ -354,7 +354,7 @@ end
 
 ItemPreviewer.get_supported_types = function (self)
 	return {
-		"item",
+		"item"
 	}
 end
 

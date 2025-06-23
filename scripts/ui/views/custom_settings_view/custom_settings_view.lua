@@ -290,7 +290,7 @@ CustomSettingsView._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text,
+			text = localized_text
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
 
@@ -300,13 +300,13 @@ CustomSettingsView._set_tooltip_data = function (self, widget)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
 			width,
-			0,
+			0
 		}, text_options)
 		local height = text_height
 
 		self._widgets_by_name.tooltip.content.size = {
 			width,
-			height,
+			height
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
@@ -373,7 +373,7 @@ CustomSettingsView._setup_page_grid = function (self, config)
 	local grid_content_pivot = "grid_content_pivot"
 	local grid_spacing = {
 		0,
-		10,
+		10
 	}
 
 	self._grid = UIWidgetGrid:new(widgets, alignment_widgets, ui_scenegraph, grid_scenegraph_id, direction, grid_spacing)
@@ -413,22 +413,22 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 		return nil, {
 			size = {
 				settings_grid_width,
-				20,
-			},
+				20
+			}
 		}
 	elseif widget_type == "large_spacing" then
 		return nil, {
 			size = {
 				settings_grid_width,
-				50,
-			},
+				50
+			}
 		}
 	elseif widget_type == "extra_large_spacing" then
 		return nil, {
 			size = {
 				settings_grid_width,
-				100,
-			},
+				100
+			}
 		}
 	elseif not widget_type then
 		if options then
@@ -459,7 +459,7 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
 		size[1] - indentation_spacing,
-		size[2],
+		size[2]
 	}
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
@@ -485,14 +485,14 @@ CustomSettingsView._create_settings_widget_from_config = function (self, config,
 		return widget, {
 			size = {
 				size[1] + (config.alignment and config.alignment.size and config.alignment.size[1] or 0),
-				size[2] + (config.alignment and config.alignment.size and config.alignment.size[2] or 0),
+				size[2] + (config.alignment and config.alignment.size and config.alignment.size[2] or 0)
 			},
 			name = name,
-			horizontal_alignment = config.alignment and config.alignment.horizontal_alignment or "right",
+			horizontal_alignment = config.alignment and config.alignment.horizontal_alignment or "right"
 		}
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end

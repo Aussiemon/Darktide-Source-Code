@@ -47,8 +47,8 @@ MainPathManager.init = function (self, world, nav_world, level_seed, main_path_r
 
 		if use_nav_point_time_slice then
 			local spawn_points_time_slice_data = {
-				last_index = 0,
 				ready = false,
+				last_index = 0
 			}
 
 			self._spawn_points_time_slice_data = spawn_points_time_slice_data
@@ -82,7 +82,7 @@ MainPathManager._calculate_travel_distances = function (self, main_path_segments
 		total_travel_distance = total_travel_distance + Vector3_distance(p1, p2)
 
 		local travel_distances = {
-			total_travel_distance,
+			total_travel_distance
 		}
 		local num_nodes = #nodes
 
@@ -279,7 +279,7 @@ MainPathManager.generate_spawn_points = function (self)
 		num_spawn_points_per_triangle = MainPathSettings.num_spawn_points_per_triangle,
 		nav_tag_cost_table = spawn_point_cost_table,
 		seed = self._level_seed,
-		path_type = self._path_type,
+		path_type = self._path_type
 	}
 
 	if self._spawn_points_time_slice_data then

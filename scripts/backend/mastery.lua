@@ -14,7 +14,7 @@ Mastery.purchase_trait = function (self, traitCatId, traitPath, tier)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/"):path("traits/"):path(traitCatId):path("/"):path(encoded_trait_name):path("/tiers/"):path(tier)
 		local options = {
-			method = "PUT",
+			method = "PUT"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -39,8 +39,8 @@ Mastery.switch_mark = function (self, gear_id, mark_id)
 		local options = {
 			method = "PATCH",
 			body = {
-				mdi = mark_id,
-			},
+				mdi = mark_id
+			}
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

@@ -96,12 +96,12 @@ local function _add_data_script_data(object, component_guid, section_id, id)
 
 	script_data_to_update[#script_data_to_update + 1] = {
 		id = object.id,
-		script_data = script_data,
+		script_data = script_data
 	}
 
 	Application.console_send({
 		type = "update_script_data",
-		data = script_data_to_update,
+		data = script_data_to_update
 	})
 end
 
@@ -165,7 +165,7 @@ ToxicGasCorals.editor_update = function (self, unit)
 					CLOSEST_CLOUD[#CLOSEST_CLOUD + 1] = {
 						distance = distance,
 						fog_unit = fog_unit,
-						component = fog_clouds[i].component,
+						component = fog_clouds[i].component
 					}
 				end
 
@@ -214,26 +214,26 @@ end
 
 ToxicGasCorals.component_data = {
 	id = {
-		max = 100,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "ID",
-		ui_type = "number",
 		value = 0,
+		ui_name = "ID",
+		max = 100
 	},
 	section_id = {
-		max = 50,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Section ID",
-		ui_type = "number",
 		value = 0,
+		ui_name = "Section ID",
+		max = 50
 	},
 	dont_automatically_set_ids = {
-		ui_name = "Dont Automatically Set IDs",
 		ui_type = "check_box",
 		value = false,
-	},
+		ui_name = "Dont Automatically Set IDs"
+	}
 }
 
 return ToxicGasCorals

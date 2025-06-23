@@ -45,7 +45,7 @@ ServerMetricsManager.add_annotation = function (self, type_name, metadata)
 	local json_object = {
 		ts = os.time(),
 		type = type_name,
-		metadata = metadata,
+		metadata = metadata
 	}
 
 	_log("annotation:%s", cjson.encode(json_object))
@@ -68,7 +68,7 @@ ServerMetricsManager.set_gauge = function (self, metric_name, value)
 		metric = {
 			flush_dt = 9999,
 			type = "gauge",
-			name = metric_name,
+			name = metric_name
 		}
 		self._metrics[metric_name] = metric
 
@@ -88,10 +88,10 @@ ServerMetricsManager.add_to_counter = function (self, metric_name, value)
 
 	if not metric then
 		metric = {
+			value = 0,
 			flush_dt = 9999,
 			type = "counter",
-			value = 0,
-			name = metric_name,
+			name = metric_name
 		}
 		self._metrics[metric_name] = metric
 
@@ -136,7 +136,7 @@ ServerMetricsManager._track_progression = function (self)
 
 	if self._last_travel_progress_report == -1 and travel_progress > 0.01 or self._last_travel_progress_report ~= -1 and normalized_travel > self._last_travel_progress_report then
 		self:add_annotation("progression", {
-			value = normalized_travel,
+			value = normalized_travel
 		})
 
 		self._last_travel_progress_report = normalized_travel

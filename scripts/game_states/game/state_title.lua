@@ -96,7 +96,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		self:_continue_cb(raw_input_device)
 	else
 		local context = {
-			parent = self,
+			parent = self
 		}
 		local view_name = "title_view"
 
@@ -162,7 +162,7 @@ StateTitle._legal_verification = function (self)
 
 	local legal_promises = {
 		Managers.backend.interfaces.account:get_data("legal", "eula"),
-		Managers.backend.interfaces.account:get_data("legal", "privacy_policy"),
+		Managers.backend.interfaces.account:get_data("legal", "privacy_policy")
 	}
 
 	legal_promises[#legal_promises + 1] = Managers.backend.interfaces.account:get_data("legal", "cross_play_support")
@@ -198,36 +198,36 @@ StateTitle._legal_verification = function (self)
 
 			if IS_XBS or IS_PLAYSTATION then
 				options[#options + 1] = {
-					margin_bottom = 20,
-					template_type = "text",
 					text = "loc_privacy_policy_privacy_url",
+					template_type = "text",
+					margin_bottom = 20
 				}
 			else
 				options[#options + 1] = {
-					margin_bottom = 20,
-					template_type = "url_button",
 					text = "loc_privacy_policy_read_privacy_policy",
+					template_type = "url_button",
+					margin_bottom = 20,
 					callback = function ()
 						Application.open_url_in_browser(Localize("loc_privacy_policy_privacy_url"))
-					end,
+					end
 				}
 			end
 
 			options[#options + 1] = {
-				close_on_pressed = true,
 				text = "loc_privacy_policy_accept_button_label",
+				close_on_pressed = true,
 				callback = function ()
 					Managers.backend.interfaces.account:set_data("legal", {
-						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1,
+						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
 					end):catch(function (error)
 						Managers.event:trigger("event_add_notification_message", "alert", {
-							text = Localize("loc_popup_description_backend_error"),
+							text = Localize("loc_popup_description_backend_error")
 						})
 						self:_on_error()
 					end)
-				end,
+				end
 			}
 			options[#options + 1] = {
 				close_on_pressed = true,
@@ -239,13 +239,13 @@ StateTitle._legal_verification = function (self)
 					else
 						self:_reset_state()
 					end
-				end,
+				end
 			}
 
 			local context = {
-				description_text = "loc_privacy_policy_information_01b",
 				title_text = "loc_privacy_policy_title",
-				options = options,
+				description_text = "loc_privacy_policy_information_01b",
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -254,36 +254,36 @@ StateTitle._legal_verification = function (self)
 
 			if IS_XBS or IS_PLAYSTATION then
 				options[#options + 1] = {
-					margin_bottom = 20,
-					template_type = "text",
 					text = "loc_privacy_policy_eula_url",
+					template_type = "text",
+					margin_bottom = 20
 				}
 			else
 				options[#options + 1] = {
-					margin_bottom = 20,
-					template_type = "url_button",
 					text = "loc_privacy_policy_read_eula",
+					template_type = "url_button",
+					margin_bottom = 20,
 					callback = function ()
 						Application.open_url_in_browser(Localize("loc_privacy_policy_eula_url"))
-					end,
+					end
 				}
 			end
 
 			options[#options + 1] = {
-				close_on_pressed = true,
 				text = "loc_privacy_policy_accept_eula_button_label",
+				close_on_pressed = true,
 				callback = function ()
 					Managers.backend.interfaces.account:set_data("legal", {
-						eula = eula_status and eula_status + 1 or 1,
+						eula = eula_status and eula_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
 					end):catch(function (error)
 						Managers.event:trigger("event_add_notification_message", "alert", {
-							text = Localize("loc_popup_description_backend_error"),
+							text = Localize("loc_popup_description_backend_error")
 						})
 						self:_on_error()
 					end)
-				end,
+				end
 			}
 			options[#options + 1] = {
 				close_on_pressed = true,
@@ -295,13 +295,13 @@ StateTitle._legal_verification = function (self)
 					else
 						self:_reset_state()
 					end
-				end,
+				end
 			}
 
 			local context = {
-				description_text = "loc_privacy_policy_information_01c",
 				title_text = "loc_eula_title",
-				options = options,
+				description_text = "loc_privacy_policy_information_01c",
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -309,8 +309,8 @@ StateTitle._legal_verification = function (self)
 			local options = {}
 
 			options[#options + 1] = {
-				close_on_pressed = true,
 				text = "loc_cross_play_support_accept_button_label",
+				close_on_pressed = true,
 				callback = function ()
 					if account_data then
 						account_data.crossplay_accepted = true
@@ -319,16 +319,16 @@ StateTitle._legal_verification = function (self)
 					end
 
 					Managers.backend.interfaces.account:set_data("legal", {
-						cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1,
+						cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1
 					})
 					self:_legal_verification()
-				end,
+				end
 			}
 
 			local context = {
-				description_text = "loc_cross_play_support_information",
 				title_text = "loc_cross_play_support_title",
-				options = options,
+				description_text = "loc_cross_play_support_information",
+				options = options
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
@@ -337,7 +337,7 @@ StateTitle._legal_verification = function (self)
 		end
 	end):catch(function (error)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 		self:_on_error()
 	end)
@@ -360,7 +360,7 @@ StateTitle._verify_name = function (self)
 		end
 	end):catch(function (_)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 		self:_on_error()
 	end)
@@ -636,7 +636,7 @@ StateTitle._signin = function (self)
 			self._backend_data_synced = true
 		end):catch(function ()
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = Localize("loc_popup_description_backend_error"),
+				text = Localize("loc_popup_description_backend_error")
 			})
 			self:_on_error()
 		end)

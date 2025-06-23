@@ -7,25 +7,25 @@ local template = {
 			"event_survive_heresy_trickle_a",
 			1,
 			"event_survive_heresy_trickle_b",
-			1,
+			1
 		},
 		fm_heresy_fort_wave_1 = {
 			"event_fort_heresy_a",
 			1,
 			"event_fort_heresy_b",
-			1,
+			1
 		},
 		fm_heresy_fort_wave_2 = {
 			"event_fort_heresy_c",
 			1,
 			"event_fort_heresy_d",
-			1,
+			1
 		},
 		fm_heresy_fort_wave_3 = {
 			"event_fort_heresy_e",
 			1,
 			"event_fort_heresy_f",
-			1,
+			1
 		},
 		km_heresy_kill_target_shield_down = {
 			"km_heresy_kill_target_shield_down_1",
@@ -35,21 +35,21 @@ local template = {
 			"km_heresy_kill_target_shield_down_3",
 			1,
 			"km_heresy_kill_target_shield_down_4",
-			1,
-		},
+			1
+		}
 	},
 	events = {
 		event_pacing_off = {
 			{
 				"set_pacing_enabled",
-				enabled = false,
-			},
+				enabled = false
+			}
 		},
 		event_pacing_on = {
 			{
 				"set_pacing_enabled",
-				enabled = true,
-			},
+				enabled = true
+			}
 		},
 		event_only_specials_enabled = {
 			{
@@ -58,17 +58,17 @@ local template = {
 				spawn_types = {
 					"hordes",
 					"roamers",
-					"trickle_hordes",
-				},
-			},
+					"trickle_hordes"
+				}
+			}
 		},
 		event_only_specials_disable = {
 			{
-				"stop_terror_trickle",
+				"stop_terror_trickle"
 			},
 			{
 				"set_pacing_enabled",
-				enabled = true,
+				enabled = true
 			},
 			{
 				"control_pacing_spawns",
@@ -77,202 +77,202 @@ local template = {
 					"hordes",
 					"roamers",
 					"trickle_hordes",
-					"monsters",
-				},
-			},
+					"monsters"
+				}
+			}
 		},
 		event_survive_heresy_trickle_a = {
 			{
 				"debug_print",
-				duration = 3,
 				text = "event_survive_heresy_trickle_a",
+				duration = 3
 			},
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"start_terror_trickle",
 				delay = 0,
 				spawner_group = "spawner_survive_heresy_trickle_a",
-				template_name = "low_mixed",
-			},
+				template_name = "low_mixed"
+			}
 		},
 		event_survive_heresy_trickle_b = {
 			{
 				"debug_print",
-				duration = 3,
 				text = "event_survive_heresy_trickle_b",
+				duration = 3
 			},
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"start_terror_trickle",
 				delay = 0,
 				spawner_group = "spawner_survive_heresy_trickle_b",
-				template_name = "low_melee ",
-			},
+				template_name = "low_melee "
+			}
 		},
 		event_fort_heresy_a = {
 			{
 				"spawn_by_points",
-				limit_spawners = 1,
-				points = 8,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_top_right",
+				limit_spawners = 1,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_top_left",
 				limit_spawners = 1,
 				points = 8,
-				spawner_group = "spawner_fort_event_top_left",
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"try_inject_special_minion",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				points = 6,
 				spawner_group = "spawner_fort_event_top",
+				points = 6,
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 4,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "fm_heresy_fort_wave_2",
-			},
+				start_event_name = "fm_heresy_fort_wave_2"
+			}
 		},
 		event_fort_heresy_b = {
 			{
 				"spawn_by_points",
-				limit_spawners = 2,
-				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_top",
+				limit_spawners = 2,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom_far",
 				limit_spawners = 2,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom_far",
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 3
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 4,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 6,
 				points = 6,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "fm_heresy_fort_wave_2",
-			},
+				start_event_name = "fm_heresy_fort_wave_2"
+			}
 		},
 		event_fort_heresy_c = {
 			{
 				"spawn_by_points",
-				limit_spawners = 4,
-				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_all",
+				limit_spawners = 4,
+				points = 12,
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 4,
 				points = 10,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -281,118 +281,118 @@ local template = {
 				breed_tags = {
 					{
 						"scrambler",
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_top",
 				limit_spawners = 2,
 				points = 16,
-				spawner_group = "spawner_fort_event_top",
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_fort_event_all",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 1,
 				points = 12,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "fm_heresy_fort_wave_3",
-			},
+				start_event_name = "fm_heresy_fort_wave_3"
+			}
 		},
 		event_fort_heresy_d = {
 			{
 				"spawn_by_points",
-				limit_spawners = 4,
-				points = 12,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_all",
+				limit_spawners = 4,
+				points = 12,
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 2,
 				points = 8,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"far",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_top",
 				limit_spawners = 2,
 				points = 8,
-				spawner_group = "spawner_fort_event_top",
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 2,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_fort_event_all",
-				template_name = "standard_melee",
+				template_name = "standard_melee"
 			},
 			{
 				"try_inject_special_minion",
@@ -401,89 +401,89 @@ local template = {
 				breed_tags = {
 					{
 						"disabler",
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 1,
 				points = 12,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"ogryn",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"start_random_terror_event",
-				start_event_name = "fm_heresy_fort_wave_3",
-			},
+				start_event_name = "fm_heresy_fort_wave_3"
+			}
 		},
 		event_fort_heresy_e = {
 			{
 				"spawn_by_points",
-				limit_spawners = 6,
-				points = 20,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_all",
+				limit_spawners = 6,
+				points = 20,
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 2,
 				points = 6,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 1,
 				points = 14,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"ogryn",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 10
-				end,
+				end
 			},
 			{
 				"try_inject_special_minion",
@@ -491,25 +491,25 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 4,
 				points = 12,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -518,47 +518,47 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 45,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"start_terror_event",
-				start_event_name = "event_fort_heresy_final",
-			},
+				start_event_name = "event_fort_heresy_final"
+			}
 		},
 		event_fort_heresy_f = {
 			{
 				"spawn_by_points",
-				limit_spawners = 2,
-				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_all",
+				limit_spawners = 2,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom",
 				limit_spawners = 2,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom",
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -567,31 +567,31 @@ local template = {
 				breed_tags = {
 					{
 						"scrambler",
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 6,
 				points = 8,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 10
-				end,
+				end
 			},
 			{
 				"try_inject_special_minion",
@@ -599,37 +599,37 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 7,
+				duration = 7
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_all",
 				limit_spawners = 4,
 				points = 6,
-				spawner_group = "spawner_fort_event_all",
 				breed_tags = {
 					{
 						"far",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_fort_event_bottom_close",
 				limit_spawners = 1,
 				points = 6,
-				spawner_group = "spawner_fort_event_bottom_close",
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"try_inject_special_minion",
@@ -638,156 +638,156 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
 				duration = 45,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 10,
+				duration = 10
 			},
 			{
 				"start_terror_event",
-				start_event_name = "event_fort_heresy_final",
-			},
+				start_event_name = "event_fort_heresy_final"
+			}
 		},
 		event_fort_heresy_final = {
 			{
 				"flow_event",
-				flow_event_name = "mid_event_target_spawned",
+				flow_event_name = "mid_event_target_spawned"
 			},
 			{
 				"delay",
-				duration = 6,
+				duration = 6
 			},
 			{
 				"spawn_by_points",
 				limit_spawners = 1,
 				max_breed_amount = 1,
-				points = 6,
 				spawner_group = "spawner_mid_event_monster",
+				points = 6,
 				breed_tags = {
 					{
-						"monster",
-					},
-				},
+						"monster"
+					}
+				}
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"delay",
-				duration = 1.5,
+				duration = 1.5
 			},
 			{
 				"flow_event",
-				flow_event_name = "mid_event_target_dead",
-			},
+				flow_event_name = "mid_event_target_dead"
+			}
 		},
 		km_heresy_passive_guards = {
 			{
 				"spawn_by_points",
+				passive = true,
 				limit_spawners = 30,
 				max_breed_amount = 30,
-				passive = true,
-				points = 40,
 				spawner_group = "spawner_passive_guards",
+				points = 40,
 				breed_tags = {
 					{
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				passive = true,
 				limit_spawners = 6,
 				max_breed_amount = 6,
-				passive = true,
-				points = 20,
 				spawner_group = "spawner_passive_heavies",
+				points = 20,
 				breed_tags = {
 					{
 						"ogryn",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				passive = true,
 				limit_spawners = 6,
 				max_breed_amount = 6,
-				passive = true,
-				points = 20,
 				spawner_group = "spawner_passive_heavies_2",
+				points = 20,
 				breed_tags = {
 					{
 						"ogryn",
-						"melee",
-					},
-				},
+						"melee"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 10,
+				duration = 10
 			},
 			{
 				"start_terror_event",
-				start_event_name = "km_heresy_ritualists",
+				start_event_name = "km_heresy_ritualists"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 16
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "heresy_event_start",
+				flow_event_name = "heresy_event_start"
 			},
 			{
 				"flow_event",
-				flow_event_name = "end_event_guards_dead",
+				flow_event_name = "end_event_guards_dead"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 11
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "end_event_shield_1",
+				flow_event_name = "end_event_shield_1"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 6
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "end_event_shield_2",
+				flow_event_name = "end_event_shield_2"
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 1
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "end_event_shield_3",
-			},
+				flow_event_name = "end_event_shield_3"
+			}
 		},
 		km_heresy_ritualists = {
 			{
@@ -795,52 +795,52 @@ local template = {
 				breed_amount = 16,
 				breed_name = "cultist_ritualist",
 				limit_spawners = 16,
-				spawner_group = "spawner_passive_ritualist",
-			},
+				spawner_group = "spawner_passive_ritualist"
+			}
 		},
 		km_heresy_kill_target_wave = {
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"start_terror_trickle",
 				delay = 5,
 				spawner_group = "spawner_cathedral",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 3,
 				points = 30,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 40,
+				duration = 40
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 3
-				end,
+				end
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 10
-				end,
+				end
 			},
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"try_inject_special_minion",
@@ -849,54 +849,54 @@ local template = {
 				breed_tags = {
 					{
 						"special",
-						"scrambler",
-					},
-				},
+						"scrambler"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 3,
 				points = 8,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 3,
 				points = 32,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"melee",
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 40,
+				duration = 40
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 3
-				end,
+				end
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 10
-				end,
+				end
 			},
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"try_inject_special_minion",
@@ -905,223 +905,223 @@ local template = {
 				breed_tags = {
 					{
 						"disabler",
-						"special",
-					},
-				},
+						"special"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 3,
 				points = 8,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"close",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 3,
 				points = 20,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"close",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 40,
+				duration = 40
 			},
 			{
 				"continue_when",
 				duration = 40,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 3
-				end,
+				end
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 10
-				end,
+				end
 			},
 			{
 				"start_terror_event",
-				start_event_name = "km_heresy_kill_target_wave",
-			},
+				start_event_name = "km_heresy_kill_target_wave"
+			}
 		},
 		km_heresy_kill_target_shield_down_1 = {
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 2,
 				points = 10,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"ogryn",
-						"far",
-					},
-				},
+						"far"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 1,
-				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_cathedral",
+				limit_spawners = 1,
+				points = 10,
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
-			},
+				duration = 5
+			}
 		},
 		km_heresy_kill_target_shield_down_2 = {
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 2,
 				points = 10,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"elite",
-						"close",
-					},
-				},
+						"close"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 1,
-				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_cathedral",
+				limit_spawners = 1,
+				points = 10,
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
-			},
+				duration = 5
+			}
 		},
 		km_heresy_kill_target_shield_down_3 = {
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 2,
 				points = 10,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"melee",
-						"roamer",
-					},
-				},
+						"roamer"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 1,
-				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_cathedral",
+				limit_spawners = 1,
+				points = 10,
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
-			},
+				duration = 5
+			}
 		},
 		km_heresy_kill_target_shield_down_4 = {
 			{
 				"spawn_by_points",
+				spawner_group = "spawner_cathedral",
 				limit_spawners = 2,
 				points = 10,
-				spawner_group = "spawner_cathedral",
 				breed_tags = {
 					{
 						"melee",
-						"elite",
-					},
-				},
+						"elite"
+					}
+				}
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 1,
-				points = 10,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_cathedral",
+				limit_spawners = 1,
+				points = 10,
 				breed_tags = {
 					{
-						"horde",
-					},
-				},
+						"horde"
+					}
+				}
 			},
 			{
 				"delay",
-				duration = 5,
-			},
+				duration = 5
+			}
 		},
 		km_heresy_kill_target_guards = {
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Guards spawned",
+				duration = 3
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Guards dead",
+				duration = 3
 			},
 			{
 				"flow_event",
-				flow_event_name = "cathedral_guards_dead",
-			},
+				flow_event_name = "cathedral_guards_dead"
+			}
 		},
 		km_heresy_kill_target_reinforcements = {
 			{
 				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
+				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal"
 			},
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Reinforcements spawned",
+				duration = 3
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Reinforcements dead",
+				duration = 3
 			},
 			{
 				"flow_event",
-				flow_event_name = "cathedral_reinforcements_dead",
-			},
+				flow_event_name = "cathedral_reinforcements_dead"
+			}
 		},
 		km_heresy_end_event = {
 			{
@@ -1129,76 +1129,76 @@ local template = {
 				duration = 25,
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() == 0
-				end,
+				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "kill_event_finished",
-			},
+				flow_event_name = "kill_event_finished"
+			}
 		},
 		km_heresy_kill_target = {
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Target spawned",
+				duration = 3
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_terror_event",
-				start_event_name = "km_heresy_kill_target_wave",
+				start_event_name = "km_heresy_kill_target_wave"
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 5
 			},
 			{
 				"start_terror_trickle",
 				delay = 5,
 				spawner_group = "spawner_cathedral",
-				template_name = "low_melee",
+				template_name = "low_melee"
 			},
 			{
 				"delay",
-				duration = 60,
+				duration = 60
 			},
 			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
-				end,
+				end
 			},
 			{
-				"stop_terror_trickle",
+				"stop_terror_trickle"
 			},
 			{
 				"debug_print",
-				duration = 3,
 				text = "Kill event: Target dead",
+				duration = 3
 			},
 			{
 				"flow_event",
-				flow_event_name = "cathedral_kill_target_dead",
-			},
+				flow_event_name = "cathedral_kill_target_dead"
+			}
 		},
 		km_heresy_spawn_sniper = {
 			{
 				"try_inject_special_minion",
 				limit_spawners = 1,
 				max_breed_amount = 2,
-				points = 8,
 				spawner_group = "spawner_sniper",
+				points = 8,
 				breed_tags = {
 					{
 						"special",
-						"sniper",
-					},
-				},
-			},
-		},
-	},
+						"sniper"
+					}
+				}
+			}
+		}
+	}
 }
 
 return template

@@ -177,7 +177,7 @@ CharacterStateMachineExtension._create_init_context = function (self, unit, worl
 		weapon_action_component = unit_data:read_component("weapon_action"),
 		player_character_constants = extension_init_data.player_character_constants,
 		breed = extension_init_data.breed,
-		archetype = unit_data:archetype(),
+		archetype = unit_data:archetype()
 	}
 
 	return state_init_context
@@ -213,13 +213,13 @@ CharacterStateMachineExtension.fixed_update = function (self, unit, dt, t, fixed
 end
 
 CharacterStateMachineExtension._on_screen_particles = function (self, t)
-	local current_state = self._state_machine:current_state()
+	local current_state_name = self._state_machine:current_state_name()
 
-	if self._dash_particle_effect and current_state ~= "lunging" then
+	if self._dash_particle_effect and current_state_name ~= "lunging" then
 		World.destroy_particles(self._world, self._dash_particle_effect)
 
 		self._dash_particle_effect = nil
-	elseif current_state == "lunging" and not self._dash_particle_effect then
+	elseif current_state_name == "lunging" and not self._dash_particle_effect then
 		local lunge_template = LungeTemplates[self._lunge_character_state_component.lunge_template]
 		local on_screen_effect = lunge_template.on_screen_effect
 		local on_screen_effect_delay = on_screen_effect and lunge_template.on_screen_effect_delay or 0
@@ -266,6 +266,10 @@ end
 
 CharacterStateMachineExtension.set_state = function (self, unit, dt, t, next_state, params)
 	self._state_machine:set_state(unit, dt, t, next_state, params)
+end
+
+CharacterStateMachineExtension.current_state_name = function (self)
+	return self._state_machine:current_state_name() or "none"
 end
 
 CharacterStateMachineExtension.current_state = function (self)

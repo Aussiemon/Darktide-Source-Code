@@ -17,16 +17,16 @@ templates.weapon_trait_bespoke_plasmagun_p1_targets_receive_rending_debuff.check
 templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = table.merge({
 	use_combo = true,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.02,
-	},
+		[stat_buffs.power_level_modifier] = 0.02
+	}
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge = {
-	class_name = "stepped_stat_buff",
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
+	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
-		[stat_buffs.charge_up_time] = -0.01,
+		[stat_buffs.charge_up_time] = -0.01
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -58,16 +58,16 @@ templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge =
 		end
 
 		return 0
-	end,
+	end
 }
 templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
-	class_name = "stepped_stat_buff",
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
+	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.01,
-		[stat_buffs.ranged_critical_strike_damage] = 0.01,
+		[stat_buffs.ranged_critical_strike_damage] = 0.01
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -99,15 +99,15 @@ templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
 		end
 
 		return 0
-	end,
+	end
 }
 templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
-	class_name = "stepped_stat_buff",
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
+	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.01,
+		[stat_buffs.power_level_modifier] = 0.01
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -139,22 +139,22 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_scaled_on_heat = {
 		end
 
 		return 0
-	end,
+	end
 }
 templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.overheat_immediate_amount_critical_strike] = 0.5,
+		[stat_buffs.overheat_immediate_amount_critical_strike] = 0.5
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire = table.merge({
 	use_combo = true,
 	conditional_stat_buffs = {
-		[stat_buffs.overheat_amount] = 0.9,
-	},
+		[stat_buffs.overheat_amount] = 0.9
+	}
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_plasmagun_p1_charge_level_increases_critical_strike_chance = table.clone(BaseWeaponTraitBuffTemplates.stacking_buff_on_charge_level)
 

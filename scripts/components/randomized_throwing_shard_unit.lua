@@ -142,31 +142,31 @@ end
 
 RandomizedThrowingShardUnit.component_data = {
 	visiblity_groups = {
-		ui_name = "Visiblity Groups",
 		ui_type = "struct_array",
+		ui_name = "Visiblity Groups",
 		definition = {
 			visiblity_group_name = {
-				ui_name = "Visiblity Group Name",
 				ui_type = "text_box",
 				value = "",
-			},
+				ui_name = "Visiblity Group Name"
+			}
 		},
 		control_order = {
-			"visiblity_group_name",
-		},
+			"visiblity_group_name"
+		}
 	},
 	dissolve_variable_name = {
-		category = "Dissolve",
-		ui_name = "Variable Name",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Variable Name",
+		category = "Dissolve"
 	},
 	dissolve_material_slot_name = {
-		category = "Dissolve",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "",
-	},
+		ui_name = "Material Slot Name",
+		category = "Dissolve"
+	}
 }
 
 return RandomizedThrowingShardUnit

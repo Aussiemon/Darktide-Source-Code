@@ -2,81 +2,81 @@
 
 local resources = {
 	vfx = {
-		chanting_01 = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_01",
-		chanting_02 = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_02",
-		chanting_off_left_hand = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_off_left_hand",
-		chanting_off_right_hand = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_off_hand",
 		target_01 = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_target_01",
+		chanting_off_right_hand = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_off_hand",
+		chanting_off_left_hand = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_off_left_hand",
+		chanting_02 = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_02",
+		chanting_01 = "content/fx/particles/enemies/cultist_ritualist/ritual_force_minions_heresy_01"
 	},
 	sfx = {
 		chanting_01 = {
-			start_event = "wwise/events/weapon/play_heresy_minion_ritual_force_01_start",
 			stop_event = "wwise/events/weapon/play_heresy_minion_ritual_force_01_stop",
+			start_event = "wwise/events/weapon/play_heresy_minion_ritual_force_01_start"
 		},
 		chanting_02 = {
-			start_event = "wwise/events/weapon/play_heresy_minion_ritual_force_02_start",
 			stop_event = "wwise/events/weapon/play_heresy_minion_ritual_force_02_stop",
-		},
-	},
+			start_event = "wwise/events/weapon/play_heresy_minion_ritual_force_02_start"
+		}
+	}
 }
 local start_delay = 0.15
 local variant_settings = {
 	{
 		vfx = {
 			{
+				node_name = "j_lefthand",
 				align_to_target = true,
 				length_variable_name = "length",
-				node_name = "j_lefthand",
 				effect_name = resources.vfx.chanting_01,
-				target_effect_name = resources.vfx.target_01,
+				target_effect_name = resources.vfx.target_01
 			},
 			{
 				node_name = "j_righthand",
-				effect_name = resources.vfx.chanting_off_right_hand,
-			},
+				effect_name = resources.vfx.chanting_off_right_hand
+			}
 		},
 		sfx = {
 			{
 				node_name = "j_lefthand",
-				looping_sound = resources.sfx.chanting_01,
-			},
-		},
+				looping_sound = resources.sfx.chanting_01
+			}
+		}
 	},
 	{
 		vfx = {
 			{
+				node_name = "j_righthand",
 				align_to_target = true,
 				length_variable_name = "length",
-				node_name = "j_righthand",
 				effect_name = resources.vfx.chanting_01,
-				target_effect_name = resources.vfx.target_01,
+				target_effect_name = resources.vfx.target_01
 			},
 			{
 				node_name = "j_lefthand",
-				effect_name = resources.vfx.chanting_off_left_hand,
-			},
+				effect_name = resources.vfx.chanting_off_left_hand
+			}
 		},
 		sfx = {
 			{
 				node_name = "j_righthand",
-				looping_sound = resources.sfx.chanting_01,
-			},
-		},
+				looping_sound = resources.sfx.chanting_01
+			}
+		}
 	},
 	{
 		vfx = {
 			{
 				node_name = "j_lefthand",
-				effect_name = resources.vfx.chanting_02,
-			},
+				effect_name = resources.vfx.chanting_02
+			}
 		},
 		sfx = {
 			{
 				node_name = "j_lefthand",
-				looping_sound = resources.sfx.chanting_02,
-			},
-		},
-	},
+				looping_sound = resources.sfx.chanting_02
+			}
+		}
+	}
 }
 
 local function _stop_effects(template_data, template_context)
@@ -299,7 +299,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		_stop_effects(template_data, template_context)
-	end,
+	end
 }
 
 return effect_template

@@ -16,17 +16,17 @@ local BLOCK_ANGLE_DISTANCE_SQUARED_EPSILON = 0.010000000000000002
 local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost
 local Block = {}
 local auto_block_interactions = {
-	pull_up = true,
-	remove_net = true,
 	rescue = true,
+	pull_up = true,
 	revive = true,
+	remove_net = true
 }
 local default_block_types = {
-	[attack_types.melee] = true,
+	[attack_types.melee] = true
 }
 local default_block_angles = {
 	inner = 0.33 * math.pi,
-	outer = math.pi,
+	outer = math.pi
 }
 
 Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_template, is_server)

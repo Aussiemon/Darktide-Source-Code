@@ -36,21 +36,21 @@ end
 
 SmartTagTarget.component_data = {
 	target_type = {
-		ui_name = "Target Type",
-		ui_type = "combo_box",
 		value = "health_station",
+		ui_type = "combo_box",
+		ui_name = "Target Type",
 		options_keys = {
 			"health_station",
-			"pickup",
+			"pickup"
 		},
 		options_values = {
 			"health_station",
-			"pickup",
-		},
+			"pickup"
+		}
 	},
 	extensions = {
-		"SmartTagExtension",
-	},
+		"SmartTagExtension"
+	}
 }
 
 return SmartTagTarget

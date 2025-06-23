@@ -2,6 +2,7 @@
 
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitTalentExtension = class("PlayerUnitTalentExtension")
 
 PlayerUnitTalentExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -57,6 +58,7 @@ PlayerUnitTalentExtension.extensions_ready = function (self, world, unit)
 	self._ability_extension = ScriptUnit.extension(unit, "ability_system")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
+	self._companion_spawner_extension = ScriptUnit.extension(unit, "companion_spawner_system")
 end
 
 PlayerUnitTalentExtension.game_object_initialized = function (self, game_object_id)
@@ -110,7 +112,7 @@ local class_loadout = {
 	passives = {},
 	coherency = {},
 	special_rules = {},
-	buff_template_tiers = {},
+	buff_template_tiers = {}
 }
 
 PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, fixed_t)
@@ -170,7 +172,7 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 		passive_buff_indices[#passive_buff_indices + 1] = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 
@@ -179,6 +181,19 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 	for _, buff_template_name in pairs(coherency_buffs) do
 		coherency_external_buff_indices[#coherency_external_buff_indices + 1] = coherency_system:add_external_buff(unit, buff_template_name, "from_talent", true)
+	end
+
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_training_grounds = game_mode_name == "training_grounds"
+	local disable_companion_special_rule_name = "disable_companion"
+	local has_disable_companion_special_rule = active_special_rules[disable_companion_special_rule_name]
+	local owner_player = self._player
+	local unit_data_extension = owner_player and ScriptUnit.has_extension(owner_player.player_unit, "unit_data_system")
+	local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+	local is_hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
+
+	if not is_hogtied and not has_disable_companion_special_rule and not is_training_grounds then
+		self._companion_spawner_extension:spawn_unit()
 	end
 end
 

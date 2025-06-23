@@ -25,17 +25,17 @@ templates.weapon_trait_bespoke_autogun_p1_increase_damage_on_close_kill_parent.c
 templates.weapon_trait_bespoke_autogun_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill)
 templates.weapon_trait_bespoke_autogun_p1_count_as_dodge_vs_ranged_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.count_as_dodge_vs_ranged_on_close_kill)
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_dodge = {
-	active_duration = 2,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 2,
 	proc_events = {
-		[proc_events.on_dodge_start] = 1,
+		[proc_events.on_dodge_start] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.reload_speed] = 0.5,
+		[stat_buffs.reload_speed] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_slide_parent = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_parent)
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_slide_child = table.clone(BaseWeaponTraitBuffTemplates.reload_speed_on_close_kill_child)
@@ -45,15 +45,15 @@ templates.weapon_trait_bespoke_autogun_p1_allow_flanking_and_increased_damage_wh
 templates.weapon_trait_bespoke_autogun_p1_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
 templates.weapon_trait_bespoke_autogun_p1_followup_shots_ranged_weakspot_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_weakspot_damage)
 templates.weapon_trait_bespoke_autogun_p1_improved_sprint_dodge = {
-	active_duration = 1,
+	predicted = false,
 	active_time_offset = 0.2,
 	class_name = "active_time_offset_proc_buff",
-	predicted = false,
+	active_duration = 1,
 	proc_events = {
-		[proc_events.on_sprint_dodge] = 1,
+		[proc_events.on_sprint_dodge] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 return templates

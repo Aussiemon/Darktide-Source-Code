@@ -28,12 +28,11 @@ DoorControlPanelExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 end
 
-DoorControlPanelExtension.on_gameplay_post_init = function (self, level)
+DoorControlPanelExtension.on_gameplay_post_init = function (self, unit)
 	if not self._is_server then
 		return
 	end
 
-	local unit = self._unit
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 
 	if self:is_active() then

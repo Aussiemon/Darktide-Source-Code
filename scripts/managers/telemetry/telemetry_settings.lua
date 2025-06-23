@@ -17,27 +17,27 @@ local settings = {
 			game = APPLICATION_SETTINGS.game_version,
 			engine_revision = string.value_or_nil(BUILD_IDENTIFIER),
 			content_revision = string.value_or_nil(APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION),
-			teamcity_build_id = teamcity_build_id,
+			teamcity_build_id = teamcity_build_id
 		},
 		data = {
 			server = string.value_or_nil(DEDICATED_SERVER),
 			testify = string.value_or_nil(GameParameters.testify),
 			testify_test_suite_id = string.value_or_nil(DevParameters.testify_test_suite_id),
 			steam_branch = HAS_STEAM and Steam.beta_branch(),
-			svn_branch = string.value_or_nil(GameParameters.svn_branch),
+			svn_branch = string.value_or_nil(GameParameters.svn_branch)
 		},
 		crashify = {
-			project_branch = string.value_or_nil(Crashify.branch),
-		},
+			project_branch = string.value_or_nil(Crashify.branch)
+		}
 	},
 	batch = {
-		full_post_interval = 30,
-		max_size = 16000,
-		post_interval = 300,
 		size = 2000,
+		max_size = 16000,
+		full_post_interval = 30,
+		post_interval = 300
 	},
 	heartbeat = {
-		interval = 300,
+		interval = 300
 	},
 	blacklisted_views = {
 		"inventory_view",
@@ -54,8 +54,8 @@ local settings = {
 		"splash_video_view",
 		"splash_view",
 		"title_view",
-		"scanner_display_view",
-	},
+		"scanner_display_view"
+	}
 }
 
 return settings

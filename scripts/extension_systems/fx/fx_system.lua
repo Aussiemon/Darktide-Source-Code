@@ -25,7 +25,7 @@ local CLIENT_RPCS = {
 	"rpc_trigger_2d_wwise_event",
 	"rpc_trigger_wwise_event",
 	"rpc_trigger_flow_event",
-	"rpc_projectile_trigger_fx",
+	"rpc_projectile_trigger_fx"
 }
 
 FxSystem.init = function (self, extension_system_creation_context, ...)
@@ -44,7 +44,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 			is_running = false,
 			buffer_index = i,
 			template_data = {},
-			optional_position = Vector3Box(Vector3.invalid_vector()),
+			optional_position = Vector3Box(Vector3.invalid_vector())
 		}
 	end
 
@@ -57,7 +57,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 		is_server = is_server,
 		world = self._world,
 		wwise_world = self._wwise_world,
-		game_session = game_session,
+		game_session = game_session
 	}
 	self._latest_player_particle_group_id = 0
 	self.unit_to_particle_group_lookup = Script.new_map(256)
@@ -178,7 +178,7 @@ FxSystem.update = function (self, context, dt, t, ...)
 	FxSystem.super.update(self, context, dt, t, ...)
 end
 
-FxSystem._has_running_template_of_name = function (self, unit, template_name)
+FxSystem.has_running_template_of_name = function (self, unit, template_name)
 	local running_template_effects = self._running_template_effects
 
 	for i = 1, #running_template_effects do
@@ -453,12 +453,7 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 
 	if optional_position or optional_unit or optional_ambisonics then
 		local event_id = NetworkLookup.sound_events[event_name]
-		local optional_parameter_id
-
-		if optional_parameter_name then
-			optional_parameter_id = NetworkLookup.sound_parameters[optional_parameter_name]
-		end
-
+		local optional_parameter_id = optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name]
 		local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_trigger_wwise_event", event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value, not not optional_ambisonics)

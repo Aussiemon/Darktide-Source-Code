@@ -13,7 +13,7 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge",
+	stinger_type = "mutant_charge"
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateMutantCharged = class("PlayerCharacterStateMutantCharged", "PlayerCharacterStateBase")

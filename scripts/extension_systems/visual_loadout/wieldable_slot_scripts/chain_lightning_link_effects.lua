@@ -30,12 +30,12 @@ local JUMP_VALIDATION = ChainLightning.jump_validation_functions
 local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3",
+	"target_unit_3"
 }
 local ROOT_CHAIN_SETTINGS = {
 	max_targets = {
-		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS,
-	},
+		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS
+	}
 }
 local LOOPING_TO_TARGET_VFX_ALIAS = "chain_lightning_to_target"
 local LOOPING_LINK_VFX_ALIAS = "chain_lightning_link"
@@ -289,7 +289,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 		visual_loadout_extension = self._visual_loadout_extension,
 		weapon_action_component = self._weapon_action_component,
 		weapon_template = self._weapon_template,
-		weapon_actions = self._weapon_actions,
+		weapon_actions = self._weapon_actions
 	}
 
 	self:_create_chain_root_node()

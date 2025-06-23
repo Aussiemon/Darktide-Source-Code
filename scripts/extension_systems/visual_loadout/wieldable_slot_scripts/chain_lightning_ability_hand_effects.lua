@@ -11,21 +11,21 @@ local PARTICLE_VARIABLE_NAME = "length"
 local DEFAULT_HAND = "both"
 local CAGE_FX_SOURCE_LOOKUP = {
 	right = {
-		elbow = "fx_right_elbow",
 		hand = "fx_right_hand",
+		elbow = "fx_right_elbow"
 	},
 	left = {
-		elbow = "fx_left_elbow",
 		hand = "fx_left_hand",
-	},
+		elbow = "fx_left_elbow"
+	}
 }
 local CHARGE_FX_TARGET_LOOKUP = "_charge"
 local CHARGE_FX_SOURCE_LOOKUP = {
-	index = "fx_right_finger_tip_index",
-	middle = "fx_right_finger_tip_middle",
+	thumb = "fx_right_finger_tip_thumb",
 	pinky = "fx_right_finger_tip_pinky",
 	ring = "fx_right_finger_tip_ring",
-	thumb = "fx_right_finger_tip_thumb",
+	index = "fx_right_finger_tip_index",
+	middle = "fx_right_finger_tip_middle"
 }
 local _vfx_external_properties = {}
 

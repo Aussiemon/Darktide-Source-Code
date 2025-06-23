@@ -4,19 +4,19 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local TextUtils = require("scripts/utilities/ui/text")
 local card_size = {
 	440,
-	335,
+	335
 }
 local hightlight_color = {
 	255,
 	193,
 	229,
-	241,
+	241
 }
 local progress_color = {
 	255,
 	226,
 	199,
-	126,
+	126
 }
 local blueprints = {}
 
@@ -24,241 +24,241 @@ blueprints.buff_card = {
 	size = card_size,
 	pass_template = {
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
 				on_hover_sound = UISoundEvents.mission_buffs_buff_hover_enter,
 				hold_sound = UISoundEvents.mission_buffs_buff_hold_start,
-				hold_release = UISoundEvents.mission_buffs_buff_hold_stop,
-			},
+				hold_release = UISoundEvents.mission_buffs_buff_hold_stop
+			}
 		},
 		{
-			pass_type = "texture",
 			style_id = "background",
-			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
 				scale_to_material = true,
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					-12,
 					-10,
-					0,
+					0
 				},
 				size_addition = {
 					24,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			style_id = "progress_highlight",
+			pass_type = "texture",
 			value = "content/ui/materials/frames/dropshadow_medium",
 			value_id = "progress_highlight",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				color = table.clone(hightlight_color),
 				size_addition = {
 					20,
-					20,
+					20
 				},
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			change_function = function (content, style, animations, dt)
 				style.color[1] = 255 * (content.hold_progress or 0)
 			end,
 			visibility_function = function (content, style)
 				return content.is_choice
-			end,
+			end
 		},
 		{
 			pass_type = "rect",
 			style_id = "input_progress_background",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					0,
+					0
 				},
 				color = table.merge(table.clone(progress_color), {
-					153,
-				}),
+					153
+				})
 			},
 			change_function = function (content, style, animations, dt)
 				style.size[1] = (content.size and content.size[1] or 0) * (content.hold_progress or 0)
 			end,
 			visibility_function = function (content, style)
 				return content.is_choice
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "title",
-			value = "",
 			value_id = "title",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 24,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_header(255, true),
 				offset = {
 					20,
 					75,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			style_id = "sub_title",
-			value = "",
 			value_id = "sub_title",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 18,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				offset = {
 					20,
 					100,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			style_id = "description",
-			value = "",
 			value_id = "description",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 18,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					20,
 					140,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			style_id = "icon",
-			value = "content/ui/materials/frames/talents/talent_icon_container",
 			value_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/talents/talent_icon_container",
 			style = {
 				horizontal_alignment = "center",
 				size = {
 					144,
-					144,
+					144
 				},
 				material_values = {
-					frame = "content/ui/textures/frames/horde/hex_frame_horde",
-					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask",
 					intensity = 0,
 					saturation = 1,
+					frame = "content/ui/textures/frames/horde/hex_frame_horde",
+					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask"
 				},
 				offset = {
 					0,
 					-75,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			style_id = "top",
-			value = "content/ui/materials/base/ui_default_base",
 			value_id = "top",
+			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "top",
+				horizontal_alignment = "center",
 				size = {
 					462,
-					44,
+					44
 				},
 				offset = {
 					0,
 					-20,
-					2,
+					2
 				},
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/horde_buff_boon_granted",
-				},
-			},
+					texture_map = "content/ui/textures/frames/horde/horde_buff_boon_granted"
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/base/ui_default_base",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = {
 					470,
-					52,
+					52
 				},
 				offset = {
 					0,
 					30,
-					2,
+					2
 				},
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/horde_buff_bottom",
-				},
-			},
+					texture_map = "content/ui/textures/frames/horde/horde_buff_bottom"
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon_glow",
-			value = "content/ui/materials/base/ui_default_base",
 			value_id = "icon_glow",
+			style_id = "icon_glow",
+			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
 				horizontal_alignment = "center",
 				scale_to_material = true,
 				offset = {
 					0,
 					-80,
-					3,
+					3
 				},
 				size = {
 					172,
-					156,
+					156
 				},
 				color = table.clone(hightlight_color),
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_glow",
-				},
+					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_glow"
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -269,29 +269,29 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return is_chosen_buff or not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon_selected",
-			value = "content/ui/materials/base/ui_default_base",
 			value_id = "icon_selected",
+			style_id = "icon_selected",
+			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
 				horizontal_alignment = "center",
 				scale_to_material = true,
 				size = {
 					117,
-					117,
+					117
 				},
 				offset = {
 					0,
 					-60,
-					5,
+					5
 				},
 				color = table.clone(hightlight_color),
 				material_values = {
-					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_selected",
-				},
+					texture_map = "content/ui/textures/frames/horde/hex_frame_horde_selected"
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -302,160 +302,160 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return is_chosen_buff or not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			style_id = "divider_sub_buff",
-			value = "content/ui/materials/dividers/skull_center_02",
 			value_id = "divider_sub_buff",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
 			style = {
 				horizontal_alignment = "center",
 				size = {
 					nil,
-					22,
+					22
 				},
 				size_addition = {
 					-60,
-					0,
+					0
 				},
 				color = Color.terminal_text_body_dark(255, true),
 				offset = {
 					0,
 					250,
-					6,
-				},
+					6
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			style_id = "sub_buff_icon",
-			value = "content/ui/materials/frames/talents/talent_icon_container",
 			value_id = "sub_buff_icon",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/talents/talent_icon_container",
 			style = {
 				horizontal_alignment = "center",
 				size = {
 					100,
-					100,
+					100
 				},
 				material_values = {
-					frame = "content/ui/textures/frames/horde/hex_frame_horde",
-					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask",
 					intensity = 0,
 					saturation = 1,
+					frame = "content/ui/textures/frames/horde/hex_frame_horde",
+					icon_mask = "content/ui/textures/frames/horde/hex_frame_horde_mask"
 				},
 				offset = {
 					0,
 					280,
-					4,
-				},
+					4
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "sub_buff_title",
-			value = "",
 			value_id = "sub_buff_title",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 22,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_header(255, true),
 				offset = {
 					20,
 					375,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "sub_buff_sub_title",
-			value = "",
 			value_id = "sub_buff_sub_title",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 18,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				offset = {
 					20,
 					400,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "sub_buff_description",
-			value = "",
 			value_id = "sub_buff_description",
+			pass_type = "text",
+			value = "",
 			style = {
 				font_size = 18,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					20,
 					440,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return content.is_family and content.has_sub_buff
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "confirm_text",
-			value = "",
 			value_id = "confirm_text",
+			pass_type = "text",
+			value = "",
 			style = {
+				vertical_alignment = "bottom",
 				font_size = 24,
+				text_vertical_alignment = "bottom",
 				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "bottom",
-				vertical_alignment = "bottom",
 				text_color = Color.legend_button_text(255, true),
 				offset = {
 					20,
 					-30,
-					6,
+					6
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
@@ -466,7 +466,7 @@ blueprints.buff_card = {
 				local is_chosen_buff = content.is_chosen_buff
 
 				return content.is_choice and not is_disabled and (is_selected or is_focused or is_hover)
-			end,
+			end
 		},
 		{
 			pass_type = "logic",
@@ -547,8 +547,8 @@ blueprints.buff_card = {
 					content.current_timer = 0
 					content.hold_progress = 0
 				end
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 		local content = widget.content
@@ -576,13 +576,13 @@ blueprints.buff_card = {
 			style.icon_glow.offset[2] = -84
 			style.icon_glow.size = {
 				190,
-				172,
+				172
 			}
 			style.icon_selected.material_values.texture_map = "content/ui/textures/frames/horde/circle_frame_horde_selected"
 			style.icon_selected.offset[2] = -60
 			style.icon_selected.size = {
 				122,
-				122,
+				122
 			}
 			style.icon.offset[2] = -70
 
@@ -590,7 +590,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_left"
 				style.top.size = {
 					486,
-					206,
+					206
 				}
 				style.top.offset[1] = -5
 				style.top.offset[2] = -75
@@ -598,7 +598,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_right"
 				style.top.size = {
 					486,
-					206,
+					206
 				}
 				style.top.offset[1] = 5
 				style.top.offset[2] = -75
@@ -606,7 +606,7 @@ blueprints.buff_card = {
 				style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_family_mid"
 				style.top.size = {
 					480,
-					86,
+					86
 				}
 				style.top.offset[2] = -40
 			end
@@ -614,7 +614,7 @@ blueprints.buff_card = {
 			style.top.material_values.texture_map = "content/ui/textures/frames/horde/horde_buff_boon_selected"
 			style.top.size = {
 				480,
-				60,
+				60
 			}
 			style.top.offset[2] = -20
 		end
@@ -653,7 +653,7 @@ blueprints.buff_card = {
 
 			widget.content.size[2] = widget.content.size[2] + 250
 		end
-	end,
+	end
 }
 
 return blueprints

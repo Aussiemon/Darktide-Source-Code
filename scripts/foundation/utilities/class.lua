@@ -11,12 +11,12 @@ destroyed_mt.__index = function (t, k)
 end
 
 local special_functions = {
-	__class_name = true,
 	__index = true,
-	__interfaces = true,
+	super = true,
 	delete = true,
 	new = true,
-	super = true,
+	__interfaces = true,
+	__class_name = true
 }
 local CLASSES = CLASSES
 
@@ -39,7 +39,7 @@ function class(class_name, super_name)
 	if not class_table then
 		class_table = {
 			super = super,
-			__class_name = class_name,
+			__class_name = class_name
 		}
 		class_table.__index = class_table
 		class_table.__interfaces = {}

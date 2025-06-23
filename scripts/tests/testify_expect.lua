@@ -60,7 +60,7 @@ TestifyExpect._expect = function (self, expect, condition, message)
 	local expect_data = {
 		expect = expect,
 		condition = condition,
-		message = message,
+		message = message
 	}
 	local expects = self._expects
 
@@ -73,7 +73,7 @@ TestifyExpect._handle_expect = function (self, expect_data)
 	end
 
 	local context = {
-		expect_data = expect_data,
+		expect_data = expect_data
 	}
 	local func = loadstring(string.format("%s(expect_data.condition, expect_data.message)", expect_data.expect))
 

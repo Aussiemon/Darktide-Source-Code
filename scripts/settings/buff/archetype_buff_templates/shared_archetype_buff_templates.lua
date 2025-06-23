@@ -8,14 +8,14 @@ local templates = {}
 table.make_unique(templates)
 
 templates.coherency_aura_lingers = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	keywords = {
-		keywords.no_coherency_stickiness_limit,
+		keywords.no_coherency_stickiness_limit
 	},
 	stat_buffs = {
-		[stat_buffs.coherency_stickiness_time_value] = 5,
-	},
+		[stat_buffs.coherency_stickiness_time_value] = 5
+	}
 }
 
 return templates

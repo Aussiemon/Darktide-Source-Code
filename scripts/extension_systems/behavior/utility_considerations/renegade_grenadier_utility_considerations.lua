@@ -3,14 +3,14 @@
 local considerations = {
 	grenadier_quick_throw = {
 		has_line_of_sight = {
-			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			blackboard_component = "perception",
+			is_condition = true
 		},
 		last_done_time = {
-			component_field = "last_done_time",
-			max_value = 10,
 			time_diff = true,
+			max_value = 10,
+			component_field = "last_done_time",
 			spline = {
 				0,
 				0,
@@ -19,20 +19,20 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	grenadier_multi_quick_throw = {
 		has_line_of_sight = {
-			blackboard_component = "perception",
 			component_field = "has_line_of_sight",
-			is_condition = true,
+			blackboard_component = "perception",
+			is_condition = true
 		},
 		last_done_time = {
-			component_field = "last_done_time",
-			max_value = 20,
 			time_diff = true,
+			max_value = 20,
+			component_field = "last_done_time",
 			spline = {
 				0,
 				0,
@@ -41,10 +41,10 @@ local considerations = {
 				0.5001,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 
 return considerations

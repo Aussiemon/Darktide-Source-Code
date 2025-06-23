@@ -25,14 +25,14 @@ local function _close_voting_view()
 end
 
 local mission_vote_matchmaking_immaterium = {
-	immaterium_party_vote_type = "start_matchmaking",
-	name = "mission_vote_matchmaking_immaterium",
 	voting_impl = "party_immaterium",
+	name = "mission_vote_matchmaking_immaterium",
+	immaterium_party_vote_type = "start_matchmaking",
 	required_params = {
-		"backend_mission_id",
+		"backend_mission_id"
 	},
 	static_params = {
-		matchmaker_type = "mission",
+		matchmaker_type = "mission"
 	},
 	on_started = function (voting_id, template, params, started_by_account_id)
 		if Managers.ui:view_active("system_view") then
@@ -47,7 +47,7 @@ local mission_vote_matchmaking_immaterium = {
 					qp = params.qp,
 					voting_id = voting_id,
 					backend_mission_id = params.backend_mission_id,
-					started_by_account_id = started_by_account_id,
+					started_by_account_id = started_by_account_id
 				}
 
 				_open_voting_view(view_context)
@@ -56,7 +56,7 @@ local mission_vote_matchmaking_immaterium = {
 					voting_id = voting_id,
 					backend_mission_id = params.backend_mission_id,
 					mission_data = cjson.decode(params.mission_data).mission,
-					started_by_account_id = started_by_account_id,
+					started_by_account_id = started_by_account_id
 				}
 
 				_open_voting_view(view_context)
@@ -83,7 +83,7 @@ local mission_vote_matchmaking_immaterium = {
 
 			return Managers.backend.interfaces.matchmaker:fetch_queue_ticket_mission(params.backend_mission_id, character_id, params.private_session == "true"):next(function (response)
 				return {
-					ticket = response.ticket,
+					ticket = response.ticket
 				}
 			end)
 		else
@@ -102,7 +102,7 @@ local mission_vote_matchmaking_immaterium = {
 
 				promise:next(function (presence)
 					local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
-						member_character_name = presence:character_name(),
+						member_character_name = presence:character_name()
 					})
 					local sound_event = UISoundEvents.mission_vote_player_declined
 
@@ -110,7 +110,7 @@ local mission_vote_matchmaking_immaterium = {
 				end)
 			end
 		end
-	end,
+	end
 }
 
 return mission_vote_matchmaking_immaterium

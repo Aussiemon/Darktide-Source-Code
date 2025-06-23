@@ -7,8 +7,8 @@ local vo_settings = {
 	vo_event = "chaos_daemonhost_aggro",
 	cooldown_duration = {
 		9,
-		11,
-	},
+		11
+	}
 }
 local template = {
 	name = "chaos_daemonhost",
@@ -60,7 +60,7 @@ local template = {
 	end,
 	stop = function (template_data, template_context)
 		return
-	end,
+	end
 }
 
 return template

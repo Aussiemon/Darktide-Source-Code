@@ -42,7 +42,7 @@ MutatorToxicGas.init = function (self, is_server, network_event_delegate, mutato
 
 		self._gas_clouds[#self._gas_clouds + 1] = {
 			position = Vector3Box(wanted_position),
-			travel_distance = current_distance,
+			travel_distance = current_distance
 		}
 	end
 end

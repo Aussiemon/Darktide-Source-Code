@@ -8,19 +8,19 @@ local player = {
 	sfx = {
 		damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_weapon_large_metal_shield_slam",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage_negated = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_weapon_large_metal_shield_slam",
-			},
-		},
+				append_husk_to_event_name = true
+			}
+		}
 	},
 	vfx = {},
-	blood_ball = {},
+	blood_ball = {}
 }
 
 return {
@@ -31,6 +31,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

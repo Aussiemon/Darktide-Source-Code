@@ -8,9 +8,9 @@ HudElementCutsceneFading.init = function (self, parent, draw_layer, start_scale)
 
 	self._player = parent:player()
 	self._fade_color = {
-		x = 0,
-		y = 0,
 		z = 0,
+		x = 0,
+		y = 0
 	}
 
 	self:_register_event("event_cutscene_fade_in")
@@ -71,9 +71,9 @@ end
 local function _check_for_valid_color(color)
 	if color == nil or type(color) ~= "table" and type(color) ~= "userdata" then
 		return {
-			x = 0,
-			y = 0,
 			z = 0,
+			x = 0,
+			y = 0
 		}
 	end
 
@@ -83,7 +83,7 @@ local function _check_for_valid_color(color)
 		return {
 			x = color.x,
 			y = color.y,
-			z = color.z,
+			z = color.z
 		}
 	end
 
@@ -93,14 +93,14 @@ local function _check_for_valid_color(color)
 		return {
 			x = color[2],
 			y = color[3],
-			z = color[4],
+			z = color[4]
 		}
 	end
 
 	return {
-		x = 0,
-		y = 0,
 		z = 0,
+		x = 0,
+		y = 0
 	}
 end
 
@@ -141,7 +141,7 @@ HudElementCutsceneFading.event_cutscene_fade_out_at = function (self, player, du
 		duration = duration,
 		easing_function = easing_function,
 		fade_out_at = fade_out_at,
-		fade_color = _check_for_valid_color(fade_color),
+		fade_color = _check_for_valid_color(fade_color)
 	}
 end
 

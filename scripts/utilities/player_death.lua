@@ -15,7 +15,7 @@ PlayerDeath.die = function (unit, optional_despawn_time, optional_attacking_unit
 
 	if reason ~= "damage" then
 		local data = {
-			reason = reason,
+			reason = reason
 		}
 
 		Managers.telemetry_events:player_died(player, data)

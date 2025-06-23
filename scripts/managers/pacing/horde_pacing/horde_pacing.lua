@@ -61,7 +61,7 @@ local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
 	60,
 	60,
 	30,
-	30,
+	30
 }
 local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
 local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
@@ -69,7 +69,7 @@ local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
 	60,
 	60,
 	15,
-	10,
+	10
 }
 local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
 
@@ -321,7 +321,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				random_targets = random_targets,
 				optional_skip_spawners = optional_skip_spawners,
 				two_waves_ahead_and_behind = two_waves_ahead_and_behind,
-				two_waves_time_between_waves = time_between_waves,
+				two_waves_time_between_waves = time_between_waves
 			}
 		else
 			self._coordinated_horde_strikes[#self._coordinated_horde_strikes + 1] = {
@@ -335,7 +335,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				prefered_direction = prefered_direction,
 				stinger = stinger,
 				random_targets = random_targets,
-				optional_skip_spawners = optional_skip_spawners,
+				optional_skip_spawners = optional_skip_spawners
 			}
 		end
 
@@ -482,7 +482,7 @@ HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_i
 		Managers.server_metrics:add_annotation("start_horde_wave", {
 			horde_type = horde_type,
 			current_wave = current_wave + 1,
-			num_weaves = template.num_waves[horde_type],
+			num_weaves = template.num_waves[horde_type]
 		})
 	end
 
@@ -626,7 +626,7 @@ end
 
 local FAILED_TRAVEL_RANGE = {
 	10,
-	20,
+	20
 }
 
 HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, target_side_id)
@@ -784,7 +784,7 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 
 								if disallow_spawning_too_close_to_other_spawn then
 									trickle_horde.disallowed_spawn_positions = {
-										Vector3Box(horde_position),
+										Vector3Box(horde_position)
 									}
 								end
 							end

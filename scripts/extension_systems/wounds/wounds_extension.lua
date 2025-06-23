@@ -7,7 +7,7 @@ local RegionConstants = require("scripts/settings/region/region_constants")
 local attack_results = AttackSettings.attack_results
 local REUSE_WOUNDS = false
 local CLIENT_RPCS = {
-	"rpc_minion_add_wounds",
+	"rpc_minion_add_wounds"
 }
 local WoundsExtension = class("WoundsExtension")
 

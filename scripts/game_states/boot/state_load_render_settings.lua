@@ -15,7 +15,7 @@ end
 StateLoadRenderSettings._state_update = function (self, dt)
 	local render_settings = render_options.settings
 	local settings = {
-		render_settings,
+		render_settings
 	}
 
 	for i = 1, #settings do

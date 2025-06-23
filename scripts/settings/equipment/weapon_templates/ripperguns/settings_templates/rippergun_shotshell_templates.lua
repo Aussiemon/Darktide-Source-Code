@@ -10,13 +10,13 @@ table.make_unique(shotshell_templates)
 table.make_unique(overrides)
 
 shotshell_templates.default_rippergun_assault = {
-	bullseye = true,
-	num_pellets = 21,
-	num_spread_circles = 3,
-	pellets_per_frame = 10,
-	range = 75,
-	spread_pitch = 3.5,
 	spread_yaw = 4,
+	range = 75,
+	pellets_per_frame = 10,
+	spread_pitch = 3.5,
+	num_pellets = 21,
+	bullseye = true,
+	num_spread_circles = 3,
 	min_num_hits = {
 		[armor_types.unarmored] = 5,
 		[armor_types.armored] = 5,
@@ -24,22 +24,22 @@ shotshell_templates.default_rippergun_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_rippergun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_rippergun_assault
+		}
+	}
 }
 shotshell_templates.default_rippergun_snp = {
-	bullseye = true,
-	num_pellets = 21,
-	num_spread_circles = 3,
-	pellets_per_frame = 10,
-	range = 75,
-	spread_pitch = 3.5,
 	spread_yaw = 4,
+	range = 75,
+	pellets_per_frame = 10,
+	spread_pitch = 3.5,
+	num_pellets = 21,
+	bullseye = true,
+	num_spread_circles = 3,
 	min_num_hits = {
 		[armor_types.unarmored] = 5,
 		[armor_types.armored] = 5,
@@ -47,22 +47,22 @@ shotshell_templates.default_rippergun_snp = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_rippergun_snp,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_rippergun_snp
+		}
+	}
 }
 shotshell_templates.rippergun_p1_m2_assault = {
-	bullseye = true,
-	num_pellets = 7,
-	num_spread_circles = 2,
-	pellets_per_frame = 10,
-	range = 100,
-	spread_pitch = 1.5,
 	spread_yaw = 2,
+	range = 100,
+	pellets_per_frame = 10,
+	spread_pitch = 1.5,
+	num_pellets = 7,
+	bullseye = true,
+	num_spread_circles = 2,
 	min_num_hits = {
 		[armor_types.unarmored] = 5,
 		[armor_types.armored] = 5,
@@ -70,22 +70,22 @@ shotshell_templates.rippergun_p1_m2_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.rippergun_p1_m2_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.rippergun_p1_m2_assault
+		}
+	}
 }
 shotshell_templates.rippergun_p1_m2_snp = {
-	bullseye = true,
-	num_pellets = 7,
-	num_spread_circles = 2,
-	pellets_per_frame = 10,
-	range = 100,
-	spread_pitch = 1.5,
 	spread_yaw = 2,
+	range = 100,
+	pellets_per_frame = 10,
+	spread_pitch = 1.5,
+	num_pellets = 7,
+	bullseye = true,
+	num_spread_circles = 2,
 	min_num_hits = {
 		[armor_types.unarmored] = 5,
 		[armor_types.armored] = 5,
@@ -93,23 +93,23 @@ shotshell_templates.rippergun_p1_m2_snp = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 5,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 5,
+		[armor_types.disgustingly_resilient] = 5
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.rippergun_p1_m2_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.rippergun_p1_m2_assault
+		}
+	}
 }
 shotshell_templates.rippergun_p1_m3_assault = {
-	bullseye = true,
-	num_pellets = 7,
-	num_spread_circles = 1,
-	pellets_per_frame = 10,
-	range = 100,
-	roll_offset = 0.125,
-	spread_pitch = 1.5,
 	spread_yaw = 3,
+	range = 100,
+	pellets_per_frame = 10,
+	spread_pitch = 1.5,
+	roll_offset = 0.125,
+	num_pellets = 7,
+	bullseye = true,
+	num_spread_circles = 1,
 	min_num_hits = {
 		[armor_types.unarmored] = 3,
 		[armor_types.armored] = 3,
@@ -117,25 +117,25 @@ shotshell_templates.rippergun_p1_m3_assault = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 3,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 3,
+		[armor_types.disgustingly_resilient] = 3
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.rippergun_p1_m3_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.rippergun_p1_m3_assault
+		}
+	}
 }
 shotshell_templates.rippergun_p1_m3_snp = {
-	bullseye = true,
-	no_random_roll = true,
-	num_pellets = 7,
-	num_spread_circles = 3,
-	pellets_per_frame = 10,
+	spread_yaw = 2,
 	range = 100,
-	roll_offset = 0.25,
+	pellets_per_frame = 10,
+	no_random_roll = true,
 	scatter_range = 0.045,
 	spread_pitch = 2,
-	spread_yaw = 2,
+	roll_offset = 0.25,
+	num_pellets = 7,
+	bullseye = true,
+	num_spread_circles = 3,
 	min_num_hits = {
 		[armor_types.unarmored] = 3,
 		[armor_types.armored] = 3,
@@ -143,16 +143,16 @@ shotshell_templates.rippergun_p1_m3_snp = {
 		[armor_types.player] = 1,
 		[armor_types.berserker] = 3,
 		[armor_types.super_armor] = 2,
-		[armor_types.disgustingly_resilient] = 3,
+		[armor_types.disgustingly_resilient] = 3
 	},
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.rippergun_p1_m3_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.rippergun_p1_m3_assault
+		}
+	}
 }
 
 return {
 	base_templates = shotshell_templates,
-	overrides = overrides,
+	overrides = overrides
 }

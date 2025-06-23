@@ -2,10 +2,10 @@
 
 local circumstance_templates = {
 	hub_anniversary = {
-		theme_tag = "hub_anniversary",
 		wwise_state = "none",
-		mutators = {},
-	},
+		theme_tag = "hub_anniversary",
+		mutators = {}
+	}
 }
 
 return circumstance_templates

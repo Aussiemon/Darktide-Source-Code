@@ -15,7 +15,7 @@ ConstantGroupFinderStatus.init = function (self, parent, draw_layer, start_scale
 	self._advertisement_join_requests_version = -1
 	self._original_position = {
 		self._ui_scenegraph.pivot.position[1],
-		self._ui_scenegraph.pivot.position[2],
+		self._ui_scenegraph.pivot.position[2]
 	}
 	self._num_requests = 0
 
@@ -203,7 +203,7 @@ ConstantGroupFinderStatus._update_incoming_join_requests = function (self)
 			if self._num_requests ~= current_request_amount then
 				self._num_requests = current_request_amount
 				self._widgets_by_name.request_text.content.text = Localize("loc_group_finder_status_panel_player_request", true, {
-					num_requests = current_request_amount,
+					num_requests = current_request_amount
 				})
 
 				if current_request_amount > 0 then

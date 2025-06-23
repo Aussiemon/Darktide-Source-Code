@@ -59,7 +59,7 @@ local MainMenuViewTestify = {
 	end,
 	wait_for_main_menu_displayed = function ()
 		return
-	end,
+	end
 }
 
 return MainMenuViewTestify

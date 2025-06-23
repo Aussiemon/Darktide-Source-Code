@@ -19,10 +19,10 @@ end
 Application.warning = function (...)
 	if BUILD ~= "release" then
 		Application.console_send({
-			level = "warning",
 			system = "Lua",
+			level = "warning",
 			type = "message",
-			message = format_error_message(...),
+			message = format_error_message(...)
 		})
 	end
 end
@@ -30,10 +30,10 @@ end
 Application.error = function (...)
 	if BUILD ~= "release" then
 		Application.console_send({
-			level = "error",
 			system = "Lua",
+			level = "error",
 			type = "message",
-			message = format_error_message(...),
+			message = format_error_message(...)
 		})
 	end
 end

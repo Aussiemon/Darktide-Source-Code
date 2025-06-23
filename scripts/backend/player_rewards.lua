@@ -22,7 +22,7 @@ PlayerRewards.get_penance_rewards_by_source = function (self, wrapped, promise, 
 
 			all_rewards[#all_rewards + 1] = {
 				penance_id = penance_id,
-				reward_bundle = item,
+				reward_bundle = item
 			}
 		end
 
@@ -51,7 +51,7 @@ PlayerRewards.claim_bundle_reward = function (self, bundle_reward_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/rewards/"):path(bundle_reward_id)
 		local options = {
-			method = "PUT",
+			method = "PUT"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

@@ -21,7 +21,7 @@ local RPCS = {
 	"rpc_remove_buff",
 	"rpc_buff_proc_set_active_time",
 	"rpc_buff_set_start_time",
-	"rpc_add_buff_with_stacks",
+	"rpc_add_buff_with_stacks"
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
 local _stat_buff_lazy_mt = {
@@ -31,7 +31,7 @@ local _stat_buff_lazy_mt = {
 		self[key] = val
 
 		return val
-	end,
+	end
 }
 
 BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, pre_allocate_event_param_tables)
@@ -56,7 +56,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		is_local_unit = extension_init_data.is_local_unit,
 		is_server = is_server,
 		breed = extension_init_data.breed,
-		fixed_time_step = Managers.state.game_session.fixed_time_step,
+		fixed_time_step = Managers.state.game_session.fixed_time_step
 	}
 	self._index = 0
 	self._buffs = {}
@@ -65,7 +65,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._stacking_buffs = {}
 	self._buffs_by_index = {}
 	self._stat_buffs = setmetatable({
-		_modified_stats = {},
+		_modified_stats = {}
 	}, _stat_buff_lazy_mt)
 	self._keywords = {}
 	self._had_keywords = {}
@@ -934,7 +934,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 
 					active_node_sfx_effects[node_index] = {
 						wwise_source_id = wwise_source_id,
-						active_wwise_events = {},
+						active_wwise_events = {}
 					}
 				end
 
@@ -982,7 +982,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 
 					active_node_vfx[particle_effect] = {
 						particle_id = effect_id,
-						stop_type = stop_type,
+						stop_type = stop_type
 					}
 
 					local material_variables = vfx.material_variables

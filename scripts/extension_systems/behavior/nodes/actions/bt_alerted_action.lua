@@ -8,11 +8,11 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtAlertedAction = class("BtAlertedAction", "BtNode")
 local ALERTED_MODES = {
-	alerted = 5,
 	directional_alerted = 3,
+	alerted = 5,
 	hesitate = 4,
 	instant_aggro = 1,
-	moving_alerted = 2,
+	moving_alerted = 2
 }
 local LINE_OF_SIGHT_CHECK_SHORT_DISTANCE = 15
 local LINE_OF_SIGHT_CHECK_DELAY_SHORT = 0.15

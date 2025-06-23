@@ -22,7 +22,7 @@ TrainingGroundsView.on_enter = function (self)
 	end
 
 	self:play_vo_events({
-		"hub_interact_training_ground_psyker",
+		"hub_interact_training_ground_psyker"
 	}, "training_ground_psyker_a", nil, 0.8, true)
 end
 

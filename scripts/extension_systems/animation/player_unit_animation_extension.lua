@@ -144,7 +144,7 @@ end
 
 local ALWAYS_ROLLBACK_ACTION_KINDS = {
 	reload_shotgun = true,
-	reload_state = true,
+	reload_state = true
 }
 
 PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, from_frame, to_frame, simulated_components)

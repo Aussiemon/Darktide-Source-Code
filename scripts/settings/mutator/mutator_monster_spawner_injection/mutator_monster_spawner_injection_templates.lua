@@ -12,7 +12,7 @@ mutator_monster_spawner_injection_templates.havoc_twins = {
 		if threshold_value < math.random() then
 			local breed_names = {
 				"renegade_twin_captain",
-				"renegade_twin_captain_two",
+				"renegade_twin_captain_two"
 			}
 			local spawn_position = monster.position:unbox()
 			local spawned_unit
@@ -40,7 +40,7 @@ mutator_monster_spawner_injection_templates.havoc_twins = {
 				Log.info("MonsterPacing", "Spawned monster %s successfully.", breed_name)
 			end
 		end
-	end,
+	end
 }
 mutator_monster_spawner_injection_templates.nurgle_totems = {
 	spawn = function (template, monster, ahead_target_unit, side_id)
@@ -68,7 +68,7 @@ mutator_monster_spawner_injection_templates.nurgle_totems = {
 
 		local placement_settings = {
 			position_offset = 4,
-			num_slots = #breed_data,
+			num_slots = #breed_data
 		}
 		local spawn_locations = RoamerSlotPlacementFunctions.circle_placement(nav_world, monster.position, placement_settings, nil)
 
@@ -81,7 +81,7 @@ mutator_monster_spawner_injection_templates.nurgle_totems = {
 
 			minion_spawn_manager:spawn_minion(breed_data[i], spawn_data.position:unbox(), spawn_data.rotation:unbox(), 2, param_table)
 		end
-	end,
+	end
 }
 
 return settings("MutatorMonsterSpawnerInjectionTemplates", mutator_monster_spawner_injection_templates)

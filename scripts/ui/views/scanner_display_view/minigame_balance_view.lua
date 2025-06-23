@@ -30,13 +30,13 @@ local COLOR_STALLED = {
 	255,
 	196,
 	116,
-	22,
+	22
 }
 local COLOR_PROGRESSING = {
 	255,
 	0,
 	196,
-	0,
+	0
 }
 
 MinigameBalanceView.update = function (self, dt, t, widgets_by_name)
@@ -80,9 +80,9 @@ MinigameBalanceView._create_progress_widgets = function (self)
 	local starting_offset_y = ScannerDisplayViewBalanceSettings.progress_starting_offset_y
 	local pass_definitions = {
 		{
-			pass_type = "rotated_texture",
-			style_id = "progress_bar",
 			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "progress_bar",
+			pass_type = "rotated_texture",
 			style = {
 				hdr = true,
 				size = {},
@@ -90,10 +90,10 @@ MinigameBalanceView._create_progress_widgets = function (self)
 					200,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}
 	local progress_widgets = {}
 
@@ -118,13 +118,13 @@ local CURSOR_COLOR = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 local CURSOR_ALERT = {
 	255,
 	255,
 	151,
-	29,
+	29
 }
 
 MinigameBalanceView._update_cursor = function (self, widgets_by_name)

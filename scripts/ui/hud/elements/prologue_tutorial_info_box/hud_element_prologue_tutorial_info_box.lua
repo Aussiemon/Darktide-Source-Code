@@ -105,7 +105,7 @@ HudElementPrologueTutorialInfoBox.event_player_display_prologue_tutorial_info_bo
 		end
 
 		table.insert(self._popup_queue, 1, {
-			info_data = info_data,
+			info_data = info_data
 		})
 	else
 		self:_present_new_info_box(info_data)
@@ -337,7 +337,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 
 		style.input_description_text.size = {
 			input_description_width,
-			input_description_text_height,
+			input_description_text_height
 		}
 
 		local offset_y = total_height + 35
@@ -355,7 +355,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 
 	style.description_text.size = {
 		description_width,
-		description_text_height,
+		description_text_height
 	}
 end
 

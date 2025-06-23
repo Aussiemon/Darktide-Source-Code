@@ -16,7 +16,7 @@ CraftingExtractTraitView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._recipe = CraftingSettings.recipes.extract_trait
 	self._ingredients = {
-		item = self._item,
+		item = self._item
 	}
 end
 

@@ -1,58 +1,58 @@
 ﻿-- chunkname: @scripts/settings/game_mode/game_mode_settings_prologue.lua
 
 local settings = {
-	bot_backfilling_allowed = false,
-	cache_local_player_profile = true,
-	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_prologue",
-	default_player_side_name = "heroes",
-	disable_hologram = true,
-	host_singleplay = true,
-	is_prologue = true,
-	name = "prologue",
-	talents_disabled = true,
 	use_prologue_profile = true,
+	bot_backfilling_allowed = false,
+	host_singleplay = true,
+	name = "prologue",
+	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_prologue",
+	talents_disabled = true,
+	cache_local_player_profile = true,
 	use_side_color = false,
+	disable_hologram = true,
 	vaulting_allowed = true,
+	default_player_side_name = "heroes",
+	is_prologue = true,
 	states = {
 		"running",
-		"prologue_complete",
+		"prologue_complete"
 	},
 	side_compositions = {
 		{
-			color_name = "blue",
 			name = "heroes",
+			color_name = "blue",
 			relations = {
 				enemy = {
-					"villains",
-				},
-			},
+					"villains"
+				}
+			}
 		},
 		{
-			color_name = "red",
 			name = "villains",
+			color_name = "red",
 			relations = {
 				enemy = {
-					"heroes",
-				},
-			},
-		},
+					"heroes"
+				}
+			}
+		}
 	},
 	side_sub_faction_types = {
 		villains = {
 			"chaos",
 			"cultist",
-			"renegade",
-		},
+			"renegade"
+		}
 	},
 	hud_settings = {
-		player_composition = "players",
+		player_composition = "players"
 	},
 	hotkeys = {
-		hotkey_system = "system_view",
+		hotkey_system = "system_view"
 	},
 	human_controlled_initial_items_excluded_slots = {
-		"slot_secondary",
-	},
+		"slot_secondary"
+	}
 }
 
 return settings

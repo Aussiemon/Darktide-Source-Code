@@ -33,7 +33,7 @@ UIWidget.init = function (name, widget_definition)
 	local offset = widget_definition.offset and table.clone(widget_definition.offset) or {
 		0,
 		0,
-		0,
+		0
 	}
 	local size = widget_definition.size and table.clone(widget_definition.size) or nil
 
@@ -47,7 +47,7 @@ UIWidget.init = function (name, widget_definition)
 		style = style,
 		scenegraph_id = widget_definition.scenegraph_id,
 		offset = offset,
-		animations = {},
+		animations = {}
 	}
 end
 
@@ -128,7 +128,7 @@ local PASS_INTERFACE = table.set({
 	"change_function",
 	"visibility_function",
 	"scenegraph_id",
-	"retained_mode",
+	"retained_mode"
 })
 
 UIWidget.add_definition_pass = function (destination, pass_info)
@@ -222,7 +222,7 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 		change_function = pass_info.change_function,
 		visibility_function = pass_info.visibility_function,
 		scenegraph_id = pass_info.scenegraph_id,
-		retained_mode = pass_info.retained_mode,
+		retained_mode = pass_info.retained_mode
 	}
 
 	passes[pass_index] = new_pass_info

@@ -11,117 +11,117 @@ local button_height = ConstantElementWarningPopupsSettings.button_height
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	center_pivot = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			start_layer + 1,
-		},
+			start_layer + 1
+		}
 	},
 	top_icon = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	title_text = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			text_max_width,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	description_text = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			text_max_width,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	offer_text = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			text_max_width,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	offer_price_text = {
-		horizontal_alignment = "center",
-		parent = "offer_text",
 		vertical_alignment = "bottom",
+		parent = "offer_text",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	button_pivot = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			button_height,
+			button_height
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	description_grid = {
-		horizontal_alignment = "center",
-		parent = "center_pivot",
 		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
 		size = {
 			text_max_width,
-			100,
+			100
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local title_text_style = table.clone(UIFontSettings.header_2)
 
@@ -148,7 +148,7 @@ offer_title_style.font_size = 40
 offer_title_style.offset = {
 	0,
 	0,
-	1,
+	1
 }
 
 local offer_sub_title_style = table.clone(UIFontSettings.terminal_header_3)
@@ -160,7 +160,7 @@ offer_sub_title_style.vertical_alignment = "top"
 offer_sub_title_style.offset = {
 	0,
 	10,
-	1,
+	1
 }
 offer_sub_title_style.font_size = 20
 
@@ -169,314 +169,314 @@ local popup_type_style = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			92,
-			72,
+			72
 		},
 		icon_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		background_color = {
 			50,
 			100,
 			0,
-			0,
+			0
 		},
 		terminal_background_color = {
 			255,
 			100,
 			6,
-			6,
+			6
 		},
 		title_text_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		description_text_color = {
 			255,
 			212,
 			194,
-			194,
-		},
+			194
+		}
 	},
 	default = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			0,
-			0,
+			0
 		},
 		icon_color = Color.blue(127.5, true),
 		background_color = Color.terminal_grid_background(50, true),
 		terminal_background_color = Color.terminal_grid_background(255, true),
 		title_text_color = Color.terminal_text_header(255, true),
-		description_text_color = Color.terminal_text_body(255, true),
-	},
+		description_text_color = Color.terminal_text_body(255, true)
+	}
 }
 local widget_definitions = {
 	popup_background = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "terminal",
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "terminal",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					start_layer,
+					start_layer
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				size_addition = {
 					40,
-					150,
+					150
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/backgrounds/popups/screen_takeover_01",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_background(255, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					start_layer + 1,
+					start_layer + 1
 				},
 				size = {
 					1822,
-					430,
+					430
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "screen"),
 	edge_top = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					start_layer + 2,
+					start_layer + 2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "texture_center",
 			value = "content/ui/materials/dividers/skull_rendered_center_01",
+			style_id = "texture_center",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					start_layer + 3,
+					start_layer + 3
 				},
 				size = {
 					140,
-					18,
-				},
-			},
-		},
+					18
+				}
+			}
+		}
 	}, "screen"),
 	edge_bottom = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					start_layer + 2,
+					start_layer + 2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "texture_center",
 			value = "content/ui/materials/dividers/skull_rendered_center_02",
+			style_id = "texture_center",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					10,
-					start_layer + 3,
+					start_layer + 3
 				},
 				size = {
 					306,
-					48,
-				},
-			},
-		},
+					48
+				}
+			}
+		}
 	}, "screen"),
 	top_icon = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			style_id = "texture",
-			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
 			value_id = "texture",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "top",
+				horizontal_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					start_layer + 2,
+					start_layer + 2
 				},
 				size = {
 					100,
-					100,
-				},
-			},
-		},
+					100
+				}
+			}
+		}
 	}, "top_icon"),
 	title_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "title_text",
 			value_id = "text",
-			style = title_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "title_text",
+			style = title_text_style
+		}
 	}, "title_text"),
 	description_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
 			value_id = "text",
-			style = description_text_style,
-		},
-	}, "description_text"),
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = description_text_style
+		}
+	}, "description_text")
 }
 local wallet_definitions = UIWidget.create_definition({
 	{
-		pass_type = "texture",
 		style_id = "texture",
+		pass_type = "texture",
 		value_id = "texture",
 		style = {
-			horizontal_alignment = "right",
 			vertical_alignment = "center",
+			horizontal_alignment = "right",
 			size = {
 				42,
-				30,
+				30
 			},
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			return content.texture
-		end,
+		end
 	},
 	{
-		pass_type = "text",
-		style_id = "text",
-		value = "0",
 		value_id = "text",
-		style = wallet_text_font_style,
-	},
+		style_id = "text",
+		pass_type = "text",
+		value = "0",
+		style = wallet_text_font_style
+	}
 }, "offer_price_text")
 local offer_definitions = UIWidget.create_definition({
 	{
+		value_id = "text",
 		pass_type = "text",
 		style_id = "text",
 		value = "",
-		value_id = "text",
-		style = offer_title_style,
+		style = offer_title_style
 	},
 	{
+		value_id = "sub_text",
 		pass_type = "text",
 		style_id = "sub_text",
 		value = "",
-		value_id = "sub_text",
-		style = offer_sub_title_style,
-	},
+		style = offer_sub_title_style
+	}
 }, "offer_text")
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
 		{
-			end_time = 0,
 			name = "init",
+			end_time = 0,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local alpha_multiplier = 0
@@ -530,7 +530,7 @@ local animations = {
 
 					content_widgets[i].alpha_multiplier = alpha_multiplier
 				end
-			end,
+			end
 		},
 		{
 			name = "open",
@@ -554,7 +554,7 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -584,7 +584,7 @@ local animations = {
 				if params.description_grid then
 					params.description_grid:set_alpha_multiplier(anim_progress)
 				end
-			end,
+			end
 		},
 		{
 			name = "reaction_time",
@@ -592,8 +592,8 @@ local animations = {
 			end_time = anim_start_delay + 0.45,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				return
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -624,7 +624,7 @@ local animations = {
 				if params.description_grid then
 					params.description_grid:set_alpha_multiplier(anim_progress)
 				end
-			end,
+			end
 		},
 		{
 			name = "close",
@@ -648,20 +648,20 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	button_definition = UIWidget.create_definition(ButtonPassTemplates.default_button, "button_pivot", nil, {
 		button_height,
-		button_height,
+		button_height
 	}),
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	popup_type_style = popup_type_style,
 	wallet_definitions = wallet_definitions,
-	offer_definitions = offer_definitions,
+	offer_definitions = offer_definitions
 }

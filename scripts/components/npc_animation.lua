@@ -74,29 +74,29 @@ end
 
 NpcAnimation.component_data = {
 	editor_only = {
-		category = "Settings",
-		ui_name = "Editor Only",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Editor Only",
+		category = "Settings"
 	},
 	state_machine_override = {
-		category = "Animation",
-		filter = "state_machine",
-		ui_name = "State Machine Override",
 		ui_type = "resource",
+		category = "Animation",
 		value = "",
+		ui_name = "State Machine Override",
+		filter = "state_machine"
 	},
 	state_machine_init_event = {
-		category = "Animation",
-		ui_name = "State Machine Init Event",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "State Machine Init Event",
+		category = "Animation"
 	},
 	anim_bone_mode = {
+		value = "default",
+		ui_type = "combo_box",
 		category = "Animation",
 		ui_name = "Bone Mode",
-		ui_type = "combo_box",
-		value = "default",
 		options_keys = {
 			"Default",
 			"Position and Rotation",
@@ -106,7 +106,7 @@ NpcAnimation.component_data = {
 			"Rotation",
 			"Scale",
 			"Position and Scale",
-			"Rotation and Scale",
+			"Rotation and Scale"
 		},
 		options_values = {
 			"default",
@@ -117,23 +117,23 @@ NpcAnimation.component_data = {
 			"rotation",
 			"scale",
 			"position_and_scale",
-			"rotation_and_scale",
-		},
+			"rotation_and_scale"
+		}
 	},
 	use_bone_lod = {
-		category = "Bone LOD",
-		ui_name = "Use Bone LOD (not visible in editor)",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Use Bone LOD (not visible in editor)",
+		category = "Bone LOD"
 	},
 	bone_lod_radius = {
-		category = "Bone LOD",
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Bone LOD Radius",
 		ui_type = "number",
+		decimals = 2,
+		category = "Bone LOD",
 		value = 0.88,
-	},
+		ui_name = "Bone LOD Radius",
+		step = 0.01
+	}
 }
 
 return NpcAnimation

@@ -8,14 +8,14 @@ WeaponBarUIDescriptionTemplates.recoil = {
 	rise = {
 		_array_range = {
 			1,
-			math.huge,
-		},
+			math.huge
+		}
 	},
 	offset_range = {
 		_array_range = {
 			1,
-			math.huge,
-		},
+			math.huge
+		}
 	},
 	offset = {
 		_array_range = {
@@ -24,16 +24,16 @@ WeaponBarUIDescriptionTemplates.recoil = {
 			pitch = {
 				_array_range = {
 					1,
-					2,
-				},
+					2
+				}
 			},
 			yaw = {
 				_array_range = {
 					1,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	},
 	offset_random_range = {
 		_array_range = {
@@ -42,23 +42,23 @@ WeaponBarUIDescriptionTemplates.recoil = {
 			pitch = {
 				_array_range = {
 					1,
-					2,
-				},
+					2
+				}
 			},
 			yaw = {
 				_array_range = {
 					1,
-					2,
-				},
-			},
-		},
+					2
+				}
+			}
+		}
 	},
-	new_influence_percent = {},
+	new_influence_percent = {}
 }
 WeaponBarUIDescriptionTemplates.spread = {
 	continuous_spread = {
 		min_pitch = {},
-		min_yaw = {},
+		min_yaw = {}
 	},
 	immediate_spread = {
 		shooting = {
@@ -66,17 +66,17 @@ WeaponBarUIDescriptionTemplates.spread = {
 				1,
 				math.huge,
 				pitch = {},
-				yaw = {},
-			},
-		},
-	},
+				yaw = {}
+			}
+		}
+	}
 }
 WeaponBarUIDescriptionTemplates.sway = {
 	continuous_sway = {
 		pitch = {},
-		yaw = {},
+		yaw = {}
 	},
-	intensity = {},
+	intensity = {}
 }
 WeaponBarUIDescriptionTemplates.armor_damage_modifiers = {
 	[armor_types.unarmored] = {},
@@ -84,89 +84,89 @@ WeaponBarUIDescriptionTemplates.armor_damage_modifiers = {
 	[armor_types.armored] = {},
 	[armor_types.super_armor] = {},
 	[armor_types.resistant] = {},
-	[armor_types.berserker] = {},
+	[armor_types.berserker] = {}
 }
 WeaponBarUIDescriptionTemplates.all_basic_stats = {
 	display_stats = {
-		__all_basic_stats = true,
-	},
+		__all_basic_stats = true
+	}
 }
 
 local default_bar_stats = {
 	stability_recoil = {
 		display_stats = {
 			still = WeaponBarUIDescriptionTemplates.recoil,
-			moving = WeaponBarUIDescriptionTemplates.recoil,
+			moving = WeaponBarUIDescriptionTemplates.recoil
 		},
 		display_group_stats = {
 			recoil_still = {},
-			recoil_moving = {},
-		},
+			recoil_moving = {}
+		}
 	},
 	stability_spread = {
 		display_stats = {
-			still = WeaponBarUIDescriptionTemplates.spread,
+			still = WeaponBarUIDescriptionTemplates.spread
 		},
 		display_group_stats = {
-			still_min_spread = {},
-		},
+			still_min_spread = {}
+		}
 	},
 	stability_sway = {
 		display_stats = {
-			still = WeaponBarUIDescriptionTemplates.sway,
+			still = WeaponBarUIDescriptionTemplates.sway
 		},
 		display_group_stats = {
-			continuous_sway = {},
-		},
+			continuous_sway = {}
+		}
 	},
 	ammo = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	dps_damage = {},
 	dps_damage_near_far = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	power_damage = {},
 	power_damage_near_far = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	mobility_dodge = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	mobility_recoil = {
 		display_stats = {
-			moving = WeaponBarUIDescriptionTemplates.recoil,
+			moving = WeaponBarUIDescriptionTemplates.recoil
 		},
 		display_group_stats = {
-			recoil_moving = {},
-		},
+			recoil_moving = {}
+		}
 	},
 	mobility_sprint = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	mobility_curve = {
 		display_stats = {
-			__all_basic_stats = true,
-		},
+			__all_basic_stats = true
+		}
 	},
 	mobility_spread = {
 		display_stats = {
-			moving = WeaponBarUIDescriptionTemplates.spread,
+			moving = WeaponBarUIDescriptionTemplates.spread
 		},
 		display_group_stats = {
-			moving_min_spread = {},
-		},
-	},
+			moving_min_spread = {}
+		}
+	}
 }
 
 WeaponBarUIDescriptionTemplates.create_template = function (bar_stat_type, prefix, postfix, custom_data)

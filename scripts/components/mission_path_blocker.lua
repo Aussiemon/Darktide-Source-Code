@@ -80,10 +80,10 @@ MissionPathBlocker.component_data = {
 	inputs = {
 		mission_path_blocker_open = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
-	extensions = {},
+	extensions = {}
 }
 
 return MissionPathBlocker

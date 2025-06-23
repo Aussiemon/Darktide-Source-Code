@@ -24,6 +24,10 @@ WeaponSpecialKillCountCharges.init = function (self, context, init_data)
 	self._last_hits = {}
 end
 
+WeaponSpecialKillCountCharges.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialKillCountCharges.fixed_update = function (self, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
 	local special_charge_remove_at_t = inventory_slot_component.special_charge_remove_at_t
@@ -73,11 +77,11 @@ end
 
 local EMPTY_TABLE = {}
 local breed_tag_charges = {
-	captain = 10,
-	elite = 2,
 	monster = 10,
-	ogryn = 2,
 	special = 2,
+	ogryn = 2,
+	captain = 10,
+	elite = 2
 }
 
 WeaponSpecialKillCountCharges.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)
@@ -92,6 +96,10 @@ WeaponSpecialKillCountCharges.process_hit = function (self, t, weapon, action_se
 			self._last_hits[target_unit] = t + killsteal_safety_time
 		end
 	end
+end
+
+WeaponSpecialKillCountCharges.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialKillCountCharges._add_charge = function (self, t, target_unit)

@@ -8,34 +8,34 @@ local MIN_DISSOLVE_RADIUS = 0.01
 local radius_material_keys = {
 	"wound_radius_01",
 	"wound_radius_02",
-	"wound_radius_03",
+	"wound_radius_03"
 }
 local shape_scale_material_keys = {
 	"wound_shape_scaling_01",
 	"wound_shape_scaling_02",
-	"wound_shape_scaling_03",
+	"wound_shape_scaling_03"
 }
 local hide_on_dissolve_slots = {
+	slot_shield = 0.6,
 	slot_beard = 0.25,
 	slot_gear_attachment = 0.4,
-	slot_hair = 0.2,
 	slot_melee_weapon = 0.6,
-	slot_ranged_weapon = 0.6,
-	slot_shield = 0.6,
+	slot_hair = 0.2,
+	slot_ranged_weapon = 0.6
 }
 local breed_hide_on_dissolve_slots = {
 	renegade_gunner = {
-		slot_head = 0.25,
+		slot_head = 0.25
 	},
 	renegade_shocktrooper = {
-		slot_head = 0.25,
+		slot_head = 0.25
 	},
 	renegade_berzerker = {
-		slot_head = 0.25,
+		slot_head = 0.25
 	},
 	cultist_assault = {
-		slot_head = 0.25,
-	},
+		slot_head = 0.25
+	}
 }
 
 local function get_shape_scale(radius)

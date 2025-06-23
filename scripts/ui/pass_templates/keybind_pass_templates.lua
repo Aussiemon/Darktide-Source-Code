@@ -39,11 +39,11 @@ KeybindPassTemplates.settings_keybind = function (width, height, settings_area_w
 	value_font_style.offset = {
 		0,
 		0,
-		3,
+		3
 	}
 	value_font_style.size = {
 		settings_area_width,
-		height,
+		height
 	}
 	value_font_style.horizontal_alignment = "right"
 	value_font_style.text_horizontal_alignment = "center"
@@ -55,68 +55,68 @@ KeybindPassTemplates.settings_keybind = function (width, height, settings_area_w
 			value = "content/ui/materials/frames/hover",
 			style = {
 				hdr = true,
-				horizontal_alignment = "right",
 				scale_to_material = true,
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					height,
+					height
 				},
 				color = Color.terminal_corner(255, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					11,
-				},
+					11
+				}
 			},
 			change_function = list_item_highlight_change_function,
-			visibility_function = list_item_focused_visibility_function,
+			visibility_function = list_item_focused_visibility_function
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/background_selected",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					height,
+					height
 				},
 				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
-					1,
-				},
-			},
+					1
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "right",
 				vertical_alignment = "center",
+				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
-					height,
+					height
 				},
 				color = Color.terminal_corner(25.5, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "text",
-			value = "n/a",
 			value_id = "value_text",
+			value = "n/a",
 			style = value_font_style,
-			change_function = highlight_color_change_function,
-		},
+			change_function = highlight_color_change_function
+		}
 	}
 	local passes = {}
 

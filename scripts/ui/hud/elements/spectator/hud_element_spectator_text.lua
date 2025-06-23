@@ -43,13 +43,13 @@ HudElementSpectatorText.update = function (self, dt, t, ui_renderer, render_sett
 		local formated_name = " " .. name
 
 		self._widgets_by_name.spectating_text.content.text = Localize("loc_spectator_mode_spectating_player", true, {
-			player_name = formated_name,
+			player_name = formated_name
 		})
 
 		local input_text = self:_get_cycle_input_text()
 
 		self._widgets_by_name.cycle_text.content.text = Localize("loc_spectator_mode_input_cycle_player", true, {
-			input = input_text,
+			input = input_text
 		})
 		self._update_spectator_text = nil
 	end

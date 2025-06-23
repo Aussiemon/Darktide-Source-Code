@@ -134,8 +134,8 @@ PresenceManager.set_party = function (self, party_id, num_party_members)
 	self._myself:set_party_id(party_id)
 	self._myself:set_num_party_members(num_party_members)
 	self:_update_my_presence({
-		num_party_members = true,
 		party_id = true,
+		num_party_members = true
 	})
 
 	if self._advertise_playing then
@@ -160,56 +160,56 @@ end
 PresenceManager.set_character_profile = function (self, character_profile)
 	self._myself:set_character_profile(character_profile)
 	self:_update_my_presence({
-		character_profile = true,
+		character_profile = true
 	})
 end
 
 PresenceManager.set_cross_play_disabled = function (self, disabled)
 	self._myself:set_cross_play_disabled(disabled)
 	self:_update_my_presence({
-		cross_play_disabled = true,
+		cross_play_disabled = true
 	})
 end
 
 PresenceManager._set_cross_play_disabled_in_party = function (self, disabled)
 	self._myself:set_cross_play_disabled_in_party(disabled)
 	self:_update_my_presence({
-		cross_play_disabled_in_party = true,
+		cross_play_disabled_in_party = true
 	})
 end
 
 PresenceManager._set_is_cross_playing = function (self, value)
 	self._myself:set_is_cross_playing(value)
 	self:_update_my_presence({
-		is_cross_playing = true,
+		is_cross_playing = true
 	})
 end
 
 PresenceManager.set_psn_session_id = function (self, session_id)
 	self._myself:set_psn_session_id(session_id)
 	self:_update_my_presence({
-		psn_session_id = true,
+		psn_session_id = true
 	})
 end
 
 PresenceManager.set_havoc_status = function (self, value)
 	self._myself:set_havoc_status(value)
 	self:_update_my_presence({
-		havoc_status = true,
+		havoc_status = true
 	})
 end
 
 PresenceManager.set_havoc_rank_cadence_high = function (self, value)
 	self._myself:set_havoc_rank_cadence_high(value)
 	self:_update_my_presence({
-		havoc_rank_cadence_high = true,
+		havoc_rank_cadence_high = true
 	})
 end
 
 PresenceManager.set_havoc_rank_all_time_high = function (self, value)
 	self._myself:set_havoc_rank_all_time_high(value)
 	self:_update_my_presence({
-		havoc_rank_all_time_high = true,
+		havoc_rank_all_time_high = true
 	})
 end
 
@@ -283,7 +283,7 @@ PresenceManager._init_batched_get_presence = function (self, stream_id)
 	batched_presence_streams[stream_id] = {
 		restarting = false,
 		stream = Managers.grpc:get_batched_presence_stream(),
-		entry_to_request_id = {},
+		entry_to_request_id = {}
 	}
 
 	return stream_id

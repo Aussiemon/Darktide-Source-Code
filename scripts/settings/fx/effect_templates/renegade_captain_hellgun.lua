@@ -12,7 +12,7 @@ local FIRE_RATE_PARAMETER_NAME = "wpn_fire_interval"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	wwise_gun_start = WWISE_GUN_START,
-	wwise_gun_stop = WWISE_GUN_STOP,
+	wwise_gun_stop = WWISE_GUN_STOP
 }
 local FX_MUZZLE_SOURCE_NAME = "muzzle"
 local ORPHANED_POLICY = "stop"
@@ -76,7 +76,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.animation_event(unit, "shoot_finished")
-	end,
+	end
 }
 
 return effect_template

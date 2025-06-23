@@ -45,30 +45,30 @@ end
 
 Broadphase.component_data = {
 	broadphase_category = {
-		ui_name = "Broadphase Category",
-		ui_type = "combo_box",
 		value = "doors",
+		ui_type = "combo_box",
+		ui_name = "Broadphase Category",
 		options_keys = {
-			"doors",
+			"doors"
 		},
 		options_values = {
-			"doors",
-		},
+			"doors"
+		}
 	},
 	broadphase_radius = {
-		decimals = 2,
-		ui_name = "Broadphase Radius",
 		ui_type = "number",
 		value = 1,
+		ui_name = "Broadphase Radius",
+		decimals = 2
 	},
 	broadphase_node_name = {
-		ui_name = "Broadphase Node Name",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Broadphase Node Name"
 	},
 	extensions = {
-		"BroadphaseExtension",
-	},
+		"BroadphaseExtension"
+	}
 }
 
 return Broadphase

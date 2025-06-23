@@ -9,76 +9,76 @@ local presence_settings = {}
 presence_settings.settings = {
 	splash_screen = {
 		advertise_playing = false,
-		can_be_invited = false,
 		can_be_joined = false,
 		hud_localization = "loc_hud_presence_main_menu",
+		can_be_invited = false
 	},
 	title_screen = {
 		advertise_playing = false,
-		can_be_invited = false,
 		can_be_joined = false,
 		hud_localization = "loc_hud_presence_main_menu",
+		can_be_invited = false
 	},
 	main_menu = {
 		advertise_playing = true,
-		can_be_invited = true,
 		can_be_joined = true,
 		hud_localization = "loc_hud_presence_main_menu",
+		can_be_invited = true
 	},
 	loading = {
 		advertise_playing = false,
-		can_be_invited = false,
 		can_be_joined = false,
 		hud_localization = "loc_hud_presence_loading",
+		can_be_invited = false
 	},
 	onboarding = {
-		advertise_playing = false,
-		can_be_invited = false,
+		split_party = true,
 		can_be_joined = false,
 		hud_localization = "loc_hud_presence_prologue",
-		split_party = true,
+		can_be_invited = false,
+		advertise_playing = false
 	},
 	hub = {
 		advertise_playing = true,
-		can_be_invited = true,
 		can_be_joined = true,
 		hud_localization = "loc_hud_presence_hub",
+		can_be_invited = true
 	},
 	cinematic = {
 		advertise_playing = false,
-		can_be_invited = false,
 		can_be_joined = false,
 		hud_localization = "loc_hud_presence_cinematic",
+		can_be_invited = false
 	},
 	matchmaking = {
 		advertise_playing = true,
-		can_be_invited = true,
 		can_be_joined = true,
-		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_matchmaking",
-		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_matchmaking",
 		hud_localization = "loc_hud_presence_matchmaking",
+		can_be_invited = true,
+		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_matchmaking",
+		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_matchmaking"
 	},
 	mission = {
 		advertise_playing = true,
-		can_be_invited = true,
 		can_be_joined = true,
-		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_mission",
-		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_mission",
 		hud_localization = "loc_hud_presence_mission",
+		can_be_invited = true,
+		fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_mission",
+		fail_reason_other = "loc_social_party_join_rejection_reason_player_in_mission"
 	},
 	training_grounds = {
-		advertise_playing = true,
-		can_be_invited = true,
+		split_party = false,
 		can_be_joined = true,
 		hud_localization = "loc_hud_presence_training_grounds",
-		split_party = false,
+		can_be_invited = true,
+		advertise_playing = true
 	},
 	end_of_round = {
 		advertise_playing = false,
-		can_be_invited = true,
 		can_be_joined = true,
 		hud_localization = "loc_hud_presence_end_of_round",
-	},
+		can_be_invited = true
+	}
 }
 
 presence_settings.evaluate_presence = function (game_state)

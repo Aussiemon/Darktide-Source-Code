@@ -25,13 +25,13 @@ local surface_materials = {
 	"water_deep",
 	"water_puddle",
 	"wood_plywood",
-	"wood_solid",
+	"wood_solid"
 }
 local footstep_effects = {
 	world_interaction = {
 		water_deep = true,
-		water_puddle = true,
-	},
+		water_puddle = true
+	}
 }
 local surface_materials_lookup = {}
 local Unit_material_id = Unit.material_id
@@ -48,7 +48,7 @@ local surface_material_groups = {
 		"cloth",
 		"concrete",
 		"ice_solid",
-		"psychic_shield",
+		"psychic_shield"
 	},
 	dirt = {
 		"dirt_sand",
@@ -56,29 +56,29 @@ local surface_material_groups = {
 		"dirt_gravel",
 		"dirt_soil",
 		"dirt_trash",
-		"vegetation",
+		"vegetation"
 	},
 	flesh = {
 		"dead_body",
-		"nurgle_flesh",
+		"nurgle_flesh"
 	},
 	glass = {
 		"glass_breakable",
-		"glass_unbreakable",
+		"glass_unbreakable"
 	},
 	metal = {
 		"metal_solid",
 		"metal_sheet",
-		"metal_catwalk",
+		"metal_catwalk"
 	},
 	water = {
 		"water_deep",
-		"water_puddle",
+		"water_puddle"
 	},
 	wood = {
 		"wood_solid",
-		"wood_plywood",
-	},
+		"wood_plywood"
+	}
 }
 local surface_material_groups_lookup = {}
 

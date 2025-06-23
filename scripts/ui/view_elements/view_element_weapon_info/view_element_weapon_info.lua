@@ -116,8 +116,8 @@ local function add_presentation_perks(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				15,
-			},
+				15
+			}
 		}
 		add_end_margin = true
 	end
@@ -131,15 +131,15 @@ local function add_presentation_perks(item, layout, grid_size)
 
 		if perk_item then
 			layout[#layout + 1] = {
-				add_background = true,
 				show_rating = false,
+				add_background = true,
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
 				perk_value = perk_value,
 				perk_rarity = perk_rarity,
 				description_size = {
-					400,
-				},
+					400
+				}
 			}
 
 			if i < num_perks then
@@ -148,8 +148,8 @@ local function add_presentation_perks(item, layout, grid_size)
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						15,
-					},
+						15
+					}
 				}
 			end
 		end
@@ -173,8 +173,8 @@ local function add_presentation_traits(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				20,
-			},
+				20
+			}
 		}
 		add_end_margin = true
 	end
@@ -197,9 +197,9 @@ local function add_presentation_traits(item, layout, grid_size)
 				trait_value = trait_value,
 				trait_rarity = trait_rarity,
 				description_size = {
-					400,
+					400
 				},
-				trait_category = trait_category,
+				trait_category = trait_category
 			}
 
 			if i < num_traits then
@@ -207,8 +207,8 @@ local function add_presentation_traits(item, layout, grid_size)
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
-						16,
-					},
+						16
+					}
 				}
 			end
 		end
@@ -219,8 +219,8 @@ local function add_presentation_traits(item, layout, grid_size)
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				20,
-			},
+				20
+			}
 		}
 	end
 
@@ -239,8 +239,8 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
@@ -248,27 +248,27 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 	if not ignore_list.ignore_header then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_stats_header",
-			item = item,
+			item = item
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_keywords then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_keywords",
-			item = item,
+			item = item
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_extended_stats then
 		layout[#layout + 1] = {
 			widget_type = "extended_weapon_stats",
-			item = item,
+			item = item
 		}
 	end
 
@@ -281,18 +281,18 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
-				10,
-			},
+				10
+			}
 		}
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
 	if not ignore_list.ignore_traits and add_presentation_traits(item, layout, grid_size) then
 		add_end_margin = true
 		layout[#layout + 1] = {
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -300,7 +300,7 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		layout[#layout + 1] = {
 			interactive = true,
 			widget_type = "weapon_stats",
-			item = item,
+			item = item
 		}
 	end
 
@@ -308,8 +308,8 @@ ViewElementWeaponInfo.present_item = function (self, item, on_present_callback, 
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			15,
-		},
+			15
+		}
 	}
 
 	self:present_grid_layout(layout, on_present_callback)

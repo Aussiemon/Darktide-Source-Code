@@ -175,8 +175,8 @@ end
 
 local text_input_base = {
 	{
-		content_id = "hotspot",
 		pass_type = "hotspot",
+		content_id = "hotspot",
 		change_function = function (hotspot_content, style)
 			if PLATFORM == "xbs" then
 				return
@@ -199,7 +199,7 @@ local text_input_base = {
 
 				content.is_writing = is_writing
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -281,7 +281,7 @@ local text_input_base = {
 			content.caret_position = caret_position
 			content.last_input = last_input
 			content._is_selecting = is_selecting
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -359,14 +359,14 @@ local text_input_base = {
 						local keyboard_options = {
 							title = title,
 							placeholder = input_text,
-							max_length = max_length,
+							max_length = max_length
 						}
 
 						PS5ImeDialog.show(keyboard_options)
 					end
 				end
 			end
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -461,7 +461,7 @@ local text_input_base = {
 			content._selection_changed = true
 
 			Log.info("TextInputPasses", "Selected text: [%s]", selected_text)
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -511,7 +511,7 @@ local text_input_base = {
 			content._active_placeholder_text = new_active_placeholder_text
 			content.force_caret_update = nil
 			caret_style.offset[1] = display_text_style.offset[1] + caret_offset
-		end,
+		end
 	},
 	{
 		pass_type = "logic",
@@ -554,8 +554,8 @@ local text_input_base = {
 			selection_style.offset = selection_offset
 			selection_style.size = selection_size
 		end,
-		visibility_function = _selection_visibility_function,
-	},
+		visibility_function = _selection_visibility_function
+	}
 }
 local _simple_input_field_padding = 4
 local _simple_input_text_style = table.clone(UIFontSettings.body)
@@ -563,12 +563,12 @@ local _simple_input_text_style = table.clone(UIFontSettings.body)
 _simple_input_text_style.text_color = Color.white(255, true)
 _simple_input_text_style.size_addition = {
 	-(_simple_input_field_padding * 2),
-	-(_simple_input_field_padding * 2),
+	-(_simple_input_field_padding * 2)
 }
 _simple_input_text_style.offset = {
 	_simple_input_field_padding,
 	_simple_input_field_padding,
-	1,
+	1
 }
 _simple_input_text_style.text_vertical_alignment = "center"
 
@@ -585,80 +585,80 @@ TextInputPassTemplates.simple_input_field = table.clone(text_input_base)
 
 table.append(TextInputPassTemplates.simple_input_field, {
 	{
-		pass_type = "rect",
 		style_id = "focused",
+		pass_type = "rect",
 		style = {
 			color = Color.ui_terminal(255, true),
 			size_addition = {
 				2,
-				2,
+				2
 			},
 			offset = {
 				-1,
 				-1,
-				-1,
-			},
+				-1
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "background",
+		pass_type = "rect",
 		style = {
 			color = {
 				255,
 				20,
 				20,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.hide_background
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "baseline",
+		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
 			color = Color.white(255, true),
 			size = {
 				nil,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.hide_baseline
-		end,
+		end
 	},
 	{
-		pass_type = "text",
-		style_id = "display_text",
-		value = "",
 		value_id = "display_text",
-		style = _simple_input_text_style,
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = _simple_input_text_style
 	},
 	{
-		pass_type = "rect",
 		style_id = "input_caret",
+		pass_type = "rect",
 		style = {
 			color = Color.white(255, true),
 			offset = {
 				0,
 				_simple_input_field_padding,
-				2,
+				2
 			},
 			size = {
-				2,
+				2
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
-			},
+				-(_simple_input_field_padding * 2 + 4)
+			}
 		},
 		visibility_function = _input_active_visibility_function,
 		change_function = function (pass_content, style_data, animations, dt)
@@ -670,41 +670,41 @@ table.append(TextInputPassTemplates.simple_input_field, {
 
 			style_data.color[1] = blink_time < 0.5 and 255 or 0
 			pass_content._blink_time = blink_time
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "selection",
+		pass_type = "rect",
 		style = {
 			offset = {
 				_simple_input_field_padding,
 				_simple_input_field_padding,
-				0,
+				0
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
+				-(_simple_input_field_padding * 2 + 4)
 			},
 			color = {
 				64,
 				64,
 				64,
-				255,
-			},
+				255
+			}
 		},
-		visibility_function = _selection_visibility_function,
+		visibility_function = _selection_visibility_function
 	},
 	{
-		pass_type = "text",
-		style_id = "active_placeholder",
-		value = "",
 		value_id = "placeholder_text",
+		style_id = "active_placeholder",
+		pass_type = "text",
+		value = "",
 		style = _simple_input_placeholder_text_style,
-		visibility_function = _placeholder_text_visibility_function,
+		visibility_function = _placeholder_text_visibility_function
 	},
 	{
-		pass_type = "text",
 		style_id = "limit_text",
+		pass_type = "text",
 		value = "",
 		value_id = "limit_text",
 		style = _simple_input_limit_text_style,
@@ -717,8 +717,8 @@ table.append(TextInputPassTemplates.simple_input_field, {
 		end,
 		visibility_function = function (content, style)
 			return not not content.max_length
-		end,
-	},
+		end
+	}
 })
 
 local _simple_input_text_box_padding = 4
@@ -727,12 +727,12 @@ local _simple_input_box_text_style = table.clone(UIFontSettings.body)
 _simple_input_box_text_style.text_color = Color.white(255, true)
 _simple_input_box_text_style.size_addition = {
 	-(_simple_input_text_box_padding * 2),
-	-(_simple_input_text_box_padding * 2),
+	-(_simple_input_text_box_padding * 2)
 }
 _simple_input_box_text_style.offset = {
 	_simple_input_text_box_padding,
 	_simple_input_text_box_padding,
-	1,
+	1
 }
 _simple_input_box_text_style.text_vertical_alignment = "top"
 
@@ -749,80 +749,80 @@ TextInputPassTemplates.simple_input_box_field_text = table.clone(text_input_base
 
 table.append(TextInputPassTemplates.simple_input_box_field_text, {
 	{
-		pass_type = "rect",
 		style_id = "focused",
+		pass_type = "rect",
 		style = {
 			color = Color.ui_terminal(255, true),
 			size_addition = {
 				2,
-				2,
+				2
 			},
 			offset = {
 				-1,
 				-1,
-				-1,
-			},
+				-1
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "background",
+		pass_type = "rect",
 		style = {
 			color = {
 				255,
 				20,
 				20,
-				20,
-			},
+				20
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.hide_background
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "baseline",
+		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
 			color = Color.white(255, true),
 			size = {
 				nil,
-				2,
-			},
+				2
+			}
 		},
 		visibility_function = function (content, style)
 			return not content.hide_baseline
-		end,
+		end
 	},
 	{
-		pass_type = "text",
-		style_id = "display_text",
-		value = "",
 		value_id = "display_text",
-		style = _simple_input_box_text_style,
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = _simple_input_box_text_style
 	},
 	{
-		pass_type = "rect",
 		style_id = "input_caret",
+		pass_type = "rect",
 		style = {
 			color = Color.white(255, true),
 			offset = {
 				0,
 				_simple_input_field_padding,
-				2,
+				2
 			},
 			size = {
-				2,
+				2
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
-			},
+				-(_simple_input_field_padding * 2 + 4)
+			}
 		},
 		visibility_function = _input_active_visibility_function,
 		change_function = function (pass_content, style_data, animations, dt)
@@ -834,41 +834,41 @@ table.append(TextInputPassTemplates.simple_input_box_field_text, {
 
 			style_data.color[1] = blink_time < 0.5 and 255 or 0
 			pass_content._blink_time = blink_time
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "selection",
+		pass_type = "rect",
 		style = {
 			offset = {
 				_simple_input_field_padding,
 				_simple_input_field_padding,
-				0,
+				0
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
+				-(_simple_input_field_padding * 2 + 4)
 			},
 			color = {
 				64,
 				64,
 				64,
-				255,
-			},
+				255
+			}
 		},
-		visibility_function = _selection_visibility_function,
+		visibility_function = _selection_visibility_function
 	},
 	{
-		pass_type = "text",
-		style_id = "active_placeholder",
-		value = "",
 		value_id = "placeholder_text",
+		style_id = "active_placeholder",
+		pass_type = "text",
+		value = "",
 		style = _simple_input_box_placeholder_text_style,
-		visibility_function = _placeholder_text_visibility_function,
+		visibility_function = _placeholder_text_visibility_function
 	},
 	{
-		pass_type = "text",
 		style_id = "limit_text",
+		pass_type = "text",
 		value = "",
 		value_id = "limit_text",
 		style = _simple_input_box_limit_text_style,
@@ -881,8 +881,8 @@ table.append(TextInputPassTemplates.simple_input_box_field_text, {
 		end,
 		visibility_function = function (content, style)
 			return not not content.max_length
-		end,
-	},
+		end
+	}
 })
 
 local _terminal_input_field_padding = 4
@@ -891,12 +891,12 @@ local _terminal_input_text_style = table.clone(UIFontSettings.body_medium)
 _terminal_input_text_style.text_color = Color.terminal_text_header_selected(255, true)
 _terminal_input_text_style.size_addition = {
 	-(_terminal_input_field_padding * 2),
-	-(_terminal_input_field_padding * 2),
+	-(_terminal_input_field_padding * 2)
 }
 _terminal_input_text_style.offset = {
 	_terminal_input_field_padding,
 	_terminal_input_field_padding,
-	1,
+	1
 }
 _terminal_input_text_style.text_vertical_alignment = "center"
 
@@ -913,71 +913,71 @@ TextInputPassTemplates.terminal_input_field = table.clone(text_input_base)
 
 table.append(TextInputPassTemplates.terminal_input_field, {
 	{
-		pass_type = "rect",
 		style_id = "focused",
+		pass_type = "rect",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			color = Color.ui_terminal(255, true),
 			size_addition = {
 				4,
-				4,
+				4
 			},
 			offset = {
 				0,
 				0,
-				-1,
-			},
+				-1
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.use_is_focused and hotspot.is_focused or hotspot.is_selected
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "background",
+		pass_type = "rect",
 		style = {
-			color = Color.terminal_grid_background(255, true),
-		},
+			color = Color.terminal_grid_background(255, true)
+		}
 	},
 	{
-		pass_type = "rect",
 		style_id = "baseline",
+		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
 			color = Color.terminal_text_header(255, true),
 			size = {
 				nil,
-				2,
-			},
-		},
+				2
+			}
+		}
 	},
 	{
-		pass_type = "text",
-		style_id = "display_text",
-		value = "",
 		value_id = "display_text",
-		style = _terminal_input_text_style,
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = _terminal_input_text_style
 	},
 	{
-		pass_type = "rect",
 		style_id = "input_caret",
+		pass_type = "rect",
 		style = {
 			color = Color.terminal_text_header(255, true),
 			offset = {
 				0,
 				_simple_input_field_padding,
-				2,
+				2
 			},
 			size = {
-				2,
+				2
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
-			},
+				-(_simple_input_field_padding * 2 + 4)
+			}
 		},
 		visibility_function = _input_active_visibility_function,
 		change_function = function (pass_content, style_data, animations, dt)
@@ -989,36 +989,36 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 
 			style_data.color[1] = blink_time < 0.5 and 255 or 0
 			pass_content._blink_time = blink_time
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "selection",
+		pass_type = "rect",
 		style = {
 			offset = {
 				_simple_input_field_padding,
 				_simple_input_field_padding,
-				0,
+				0
 			},
 			size_addition = {
 				0,
-				-(_simple_input_field_padding * 2 + 4),
+				-(_simple_input_field_padding * 2 + 4)
 			},
-			color = Color.terminal_frame_hover(255, true),
+			color = Color.terminal_frame_hover(255, true)
 		},
-		visibility_function = _selection_visibility_function,
+		visibility_function = _selection_visibility_function
 	},
 	{
-		pass_type = "text",
-		style_id = "active_placeholder",
-		value = "",
 		value_id = "placeholder_text",
+		style_id = "active_placeholder",
+		pass_type = "text",
+		value = "",
 		style = _terminal_input_placeholder_text_style,
-		visibility_function = _placeholder_text_visibility_function,
+		visibility_function = _placeholder_text_visibility_function
 	},
 	{
-		pass_type = "text",
 		style_id = "limit_text",
+		pass_type = "text",
 		value = "",
 		value_id = "limit_text",
 		style = _terminal_input_limit_text_style,
@@ -1031,8 +1031,8 @@ table.append(TextInputPassTemplates.terminal_input_field, {
 		end,
 		visibility_function = function (content, style)
 			return not not content.max_length
-		end,
-	},
+		end
+	}
 })
 
 local input_text_style = table.clone(UIFontSettings.chat_input)
@@ -1040,11 +1040,11 @@ local input_text_style = table.clone(UIFontSettings.chat_input)
 input_text_style.offset = {
 	ChatSettings.window_margins[1],
 	0,
-	2,
+	2
 }
 input_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local input_caret_style = {
@@ -1052,18 +1052,18 @@ local input_caret_style = {
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	color = ChatSettings.insertion_caret_color,
-	size = ChatSettings.insertion_caret_size,
+	size = ChatSettings.insertion_caret_size
 }
 local input_frame_style = {
 	vertical_alignment = "bottom",
 	size = {
 		nil,
-		2,
+		2
 	},
-	color = ChatSettings.insertion_caret_color,
+	color = ChatSettings.insertion_caret_color
 }
 local placeholder_text_style = table.clone(input_text_style)
 
@@ -1076,11 +1076,11 @@ TextInputPassTemplates.chat_input_field = table.clone(text_input_base)
 
 table.append(TextInputPassTemplates.chat_input_field, {
 	{
-		content_id = "background",
-		pass_type = "rect",
 		style_id = "background",
+		pass_type = "rect",
+		content_id = "background",
 		style = {
-			color = ChatSettings.input_field_active_color,
+			color = ChatSettings.input_field_active_color
 		},
 		change_function = function (pass_content, style_data, animations, dt)
 			local widget_content = pass_content.parent or pass_content
@@ -1093,32 +1093,32 @@ table.append(TextInputPassTemplates.chat_input_field, {
 			elseif should_be_visible and alpha < 255 then
 				style_data.color[1] = _math_min(alpha + fade_step, 255)
 			end
-		end,
+		end
 	},
 	{
-		content_id = "frame",
-		pass_type = "rect",
 		style_id = "frame",
-		style = input_frame_style,
-	},
-	{
-		pass_type = "text",
-		style_id = "to_channel",
-		value = "",
-		value_id = "to_channel",
-		style = table.clone(input_text_style),
-	},
-	{
-		pass_type = "text",
-		style_id = "display_text",
-		value = "",
-		value_id = "display_text",
-		style = input_text_style,
-	},
-	{
-		content_id = "input_caret",
 		pass_type = "rect",
+		content_id = "frame",
+		style = input_frame_style
+	},
+	{
+		value_id = "to_channel",
+		style_id = "to_channel",
+		pass_type = "text",
+		value = "",
+		style = table.clone(input_text_style)
+	},
+	{
+		value_id = "display_text",
+		style_id = "display_text",
+		pass_type = "text",
+		value = "",
+		style = input_text_style
+	},
+	{
 		style_id = "input_caret",
+		pass_type = "rect",
+		content_id = "input_caret",
 		style = input_caret_style,
 		visibility_function = _input_active_visibility_function,
 		change_function = function (pass_content, style_data, animations, dt)
@@ -1131,7 +1131,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 
 			style_data.color[1] = blink_time < 0.5 and 255 or 0
 			widget_content._blink_time = blink_time
-		end,
+		end
 	},
 	{
 		pass_type = "text",
@@ -1150,25 +1150,25 @@ table.append(TextInputPassTemplates.chat_input_field, {
 			elseif alpha < 255 then
 				style_data.text_color[1] = _math_min(alpha + fade_step, 255)
 			end
-		end,
+		end
 	},
 	{
-		pass_type = "rect",
 		style_id = "selection",
+		pass_type = "rect",
 		style = {
 			offset = {
 				ChatSettings.input_field_margins[1],
 				ChatSettings.input_field_margins[2],
-				0,
+				0
 			},
 			size_addition = {
 				0,
-				-(ChatSettings.input_field_margins[2] + ChatSettings.input_field_margins[4]),
+				-(ChatSettings.input_field_margins[2] + ChatSettings.input_field_margins[4])
 			},
-			color = ChatSettings.selected_text_color,
+			color = ChatSettings.selected_text_color
 		},
-		visibility_function = _selection_visibility_function,
-	},
+		visibility_function = _selection_visibility_function
+	}
 })
 
 return TextInputPassTemplates

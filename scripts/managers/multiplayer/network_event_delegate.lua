@@ -141,7 +141,7 @@ NetworkEventDelegate._register_channel_events = function (self, is_session_event
 		local object_table = self._registered_unit_objects[callback_name]
 
 		object_table = self._registered_channel_objects[callback_name] or {
-			__size = 0,
+			__size = 0
 		}
 		self._registered_channel_objects[callback_name] = object_table
 		object_table[channel_id] = object
@@ -180,7 +180,7 @@ NetworkEventDelegate._register_session_unit_events = function (self, object, uni
 		local object_table = self._registered_channel_objects[callback_name]
 
 		object_table = self._registered_unit_objects[callback_name] or {
-			__size = 0,
+			__size = 0
 		}
 		self._registered_unit_objects[callback_name] = object_table
 		object_table[unit_id] = object

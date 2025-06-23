@@ -10,8 +10,8 @@ local DURATION = 0.25
 
 CameraTransitionTemplates.instant_cut = {
 	exposure_snap = {
-		class = "CameraTransitionExposureSnap",
-	},
+		class = "CameraTransitionExposureSnap"
+	}
 }
 CameraTransitionTemplates.dead = {
 	position = {
@@ -19,12 +19,12 @@ CameraTransitionTemplates.dead = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return math.sin(0.5 * t * math.pi) * 0.8 + 0.2
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time * 1.5,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time * 1.5
+	}
 }
 CameraTransitionTemplates.reviving = {
 	position = {
@@ -32,12 +32,12 @@ CameraTransitionTemplates.reviving = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return math.sin(0.5 * t * math.pi) * 0.8 + 0.2
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time * 0.8,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time * 0.8
+	}
 }
 CameraTransitionTemplates.to_first_person = {
 	position = {
@@ -45,12 +45,12 @@ CameraTransitionTemplates.to_first_person = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return t^2 * 0.8
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time * 0.8,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time * 0.8
+	}
 }
 CameraTransitionTemplates.to_third_person = {
 	position = {
@@ -58,12 +58,12 @@ CameraTransitionTemplates.to_third_person = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return t^2
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
 }
 CameraTransitionTemplates.to_consumed = {
 	position = {
@@ -71,25 +71,25 @@ CameraTransitionTemplates.to_consumed = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return 0.1
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
 }
 CameraTransitionTemplates.to_grabbed = {
 	position = {
-		class = "CameraTransitionPositionLinear",
 		duration = 0.01,
+		class = "CameraTransitionPositionLinear",
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
 }
 CameraTransitionTemplates.zoom = {
 	position = {
@@ -97,36 +97,36 @@ CameraTransitionTemplates.zoom = {
 		duration = DURATION,
 		transition_func = function (t)
 			return math.sin(0.5 * t * math.pi)
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = DURATION * 0.25,
+		duration = DURATION * 0.25
 	},
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
 		parameter = "vertical_fov",
+		class = "CameraTransitionGeneric",
 		duration = DURATION,
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	custom_vertical_fov = {
-		class = "CameraTransitionGeneric",
 		parameter = "custom_vertical_fov",
+		class = "CameraTransitionGeneric",
 		duration = DURATION,
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	near_range = {
-		class = "CameraTransitionGeneric",
 		parameter = "near_range",
+		class = "CameraTransitionGeneric",
 		duration = DURATION,
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.to_sprint = {
 	position = {
@@ -134,67 +134,67 @@ CameraTransitionTemplates.to_sprint = {
 		duration = DURATION,
 		transition_func = function (t)
 			return math.sin(0.5 * t * math.pi)
-		end,
+		end
 	},
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
-		duration = 0.3,
 		parameter = "vertical_fov",
+		duration = 0.3,
+		class = "CameraTransitionGeneric",
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.from_sprint = {
 	position = {
-		class = "CameraTransitionPositionLinear",
 		duration = 0.5,
+		class = "CameraTransitionPositionLinear",
 		transition_func = function (t)
 			return math.sin(0.5 * t * math.pi)
-		end,
+		end
 	},
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
-		duration = 0.5,
 		parameter = "vertical_fov",
+		duration = 0.5,
+		class = "CameraTransitionGeneric",
 		transition_func = function (t)
 			return 1 - (t - 1)^2
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.to_lunge = {
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
-		duration = 0.8,
 		parameter = "vertical_fov",
+		duration = 0.8,
+		class = "CameraTransitionGeneric",
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	position = {
-		class = "CameraTransitionPositionLinear",
 		duration = 0.5,
+		class = "CameraTransitionPositionLinear",
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.from_lunge = {
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
-		duration = 0.3,
 		parameter = "vertical_fov",
+		duration = 0.3,
+		class = "CameraTransitionGeneric",
 		transition_func = function (t)
 			return 1 - (t - 1)^2
-		end,
+		end
 	},
 	position = {
-		class = "CameraTransitionPositionLinear",
 		duration = 0.3,
+		class = "CameraTransitionPositionLinear",
 		transition_func = function (t)
 			return t^2 * 0.8
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.to_third_person_hanging = {
 	position = {
@@ -202,12 +202,12 @@ CameraTransitionTemplates.to_third_person_hanging = {
 		duration = CameraTransitionSettings.perspective_transition_time,
 		transition_func = function (t)
 			return math.sqrt(t)
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = CameraTransitionSettings.perspective_transition_time,
-	},
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
 }
 CameraTransitionTemplates.from_third_person_hanging = {
 	position = {
@@ -215,36 +215,36 @@ CameraTransitionTemplates.from_third_person_hanging = {
 		duration = CameraTransitionSettings.pull_up_animation_time,
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
 		duration = CameraTransitionSettings.pull_up_animation_time,
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
-	},
+		end
+	}
 }
 CameraTransitionTemplates.from_scanning = {
 	position = {
-		class = "CameraTransitionPositionLinear",
 		duration = 0.5,
+		class = "CameraTransitionPositionLinear",
 		transition_func = function (t)
 			return math.smoothstep(t, 0, 1)
-		end,
+		end
 	},
 	rotation = {
 		class = "CameraTransitionRotationLerp",
-		duration = 0.2,
+		duration = 0.2
 	},
 	vertical_fov = {
-		class = "CameraTransitionGeneric",
-		duration = 0.2,
 		parameter = "vertical_fov",
+		duration = 0.2,
+		class = "CameraTransitionGeneric",
 		transition_func = function (t)
 			return 1 - (t - 1)^2
-		end,
-	},
+		end
+	}
 }
 
 return settings("CameraTransitionTemplates", CameraTransitionTemplates)

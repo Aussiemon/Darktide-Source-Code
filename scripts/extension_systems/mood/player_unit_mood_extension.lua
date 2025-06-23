@@ -11,7 +11,7 @@ local mood_status = MoodSettings.status
 local num_moods = MoodSettings.num_moods
 local CLIENT_RPCS = {
 	"rpc_trigger_timed_mood",
-	"rpc_remove_mood",
+	"rpc_remove_mood"
 }
 local PlayerUnitMoodExtension = class("PlayerUnitMoodExtension")
 
@@ -50,7 +50,7 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 		moods_data[mood_type] = {
 			entered_t = math.huge,
 			removed_t = math.huge,
-			status = mood_status.inactive,
+			status = mood_status.inactive
 		}
 	end
 
@@ -393,7 +393,7 @@ PlayerUnitMoodExtension.remove_all_moods = function (self)
 		if mood_data.status ~= mood_status.inactive then
 			mood_data.entered_t = math.huge
 			mood_data.removed_t = math.huge
-			mood_data.status = mood_status.inactive
+			mood_data.status = mood_status.removing
 		end
 	end
 end

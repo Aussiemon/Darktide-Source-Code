@@ -8,7 +8,7 @@ local Navigation = require("scripts/extension_systems/navigation/utilities/navig
 local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
 local NavMeshManager = class("NavMeshManager")
 local CLIENT_RPCS = {
-	"rpc_set_allowed_nav_tag_layer",
+	"rpc_set_allowed_nav_tag_layer"
 }
 local NAV_COST_MAP_MAX_VOLUMES = 1024
 local NAV_COST_MAP_NUM_VOLUMES_GUESS = 16
@@ -33,10 +33,10 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._nav_tag_layer_lookup = self:_setup_nav_tag_layer_lookup(nav_tag_volume_layers)
 	self._nav_tag_allowed_layers = table.set(self._nav_tag_layer_lookup)
 	self._nav_cost_map_volume_id_data = {
-		current_id = 1,
 		size = 0,
+		current_id = 1,
 		ids = Script.new_array(NAV_COST_MAP_MAX_VOLUMES),
-		max_size = NAV_COST_MAP_MAX_VOLUMES,
+		max_size = NAV_COST_MAP_MAX_VOLUMES
 	}
 
 	self:_create_nav_cost_maps()
@@ -194,7 +194,7 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 	nav_tag_volume_data[nav_tag_volume] = {
 		name = layer_name,
 		type = optional_type,
-		bottom_points = Navigation.vector3s_to_arrays(bottom_points),
+		bottom_points = Navigation.vector3s_to_arrays(bottom_points)
 	}
 
 	if not self._is_server then
@@ -356,7 +356,7 @@ NavMeshManager._create_nav_cost_maps = function (self)
 		nav_cost_maps_data[i] = {
 			recompute = false,
 			cost_map = GwNavVolumeCostMap.create(nav_world, i),
-			volumes = Script.new_map(NAV_COST_MAP_NUM_VOLUMES_GUESS),
+			volumes = Script.new_map(NAV_COST_MAP_NUM_VOLUMES_GUESS)
 		}
 	end
 
@@ -592,10 +592,6 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 		return
 	end
 
-	if self._dynamic_mesh_spawning and self._sparse_nav_graph_connected then
-		self:_make_sparse_graph_dirty()
-	end
-
 	local layer_id = self._nav_tag_layer_lookup[layer_name]
 
 	self._nav_tag_allowed_layers[layer_name] = allowed
@@ -613,7 +609,7 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
-		if not allowed and Breed.is_minion(breed) then
+		if not allowed and Breed.is_minion(breed) and not Breed.is_companion(breed) then
 			local unit_position = POSITION_LOOKUP[unit]
 
 			if Navigation.inside_nav_tag_volume_layer(nav_world, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, layer_id) then

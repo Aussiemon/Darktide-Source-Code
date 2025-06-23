@@ -17,7 +17,7 @@ local BaseViewTestify = {
 		local callback = hotspot_content.pressed_callback
 
 		callback()
-	end,
+	end
 }
 
 return BaseViewTestify

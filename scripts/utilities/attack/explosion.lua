@@ -26,10 +26,10 @@ local attack_units_array = {}
 local generic_broadphase_filter = {
 	"heroes",
 	"villains",
-	"destructibles",
+	"destructibles"
 }
 local destructibles_only_filter = {
-	"destructibles",
+	"destructibles"
 }
 local USE_PHYSICS_OVERLAP = true
 local USE_SEPERATE_QUERY_FOR_DESTRUCTIBLES = true
@@ -61,7 +61,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	end
 
 	Managers.server_metrics:add_annotation("explosion_create", {
-		power_level = power_level,
+		power_level = power_level
 	})
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -333,7 +333,7 @@ Explosion.lerp_values = function (attacking_unit, explosion_template_name_or_nil
 end
 
 local EMPTY_PATH = {
-	[DEFAULT_LERP_VALUE] = 0,
+	[DEFAULT_LERP_VALUE] = 0
 }
 
 Explosion.lerp_value_from_path = function (lerp_values, ...)

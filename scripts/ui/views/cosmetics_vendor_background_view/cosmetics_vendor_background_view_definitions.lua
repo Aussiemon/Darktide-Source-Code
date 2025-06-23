@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_definitions.lua
 
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -12,149 +13,149 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	info_box = {
-		horizontal_alignment = "left",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
 		size = {
 			700,
-			400,
+			400
 		},
 		position = {
 			180,
 			375,
-			1,
-		},
+			1
+		}
 	},
 	button_pivot = {
-		horizontal_alignment = "left",
-		parent = "button_divider",
 		vertical_alignment = "top",
+		parent = "button_divider",
+		horizontal_alignment = "left",
 		size = {
 			260,
-			380,
+			380
 		},
 		position = {
 			0,
 			25,
-			1,
-		},
+			1
+		}
 	},
 	corner_top_right = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			540,
-			224,
+			224
 		},
 		position = {
 			0,
 			-65,
-			55,
-		},
+			55
+		}
 	},
 	wallet_pivot = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-20,
 			50,
-			56,
-		},
-	},
+			56
+		}
+	}
 }
 local widget_definitions = {
 	corner_top_right = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/frames/screen/cosmetic_upper_right",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
 				offset = {
 					0,
 					-1,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "corner_top_right"),
 	button_divider = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/dividers/skull_rendered_left_01",
-		},
+			value = "content/ui/materials/dividers/skull_rendered_left_01"
+		}
 	}, "button_divider", {
-		visible = false,
-	}),
+		visible = false
+	})
 }
 local input_legend_params = {}
 local intro_texts = {
 	description_text = "loc_cosmetics_vendor_view_intro_description",
-	title_text = "loc_cosmetics_vendor_view_intro_title",
+	title_text = "loc_cosmetics_vendor_view_intro_title"
 }
 local menu_preview_with_gear_off = "loc_inventory_menu_preview_with_gear_off"
 local menu_preview_with_gear_on = "loc_inventory_menu_preview_with_gear_on"
 local cosmetics_vendor_option_tab_definition = {
-	blur_background = false,
-	display_name = "loc_credits_vendor_view_title",
-	view = "cosmetics_vendor_view",
 	view_function = "present_items",
+	display_name = "loc_credits_vendor_view_title",
+	blur_background = false,
+	view = "cosmetics_vendor_view",
 	context = {
+		grid_id = "gear_grid",
+		optional_store_service = "get_credits_cosmetics_store",
+		hide_price = true,
 		disable_item_presentation = true,
+		spawn_player = true,
 		fetch_account_items = true,
 		fetch_store_items_on_enter = false,
-		grid_id = "gear_grid",
-		hide_price = true,
-		optional_store_service = "get_credits_cosmetics_store",
-		spawn_player = true,
 		option_button_definitions = {
 			{
-				display_name = "loc_item_type_set",
-				icon = "content/ui/materials/icons/item_types/outfits",
 				slot_name = "slot_gear_upperbody",
+				icon = "content/ui/materials/icons/item_types/outfits",
+				display_name = "loc_item_type_set",
 				item_types = {
 					"BUNDLE",
-					"SET",
-				},
+					"SET"
+				}
 			},
 			{
 				icon = "content/ui/materials/icons/item_types/headgears",
 				display_name = ItemSlotSettings.slot_gear_head.display_name,
 				slot_names = {
-					"slot_gear_head",
-				},
+					"slot_gear_head"
+				}
 			},
 			{
 				icon = "content/ui/materials/icons/item_types/upper_bodies",
 				display_name = ItemSlotSettings.slot_gear_upperbody.display_name,
 				slot_names = {
-					"slot_gear_upperbody",
-				},
+					"slot_gear_upperbody"
+				}
 			},
 			{
 				icon = "content/ui/materials/icons/item_types/lower_bodies",
 				display_name = ItemSlotSettings.slot_gear_lowerbody.display_name,
 				slot_names = {
-					"slot_gear_lowerbody",
-				},
+					"slot_gear_lowerbody"
+				}
 			},
 			{
 				icon = "content/ui/materials/icons/item_types/accessories",
 				display_name = ItemSlotSettings.slot_gear_extra_cosmetic.display_name,
 				slot_names = {
-					"slot_gear_extra_cosmetic",
-				},
-			},
+					"slot_gear_extra_cosmetic"
+				}
+			}
 		},
 		optional_sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -165,12 +166,12 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_price,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -181,12 +182,12 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_price,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -200,12 +201,12 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -219,12 +220,12 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_item_rarity,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -238,12 +239,12 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_owned,
 					"<",
 					"offer",
-					ItemUtils.compare_offer_price,
-				}),
+					ItemUtils.compare_offer_price
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -257,16 +258,16 @@ local cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_owned,
 					"<",
 					"offer",
-					ItemUtils.compare_offer_price,
-				}),
-			},
-		},
+					ItemUtils.compare_offer_price
+				})
+			}
+		}
 	},
 	input_legend_buttons = {
 		{
-			alignment = "right_alignment",
 			display_name = "loc_inventory_menu_zoom_in",
 			input_action = "hotkey_menu_special_2",
+			alignment = "right_alignment",
 			on_pressed_callback = "cb_on_camera_zoom_toggled",
 			visibility_function = function (parent, id)
 				local active_view = parent._active_view
@@ -288,12 +289,12 @@ local cosmetics_vendor_option_tab_definition = {
 				end
 
 				return true
-			end,
+			end
 		},
 		{
-			alignment = "right_alignment",
-			display_name = "loc_weapon_inventory_inspect_button",
 			input_action = "hotkey_item_inspect",
+			display_name = "loc_weapon_inventory_inspect_button",
+			alignment = "right_alignment",
 			on_pressed_callback = "cb_on_inspect_pressed",
 			visibility_function = function (parent)
 				local active_view = parent._active_view
@@ -306,19 +307,19 @@ local cosmetics_vendor_option_tab_definition = {
 						local item_type = previewed_item.item_type
 						local ITEM_TYPES = UISettings.ITEM_TYPES
 
-						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
+						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
 							return view_instance._on_enter_animation_triggered
 						end
 					end
 				end
 
 				return false
-			end,
+			end
 		},
 		{
+			input_action = "hotkey_menu_special_1",
 			alignment = "right_alignment",
 			gear_toggle_option = true,
-			input_action = "hotkey_menu_special_1",
 			on_pressed_callback = "cb_on_preview_with_gear_toggled",
 			display_name = menu_preview_with_gear_off,
 			visibility_function = function (parent, id)
@@ -334,43 +335,43 @@ local cosmetics_vendor_option_tab_definition = {
 				end
 
 				return false
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local weapon_cosmetics_vendor_option_tab_definition = {
-	blur_background = false,
-	display_name = "loc_credits_vendor_view_title",
-	view = "cosmetics_vendor_view",
 	view_function = "present_items",
+	display_name = "loc_credits_vendor_view_title",
+	blur_background = false,
+	view = "cosmetics_vendor_view",
 	context = {
-		draw_parents_input_legend = true,
-		fetch_store_items_on_enter = false,
 		grid_id = "weapon_grid",
-		hide_price = true,
-		optional_camera_breed_name = "human",
+		draw_parents_input_legend = true,
 		optional_store_service = "get_credits_weapon_cosmetics_store",
+		hide_price = true,
 		use_weapon_preview = true,
+		fetch_store_items_on_enter = false,
+		optional_camera_breed_name = "human",
 		option_button_definitions = {
 			{
 				icon = "content/ui/materials/icons/item_types/melee_weapons",
 				display_name = ItemSlotSettings.slot_primary.display_name,
 				slot_names = {
-					"slot_primary",
-				},
+					"slot_primary"
+				}
 			},
 			{
 				icon = "content/ui/materials/icons/item_types/ranged_weapons",
 				display_name = ItemSlotSettings.slot_secondary.display_name,
 				slot_names = {
-					"slot_secondary",
-				},
-			},
+					"slot_secondary"
+				}
+			}
 		},
 		optional_sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -384,12 +385,12 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_item_type,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -403,12 +404,12 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_item_type,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -422,12 +423,12 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_owned,
 					"<",
 					"offer",
-					ItemUtils.compare_offer_price,
-				}),
+					ItemUtils.compare_offer_price
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -441,16 +442,16 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 					ItemUtils.compare_offer_owned,
 					"<",
 					"offer",
-					ItemUtils.compare_offer_price,
-				}),
-			},
-		},
+					ItemUtils.compare_offer_price
+				})
+			}
+		}
 	},
 	input_legend_buttons = {
 		{
-			alignment = "right_alignment",
-			display_name = "loc_weapon_inventory_inspect_button",
 			input_action = "hotkey_item_inspect",
+			display_name = "loc_weapon_inventory_inspect_button",
+			alignment = "right_alignment",
 			on_pressed_callback = "cb_on_inspect_pressed",
 			visibility_function = function (parent)
 				local active_view = parent._active_view
@@ -463,38 +464,40 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 						local item_type = previewed_item.item_type
 						local ITEM_TYPES = UISettings.ITEM_TYPES
 
-						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
+						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
 							return true
 						end
 					end
 				end
 
 				return false
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local cosmetic_gear_tabs = {}
 local cosmetic_weapon_tabs = {}
 
 for archetype_name, archetype in pairs(Archetypes) do
-	local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
+	if table.contains(ArchetypeSettings.archetype_cosmetics_whitelist, archetype_name) then
+		local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
 
-	cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
-	cosmetics_vendor_option_tab.view_function_context = {
-		archetype_name = archetype_name,
-	}
-	cosmetics_vendor_option_tab.display_name = archetype.archetype_name
-	cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+		cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
+		cosmetics_vendor_option_tab.view_function_context = {
+			archetype_name = archetype_name
+		}
+		cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+		cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
 
-	local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
+		local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
 
-	cosmetic_weapon_tabs[#cosmetic_weapon_tabs + 1] = weapon_cosmetics_vendor_option_tab
-	weapon_cosmetics_vendor_option_tab.view_function_context = {
-		archetype_name = archetype_name,
-	}
-	weapon_cosmetics_vendor_option_tab.display_name = archetype.archetype_name
-	weapon_cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+		cosmetic_weapon_tabs[#cosmetic_weapon_tabs + 1] = weapon_cosmetics_vendor_option_tab
+		weapon_cosmetics_vendor_option_tab.view_function_context = {
+			archetype_name = archetype_name
+		}
+		weapon_cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+		weapon_cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+	end
 end
 
 table.sort(cosmetic_gear_tabs, function (a, b)
@@ -511,8 +514,8 @@ for i = 1, #cosmetic_gear_tabs do
 end
 
 local cosmetics_vendor_option_definition = {
-	display_name = "loc_credits_vendor_view_option_buy_character_cosmetics",
 	icon = "content/ui/materials/backgrounds/cosmetics_vendor/character_cosmetics",
+	display_name = "loc_credits_vendor_view_option_buy_character_cosmetics",
 	callback = function (self)
 		local tab_bar_params = {
 			hide_tabs = false,
@@ -531,7 +534,7 @@ local cosmetics_vendor_option_definition = {
 				end
 
 				return false
-			end,
+			end
 		}
 		local player = self:_player()
 		local profile = player and player:profile()
@@ -539,11 +542,11 @@ local cosmetics_vendor_option_definition = {
 		local start_index = index_by_archetype_name[archetype_name] or 1
 
 		self:_setup_tab_bar(tab_bar_params, nil, start_index)
-	end,
+	end
 }
 local weapon_cosmetics_vendor_option_definition = {
-	display_name = "loc_credits_vendor_view_option_buy_weapon_cosmetics",
 	icon = "content/ui/materials/backgrounds/cosmetics_vendor/weapon_cosmetics",
+	display_name = "loc_credits_vendor_view_option_buy_weapon_cosmetics",
 	callback = function (self)
 		local tab_bar_params = {
 			hide_tabs = false,
@@ -562,7 +565,7 @@ local weapon_cosmetics_vendor_option_definition = {
 				end
 
 				return false
-			end,
+			end
 		}
 		local player = self:_player()
 		local profile = player and player:profile()
@@ -570,59 +573,59 @@ local weapon_cosmetics_vendor_option_definition = {
 		local start_index = index_by_archetype_name[archetype_name] or 1
 
 		self:_setup_tab_bar(tab_bar_params, nil, start_index)
-	end,
+	end
 }
 local button_options_definitions = {
 	cosmetics_vendor_option_definition,
-	weapon_cosmetics_vendor_option_definition,
+	weapon_cosmetics_vendor_option_definition
 }
 local background_world_params = {
-	level_name = "content/levels/ui/credits_cosmetics_vendor/credits_cosmetics_vendor",
-	register_camera_event = "event_register_credits_vendor_camera",
 	shading_environment = "content/shading_environments/ui/credits_cosmetics_vendor",
-	timer_name = "ui",
-	total_blur_duration = 0.5,
-	viewport_layer = 1,
-	viewport_name = "ui_credits_cosmetics_vendor_world_viewport",
-	viewport_type = "default",
 	world_layer = 1,
+	total_blur_duration = 0.5,
+	timer_name = "ui",
+	viewport_type = "default",
+	register_camera_event = "event_register_credits_vendor_camera",
+	viewport_name = "ui_credits_cosmetics_vendor_world_viewport",
+	viewport_layer = 1,
+	level_name = "content/levels/ui/credits_cosmetics_vendor/credits_cosmetics_vendor",
 	world_name = "ui_credits_cosmetics_vendor_world",
 	animations_per_archetype = {
 		psyker = {
 			initial_event = "character_customization_idle",
 			events = {
 				body = "character_customization_idle",
-				head = "character_customization_idle_head",
-			},
+				head = "character_customization_idle_head"
+			}
 		},
 		veteran = {
 			initial_event = "character_customization_idle",
 			events = {
 				body = "character_customization_idle",
-				head = "character_customization_idle_head",
-			},
+				head = "character_customization_idle_head"
+			}
 		},
 		zealot = {
 			initial_event = "character_customization_idle",
 			events = {
 				body = "character_customization_idle",
-				head = "character_customization_idle_head",
-			},
+				head = "character_customization_idle_head"
+			}
 		},
 		ogryn = {
 			initial_event = "character_customization_idle",
 			events = {
 				body = "character_customization_idle",
-				head = "character_customization_idle_head",
-			},
-		},
-	},
+				head = "character_customization_idle_head"
+			}
+		}
+	}
 }
 local animations = {
 	on_option_exit = {
 		{
-			end_time = 0.6,
 			name = "fade_in",
+			end_time = 0.6,
 			start_time = 0.3,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent:_blur_fade_out(0.3, math.easeCubic)
@@ -641,27 +644,27 @@ local animations = {
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local internal_button_size = {
 	20,
-	20,
+	20
 }
 local option_button_settings = {
-	grow_vertically = false,
 	spacing = 30,
+	grow_vertically = false,
 	button_template = {
 		{
-			content_id = "hotspot",
-			pass_type = "hotspot",
 			style_id = "hotspot",
+			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
 				on_pressed_sound = UISoundEvents.default_click,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_select_sound = UISoundEvents.default_mouse_hover,
-			},
+				on_select_sound = UISoundEvents.default_mouse_hover
+			}
 		},
 		{
 			pass_type = "texture",
@@ -673,7 +676,7 @@ local option_button_settings = {
 				vertical_alignment = "center",
 				size_addition = {
 					-internal_button_size[1],
-					-internal_button_size[2],
+					-internal_button_size[2]
 				},
 				color = Color.terminal_frame(nil, true),
 				default_color = Color.terminal_frame(nil, true),
@@ -682,10 +685,10 @@ local option_button_settings = {
 				offset = {
 					0,
 					0,
-					12,
-				},
+					12
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -697,7 +700,7 @@ local option_button_settings = {
 				vertical_alignment = "center",
 				size_addition = {
 					-internal_button_size[1],
-					-internal_button_size[2],
+					-internal_button_size[2]
 				},
 				color = Color.terminal_corner(nil, true),
 				default_color = Color.terminal_corner(nil, true),
@@ -706,29 +709,29 @@ local option_button_settings = {
 				offset = {
 					0,
 					0,
-					13,
-				},
+					13
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
 			style_id = "button_gradient",
 			value = "content/ui/materials/frames/inner_shadow_medium",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size_addition = {
 					-internal_button_size[1],
-					-internal_button_size[2],
+					-internal_button_size[2]
 				},
 				default_color = Color.terminal_background_gradient(nil, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
 				offset = {
 					0,
 					0,
-					8,
-				},
+					8
+				}
 			},
 			change_function = function (content, style)
 				ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -742,37 +745,37 @@ local option_button_settings = {
 				local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 255
 
 				style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
-			end,
+			end
 		},
 		{
 			pass_type = "texture_uv",
 			style_id = "icon",
 			value_id = "icon",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					6,
+					6
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
 				size_addition = {
 					-internal_button_size[1],
-					-internal_button_size[2],
+					-internal_button_size[2]
 				},
 				material_values = {
-					shine = 0,
-				},
+					shine = 0
+				}
 			},
 			visibility_function = function (content, style)
 				return true
@@ -790,202 +793,202 @@ local option_button_settings = {
 				style.uvs[1][2] = start_uv + current_uv
 				style.uvs[2][1] = end_uv - current_uv
 				style.uvs[2][2] = end_uv - current_uv
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "background",
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
 					30,
-					24,
+					24
 				},
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_background_gradient(100, true),
 				selected_color = Color.terminal_frame_selected(nil, true),
 				disabled_color = UIFontSettings.list_button.disabled_color,
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					6,
-					0,
-				},
+					0
+				}
 			},
 			change_function = function (content, style)
 				return
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
 			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				color = Color.black(200, true),
 				size_addition = {
 					internal_button_size[1],
-					internal_button_size[2],
+					internal_button_size[2]
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/cosmetics_vendor/card_upper",
+			pass_type = "texture",
 			style = {
 				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "top",
+				scale_to_material = true,
 				default_color = Color.terminal_text_header(255, true),
 				disabled_color = Color.gray(255, true),
 				color = Color.terminal_text_header(255, true),
 				hover_color = Color.terminal_text_header_selected(255, true),
 				size = {
 					nil,
-					16,
+					16
 				},
 				offset = {
 					0,
 					-7,
-					10,
+					10
 				},
 				size_addition = {
 					14,
-					0,
-				},
+					0
+				}
 			},
-			change_function = ButtonPassTemplates.list_button_label_change_function,
+			change_function = ButtonPassTemplates.list_button_label_change_function
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/cosmetics_vendor/card_lower",
+			pass_type = "texture",
 			style = {
 				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "bottom",
+				scale_to_material = true,
 				default_color = Color.terminal_text_header(255, true),
 				disabled_color = Color.gray(255, true),
 				color = Color.terminal_text_header(255, true),
 				hover_color = Color.terminal_text_header_selected(255, true),
 				size = {
 					nil,
-					16,
+					16
 				},
 				offset = {
 					0,
 					7,
-					10,
+					10
 				},
 				size_addition = {
 					14,
-					0,
-				},
+					0
+				}
 			},
-			change_function = ButtonPassTemplates.list_button_label_change_function,
+			change_function = ButtonPassTemplates.list_button_label_change_function
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/bottom_fade",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = {
 					nil,
-					140,
+					140
 				},
 				size_addition = {
 					-20,
-					0,
+					0
 				},
 				color = Color.black(255, true),
 				offset = {
 					0,
 					-10,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
 			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				color = Color.black(200, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
+			value_id = "text",
 			pass_type = "text",
 			style_id = "text",
-			value_id = "text",
 			style = {
-				font_size = 20,
-				font_type = "proxima_nova_bold",
-				horizontal_alignment = "center",
 				text_horizontal_alignment = "center",
-				text_vertical_alignment = "center",
+				font_size = 20,
+				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				text_vertical_alignment = "center",
+				font_type = "proxima_nova_bold",
 				text_color = Color.terminal_text_header(255, true),
 				hover_color = Color.terminal_text_header_selected(255, true),
 				default_color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					0,
-					9,
+					9
 				},
 				size = {
 					nil,
-					90,
+					90
 				},
 				size_addition = {
 					-40,
-					0,
-				},
+					0
+				}
 			},
 			value = Localize("loc_credits_goods_vendor_title_text"),
-			change_function = ButtonPassTemplates.list_button_label_change_function,
+			change_function = ButtonPassTemplates.list_button_label_change_function
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/dividers/skull_center_06",
+			pass_type = "texture",
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
@@ -996,16 +999,16 @@ local option_button_settings = {
 				offset = {
 					0,
 					-15,
-					9,
+					9
 				},
 				size = {
 					70,
-					20,
-				},
+					20
+				}
 			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
-		},
-	},
+			change_function = ButtonPassTemplates.terminal_button_change_function
+		}
+	}
 }
 
 return {
@@ -1016,5 +1019,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
-	background_world_params = background_world_params,
+	background_world_params = background_world_params
 }

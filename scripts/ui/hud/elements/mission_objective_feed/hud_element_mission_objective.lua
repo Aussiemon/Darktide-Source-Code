@@ -176,7 +176,7 @@ HudElementMissionObjective._add_unit_marker = function (self, unit)
 	local data = {
 		hud_element = self,
 		ui_target_type = ui_target_type,
-		extension = extension,
+		extension = extension
 	}
 
 	Managers.event:trigger("add_world_marker_unit", marker_type, unit, marker_callback, data)

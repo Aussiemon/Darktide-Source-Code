@@ -5,7 +5,7 @@ local HuskCoherencyExtension = class("HuskCoherencyExtension")
 local EMPTY_TABLE = {}
 local RPCS = {
 	"rpc_player_unit_enter_coherency",
-	"rpc_player_unit_exit_coherency",
+	"rpc_player_unit_exit_coherency"
 }
 
 HuskCoherencyExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)

@@ -13,47 +13,47 @@ recoil_templates.default_flamer_demolitions = {
 		new_influence_percent = 0.75,
 		rise_duration = 0.15,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
-			idle = 1.5,
 			shooting = 0.5,
+			idle = 1.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.1,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
-			pitch = 3,
 			yaw = 3,
-		},
+			pitch = 3
+		}
 	},
 	moving = {
 		inherits = {
 			"default_flamer_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_flamer_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_flamer_demolitions",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.default_flamer_assault = {
 	still = {
@@ -64,92 +64,92 @@ recoil_templates.default_flamer_assault = {
 			0.35,
 			0.275,
 			0.2,
-			0.1,
+			0.1
 		},
 		decay = {
-			idle = 1.75,
 			shooting = 1,
+			idle = 1.75
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.1,
-					0.125,
+					0.125
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.075,
-					0.1,
+					0.1
 				},
 				yaw = {
 					-0.02,
-					0.02,
-				},
+					0.02
+				}
 			},
 			{
 				pitch = {
 					0.05,
-					0.075,
+					0.075
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
+					0.03
+				}
 			},
 			{
 				pitch = {
 					0.02,
-					0.04,
+					0.04
 				},
 				yaw = {
 					-0.03,
-					0.03,
-				},
-			},
+					0.03
+				}
+			}
 		},
 		offset_limit = {
-			pitch = 2,
 			yaw = 2,
+			pitch = 2
 		},
 		aim_assist = {
-			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
-		},
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		}
 	},
 	moving = {
 		new_influence_percent = 0.05,
 		inherits = {
 			"default_flamer_assault",
-			"still",
+			"still"
 		},
 		rise = {
 			0.5,
 			0.35,
 			0.275,
-			0.2,
-		},
+			0.2
+		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.04,
 		inherits = {
 			"default_flamer_assault",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.08,
 		inherits = {
 			"default_flamer_assault",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides,
+	overrides = overrides
 }

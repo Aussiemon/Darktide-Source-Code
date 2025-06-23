@@ -8,6 +8,7 @@ local ChunkLodManager = require("scripts/managers/chunk_lod/chunk_lod_manager")
 local CinematicManager = require("scripts/managers/cinematic/cinematic_manager")
 local CircumstanceManager = require("scripts/managers/circumstance/circumstance_manager")
 local CollectiblesManager = require("scripts/managers/collectibles/collectibles_manager")
+local CompanionInteractionsManager = require("scripts/managers/companion/companion_interactions_manager")
 local HavocManager = require("scripts/managers/havoc/havoc_manager")
 local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
@@ -63,7 +64,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 	self._shared_state.initialized_steps.GameplayInitStepMainPathOcclusion = true
 
 	local next_step_params = {
-		shared_state = self._shared_state,
+		shared_state = self._shared_state
 	}
 
 	return GameplayInitStepNvidiaAiAgent, next_step_params
@@ -115,6 +116,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.mutator = MutatorManager:new(is_server, nav_world, network_event_delegate, circumstance_name, level_seed)
 	Managers.state.world_interaction = WorldInteractionManager:new(world)
 	Managers.state.emote = EmoteManager:new(is_server, network_event_delegate)
+	Managers.state.companion_interaction = CompanionInteractionsManager:new(is_server, network_event_delegate)
 	Managers.state.collectibles = CollectiblesManager:new(is_server, network_event_delegate)
 end
 

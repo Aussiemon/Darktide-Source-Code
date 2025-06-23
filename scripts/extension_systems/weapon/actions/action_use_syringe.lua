@@ -129,7 +129,7 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 					used_on_ally = not action_settings.self_use,
 					time_held = time_hoarded,
 					tension = tension,
-					combat_state = combat_state,
+					combat_state = combat_state
 				}
 
 				Managers.telemetry_events:player_used_stimm(player, data)

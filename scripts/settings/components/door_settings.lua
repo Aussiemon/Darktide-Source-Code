@@ -10,24 +10,24 @@ local STATES = door_settings.STATES
 
 door_settings.anim = {
 	[STATES.none] = {
-		duration = 0,
+		duration = 0
 	},
 	[STATES.open] = {
-		duration = 0,
 		event = "open",
+		duration = 0
 	},
 	[STATES.open_fwd] = {
-		duration = 0,
 		event = "open_fwd",
+		duration = 0
 	},
 	[STATES.open_bwd] = {
-		duration = 0,
 		event = "open_bwd",
+		duration = 0
 	},
 	[STATES.closed] = {
-		duration = 0,
 		event = "close",
-	},
+		duration = 0
+	}
 }
 
 return settings("DoorSettings", door_settings)

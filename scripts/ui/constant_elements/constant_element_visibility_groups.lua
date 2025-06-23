@@ -15,13 +15,13 @@ local visibility_groups = {
 		name = "disabled",
 		validation_function = function (element)
 			return false
-		end,
+		end
 	},
 	{
 		name = "testify",
 		validation_function = function (element)
 			return Managers.state.cinematic and Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
-		end,
+		end
 	},
 	{
 		name = "tactical_overlay",
@@ -29,7 +29,7 @@ local visibility_groups = {
 			local hud = Managers.ui:get_hud()
 
 			return hud and hud:tactical_overlay_active() or false
-		end,
+		end
 	},
 	{
 		name = "skippable_cinematic",
@@ -48,25 +48,25 @@ local visibility_groups = {
 			else
 				return false
 			end
-		end,
+		end
 	},
 	{
 		name = "cutscene",
 		validation_function = function (element)
 			return Managers.state.cinematic and Managers.state.cinematic:active_camera()
-		end,
+		end
 	},
 	{
 		name = "mission_lobby",
 		validation_function = function (element)
 			return Managers.ui:view_active("lobby_view")
-		end,
+		end
 	},
 	{
 		name = "end_of_round",
 		validation_function = function (element)
 			return Managers.ui:view_active("end_view")
-		end,
+		end
 	},
 	{
 		name = "in_loading",
@@ -78,7 +78,7 @@ local visibility_groups = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "in_hub_view",
@@ -88,19 +88,19 @@ local visibility_groups = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "in_view",
 		validation_function = function (element)
 			return Managers.ui:has_active_view()
-		end,
+		end
 	},
 	{
 		name = "in_hub",
 		validation_function = function (element)
 			return _is_in_hub()
-		end,
+		end
 	},
 	{
 		name = "in_mission",
@@ -111,14 +111,14 @@ local visibility_groups = {
 			local in_cinematic = Managers.state.cinematic and Managers.state.cinematic:active_camera()
 
 			return mechanism_name == "adventure" and not view_open and not in_cinematic
-		end,
+		end
 	},
 	{
 		name = "default",
 		validation_function = function (element)
 			return true
-		end,
-	},
+		end
+	}
 }
 
 return visibility_groups

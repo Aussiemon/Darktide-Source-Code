@@ -14,7 +14,7 @@ local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "mutant_charge",
+	stinger_type = "mutant_charge"
 }
 local VCE = "scream_long_vce"
 local PlayerCharacterStateGrabbed = class("PlayerCharacterStateGrabbed", "PlayerCharacterStateBase")
@@ -38,7 +38,7 @@ local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local START_EAT_TIMING = {
 	human = 1.2,
-	ogryn = 1.5666666666666667,
+	ogryn = 1.5666666666666667
 }
 
 PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)

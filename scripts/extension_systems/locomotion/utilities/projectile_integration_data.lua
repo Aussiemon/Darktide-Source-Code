@@ -59,7 +59,7 @@ local integration_data_interface = {
 	"initial_position_box",
 	"target_position_box",
 	"last_hit_position_box",
-	"last_hit_detection_position_box",
+	"last_hit_detection_position_box"
 }
 local num_integration_data_fields = #integration_data_interface
 

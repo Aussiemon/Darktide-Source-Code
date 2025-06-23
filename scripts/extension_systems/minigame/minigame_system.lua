@@ -20,10 +20,10 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_drill_generate_targets",
 	"rpc_minigame_sync_drill_set_cursor",
 	"rpc_minigame_sync_drill_set_search",
-	"rpc_minigame_sync_frequency_set_target_frequency",
+	"rpc_minigame_sync_frequency_set_target_frequency"
 }
 local SERVER_RPCS = {
-	"rpc_minigame_sync_frequency_test_frequency",
+	"rpc_minigame_sync_frequency_test_frequency"
 }
 
 MinigameSystem.init = function (self, context, system_init_data, ...)

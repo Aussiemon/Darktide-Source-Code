@@ -12,95 +12,95 @@ local player_info_area_size = PopupStyles.player_info_area_size
 local popup_area_height = PopupStyles.player_info_area_size[2] + column_margin[2] * 2
 local screen = UIWorkspaceSettings.screen
 local popup_area_background = {
-	scale = "fit_width",
 	vertical_alignment = "center",
+	scale = "fit_width",
 	size = {
 		screen.size[1],
-		popup_area_height,
+		popup_area_height
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local popup_area = {
-	horizontal_alignment = "center",
-	parent = "screen",
 	vertical_alignment = "center",
+	parent = "screen",
+	horizontal_alignment = "center",
 	size = {
 		screen.size[1],
-		popup_area_height,
+		popup_area_height
 	},
 	position = {
 		0,
 		0,
-		2,
-	},
+		2
+	}
 }
 local left_column = {
-	horizontal_alignment = "left",
-	parent = "popup_area",
 	vertical_alignment = "top",
+	parent = "popup_area",
+	horizontal_alignment = "left",
 	size = {
 		screen.size[1] / 2,
-		popup_area_height,
+		popup_area_height
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local right_column = {
-	horizontal_alignment = "right",
-	parent = "popup_area",
 	vertical_alignment = "top",
+	parent = "popup_area",
+	horizontal_alignment = "right",
 	size = {
 		screen.size[1] / 2,
-		popup_area_height,
+		popup_area_height
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local menu_area = {
-	horizontal_alignment = "left",
-	parent = "right_column",
 	vertical_alignment = "top",
+	parent = "right_column",
+	horizontal_alignment = "left",
 	size = {
 		column_width,
-		popup_area_height - column_margin[2] * 2,
+		popup_area_height - column_margin[2] * 2
 	},
 	position = {
 		column_margin[1],
 		column_margin[2],
-		1,
-	},
+		1
+	}
 }
 local player_info_area = {
-	horizontal_alignment = "right",
-	parent = "left_column",
 	vertical_alignment = "top",
+	parent = "left_column",
+	horizontal_alignment = "right",
 	size = player_info_area_size,
 	position = {
 		-column_margin[1],
 		column_margin[2],
-		1,
-	},
+		1
+	}
 }
 local player_info_header = {
-	horizontal_alignment = "right",
-	parent = "player_info_area",
 	vertical_alignment = "top",
+	parent = "player_info_area",
+	horizontal_alignment = "right",
 	size = PopupStyles.player_info_header_size,
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 local scenegraph_definition = {
 	screen = screen,
@@ -110,101 +110,101 @@ local scenegraph_definition = {
 	right_column = right_column,
 	menu_area = menu_area,
 	player_info_area = player_info_area,
-	player_info_header = player_info_header,
+	player_info_header = player_info_header
 }
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot"
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "terminal",
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "terminal",
+			pass_type = "texture_uv"
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "icon",
 			value = "content/ui/materials/backgrounds/popups/screen_takeover_02",
+			style_id = "icon",
+			pass_type = "texture_uv"
 		},
 		{
-			pass_type = "texture",
-			style_id = "top_border",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
+			style_id = "top_border",
+			pass_type = "texture"
 		},
 		{
-			pass_type = "texture",
-			style_id = "top_border_decoration",
 			value = "content/ui/materials/dividers/skull_rendered_center_01",
+			style_id = "top_border_decoration",
+			pass_type = "texture"
 		},
 		{
-			pass_type = "texture",
-			style_id = "bottom_border",
 			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
+			style_id = "bottom_border",
+			pass_type = "texture"
 		},
 		{
-			pass_type = "texture",
-			style_id = "bottom_border_decoration",
 			value = "content/ui/materials/dividers/skull_rendered_center_02",
-		},
+			style_id = "bottom_border_decoration",
+			pass_type = "texture"
+		}
 	}, "popup_area_background", nil, nil, PopupStyles.background),
 	player_header = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
-			pass_type = "hotspot",
 			style_id = "user_fatshark_id",
+			pass_type = "hotspot",
+			content_id = "hotspot"
 		},
 		{
+			value_id = "player_platform_icon",
 			pass_type = "text",
 			style_id = "player_platform_icon",
-			value_id = "player_platform_icon",
 			change_function = function (content, style)
 				if content.platform_icon_color_override then
 					style.material = nil
 				else
 					style.material = style.default_material
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "player_display_name",
 			value_id = "player_display_name",
+			pass_type = "text"
 		},
 		{
-			pass_type = "text",
 			style_id = "user_display_name",
 			value_id = "user_display_name",
+			pass_type = "text"
 		},
 		{
-			pass_type = "text",
 			style_id = "user_fatshark_id",
 			value_id = "user_fatshark_id",
+			pass_type = "text"
 		},
 		{
-			pass_type = "text",
 			style_id = "user_activity",
 			value_id = "user_activity",
+			pass_type = "text"
 		},
 		{
-			pass_type = "texture",
-			style_id = "divider",
 			value = "content/ui/materials/dividers/skull_rendered_left_01",
+			style_id = "divider",
+			pass_type = "texture"
 		},
 		{
-			pass_type = "texture",
-			style_id = "portrait",
 			value = "content/ui/materials/base/ui_portrait_frame_base",
 			value_id = "portrait",
-		},
-	}, "player_info_header", nil, nil, PopupStyles.player_header),
+			pass_type = "texture",
+			style_id = "portrait"
+		}
+	}, "player_info_header", nil, nil, PopupStyles.player_header)
 }
 local animations = {
 	open = {
 		{
-			end_time = 0.15,
 			name = "fade_in_background",
+			end_time = 0.15,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				for _, widget in pairs(widgets) do
@@ -217,11 +217,11 @@ local animations = {
 				local background_widget = widgets.background
 
 				background_widget.alpha_multiplier = progress
-			end,
+			end
 		},
 		{
-			end_time = 0.4,
 			name = "resize_popup",
+			end_time = 0.4,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local content_target_height = math.max(params.popup_content_height, player_info_area_size[2])
@@ -263,11 +263,11 @@ local animations = {
 				background_style.uvs[2][2] = v_end_progress
 
 				return true
-			end,
+			end
 		},
 		{
-			end_time = 0.75,
 			name = "fade_in_widgets",
+			end_time = 0.75,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeCubic(progress)
@@ -277,13 +277,13 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	close = {
 		{
-			end_time = 0.5,
 			name = "fade_out_widgets",
+			end_time = 0.5,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent:_play_sound(UISoundEvents.social_menu_popup_exit)
@@ -296,11 +296,11 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
+			end
 		},
 		{
-			end_time = 0.65,
 			name = "resize_background",
+			end_time = 0.65,
 			start_time = 0.25,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local start_height = params.popup_content_height + column_margin[2] * 2
@@ -339,23 +339,23 @@ local animations = {
 				background_style.uvs[2][2] = v_end_progress
 
 				return true
-			end,
+			end
 		},
 		{
-			end_time = 0.65,
 			name = "fade_out_background",
+			end_time = 0.65,
 			start_time = 0.5,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local background_widget = widgets.background
 
 				background_widget.alpha_multiplier = 1 - progress
-			end,
-		},
+			end
+		}
 	},
 	fade_in_widgets = {
 		{
-			end_time = 0.4,
 			name = "resize_background",
+			end_time = 0.4,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeCubic(progress)
@@ -363,11 +363,11 @@ local animations = {
 				ui_scenegraph.popup_area.size[2] = math.lerp(params.start_height, params.popup_area_height, anim_progress)
 
 				return true
-			end,
+			end
 		},
 		{
-			end_time = 0.75,
 			name = "fade_in_widgets",
+			end_time = 0.75,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeCubic(progress)
@@ -377,13 +377,13 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
-		},
+			end
+		}
 	},
 	fade_out_widgets = {
 		{
-			end_time = 0.75,
 			name = "fade_out_widgets",
+			end_time = 0.75,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = 1 - math.easeCubic(progress)
@@ -393,15 +393,15 @@ local animations = {
 						widget.alpha_multiplier = anim_progress
 					end
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local view_element_player_social_popup_style_definition = {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	blueprints = Blueprints,
+	blueprints = Blueprints
 }
 
 return settings("ViewElementPlayerSocialPopupDefinition", view_element_player_social_popup_style_definition)

@@ -23,7 +23,7 @@ local player_template = {
 				account_id = account_id,
 				loading_items = loading_items,
 				profile_package_loader = profile_package_loader,
-				item_definitions = item_definitions,
+				item_definitions = item_definitions
 			}
 			self.active = true
 		end
@@ -59,7 +59,7 @@ local player_template = {
 				end
 			end
 		end
-	end,
+	end
 }
 local PLAYER_SYNC_DELAY_TIME = 10
 local ConstantElementTeamProfileLoader = class("ConstantElementTeamProfileLoader")

@@ -7,22 +7,22 @@ if rawget(_G, "RuleDatabase") then
 	RuleDatabase.initialize_static_values()
 
 	local operator_string_lookup = {
-		EQ = "EQ",
 		GT = "GT",
-		GTEQ = "GTEQ",
 		LT = "LT",
-		LTEQ = "LTEQ",
 		NEQ = "NEQ",
-		NOT = "NOT",
-		SET_INCLUDES = "SET_INCLUDES",
 		SET_INTERSECTS = "SET_INTERSECTS",
-		SET_NOT_INCLUDES = "SET_NOT_INCLUDES",
+		LTEQ = "LTEQ",
+		GTEQ = "GTEQ",
 		SET_NOT_INTERSECTS = "SET_NOT_INTERSECTS",
 		TIMEDIFF = "TIMEDIFF",
+		EQ = "EQ",
+		SET_NOT_INCLUDES = "SET_NOT_INCLUDES",
+		NOT = "NOT",
+		SET_INCLUDES = "SET_INCLUDES",
 		TIMESET = TagQuery.OP.TIMESET,
 		ADD = TagQuery.OP.ADD,
 		SUB = TagQuery.OP.SUB,
-		NUMSET = TagQuery.OP.NUMSET,
+		NUMSET = TagQuery.OP.NUMSET
 	}
 
 	OP = operator_string_lookup
@@ -49,17 +49,17 @@ TagQueryLoader.init = function (self, tagquery_database, dialogue_templates_dest
 				wwise_route = rule_definition.wwise_route,
 				heard_speak_routing = rule_definition.heard_speak_routing,
 				on_post_rule_execution = rule_definition.on_post_rule_execution,
-				on_pre_rule_execution = rule_definition.on_pre_rule_execution,
+				on_pre_rule_execution = rule_definition.on_pre_rule_execution
 			}
 
 			dialogue_templates_destination_table[rule_definition.name] = dialogue_template
-		end,
+		end
 	}
 	self.unload_file_environment = {
 		OP = OP,
 		define_rule = function (rule_definition)
 			tagquery_database:remove_rule(rule_definition.name)
-		end,
+		end
 	}
 	self.tagquery_database = tagquery_database
 end

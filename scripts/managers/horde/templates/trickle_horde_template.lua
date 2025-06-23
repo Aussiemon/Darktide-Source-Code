@@ -9,9 +9,9 @@ local PerceptionSettings = require("scripts/settings/perception/perception_setti
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
 local horde_template = {
-	name = "trickle_horde",
-	occluded_spawn_range = 3,
 	requires_main_path = true,
+	name = "trickle_horde",
+	occluded_spawn_range = 3
 }
 local TEMP_BREED_NAMES = {}
 
@@ -74,7 +74,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 	end
 
 	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, random_occluded_position)
-	local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+	local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
 	local end_index = start_index + 1
 	local closest_mainpath_position = MainPathQueries.closest_position_between_nodes(random_occluded_position, start_index, end_index)
 
@@ -150,7 +150,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		template_name = horde_template.name,
 		side = side,
 		target_side = target_side,
-		group_id = group_id,
+		group_id = group_id
 	}
 	local spawn_rotation = Quaternion.look(Vector3(horde_direction.x, horde_direction.y, 0))
 	local side_id = side.side_id

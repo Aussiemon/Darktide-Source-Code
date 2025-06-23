@@ -6,7 +6,7 @@ local GameplayStateInterface = {
 	"update",
 	"post_update",
 	"render",
-	"on_reload",
+	"on_reload"
 }
 
 return GameplayStateInterface

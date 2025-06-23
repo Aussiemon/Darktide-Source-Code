@@ -22,7 +22,7 @@ StateBoot.on_enter = function (self, parent, params)
 
 	local sub_state_params = {
 		sub_state_index = 1,
-		states = params.states,
+		states = params.states
 	}
 
 	self._done = false
@@ -66,7 +66,7 @@ StateBoot.update = function (self, dt)
 		return CLASSES[self._next_state], {
 			package_manager = self._package_manager,
 			dt = dt,
-			localization_manager = self._localization_manager,
+			localization_manager = self._localization_manager
 		}
 	end
 end

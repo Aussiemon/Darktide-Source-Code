@@ -4,9 +4,9 @@ local ItemMaterialOverrides = require("scripts/settings/equipment/item_material_
 local VisualLoadoutCustomization = {}
 local _validate_item_name, _generate_attachment_overrides_recursive, _attach_hierarchy, _attach_hierarchy_children, _spawn_attachment
 local _sort_order_enum = {
-	FACE_HAIR = 2,
 	FACE_SCAR = 1,
-	HAIR = 3,
+	FACE_HAIR = 2,
+	HAIR = 3
 }
 local _apply_material_override
 local Unit = Unit
@@ -15,6 +15,7 @@ local Unit_set_vector2_for_materials = Unit.set_vector2_for_materials
 local Unit_set_vector3_for_materials = Unit.set_vector3_for_materials
 local Unit_set_vector4_for_materials = Unit.set_vector4_for_materials
 local Unit_set_texture_for_materials = Unit.set_texture_for_materials
+local Unit_set_texture_for_material = Unit.set_texture_for_material
 
 VisualLoadoutCustomization.ROOT_ATTACH_NAME = ""
 
@@ -34,9 +35,9 @@ VisualLoadoutCustomization.apply_material_override = function (unit, parent_unit
 
 		if material_override_data then
 			if apply_to_parent then
-				_apply_material_override(parent_unit, material_override_data)
+				_apply_material_override(parent_unit, material_override_data, in_editor)
 			else
-				_apply_material_override(unit, material_override_data)
+				_apply_material_override(unit, material_override_data, in_editor)
 			end
 		end
 	end
@@ -84,7 +85,7 @@ VisualLoadoutCustomization._create_extract_data = function (map_attachment_units
 		item_name_by_unit = map_item_names and {} or nil,
 		bind_poses_by_unit = map_bind_poses and {} or nil,
 		attachment_id_lookup = map_attachment_units and {} or nil,
-		attachment_name_lookup = map_attachment_units and {} or nil,
+		attachment_name_lookup = map_attachment_units and {} or nil
 	}
 
 	return extract_data
@@ -183,11 +184,20 @@ VisualLoadoutCustomization.spawn_item_attachments = function (item_data, overrid
 			attachment_names[#attachment_names + 1] = skin_color_slot_name
 		end
 
-		for i = 1, #attachment_names do
-			local name = attachment_names[i]
-			local attachment_slot_data = attachments[name]
+		local companion_body_skin_color_slot_name = "slot_companion_body_skin_color"
+		local companion_body_skin_color_slot_index = table.find(attachment_names, companion_body_skin_color_slot_name)
 
-			_attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, item_unit, name, extract_data, optional_mission_template, optional_equipment)
+		if companion_body_skin_color_slot_index then
+			table.remove(attachment_names, companion_body_skin_color_slot_index)
+
+			attachment_names[#attachment_names + 1] = companion_body_skin_color_slot_name
+		end
+
+		for ii = 1, #attachment_names do
+			local attachment_name = attachment_names[ii]
+			local attachment_slot_data = attachments[attachment_name]
+
+			_attach_hierarchy(attachment_slot_data, override_lookup, attach_settings, item_unit, attachment_name, extract_data, optional_mission_template, optional_equipment)
 		end
 	end
 
@@ -241,7 +251,7 @@ VisualLoadoutCustomization.attach_hierarchy = function (attachment_slot_data, ov
 	_attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attachment_name, extract_data, optional_mission_template)
 	VisualLoadoutCustomization._pop_extract_data(extract_data, parent_unit)
 
-	return extract_data.attachment_units_by_unit
+	return extract_data.attachment_units_by_unit, extract_data.attachment_id_lookup, extract_data.attachment_name_lookup, extract_data.bind_poses_by_unit, extract_data.item_name_by_unit
 end
 
 VisualLoadoutCustomization.generate_attachment_overrides_lookup = function (item_data, override_item_data)
@@ -395,7 +405,9 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		map_mode = optional_as_leaf_map_mode
 	elseif World[item_data.link_map_mode] then
 		map_mode = World[item_data.link_map_mode]
-	elseif settings.skip_link_children then
+	elseif item_type == "COMPANION_GEAR_FULL" then
+		map_mode = World.LINK_MODE_NONE
+	elseif settings.skip_link_children and not item_data.force_link_children then
 		map_mode = World.LINK_MODE_NONE
 	else
 		map_mode = World.LINK_MODE_NODE_NAME
@@ -429,7 +441,7 @@ end
 
 local ignore_slot_item_assigning = table.set({
 	"slot_primary",
-	"slot_secondary",
+	"slot_secondary"
 })
 
 function _attach_hierarchy(attachment_slot_data, override_lookup, settings, parent_unit, attachment_name, extract_data, optional_mission_template, optional_equipment)
@@ -498,8 +510,32 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 		local apply_to_parent = item.material_override_apply_to_parent
 
 		if material_overrides then
-			for _, material_override in pairs(material_overrides) do
-				VisualLoadoutCustomization.apply_material_override(attachment_unit, parent_unit, apply_to_parent, material_override, settings.in_editor)
+			if not settings.in_editor and item.item_type == "COMPANION_BODY_COAT_PATTERN" then
+				local parent_item_name = parent_unit and extract_data.item_name_by_unit[parent_unit]
+				local parent_item = parent_item_name and settings.item_definitions[parent_item_name]
+				local parent_attachments = parent_item and parent_item.attachments
+
+				if parent_attachments then
+					for attachment_child_name, _ in pairs(parent_attachments) do
+						local attachment_child_unit = extract_data.attachment_id_lookup[attachment_child_name]
+
+						if attachment_child_unit then
+							local attachment_item_name = extract_data.item_name_by_unit[attachment_child_unit]
+
+							if attachment_item_name then
+								Unit.set_data(attachment_child_unit, "attachment_item_name", attachment_item_name)
+
+								for _, material_override in pairs(material_overrides) do
+									VisualLoadoutCustomization.apply_material_override(attachment_child_unit, parent_unit, false, material_override, settings.in_editor)
+								end
+							end
+						end
+					end
+				end
+			else
+				for _, material_override in pairs(material_overrides) do
+					VisualLoadoutCustomization.apply_material_override(attachment_unit, parent_unit, apply_to_parent, material_override, settings.in_editor)
+				end
 			end
 		end
 	end
@@ -513,7 +549,7 @@ function _attach_hierarchy_children(children, override_lookup, settings, parent_
 	end
 end
 
-function _apply_material_override(unit, material_override_data)
+function _apply_material_override(unit, material_override_data, in_editor)
 	if material_override_data.property_overrides ~= nil then
 		for property_name, property_override_data in pairs(material_override_data.property_overrides) do
 			if type(property_override_data) == "number" then
@@ -536,18 +572,37 @@ function _apply_material_override(unit, material_override_data)
 
 	if material_override_data.texture_overrides ~= nil then
 		for texture_slot, texture_override_data in pairs(material_override_data.texture_overrides) do
-			if texture_override_data.resource_by_item == nil then
-				Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
-			else
-				local resources = texture_override_data.resource_by_item
+			local resource_by_item = texture_override_data.resource_by_item
+
+			if resource_by_item == nil then
+				if texture_override_data.material_slot == nil then
+					Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
+				else
+					Unit_set_texture_for_material(unit, texture_override_data.material_slot, texture_slot, texture_override_data.resource)
+				end
+			elseif in_editor then
 				local items_array_size = Unit.data_table_size(unit, "attached_item_names") or 0
 
-				for i = 1, items_array_size do
-					local resource = resources[Unit.get_data(unit, "attached_item_names", i)]
+				for ii = 1, items_array_size do
+					local attached_item_name = Unit.get_data(unit, "attached_item_names", ii)
+					local texture_resource = resource_by_item[attached_item_name]
 
-					if resource ~= nil then
-						Unit_set_texture_for_materials(unit, texture_slot, resource, true)
+					if texture_resource then
+						local unit_array_size = Unit.data_table_size(unit, "attached_units_lookup", ii) or 0
+
+						for jj = 1, unit_array_size do
+							local attachment_unit = Unit.get_data(unit, "attached_units_lookup", ii, jj)
+
+							Unit_set_texture_for_materials(attachment_unit, texture_slot, texture_resource, true)
+						end
 					end
+				end
+			else
+				local attachment_item_name = Unit.get_data(unit, "attachment_item_name")
+				local texture_resource = resource_by_item[attachment_item_name]
+
+				if texture_resource then
+					Unit_set_texture_for_materials(unit, texture_slot, texture_resource, true)
 				end
 			end
 		end

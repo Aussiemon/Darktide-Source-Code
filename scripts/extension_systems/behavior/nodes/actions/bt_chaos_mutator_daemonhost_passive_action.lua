@@ -673,7 +673,7 @@ function _closets_aggro_target(unit, breed, blackboard, scratchpad, action_data,
 
 		distance_to_all_players[i] = {
 			distance_to_target_sq,
-			target_unit,
+			target_unit
 		}
 	end
 

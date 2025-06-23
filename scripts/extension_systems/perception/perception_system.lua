@@ -178,7 +178,7 @@ end
 PerceptionSystem.set_untargetable = function (self, caller_class, unit)
 	local unit_untargetable_data = self._unit_untargetable_data
 	local untargetable_data = unit_untargetable_data[unit] or {
-		num_ids = 0,
+		num_ids = 0
 	}
 
 	unit_untargetable_data[unit] = untargetable_data

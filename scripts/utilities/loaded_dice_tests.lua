@@ -7,7 +7,7 @@ local function _test_roll()
 		10,
 		5,
 		3,
-		2,
+		2
 	}
 	local weight_sum = 0
 
@@ -21,7 +21,7 @@ local function _test_roll()
 		0,
 		0,
 		0,
-		0,
+		0
 	}
 
 	for i = 1, tries do
@@ -50,7 +50,7 @@ local function _test_roll_seeded()
 		25,
 		5,
 		15,
-		40,
+		40
 	}
 	local num_weights = #weights
 	local normalized_weights = Script.new_array(num_weights)
@@ -75,7 +75,7 @@ local function _test_roll_seeded()
 		5,
 		2,
 		4,
-		2,
+		2
 	}
 	local column
 	local probabilities, alias = LoadedDice.create(weights, false)

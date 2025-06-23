@@ -16,8 +16,8 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_crit_kills = table
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire = table.merge({
 	use_combo = true,
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.02,
-	},
+		[stat_buffs.power_level_modifier] = 0.02
+	}
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_parent)
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power_child"
@@ -26,7 +26,7 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_targets_receive_rending_debuff 
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_targets_receive_rending_debuff.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_ranged_hit)
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time)
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power.conditional_stat_buffs = {
-	[stat_buffs.power_level_modifier] = 0.05,
+	[stat_buffs.power_level_modifier] = 0.05
 }
 
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power.bonus_step_func = function (template_data, template_context)
@@ -63,50 +63,50 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_windup_increases_power.min_max_
 end
 
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_crit_chance_bonus_on_melee_kills = {
-	active_duration = 2,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 2,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05,
+		[stat_buffs.critical_strike_chance] = 0.05
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_kill),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_kill)
 }
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_chained_melee_hits_increases_power_parent = {
+	stacks_to_remove = 1,
 	child_buff_template = "weapon_trait_bespoke_ogryn_gauntlet_p1_chained_melee_hits_increases_power_child",
 	child_duration = 1.5,
-	class_name = "weapon_trait_parent_proc_buff",
-	max_stacks = 5,
 	predicted = false,
 	stack_offset = -1,
-	stacks_to_remove = 1,
+	max_stacks = 5,
+	class_name = "weapon_trait_parent_proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_first_target_melee_hit),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_first_target_melee_hit)
 }
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_chained_melee_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_power_child)
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_melee_power_after_ranged_explosion = {
-	active_duration = 4,
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	allow_proc_while_active = true,
+	max_stacks = 1,
+	class_name = "proc_buff",
+	active_duration = 4,
 	buff_data = {
-		required_num_hits = 3,
+		required_num_hits = 3
 	},
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.05,
+		[stat_buffs.melee_power_level_modifier] = 0.05
 	},
 	check_proc_func = function (params, template_data, template_context)
 		if not CheckProcFunctions.check_item_slot(params, template_data, template_context) then
@@ -122,21 +122,21 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_melee_power_after_ranged_explos
 		end
 
 		return true
-	end,
+	end
 }
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_after_weapon_special_multiple = {
-	active_duration = 6,
+	predicted = false,
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
-	predicted = false,
+	active_duration = 6,
 	buff_data = {
-		required_num_hits = 3,
+		required_num_hits = 3
 	},
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.06,
+		[stat_buffs.power_level_modifier] = 0.06
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)
@@ -149,7 +149,7 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_after_weapon_specia
 		end
 
 		return params.weapon_special
-	end,
+	end
 }
 
 return templates

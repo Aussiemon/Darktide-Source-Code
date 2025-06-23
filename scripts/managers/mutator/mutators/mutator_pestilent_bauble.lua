@@ -7,7 +7,7 @@ local MasterItems = require("scripts/backend/master_items")
 local MutatorPestilentBauble = class("MutatorPestilentBauble", "MutatorBase")
 local throw_config = {
 	item = "content/items/weapons/minions/ranged/twin_grenade",
-	projectile_template = ProjectileTemplates.mutator_pestilent_bauble_projectile,
+	projectile_template = ProjectileTemplates.mutator_pestilent_bauble_projectile
 }
 local allowed_spawns = 0
 local DELAY = 5

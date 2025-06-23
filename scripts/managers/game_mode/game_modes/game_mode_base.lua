@@ -13,12 +13,12 @@ GameModeBase.INTERFACE = {
 	"on_player_unit_despawn",
 	"can_spawn_player",
 	"player_time_until_spawn",
-	"cleanup_game_mode_units",
+	"cleanup_game_mode_units"
 }
 
 local CLIENT_RPCS = {
 	"rpc_change_game_mode_state",
-	"rpc_client_set_local_player_orientation",
+	"rpc_client_set_local_player_orientation"
 }
 
 local function _log(...)

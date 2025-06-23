@@ -62,64 +62,64 @@ end
 
 PlayerSpawner.component_data = {
 	active = {
-		ui_name = "Active",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Active"
 	},
 	player_side = {
-		ui_name = "Player Side",
-		ui_type = "combo_box",
 		value = "heroes",
+		ui_type = "combo_box",
+		ui_name = "Player Side",
 		options_keys = {
-			"Heroes",
+			"Heroes"
 		},
 		options_values = {
-			"heroes",
-		},
+			"heroes"
+		}
 	},
 	spawn_identifier = {
-		ui_name = "Spawn Identifier",
-		ui_type = "combo_box",
 		value = "default",
+		ui_type = "combo_box",
+		ui_name = "Spawn Identifier",
 		options_keys = {
 			"Default",
 			"Bots",
 			"Recent Mission",
-			"Shooting Range",
+			"Shooting Range"
 		},
 		options_values = {
 			"default",
 			"bots",
 			"recent_mission",
-			"tg_shooting_range",
-		},
+			"tg_shooting_range"
+		}
 	},
 	spawn_priority = {
-		decimals = 0,
-		min = 1,
-		step = 1,
-		ui_name = "Spawn Priority",
 		ui_type = "number",
+		min = 1,
+		decimals = 0,
 		value = 1,
+		ui_name = "Spawn Priority",
+		step = 1
 	},
 	parent_spawned = {
-		ui_name = "Parent Spawned",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Parent Spawned"
 	},
 	inputs = {
 		player_spawner_activate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		player_spawner_deactivate = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"PlayerSpawnerExtension",
-	},
+		"PlayerSpawnerExtension"
+	}
 }
 
 return PlayerSpawner

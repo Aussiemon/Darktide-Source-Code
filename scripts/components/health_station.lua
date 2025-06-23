@@ -50,66 +50,66 @@ end
 
 HealthStation.component_data = {
 	battery_spawning_mode = {
-		ui_name = "Battery Spawning",
-		ui_type = "combo_box",
 		value = "plugged",
+		ui_type = "combo_box",
+		ui_name = "Battery Spawning",
 		options_keys = {
 			"Battery Unplugged",
 			"Battery Spawned at pickup_location",
 			"Battery always Plugged on Spawn",
-			"Battery Plugged only with Distributed Charge",
+			"Battery Plugged only with Distributed Charge"
 		},
 		options_values = {
 			"none",
 			"pickup_location",
 			"plugged",
-			"plugged_with_charge",
-		},
+			"plugged_with_charge"
+		}
 	},
 	available_charges = {
+		ui_type = "number",
+		min = 0,
 		decimals = 0,
 		max = 4,
-		min = 0,
-		step = 1,
-		ui_name = "Available Charges",
-		ui_type = "number",
 		value = 4,
+		ui_name = "Available Charges",
+		step = 1
 	},
 	health_per_charge = {
+		ui_type = "number",
+		min = 0,
 		decimals = 0,
 		max = 100,
-		min = 0,
-		step = 1,
-		ui_name = "Health per Charge (0 == full health)",
-		ui_type = "number",
 		value = 0,
+		ui_name = "Health per Charge (0 == full health)",
+		step = 1
 	},
 	use_distribution_pool = {
-		ui_name = "Use Health Charge Distribution Pool (see mission_templates.lua)",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Use Health Charge Distribution Pool (see mission_templates.lua)"
 	},
 	socket_prop = {
-		ui_name = "Socket Prop (see 'settings/level_prop')",
-		ui_type = "combo_box",
 		value = "luggable_socket",
+		ui_type = "combo_box",
+		ui_name = "Socket Prop (see 'settings/level_prop')",
 		options_keys = {
-			"socket_luggable_battery_01",
+			"socket_luggable_battery_01"
 		},
 		options_values = {
-			"luggable_socket",
-		},
+			"luggable_socket"
+		}
 	},
 	inputs = {
 		spawn_battery = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		unspawn_battery = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return HealthStation

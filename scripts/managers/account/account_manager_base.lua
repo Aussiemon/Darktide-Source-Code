@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_base.lua
 
 local AccountManagerBase = class("AccountManagerBase")
+local Promise = require("scripts/foundation/utilities/promise")
 
 AccountManagerBase.init = function (self)
 	return
@@ -128,6 +129,18 @@ end
 
 AccountManagerBase.region_has_restriction = function (self, restriction)
 	return false
+end
+
+AccountManagerBase.open_to_store = function (self, app_id)
+	return Promise.resolved({
+		success = false
+	})
+end
+
+AccountManagerBase.is_owner_of = function (self, app_id)
+	return Promise.resolved({
+		success = false
+	})
 end
 
 return AccountManagerBase

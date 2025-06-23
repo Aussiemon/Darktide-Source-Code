@@ -217,7 +217,7 @@ local PlayerManagerTestify = {
 		if current_item == nil or current_item.name ~= data.item.name then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return PlayerManagerTestify

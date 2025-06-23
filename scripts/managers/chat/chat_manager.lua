@@ -189,7 +189,7 @@ ChatManager.join_chat_channel = function (self, channel, host_peer_id, voice, te
 					channel,
 					text,
 					voice,
-					vivox_token,
+					vivox_token
 				})
 			end
 		else
@@ -570,7 +570,7 @@ ChatManager._handle_event = function (self, message)
 			session_handle = message.session_handle,
 			sessiongroup_handle = message.sessiongroup_handle,
 			name = message.name,
-			tag = tag,
+			tag = tag
 		}
 
 		self._sessions[message.session_handle] = session
@@ -648,21 +648,21 @@ ChatManager._handle_event = function (self, message)
 
 		local peer_id, account_id = self:split_displayname(message.displayname)
 		local participant = {
+			is_speaking = false,
+			waiting_for_block_states = false,
+			is_muted_for_me = false,
+			is_validated = false,
 			is_moderator_muted = false,
+			is_text_muted_for_me = false,
 			is_moderator_text_muted = false,
 			is_mute_status_set = false,
-			is_muted_for_me = false,
-			is_speaking = false,
-			is_text_muted_for_me = false,
-			is_validated = false,
-			waiting_for_block_states = false,
 			account_name = message.account_name,
 			participant_uri = message.participant_uri,
 			packed_displayname = message.displayname,
 			peer_id = peer_id,
 			account_id = account_id,
 			joined_time = self._t,
-			is_current_user = message.is_current_user,
+			is_current_user = message.is_current_user
 		}
 
 		self._sessions[message.session_handle].participants[message.participant_uri] = participant
@@ -721,7 +721,7 @@ ChatManager._handle_response = function (self, message)
 			is_mic_muted = message.is_mic_muted,
 			is_speaker_muted = message.is_speaker_muted,
 			mic_volume = message.mic_volume,
-			speaker_volume = message.speaker_volume,
+			speaker_volume = message.speaker_volume
 		}
 	elseif message.response == Vivox.ResponseType_GET_CAPTURE_DEVICES then
 		self._capture_devices = message.capture_devices
@@ -900,7 +900,7 @@ end
 ChatManager._update_transmitting_channel_priority = function (self)
 	local priority = {
 		[ChatManagerConstants.ChannelTag.MISSION] = 1,
-		[ChatManagerConstants.ChannelTag.PARTY] = 2,
+		[ChatManagerConstants.ChannelTag.PARTY] = 2
 	}
 	local priority_channel
 
@@ -938,7 +938,7 @@ ChatManager._get_vivox_token = function (self)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/social/"):path(account_id):path("/chat"):path("/login")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -948,7 +948,7 @@ ChatManager._get_vivox_token = function (self)
 
 			return {
 				account_id = account_id,
-				vivox_token = data.body.VivoxToken,
+				vivox_token = data.body.VivoxToken
 			}
 		end)
 	end)

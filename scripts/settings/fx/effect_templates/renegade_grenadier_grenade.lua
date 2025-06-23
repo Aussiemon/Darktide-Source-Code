@@ -3,7 +3,7 @@
 local MasterItems = require("scripts/backend/master_items")
 local GRENADE_ITEM_NAME = "content/items/weapons/minions/ranged/renegade_grenade"
 local resources = {
-	grenade_item_name = GRENADE_ITEM_NAME,
+	grenade_item_name = GRENADE_ITEM_NAME
 }
 local effect_template = {
 	name = "renegade_grenadier_grenade",
@@ -31,7 +31,7 @@ local effect_template = {
 		local grenade_unit = template_data.grenade_unit
 
 		Managers.state.unit_spawner:mark_for_deletion(grenade_unit)
-	end,
+	end
 }
 
 return effect_template

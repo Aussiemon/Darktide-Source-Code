@@ -46,7 +46,7 @@ end
 TagQueryDatabase.create_query = function (self)
 	return setmetatable({
 		query_context = {},
-		tagquery_database = self,
+		tagquery_database = self
 	}, TagQuery)
 end
 
@@ -72,7 +72,7 @@ local operator_lookup = {
 	SET_INCLUDES = RuleDatabase.OPERATOR_SET_INCLUDES,
 	SET_INTERSECTS = RuleDatabase.OPERATOR_SET_INTERSECTS,
 	SET_NOT_INTERSECTS = RuleDatabase.OPERATOR_SET_NOT_INTERSECTS,
-	SET_NOT_INCLUDES = RuleDatabase.OPERATOR_SET_NOT_INCLUDES,
+	SET_NOT_INCLUDES = RuleDatabase.OPERATOR_SET_NOT_INCLUDES
 }
 local context_indexes = table.mirror_array_inplace({
 	"global_context",
@@ -80,7 +80,7 @@ local context_indexes = table.mirror_array_inplace({
 	"user_context",
 	"user_memory",
 	"faction_memory",
-	"faction_context",
+	"faction_context"
 })
 
 TagQueryDatabase.define_rule = function (self, rule_definition)

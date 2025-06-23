@@ -29,12 +29,12 @@ FixedUpdateMissedInputsReporter.register_event = function (self, player)
 	else
 		local player_data = {
 			telemetry_subject = subject,
-			telemetry_game_session = player:telemetry_game_session(),
+			telemetry_game_session = player:telemetry_game_session()
 		}
 
 		self._reports[player_key] = {
 			entries = 1,
-			player_data = player_data,
+			player_data = player_data
 		}
 	end
 end

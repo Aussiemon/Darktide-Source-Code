@@ -13,7 +13,7 @@ local SUPPRESSION_HIT_CLEAR_TIME = 0.03
 local SUPPRESSION_HIT_CLEAR_AMOUNT = 0.1
 local _add_to_clear_time
 local CLIENT_RPCS = {
-	"rpc_player_suppressed",
+	"rpc_player_suppressed"
 }
 
 PlayerSuppressionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)

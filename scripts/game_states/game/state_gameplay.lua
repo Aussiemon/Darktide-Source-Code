@@ -54,7 +54,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	Crashify.print_property("circumstance", tostring(mechanism_data.circumstance_name))
 
 	local start_params = {
-		shared_state = shared_state,
+		shared_state = shared_state
 	}
 	local sub_state_change_callbacks = {}
 

@@ -6,6 +6,7 @@ local LocalConnectChannelState = require("scripts/multiplayer/connection/local_s
 local LocalConnectedState = require("scripts/multiplayer/connection/local_states/local_connected_state")
 local LocalDataSyncState = require("scripts/multiplayer/connection/local_states/local_data_sync_state")
 local LocalDisconnectedState = require("scripts/multiplayer/connection/local_states/local_disconnected_state")
+local LocalDLCVerificationState = require("scripts/multiplayer/connection/local_states/local_dlc_verification_state")
 local LocalEacCheckState = require("scripts/multiplayer/connection/local_states/local_eac_check_state")
 local LocalMasterItemsCheckState = require("scripts/multiplayer/connection/local_states/local_master_items_check_state")
 local LocalMechanismVerificationState = require("scripts/multiplayer/connection/local_states/local_mechanism_verification_state")
@@ -40,7 +41,7 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 		profile_synchronizer_client = profile_synchronizer_client,
 		jwt_ticket = jwt_ticket,
 		ready_to_claim_slots = slots_to_reserve == nil,
-		event_list = {},
+		event_list = {}
 	}
 
 	self._shared_state = shared_state
@@ -90,9 +91,13 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 	state_machine:add_transition("LocalEacCheckState", "eac mismatch", LocalDisconnectedState)
 	state_machine:add_transition("LocalEacCheckState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalEacCheckState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalProfilesSyncState", "profiles synced", LocalDataSyncState)
+	state_machine:add_transition("LocalProfilesSyncState", "profiles synced", LocalDLCVerificationState)
 	state_machine:add_transition("LocalProfilesSyncState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalProfilesSyncState", "disconnected", LocalDisconnectedState)
+	state_machine:add_transition("LocalDLCVerificationState", "done", LocalDataSyncState)
+	state_machine:add_transition("LocalDLCVerificationState", "timeout", LocalDisconnectedState)
+	state_machine:add_transition("LocalDLCVerificationState", "error", LocalDisconnectedState)
+	state_machine:add_transition("LocalDLCVerificationState", "disconnected", LocalDisconnectedState)
 	state_machine:add_transition("LocalDataSyncState", "data synced", LocalSyncStatsState)
 	state_machine:add_transition("LocalDataSyncState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalDataSyncState", "disconnected", LocalDisconnectedState)
@@ -122,7 +127,7 @@ end
 
 ConnectionLocalStateMachine.disconnect = function (self, optional_game_reason)
 	self._state_machine:event("disconnected", {
-		game_reason = optional_game_reason or "game_request",
+		game_reason = optional_game_reason or "game_request"
 	})
 end
 

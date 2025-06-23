@@ -106,68 +106,68 @@ local function init_and_run_tests(side_system_object)
 
 	local side_compositions = {
 		{
-			color_name = "red",
 			name = "test1",
+			color_name = "red",
 			relations = {
 				enemy = {
 					"test2",
-					"test3",
-				},
-			},
+					"test3"
+				}
+			}
 		},
 		{
-			color_name = "blue",
 			name = "test2",
+			color_name = "blue",
 			relations = {
 				enemy = {
-					"test1",
-				},
-			},
+					"test1"
+				}
+			}
 		},
 		{
-			color_name = "green",
 			name = "test3",
+			color_name = "green",
 			relations = {
 				enemy = {
-					"test1",
-				},
-			},
-		},
+					"test1"
+				}
+			}
+		}
 	}
 	local side_system = dummy_create_side_system(side_compositions)
 	local unit_extension_data = side_system._unit_extension_data
 
 	unit_extension_data.player_unit_1 = {
 		is_player_unit = true,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.player_unit_2 = {
 		is_player_unit = true,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.player_unit_3 = {
 		is_player_unit = true,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.minion_1 = {
 		is_player_unit = false,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.minion_2 = {
 		is_player_unit = false,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.minion_3 = {
 		is_player_unit = false,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.minion_4 = {
 		is_player_unit = false,
-		breed_tags = {},
+		breed_tags = {}
 	}
 	unit_extension_data.minion_5 = {
 		is_player_unit = false,
-		breed_tags = {},
+		breed_tags = {}
 	}
 
 	local sides = side_system._sides

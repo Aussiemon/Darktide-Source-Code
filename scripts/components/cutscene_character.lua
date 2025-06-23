@@ -22,6 +22,10 @@ CutsceneCharacter.init = function (self, unit)
 
 	self._breed_name = breed_name
 
+	local companion_inclusion_setting = self:get_data(unit, "companion_inclusion_setting")
+
+	self._companion_inclusion_setting = companion_inclusion_setting
+
 	local cinematic_slot = self:get_data(unit, "cinematic_slot")
 
 	self._cinematic_slot = cinematic_slot
@@ -33,7 +37,7 @@ CutsceneCharacter.init = function (self, unit)
 		local prop_items = self:get_data(unit, "prop_items")
 		local animation_event = self:get_data(unit, "animation_event")
 
-		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign)
+		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign, companion_inclusion_setting)
 	end
 
 	if self:get_data(unit, "materialize") ~= "disabled" then
@@ -69,6 +73,10 @@ end
 
 CutsceneCharacter.breed_name = function (self)
 	return self._breed_name
+end
+
+CutsceneCharacter.companion_inclusion_setting = function (self)
+	return self._companion_inclusion_setting
 end
 
 CutsceneCharacter.start_weapon_specific_walk_animation = function (self)
@@ -205,18 +213,18 @@ CutsceneCharacter.start_materialize = function (self)
 	local unit = self._unit
 
 	self._materialize_data = {
-		current_t = 0,
 		duration = 2.7,
+		wielded_vis = true,
+		wielded_per = 0.6,
+		current_t = 0,
 		eyes_per = 0.9,
+		visible_per = 0.01,
 		eyes_set = false,
 		visible = true,
-		visible_per = 0.01,
-		visible_set = false,
-		wielded_per = 0.6,
 		wielded_set = false,
-		wielded_vis = true,
+		visible_set = false,
 		from = get_min(unit),
-		to = get_max(unit, self._breed_name),
+		to = get_max(unit, self._breed_name)
 	}
 	self._should_update = true
 
@@ -238,18 +246,18 @@ CutsceneCharacter.start_dematerialize = function (self)
 	end
 
 	self._materialize_data = {
-		current_t = 0,
 		duration = 2.7,
+		wielded_vis = false,
+		wielded_per = 0.5,
+		current_t = 0,
+		visible_per = 0.99,
 		eyes_set = false,
 		visible = false,
-		visible_per = 0.99,
-		visible_set = false,
-		wielded_per = 0.5,
 		wielded_set = false,
-		wielded_vis = false,
+		visible_set = false,
 		from = get_max(unit, self._breed_name),
 		to = get_min(unit),
-		eyes_per = eyes_percentage,
+		eyes_per = eyes_percentage
 	}
 	self._should_update = true
 
@@ -258,9 +266,9 @@ end
 
 CutsceneCharacter.component_data = {
 	cinematic_name = {
-		ui_name = "Cinematic Name",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Cinematic Name",
 		options_keys = {
 			"None",
 			"Intro ABC",
@@ -292,7 +300,7 @@ CutsceneCharacter.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -325,142 +333,142 @@ CutsceneCharacter.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	character_type = {
-		ui_name = "Character Type",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Character Type",
 		options_keys = {
 			"None",
 			"Player",
-			"NPC",
+			"NPC"
 		},
 		options_values = {
 			"none",
 			"player",
-			"npc",
-		},
+			"npc"
+		}
 	},
 	breed_name = {
-		ui_name = "Breed Name",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Breed Name",
 		options_keys = {
 			"None",
 			"Human",
 			"Ogryn",
-			"Companion Dog",
+			"Companion Dog"
 		},
 		options_values = {
 			"none",
 			"human",
 			"ogryn",
-			"companion_dog",
-		},
+			"companion_dog"
+		}
 	},
 	companion_inclusion_setting = {
-		ui_name = "Companion Inclusion",
-		ui_type = "combo_box",
 		value = "any",
+		ui_type = "combo_box",
+		ui_name = "Companion Inclusion",
 		options_keys = {
 			"Any",
 			"With Companion Only",
-			"Without Companion Only",
+			"Without Companion Only"
 		},
 		options_values = {
 			"any",
 			"with_companion",
-			"without_companion",
-		},
+			"without_companion"
+		}
 	},
 	prop_items = {
-		category = "Attachments",
-		ui_name = "Prop Items",
-		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
-		values = {},
+		category = "Attachments",
+		ui_type = "text_box_array",
+		ui_name = "Prop Items",
+		values = {}
 	},
 	cinematic_slot = {
-		ui_name = "Slot",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Slot",
 		options_keys = {
 			"None",
 			"1",
 			"2",
 			"3",
-			"4",
+			"4"
 		},
 		options_values = {
 			"none",
 			1,
 			2,
 			3,
-			4,
-		},
+			4
+		}
 	},
 	animation_event = {
-		ui_name = "Animation Inventory Event",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Animation Inventory Event",
 		options_keys = {
 			"None",
 			"ready_idle",
 			"unready_idle",
-			"to_ready",
+			"to_ready"
 		},
 		options_values = {
 			"none",
 			"cin_ready",
 			"unready_idle",
-			"ready",
-		},
+			"ready"
+		}
 	},
 	equip_slot_on_loadout_assign = {
-		category = "Attachments",
-		ui_name = "Equip Slot on Loadout Assignment",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Equip Slot on Loadout Assignment",
+		category = "Attachments"
 	},
 	materialize = {
-		category = "Materialize",
-		ui_name = "Materialize",
 		ui_type = "combo_box",
+		category = "Materialize",
 		value = "disabled",
+		ui_name = "Materialize",
 		options_keys = {
 			"Disabled",
 			"Enabled (Start Visible)",
-			"Enabled (Start Hidden)",
+			"Enabled (Start Hidden)"
 		},
 		options_values = {
 			"disabled",
 			"enabled_visible",
-			"enabled_hidden",
-		},
+			"enabled_hidden"
+		}
 	},
 	inputs = {
 		start_weapon_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_inventory_specific_walk_animation = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_materialize = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		start_dematerialize = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CutsceneCharacterExtension",
-	},
+		"CutsceneCharacterExtension"
+	}
 }
 
 return CutsceneCharacter

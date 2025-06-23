@@ -2,20 +2,20 @@
 
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local view_settings = {
-	class = "ReportPlayerView",
 	close_on_hotkey_pressed = true,
-	disable_game_world = false,
-	game_world_blur = 1.1,
-	load_in_hub = true,
-	package = "packages/ui/views/report_player_view/report_player_view",
-	path = "scripts/ui/views/report_player_view/report_player_view",
 	state_bound = true,
+	path = "scripts/ui/views/report_player_view/report_player_view",
+	package = "packages/ui/views/report_player_view/report_player_view",
+	class = "ReportPlayerView",
+	disable_game_world = false,
+	load_in_hub = true,
+	game_world_blur = 1.1,
 	enter_sound_events = {
-		UISoundEvents.default_menu_enter,
+		UISoundEvents.default_menu_enter
 	},
 	exit_sound_events = {
-		UISoundEvents.default_menu_exit,
-	},
+		UISoundEvents.default_menu_exit
+	}
 }
 
 return settings("ReportPlayerViewDeclarationSettings", view_settings)

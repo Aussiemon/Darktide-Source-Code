@@ -8,7 +8,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	120,
-	6,
+	6
 }
 local damage_number_types = table.enum("readable", "floating", "flashy")
 
@@ -25,7 +25,7 @@ template.unit_node = "root_point"
 template.position_offset = {
 	0,
 	0,
-	0,
+	0
 }
 template.check_line_of_sight = true
 template.max_distance = 200
@@ -33,64 +33,64 @@ template.screen_clamp = false
 template.remove_on_death_duration = 2
 template.damage_number_settings = {
 	add_numbers_together_timer = 0.2,
-	add_numbers_together_timer_flashy = 0,
-	crit_color = "orange",
-	crit_hit_size_scale = 1.5,
-	default_color = "white",
-	default_font_size = 17,
-	dps_font_size = 14.4,
-	dps_y_offset = -36,
-	duration = 3,
-	expand_bonus_scale = 30,
-	expand_duration = 0.2,
-	fade_delay = 2,
 	first_hit_size_scale = 1.2,
-	has_taken_damage_timer_remove_after_time = 5,
-	has_taken_damage_timer_y_offset = 34,
-	hundreds_font_size = 14.4,
-	max_float_y = 100,
-	shrink_duration = 1,
 	visibility_delay = 2,
+	crit_hit_size_scale = 1.5,
+	expand_bonus_scale = 30,
+	has_taken_damage_timer_y_offset = 34,
+	fade_delay = 2,
+	add_numbers_together_timer_flashy = 0,
+	default_color = "white",
 	weakspot_color = "yellow",
-	x_offset = 1,
+	shrink_duration = 1,
+	duration = 3,
 	x_offset_between_numbers = 38,
+	expand_duration = 0.2,
+	crit_color = "orange",
+	hundreds_font_size = 14.4,
+	default_font_size = 17,
+	has_taken_damage_timer_remove_after_time = 5,
+	max_float_y = 100,
+	dps_font_size = 14.4,
+	x_offset = 1,
+	dps_y_offset = -36,
 	y_offset = 15,
 	flashy_font_size_dmg_multiplier = {
 		1,
-		2,
+		2
 	},
 	flashy_font_size_dmg_scale_range = {
 		100,
-		600,
-	},
+		600
+	}
 }
 template.bar_settings = {
-	alpha_fade_delay = 0.5,
-	alpha_fade_duration = 0.6,
-	alpha_fade_min_value = 50,
 	animate_on_health_increase = true,
 	bar_spacing = 2,
-	duration_health = 0.5,
 	duration_health_ghost = 0.2,
 	health_animation_threshold = 0.1,
+	alpha_fade_delay = 0.5,
+	duration_health = 0.5,
+	alpha_fade_min_value = 50,
+	alpha_fade_duration = 0.6
 }
 
 local armor_type_string_lookup = {
-	armored = "loc_weapon_stats_display_armored",
-	berserker = "loc_weapon_stats_display_berzerker",
 	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
-	resistant = "loc_glossary_armour_type_resistant",
 	super_armor = "loc_weapon_stats_display_super_armor",
-	unarmored = "loc_weapon_stats_display_unarmored",
+	armored = "loc_weapon_stats_display_armored",
+	resistant = "loc_glossary_armour_type_resistant",
+	berserker = "loc_weapon_stats_display_berzerker",
+	unarmored = "loc_weapon_stats_display_unarmored"
 }
 
 template.fade_settings = {
-	default_fade = 0.5,
-	fade_from = 0.5,
 	fade_to = 1,
+	fade_from = 0.5,
+	default_fade = 0.5,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 local function _readable_damage_number_function(ui_content, ui_renderer, ui_style, damage_number_settings, damage_numbers, num_damage_numbers, position, default_color, text_color, crit_color, weakspot_color, default_font_size, hundreds_font_size, font_type)
@@ -454,12 +454,12 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 	local header_font_color = header_font_settings.text_color
 	local bar_size = {
 		size[1],
-		size[2],
+		size[2]
 	}
 	local bar_offset = {
 		-size[1] * 0.5,
 		0,
-		0,
+		0
 	}
 
 	if template.show_health_bar and template.show_numbers then
@@ -468,120 +468,120 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 				pass_type = "logic",
 				value = template.damage_number_function,
 				style = {
-					font_size = 30,
 					horizontal_alignment = "left",
-					text_horizontal_alignment = "left",
+					font_size = 30,
 					text_vertical_alignment = "bottom",
+					text_horizontal_alignment = "left",
 					vertical_alignment = "center",
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2,
+						2
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2],
-					},
-				},
+						size[2]
+					}
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "background",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "background",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0,
-				},
+					color = UIHudSettings.color_tint_0
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "ghost_bar",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "ghost_bar",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2,
+						2
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100,
-					},
-				},
+						100
+					}
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "health_max",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "health_max",
+				pass_type = "rect",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1,
+						1
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255,
-					},
-				},
+						255
+					}
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "bar",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "bar",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3,
+						3
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20,
-					},
-				},
+						20
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "bar_end",
 				value = "content/ui/materials/bars/simple/end",
+				style_id = "bar_end",
+				pass_type = "texture",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "center",
+					horizontal_alignment = "right",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4,
+						4
 					},
 					size = {
 						12,
-						bar_size[2] + 12,
+						bar_size[2] + 12
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		}, scenegraph_id)
 	elseif not template.show_health_bar and template.show_numbers then
 		return UIWidget.create_definition({
@@ -589,123 +589,123 @@ template.create_widget_defintion = function (temp, scenegraph_id)
 				pass_type = "logic",
 				value = template.damage_number_function,
 				style = {
-					font_size = 30,
 					horizontal_alignment = "left",
-					text_horizontal_alignment = "left",
+					font_size = 30,
 					text_vertical_alignment = "bottom",
+					text_horizontal_alignment = "left",
 					vertical_alignment = "center",
 					offset = {
 						-size[1] * 0.5,
 						-size[2],
-						2,
+						2
 					},
 					font_type = header_font_settings.font_type,
 					text_color = header_font_color,
 					size = {
 						600,
-						size[2],
-					},
-				},
-			},
+						size[2]
+					}
+				}
+			}
 		}, scenegraph_id)
 	elseif template.show_health_bar and not template.show_numbers then
 		return UIWidget.create_definition({
 			{
-				pass_type = "rect",
-				style_id = "background",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "background",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = bar_offset,
 					size = bar_size,
-					color = UIHudSettings.color_tint_0,
-				},
+					color = UIHudSettings.color_tint_0
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "ghost_bar",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "ghost_bar",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						2,
+						2
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						100,
-						100,
-					},
-				},
+						100
+					}
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "health_max",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "health_max",
+				pass_type = "rect",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						1,
+						1
 					},
 					size = bar_size,
 					color = {
 						200,
 						255,
 						255,
-						255,
-					},
-				},
+						255
+					}
+				}
 			},
 			{
-				pass_type = "rect",
-				style_id = "bar",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "bar",
+				pass_type = "rect",
 				style = {
 					vertical_alignment = "center",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						3,
+						3
 					},
 					size = bar_size,
 					color = {
 						255,
 						220,
 						20,
-						20,
-					},
-				},
+						20
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "bar_end",
 				value = "content/ui/materials/bars/simple/end",
+				style_id = "bar_end",
+				pass_type = "texture",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "center",
+					horizontal_alignment = "right",
 					offset = {
 						bar_offset[1],
 						bar_offset[2],
-						4,
+						4
 					},
 					size = {
 						12,
-						bar_size[2] + 12,
+						bar_size[2] + 12
 					},
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		}, scenegraph_id)
 	end
 end
@@ -826,7 +826,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					value = damage_diff,
 					expand_duration = damage_number_settings.expand_duration,
 					random_number = math.random(),
-					float_right = math.random() > 0.5,
+					float_right = math.random() > 0.5
 				}
 				local breed = content.breed
 				local hit_zone_weakspot_types = breed.hit_zone_weakspot_types

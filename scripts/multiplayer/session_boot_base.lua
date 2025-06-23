@@ -7,7 +7,7 @@ end
 local SessionBootBase = class("SessionBootBase")
 
 SessionBootBase.INTERFACE = {
-	"result",
+	"result"
 }
 
 SessionBootBase.init = function (self, states, event_object)

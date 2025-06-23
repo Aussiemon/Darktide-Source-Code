@@ -12,6 +12,7 @@ require("scripts/extension_systems/locomotion/projectile_unit_locomotion_extensi
 local Attack = require("scripts/utilities/attack/attack")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local LocomotionSystem = class("LocomotionSystem", "ExtensionSystemBase")
 
 LocomotionSystem.init = function (self, extension_system_creation_context, ...)
@@ -70,8 +71,17 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 
 	for i = 1, #units_to_kill do
 		local unit = units_to_kill[i]
+		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
 
-		if HEALTH_ALIVE[unit] then
+		if Breed.is_companion(breed) then
+			local blackboard = BLACKBOARDS[unit]
+			local behavior_component = blackboard and Blackboard.write_component(blackboard, "behavior")
+
+			if behavior_component then
+				behavior_component.is_out_of_bound = true
+			end
+		elseif HEALTH_ALIVE[unit] then
 			local position = Unit.local_position(unit, 1)
 
 			Log.info("LocomotionSystem", "Killing %s since outside nav mesh (%s).", unit, position)

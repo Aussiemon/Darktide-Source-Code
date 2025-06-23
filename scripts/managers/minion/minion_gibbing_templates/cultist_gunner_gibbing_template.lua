@@ -17,7 +17,7 @@ local head_sever = table.clone(SharedGibbingTemplates.head)
 
 head_sever.gib_settings.override_push_force = {
 	gib_push_head,
-	gib_push_head * 1.25,
+	gib_push_head * 1.25
 }
 head_sever.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/longrange_elite_a/head_gib"
 head_sever.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_head_gib"
@@ -25,7 +25,7 @@ head_sever.gib_settings.gib_spawn_node = "j_neck"
 head_sever.gib_settings.gib_actor = "rp_head_gib"
 head_sever.gib_settings.attach_inventory_slots_to_gib = {
 	"slot_head",
-	"slot_mask",
+	"slot_mask"
 }
 head_sever.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 head_sever.gib_settings.sfx = SharedGibbingTemplates.sfx.dismember_head_off
@@ -39,7 +39,7 @@ head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + s
 head_sever.material_overrides = {
 	"slot_head",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local head_full = table.clone(head_sever)
@@ -86,7 +86,7 @@ local upper_left_arm = table.clone(limb_segment)
 
 upper_left_arm.gib_settings.override_push_force = {
 	gib_push_upper_arm,
-	gib_push_upper_arm * 1.25,
+	gib_push_upper_arm * 1.25
 }
 upper_left_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/left_upper_arm_gib"
 upper_left_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_upper_arm_gib"
@@ -98,19 +98,19 @@ upper_left_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_culti
 upper_left_arm.stump_settings.stump_attach_node = "j_spine"
 upper_left_arm.scale_node = "j_leftarm"
 upper_left_arm.condition = {
-	already_gibbed = "lower_left_arm",
+	already_gibbed = "lower_left_arm"
 }
 upper_left_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_right_arm = table.clone(limb_segment)
 
 upper_right_arm.gib_settings.override_push_force = {
 	gib_push_upper_arm,
-	gib_push_upper_arm * 1.25,
+	gib_push_upper_arm * 1.25
 }
 upper_right_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/right_upper_arm_gib"
 upper_right_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_upper_arm_gib"
@@ -122,12 +122,12 @@ upper_right_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_cult
 upper_right_arm.stump_settings.stump_attach_node = "j_spine"
 upper_right_arm.scale_node = "j_rightarm"
 upper_right_arm.condition = {
-	already_gibbed = "lower_right_arm",
+	already_gibbed = "lower_right_arm"
 }
 upper_right_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_left_arm_remove = table.clone(upper_left_arm)
@@ -142,7 +142,7 @@ local lower_left_arm = table.clone(limb_segment)
 
 lower_left_arm.gib_settings.override_push_force = {
 	gib_push_lower_arm,
-	gib_push_lower_arm * 1.25,
+	gib_push_lower_arm * 1.25
 }
 lower_left_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/left_lower_arm_gib"
 lower_left_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_lower_arm_gib"
@@ -155,14 +155,14 @@ lower_left_arm.scale_node = "j_leftforearm"
 lower_left_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local lower_right_arm = table.clone(limb_segment)
 
 lower_right_arm.gib_settings.override_push_force = {
 	gib_push_lower_arm,
-	gib_push_lower_arm * 1.25,
+	gib_push_lower_arm * 1.25
 }
 lower_right_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/right_lower_arm_gib"
 lower_right_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_lower_arm_gib"
@@ -175,7 +175,7 @@ lower_right_arm.scale_node = "j_rightforearm"
 lower_right_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local lower_left_arm_remove = table.clone(lower_left_arm)
@@ -190,7 +190,7 @@ local left_arm = table.clone(limb_full)
 
 left_arm.gib_settings.override_push_force = {
 	gib_push_arm,
-	gib_push_arm * 1.25,
+	gib_push_arm * 1.25
 }
 left_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/left_fullarm_gib"
 left_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_entire_arm_gib"
@@ -200,19 +200,19 @@ left_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_cultists/gi
 left_arm.stump_settings.stump_attach_node = "j_spine"
 left_arm.scale_node = "j_leftarm"
 left_arm.extra_hit_zone_actors_to_destroy = {
-	"lower_left_arm",
+	"lower_left_arm"
 }
 left_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local right_arm = table.clone(limb_full)
 
 right_arm.gib_settings.override_push_force = {
 	gib_push_arm,
-	gib_push_arm * 1.25,
+	gib_push_arm * 1.25
 }
 right_arm.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/right_fullarm_gib"
 right_arm.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_entire_arm_gib"
@@ -222,12 +222,12 @@ right_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_cultists/g
 right_arm.stump_settings.stump_attach_node = "j_spine"
 right_arm.scale_node = "j_rightarm"
 right_arm.extra_hit_zone_actors_to_destroy = {
-	"lower_right_arm",
+	"lower_right_arm"
 }
 right_arm.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_left_arm_warp = table.clone(upper_left_arm)
@@ -298,7 +298,7 @@ local upper_left_leg = table.clone(limb_segment)
 
 upper_left_leg.gib_settings.override_push_force = {
 	gib_push_upper_leg,
-	gib_push_upper_leg * 1.25,
+	gib_push_upper_leg * 1.25
 }
 upper_left_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/left_upper_leg_gib"
 upper_left_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_upper_leg_gib"
@@ -310,19 +310,19 @@ upper_left_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_culti
 upper_left_leg.stump_settings.stump_attach_node = "j_hips"
 upper_left_leg.scale_node = "j_leftupleg"
 upper_left_leg.condition = {
-	already_gibbed = "lower_left_leg",
+	already_gibbed = "lower_left_leg"
 }
 upper_left_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_right_leg = table.clone(limb_segment)
 
 upper_right_leg.gib_settings.override_push_force = {
 	gib_push_upper_leg,
-	gib_push_upper_leg * 1.25,
+	gib_push_upper_leg * 1.25
 }
 upper_right_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/right_upper_leg_gib"
 upper_right_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_upper_leg_gib"
@@ -334,12 +334,12 @@ upper_right_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_cult
 upper_right_leg.stump_settings.stump_attach_node = "j_hips"
 upper_right_leg.scale_node = "j_rightupleg"
 upper_right_leg.condition = {
-	already_gibbed = "lower_right_leg",
+	already_gibbed = "lower_right_leg"
 }
 upper_right_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_left_leg_remove = table.clone(upper_left_leg)
@@ -354,7 +354,7 @@ local lower_left_leg = table.clone(limb_segment)
 
 lower_left_leg.gib_settings.override_push_force = {
 	gib_push_lower_leg,
-	gib_push_lower_leg * 1.25,
+	gib_push_lower_leg * 1.25
 }
 lower_left_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/longrange_elite_a/left_lower_leg_gib"
 lower_left_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_lower_leg_gib"
@@ -368,14 +368,14 @@ lower_left_leg.scale_node = "j_leftleg"
 lower_left_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local lower_right_leg = table.clone(limb_segment)
 
 lower_right_leg.gib_settings.override_push_force = {
 	gib_push_lower_leg,
-	gib_push_lower_leg * 1.25,
+	gib_push_lower_leg * 1.25
 }
 lower_right_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/base_b/right_lower_leg_gib"
 lower_right_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_lower_leg_gib"
@@ -389,7 +389,7 @@ lower_right_leg.scale_node = "j_rightleg"
 lower_right_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local lower_left_leg_remove = table.clone(lower_left_leg)
@@ -404,7 +404,7 @@ local left_leg = table.clone(limb_full)
 
 left_leg.gib_settings.override_push_force = {
 	gib_push_leg,
-	gib_push_leg * 1.25,
+	gib_push_leg * 1.25
 }
 left_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/longrange_elite_a/left_fullleg_gib"
 left_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_left_entire_leg_gib"
@@ -414,19 +414,19 @@ left_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_cultists/gi
 left_leg.stump_settings.stump_attach_node = "j_hips"
 left_leg.scale_node = "j_leftupleg"
 left_leg.extra_hit_zone_actors_to_destroy = {
-	"lower_left_leg",
+	"lower_left_leg"
 }
 left_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local right_leg = table.clone(limb_full)
 
 right_leg.gib_settings.override_push_force = {
 	gib_push_leg,
-	gib_push_leg * 1.25,
+	gib_push_leg * 1.25
 }
 right_leg.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/longrange_elite_a/right_fullleg_gib"
 right_leg.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_right_entire_leg_gib"
@@ -436,12 +436,12 @@ right_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_cultists/g
 right_leg.stump_settings.stump_attach_node = "j_hips"
 right_leg.scale_node = "j_rightupleg"
 right_leg.extra_hit_zone_actors_to_destroy = {
-	"lower_right_leg",
+	"lower_right_leg"
 }
 right_leg.material_overrides = {
 	"slot_lowerbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local upper_left_leg_warp = table.clone(upper_left_leg)
@@ -512,7 +512,7 @@ local torso_sever = table.clone(SharedGibbingTemplates.torso)
 
 torso_sever.gib_settings.override_push_force = {
 	gib_push_torso,
-	gib_push_torso * 1.25,
+	gib_push_torso * 1.25
 }
 torso_sever.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibbing/longrange_elite_a/upper_torso_gib_full"
 torso_sever.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_upper_torso_gib_full"
@@ -521,7 +521,7 @@ torso_sever.gib_settings.gib_actor = "rp_upper_torso_gib_full"
 torso_sever.gib_settings.attach_inventory_slots_to_gib = {
 	"slot_head",
 	"slot_face",
-	"slot_mask",
+	"slot_mask"
 }
 torso_sever.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
 torso_sever.gib_settings.sfx = nil
@@ -534,7 +534,7 @@ torso_sever.gibbing_threshold = SharedGibbingTemplates.torso.gibbing_threshold +
 torso_sever.material_overrides = {
 	"slot_upperbody",
 	"envrionmental_override",
-	"skin_color_override",
+	"skin_color_override"
 }
 
 local torso_full = table.clone(torso_sever)
@@ -543,12 +543,12 @@ torso_full.gib_settings.gib_unit = "content/characters/enemy/chaos_cultists/gibb
 torso_full.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_upper_torso_gib"
 torso_full.gib_settings.gib_actor = "rp_upper_torso_gib"
 torso_full.gib_settings.attach_inventory_slots_to_gib = {
-	"",
+	""
 }
 torso_full.extra_hit_zone_gibs = {
 	"head",
 	"upper_right_arm",
-	"upper_left_arm",
+	"upper_left_arm"
 }
 
 local torso_remove = table.clone(torso_full)
@@ -557,7 +557,7 @@ torso_remove.gib_settings = nil
 torso_remove.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_splatter
 torso_full.material_overrides = {
 	"slot_body",
-	"slot_upper_body",
+	"slot_upper_body"
 }
 
 local torso_warp = table.clone(torso_sever)
@@ -590,14 +590,14 @@ center_mass_full.gib_settings.gib_unit = "content/characters/enemy/chaos_cultist
 center_mass_full.gib_settings.gib_flesh_unit = "content/characters/enemy/chaos_traitor_guard/gibbing/newly_infected/flesh_upper_torso_gib"
 center_mass_full.gib_settings.gib_actor = "rp_upper_torso_gib"
 center_mass_full.gib_settings.attach_inventory_slots_to_gib = {
-	"",
+	""
 }
 center_mass_full.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_splatter
 center_mass_full.gibbing_threshold = SharedGibbingTemplates.center_mass.gibbing_threshold + size
 center_mass_full.extra_hit_zone_gibs = SharedGibbingTemplates.center_mass.extra_hit_zone_gibs
 center_mass_full.material_overrides = {
 	"slot_body",
-	"slot_upper_body",
+	"slot_upper_body"
 }
 
 local center_mass_upper = table.clone(center_mass_full)
@@ -605,7 +605,7 @@ local center_mass_upper = table.clone(center_mass_full)
 center_mass_upper.extra_hit_zone_gibs = {
 	"head",
 	"upper_right_arm",
-	"upper_left_arm",
+	"upper_left_arm"
 }
 
 local center_mass_lower = table.clone(center_mass_full)
@@ -614,11 +614,11 @@ center_mass_lower.gib_settings = nil
 center_mass_lower.scale_node = nil
 center_mass_lower.extra_hit_zone_gibs = {
 	"upper_right_leg",
-	"upper_left_leg",
+	"upper_left_leg"
 }
 center_mass_lower.prevents_other_gibs = {
 	"center_mass",
-	"torso",
+	"torso"
 }
 
 local center_mass_left = table.clone(center_mass_full)
@@ -627,10 +627,10 @@ center_mass_left.gib_settings = left_arm.gib_settings
 center_mass_left.stump_settings = left_arm.stump_settings
 center_mass_left.scale_node = left_arm.scale_node
 center_mass_left.extra_hit_zone_gibs = {
-	"upper_right_leg",
+	"upper_right_leg"
 }
 center_mass_left.extra_hit_zone_actors_to_destroy = {
-	"upper_right_leg",
+	"upper_right_leg"
 }
 
 local center_mass_right = table.clone(center_mass_full)
@@ -639,10 +639,10 @@ center_mass_right.gib_settings = right_arm.gib_settings
 center_mass_right.stump_settings = right_arm.stump_settings
 center_mass_right.scale_node = right_arm.scale_node
 center_mass_right.extra_hit_zone_gibs = {
-	"upper_left_leg",
+	"upper_left_leg"
 }
 center_mass_right.extra_hit_zone_actors_to_destroy = {
-	"upper_left_leg",
+	"upper_left_leg"
 }
 
 local center_mass_full_warp = table.clone(center_mass_full)
@@ -726,247 +726,247 @@ local gibbing_template = {
 		sawing = head_sever,
 		plasma = head_full,
 		warp = head_warp,
-		warp_shard = head_warp_shard,
+		warp_shard = head_warp_shard
 	},
 	upper_left_arm = {
 		default = {
 			conditional = {
 				upper_left_arm,
-				left_arm,
-			},
+				left_arm
+			}
 		},
 		ballistic = {
 			conditional = {
 				upper_left_arm_remove,
-				left_arm,
-			},
+				left_arm
+			}
 		},
 		boltshell = {
 			conditional = {
 				upper_left_arm_remove,
-				left_arm,
-			},
+				left_arm
+			}
 		},
 		plasma = {
 			conditional = {
 				upper_left_arm_remove,
-				left_arm,
-			},
+				left_arm
+			}
 		},
 		warp = upper_left_arm_warp,
-		warp_shard = upper_left_arm_warp_shard,
+		warp_shard = upper_left_arm_warp_shard
 	},
 	upper_right_arm = {
 		default = {
 			conditional = {
 				upper_right_arm,
-				right_arm,
-			},
+				right_arm
+			}
 		},
 		ballistic = {
 			conditional = {
 				upper_right_arm_remove,
-				right_arm,
-			},
+				right_arm
+			}
 		},
 		boltshell = {
 			conditional = {
 				upper_right_arm_remove,
-				right_arm,
-			},
+				right_arm
+			}
 		},
 		plasma = {
 			conditional = {
 				upper_right_arm_remove,
-				right_arm,
-			},
+				right_arm
+			}
 		},
 		warp = upper_right_arm_warp,
-		warp_shard = upper_right_arm_warp_shard,
+		warp_shard = upper_right_arm_warp_shard
 	},
 	upper_left_leg = {
 		default = {
 			conditional = {
 				upper_left_leg,
-				left_leg,
-			},
+				left_leg
+			}
 		},
 		ballistic = {
 			conditional = {
 				upper_left_leg_remove,
-				left_leg,
-			},
+				left_leg
+			}
 		},
 		boltshell = {
 			conditional = {
 				upper_left_leg_remove,
-				left_leg,
-			},
+				left_leg
+			}
 		},
 		plasma = {
 			conditional = {
 				upper_left_leg_remove,
-				left_leg,
-			},
+				left_leg
+			}
 		},
 		warp = upper_left_leg_warp,
-		warp_shard = upper_left_leg_warp_shard,
+		warp_shard = upper_left_leg_warp_shard
 	},
 	upper_right_leg = {
 		default = {
 			conditional = {
 				upper_right_leg,
-				right_leg,
-			},
+				right_leg
+			}
 		},
 		ballistic = {
 			conditional = {
 				upper_right_leg_remove,
-				right_leg,
-			},
+				right_leg
+			}
 		},
 		boltshell = {
 			conditional = {
 				upper_right_leg_remove,
-				right_leg,
-			},
+				right_leg
+			}
 		},
 		plasma = {
 			conditional = {
 				upper_right_leg_remove,
-				right_leg,
-			},
+				right_leg
+			}
 		},
 		warp = upper_right_leg_warp,
-		warp_shard = upper_right_leg_warp_shard,
+		warp_shard = upper_right_leg_warp_shard
 	},
 	lower_left_arm = {
 		default = lower_left_arm,
 		ballistic = {
 			lower_left_arm,
-			lower_left_arm_remove,
+			lower_left_arm_remove
 		},
 		boltshell = {
 			lower_left_arm,
-			lower_left_arm_remove,
+			lower_left_arm_remove
 		},
 		plasma = lower_left_arm_remove,
 		warp = lower_left_arm_warp,
-		warp_shard = lower_left_arm_warp_shard,
+		warp_shard = lower_left_arm_warp_shard
 	},
 	lower_right_arm = {
 		default = lower_right_arm,
 		ballistic = {
 			lower_right_arm,
-			lower_right_arm_remove,
+			lower_right_arm_remove
 		},
 		boltshell = {
 			lower_right_arm,
-			lower_right_arm_remove,
+			lower_right_arm_remove
 		},
 		plasma = lower_right_arm_remove,
 		warp = lower_right_arm_warp,
-		warp_shard = lower_right_arm_warp_shard,
+		warp_shard = lower_right_arm_warp_shard
 	},
 	lower_left_leg = {
 		default = lower_left_leg,
 		ballistic = {
 			lower_left_leg,
-			lower_left_leg_remove,
+			lower_left_leg_remove
 		},
 		boltshell = {
 			lower_left_leg,
-			lower_left_leg_remove,
+			lower_left_leg_remove
 		},
 		plasma = lower_left_leg_remove,
 		warp = lower_left_leg_warp,
-		warp_shard = lower_left_leg_warp_shard,
+		warp_shard = lower_left_leg_warp_shard
 	},
 	lower_right_leg = {
 		default = lower_right_leg,
 		ballistic = {
 			lower_right_leg,
-			lower_right_leg_remove,
+			lower_right_leg_remove
 		},
 		boltshell = {
 			lower_right_leg,
-			lower_right_leg_remove,
+			lower_right_leg_remove
 		},
 		plasma = lower_right_leg_remove,
 		warp = lower_right_leg_warp,
-		warp_shard = lower_right_leg_warp_shard,
+		warp_shard = lower_right_leg_warp_shard
 	},
 	torso = {
 		default = torso_sever,
 		ballistic = {
-			torso_remove,
+			torso_remove
 		},
 		explosion = {
 			torso_sever,
 			torso_remove,
-			torso_full,
+			torso_full
 		},
 		boltshell = torso_remove,
 		plasma = torso_remove,
 		sawing = {
-			torso_sever,
+			torso_sever
 		},
 		warp = {
-			center_mass_upper_warp,
+			center_mass_upper_warp
 		},
 		warp_shard = {
-			center_mass_upper_warp_shard,
+			center_mass_upper_warp_shard
 		},
 		warp_wind_slash_high = {
-			torso_warp_wind_slash,
-		},
+			torso_warp_wind_slash
+		}
 	},
 	center_mass = {
 		ballistic = {
 			center_mass_full,
-			torso_sever,
+			torso_sever
 		},
 		explosion = {
 			center_mass_full,
 			center_mass_upper,
 			center_mass_lower,
 			center_mass_left,
-			center_mass_right,
+			center_mass_right
 		},
 		boltshell = {
 			center_mass_full,
 			center_mass_upper,
-			torso_sever,
+			torso_sever
 		},
 		warp = {
 			center_mass_full_warp,
 			center_mass_upper_warp,
 			center_mass_lower_warp,
 			center_mass_left_warp,
-			center_mass_right_warp,
+			center_mass_right_warp
 		},
 		warp_lightning = {
 			center_mass_upper_warp_lightning,
 			center_mass_lower_warp_lightning,
 			center_mass_left_warp_lightning,
-			center_mass_right_warp_lightning,
+			center_mass_right_warp_lightning
 		},
 		warp_shard = {
 			center_mass_full_warp_shard,
 			center_mass_upper_warp_shard,
 			center_mass_lower_warp_shard,
 			center_mass_left_warp_shard,
-			center_mass_right_warp_shard,
+			center_mass_right_warp_shard
 		},
 		warp_wind_slash_high = {
-			torso_warp_wind_slash,
+			torso_warp_wind_slash
 		},
 		plasma = {
 			center_mass_full,
 			center_mass_upper,
-			torso_sever,
-		},
-	},
+			torso_sever
+		}
+	}
 }
 
 return gibbing_template

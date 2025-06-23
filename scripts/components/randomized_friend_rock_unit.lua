@@ -85,19 +85,19 @@ end
 
 RandomizedFriendRockUnit.component_data = {
 	visiblity_groups = {
-		ui_name = "Visiblity Groups",
 		ui_type = "struct_array",
+		ui_name = "Visiblity Groups",
 		definition = {
 			visiblity_group_name = {
-				ui_name = "Visiblity Group Name",
 				ui_type = "text_box",
 				value = "",
-			},
+				ui_name = "Visiblity Group Name"
+			}
 		},
 		control_order = {
-			"visiblity_group_name",
-		},
-	},
+			"visiblity_group_name"
+		}
+	}
 }
 
 return RandomizedFriendRockUnit

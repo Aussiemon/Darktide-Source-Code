@@ -6,11 +6,11 @@ local reload_template = {
 		"eject_mag",
 		"eject_mag_restart",
 		"fit_new_mag",
-		"cock_weapon",
+		"cock_weapon"
 	},
 	eject_mag = {
-		show_magazine_ammo_time = 1,
 		time = 2.8,
+		show_magazine_ammo_time = 1,
 		anim_1p = function (condition_func_params)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 
@@ -23,30 +23,30 @@ local reload_template = {
 			end
 		end,
 		state_transitions = {
-			cock_weapon = 1.3,
 			eject_mag = 1.65,
-			fit_new_mag = 0.5,
+			cock_weapon = 1.3,
+			fit_new_mag = 0.5
 		},
 		functionality = {
-			refill_ammunition = 1.3,
-		},
+			refill_ammunition = 1.3
+		}
 	},
 	eject_mag_restart = {
 		anim_1p = "reload_restart",
-		show_magazine_ammo_time = 1,
 		time = 2.8,
+		show_magazine_ammo_time = 1,
 		state_transitions = {
-			cock_weapon = 1.3,
 			eject_mag = 1.65,
-			fit_new_mag = 0.5,
+			cock_weapon = 1.3,
+			fit_new_mag = 0.5
 		},
 		functionality = {
-			refill_ammunition = 1.3,
-		},
+			refill_ammunition = 1.3
+		}
 	},
 	fit_new_mag = {
-		show_magazine_ammo_time = 0.3,
 		time = 2.3,
+		show_magazine_ammo_time = 0.3,
 		anim_1p = function (condition_func_params)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 
@@ -57,22 +57,22 @@ local reload_template = {
 			end
 		end,
 		state_transitions = {
-			cock_weapon = 0.7,
 			eject_mag = 1.05,
+			cock_weapon = 0.7
 		},
 		functionality = {
-			refill_ammunition = 0.7,
-		},
+			refill_ammunition = 0.7
+		}
 	},
 	cock_weapon = {
 		anim_1p = "reload_end",
-		show_magazine_ammo_time = 0,
 		time = 0.9,
+		show_magazine_ammo_time = 0,
 		state_transitions = {
-			eject_mag = 0.3,
+			eject_mag = 0.3
 		},
-		functionality = {},
-	},
+		functionality = {}
+	}
 }
 
 return reload_template

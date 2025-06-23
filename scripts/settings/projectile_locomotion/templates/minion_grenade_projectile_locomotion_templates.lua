@@ -6,14 +6,14 @@ local minion_projectile_locomotion_templates = {
 	minion_grenade = {
 		trajectory_parameters = {
 			throw = {
-				aim_max_iterations = 150,
-				inherit_owner_velocity_percentage = 1,
-				offset_forward = 1,
 				offset_right = 0,
+				aim_max_iterations = 150,
 				place_distance = 2,
-				rotation_charge_duration = 0,
-				speed_charge_duration = 0,
+				offset_forward = 1,
 				speed_initial = 20,
+				inherit_owner_velocity_percentage = 1,
+				speed_charge_duration = 0,
+				rotation_charge_duration = 0,
 				speed_maximal = 20,
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
@@ -21,44 +21,44 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
-				inherit_owner_velocity_percentage = 1,
 				speed = 1,
+				inherit_owner_velocity_percentage = 1,
 				locomotion_state = locomotion_states.manual_physics,
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
-			air_density = 0,
-			coefficient_of_restitution = 0,
-			collision_filter = "filter_minion_throwing",
-			collision_types = "both",
-			drag_coefficient = 0,
 			gravity = 12.5,
-			mass = 0.8,
-			max_hit_count = 1,
 			radius = 0.025,
+			coefficient_of_restitution = 0,
+			drag_coefficient = 0,
+			collision_filter = "filter_minion_throwing",
 			use_actor_mass_radius = false,
-		},
+			air_density = 0,
+			collision_types = "both",
+			max_hit_count = 1,
+			mass = 0.8
+		}
 	},
 	minion_grenade_cultist_grenadier = {
 		trajectory_parameters = {
 			throw = {
-				aim_max_iterations = 150,
-				inherit_owner_velocity_percentage = 1,
-				offset_forward = 1,
 				offset_right = 0,
+				aim_max_iterations = 150,
 				place_distance = 2,
-				rotation_charge_duration = 0,
-				speed_charge_duration = 0,
+				offset_forward = 1,
 				speed_initial = 25,
+				inherit_owner_velocity_percentage = 1,
+				speed_charge_duration = 0,
+				rotation_charge_duration = 0,
 				speed_maximal = 25,
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
@@ -66,44 +66,44 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
-				inherit_owner_velocity_percentage = 1,
 				speed = 1,
+				inherit_owner_velocity_percentage = 1,
 				locomotion_state = locomotion_states.manual_physics,
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
-			air_density = 0,
-			coefficient_of_restitution = 0.55,
-			collision_filter = "filter_minion_throwing",
-			collision_types = "both",
-			drag_coefficient = 0,
 			gravity = 14.5,
-			mass = 0.8,
-			max_hit_count = 1,
 			radius = 0.035,
+			coefficient_of_restitution = 0.55,
+			drag_coefficient = 0,
+			collision_filter = "filter_minion_throwing",
 			use_actor_mass_radius = false,
-		},
+			air_density = 0,
+			collision_types = "both",
+			max_hit_count = 1,
+			mass = 0.8
+		}
 	},
 	minion_grenade_twin = {
 		trajectory_parameters = {
 			throw = {
-				aim_max_iterations = 150,
-				inherit_owner_velocity_percentage = 1,
-				offset_forward = 1,
 				offset_right = 0,
+				aim_max_iterations = 150,
 				place_distance = 2,
-				rotation_charge_duration = 0,
-				speed_charge_duration = 0,
+				offset_forward = 1,
 				speed_initial = 18,
+				inherit_owner_velocity_percentage = 1,
+				speed_charge_duration = 0,
+				rotation_charge_duration = 0,
 				speed_maximal = 28,
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
@@ -111,44 +111,44 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
-				inherit_owner_velocity_percentage = 1,
 				speed = 1,
+				inherit_owner_velocity_percentage = 1,
 				locomotion_state = locomotion_states.manual_physics,
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
-			air_density = 0,
-			coefficient_of_restitution = 0,
-			collision_filter = "filter_minion_throwing",
-			collision_types = "both",
-			drag_coefficient = 0,
 			gravity = 14.5,
-			mass = 0.8,
-			max_hit_count = 1,
 			radius = 0.025,
+			coefficient_of_restitution = 0,
+			drag_coefficient = 0,
+			collision_filter = "filter_minion_throwing",
 			use_actor_mass_radius = false,
-		},
+			air_density = 0,
+			collision_types = "both",
+			max_hit_count = 1,
+			mass = 0.8
+		}
 	},
 	mutator_pestilent_bauble = {
 		trajectory_parameters = {
 			throw = {
-				aim_max_iterations = 150,
-				inherit_owner_velocity_percentage = 1,
-				offset_forward = 0,
 				offset_right = 0,
+				aim_max_iterations = 150,
 				place_distance = 0,
-				rotation_charge_duration = 0,
-				speed_charge_duration = 0,
+				offset_forward = 0,
 				speed_initial = 1,
+				inherit_owner_velocity_percentage = 1,
+				speed_charge_duration = 0,
+				rotation_charge_duration = 0,
 				speed_maximal = 2,
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
@@ -156,33 +156,33 @@ local minion_projectile_locomotion_templates = {
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
+					z = math.pi / 2
+				}
 			},
 			drop = {
-				inherit_owner_velocity_percentage = 1,
 				speed = 0,
+				inherit_owner_velocity_percentage = 1,
 				locomotion_state = locomotion_states.manual_physics,
 				randomized_angular_velocity = {
 					x = math.pi / 10,
 					y = math.pi,
-					z = math.pi / 2,
-				},
-			},
+					z = math.pi / 2
+				}
+			}
 		},
 		integrator_parameters = {
-			air_density = 0,
-			coefficient_of_restitution = 0,
-			collision_filter = "filter_minion_throwing",
-			collision_types = "both",
-			drag_coefficient = 0,
 			gravity = 0.5,
-			mass = 0.8,
-			max_hit_count = 1,
 			radius = 0.025,
+			coefficient_of_restitution = 0,
+			drag_coefficient = 0,
+			collision_filter = "filter_minion_throwing",
 			use_actor_mass_radius = false,
-		},
-	},
+			air_density = 0,
+			collision_types = "both",
+			max_hit_count = 1,
+			mass = 0.8
+		}
+	}
 }
 
 return minion_projectile_locomotion_templates

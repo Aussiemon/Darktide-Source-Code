@@ -29,20 +29,20 @@ blueprint_templates.report_header = {
 	size = blueprint_styles.report_header.size,
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "headline",
 			value = "Situation Report",
 			value_id = "headline",
+			pass_type = "text",
+			style_id = "headline"
 		},
 		{
-			pass_type = "text",
 			style_id = "time_left",
-			value = " 40:30",
+			pass_type = "text",
 			value_id = "time_left",
+			value = " 40:30",
 			change_function = function (content, style)
 				content.time_left = content.time_left_update()
-			end,
-		},
+			end
+		}
 	},
 	style = blueprint_styles.report_header,
 	init = function (widget, widget_data)
@@ -50,27 +50,27 @@ blueprint_templates.report_header = {
 
 		widget_content.headline = widget_data.headline
 		widget_content.time_left_update = widget_data.time_left_update
-	end,
+	end
 }
 blueprint_templates.negative_circumstance_header = {
 	size = blueprint_styles.negative_circumstance_header.size,
 	pass_template = {
 		{
-			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
+			pass_type = "texture"
 		},
 		{
+			value_id = "label",
 			pass_type = "text",
 			style_id = "label",
-			value_id = "label",
-			value = Localize("loc_mission_info_circumstance_label"),
+			value = Localize("loc_mission_info_circumstance_label")
 		},
 		{
-			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
-		},
+			pass_type = "text"
+		}
 	},
 	style = blueprint_styles.negative_circumstance_header,
 	init = function (widget, widget_data, ui_renderer)
@@ -87,7 +87,7 @@ blueprint_templates.negative_circumstance_header = {
 		if total_widget_height > widget_content.size[2] then
 			widget_content.size[2] = total_widget_height
 		end
-	end,
+	end
 }
 blueprint_templates.positive_circumstance_header = table.clone(blueprint_templates.negative_circumstance_header)
 blueprint_templates.positive_circumstance_header.size = blueprint_styles.positive_circumstance_header.size
@@ -96,16 +96,16 @@ blueprint_templates.circumstance_bullet_point = {
 	size = blueprint_styles.circumstance_bullet_point.size,
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "bullet",
 			value = "•",
 			value_id = "bullet",
+			pass_type = "text",
+			style_id = "bullet"
 		},
 		{
-			pass_type = "text",
 			style_id = "text",
 			value_id = "text",
-		},
+			pass_type = "text"
+		}
 	},
 	style = blueprint_styles.circumstance_bullet_point,
 	init = function (widget, widget_data, ui_renderer)
@@ -123,33 +123,33 @@ blueprint_templates.circumstance_bullet_point = {
 		if total_text_height > widget_size[2] then
 			widget_size[2] = total_text_height
 		end
-	end,
+	end
 }
 blueprint_templates.list_spacing = {
 	size = {
 		MissionInfoStyles.panel.size[1],
-		blueprint_styles.list_spacing,
-	},
+		blueprint_styles.list_spacing
+	}
 }
 blueprint_templates.side_mission = {
 	size = blueprint_styles.side_mission.size,
 	pass_template = {
 		{
+			value_id = "label",
 			pass_type = "text",
 			style_id = "label",
-			value_id = "label",
-			value = Localize("loc_mission_info_side_mission_label"),
+			value = Localize("loc_mission_info_side_mission_label")
 		},
 		{
-			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
+			pass_type = "text"
 		},
 		{
-			pass_type = "text",
 			style_id = "description",
 			value_id = "description",
-		},
+			pass_type = "text"
+		}
 	},
 	style = blueprint_styles.side_mission,
 	init = function (widget, widget_data, ui_renderer)
@@ -181,26 +181,26 @@ blueprint_templates.side_mission = {
 		end
 
 		style.description.size[2] = description_height + bottom_margin
-	end,
+	end
 }
 blueprint_templates.bonus = {
 	size = blueprint_styles.bonus.size,
 	pass_template = {
 		{
-			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
+			pass_type = "texture"
 		},
 		{
-			pass_type = "text",
 			style_id = "category",
 			value_id = "category",
+			pass_type = "text"
 		},
 		{
-			pass_type = "text",
 			style_id = "title",
 			value_id = "title",
-		},
+			pass_type = "text"
+		}
 	},
 	style = blueprint_styles.bonus,
 	init = function (widget, widget_data)
@@ -214,7 +214,7 @@ blueprint_templates.bonus = {
 		else
 			widget.style.icon.visible = false
 		end
-	end,
+	end
 }
 details_widgets_blueprints.utility_functions = {}
 
@@ -237,7 +237,7 @@ local function _next_element(index)
 		table.clear(next_element.widget_data)
 	else
 		next_element = {
-			widget_data = {},
+			widget_data = {}
 		}
 		details_data[index] = next_element
 	end

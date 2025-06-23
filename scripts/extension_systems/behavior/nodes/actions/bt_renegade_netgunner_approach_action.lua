@@ -10,7 +10,7 @@ local Vo = require("scripts/utilities/vo")
 local BtRenegadeNetgunnerApproachAction = class("BtRenegadeNetgunnerApproachAction", "BtNode")
 local VO_MOVE_EVENT_FREQUENCY_RANGE = {
 	5,
-	10,
+	10
 }
 
 BtRenegadeNetgunnerApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

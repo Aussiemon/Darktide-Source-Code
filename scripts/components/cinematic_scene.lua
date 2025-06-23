@@ -78,27 +78,27 @@ end
 
 CinematicScene.component_data = {
 	name = {
-		ui_name = "Name:",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Name:"
 	},
 	unit_type = {
-		ui_name = "Type",
-		ui_type = "combo_box",
 		value = "origin",
+		ui_type = "combo_box",
+		ui_name = "Type",
 		options_keys = {
 			"Origin",
-			"Destination",
+			"Destination"
 		},
 		options_values = {
 			"origin",
-			"destination",
-		},
+			"destination"
+		}
 	},
 	cinematic_name = {
-		ui_name = "Cinematic Name",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Cinematic Name",
 		options_keys = {
 			"None",
 			"Intro ABC",
@@ -130,7 +130,7 @@ CinematicScene.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -163,13 +163,13 @@ CinematicScene.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	cinematic_category = {
-		ui_name = "Cinematic Category",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Cinematic Category",
 		options_keys = {
 			"None",
 			"Camera A",
@@ -221,7 +221,7 @@ CinematicScene.component_data = {
 			"Hub Location Intro Training Grounds",
 			"Hub Location Intro Contracts",
 			"Hub Location Intro Crafting",
-			"Hub Location Intro Gun Shop",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -274,25 +274,25 @@ CinematicScene.component_data = {
 			"hub_location_intro_training_grounds",
 			"hub_location_intro_contracts",
 			"hub_location_intro_crafting",
-			"hub_location_intro_gun_shop",
-		},
+			"hub_location_intro_gun_shop"
+		}
 	},
 	origin_level_name = {
-		category = "Level",
-		ui_name = "Origin Level Name",
 		ui_type = "text_box",
 		validator = "ContentPathsAllowed",
+		category = "Level",
 		value = "",
+		ui_name = "Origin Level Name"
 	},
 	inputs = {
 		play_cutscene = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"CinematicSceneExtension",
-	},
+		"CinematicSceneExtension"
+	}
 }
 
 return CinematicScene

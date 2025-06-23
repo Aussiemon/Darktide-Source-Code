@@ -11,50 +11,50 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
-	},
+				inputs = wield_inputs
+			}
+		}
+	}
 }
 weapon_template.action_input_hierarchy = {
 	{
-		input = "wield",
 		transition = "stay",
-	},
+		input = "wield"
+	}
 }
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
 		anim_event = "unequip",
-		kind = "unwield",
 		start_input = "wield",
-		total_time = 0,
 		uninterruptible = true,
-		allowed_chain_actions = {},
+		kind = "unwield",
+		total_time = 0,
+		allowed_chain_actions = {}
 	},
 	action_wield = {
-		allowed_during_sprint = true,
-		anim_event = "servo_start",
-		kind = "wield",
-		total_time = 0.1,
 		uninterruptible = true,
-	},
+		anim_event = "servo_start",
+		allowed_during_sprint = true,
+		kind = "wield",
+		total_time = 0.1
+	}
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.keywords = {
-	"devices",
+	"devices"
 }
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
-	_source = "fx_source",
+	_source = "fx_source"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
@@ -63,8 +63,8 @@ weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
 weapon_template.hide_slot = true
 weapon_template.hud_configuration = {
-	uses_ammunition = false,
 	uses_overheat = false,
+	uses_ammunition = false
 }
 weapon_template.not_player_wieldable = true
 

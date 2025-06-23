@@ -16,8 +16,8 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activat
 templates.weapon_trait_bespoke_forcesword_2h_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill_effect)
 templates.weapon_trait_bespoke_forcesword_2h_p1_warp_charge_power_bonus = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.05,
-	},
+		[stat_buffs.power_level_modifier] = 0.05
+	}
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
 templates.weapon_trait_bespoke_forcesword_2h_p1_can_block_ranged = table.clone(BaseWeaponTraitBuffTemplates.can_block_ranged)
 templates.weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.warp_burninating_on_crits_melee)
@@ -29,21 +29,21 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_melee_cle
 templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_critical_strike_chance = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_critical_strike_chance)
 templates.weapon_trait_bespoke_forcesword_2h_p1_dodge_grants_finesse_bonus = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_finesse_bonus)
 templates.weapon_trait_bespoke_forcesword_2h_p1_vent_warp_charge_on_multiple_hits = {
-	class_name = "proc_buff",
-	predicted = false,
-	show_in_hud_if_slot_is_wielded = true,
 	vent_percentage = 0.01,
+	predicted = false,
+	class_name = "proc_buff",
+	show_in_hud_if_slot_is_wielded = true,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	buff_data = {
-		required_num_hits = 3,
+		required_num_hits = 3
 	},
 	start_func = SharedBuffFunctions.vent_warp_charge_start_func,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_multiple_melee_hit,
 	proc_func = SharedBuffFunctions.vent_warp_charge_proc_func,
-	update_func = SharedBuffFunctions.vent_warp_charge_update_func,
+	update_func = SharedBuffFunctions.vent_warp_charge_update_func
 }
 templates.weapon_trait_bespoke_forcesword_2h_p1_toughness_recovery_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_multiple_hits)
 templates.weapon_trait_bespoke_forcesword_2h_p1_chained_hits_increases_crit_chance_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_parent)

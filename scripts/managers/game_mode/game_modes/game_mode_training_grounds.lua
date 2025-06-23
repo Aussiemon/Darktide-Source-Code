@@ -18,7 +18,7 @@ end
 GameModeTrainingGrounds.set_init_scenario = function (self, scenario_alias, scenario_name)
 	self._init_scenario = {
 		alias = scenario_alias,
-		name = scenario_name,
+		name = scenario_name
 	}
 end
 

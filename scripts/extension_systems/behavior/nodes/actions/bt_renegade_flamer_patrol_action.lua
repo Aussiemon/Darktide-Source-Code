@@ -20,11 +20,11 @@ local Vo = require("scripts/utilities/vo")
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 local BtRenegadeFlamerPatrolAction = class("BtRenegadeFlamerPatrolAction", "BtNode")
 local NAV_TAG_LAYER_COSTS = {
-	doors = 10,
 	jumps = 30,
-	ledges = 30,
 	ledges_with_fence = 30,
+	doors = 10,
 	teleporters = 20,
+	ledges = 30
 }
 local DEFAULT_ROTATION_SPEED = 3.5
 
@@ -216,7 +216,7 @@ end
 
 local WAIT_AT_DESTINATION_TIME_RANGE = {
 	1,
-	2,
+	2
 }
 
 BtRenegadeFlamerPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -360,11 +360,11 @@ end
 
 local AHEAD_TRAVEL_DISTANCE_RANDOM_RANGE = {
 	-30,
-	30,
+	30
 }
 local FALLBACK_DISTANCE_RANDOM_RANGE = {
 	1,
-	30,
+	30
 }
 local NEW_PATROL_POSITION_TARGET_SIDE_ID = 1
 local MIN_DISTANCE_TO_NEW_PATROL_POS = 2

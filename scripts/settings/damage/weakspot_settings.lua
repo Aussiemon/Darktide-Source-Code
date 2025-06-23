@@ -20,7 +20,7 @@ local finesse_boost_modifers = {
 	end,
 	[weakspot_types.explosive_backpack] = function (finesse_boost_amount)
 		return finesse_boost_amount
-	end,
+	end
 }
 
 table.set_readonly(finesse_boost_modifers)

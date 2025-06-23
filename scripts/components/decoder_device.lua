@@ -66,33 +66,33 @@ end
 
 DecoderDevice.component_data = {
 	material_slot = {
-		category = "Material",
-		ui_name = "Material Slot",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Material Slot",
+		category = "Material"
 	},
 	main_material = {
-		category = "Material",
-		filter = "material",
-		ui_name = "Main Material",
 		ui_type = "resource",
+		category = "Material",
 		value = "",
+		ui_name = "Main Material",
+		filter = "material"
 	},
 	ghost_material = {
-		category = "Material",
-		filter = "material",
-		ui_name = "Ghost Material",
 		ui_type = "resource",
+		category = "Material",
 		value = "",
+		ui_name = "Ghost Material",
+		filter = "material"
 	},
 	install_anim_event = {
-		ui_name = "Install Anim Event",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Install Anim Event"
 	},
 	extensions = {
-		"DecoderDeviceExtension",
-	},
+		"DecoderDeviceExtension"
+	}
 }
 
 return DecoderDevice

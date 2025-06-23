@@ -8,11 +8,11 @@ local BtMoveToPositionAction = class("BtMoveToPositionAction", "BtNode")
 
 BtMoveToPositionAction.TIME_TO_FIRST_EVALUATE = {
 	0.8,
-	1.5,
+	1.5
 }
 BtMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	2,
+	2
 }
 
 BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

@@ -139,7 +139,7 @@ local function _add_friend_management_items(parent, player_info)
 		local can_accept, cannot_befriend_reason = Managers.data_service.social:can_befriend()
 		local user_display_name = player_info:user_display_name()
 		local request_header_params = {
-			player = user_display_name,
+			player = user_display_name
 		}
 		local list_item = _get_next_list_item(1)
 

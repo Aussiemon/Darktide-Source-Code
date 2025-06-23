@@ -11,10 +11,10 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_lasgun_p1_increased_zoom = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.fov_multiplier] = 0.95,
+		[stat_buffs.fov_multiplier] = 0.95
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -22,20 +22,20 @@ templates.weapon_trait_bespoke_lasgun_p1_increased_zoom = {
 		end
 
 		return ConditionalFunctions.is_alternative_fire(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
 	cooldown_duration = 1,
-	predicted = false,
 	show_in_hud_if_slot_is_wielded = true,
+	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
-		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot] = 1
 	},
 	off_cooldown_keywords = {
-		keywords.reduced_ammo_consumption,
-	},
+		keywords.reduced_ammo_consumption
+	}
 }
 templates.weapon_trait_bespoke_lasgun_p1_suppression_negation_on_weakspot = table.clone(BaseWeaponTraitBuffTemplates.suppression_negation_on_weakspot)
 templates.weapon_trait_bespoke_lasgun_p1_stacking_crit_chance_on_weakspot_parent = table.clone(BaseWeaponTraitBuffTemplates.stacking_crit_chance_on_weakspot_parent)

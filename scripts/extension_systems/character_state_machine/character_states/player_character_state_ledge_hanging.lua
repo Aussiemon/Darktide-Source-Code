@@ -19,33 +19,33 @@ local assist_anims = CharacterStateAssistSettings.anim_settings.ledge_hanging
 local LEDGE_HANGING_STATES = table.enum("none", "ledge_start", "ledge_loop")
 local IK_RAY_DISTANCE = 1
 local HAND_IK_CONFIG = {
-	hips_handle_name = "j_hips_handle",
+	right_transform_name = "j_right_hand_ik_transform",
 	left_handle_name = "j_left_hand_ik_handle",
-	left_transform_name = "j_left_hand_ik_transform",
 	ray_edge_offset = 0.05,
 	right_handle_name = "j_right_hand_ik_handle",
-	right_transform_name = "j_right_hand_ik_transform",
+	left_transform_name = "j_left_hand_ik_transform",
+	hips_handle_name = "j_hips_handle",
 	hand_length = {
 		human = 0.05,
-		ogryn = 0.1,
+		ogryn = 0.1
 	},
 	hand_separation = {
 		human = 0.428,
-		ogryn = 0.896,
+		ogryn = 0.896
 	},
 	hand_thickness = {
 		human = 0.05,
-		ogryn = 0.1,
+		ogryn = 0.1
 	},
 	ray_distance = IK_RAY_DISTANCE,
-	half_ray_distance = IK_RAY_DISTANCE * 0.5,
+	half_ray_distance = IK_RAY_DISTANCE * 0.5
 }
 local ENTER_ANIMATION_DURATION = 1
 local SFX_SOURCE = "head"
 local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "hanging",
+	stinger_type = "hanging"
 }
 local _update_hand_ik_to_hanging
 
@@ -90,7 +90,7 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 		left_transform_node = left_transform_node,
 		right_handle = right_handle,
 		right_transform_node = right_transform_node,
-		hips_handle = hips_handle,
+		hips_handle = hips_handle
 	}
 end
 
@@ -140,7 +140,7 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
 
 		local data = {
-			reason = "ledge_hanging",
+			reason = "ledge_hanging"
 		}
 
 		Managers.telemetry_events:player_knocked_down(self._player, data)

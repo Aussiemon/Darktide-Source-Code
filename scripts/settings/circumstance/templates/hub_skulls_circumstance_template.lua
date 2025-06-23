@@ -2,10 +2,10 @@
 
 local circumstance_templates = {
 	hub_skulls = {
-		theme_tag = "hub_skulls",
 		wwise_state = "none",
-		mutators = {},
-	},
+		theme_tag = "hub_skulls",
+		mutators = {}
+	}
 }
 
 return circumstance_templates

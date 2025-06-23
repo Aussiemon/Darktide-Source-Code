@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_slot_reserve_state.lua
 
 local RPCS = {
-	"rpc_reserve_slots_reply",
+	"rpc_reserve_slots_reply"
 }
 local LocalSlotReserveState = class("LocalSlotReserveState")
 
@@ -30,7 +30,7 @@ LocalSlotReserveState.update = function (self, dt)
 		Log.info("LocalSlotReserveState", "Timeout waiting for rpc_reserve_slots_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -40,7 +40,7 @@ LocalSlotReserveState.update = function (self, dt)
 		Log.info("LocalSlotReserveState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -53,7 +53,7 @@ LocalSlotReserveState.update = function (self, dt)
 			Log.info("LocalSlotReserveState", "Slot reservation rejected")
 
 			return "slots rejected", {
-				game_reason = "slot_reserve_rejected",
+				game_reason = "slot_reserve_rejected"
 			}
 		end
 	end

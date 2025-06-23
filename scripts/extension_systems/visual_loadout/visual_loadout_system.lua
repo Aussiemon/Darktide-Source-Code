@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/visual_loadout_system.lua
 
+require("scripts/extension_systems/visual_loadout/companion_visual_loadout_extension")
 require("scripts/extension_systems/visual_loadout/minion_visual_loadout_extension")
 require("scripts/extension_systems/visual_loadout/player_husk_visual_loadout_extension")
 require("scripts/extension_systems/visual_loadout/player_unit_visual_loadout_extension")
@@ -8,7 +9,7 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local VisualLoadoutSystem = class("VisualLoadoutSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_player_wield_slot",
-	"rpc_player_unwield_slot",
+	"rpc_player_unwield_slot"
 }
 local GIB_RING_BUFFER_STRIDE = 9
 local GIB_RING_BUFFER_SIZE = GIB_RING_BUFFER_STRIDE * 12

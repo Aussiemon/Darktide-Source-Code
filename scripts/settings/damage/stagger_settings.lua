@@ -8,60 +8,60 @@ stagger_settings.stagger_categories = {
 	melee = {
 		stagger_types.light,
 		stagger_types.medium,
-		stagger_types.heavy,
+		stagger_types.heavy
 	},
 	stab = {
 		stagger_types.light_ranged,
 		stagger_types.medium,
-		stagger_types.heavy,
+		stagger_types.heavy
 	},
 	sticky = {
-		stagger_types.sticky,
+		stagger_types.sticky
 	},
 	electrocuted = {
-		stagger_types.electrocuted,
+		stagger_types.electrocuted
 	},
 	flamer = {
 		stagger_types.killshot,
-		stagger_types.medium,
+		stagger_types.medium
 	},
 	hatchet = {
-		stagger_types.killshot,
+		stagger_types.killshot
 	},
 	uppercut = {
 		stagger_types.light,
-		stagger_types.medium,
+		stagger_types.medium
 	},
 	killshot = {
 		stagger_types.killshot,
 		stagger_types.medium,
-		stagger_types.heavy,
+		stagger_types.heavy
 	},
 	ranged = {
 		stagger_types.light_ranged,
 		stagger_types.medium,
-		stagger_types.heavy,
+		stagger_types.heavy
 	},
 	explosion = {
 		stagger_types.light,
 		stagger_types.medium,
 		stagger_types.heavy,
-		stagger_types.explosion,
+		stagger_types.explosion
 	},
 	force_field = {
-		stagger_types.light,
+		stagger_types.light
 	},
 	blinding = {
-		stagger_types.blinding,
-	},
+		stagger_types.blinding
+	}
 }
 stagger_settings.stagger_duration_scale = {
 	0.75,
-	1.25,
+	1.25
 }
 stagger_settings.stagger_length_scale = {
 	0.8,
-	1.2,
+	1.2
 }
 stagger_settings.default_stagger_thresholds = {
 	[stagger_types.light] = 1,
@@ -76,7 +76,7 @@ stagger_settings.default_stagger_thresholds = {
 	[stagger_types.shield_heavy_block] = 5,
 	[stagger_types.shield_broken] = 10,
 	[stagger_types.wall_collision] = 0.25,
-	[stagger_types.blinding] = 0.25,
+	[stagger_types.blinding] = 0.25
 }
 stagger_settings.stagger_impact_comparison = {
 	[stagger_types.explosion] = 4,
@@ -91,7 +91,7 @@ stagger_settings.stagger_impact_comparison = {
 	[stagger_types.shield_block] = 1,
 	[stagger_types.sticky] = 3,
 	[stagger_types.electrocuted] = 1,
-	[stagger_types.blinding] = 1,
+	[stagger_types.blinding] = 1
 }
 stagger_settings.default_stagger_resistance = 1
 stagger_settings.max_excessive_force = 5

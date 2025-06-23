@@ -15,14 +15,14 @@ snapshot_ignore[snapshot_ignore] = true
 Widget.new = function (display_name, optional_width)
 	local widget = {
 		filter = "",
-		memory_layout_name_max_size = 0,
-		single_column = true,
-		type = "debug_memory_snapshot",
-		window_height = 0,
 		window_width = 0,
+		type = "debug_memory_snapshot",
+		memory_layout_name_max_size = 0,
+		window_height = 0,
+		single_column = true,
 		display_name = display_name,
 		button_label = ImguiWidgetUtilities.create_unique_label("Take Snapshot"),
-		remember_open = {},
+		remember_open = {}
 	}
 
 	snapshot_ignore[widget] = true
@@ -160,7 +160,7 @@ Widget.add_to_blob = function (val, key, ref_blob, name_by_ref, references_at_de
 		if not refs then
 			refs = {
 				[0] = 1,
-				val,
+				val
 			}
 			references_at_depth[depth] = refs
 		else
@@ -178,25 +178,25 @@ Widget.grab_lua_memory_tree_snapshot = function (tbl, root_name)
 	tbl = tbl or _G
 
 	local depth_by_reference = {
-		[_G] = 1,
+		[_G] = 1
 	}
 	local references_at_depth = {
 		{
 			[0] = 1,
-			_G,
-		},
+			_G
+		}
 	}
 	local size_by_ref = {
-		[tbl] = LuaJIT.bytes(tbl, true),
+		[tbl] = LuaJIT.bytes(tbl, true)
 	}
 	local track_size = {
-		[tbl] = true,
+		[tbl] = true
 	}
 	local one_layer_size = {
-		[tbl] = size_by_ref[tbl],
+		[tbl] = size_by_ref[tbl]
 	}
 	local name_by_ref = {
-		[tbl] = root_name,
+		[tbl] = root_name
 	}
 
 	do
@@ -404,10 +404,10 @@ end
 
 local function validate()
 	local args = {
-		Application.argv(),
+		Application.argv()
 	}
 	local memory_override_idx = table.find({
-		Application.argv(),
+		Application.argv()
 	}, "--lua-heap-mb-size")
 
 	if not memory_override_idx or (tonumber(args[15]) or 0) < 2048 then
@@ -436,7 +436,7 @@ Widget.get_tbl = function (filter)
 		end
 
 		setfenv(filter_func, {
-			root = root,
+			root = root
 		})
 
 		success, root = pcall(filter_func)
@@ -486,7 +486,7 @@ Widget.render = function (widget)
 
 				widget.snapshot_data = {
 					root = root,
-					Widget.grab_lua_memory_tree_snapshot(root, name),
+					Widget.grab_lua_memory_tree_snapshot(root, name)
 				}
 			end
 		else

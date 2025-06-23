@@ -7,31 +7,31 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk",
-			},
+				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk"
+			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk",
-			},
-		},
+				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk"
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/enemies/beast_of_nurgle/bon_minion_eat",
-				},
-			},
+					"content/fx/particles/enemies/beast_of_nurgle/bon_minion_eat"
+				}
+			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/enemies/beast_of_nurgle/bon_minion_eat",
-				},
-			},
-		},
-	},
+					"content/fx/particles/enemies/beast_of_nurgle/bon_minion_eat"
+				}
+			}
+		}
+	}
 }
 local armored = table.clone(unarmored)
 local berserker = table.clone(unarmored)
@@ -48,6 +48,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

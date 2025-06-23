@@ -1,21 +1,21 @@
 ﻿-- chunkname: @scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_declaration_settings.lua
 
 local CraftingReplacePerkViewDeclarationSettings = {
-	class = "CraftingReplacePerkView",
-	disable_game_world = true,
+	state_bound = true,
 	display_name = "loc_crafting_view_display_name",
 	load_in_hub = true,
-	package = "packages/ui/views/crafting_replace_perk_view/crafting_replace_perk_view",
 	path = "scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view",
-	state_bound = true,
+	package = "packages/ui/views/crafting_replace_perk_view/crafting_replace_perk_view",
+	class = "CraftingReplacePerkView",
+	disable_game_world = true,
 	levels = {
-		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",
+		"content/levels/ui/crafting_view_itemization/crafting_view_itemization"
 	},
 	enter_sound_events = {},
 	exit_sound_events = {},
 	testify_flags = {
-		ui_views = false,
-	},
+		ui_views = false
+	}
 }
 
 return settings("CraftingReplacePerkViewDeclarationSettings", CraftingReplacePerkViewDeclarationSettings)

@@ -28,7 +28,7 @@ PerformanceTestCases.measure_memory_usage_evolution = function (case_settings)
 			map = cached_last_mission_loaded,
 			memory = memory_usage,
 			memory_tree = memory_tree,
-			is_bundled = is_application_bundled,
+			is_bundled = is_application_bundled
 		}
 
 		if monitor_resources_memory_usage and not is_application_bundled then
@@ -141,8 +141,8 @@ PerformanceTestCases.performance_milliseconds_per_frame = function (mission_key,
 		local performance_measurements = {}
 		local telemetry_event_name = "perf_camera"
 		local values_to_measure = {
-			batchcount = true,
 			primitives_count = true,
+			batchcount = true
 		}
 
 		for index, camera in pairs(cameras) do
@@ -180,8 +180,8 @@ PerformanceTestCases.performance_milliseconds_per_frame_mission_server = functio
 		local performance_measurements = {}
 		local telemetry_event_name = "perf_camera"
 		local values_to_measure = {
-			batchcount = true,
 			primitives_count = true,
+			batchcount = true
 		}
 
 		for index, camera in pairs(cameras) do
@@ -219,11 +219,11 @@ PerformanceTestCases.meat_grind_stress = function (case_settings)
 
 		local training_grounds_view_name = "training_grounds_view"
 		local training_grounds_view_data = {
-			view_name = training_grounds_view_name,
+			view_name = training_grounds_view_name
 		}
 		local system_view_name = "system_view"
 		local system_view_data = {
-			view_name = system_view_name,
+			view_name = system_view_name
 		}
 
 		for i = 1, num_iterations do
@@ -278,7 +278,7 @@ PerformanceTestCases.purchase_item = function (case_settings)
 
 		local credits_vendor_background_view_name = "credits_vendor_background_view"
 		local credits_vendor_background_view_data = {
-			view_name = credits_vendor_background_view_name,
+			view_name = credits_vendor_background_view_name
 		}
 
 		Testify:make_request("open_view", credits_vendor_background_view_data)

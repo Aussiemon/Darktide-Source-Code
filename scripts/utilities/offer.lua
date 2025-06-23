@@ -25,7 +25,7 @@ local function _extract_item(description)
 
 		if visual_item and not visual_item.slots then
 			visual_item.slots = {
-				"slot_trinket_1",
+				"slot_trinket_1"
 			}
 		end
 	end
@@ -50,7 +50,7 @@ Offer.extract_items = function (offer)
 				real_item = real_item,
 				gearId = bundle_offer.description.gearId,
 				item = item,
-				offer = bundle_offer,
+				offer = bundle_offer
 			}
 		end
 	else
@@ -60,7 +60,7 @@ Offer.extract_items = function (offer)
 			real_item = real_item,
 			gearId = offer.description.gearId,
 			item = item,
-			offer = offer,
+			offer = offer
 		}
 	end
 

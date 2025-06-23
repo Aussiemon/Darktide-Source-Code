@@ -29,7 +29,7 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 		host_channel_id = host_channel_id,
 		timeout = LoadingClient.TIMEOUT,
 		loaders = loaders,
-		themes = {},
+		themes = {}
 	}
 	local parent
 	local state_machine = StateMachine:new("LoadingClient", parent, shared_state)

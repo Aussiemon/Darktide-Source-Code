@@ -9,7 +9,7 @@ local Interface = {
 	"fetch_queue_ticket_single_player",
 	"start",
 	"status",
-	"cancel",
+	"cancel"
 }
 local Matchmaker = class("Matchmaker")
 
@@ -113,7 +113,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 			dedicatedAliases = dedicated_aliases,
 			disableCrossPlay = cross_play_disabled,
 			platformUserIdAvoidList = avoid_platform_user_ids,
-			latencyList = latency_list,
+			latencyList = latency_list
 		}
 	end)
 end
@@ -124,7 +124,7 @@ Matchmaker.fetch_queue_ticket_hub = function (self)
 	return data_promise:next(function (data)
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data,
+			body = data
 		}):next(function (data)
 			return data.body
 		end)
@@ -146,7 +146,7 @@ Matchmaker.fetch_queue_ticket_mission = function (self, mission_id, character_id
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data,
+			body = data
 		}):next(function (data)
 			return data.body
 		end)
@@ -162,7 +162,7 @@ Matchmaker.fetch_queue_ticket_mission_hotjoin = function (self, matched_game_ses
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data,
+			body = data
 		}):next(function (data)
 			return data.body
 		end)
@@ -178,7 +178,7 @@ Matchmaker.fetch_queue_ticket_single_player = function (self, mission_id, charac
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",
-			body = data,
+			body = data
 		}):next(function (data)
 			return data.body
 		end)
@@ -187,12 +187,12 @@ end
 
 Matchmaker.start = function (self, queue_tickets)
 	local data = {
-		queueTickets = queue_tickets,
+		queueTickets = queue_tickets
 	}
 
 	return Managers.backend:title_request("/matchmaker/start", {
 		method = "POST",
-		body = data,
+		body = data
 	}):next(function (data)
 		return data.body
 	end)

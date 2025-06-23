@@ -16,5 +16,6 @@ end
 
 _add_lunge_templates("scripts/settings/lunge/zealot_lunge_templates")
 _add_lunge_templates("scripts/settings/lunge/ogryn_lunge_templates")
+_add_lunge_templates("scripts/settings/lunge/adamant_lunge_templates")
 
 return settings("LungeTemplates", lunge_templates)

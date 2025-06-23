@@ -35,10 +35,10 @@ local ProjectileDamageExtension = class("ProjectileDamageExtension")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local IMPACT_FX_DATA = {
 	will_be_predicted = false,
-	source_parameters = {},
+	source_parameters = {}
 }
 local IMPACT_CONFIG = {
-	destroy_on_impact = false,
+	destroy_on_impact = false
 }
 
 ProjectileDamageExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -127,6 +127,11 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 
 	local projectile_template = self._projectile_template
 	local locomotion_extension = self._locomotion_extension
+	local current_locomotion_state = locomotion_extension:current_state()
+
+	if projectile_template.deployable and current_locomotion_state == locomotion_states.deployed then
+		return
+	end
 
 	if self._marked_for_deletion and not self._marked_for_deletion_done then
 		local is_done = true

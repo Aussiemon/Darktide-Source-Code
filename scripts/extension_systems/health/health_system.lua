@@ -11,7 +11,7 @@ require("scripts/extension_systems/health/player_unit_health_extension")
 require("scripts/extension_systems/health/prop_health_extension")
 
 local CLIENT_RPCS = {
-	"rpc_kill_unit_health",
+	"rpc_kill_unit_health"
 }
 local HealthSystem = class("HealthSystem", "ExtensionSystemBase")
 

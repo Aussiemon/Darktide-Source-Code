@@ -6,7 +6,7 @@ local RPCQueue = require("scripts/utilities/rpc_queue")
 local Text = require("scripts/utilities/ui/text")
 local RPCS = {
 	"rpc_player_profile_synced",
-	"rpc_notify_profile_changed",
+	"rpc_notify_profile_changed"
 }
 local ProfileSynchronizerHost = class("ProfileSynchronizerHost")
 local SYNC_STATES = table.enum("not_synced", "syncing", "syncing_need_resync", "synced")
@@ -30,8 +30,8 @@ ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
 
 	local rpc_queue_settings = {
 		max_rpcs = 1000,
-		num_rpcs_per_send = 10,
 		time_between_sends = 0,
+		num_rpcs_per_send = 10
 	}
 
 	self._rpc_queues[channel_id] = RPCQueue:new(channel_id, rpc_queue_settings)
@@ -208,7 +208,7 @@ ProfileSynchronizerHost.override_slot = function (self, peer_id, local_player_id
 	local loadout_item_data = new_profile.loadout_item_data
 
 	loadout_item_data[slot_name] = {
-		id = item_name,
+		id = item_name
 	}
 
 	self:override_singleplay_profile(peer_id, local_player_id, new_profile)
@@ -257,7 +257,7 @@ end
 
 local temp_non_synced_peers_map = {
 	peer_to_others = Script.new_array(8),
-	others_to_peer = Script.new_array(8),
+	others_to_peer = Script.new_array(8)
 }
 
 ProfileSynchronizerHost.peers_not_synced_with = function (self, peer_id, peers_filter_map)

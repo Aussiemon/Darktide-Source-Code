@@ -11,20 +11,20 @@ hitscan_templates.default_laspistol_beam = {
 	range = 75,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_laspistol_killshot,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_laspistol_killshot
+		}
+	}
 }
 hitscan_templates.bfg_laspistol_beam = {
 	range = 75,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_laspistol_bfg,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_laspistol_bfg
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

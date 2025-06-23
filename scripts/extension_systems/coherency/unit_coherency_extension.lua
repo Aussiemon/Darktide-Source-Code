@@ -314,7 +314,7 @@ UnitCoherencyExtension.update_active_buffs = function (self, t)
 			local _, local_index, component_index = self._buff_extension:add_externally_controlled_buff(buff_name, t)
 			local indices = {
 				local_index = local_index,
-				component_index = component_index,
+				component_index = component_index
 			}
 
 			table.insert(buff_indices, indices)
@@ -340,7 +340,7 @@ UnitCoherencyExtension.update_active_buffs = function (self, t)
 			local _, local_index, component_index = self._buff_extension:add_externally_controlled_buff(buff_name, t)
 			local indices = {
 				local_index = local_index,
-				component_index = component_index,
+				component_index = component_index
 			}
 
 			table.insert(buff_indices, indices)

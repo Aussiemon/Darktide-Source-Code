@@ -12,7 +12,7 @@ local PlayerCharacterStateDead = class("PlayerCharacterStateDead", "PlayerCharac
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "teammate_died",
+	stinger_type = "teammate_died"
 }
 
 PlayerCharacterStateDead.init = function (self, character_state_init_context, ...)

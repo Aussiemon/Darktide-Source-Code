@@ -84,13 +84,13 @@ PsnBlockUsersStatesManager.fetch_block_users_states = function (self, account_id
 			method = "POST",
 			headers = in_header,
 			body = {
-				platformIds = account_ids,
-			},
+				platformIds = account_ids
+			}
 		}):next(function (response)
 			local blocked_by = self._blocked_by
 			local accounts = {
 				response.body.accounts,
-				response.body.platformAccounts,
+				response.body.platformAccounts
 			}
 
 			for index, _ in pairs(accounts) do

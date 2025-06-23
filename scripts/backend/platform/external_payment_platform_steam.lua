@@ -5,11 +5,11 @@ local ExternalPaymentPlatformBase = require("scripts/backend/platform/external_p
 local Promise = require("scripts/foundation/utilities/promise")
 local ExternalPaymentPlatformSteam = class("ExternalPaymentPlatformSteam", "ExternalPaymentPlatformBase")
 
-ExternalPaymentPlatformSteam._get_payment_platform = function (self)
+ExternalPaymentPlatformSteam.get_payment_platform = function (self)
 	return "steam"
 end
 
-ExternalPaymentPlatformSteam._get_platform_token = function (self)
+ExternalPaymentPlatformSteam.get_platform_token = function (self)
 	return Promise.resolved(nil)
 end
 
@@ -30,15 +30,15 @@ ExternalPaymentPlatformSteam.payment_options = function (self)
 end
 
 ExternalPaymentPlatformSteam.reconcile_pending_txns = function (self)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/reconcile"):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body
 			end)
@@ -47,22 +47,22 @@ ExternalPaymentPlatformSteam.reconcile_pending_txns = function (self)
 end
 
 ExternalPaymentPlatformSteam.reconcile_dlc = function (self, store_ids)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body
 			end):catch(function (error)
 				Log.error("ExternalPayment", "Failed to reconcile dlc", tostring(error))
 
 				return Promise.rejected({
-					error = error,
+					error = error
 				})
 			end)
 		end)
@@ -71,13 +71,13 @@ end
 
 ExternalPaymentPlatformSteam.init_txn = function (self, payment_option)
 	return Managers.backend:authenticate():next(function (account)
-		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments"):query("platform", self:_get_payment_platform())
+		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments"):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
 			body = {
-				paymentOptionId = payment_option,
-			},
+				paymentOptionId = payment_option
+			}
 		}):next(function (response)
 			return response.body.orderId
 		end)
@@ -85,18 +85,18 @@ ExternalPaymentPlatformSteam.init_txn = function (self, payment_option)
 end
 
 ExternalPaymentPlatformSteam.finalize_txn = function (self, order_id)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
 				body = {
-					placeholder = "",
+					placeholder = ""
 				},
 				headers = {
-					["platform-token"] = token,
-				},
+					["platform-token"] = token
+				}
 			}):next(function (response)
 				return response.body.data
 			end)
@@ -106,15 +106,15 @@ end
 
 ExternalPaymentPlatformSteam.fail_txn = function (self, order_id)
 	return Managers.backend:authenticate():next(function (account)
-		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:_get_payment_platform())
+		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
-			method = "DELETE",
+			method = "DELETE"
 		}):catch(function (error)
 			Log.error("ExternalPayment", "Failed to remove pending transaction %s", tostring(error))
 
 			return Promise.rejected({
-				error = error,
+				error = error
 			})
 		end)
 	end)
@@ -122,17 +122,17 @@ end
 
 local FAILED_TXN = {
 	body = {
-		state = "failed",
-	},
+		state = "failed"
+	}
 }
 
 ExternalPaymentPlatformSteam._decorate_option = function (self, option, platform_entitlements)
 	option.description = {
 		type = "currency",
-		description = option.value.amount .. " " .. option.value.type,
+		description = option.value.amount .. " " .. option.value.type
 	}
 	option.price = {
-		amount = {},
+		amount = {}
 	}
 	option.price.amount.amount = option.steam.priceCents / 100
 	option.price.amount.type = option.steam.currency
@@ -176,7 +176,7 @@ ExternalPaymentPlatformSteam._decorate_option = function (self, option, platform
 	option.make_purchase = function (self)
 		if self.pending_txn_promise then
 			return Promise.rejected({
-				message = "Called init transaction when a transaction was already pending",
+				message = "Called init transaction when a transaction was already pending"
 			})
 		end
 
@@ -210,14 +210,14 @@ ExternalPaymentPlatformSteam.get_options = function (self)
 			end
 
 			local result = {
-				offers = options,
+				offers = options
 			}
 
 			if body._links.layout then
 				return Managers.backend:title_request(body._links.layout.href):next(function (data)
 					data.body._links = nil
 					result.layout_config = {
-						layout = data.body,
+						layout = data.body
 					}
 
 					return result

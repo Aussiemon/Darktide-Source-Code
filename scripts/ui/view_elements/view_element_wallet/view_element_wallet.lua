@@ -17,7 +17,7 @@ ViewElementWallet.init = function (self, parent, draw_layer, start_scale)
 	self._wallets_by_type = {}
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 	self._text_options = {}
 end
@@ -27,11 +27,11 @@ ViewElementWallet._generate_currencies = function (self, currencies_to_use, widg
 	local widgets_by_currency = {}
 	local grid_spacing = {
 		grid_spacing and grid_spacing[1] or ViewElementWalletSettings.row_spacing,
-		grid_spacing and grid_spacing[2] or ViewElementWalletSettings.column_spacing,
+		grid_spacing and grid_spacing[2] or ViewElementWalletSettings.column_spacing
 	}
 	local widget_size = {
 		widget_size and widget_size[1] or ViewElementWalletSettings.wallet_widget_width,
-		widget_size and widget_size[2] or ViewElementWalletSettings.icon_size[2],
+		widget_size and widget_size[2] or ViewElementWalletSettings.icon_size[2]
 	}
 
 	if not currencies_to_use then
@@ -133,7 +133,7 @@ ViewElementWallet._get_wallet_text_size = function (self, widget, currency_name,
 	local text_options = UIFonts.get_font_options_by_style(style, self._text_options)
 	local size = {
 		1920,
-		1080,
+		1080
 	}
 	local width, height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, size, text_options)
 
@@ -163,7 +163,7 @@ ViewElementWallet._generate_currency_widget = function (self, currency_name, cur
 
 	widget.style.texture.size = {
 		icon_width,
-		widget_size[2],
+		widget_size[2]
 	}
 	widget.style.text.offset[1] = -icon_width - ViewElementWalletSettings.text_margin
 	widget.style.text.font_size = widget_size[2]
@@ -237,7 +237,7 @@ ViewElementWallet._draw_widgets = function (self, dt, t, input_service, ui_rende
 				widget.offset = {
 					0,
 					(i - 1) * self._widget_height + self._grid_spacing[2] * (i - 1),
-					1,
+					1
 				}
 			end
 		else
@@ -248,7 +248,7 @@ ViewElementWallet._draw_widgets = function (self, dt, t, input_service, ui_rende
 
 				local grid_position = {
 					(count - 1) % self._wallets_per_column,
-					math.floor((count - 1) / self._wallets_per_column),
+					math.floor((count - 1) / self._wallets_per_column)
 				}
 				local widget_size = widget.content.size
 				local text_width = self:_get_wallet_text_size(widget, name, ui_renderer)
@@ -259,14 +259,14 @@ ViewElementWallet._draw_widgets = function (self, dt, t, input_service, ui_rende
 					widget.offset = {
 						grid_position[1] * total_width,
 						grid_position[2] * widget_size[2] + self._grid_spacing[2] * (count - 1),
-						1,
+						1
 					}
 				else
 					widget.content.size[1] = math.max(widget_width, widget_min_width)
 					widget.offset = {
 						total_width,
 						0,
-						1,
+						1
 					}
 				end
 

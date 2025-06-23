@@ -39,7 +39,7 @@ ViewElementItemResultOverlayMastery.start = function (self, presentation_data)
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local title_text_width = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size or {
 		900,
-		50,
+		50
 	}, text_options)
 
 	self:_set_scenegraph_size("divider", math.max(title_text_width + 440, 600))
@@ -52,7 +52,7 @@ ViewElementItemResultOverlayMastery._present_mastery_reward = function (self, co
 	local grid_height = 520
 	local grid_size = {
 		grid_width,
-		grid_height,
+		grid_height
 	}
 	local template = MasteryContentBlueprints.overlay
 	local mastery_item_pass_template = template and template.pass_template
@@ -68,7 +68,7 @@ ViewElementItemResultOverlayMastery._present_mastery_reward = function (self, co
 	mastery_item_widget.offset = {
 		-10,
 		-10,
-		0,
+		0
 	}
 	self._mastery_reward_widget = mastery_item_widget
 end

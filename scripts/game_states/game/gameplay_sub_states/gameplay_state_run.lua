@@ -6,7 +6,7 @@ local StateGameplayTestify = GameParameters.testify and require("scripts/game_st
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local RUN_CLIENT_RPCS = {
-	"rpc_sync_clock",
+	"rpc_sync_clock"
 }
 local DELETION_STATES = UnitSpawnerManager.DELETION_STATES
 local GameplayStateRun = class("GameplayStateRun")
@@ -34,7 +34,7 @@ GameplayStateRun.on_enter = function (self, parent, params)
 
 	local telemetry_params = {
 		mission_name = shared_state.mission_name,
-		host_type = Managers.connection:host_type(),
+		host_type = Managers.connection:host_type()
 	}
 
 	Managers.telemetry_events:gameplay_started(telemetry_params)
@@ -224,6 +224,7 @@ GameplayStateRun._fixed_update = function (self, extension_manager, player_manag
 	for frame = self._fixed_frame_counter + 1, last_frame do
 		local fixed_t = fixed_dt * frame
 
+		Managers.state.companion_interaction:fixed_update(fixed_dt, fixed_t, frame)
 		player_manager:state_fixed_update(fixed_dt, fixed_t, frame)
 		player_unit_spawn_manager:fixed_update(fixed_dt, fixed_t, frame)
 		Managers.state.player_overlap_manager:fixed_update(fixed_dt, fixed_t, frame)

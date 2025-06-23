@@ -34,11 +34,11 @@ end
 
 local MOVEMENT_CURVE_EXTENTS = {
 	400,
-	300,
+	300
 }
 local ANCHOR_POINT = {
 	-50,
-	50,
+	50
 }
 local SCREEN_ALIGNMENT_X = "right"
 local LAYER = 10

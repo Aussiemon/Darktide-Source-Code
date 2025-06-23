@@ -30,7 +30,7 @@ local HEALTH_DIFFICULTY_SCALING = {
 	0.6,
 	0.75,
 	1,
-	1,
+	1
 }
 
 PropHealthExtension.setup_from_component = function (self, create_health_game_object, health, difficulty_scaling, invulnerable, unkillable, regenerate_health, breed_white_list, ignored_collider_actor_names, speed_on_hit)
@@ -100,7 +100,7 @@ PropHealthExtension._create_game_object = function (self)
 		unit_id = unit_id,
 		health = self._health,
 		damage = self._damage,
-		is_dead = self._is_dead,
+		is_dead = self._is_dead
 	}
 	local game_session = Managers.state.game_session:game_session()
 	local game_object_id = GameSession.create_game_object(game_session, "prop_health", game_object_data)

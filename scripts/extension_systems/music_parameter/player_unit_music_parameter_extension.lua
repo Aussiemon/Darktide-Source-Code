@@ -47,14 +47,14 @@ PlayerUnitMusicParameterExtension.game_object_initialized = function (self, game
 	self._game_session, self._game_object_id = game_session, game_object_id
 
 	local go_data_table = {
-		ambush_horde_near = false,
-		boss_near = false,
-		intensity_percent = 0,
 		last_man_standing = false,
 		locked_in_melee = false,
+		boss_near = false,
+		ambush_horde_near = false,
 		vector_horde_near = false,
+		intensity_percent = 0,
 		game_object_type = NetworkLookup.game_object_types.music_parameters,
-		unit_game_object_id = game_object_id,
+		unit_game_object_id = game_object_id
 	}
 
 	self._music_parameters_game_object_id = GameSession.create_game_object(game_session, "music_parameters", go_data_table)

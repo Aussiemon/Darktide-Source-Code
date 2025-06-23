@@ -17,7 +17,7 @@ ConstantMissionLobbyStatus.init = function (self, parent, draw_layer, start_scal
 	self._active_top_view = nil
 	self._original_position = {
 		self._ui_scenegraph.pivot.position[1],
-		self._ui_scenegraph.pivot.position[2],
+		self._ui_scenegraph.pivot.position[2]
 	}
 
 	local number_of_slots = 4

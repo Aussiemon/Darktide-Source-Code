@@ -9,8 +9,8 @@ local HapticTriggerEffects = class("HapticTriggerEffects")
 local SUPPRESS_REASONS = {
 	"character_disabled",
 	"menu",
-	character_disabled = 1,
 	menu = 2,
+	character_disabled = 1
 }
 
 HapticTriggerEffects.init = function (self)
@@ -19,7 +19,7 @@ HapticTriggerEffects.init = function (self)
 
 	local suppression_reasons = {
 		[SUPPRESS_REASONS.character_disabled] = 0,
-		[SUPPRESS_REASONS.menu] = 0,
+		[SUPPRESS_REASONS.menu] = 0
 	}
 
 	self._suppression_reasons = suppression_reasons

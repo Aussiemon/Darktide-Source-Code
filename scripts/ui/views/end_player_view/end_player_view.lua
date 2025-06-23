@@ -1,14 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view.lua
 
 local Definitions = require("scripts/ui/views/end_player_view/end_player_view_definitions")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Mastery = require("scripts/utilities/mastery")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
-local Items = require("scripts/utilities/items")
-local MasteryUtils = require("scripts/utilities/mastery")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
 local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon", "havocOrder")
 local item_type_group_lookup = UISettings.item_type_group_lookup
@@ -56,7 +56,7 @@ EndPlayerView.on_enter = function (self)
 	local weapon_preview_size = ViewStyles.blueprints.pass_styles.item_icon_landscape.size
 	local weapons_render_settings = {
 		width = weapon_preview_size[1],
-		height = weapon_preview_size[2],
+		height = weapon_preview_size[2]
 	}
 	local icon_render_type = "weapon"
 
@@ -152,7 +152,7 @@ EndPlayerView.update = function (self, dt, t, input_service)
 
 	local slots = {
 		"slot_primary",
-		"slot_secondary",
+		"slot_secondary"
 	}
 
 	for i = 1, #slots do
@@ -405,7 +405,7 @@ EndPlayerView._create_cards = function (self)
 		local card_data = {
 			order_reward = session_report.havoc_order_reward,
 			highest_rank = session_report.havoc_highest_rank,
-			week_rank = session_report.havoc_week_rank,
+			week_rank = session_report.havoc_week_rank
 		}
 
 		card_widgets[card_index] = self:_create_card_widget(card_index, "havocOrder", card_data)
@@ -423,7 +423,7 @@ EndPlayerView._create_cards = function (self)
 
 			local slots = {
 				"slot_primary",
-				"slot_secondary",
+				"slot_secondary"
 			}
 			local filtered_rewards = {}
 
@@ -437,7 +437,7 @@ EndPlayerView._create_cards = function (self)
 					local trait_category_id = reward.masteryId
 
 					if slot and trait_category_id then
-						local pattern_name = MasteryUtils.get_category_id_to_pattern_id(trait_category_id)
+						local pattern_name = Mastery.get_category_id_to_pattern_id(trait_category_id)
 
 						if pattern_name == item.parent_pattern then
 							filtered_rewards[slot] = reward
@@ -484,7 +484,7 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		card_data.label = card_type
 		optional_icon_size = {
 			math.floor(UISettings.weapon_icon_size[1] * 2),
-			math.floor(UISettings.weapon_icon_size[2] * 2),
+			math.floor(UISettings.weapon_icon_size[2] * 2)
 		}
 	elseif card_type == CARD_TYPES.weapon then
 		blueprint_name = "weapon"
@@ -520,7 +520,7 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 		"credits",
 		"marks",
 		"plasteel",
-		"diamantine",
+		"diamantine"
 	}
 
 	for _, wallet_type in ipairs(wallet_types) do
@@ -589,7 +589,7 @@ EndPlayerView._get_item = function (self, card_reward)
 	local rarity = item_overrides and item_overrides.rarity
 	local dummy_item = {
 		item_type = item.item_type,
-		baseItemLevel = item_overrides and item_overrides.baseItemLevel,
+		baseItemLevel = item_overrides and item_overrides.baseItemLevel
 	}
 	local item_level_text, has_level = Items.expertise_level(dummy_item, true, true)
 	local item_level = has_level and tonumber(item_level_text)
@@ -808,7 +808,7 @@ EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
 
 		widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
 			current = diff_exp_level,
-			next = diff_exp_level,
+			next = diff_exp_level
 		})
 
 		local style = widget.style["weapon_experience_bar_" .. slot]
@@ -825,7 +825,7 @@ EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
 
 		widget.content["weapon_total_exp_" .. slot] = Localize("loc_mastery_exp_current_next", true, {
 			current = current_exp,
-			next = diff_exp_level,
+			next = diff_exp_level
 		})
 
 		if next_exp_level <= new_exp then
@@ -842,14 +842,14 @@ EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
 			self:_play_sound(UISoundEvents.end_screen_summary_mastery_level_up)
 
 			self["_levelup_mastery_animation_id_" .. slot] = self:_start_animation("weapon_level_up", widget, {
-				slot = slot,
+				slot = slot
 			}, nil)
 		end
 
 		widget.content["weapon_current_exp_level_" .. slot] = current_exp
 		widget.content["weapon_current_mastery_level_" .. slot] = current_mastery_level
 		widget.content["weapon_added_exp_text_" .. slot] = Localize("loc_eor_card_mastery_added_exp", true, {
-			exp = added_exp,
+			exp = added_exp
 		})
 
 		local bar_style = widget.style["weapon_experience_bar_" .. slot]

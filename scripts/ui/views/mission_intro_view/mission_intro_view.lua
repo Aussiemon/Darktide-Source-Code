@@ -125,7 +125,7 @@ MissionIntroView.select_target_intro_level = function (mission_name)
 	local intro_level = MissionIntroViewSettings.intro_levels_by_zone_id[mission_zone_id] or MissionIntroViewSettings.intro_levels_by_zone_id.default
 	local intro_level_packages = {
 		is_level_package = true,
-		name = intro_level.level_name,
+		name = intro_level.level_name
 	}
 
 	return intro_level, intro_level_packages
@@ -150,6 +150,7 @@ MissionIntroView._initialize_background_world = function (self)
 	local game_state_context = Managers.player:game_state_context()
 	local mission_name = game_state_context and game_state_context.mission_name
 	local mission_giver_vo = game_state_context and game_state_context.mission_giver_vo
+	local circumstance_name = game_state_context and game_state_context.circumstance_name
 	local target_intro_level = self._intro_level
 	local level_name = target_intro_level.level_name
 
@@ -158,7 +159,7 @@ MissionIntroView._initialize_background_world = function (self)
 	self._world_initialized = true
 
 	if mission_name then
-		self:_play_mission_brief_vo(mission_name, mission_giver_vo)
+		self:_play_mission_brief_vo(mission_name, mission_giver_vo, circumstance_name)
 		self:_set_hologram_briefing_material(mission_name)
 	else
 		self.mission_briefing_done = true
@@ -327,7 +328,7 @@ MissionIntroView._setup_spawn_slots = function (self)
 			boxed_rotation = QuaternionBox(initial_rotation),
 			boxed_position = Vector3.to_array(initial_position),
 			profile_spawner = profile_spawner,
-			spawn_point_unit = spawn_point_unit,
+			spawn_point_unit = spawn_point_unit
 		}
 
 		spawn_slots[i] = spawn_slot
@@ -464,7 +465,7 @@ MissionIntroView._reset_spawn_slot = function (self, slot)
 	slot.player = nil
 end
 
-MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_giver_vo)
+MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_giver_vo, circumstance_name)
 	local mission = Missions[mission_name]
 	local mission_intro_time = mission.mission_intro_minimum_time or 0
 
@@ -496,7 +497,8 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 		seed = Managers.connection:session_seed()
 	end
 
-	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed)
+	local specific_lines = MissionIntroViewSettings.journey_briefing_lines[circumstance_name]
+	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed, nil, specific_lines)
 
 	self._vo_unit = vo_unit
 	self._last_vo_event = events[#events]

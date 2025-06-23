@@ -25,11 +25,11 @@ CraftingModifyView.on_enter = function (self)
 	self._parent:set_active_view_instance(self)
 	self._item_grid:update_dividers("content/ui/materials/frames/item_list_top_hollow", {
 		652,
-		118,
+		118
 	}, {
 		0,
 		-88,
-		200,
+		200
 	}, "content/ui/materials/frames/item_info_lower", nil, nil)
 
 	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
@@ -40,12 +40,12 @@ CraftingModifyView.on_enter = function (self)
 		"slot_secondary",
 		"slot_attachment_1",
 		"slot_attachment_2",
-		"slot_attachment_3",
+		"slot_attachment_3"
 	}
 	local item_type_filter_list = {
 		"WEAPON_MELEE",
 		"WEAPON_RANGED",
-		"GADGET",
+		"GADGET"
 	}
 
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, slot_filter_list, item_type_filter_list)
@@ -59,24 +59,24 @@ CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scen
 	local grid_width = 430
 	local grid_height = 600
 	local context = {
-		hide_continue_button = true,
 		scrollbar_width = 7,
-		title_height = 0,
+		hide_continue_button = true,
 		top_padding = 10,
+		title_height = 0,
 		use_parent_ui_renderer = true,
 		grid_spacing = {
 			0,
-			10,
+			10
 		},
 		grid_size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		mask_size = {
 			grid_width + edge_padding,
-			grid_height,
+			grid_height
 		},
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 
 	return self:_add_element(ViewElementCraftingRecipe, reference_name, layer, context)
@@ -87,7 +87,7 @@ CraftingModifyView._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					">",
@@ -98,12 +98,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_level,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					"<",
@@ -114,12 +114,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_level,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					">",
@@ -130,12 +130,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_rarity,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					"<",
@@ -146,12 +146,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_rarity,
 					"<",
 					"item",
-					Items.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					"<",
@@ -162,12 +162,12 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_level,
 					">",
 					"item",
-					Items.compare_item_rarity,
-				}),
+					Items.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = Items.sort_element_key_comparator({
 					">",
@@ -178,9 +178,9 @@ CraftingModifyView._setup_sort_options = function (self)
 					Items.compare_item_level,
 					">",
 					"item",
-					Items.compare_item_rarity,
-				}),
-			},
+					Items.compare_item_rarity
+				})
+			}
 		}
 	end
 
@@ -414,7 +414,7 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 			layout[#layout + 1] = {
 				widget_type = "item",
 				item = item,
-				slot = ItemSlotSettings[slot_name],
+				slot = ItemSlotSettings[slot_name]
 			}
 		end
 	end
@@ -473,12 +473,12 @@ CraftingModifyView._setup_menu_tabs = function (self, content)
 		horizontal_alignment = "center",
 		button_size = {
 			132,
-			38,
+			38
 		},
 		input_label_offset = {
 			10,
-			5,
-		},
+			5
+		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 

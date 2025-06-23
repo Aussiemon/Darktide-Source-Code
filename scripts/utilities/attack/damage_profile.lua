@@ -1,10 +1,12 @@
 ﻿-- chunkname: @scripts/utilities/attack/damage_profile.lua
 
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
+local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
@@ -13,7 +15,7 @@ local MIN_CRIT_MOD = DamageProfileSettings.min_crit_mod
 local _distribute_power_level_to_power_type, _max_hit_mass
 local armor_penetrating_conversion = {
 	armored = "unarmored",
-	super_armor = "armored",
+	super_armor = "armored"
 }
 local DamageProfile = {}
 
@@ -39,6 +41,7 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	local cleave_output = PowerLevelSettings.cleave_output
 	local cleave_min, cleave_max = cleave_output.min, cleave_output.max
 	local cleave_range = cleave_max - cleave_min
+	local is_ranged_attack = attack_type_or_nil == attack_types.ranged
 	local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
 	local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
 	local max_hit_mass_impact, impact_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
@@ -47,6 +50,7 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
 	local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
 	local max_melee_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_melee_hit_mass_attack_modifier or 1
+	local ranged_max_hit_mass_attack_modifier = is_ranged_attack and stat_buffs_or_nil and stat_buffs_or_nil.ranged_max_hit_mass_attack_modifier or 1
 
 	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier + max_melee_hit_mass_attack_modifier - 2
 	max_hit_mass_attack = max_hit_mass_attack * attack_modifier
@@ -302,7 +306,7 @@ end
 
 local TARGET_SETTINGS_NO_LERP_VALUES = {}
 local DAMAGE_PROFILE_NO_LERP_VALUES = {
-	current_target_settings_lerp_values = TARGET_SETTINGS_NO_LERP_VALUES,
+	current_target_settings_lerp_values = TARGET_SETTINGS_NO_LERP_VALUES
 }
 
 DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, target_index_or_nil)
@@ -326,7 +330,7 @@ DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, tar
 end
 
 local EMPTY_PATH = {
-	[DEFAULT_LERP_VALUE] = 0,
+	[DEFAULT_LERP_VALUE] = 0
 }
 
 DamageProfile.lerp_value_from_path = function (lerp_values, ...)

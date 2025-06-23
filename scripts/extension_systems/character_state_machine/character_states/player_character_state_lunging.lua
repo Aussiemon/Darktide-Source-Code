@@ -26,6 +26,7 @@ local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local Stagger = require("scripts/utilities/attack/stagger")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
@@ -36,6 +37,7 @@ local LUNGE_ATTACK_POWER_LEVEL = 1000
 local HIT_WEAKSPOT = false
 local IS_CRITICAL_STRIKE = false
 local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit
+local broadphase_results = {}
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateLunging.init = function (self, character_state_init_context, ...)
@@ -103,7 +105,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	local lunge_character_state_component = self._lunge_character_state_component
 	local lunge_target = lunge_character_state_component.lunge_target
 	local has_target = lunge_target ~= nil
-	local distance = Lunge.distance(lunge_template, has_target)
+	local distance = Lunge.distance(lunge_template, has_target, self._buff_extension)
 
 	if has_target then
 		local lunge_target_position = POSITION_LOOKUP[lunge_target]
@@ -234,6 +236,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 local temp_hit_units = {}
+local external_properties = {}
 
 PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateLunging.super.on_exit(self, unit, t, next_state)
@@ -261,15 +264,30 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local on_exit_anim = anim_settings and anim_settings.on_exit
 
 	if on_exit_anim then
-		if type(on_exit_anim) ~= "table" then
-			self:_play_animation(self._animation_extension, on_exit_anim)
-		else
-			for ii = 1, #on_exit_anim do
-				local anim = on_exit_anim[ii]
+		local wielded_slot = self._visual_loadout_extension:currently_wielded_slot()
+		local slot_to_wield = lunge_template.slot_to_wield
 
-				self:_play_animation(self._animation_extension, anim)
+		if slot_to_wield and wielded_slot == slot_to_wield then
+			if type(on_exit_anim) ~= "table" then
+				self:_play_animation(self._animation_extension, on_exit_anim)
+			else
+				for ii = 1, #on_exit_anim do
+					local anim = on_exit_anim[ii]
+
+					self:_play_animation(self._animation_extension, anim)
+				end
 			end
 		end
+	end
+
+	local player_position = self._locomotion_component.position
+	local rotation = self._first_person_component.rotation
+	local on_exit_vfx = lunge_template.on_exit_vfx
+
+	if on_exit_vfx then
+		local vfx_pos = player_position + Vector3.up()
+
+		self._fx_extension:spawn_particles(on_exit_vfx, vfx_pos, rotation)
 	end
 
 	local lunge_end_camera_shake = lunge_template.lunge_end_camera_shake
@@ -282,6 +300,97 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 
 	if next_state ~= "dead" and lunge_template.slot_to_wield and not lunge_template.keep_slot_wielded_on_lunge_end then
 		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
+	end
+
+	local on_finish_directional_shout = lunge_template.on_finish_directional_shout
+
+	if on_finish_directional_shout then
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		local enemy_side_names = side:relation_side_names("enemy")
+		local shout_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+		local total_hits = {}
+		local shout_dot = on_finish_directional_shout.shout_dot
+		local total_range = on_finish_directional_shout.forward_range
+		local damage_profile = on_finish_directional_shout.damage_profile
+		local power_level = on_finish_directional_shout.power_level
+		local hit = false
+		local hit_elite_special_monster = false
+
+		table.clear(broadphase_results)
+
+		local num_hits = broadphase.query(broadphase, player_position, total_range, broadphase_results, enemy_side_names)
+		local target_number = 1
+
+		for ii = 1, num_hits do
+			local enemy_unit = broadphase_results[ii]
+			local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
+			local attack_direction = Vector3.normalize(Vector3.flat(enemy_unit_position - player_position))
+
+			if Vector3.length_squared(attack_direction) == 0 then
+				local player_rotation = locomotion_component.rotation
+
+				attack_direction = Quaternion.forward(player_rotation)
+			end
+
+			local dot = Vector3.dot(shout_direction, attack_direction)
+
+			if shout_dot < dot and not total_hits[enemy_unit] then
+				local hit_zone_name = "torso"
+				local _, _, _, stagger_result, _ = Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", nil, "attack_type", attack_types.shout, "attacking_unit", unit, "target_number", target_number)
+
+				if stagger_result == "stagger" then
+					hit_enemy_units[enemy_unit] = true
+				end
+
+				target_number = target_number + 1
+				total_hits[enemy_unit] = true
+
+				local unit_data = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
+				local breed = unit_data and unit_data:breed()
+				local tags = breed and breed.tags
+
+				if tags and (tags.elite or tags.special or tags.monster or tags.captain or tags.cultist_captain) then
+					hit_elite_special_monster = true
+				end
+
+				hit = true
+
+				if on_finish_directional_shout.force_stagger_type_if_not_staggered and stagger_result and stagger_result == "no_stagger" and tags and not tags.monster and not tags.captain then
+					hit_enemy_units[enemy_unit] = true
+
+					local force_stagger_type_if_not_staggered_duration = on_finish_directional_shout.force_stagger_type_if_not_staggered_duration
+
+					Stagger.force_stagger(enemy_unit, on_finish_directional_shout.force_stagger_type_if_not_staggered, attack_direction, force_stagger_type_if_not_staggered_duration, 1, force_stagger_type_if_not_staggered_duration, unit)
+				end
+			end
+		end
+
+		if hit then
+			local anim_event_1p = on_finish_directional_shout.anim_event_1p
+
+			if anim_event_1p then
+				self._animation_extension:anim_event_1p(anim_event_1p)
+			end
+		end
+
+		if hit_elite_special_monster then
+			local wwise_alias = lunge_template.on_hit_gear_alias
+
+			if wwise_alias then
+				local source_name = "head"
+				local sync_to_clients = false
+				local include_client = false
+
+				table.clear(external_properties)
+
+				external_properties.ability_template = "adamant_charge"
+
+				self._fx_extension:trigger_gear_wwise_event_with_source("ability_bash", external_properties, source_name, sync_to_clients, include_client)
+			end
+		end
 	end
 
 	local direction = lunge_character_state_component.direction
@@ -351,12 +460,15 @@ end
 PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local lunge_character_state_component = self._lunge_character_state_component
 	local time_in_lunge = t - self._character_state_component.entered_t
-
-	self._weapon_extension:update_weapon_actions(fixed_frame)
-	self._ability_extension:update_ability_actions(fixed_frame)
-
 	local lunge_template_name = lunge_character_state_component.lunge_template
 	local lunge_template = LungeTemplates[lunge_template_name]
+
+	if not lunge_template.disable_weapon_actions then
+		self._weapon_extension:update_weapon_actions(fixed_frame)
+	end
+
+	self._ability_extension:update_ability_actions(fixed_frame)
+
 	local max_mass_hit = false
 	local damage_settings = lunge_template and lunge_template.damage_settings
 
@@ -451,6 +563,17 @@ PlayerCharacterStateLunging._check_transition = function (self, unit, t, input_e
 
 	if max_mass_hit then
 		return "walking"
+	end
+
+	local cancel_on_unwield = lunge_template and lunge_template.cancel_on_unwield
+
+	if cancel_on_unwield then
+		local wielded_slot = self._visual_loadout_extension:currently_wielded_slot()
+		local slot_to_wield = lunge_template.slot_to_wield
+
+		if slot_to_wield and wielded_slot ~= slot_to_wield then
+			return "walking"
+		end
 	end
 
 	if not still_lunging then
@@ -644,6 +767,20 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 						if stop_tags[tag] then
 							should_stop = true
 
+							local damage_profile_stop = damage_settings.damage_profile_damage
+
+							if damage_profile_stop then
+								local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile_stop, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
+							end
+
+							Managers.state.blood:play_screen_space_blood(self._fx_extension)
+
+							local anim_event_1p_on_damage = damage_settings.anim_event_1p_on_damage
+
+							if anim_event_1p_on_damage then
+								self._animation_extension:anim_event_1p(anim_event_1p_on_damage)
+							end
+
 							break
 						end
 					end
@@ -727,6 +864,8 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 	local number_of_hit_units = 0
 	local number_of_hit_ogryns = 0
 	local number_of_hit_ranged = 0
+	local number_of_hit_elites = 0
+	local number_of_hit_specials = 0
 
 	for hit_unit, _ in pairs(hit_units) do
 		number_of_hit_units = number_of_hit_units + 1
@@ -738,12 +877,20 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 			number_of_hit_ogryns = number_of_hit_ogryns + 1
 		end
 
+		if breed and breed.tags.elite then
+			number_of_hit_elites = number_of_hit_elites + 1
+		end
+
+		if breed and breed.tags.special then
+			number_of_hit_specials = number_of_hit_specials + 1
+		end
+
 		if breed and breed.ranged then
 			number_of_hit_ranged = number_of_hit_ranged + 1
 		end
 	end
 
-	Managers.stats:record_private("hook_lunge_stop", player, number_of_hit_units, number_of_hit_ranged, number_of_hit_ogryns)
+	Managers.stats:record_private("hook_lunge_stop", player, number_of_hit_units, number_of_hit_ranged, number_of_hit_ogryns, number_of_hit_elites, number_of_hit_specials)
 end
 
 function _apply_buff_to_hit_unit(hit_unit, buff_to_apply, number_of_stacks, t, origin_unit)

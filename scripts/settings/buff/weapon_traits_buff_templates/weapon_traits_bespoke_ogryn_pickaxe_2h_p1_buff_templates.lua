@@ -32,18 +32,18 @@ templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_increase_power_on_weapon_spec
 templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks)
 templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
 templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_toughness_on_hit_based_on_charge_time = {
-	allow_proc_while_active = true,
 	child_buff_template = "weapon_trait_bespoke_ogryn_pickaxe_2h_p1_toughness_on_hit_based_on_charge_time_visual_stack_count",
-	class_name = "weapon_trait_parent_proc_buff",
 	predicted = false,
-	show_in_hud_if_slot_is_wielded = true,
 	toughness_fixed_percentage = 0.05,
+	allow_proc_while_active = true,
+	class_name = "weapon_trait_parent_proc_buff",
+	show_in_hud_if_slot_is_wielded = true,
 	proc_events = {
 		[proc_events.on_windup_trigger] = 1,
 		[proc_events.on_hit] = 1,
 		[proc_events.on_action_start] = 1,
 		[proc_events.on_sweep_finish] = 1,
-		[proc_events.on_wield] = 1,
+		[proc_events.on_wield] = 1
 	},
 	check_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_proc_func = {
@@ -68,25 +68,25 @@ templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_toughness_on_hit_based_on_cha
 		end,
 		on_wield = function (params, template_data, template_context)
 			template_data.num_windup_procs = 0
-		end,
+		end
 	},
 	add_child_proc_events = {
-		[proc_events.on_windup_trigger] = 1,
+		[proc_events.on_windup_trigger] = 1
 	},
 	clear_child_stacks_proc_events = {
 		[proc_events.on_hit] = true,
 		[proc_events.on_sweep_finish] = true,
-		[proc_events.on_wield] = true,
+		[proc_events.on_wield] = true
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_toughness_on_hit_based_on_charge_time_visual_stack_count = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
-	max_stacks = 3,
 	predicted = false,
 	stack_offset = -1,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	max_stacks = 3,
+	class_name = "buff",
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_ogryn_pickaxe_2h_p1_targets_receive_increased_damage_debuff_on_weapon_special = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_increased_damage_debuff_on_weapon_special)
 

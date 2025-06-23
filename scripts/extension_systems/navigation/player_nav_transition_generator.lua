@@ -22,19 +22,19 @@ end
 
 local ALLOWED_STATES = {
 	falling = {
-		falling = true,
+		falling = true
 	},
 	jumping = {
-		falling = true,
 		jumping = true,
+		falling = true
 	},
 	ledge_vaulting = {
-		falling = true,
 		jumping = true,
-		ledge_vaulting = true,
 		sprinting = true,
-		walking = true,
-	},
+		ledge_vaulting = true,
+		falling = true,
+		walking = true
+	}
 }
 
 PlayerNavTransitionGenerator.fixed_update = function (self, unit, is_on_nav_mesh, latest_position_on_nav_mesh)

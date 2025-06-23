@@ -2,56 +2,67 @@
 
 local MissionTypes = {
 	raid = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_01",
 		index = 1,
 		name = "loc_mission_type_01_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_01",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_01"
 	},
 	assassination = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_02",
 		index = 2,
 		name = "loc_mission_type_02_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_02",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_02"
 	},
 	investigation = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_03",
 		index = 3,
 		name = "loc_mission_type_03_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_03",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_03"
 	},
 	disruption = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_04",
 		index = 4,
 		name = "loc_mission_type_04_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_04",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_04"
 	},
 	strike = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_05",
 		index = 5,
 		name = "loc_mission_type_05_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_05",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_05"
 	},
 	espionage = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_06",
 		index = 6,
 		name = "loc_mission_type_06_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_06",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_06"
 	},
 	repair = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_07",
 		index = 7,
 		name = "loc_mission_type_07_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_07",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_07"
 	},
 	operations = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_operations",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_operations",
 		name = "loc_mission_type_operations_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_operations"
 	},
 	horde = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_horde",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_horde",
 		name = "loc_horde_mission_type",
+		icon = "content/ui/materials/icons/mission_types/mission_type_horde"
 	},
 	undefined = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",
+		icon = "content/ui/materials/icons/mission_types/mission_type_undefined"
 	},
 	hub = {
-		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",
-	},
+		icon = "content/ui/materials/icons/mission_types/mission_type_undefined"
+	}
 }
 
 return settings("MissionTypes", MissionTypes)

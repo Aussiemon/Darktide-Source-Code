@@ -159,19 +159,16 @@ UIViewHandler.wwise_music_state = function (self, wwise_state_group_name)
 
 	for i = #active_views_array, 1, -1 do
 		local view_name = active_views_array[i]
+		local view_settings = self:settings_by_view_name(view_name)
+		local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
 
-		if TEMP_DRAWN_VIEWS[view_name] then
-			local view_settings = self:settings_by_view_name(view_name)
-			local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
+		if wwise_state then
+			return wwise_state
+		elseif view_settings.wwise_state_query then
+			local view_data = self._active_views_data[view_name]
+			local view_instance = view_data.instance
 
-			if wwise_state then
-				return wwise_state
-			elseif view_settings.wwise_state_query then
-				local view_data = self._active_views_data[view_name]
-				local view_instance = view_data.instance
-
-				return view_instance:wwise_music_state()
-			end
+			return view_instance:wwise_music_state()
 		end
 	end
 end
@@ -710,16 +707,16 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 	end
 
 	local view_data = {
-		allow_next_draw = true,
-		allow_next_input = true,
 		hide_while_fade_in = true,
+		allow_next_input = true,
+		allow_next_draw = true,
 		name = view_name,
 		opening_time = t,
 		disable_game_world = view_settings.disable_game_world,
 		game_world_blur = view_settings.game_world_blur,
 		fade_in = view_settings.use_transition_ui,
 		use_transition_ui = view_settings.use_transition_ui,
-		parent_transition_view = view_settings.parent_transition_view,
+		parent_transition_view = view_settings.parent_transition_view
 	}
 
 	self._num_active_views = self._num_active_views + 1
@@ -766,7 +763,7 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 
 	registered_view_worlds[view_name][world_name] = {
 		layer_offset = layer,
-		current_layer = layer,
+		current_layer = layer
 	}
 
 	local current_view_layer = self._curent_frame_view_layers[view_name]

@@ -10,23 +10,23 @@ local CONFIG = {
 	syringe_corruption_pocketable = {
 		decal_index = 1,
 		glass_color = Vector3Box(0.3, 0.6, 0.4),
-		liquid_color = Vector3Box(0.117, 0.6, 0.197),
+		liquid_color = Vector3Box(0.117, 0.6, 0.197)
 	},
 	syringe_ability_boost_pocketable = {
 		decal_index = 4,
 		glass_color = Vector3Box(1, 0.5, 0),
-		liquid_color = Vector3Box(1, 0.5, 0),
+		liquid_color = Vector3Box(1, 0.5, 0)
 	},
 	syringe_power_boost_pocketable = {
 		decal_index = 3,
 		glass_color = Vector3Box(0.389, 0, 0),
-		liquid_color = Vector3Box(0.389, 0, 0),
+		liquid_color = Vector3Box(0.389, 0, 0)
 	},
 	syringe_speed_boost_pocketable = {
 		decal_index = 2,
 		glass_color = Vector3Box(0.221, 0.49, 1),
-		liquid_color = Vector3Box(0.221, 0.49, 1),
-	},
+		liquid_color = Vector3Box(0.221, 0.49, 1)
+	}
 }
 
 SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
@@ -54,7 +54,7 @@ SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = unit_1p,
-				component = component,
+				component = component
 			}
 		end
 	end
@@ -67,7 +67,7 @@ SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = unit_3p,
-				component = component,
+				component = component
 			}
 		end
 	end

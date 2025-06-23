@@ -50,31 +50,31 @@ end
 
 WeatherVolume.component_data = {
 	world_particles = {
-		filter = "particles",
-		preview = false,
-		ui_name = "World Particles",
 		ui_type = "resource",
+		preview = false,
 		value = "",
+		ui_name = "World Particles",
+		filter = "particles"
 	},
 	screen_particles = {
-		filter = "particles",
-		preview = false,
-		ui_name = "Screen Particles",
 		ui_type = "resource",
+		preview = false,
 		value = "",
+		ui_name = "Screen Particles",
+		filter = "particles"
 	},
 	priority = {
-		decimals = 0,
-		max = 10,
-		min = 1,
-		step = 1,
-		ui_name = "Priority",
 		ui_type = "number",
+		min = 1,
+		max = 10,
+		decimals = 0,
 		value = 1,
+		ui_name = "Priority",
+		step = 1
 	},
 	extensions = {
-		"WeatherExtension",
-	},
+		"WeatherExtension"
+	}
 }
 
 return WeatherVolume

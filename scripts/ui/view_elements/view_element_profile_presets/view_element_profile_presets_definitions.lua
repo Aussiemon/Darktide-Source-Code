@@ -13,110 +13,110 @@ local ViewElementTabMenuSettings = require("scripts/ui/view_elements/view_elemen
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	entry_pivot = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	profile_preset_button_panel = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			524,
-			56,
+			56
 		},
 		position = {
 			-60,
 			94,
-			100,
-		},
+			100
+		}
 	},
 	profile_preset_add_button = {
-		horizontal_alignment = "right",
-		parent = "profile_preset_button_panel",
 		vertical_alignment = "center",
+		parent = "profile_preset_button_panel",
+		horizontal_alignment = "right",
 		size = {
 			32,
-			32,
+			32
 		},
 		position = {
 			-11,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	profile_preset_button_pivot = {
-		horizontal_alignment = "right",
-		parent = "profile_preset_button_panel",
 		vertical_alignment = "center",
+		parent = "profile_preset_button_panel",
+		horizontal_alignment = "right",
 		size = {
 			44,
-			58,
+			58
 		},
 		position = {
 			-52,
 			-2,
-			1,
-		},
+			1
+		}
 	},
 	profile_preset_tooltip = {
-		horizontal_alignment = "right",
-		parent = "profile_preset_button_panel",
 		vertical_alignment = "top",
+		parent = "profile_preset_button_panel",
+		horizontal_alignment = "right",
 		size = {
 			300,
-			400,
+			400
 		},
 		position = {
 			-5,
 			62,
-			1,
-		},
+			1
+		}
 	},
 	profile_preset_tooltip_grid = {
-		horizontal_alignment = "left",
-		parent = "profile_preset_tooltip",
 		vertical_alignment = "top",
+		parent = "profile_preset_tooltip",
+		horizontal_alignment = "left",
 		size = {
 			225,
-			1,
+			1
 		},
 		position = {
 			37.5,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	profile_preset_button_panel = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/presets/main",
 			value_id = "texture",
-		},
+			pass_type = "texture"
+		}
 	}, "profile_preset_button_panel"),
 	profile_preset_tooltip = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size_addition = {
 					-20,
-					-20,
-				},
-			},
+					-20
+				}
+			}
 		},
 		{
 			pass_type = "rect",
@@ -126,56 +126,56 @@ local widget_definitions = {
 				color = Color.terminal_grid_background_icon(255, true),
 				size_addition = {
 					-24,
-					-24,
-				},
-			},
+					-24
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				color = Color.terminal_grid_background(255, true),
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
-				scenegraph_id = "screen",
 				vertical_alignment = "center",
+				scenegraph_id = "screen",
+				horizontal_alignment = "center",
 				color = Color.black(100, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					80,
-				},
-			},
-		},
+					80
+				}
+			}
+		}
 	}, "profile_preset_tooltip"),
 	profile_preset_add_button = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			content = {
-				on_hover_sound = UISoundEvents.default_mouse_hover,
-			},
+				on_hover_sound = UISoundEvents.default_mouse_hover
+			}
 		},
 		{
 			pass_type = "texture",
@@ -188,8 +188,8 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1,
-				},
+					1
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot
@@ -203,51 +203,51 @@ local widget_definitions = {
 			end,
 			visibility_function = function (content, style)
 				return not content.missing_content
-			end,
+			end
 		},
 		{
+			value_id = "exclamation_mark",
 			pass_type = "texture",
 			value = "content/ui/materials/icons/generic/exclamation_mark",
-			value_id = "exclamation_mark",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					7,
+					7
 				},
 				color = {
 					255,
 					246,
 					69,
-					69,
+					69
 				},
 				size = {
 					16,
-					28,
-				},
+					28
+				}
 			},
 			visibility_function = function (content, style)
 				return content.missing_content
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/hud/stamina_glow",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_icon(nil, true),
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size_addition = {
 					30,
-					30,
-				},
+					30
+				}
 			},
 			visibility_function = function (content, style)
 				return content.pulse
@@ -271,87 +271,87 @@ local widget_definitions = {
 				local color = style.color
 
 				color[1] = 150 * math.min(alpha_progress)
-			end,
-		},
-	}, "profile_preset_add_button"),
+			end
+		}
+	}, "profile_preset_add_button")
 }
 local profile_preset_button = UIWidget.create_definition({
 	{
+		value_id = "arrow",
 		pass_type = "rotated_texture",
 		value = "content/ui/materials/icons/system/page_arrow",
-		value_id = "arrow",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			angle = -math.pi / 2,
 			offset = {
 				0,
 				39,
-				7,
+				7
 			},
 			color = Color.terminal_corner(nil, true),
 			size = {
 				24,
-				46,
-			},
+				46
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.is_focused
-		end,
+		end
 	},
 	{
-		pass_type = "texture",
-		style_id = "exclamation_mark",
-		value = "content/ui/materials/icons/generic/exclamation_mark",
 		value_id = "exclamation_mark",
+		style_id = "exclamation_mark",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/generic/exclamation_mark",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			offset = {
 				10,
 				10,
-				7,
+				7
 			},
 			color = {
 				255,
 				246,
 				69,
-				69,
+				69
 			},
 			size = {
 				16,
-				28,
-			},
+				28
+			}
 		},
 		visibility_function = function (content, style)
 			return content.missing_content
-		end,
+		end
 	},
 	{
-		pass_type = "texture",
 		style_id = "modified_exclamation_mark",
+		pass_type = "texture",
 		value = "content/ui/materials/icons/generic/exclamation_mark",
 		value_id = "modified_exclamation_mark",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			offset = {
 				10,
 				10,
-				7,
+				7
 			},
 			color = {
 				255,
 				246,
 				202,
-				69,
+				69
 			},
 			size = {
 				16,
-				28,
-			},
+				28
+			}
 		},
 		visibility_function = function (content, style)
 			return content.modified_content
@@ -362,80 +362,80 @@ local profile_preset_button = UIWidget.create_definition({
 			else
 				style.offset[1] = 10
 			end
-		end,
+		end
 	},
 	{
-		content_id = "hotspot",
 		pass_type = "hotspot",
+		content_id = "hotspot",
 		content = {
-			on_hover_sound = UISoundEvents.default_mouse_hover,
-		},
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		}
 	},
 	{
-		pass_type = "texture",
 		value = "content/ui/materials/icons/presets/preset_01",
 		value_id = "icon",
+		pass_type = "texture",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			offset = {
 				0,
 				4,
-				3,
+				3
 			},
 			color = Color.terminal_icon(255, true),
 			size = {
 				32,
-				32,
-			},
-		},
+				32
+			}
+		}
 	},
 	{
+		value_id = "background_idle",
 		pass_type = "texture",
 		value = "content/ui/materials/frames/presets/idle",
-		value_id = "background_idle",
 		style = {
 			offset = {
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return not hotspot.is_selected
-		end,
+		end
 	},
 	{
+		value_id = "background_active",
 		pass_type = "texture",
 		value = "content/ui/materials/frames/presets/active",
-		value_id = "background_active",
 		style = {
 			offset = {
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.is_selected
-		end,
+		end
 	},
 	{
 		pass_type = "texture",
-		value = "content/ui/materials/frames/presets/highlight",
 		value_id = "highlight",
+		value = "content/ui/materials/frames/presets/highlight",
 		style = {
 			offset = {
 				0,
 				0,
-				2,
+				2
 			},
 			default_color = Color.terminal_corner(255, true),
-			hover_color = Color.terminal_corner_hover(255, true),
+			hover_color = Color.terminal_corner_hover(255, true)
 		},
 		change_function = function (content, style)
 			local color = style.color
@@ -453,8 +453,8 @@ local profile_preset_button = UIWidget.create_definition({
 			local ignore_alpha = true
 
 			ColorUtilities.color_lerp(default_color, hover_color, math.max(focus_progress, select_progress), color, ignore_alpha)
-		end,
-	},
+		end
+	}
 }, "profile_preset_button_pivot")
 
 local function icon_change_function(content, style)
@@ -483,43 +483,43 @@ local profile_preset_grid_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	texture = {
 		size = {
 			64,
-			64,
+			64
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				64,
-				64,
+				64
 			}
 		end,
 		pass_template = {
 			{
-				pass_type = "texture",
 				style_id = "texture",
 				value_id = "texture",
+				pass_type = "texture",
 				style = {
 					color = {
 						255,
 						255,
 						255,
-						255,
-					},
-				},
-			},
+						255
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -542,90 +542,90 @@ local profile_preset_grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	dynamic_button = {
 		size = {
 			225,
-			100,
+			100
 		},
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot",
 				content = {
-					on_hover_sound = UISoundEvents.default_mouse_hover,
-				},
+					on_hover_sound = UISoundEvents.default_mouse_hover
+				}
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame",
 				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_frame(nil, true),
 					hover_color = Color.terminal_frame_hover(nil, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
+						3
+					}
 				},
 				change_function = ButtonPassTemplates.default_button_hover_change_function,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
 				style_id = "corner",
 				value = "content/ui/materials/frames/frame_corner_2px",
 				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_corner(nil, true),
 					hover_color = Color.terminal_corner_hover(nil, true),
 					offset = {
 						0,
 						0,
-						4,
-					},
+						4
+					}
 				},
 				change_function = ButtonPassTemplates.default_button_hover_change_function,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
 				style_id = "background_gradient",
 				value = "content/ui/materials/gradients/gradient_vertical",
 				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					default_color = Color.terminal_background_gradient(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
 					offset = {
 						0,
 						0,
-						2,
-					},
+						2
+					}
 				},
 				change_function = function (content, style)
 					ButtonPassTemplates.terminal_button_change_function(content, style)
@@ -633,26 +633,26 @@ local profile_preset_grid_blueprints = {
 				end,
 				visibility_function = function (content, style)
 					return not content.hotspot.disabled
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
-					font_size = 20,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "center",
+					font_size = 20,
 					text_vertical_alignment = "center",
+					text_horizontal_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -685,32 +685,32 @@ local profile_preset_grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	header = {
 		size = {
 			225,
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
-					font_size = 20,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "center",
+					font_size = 20,
 					text_vertical_alignment = "center",
+					text_horizontal_alignment = "center",
 					text_color = Color.terminal_text_header(255, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -739,21 +739,21 @@ local profile_preset_grid_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	icon = {
 		size = {
 			45,
-			45,
+			45
 		},
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot",
 				content = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "rect",
@@ -762,101 +762,101 @@ local profile_preset_grid_blueprints = {
 						100,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
 				value = "content/ui/materials/frames/inner_shadow_thin",
+				pass_type = "texture",
 				style = {
 					scale_to_material = true,
 					color = Color.terminal_corner_selected(nil, true),
 					offset = {
 						0,
 						0,
-						1,
-					},
+						1
+					}
 				},
 				visibility_function = function (content, style)
 					return content.equipped
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
 				style_id = "frame",
 				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						6,
+						6
 					},
 					color = Color.terminal_frame(nil, true),
 					default_color = Color.terminal_frame(nil, true),
 					selected_color = Color.terminal_frame_selected(nil, true),
-					hover_color = Color.terminal_frame_hover(nil, true),
+					hover_color = Color.terminal_frame_hover(nil, true)
 				},
-				change_function = icon_change_function,
+				change_function = icon_change_function
 			},
 			{
 				pass_type = "texture",
 				style_id = "corner",
 				value = "content/ui/materials/frames/frame_corner_2px",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						7,
+						7
 					},
 					color = Color.terminal_corner(nil, true),
 					default_color = Color.terminal_corner(nil, true),
 					selected_color = Color.terminal_corner_selected(nil, true),
-					hover_color = Color.terminal_corner_hover(nil, true),
+					hover_color = Color.terminal_corner_hover(nil, true)
 				},
-				change_function = icon_change_function,
+				change_function = icon_change_function
 			},
 			{
-				pass_type = "texture",
 				value = "content/ui/materials/frames/frame_tile_1px",
+				pass_type = "texture",
 				style = {
 					color = {
 						255,
 						0,
 						0,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "icon",
-				value = "content/ui/materials/icons/presets/preset_01",
 				value_id = "icon",
+				style_id = "icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/presets/preset_01",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						2,
+						2
 					},
 					size = {
 						32,
-						32,
+						32
 					},
-					color = Color.terminal_icon(255, true),
-				},
-			},
+					color = Color.terminal_icon(255, true)
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local style = widget.style
@@ -874,13 +874,13 @@ local profile_preset_grid_blueprints = {
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			return
-		end,
-	},
+		end
+	}
 }
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	profile_preset_button = profile_preset_button,
-	profile_preset_grid_blueprints = profile_preset_grid_blueprints,
+	profile_preset_grid_blueprints = profile_preset_grid_blueprints
 }

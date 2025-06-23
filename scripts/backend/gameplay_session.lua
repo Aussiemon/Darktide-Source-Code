@@ -7,7 +7,7 @@ local Interface = {
 	"fetch",
 	"create",
 	"complete",
-	"events",
+	"events"
 }
 local game_session_poll_interval_s = 2
 local max_events_per_batch = 20
@@ -84,15 +84,15 @@ GameplaySession.create = function (self, server_id, ip_address)
 				type = "dedicated",
 				properties = {
 					serverId = server_id,
-					ipAddress = ip_address,
-				},
-			},
-		},
+					ipAddress = ip_address
+				}
+			}
+		}
 	}
 
 	return Managers.backend:title_request("/gameplay/sessions", {
 		method = "POST",
-		body = data,
+		body = data
 	}):next(function (data)
 		return data.body
 	end):next(function (results)
@@ -113,8 +113,8 @@ GameplaySession.update = function (self, session_id, participants, kicked_partic
 		info = {
 			participants = participants,
 			kickedParticipants = kicked_participants_account_ids,
-			backfillWanted = backfill_wanted,
-		},
+			backfillWanted = backfill_wanted
+		}
 	}
 
 	if not DevParameters.disable_session_update_print then
@@ -123,7 +123,7 @@ GameplaySession.update = function (self, session_id, participants, kicked_partic
 
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/update", {
 		method = "POST",
-		body = data,
+		body = data
 	}):next(function (data)
 		return data.body
 	end)
@@ -136,7 +136,7 @@ local function to_backend_modifier(reward_modifier)
 		rareLoot = reward_modifier.mission_reward_rare_loot_modifier,
 		gearInsteadOfWeapon = reward_modifier.mission_reward_gear_instead_of_weapon_modifier,
 		sideMissionXp = reward_modifier.side_mission_reward_xp_modifier,
-		sideMissionCredit = reward_modifier.side_mission_reward_credit_modifier,
+		sideMissionCredit = reward_modifier.side_mission_reward_credit_modifier
 	}
 end
 
@@ -162,13 +162,13 @@ GameplaySession.complete = function (self, session_id, participants, mission_res
 	local data = {
 		info = {
 			participants = participants,
-			missionResult = mission_result,
-		},
+			missionResult = mission_result
+		}
 	}
 
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/complete", {
 		method = "POST",
-		body = data,
+		body = data
 	}):next(function (data)
 		return data.body
 	end)
@@ -191,8 +191,8 @@ local function _events_batched(session_id, events, from)
 		return Managers.backend:title_request(url, {
 			method = "POST",
 			body = {
-				updates = events,
-			},
+				updates = events
+			}
 		}):next(function (data)
 			return data.body
 		end)
@@ -202,7 +202,7 @@ end
 GameplaySession.events = function (self, session_id, events)
 	if #events == 0 then
 		return Promise.resolved({
-			sessionId = session_id,
+			sessionId = session_id
 		})
 	end
 
@@ -231,8 +231,8 @@ GameplaySession.lock = function (self, category, lock_state, participants)
 		body = {
 			category = category,
 			lockState = lock_state,
-			participants = participants,
-		},
+			participants = participants
+		}
 	})
 end
 

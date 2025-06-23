@@ -8,7 +8,7 @@ local TelemetryManagerTestify = {
 		if telemetry_manager:batch_in_flight() then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return TelemetryManagerTestify

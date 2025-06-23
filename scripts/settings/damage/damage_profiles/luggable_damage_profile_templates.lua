@@ -26,17 +26,17 @@ local damage_types = DamageSettings.damage_types
 local double_cleave = DamageProfileSettings.double_cleave
 
 damage_templates.luggable_battery = {
-	disorientation_type = "grenadier",
-	ignore_stagger_reduction = true,
-	ignore_stun_immunity = true,
 	interrupt_alternate_fire = true,
-	ogryn_disorientation_type = "grenadier",
-	ragdoll_push_force = 500,
-	stagger_category = "ranged",
 	suppression_value = 15,
+	ogryn_disorientation_type = "grenadier",
+	ignore_stun_immunity = true,
+	stagger_category = "ranged",
+	ragdoll_push_force = 500,
+	ignore_stagger_reduction = true,
+	disorientation_type = "grenadier",
 	cleave_distribution = {
 		attack = 0.15,
-		impact = 0.15,
+		impact = 0.15
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -48,7 +48,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -58,8 +58,8 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-			},
+				[armor_types.void_shield] = 2
+			}
 		},
 		far = {
 			attack = {
@@ -70,7 +70,7 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 0,
 				[armor_types.super_armor] = 0,
 				[armor_types.disgustingly_resilient] = 0,
-				[armor_types.void_shield] = 0,
+				[armor_types.void_shield] = 0
 			},
 			impact = {
 				[armor_types.unarmored] = 2,
@@ -80,9 +80,9 @@ damage_templates.luggable_battery = {
 				[armor_types.berserker] = 2,
 				[armor_types.super_armor] = 2,
 				[armor_types.disgustingly_resilient] = 2,
-				[armor_types.void_shield] = 2,
-			},
-		},
+				[armor_types.void_shield] = 2
+			}
+		}
 	},
 	targets = {
 		default_target = {
@@ -96,7 +96,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -106,8 +106,8 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-					},
+						[armor_types.void_shield] = 2
+					}
 				},
 				far = {
 					attack = {
@@ -118,7 +118,7 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 0,
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
-						[armor_types.void_shield] = 0,
+						[armor_types.void_shield] = 0
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -128,25 +128,25 @@ damage_templates.luggable_battery = {
 						[armor_types.berserker] = 2,
 						[armor_types.super_armor] = 2,
 						[armor_types.disgustingly_resilient] = 2,
-						[armor_types.void_shield] = 2,
-					},
-				},
+						[armor_types.void_shield] = 2
+					}
+				}
 			},
 			power_distribution = {
 				attack = 20,
-				impact = 4,
-			},
-		},
+				impact = 4
+			}
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 25,
+		impact = 25
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
-	push_template = push_templates.grenadier_explosion,
+	push_template = push_templates.grenadier_explosion
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

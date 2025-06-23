@@ -102,10 +102,10 @@ local EVAL_TIMER_MELEE = 2
 local EVAL_TIMER_ENGAGE = 1
 local EVAL_TIMER_DEFAULT = 3
 local DEFAULT_DEFENSE_META_DATA = {
-	push = "heavy",
 	push_action_input = "push",
-	start_action_input = "block",
 	stop_action_input = "block_release",
+	push = "heavy",
+	start_action_input = "block"
 }
 
 BtBotMeleeAction._update_melee = function (self, unit, scratchpad, action_data, t)
@@ -269,20 +269,20 @@ end
 local DEFAULT_MAXIMAL_MELEE_RANGE = 2.5
 local DEFAULT_ATTACK_META_DATA = {
 	light_attack = {
-		arc = 0,
 		penetrating = false,
+		arc = 0,
 		max_range = DEFAULT_MAXIMAL_MELEE_RANGE,
 		action_inputs = {
 			{
-				action_input = "start_attack",
 				timing = 0,
+				action_input = "start_attack"
 			},
 			{
-				action_input = "light_attack",
 				timing = 0,
-			},
-		},
-	},
+				action_input = "light_attack"
+			}
+		}
+	}
 }
 local ARMORED = ArmorSettings.types.armored
 
@@ -496,11 +496,11 @@ end
 
 local DODGE_CHECK_RANDOM_RANGE = {
 	0.5,
-	2,
+	2
 }
 local CANT_PUSH_DODGE_CHECK_RANDOM_RANGE = {
 	0.1,
-	0.2,
+	0.2
 }
 local DODGE_RANGE_TEST_DISTANCE = 2.25
 local DODGE_CHECK_FAIL_COOLDOWN = 0.1

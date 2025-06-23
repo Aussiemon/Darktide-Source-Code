@@ -5,59 +5,59 @@ local mission_objective_templates = {
 		objectives = {
 			objective_hm_complex_cross = {
 				description = "loc_objective_hm_complex_cross_desc",
-				header = "loc_objective_hm_complex_cross_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_cross_header"
 			},
 			objective_hm_complex_locate = {
 				description = "loc_objective_hm_complex_locate_desc",
-				header = "loc_objective_hm_complex_locate_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_locate_header"
 			},
 			objective_hm_complex_enter = {
 				description = "loc_objective_hm_complex_enter_desc",
-				header = "loc_objective_hm_complex_enter_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_enter_header"
 			},
 			objective_hm_complex_elevator_event_survive = {
 				description = "loc_objective_hm_complex_elevator_event_survive_desc",
-				event_type = "mid_event",
-				header = "loc_objective_hm_complex_elevator_event_survive_header",
-				mission_objective_type = "decode",
 				music_wwise_state = "hacking_event",
+				header = "loc_objective_hm_complex_elevator_event_survive_header",
+				event_type = "mid_event",
 				progress_bar = true,
+				mission_objective_type = "decode"
 			},
 			objective_hm_complex_elevator_up = {
 				description = "loc_objective_hm_complex_elevator_up_desc",
-				header = "loc_objective_hm_complex_elevator_up_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_elevator_up_header"
 			},
 			objective_hm_complex_elevator_office = {
 				description = "loc_objective_hm_complex_elevator_office_desc",
-				header = "loc_objective_hm_complex_elevator_office_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_elevator_office_header"
 			},
 			objective_hm_complex_final_event_running = {
 				description = "loc_objective_hm_complex_final_event_running_desc",
-				event_type = "end_event",
-				header = "loc_objective_hm_complex_final_event_running_header",
-				mission_objective_type = "decode",
 				music_wwise_state = "hacking_event",
-				progress_bar = true,
 				turn_off_backfill = true,
+				header = "loc_objective_hm_complex_final_event_running_header",
+				event_type = "end_event",
+				progress_bar = true,
+				mission_objective_type = "decode"
 			},
 			objective_hm_complex_activate_transmission = {
 				description = "loc_objective_hm_complex_activate_transmission_desc",
-				header = "loc_objective_hm_complex_activate_transmission_header",
 				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_activate_transmission_header"
 			},
 			objective_hm_complex_escape = {
 				description = "loc_objective_hm_complex_escape_desc",
-				header = "loc_objective_hm_complex_escape_header",
-				mission_objective_type = "goal",
 				music_wwise_state = "escape_event",
-			},
-		},
-	},
+				mission_objective_type = "goal",
+				header = "loc_objective_hm_complex_escape_header"
+			}
+		}
+	}
 }
 
 return mission_objective_templates

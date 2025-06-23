@@ -11,160 +11,160 @@ default_melee_action_input_setup.action_inputs = {
 		reevaluation_time = 0.18,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = true,
-			},
-		},
+				input = "action_one_hold"
+			}
+		}
 	},
 	attack_cancel = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				hold_input = "action_one_hold",
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
+				hold_input = "action_one_hold",
+				input = "action_two_pressed"
+			}
+		}
 	},
 	light_attack = {
 		buffer_time = 0.3,
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_one_hold",
-				time_window = 0.2,
 				value = false,
-			},
-		},
+				time_window = 0.2,
+				input = "action_one_hold"
+			}
+		}
 	},
 	heavy_attack = {
 		buffer_time = 0.5,
 		max_queue = 1,
 		input_sequence = {
 			{
-				duration = 0.25,
-				input = "action_one_hold",
 				value = true,
+				duration = 0.25,
+				input = "action_one_hold"
 			},
 			{
-				auto_complete = true,
-				input = "action_one_hold",
-				time_window = 1.5,
 				value = false,
-			},
-		},
+				time_window = 1.5,
+				auto_complete = true,
+				input = "action_one_hold"
+			}
+		}
 	},
 	attack_release = {
-		buffer_time = 0,
 		dont_queue = true,
+		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	block = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "action_two_hold",
 				value = true,
-			},
-		},
+				input = "action_two_hold"
+			}
+		}
 	},
 	block_release = {
 		buffer_time = 0.35,
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_two_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "action_two_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	push = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				hold_input = "action_two_hold",
-				input = "action_one_pressed",
 				value = true,
-			},
-		},
+				hold_input = "action_two_hold",
+				input = "action_one_pressed"
+			}
+		}
 	},
 	push_follow_up = {
 		buffer_time = 0.3,
 		input_sequence = {
 			{
+				value = true,
 				duration = 0.25,
 				hold_input = "action_two_hold",
-				input = "action_one_hold",
-				value = true,
-			},
-		},
+				input = "action_one_hold"
+			}
+		}
 	},
 	push_follow_up_release = {
-		buffer_time = 0,
 		dont_queue = true,
+		buffer_time = 0,
 		input_sequence = {
 			{
 				inputs = {
 					{
-						input = "action_one_hold",
 						value = false,
+						input = "action_one_hold"
 					},
 					{
-						input = "action_two_hold",
 						value = false,
-					},
+						input = "action_two_hold"
+					}
 				},
-				time_window = math.huge,
-			},
-		},
+				time_window = math.huge
+			}
+		}
 	},
 	push_follow_up_early_release = {
-		buffer_time = 0,
 		dont_queue = true,
+		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	special_action = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "weapon_extra_pressed",
 				value = true,
-			},
-		},
+				input = "weapon_extra_pressed"
+			}
+		}
 	},
 	special_action_hold = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				hold_input = "weapon_extra_hold",
-				input = "weapon_extra_hold",
 				value = true,
-			},
-		},
+				hold_input = "weapon_extra_hold",
+				input = "weapon_extra_hold"
+			}
+		}
 	},
 	special_action_release = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				hold_input = "weapon_extra_release",
-				input = "weapon_extra_release",
 				value = true,
-			},
-		},
-	},
+				hold_input = "weapon_extra_release",
+				input = "weapon_extra_release"
+			}
+		}
+	}
 }
 
 table.add_missing(default_melee_action_input_setup.action_inputs, BaseTemplateSettings.action_inputs)
@@ -174,41 +174,41 @@ default_melee_action_input_setup.action_input_hierarchy = {
 		input = "start_attack",
 		transition = {
 			{
-				input = "attack_cancel",
 				transition = "base",
+				input = "attack_cancel"
 			},
 			{
-				input = "light_attack",
 				transition = "base",
+				input = "light_attack"
 			},
 			{
-				input = "heavy_attack",
 				transition = "base",
+				input = "heavy_attack"
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
-				input = "grenade_ability",
 				transition = "base",
+				input = "grenade_ability"
 			},
 			{
-				input = "special_action",
 				transition = "base",
+				input = "special_action"
 			},
 			{
-				input = "block",
 				transition = "base",
-			},
-		},
+				input = "block"
+			}
+		}
 	},
 	{
 		input = "block",
 		transition = {
 			{
-				input = "block_release",
 				transition = "base",
+				input = "block_release"
 			},
 			{
 				input = "push",
@@ -217,75 +217,75 @@ default_melee_action_input_setup.action_input_hierarchy = {
 						input = "push_follow_up",
 						transition = {
 							{
-								input = "push_follow_up_release",
 								transition = "base",
+								input = "push_follow_up_release"
 							},
 							{
-								input = "wield",
 								transition = "base",
+								input = "wield"
 							},
 							{
-								input = "combat_ability",
 								transition = "base",
+								input = "combat_ability"
 							},
 							{
-								input = "grenade_ability",
 								transition = "base",
+								input = "grenade_ability"
 							},
 							{
-								input = "special_action",
 								transition = "base",
+								input = "special_action"
 							},
 							{
-								input = "block",
 								transition = "base",
-							},
-						},
+								input = "block"
+							}
+						}
 					},
 					{
-						input = "push_follow_up_early_release",
 						transition = "base",
+						input = "push_follow_up_early_release"
 					},
 					{
-						input = "special_action",
 						transition = "base",
-					},
-				},
+						input = "special_action"
+					}
+				}
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
-				input = "combat_ability",
 				transition = "base",
+				input = "combat_ability"
 			},
 			{
-				input = "grenade_ability",
 				transition = "base",
+				input = "grenade_ability"
 			},
 			{
-				input = "special_action",
 				transition = "base",
-			},
-		},
+				input = "special_action"
+			}
+		}
 	},
 	{
-		input = "special_action",
 		transition = "base",
+		input = "special_action"
 	},
 	{
-		input = "wield",
 		transition = "stay",
+		input = "wield"
 	},
 	{
-		input = "combat_ability",
 		transition = "base",
+		input = "combat_ability"
 	},
 	{
-		input = "grenade_ability",
 		transition = "base",
-	},
+		input = "grenade_ability"
+	}
 }
 
 ActionInputHierarchy.add_missing(default_melee_action_input_setup.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)

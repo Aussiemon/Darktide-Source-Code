@@ -65,6 +65,12 @@ HitReaction.disorient_player = function (attacked_unit, unit_data_extension, dis
 	local buff_extension = ScriptUnit.extension(attacked_unit, "buff_system")
 	local slowdown_immune = buff_extension:has_keyword(buff_keywords.slowdown_immune)
 	local stun_immune = buff_extension:has_keyword(buff_keywords.stun_immune)
+	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
+	if alternate_fire_component.is_active and buff_extension:has_keyword(buff_keywords.ranged_alternate_fire_interrupt_immune) then
+		stun_immune = true
+	end
+
 	local movement_speed_buff = disorientation_template.movement_speed_buff
 
 	if not slowdown_immune and movement_speed_buff then

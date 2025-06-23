@@ -9,47 +9,47 @@ local text_box_height = background_height - 60
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	text_box = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1000,
-			text_box_height,
+			text_box_height
 		},
 		position = {
 			0,
 			0,
-			start_layer + 1,
-		},
+			start_layer + 1
+		}
 	},
 	description_text = {
-		horizontal_alignment = "center",
-		parent = "text_box",
 		vertical_alignment = "center",
+		parent = "text_box",
+		horizontal_alignment = "center",
 		size = {
 			1000,
-			text_box_height - 20,
+			text_box_height - 20
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	value_background = {
-		horizontal_alignment = "center",
-		parent = "text_box",
 		vertical_alignment = "bottom",
+		parent = "text_box",
+		horizontal_alignment = "center",
 		size = {
 			1000,
-			50,
+			50
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local action_text_style = table.clone(UIFontSettings.header_2)
 
@@ -69,7 +69,7 @@ warning_text_style.text_color = {
 	150,
 	255,
 	0,
-	0,
+	0
 }
 
 local value_text_style = table.clone(UIFontSettings.header_3)
@@ -86,87 +86,87 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					start_layer,
+					start_layer
 				},
 				size = {
-					[2] = background_height,
+					[2] = background_height
 				},
 				color = {
 					166,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "screen"),
 	edge_top = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/background_selected_edge",
+			pass_type = "texture",
 			style = {
-				hdr = true,
 				vertical_alignment = "center",
+				hdr = true,
 				offset = {
 					0,
 					-background_height * 0.5,
-					start_layer + 1,
+					start_layer + 1
 				},
 				size = {
 					nil,
-					2,
+					2
 				},
-				color = Color.terminal_corner(255, true),
-			},
-		},
+				color = Color.terminal_corner(255, true)
+			}
+		}
 	}, "screen"),
 	edge_bottom = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/buttons/background_selected_edge",
+			pass_type = "texture",
 			style = {
-				hdr = true,
 				vertical_alignment = "center",
+				hdr = true,
 				offset = {
 					0,
 					background_height * 0.5,
-					start_layer + 1,
+					start_layer + 1
 				},
 				size = {
 					nil,
-					2,
+					2
 				},
-				color = Color.terminal_corner(255, true),
-			},
-		},
+				color = Color.terminal_corner(255, true)
+			}
+		}
 	}, "screen"),
 	action_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
 			value_id = "text",
-			style = action_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = action_text_style
+		}
 	}, "text_box"),
 	description_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
 			value_id = "text",
-			style = description_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = description_text_style
+		}
 	}, "description_text"),
 	value_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
 			value_id = "text",
-			style = value_text_style,
-		},
-	}, "value_background"),
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = value_text_style
+		}
+	}, "value_background")
 }
 
 return {
@@ -177,12 +177,12 @@ return {
 				offset = {
 					0,
 					0,
-					start_layer - 1,
+					start_layer - 1
 				},
-				color = Color.terminal_corner(30, true),
-			},
-		},
+				color = Color.terminal_corner(30, true)
+			}
+		}
 	}, "screen"),
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

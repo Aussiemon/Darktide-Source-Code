@@ -6,7 +6,7 @@ local Wintracks = class("Wintracks")
 local function _patch_wintrack(character_id, wintrack_id, body)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/wintracks/"):path(wintrack_id), {
 		method = "PATCH",
-		body = body,
+		body = body
 	}):next(function (data)
 		return true
 	end)
@@ -14,7 +14,7 @@ end
 
 Wintracks.set_wintrack_active_state = function (self, character_id, wintrack_id, active)
 	return _patch_wintrack(character_id, wintrack_id, {
-		active = active or false,
+		active = active or false
 	})
 end
 

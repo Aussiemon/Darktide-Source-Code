@@ -1,15 +1,10 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_discard_items/view_element_discard_items.lua
 
 local Definitions = require("scripts/ui/view_elements/view_element_discard_items/view_element_discard_items_definitions")
-local ViewElementDiscardItemsSettings = require("scripts/ui/view_elements/view_element_discard_items/view_element_discard_items_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local Items = require("scripts/utilities/items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
-local ItemUtils = require("scripts/utilities/items")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementDiscardItems = class("ViewElementDiscardItems", "ViewElementBase")
 
 ViewElementDiscardItems.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -25,7 +20,7 @@ ViewElementDiscardItems.init = function (self, parent, draw_layer, start_scale, 
 	local highest_item_level = 0
 
 	for _, item in pairs(self._items) do
-		local item_expertise = ItemUtils.expertise_level(item, true)
+		local item_expertise = Items.expertise_level(item, true)
 		local expertise_value = tonumber(item_expertise)
 		local item_level = expertise_value or 0
 
@@ -34,12 +29,12 @@ ViewElementDiscardItems.init = function (self, parent, draw_layer, start_scale, 
 		end
 	end
 
-	self._highest_item_level = highest_item_level + 1 * ItemUtils.get_expertise_multiplier()
+	self._highest_item_level = highest_item_level + 1 * Items.get_expertise_multiplier()
 	self._highest_item_level_cap = self._highest_item_level
 	self._current_rating_value = self._highest_item_level_cap
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_setup_buttons_interactions()
@@ -67,7 +62,7 @@ ViewElementDiscardItems._initialize_all = function (self, items, display_name, s
 	local highest_item_level = 0
 
 	for _, item in pairs(self._items) do
-		local item_expertise = ItemUtils.expertise_level(item, true)
+		local item_expertise = Items.expertise_level(item, true)
 		local expertise_value = tonumber(item_expertise)
 		local item_level = expertise_value or 0
 
@@ -76,12 +71,12 @@ ViewElementDiscardItems._initialize_all = function (self, items, display_name, s
 		end
 	end
 
-	self._highest_item_level = highest_item_level + 1 * ItemUtils.get_expertise_multiplier()
+	self._highest_item_level = highest_item_level + 1 * Items.get_expertise_multiplier()
 	self._highest_item_level_cap = self._highest_item_level
 	self._current_rating_value = self._highest_item_level_cap
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_setup_buttons_interactions()
@@ -128,7 +123,7 @@ ViewElementDiscardItems._update_selected_items_by_rarity = function (self)
 		for index, item in ipairs(items) do
 			local gear_id = item.gear_id
 
-			if self:_can_discard_item(item) and not ItemUtils.is_item_id_favorited(gear_id) then
+			if self:_can_discard_item(item) and not Items.is_item_id_favorited(gear_id) then
 				selected_items_by_rarity[rarity][#selected_items_by_rarity[rarity] + 1] = item
 			end
 		end
@@ -178,7 +173,7 @@ ViewElementDiscardItems._setup_buttons_interactions = function (self)
 		widgets_by_name.rarity_checkbox_button_5,
 		widgets_by_name.rating_stepper,
 		widgets_by_name.select_button,
-		widgets_by_name.unselect_button,
+		widgets_by_name.unselect_button
 	}
 end
 
@@ -190,8 +185,8 @@ ViewElementDiscardItems._initialize_description_text = function (self)
 			value = "",
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
-		}),
+			b = key_value_color[4]
+		})
 	})
 
 	widgets_by_name.description.content.text = text
@@ -281,7 +276,7 @@ ViewElementDiscardItems._update_items_to_discard = function (self)
 	local item_amount = self._items_to_discard and #self._items_to_discard or 0
 
 	self._widgets_by_name.selection_value.content.value = Localize("loc_premium_store_num_items", true, {
-		count = item_amount,
+		count = item_amount
 	})
 
 	self:_initialize_rarity_options()
@@ -289,7 +284,7 @@ end
 
 ViewElementDiscardItems._can_discard_item = function (self, item)
 	local allowed_item_level = math.min(self._highest_item_level, self._current_rating_value or 0)
-	local item_expertise = ItemUtils.expertise_level(item, true)
+	local item_expertise = Items.expertise_level(item, true)
 	local expertise_value = tonumber(item_expertise)
 
 	return expertise_value and expertise_value < allowed_item_level
@@ -316,11 +311,11 @@ ViewElementDiscardItems._on_unselect_pressed = function (self)
 end
 
 ViewElementDiscardItems._on_rating_stepper_left_pressed = function (self)
-	self:_increment_rating_value(-1 * ItemUtils.get_expertise_multiplier())
+	self:_increment_rating_value(-1 * Items.get_expertise_multiplier())
 end
 
 ViewElementDiscardItems._on_rating_stepper_right_pressed = function (self)
-	self:_increment_rating_value(1 * ItemUtils.get_expertise_multiplier())
+	self:_increment_rating_value(1 * Items.get_expertise_multiplier())
 end
 
 ViewElementDiscardItems._increment_rating_value = function (self, add)

@@ -226,13 +226,13 @@ end
 
 local function _forcesword_wind_slash_trigger_generator_func(level)
 	return {
-		active_duration = 3,
-		class_name = "proc_buff",
-		force_predicted_proc = true,
 		predicted = false,
+		force_predicted_proc = true,
+		class_name = "proc_buff",
+		active_duration = 3,
 		proc_events = {
 			[proc_events.on_sweep_start] = 1,
-			[proc_events.on_weapon_special_deactivate] = 1,
+			[proc_events.on_weapon_special_deactivate] = 1
 		},
 		conditional_exit_func = function (template_data, template_context)
 			local special_active = template_data.inventory_slot_component.special_active
@@ -258,15 +258,15 @@ local function _forcesword_wind_slash_trigger_generator_func(level)
 
 			buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
 			template_data.weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "max_activations")
-		end,
+		end
 	}
 end
 
 local function _forcesword_wind_slash_effect_generator_func(level)
 	return {
 		class_name = "buff",
-		duration = 3,
 		predicted = false,
+		duration = 3,
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		check_proc_func = function (params, template_data, template_context)
 			return params.is_weapon_special_active
@@ -364,16 +364,16 @@ local function _forcesword_wind_slash_effect_generator_func(level)
 			end
 
 			_update_forcesword_wind_slash(template_data, template_context, dt, t)
-		end,
+		end
 	}
 end
 
 templates.forcesword_wind_slash_weapon_special_primer = {
-	class_name = "proc_buff",
 	force_predicted_proc = true,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_weapon_special_activate] = 1,
+		[proc_events.on_weapon_special_activate] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -403,7 +403,7 @@ templates.forcesword_wind_slash_weapon_special_primer = {
 
 			template_data.trigger_buff_id = buff_id
 		end
-	end,
+	end
 }
 templates.forcesword_wind_slash_weapon_special_trigger_low = _forcesword_wind_slash_trigger_generator_func("low")
 templates.forcesword_wind_slash_weapon_special_trigger_middle = _forcesword_wind_slash_trigger_generator_func("middle")

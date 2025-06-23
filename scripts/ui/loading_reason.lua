@@ -57,7 +57,7 @@ LoadingReason._render_icon = function (self, gui, anchor_x, anchor_y, resolution
 end
 
 local font_options = {
-	shadow = true,
+	shadow = true
 }
 
 LoadingReason._render_text = function (self, gui, anchor_x, anchor_y, resolution_scale, text, text_opacity)

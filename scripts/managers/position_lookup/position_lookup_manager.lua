@@ -33,7 +33,7 @@ PositionLookupManager.init = function (self, optional_num_keys)
 			end
 
 			return nil
-		end,
+		end
 	})
 
 	rawset(_G, "POSITION_LOOKUP", self._position_lookup)

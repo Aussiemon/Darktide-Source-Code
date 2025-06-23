@@ -20,7 +20,7 @@ SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, 
 		timeout = SessionLocalStateMachine.TIMEOUT,
 		gameobject_callback_object = gameobject_callback_object,
 		clock_handler_client = clock_handler_client,
-		event_list = {},
+		event_list = {}
 	}
 
 	self._shared_state = shared_state
@@ -86,7 +86,7 @@ end
 SessionLocalStateMachine.leave = function (self)
 	while self._state_machine:state().__class_name ~= "LocalLeftSessionState" do
 		self._state_machine:event("leave", {
-			game_reason = "game_request",
+			game_reason = "game_request"
 		})
 		self._state_machine:update(0)
 	end

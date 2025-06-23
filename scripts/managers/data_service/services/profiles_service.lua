@@ -35,7 +35,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 
 		if not characters or #characters == 0 then
 			return Promise.resolved({
-				profiles = {},
+				profiles = {}
 			})
 		end
 
@@ -67,7 +67,7 @@ local function _fetch_all_backend_profiles(backend_interface)
 		return Promise.resolved({
 			profiles = profiles,
 			selected_profile = selected_profile,
-			gear = gear_list,
+			gear = gear_list
 		})
 	end)
 end
@@ -175,16 +175,27 @@ ProfilesService.equip_master_items_in_slots = function (self, character_id, item
 end
 
 ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_name, gender, planet)
-	return Managers.backend.interfaces.social:suggested_names_by_archetype(archetype_name, gender, planet):next(function (names)
+	return Managers.backend.interfaces.social:suggested_names_by_archetype(archetype_name, gender, planet):next(function (result)
+		local names = {
+			character = result.names,
+			companion = result.companionNames
+		}
+
 		return Promise.resolved(names)
 	end):catch(function (error)
 		return Promise.resolved({
-			"Alex",
 			"Rikard",
 			"Thomas",
 			"Jane",
 			"Niki",
 			"Marie",
+			"Rikard",
+			"Thomas",
+			"Jane",
+			"Niki",
+			"Marie",
+			companion = "Alex",
+			character = "Alex"
 		})
 	end)
 end
@@ -209,12 +220,19 @@ ProfilesService.check_name = function (self, name)
 	end)
 end
 
+ProfilesService.check_companion_name = function (self, name)
+	return self._backend_interface.characters:check_name(name, "comp"):next(function (data)
+		return Promise.resolved(data)
+	end):catch(function (error)
+		Managers.error:report_error(BackendError:new(error))
+
+		return Promise.rejected({})
+	end)
+end
+
 ProfilesService.fetch_character_operation = function (self, shopkeep, operation_name)
 	return self._backend_interface.characters:fetch_character_operation():next(function (data)
 		local operations = Promise.resolved(data)
-
-		table.dump(operations)
-
 		local operation = operations[shopkeep][operation_name]
 
 		return operation

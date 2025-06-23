@@ -4,10 +4,10 @@ local BossPatrols = require("scripts/managers/pacing/monster_pacing/boss_patrols
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local AggroStates = PerceptionSettings.aggro_states
 local SPAWN_STINGERS = {
-	cultist_captain = "wwise/events/minions/play_minion_captain_spawn_stinger",
-	renegade_captain = "wwise/events/minions/play_minion_captain_spawn_stinger",
-	renegade_twin_captain = "wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
 	renegade_twin_captain_two = "wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
+	cultist_captain = "wwise/events/minions/play_minion_captain_spawn_stinger",
+	renegade_twin_captain = "wwise/events/minions/play_minion_twins_ambush_spawn_impact_hit",
+	renegade_captain = "wwise/events/minions/play_minion_captain_spawn_stinger"
 }
 local monster_pacing_template = {
 	name = "default_monsters",
@@ -17,257 +17,257 @@ local monster_pacing_template = {
 				witches = 0,
 				monsters = {
 					0,
-					1,
-				},
+					1
+				}
 			},
 			breed_names = {
 				monsters = {
-					"chaos_plague_ogryn",
+					"chaos_plague_ogryn"
 				},
 				witches = {
-					"chaos_daemonhost",
-				},
+					"chaos_daemonhost"
+				}
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
 				chaos_beast_of_nurgle = AggroStates.aggroed,
-				chaos_spawn = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
 					hordes = 60,
-					specials = 50,
 					trickle_hordes = 40,
+					specials = 50
 				},
 				chaos_beast_of_nurgle = {
 					hordes = 60,
-					specials = 20,
 					trickle_hordes = 40,
+					specials = 20
 				},
 				chaos_spawn = {
 					hordes = 60,
-					specials = 50,
 					trickle_hordes = 40,
-				},
+					specials = 50
+				}
 			},
 			despawn_distance_when_passive = {
-				chaos_daemonhost = 65,
+				chaos_daemonhost = 65
 			},
-			spawn_stingers = SPAWN_STINGERS,
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			num_spawns = {
 				witches = 0,
 				monsters = {
 					0,
-					1,
-				},
+					1
+				}
 			},
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle",
+					"chaos_beast_of_nurgle"
 				},
 				witches = {
-					"chaos_daemonhost",
-				},
+					"chaos_daemonhost"
+				}
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
 				chaos_beast_of_nurgle = AggroStates.aggroed,
-				chaos_spawn = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
 					hordes = 30,
-					specials = 20,
 					trickle_hordes = 20,
+					specials = 20
 				},
 				chaos_beast_of_nurgle = {
 					hordes = 30,
-					specials = 20,
 					trickle_hordes = 20,
+					specials = 20
 				},
 				chaos_spawn = {
 					hordes = 30,
-					specials = 20,
 					trickle_hordes = 20,
-				},
+					specials = 20
+				}
 			},
 			despawn_distance_when_passive = {
-				chaos_daemonhost = 65,
+				chaos_daemonhost = 65
 			},
-			spawn_stingers = SPAWN_STINGERS,
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			num_spawns = {
 				monsters = {
 					0,
-					2,
+					2
 				},
 				witches = {
 					0,
-					1,
-				},
+					1
+				}
 			},
 			boss_patrols = {
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
-					cultist = BossPatrols.cultist_boss_patrols,
+					cultist = BossPatrols.cultist_boss_patrols
 				},
 				sound_events = {
 					renegade = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
-					},
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
+					}
 				},
 				num_boss_patrols_range = {
 					1,
-					2,
-				},
+					2
+				}
 			},
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
-					"chaos_spawn",
+					"chaos_spawn"
 				},
 				witches = {
-					"chaos_daemonhost",
-				},
+					"chaos_daemonhost"
+				}
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
 				chaos_beast_of_nurgle = AggroStates.aggroed,
-				chaos_spawn = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
-					specials = 15,
+					specials = 15
 				},
 				chaos_beast_of_nurgle = {
-					specials = 15,
+					specials = 15
 				},
 				chaos_spawn = {
-					specials = 15,
-				},
+					specials = 15
+				}
 			},
 			despawn_distance_when_passive = {
-				chaos_daemonhost = 65,
+				chaos_daemonhost = 65
 			},
-			spawn_stingers = SPAWN_STINGERS,
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			allow_witches_spawned_with_monsters = true,
 			num_spawns = {
 				monsters = {
 					1,
-					2,
+					2
 				},
 				witches = {
 					0,
-					2,
-				},
+					2
+				}
 			},
 			boss_patrols = {
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
-					cultist = BossPatrols.cultist_boss_patrols,
+					cultist = BossPatrols.cultist_boss_patrols
 				},
 				sound_events = {
 					renegade = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
-					},
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
+					}
 				},
 				num_boss_patrols_range = {
 					1,
-					2,
-				},
+					2
+				}
 			},
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
-					"chaos_spawn",
+					"chaos_spawn"
 				},
 				witches = {
-					"chaos_daemonhost",
-				},
+					"chaos_daemonhost"
+				}
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
 				chaos_beast_of_nurgle = AggroStates.aggroed,
-				chaos_spawn = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {
-				chaos_daemonhost = 65,
+				chaos_daemonhost = 65
 			},
-			spawn_stingers = SPAWN_STINGERS,
+			spawn_stingers = SPAWN_STINGERS
 		},
 		{
 			allow_witches_spawned_with_monsters = true,
 			num_spawns = {
 				monsters = {
 					1,
-					2,
+					2
 				},
 				witches = {
 					0,
-					2,
-				},
+					2
+				}
 			},
 			boss_patrols = {
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
-					cultist = BossPatrols.cultist_boss_patrols,
+					cultist = BossPatrols.cultist_boss_patrols
 				},
 				sound_events = {
 					renegade = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist",
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
-					},
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
+					}
 				},
 				num_boss_patrols_range = {
 					1,
-					3,
-				},
+					3
+				}
 			},
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
-					"chaos_spawn",
+					"chaos_spawn"
 				},
 				witches = {
-					"chaos_daemonhost",
-				},
+					"chaos_daemonhost"
+				}
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
 				chaos_beast_of_nurgle = AggroStates.aggroed,
-				chaos_spawn = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {
-				chaos_daemonhost = 65,
+				chaos_daemonhost = 65
 			},
-			spawn_stingers = SPAWN_STINGERS,
-		},
-	},
+			spawn_stingers = SPAWN_STINGERS
+		}
+	}
 }
 
 return monster_pacing_template

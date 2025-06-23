@@ -25,8 +25,8 @@ ActionMeleeExplosive.start = function (self, action_settings, t, ...)
 	self._have_added_buff = nil
 end
 
-ActionMeleeExplosive.fixed_update = function (self, dt, t, time_in_action)
-	ActionMeleeExplosive.super.fixed_update(self, dt, t, time_in_action)
+ActionMeleeExplosive.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionMeleeExplosive.super.fixed_update(self, dt, t, time_in_action, frame)
 
 	local exploding_time = self._exploding_time
 	local will_explode = not not exploding_time

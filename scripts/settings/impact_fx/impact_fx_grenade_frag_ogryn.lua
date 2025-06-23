@@ -10,73 +10,73 @@ local default_armor_decal = {
 	extents = {
 		min = {
 			x = 0.25,
-			y = 0.25,
+			y = 0.25
 		},
 		max = {
 			x = 0.25,
-			y = 0.25,
-		},
+			y = 0.25
+		}
 	},
 	units = {
-		"content/fx/units/weapons/vfx_decal_plasma_scorchmark",
-	},
+		"content/fx/units/weapons/vfx_decal_plasma_scorchmark"
+	}
 }
 local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		died = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		weakspot_damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage_reduced = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage_negated = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		shield_blocked = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		blocked = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		dead = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_unarmored",
-			},
-		},
+				append_husk_to_event_name = true
+			}
+		}
 	},
 	vfx = {},
 	linked_decal = {
@@ -84,66 +84,66 @@ local unarmored = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
-	blood_ball = {},
+	blood_ball = {}
 }
 local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		died = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		weakspot_damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage_reduced = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		damage_negated = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		shield_blocked = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		blocked = {
 			{
-				append_husk_to_event_name = false,
 				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
-			},
+				append_husk_to_event_name = false
+			}
 		},
 		dead = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_hits_armored",
-			},
-		},
+				append_husk_to_event_name = true
+			}
+		}
 	},
 	vfx = {},
 	linked_decal = {
@@ -151,9 +151,9 @@ local armored = {
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
-		damage_reduced = default_armor_decal,
+		damage_reduced = default_armor_decal
 	},
-	blood_ball = {},
+	blood_ball = {}
 }
 local super_armor = table.clone(armored)
 local disgustingly_resilient = table.clone(unarmored)
@@ -167,11 +167,11 @@ local surface_fx = {
 				{
 					normal_rotation = true,
 					effects = {
-						"content/fx/particles/impacts/surfaces/impact_snow_grenade",
-					},
-				},
-			},
-		},
+						"content/fx/particles/impacts/surfaces/impact_snow_grenade"
+					}
+				}
+			}
+		}
 	},
 	snow_frosty = {
 		[hit_types.stop] = {
@@ -179,26 +179,26 @@ local surface_fx = {
 				{
 					normal_rotation = true,
 					effects = {
-						"content/fx/particles/impacts/surfaces/impact_snow_grenade",
-					},
-				},
-			},
-		},
-	},
+						"content/fx/particles/impacts/surfaces/impact_snow_grenade"
+					}
+				}
+			}
+		}
+	}
 }
 local default_surface_fx = {
 	[hit_types.stop] = {
 		sfx = {
 			{
+				group = "surface_material",
 				append_husk_to_event_name = true,
 				event = "wwise/events/weapon/play_grenade_surface_impact_large",
-				group = "surface_material",
-				normal_rotation = true,
-			},
-		},
+				normal_rotation = true
+			}
+		}
 	},
 	[hit_types.penetration_entry] = nil,
-	[hit_types.penetration_exit] = nil,
+	[hit_types.penetration_exit] = nil
 }
 
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
@@ -211,7 +211,7 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
+		[armor_types.unarmored] = unarmored
 	},
-	surface = surface_fx,
+	surface = surface_fx
 }

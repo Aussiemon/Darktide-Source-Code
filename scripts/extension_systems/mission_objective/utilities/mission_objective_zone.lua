@@ -107,7 +107,7 @@ MissionObjectiveZone.set_go_to_marker = function (self, unit)
 	if unit then
 		if not self._override_marked_units or not self._override_marked_units[unit] then
 			self._override_marked_units = {
-				unit,
+				unit
 			}
 			self._override_marked_units[unit] = true
 		end

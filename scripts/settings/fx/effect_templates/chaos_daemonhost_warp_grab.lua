@@ -12,7 +12,7 @@ local resources = {
 	hit_particle_name = HIT_PARTICLE_NAME,
 	grab_particle_name = GRAB_FX_PARTICLE_NAME,
 	beam_sound_event = HIT_WWISE_EVENT,
-	stop_beam_sound_event = HIT_WWISE_STOP_EVENT,
+	stop_beam_sound_event = HIT_WWISE_STOP_EVENT
 }
 local effect_template = {
 	name = "chaos_daemonhost_warp_grab",
@@ -65,7 +65,7 @@ local effect_template = {
 			WwiseWorld.trigger_resource_event(wwise_world, HIT_WWISE_STOP_EVENT, source_id)
 			WwiseWorld.destroy_manual_source(wwise_world, source_id)
 		end
-	end,
+	end
 }
 
 function _start_fx(target_unit, template_data, template_context)

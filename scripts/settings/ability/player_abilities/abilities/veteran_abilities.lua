@@ -5,61 +5,61 @@ local shock_trooper_talent_settings = TalentSettings.veteran_1
 local ranger_talent_settings = TalentSettings.veteran_2
 local squad_leader_talent_settings = TalentSettings.veteran_3
 local base_ability = {
+	required_weapon_type = "ranged",
 	ability_group = "veteran_combat_ability",
+	stat_buff = "ability_extra_charges",
+	hud_icon = "content/ui/textures/icons/abilities/hud/veteran/veteran_ability_volley_fire",
 	ability_template = "veteran_combat_ability",
 	ability_type = "combat_ability",
-	hud_icon = "content/ui/textures/icons/abilities/hud/veteran/veteran_ability_volley_fire",
 	icon = "content/ui/materials/icons/abilities/ultimate/default",
-	required_weapon_type = "ranged",
-	stat_buff = "ability_extra_charges",
 	cooldown = ranger_talent_settings.combat_ability.cooldown,
 	max_charges = ranger_talent_settings.combat_ability.max_charges,
 	archetypes = {
-		"veteran",
+		"veteran"
 	},
 	ability_template_tweak_data = {
-		class_tag = "base",
+		class_tag = "base"
 	},
 	pause_cooldown_settings = {
 		pause_fulfilled_func = function (context)
 			return true
-		end,
-	},
+		end
+	}
 }
 local abilities = {
 	veteran_frag_grenade = {
 		ability_type = "grenade_ability",
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		inventory_item_name = "content/items/weapons/player/grenade_frag",
 		stat_buff = "extra_max_amount_of_grenades",
+		inventory_item_name = "content/items/weapons/player/grenade_frag",
+		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = ranger_talent_settings.grenade.max_charges,
 		archetypes = {
-			"veteran",
-		},
+			"veteran"
+		}
 	},
 	veteran_smoke_grenade = {
 		ability_type = "grenade_ability",
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		inventory_item_name = "content/items/weapons/player/grenade_smoke",
 		stat_buff = "extra_max_amount_of_grenades",
+		inventory_item_name = "content/items/weapons/player/grenade_smoke",
+		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = shock_trooper_talent_settings.grenade.max_charges,
 		archetypes = {
-			"veteran",
-		},
+			"veteran"
+		}
 	},
 	veteran_krak_grenade = {
 		ability_type = "grenade_ability",
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		inventory_item_name = "content/items/weapons/player/grenade_krak",
 		stat_buff = "extra_max_amount_of_grenades",
+		inventory_item_name = "content/items/weapons/player/grenade_krak",
+		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = squad_leader_talent_settings.grenade.max_charges,
 		archetypes = {
-			"veteran",
-		},
-	},
+			"veteran"
+		}
+	}
 }
 
 abilities.veteran_combat_ability_stance = table.clone(base_ability)

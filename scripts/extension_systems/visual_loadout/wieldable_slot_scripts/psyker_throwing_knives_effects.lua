@@ -12,7 +12,7 @@ local ATTACHMENT_NAMES = {
 	"shard_01",
 	"shard_02",
 	"shard_03",
-	"shard_04",
+	"shard_04"
 }
 local _external_properties = {}
 local PsykerThrowingKnivesEffects = class("PsykerThrowingKnivesEffects")
@@ -208,7 +208,7 @@ function _components(destination, destination_lookup, attachments, attachment_na
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component,
+				component = component
 			}
 
 			destination[#destination + 1] = data

@@ -21,27 +21,27 @@ local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings"
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local _MISSION_DUMMY_DATA = {
 	{
-		category = "narrative",
-		challenge = 2,
-		credits = 4180,
-		displayIndex = 13,
-		duration = 86399.999,
-		expiry = 1734040259999,
-		expiry_game_time = 49467.13009181449,
-		expiry_server_time = 1734040259999,
-		id = "d1ef6cd9-bf5e-439b-b234-a8da5e5dbc39",
 		map = "psykhanium",
-		missionGiver = "explicator_a",
-		missionSize = 1,
+		start_server_time = 1733953860000,
 		mission_reward = 4180,
-		mission_xp = 2000,
-		requiredLevel = 1,
-		required_level = 1,
-		resistance = 2,
-		start = 1733953860000,
-		start_game_time = -36932.86890818551,
-		start_server_time = 1733953860000,
+		displayIndex = 13,
+		credits = 4180,
 		xp = 2000,
+		expiry_game_time = 49467.13009181449,
+		challenge = 2,
+		expiry_server_time = 1734040259999,
+		start = 1733953860000,
+		expiry = 1734040259999,
+		start_game_time = -36932.86890818551,
+		requiredLevel = 1,
+		missionSize = 1,
+		missionGiver = "explicator_a",
+		resistance = 2,
+		duration = 86399.999,
+		required_level = 1,
+		category = "narrative",
+		id = "d1ef6cd9-bf5e-439b-b234-a8da5e5dbc39",
+		mission_xp = 2000,
 		flags = {},
 		book = {},
 		page = {},
@@ -50,30 +50,30 @@ local _MISSION_DUMMY_DATA = {
 		activate_twins = {},
 		chapter = {},
 		extraRewards = {},
-		layout_seed = math.random_seed(),
+		layout_seed = math.random_seed()
 	},
 	{
-		category = "narrative",
-		challenge = 3,
-		credits = 7440,
-		displayIndex = 4,
-		duration = 86399.999,
-		expiry = 1734040259999,
-		expiry_game_time = 49467.13009181449,
-		expiry_server_time = 1734040259999,
-		id = "06efd4c7-66a2-42bb-befe-5e4a06fd3e68",
 		map = "psykhanium",
-		missionGiver = "explicator_a",
-		missionSize = 1,
+		start_server_time = 1733953860000,
 		mission_reward = 7440,
-		mission_xp = 3100,
-		requiredLevel = 3,
 		required_level = 3,
-		resistance = 3,
-		start = 1733953860000,
-		start_game_time = -36932.86890818551,
-		start_server_time = 1733953860000,
+		displayIndex = 4,
+		credits = 7440,
 		xp = 3100,
+		expiry_game_time = 49467.13009181449,
+		challenge = 3,
+		expiry_server_time = 1734040259999,
+		start = 1733953860000,
+		expiry = 1734040259999,
+		start_game_time = -36932.86890818551,
+		requiredLevel = 3,
+		missionSize = 1,
+		missionGiver = "explicator_a",
+		resistance = 3,
+		duration = 86399.999,
+		category = "narrative",
+		id = "06efd4c7-66a2-42bb-befe-5e4a06fd3e68",
+		mission_xp = 3100,
 		flags = {},
 		book = {},
 		page = {},
@@ -81,30 +81,30 @@ local _MISSION_DUMMY_DATA = {
 		altered = {},
 		activate_twins = {},
 		chapter = {},
-		extraRewards = {},
+		extraRewards = {}
 	},
 	{
-		category = "narrative",
-		challenge = 4,
-		credits = 14820,
-		displayIndex = 10,
-		duration = 86399.999,
-		expiry = 1734040259999,
-		expiry_game_time = 49467.13009181449,
-		expiry_server_time = 1734040259999,
-		id = "6279669c-3b01-490e-80d2-a225b5addd36",
 		map = "psykhanium",
-		missionGiver = "explicator_a",
-		missionSize = 1,
+		start_server_time = 1733953860000,
 		mission_reward = 14820,
-		mission_xp = 4250,
-		requiredLevel = 9,
 		required_level = 9,
-		resistance = 4,
-		start = 1733953860000,
-		start_game_time = -36932.86890818551,
-		start_server_time = 1733953860000,
+		displayIndex = 10,
+		credits = 14820,
 		xp = 4250,
+		expiry_game_time = 49467.13009181449,
+		challenge = 4,
+		expiry_server_time = 1734040259999,
+		start = 1733953860000,
+		expiry = 1734040259999,
+		start_game_time = -36932.86890818551,
+		requiredLevel = 9,
+		missionSize = 1,
+		missionGiver = "explicator_a",
+		resistance = 4,
+		duration = 86399.999,
+		category = "narrative",
+		id = "6279669c-3b01-490e-80d2-a225b5addd36",
+		mission_xp = 4250,
 		flags = {},
 		book = {},
 		page = {},
@@ -112,30 +112,30 @@ local _MISSION_DUMMY_DATA = {
 		altered = {},
 		activate_twins = {},
 		chapter = {},
-		extraRewards = {},
+		extraRewards = {}
 	},
 	{
-		category = "narrative",
-		challenge = 5,
-		credits = 19950,
-		displayIndex = 30,
-		duration = 86399.999,
-		expiry = 1734040259999,
-		expiry_game_time = 49467.13009181449,
-		expiry_server_time = 1734040259999,
-		id = "5509473c-99d8-449c-b286-51e9f965af3c",
 		map = "psykhanium",
-		missionGiver = "explicator_a",
-		missionSize = 1,
-		mission_reward = 19950,
-		mission_xp = 5450,
-		requiredLevel = 15,
-		required_level = 15,
-		resistance = 4,
-		start = 1733953860000,
-		start_game_time = -36932.86890818551,
 		start_server_time = 1733953860000,
+		mission_reward = 19950,
+		required_level = 15,
+		displayIndex = 30,
+		credits = 19950,
 		xp = 5450,
+		expiry_game_time = 49467.13009181449,
+		challenge = 5,
+		expiry_server_time = 1734040259999,
+		start = 1733953860000,
+		expiry = 1734040259999,
+		start_game_time = -36932.86890818551,
+		requiredLevel = 15,
+		missionSize = 1,
+		missionGiver = "explicator_a",
+		resistance = 4,
+		duration = 86399.999,
+		category = "narrative",
+		id = "5509473c-99d8-449c-b286-51e9f965af3c",
+		mission_xp = 5450,
 		flags = {},
 		book = {},
 		page = {},
@@ -143,8 +143,39 @@ local _MISSION_DUMMY_DATA = {
 		altered = {},
 		activate_twins = {},
 		chapter = {},
-		extraRewards = {},
+		extraRewards = {}
 	},
+	{
+		map = "psykhanium",
+		start_server_time = 1733953860000,
+		mission_reward = 19950,
+		required_level = 15,
+		displayIndex = 30,
+		credits = 19950,
+		xp = 5450,
+		expiry_game_time = 49467.13009181449,
+		challenge = 5,
+		expiry_server_time = 1734040259999,
+		start = 1733953860000,
+		expiry = 1734040259999,
+		start_game_time = -36932.86890818551,
+		requiredLevel = 15,
+		missionSize = 1,
+		missionGiver = "explicator_a",
+		resistance = 5,
+		duration = 86399.999,
+		category = "narrative",
+		id = "5509473c-99d8-449c-b286-51e9f965dc5c",
+		mission_xp = 5450,
+		flags = {},
+		book = {},
+		page = {},
+		noqp = {},
+		altered = {},
+		activate_twins = {},
+		chapter = {},
+		extraRewards = {}
+	}
 }
 local HordePlayView = class("HordePlayView", "BaseView")
 
@@ -230,7 +261,6 @@ end
 
 HordePlayView._fetch_success = function (self, data)
 	local missions = data.missions
-	local num_mission_to_display = 4
 	local mission_difficulties_selected = {}
 	local num_mission_difficulties_selected = 0
 	local filtered_missions = {}
@@ -238,7 +268,7 @@ HordePlayView._fetch_success = function (self, data)
 	for _, mission in ipairs(missions) do
 		local difficulty_id = mission.challenge .. "-" .. mission.resistance
 
-		if mission.category == "horde" and not mission_difficulties_selected[difficulty_id] and Danger.calculate_danger(mission.challenge, mission.resistance) then
+		if mission.category == "horde" and not mission_difficulties_selected[difficulty_id] then
 			mission_difficulties_selected[difficulty_id] = true
 			num_mission_difficulties_selected = num_mission_difficulties_selected + 1
 			filtered_missions[#filtered_missions + 1] = mission
@@ -258,6 +288,7 @@ HordePlayView._fetch_success = function (self, data)
 
 	local option_widgets = {}
 	local num_missions_available = #self._missions
+	local num_mission_to_display = num_missions_available
 
 	if num_missions_available > 0 then
 		for i = 1, num_mission_to_display do
@@ -268,6 +299,11 @@ HordePlayView._fetch_success = function (self, data)
 			local widgets_by_name = self._widgets_by_name
 
 			option_widgets[i] = widgets_by_name["option_" .. i]
+
+			local danger = Danger.danger_by_difficulty(mission.challenge, mission.resistance)
+			local is_unlocked = Managers.data_service.mission_board:is_difficulty_unlocked(danger.name)
+
+			widgets_by_name["option_" .. i].content.hotspot.disabled = not is_unlocked
 		end
 	end
 
@@ -365,18 +401,8 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 
 	local danger_settings = Danger.danger_by_difficulty(data.challenge, data.resistance)
 	local danger_color = danger_settings.color
-
-	for i = 1, 5 do
-		local difficulty_style_id = "difficulty_box_" .. i
-		local color = style[difficulty_style_id].color
-
-		if i <= danger_settings.index then
-			local ignore_alpha = true
-
-			ColorUtilities.color_copy(danger_color, color, ignore_alpha)
-		end
-	end
-
+	local difficulty_icon_color = style.difficulty_icon.color
+	local ignore_alpha = false
 	local xp = data.xp
 	local credits = data.credits
 	local extraRewards = data.extraRewards.circumstance
@@ -387,12 +413,12 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 	local rewards = {
 		{
 			icon = "content/ui/materials/icons/currencies/credits_small",
-			amount = credits,
+			amount = credits
 		},
 		{
 			icon = "content/ui/materials/icons/currencies/experience_small",
-			amount = xp,
-		},
+			amount = xp
+		}
 	}
 	local ui_renderer = self:ui_renderer()
 	local reward_spacing = 15
@@ -416,7 +442,7 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local text_width = UIRenderer.text_size(ui_renderer, amount_text, text_style.font_type, text_style.font_size, {
 			400,
-			30,
+			30
 		}, text_options)
 
 		text_style.offset[1] = text_style.default_offset[1] - total_reward_horizontal_offset
@@ -426,6 +452,7 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 	local display_name = danger_settings.display_name
 
 	content.title_text = Localize(display_name)
+	content.difficulty_icon = danger_settings.icon
 end
 
 HordePlayView._set_selected_mission = function (self, mission)
@@ -520,7 +547,7 @@ HordePlayView.draw = function (self, dt, t, input_service, layer)
 end
 
 local _required_level_loc_table = {
-	required_level = -1,
+	required_level = -1
 }
 
 HordePlayView._update_can_start_mission = function (self)
@@ -628,7 +655,7 @@ HordePlayView._handle_input = function (self, input_service, dt, t)
 				new_index = math.min(selected_mission_index + 1, num_options)
 			end
 
-			if new_index and new_index ~= selected_mission_index then
+			if new_index and new_index ~= selected_mission_index and not self._option_widgets[new_index].content.hotspot.disabled then
 				self:_set_selected_option(new_index)
 			end
 		end
@@ -669,16 +696,16 @@ end
 
 HordePlayView._callback_open_options = function (self, region_data)
 	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
-		on_destroy_callback = callback(self, "_callback_close_options"),
+		on_destroy_callback = callback(self, "_callback_close_options")
 	})
 
 	local regions_latency = self._regions_latency
 	local presentation_data = {
 		{
+			widget_type = "dropdown",
 			display_name = "loc_mission_board_view_options_Matchmaking_Location",
 			id = "region_matchmaking",
 			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
-			widget_type = "dropdown",
 			validation_function = function ()
 				return
 			end,
@@ -717,7 +744,7 @@ HordePlayView._callback_open_options = function (self, region_data)
 						display_name = region_display_name,
 						ignore_localization = ignore_localization,
 						value = region_name,
-						latency_order = latency_data.min_latency,
+						latency_order = latency_data.min_latency
 					}
 				end
 
@@ -729,11 +756,11 @@ HordePlayView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				BackendUtilities.prefered_mission_region = value
-			end,
+			end
 		},
 		{
-			display_name = "loc_private_tag_name",
 			id = "private_match",
+			display_name = "loc_private_tag_name",
 			tooltip_text = "loc_mission_board_view_options_private_game_desc",
 			widget_type = "checkbox",
 			start_value = self._private_match,
@@ -745,8 +772,8 @@ HordePlayView._callback_open_options = function (self, region_data)
 			end,
 			on_changed = function (value)
 				self:_callback_toggle_private_matchmaking()
-			end,
-		},
+			end
+		}
 	}
 
 	self._mission_board_options:present(presentation_data)

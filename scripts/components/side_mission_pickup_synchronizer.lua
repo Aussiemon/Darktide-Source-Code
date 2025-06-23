@@ -34,13 +34,13 @@ end
 
 SideMissionPickupSynchronizer.component_data = {
 	automatic_start = {
-		ui_name = "Auto Start On Level Spawned",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Auto Start On Level Spawned"
 	},
 	extensions = {
-		"SideMissionPickupSynchronizerExtension",
-	},
+		"SideMissionPickupSynchronizerExtension"
+	}
 }
 
 return SideMissionPickupSynchronizer

@@ -8,19 +8,19 @@ local panel_size = UIWorkspaceSettings.top_panel.size
 local scenegraph_definition = {
 	bottom_panel = UIWorkspaceSettings.bottom_panel,
 	entry_pivot = {
-		horizontal_alignment = "left",
-		parent = "bottom_panel",
 		vertical_alignment = "center",
+		parent = "bottom_panel",
+		horizontal_alignment = "left",
 		size = {
 			0,
-			button_size[2],
+			button_size[2]
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {
 	bottom_panel = UIWidget.create_definition({
@@ -30,20 +30,20 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "bottom_panel"),
+					0
+				}
+			}
+		}
+	}, "bottom_panel")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

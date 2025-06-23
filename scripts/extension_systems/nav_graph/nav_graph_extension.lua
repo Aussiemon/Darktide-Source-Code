@@ -38,7 +38,7 @@ local NAV_GRAPH_POINTS = {}
 local SLOT_COUNT = 1
 local OCCUPIED_COST = 2
 local REGISTER_FOR_CROWD_DISPERSION = {
-	teleporters = false,
+	teleporters = false
 }
 
 NavGraphExtension._create_nav_graphs = function (self)

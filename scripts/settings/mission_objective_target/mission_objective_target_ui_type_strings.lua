@@ -7,7 +7,7 @@ local mission_objective_target_ui_type_strings = {
 	"escort",
 	"resupply",
 	"scanning",
-	"kill",
+	"kill"
 }
 
 return mission_objective_target_ui_type_strings

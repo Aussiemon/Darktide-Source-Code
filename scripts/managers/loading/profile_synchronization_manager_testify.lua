@@ -25,7 +25,7 @@ local ProfileSynchronizationManagerTestify = {
 				connection_manager:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 		end)
-	end,
+	end
 }
 
 return ProfileSynchronizationManagerTestify

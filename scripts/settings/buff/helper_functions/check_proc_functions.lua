@@ -17,7 +17,7 @@ local _is_within_close_distance
 
 CheckProcFunctions.all = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -33,7 +33,7 @@ end
 
 CheckProcFunctions.any = function (...)
 	local conditions = {
-		...,
+		...
 	}
 
 	return function (...)
@@ -481,7 +481,18 @@ end
 CheckProcFunctions.on_staggering_hit = function (params, template_data, template_context, t)
 	local stagger_result = params.stagger_result
 
-	return stagger_result == stagger_results.stagger
+	if stagger_result == stagger_results.stagger then
+		return true
+	end
+
+	local talent_extension = ScriptUnit.has_extension(template_context.unit, "talent_system")
+	local melee_weakspot_count_as_staggered = talent_extension and talent_extension:has_special_rule("adamant_melee_weakspots_count_as_staggered")
+
+	if melee_weakspot_count_as_staggered and CheckProcFunctions.on_weakspot_hit_melee(params, template_data, template_context, t) then
+		return true
+	end
+
+	return false
 end
 
 CheckProcFunctions.on_staggered_kill = function (params, template_data, template_context, t)
@@ -548,6 +559,28 @@ end
 
 CheckProcFunctions.hit_has_charge_level = function (params, template_data, template_context, t)
 	return params.charge_level ~= nil
+end
+
+CheckProcFunctions.attacker_is_my_companion = function (params, template_data, template_context, t)
+	local breed_name = params.attack_instigator_unit_breed_name
+	local breed = breed_name and Breeds[breed_name]
+	local is_companion = Breed.is_companion(breed)
+
+	if not is_companion then
+		return false
+	end
+
+	local attack_instigator_unit = params.attack_instigator_unit
+	local owner = Managers.state.player_unit_spawn:owner(attack_instigator_unit)
+
+	if not owner then
+		return false
+	end
+
+	local player_unit = owner.player_unit
+	local unit = template_context.unit
+
+	return player_unit == unit
 end
 
 CheckProcFunctions.would_die = function (params, template_data, template_context, t)

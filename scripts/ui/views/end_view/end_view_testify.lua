@@ -11,7 +11,7 @@ local EndViewTestify = {
 
 			return
 		end
-	end,
+	end
 }
 
 return EndViewTestify

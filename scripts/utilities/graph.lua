@@ -17,7 +17,7 @@ Graph.add_node = function (self, value)
 
 	if not nodes[value] then
 		nodes[value] = {
-			adjacency_nodes = {},
+			adjacency_nodes = {}
 		}
 	end
 end

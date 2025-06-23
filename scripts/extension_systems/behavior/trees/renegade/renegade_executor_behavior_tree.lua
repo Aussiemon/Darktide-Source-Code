@@ -7,132 +7,132 @@ local MELEE_COMBAT = {
 	{
 		"BtMeleeFollowTargetAction",
 		name = "follow",
-		action_data = action_data.follow,
+		action_data = action_data.follow
 	},
 	{
 		"BtMeleeAttackAction",
-		condition = "attack_allowed",
 		name = "melee_attack",
-		condition_args = {
-			attack_type = "melee",
-		},
-		action_data = action_data.melee_attack,
-	},
-	{
-		"BtMeleeAttackAction",
 		condition = "attack_allowed",
+		condition_args = {
+			attack_type = "melee"
+		},
+		action_data = action_data.melee_attack
+	},
+	{
+		"BtMeleeAttackAction",
 		name = "melee_cleave_attack",
+		condition = "attack_allowed",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_cleave_attack,
+		action_data = action_data.melee_cleave_attack
 	},
 	{
 		"BtMeleeAttackAction",
-		condition = "moving_attack_allowed",
 		name = "moving_melee_attack",
+		condition = "moving_attack_allowed",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.moving_melee_attack,
+		action_data = action_data.moving_melee_attack
 	},
 	{
 		"BtMeleeAttackAction",
-		condition = "moving_attack_allowed",
 		name = "moving_melee_cleave_attack",
+		condition = "moving_attack_allowed",
 		condition_args = {
-			attack_type = "moving_melee",
+			attack_type = "moving_melee"
 		},
-		action_data = action_data.moving_melee_cleave_attack,
+		action_data = action_data.moving_melee_cleave_attack
 	},
 	condition = "is_aggroed",
-	name = "melee_combat",
+	name = "melee_combat"
 }
 local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
-		action_data = action_data.death,
+		condition = "is_dead",
+		action_data = action_data.death
 	},
 	{
 		"BtDisableAction",
-		condition = "is_minion_disabled",
 		name = "disable",
-		action_data = action_data.disable,
+		condition = "is_minion_disabled",
+		action_data = action_data.disable
 	},
 	{
 		"BtExitSpawnerAction",
-		condition = "is_exiting_spawner",
 		name = "exit_spawner",
-		action_data = action_data.exit_spawner,
+		condition = "is_exiting_spawner",
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
-			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			condition = "at_climb_smart_object",
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
-			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			condition = "at_jump_smart_object",
+			action_data = action_data.jump_across
 		},
 		{
 			"BtOpenDoorAction",
-			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			condition = "at_door_smart_object",
+			action_data = action_data.open_door
 		},
 		{
 			"BtSmashObstacleAction",
-			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			condition = "at_smashable_obstacle_smart_object",
+			action_data = action_data.smash_obstacle
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
-		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		condition = "is_staggered",
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
-		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		condition = "is_blocked",
+		action_data = action_data.blocked
 	},
 	MELEE_COMBAT,
 	{
 		"BtAlertedAction",
-		condition = "is_alerted",
 		name = "alerted",
-		action_data = action_data.alerted,
+		condition = "is_alerted",
+		action_data = action_data.alerted
 	},
 	{
 		"BtPatrolAction",
-		condition = "should_patrol",
 		name = "patrol",
-		action_data = action_data.patrol,
+		condition = "should_patrol",
+		action_data = action_data.patrol
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "renegade_executor",
+	name = "renegade_executor"
 }
 
 return behavior_tree

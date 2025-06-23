@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/extension_systems/mission_objective_zone_scannable/mission_objective_zone_scannable_extension.lua
 
-local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local MissionObjectiveZoneScannableExtension = class("MissionObjectiveZoneScannableExtension")
 
 MissionObjectiveZoneScannableExtension.init = function (self, extension_init_context, unit, extension_init_data)
@@ -17,11 +16,11 @@ MissionObjectiveZoneScannableExtension.init = function (self, extension_init_con
 	self._has_highlight = false
 end
 
-MissionObjectiveZoneScannableExtension.on_gameplay_post_init = function (self, level)
+MissionObjectiveZoneScannableExtension.on_gameplay_post_init = function (self, unit)
 	if self._is_server then
 		local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 
-		mission_objective_zone_system:register_scannable_unit(self._unit)
+		mission_objective_zone_system:register_scannable_unit(unit)
 	end
 end
 

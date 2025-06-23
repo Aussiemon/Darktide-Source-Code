@@ -7,7 +7,7 @@ local MinionFxExtension = class("MinionFxExtension")
 local CLIENT_RPCS = {
 	"rpc_trigger_minion_inventory_wwise_event",
 	"rpc_trigger_minion_inventory_vfx",
-	"rpc_trigger_minion_fx_line",
+	"rpc_trigger_minion_fx_line"
 }
 
 MinionFxExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -17,6 +17,8 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
 	self._unit = unit
+	self._breed = extension_init_data.breed
+	self._sources = {}
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
@@ -26,6 +28,14 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 
 		network_event_delegate:register_session_unit_events(self, nil_or_game_object_id, unpack(CLIENT_RPCS))
 	end
+
+	local base_unit_sound_sources = self._breed.base_unit_sound_sources
+
+	if base_unit_sound_sources then
+		for source_name, node_name in pairs(base_unit_sound_sources) do
+			self:register_sound_source(source_name, unit, node_name)
+		end
+	end
 end
 
 MinionFxExtension.extensions_ready = function (self, world, unit)
@@ -33,7 +43,7 @@ MinionFxExtension.extensions_ready = function (self, world, unit)
 end
 
 local ALWAYS_TARGET_BREEDS = {
-	renegade_sniper = true,
+	renegade_sniper = true
 }
 
 MinionFxExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -46,9 +56,21 @@ MinionFxExtension.game_object_initialized = function (self, game_session, game_o
 	end
 end
 
+MinionFxExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	return
+end
+
 MinionFxExtension.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(CLIENT_RPCS))
+	end
+
+	local base_unit_sound_sources = self._breed.base_unit_sound_sources
+
+	if base_unit_sound_sources then
+		for source_name, node_name in pairs(base_unit_sound_sources) do
+			self:unregister_sound_source(source_name)
+		end
 	end
 end
 
@@ -220,6 +242,30 @@ MinionFxExtension.rpc_trigger_minion_fx_line = function (self, channel_id, game_
 	local fx_source_name = NetworkLookup.minion_fx_source_names[fx_source_name_id]
 
 	self:_trigger_unit_line_fx(line_effect, inventory_slot_name, fx_source_name, end_position)
+end
+
+MinionFxExtension.sound_source = function (self, source_name)
+	local sources = self._sources
+
+	return sources[source_name]
+end
+
+MinionFxExtension.register_sound_source = function (self, source_name, parent_unit, optional_node_name)
+	local sources = self._sources
+	local wwise_world = self._wwise_world
+	local fx_node_name = Unit.node(parent_unit, optional_node_name)
+	local source_id = WwiseWorld.make_manual_source(wwise_world, parent_unit, fx_node_name)
+
+	sources[source_name] = source_id
+end
+
+MinionFxExtension.unregister_sound_source = function (self, source_name)
+	local sources = self._sources
+	local wwise_world = self._wwise_world
+
+	WwiseWorld.destroy_manual_source(wwise_world, sources[source_name])
+
+	sources[source_name] = nil
 end
 
 return MinionFxExtension

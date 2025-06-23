@@ -21,7 +21,7 @@ roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_po
 		if position_on_navmesh then
 			local roamer_slot = {
 				position = Vector3Box(position_on_navmesh),
-				rotation = QuaternionBox(Quaternion.look(-random_direction)),
+				rotation = QuaternionBox(Quaternion.look(-random_direction))
 			}
 
 			roamer_slots[#roamer_slots + 1] = roamer_slot
@@ -40,7 +40,7 @@ roamer_slot_placement_functions.circle_placement = function (nav_world, spawn_po
 		if position_on_navmesh then
 			local roamer_slot = {
 				position = Vector3Box(position_on_navmesh),
-				rotation = QuaternionBox(Quaternion.look(-direction)),
+				rotation = QuaternionBox(Quaternion.look(-direction))
 			}
 
 			roamer_slots[#roamer_slots + 1] = roamer_slot
@@ -78,7 +78,7 @@ roamer_slot_placement_functions.random_circle_placement = function (nav_world, s
 				local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 				local roamer_slot = {
 					position = Vector3Box(position_on_navmesh),
-					rotation = QuaternionBox(Quaternion.look(random_direction)),
+					rotation = QuaternionBox(Quaternion.look(random_direction))
 				}
 
 				roamer_slots[#roamer_slots + 1] = roamer_slot
@@ -104,7 +104,7 @@ roamer_slot_placement_functions.flood_fill = function (nav_world, spawn_position
 		local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 		local roamer_slot = {
 			position = Vector3Box(position),
-			rotation = QuaternionBox(Quaternion.look(random_direction)),
+			rotation = QuaternionBox(Quaternion.look(random_direction))
 		}
 
 		roamer_slots[#roamer_slots + 1] = roamer_slot

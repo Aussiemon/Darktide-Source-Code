@@ -22,7 +22,7 @@ DataServiceBackendCache.get_data = function (self, cache_key, backend_func)
 
 		Log.error(self._name, err)
 		promise:reject({
-			error = string.format("[%s] %s", self._name, err),
+			error = string.format("[%s] %s", self._name, err)
 		})
 	elseif self._cached_data[cache_key] then
 		promise:resolve(self._cached_data[cache_key])
@@ -53,7 +53,7 @@ DataServiceBackendCache._fetch_backend_data = function (self, cache_key, backend
 
 	self._backend_requests[cache_key] = {
 		promise = backend_promise,
-		backend_func = backend_func,
+		backend_func = backend_func
 	}
 
 	backend_promise:next(function (result)

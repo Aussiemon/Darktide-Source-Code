@@ -5,9 +5,9 @@ local CAPTURE_PROMISE_DEBUG_DATA = true
 local queue = {}
 local State = {
 	CANCELED = "canceled",
-	FULFILLED = "fulfilled",
-	PENDING = "pending",
 	REJECTED = "rejected",
+	FULFILLED = "fulfilled",
+	PENDING = "pending"
 }
 
 local function passthrough(x)
@@ -83,7 +83,7 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
 		debug_traceback_info_1 = getinfo(2, "Sl"),
-		debug_traceback_info_2 = getinfo(3, "Sl"),
+		debug_traceback_info_2 = getinfo(3, "Sl")
 	})
 	run(self)
 
@@ -180,7 +180,7 @@ function resolve(promise, x)
 		if not type(err) ~= "table" then
 			err = {
 				fatal = true,
-				message = err,
+				message = err
 			}
 		end
 
@@ -230,7 +230,7 @@ function run(promise)
 				if type(err) ~= "table" then
 					err = {
 						fatal = true,
-						message = err,
+						message = err
 					}
 				end
 
@@ -345,7 +345,7 @@ end
 
 Promise.all = function (...)
 	local promises = {
-		...,
+		...
 	}
 	local results = {}
 	local state = State.FULFILLED
@@ -382,7 +382,7 @@ end
 
 Promise.race = function (...)
 	local promises = {
-		...,
+		...
 	}
 	local promise = Promise.new()
 
@@ -462,7 +462,7 @@ Promise.delay = function (delta)
 
 	table.insert(delayed, {
 		promise = promise,
-		time = latest_time + delta,
+		time = latest_time + delta
 	})
 
 	return promise
@@ -484,7 +484,7 @@ Promise.until_value_is_true = function (predicate)
 	table.insert(predicates, {
 		promise = promise,
 		predicate = predicate,
-		result = {},
+		result = {}
 	})
 
 	return promise

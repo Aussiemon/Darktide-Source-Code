@@ -1,10 +1,10 @@
 ﻿-- chunkname: @scripts/game_states/game/state_main_menu_testify.lua
 
 local temp_archetype_to_specialization_lookup = {
-	ogryn = "ogryn_2",
-	psyker = "psyker_2",
 	veteran = "veteran_2",
+	psyker = "psyker_2",
 	zealot = "zealot_2",
+	ogryn = "ogryn_2"
 }
 local StateMainMenuTestify = {
 	create_character_by_archetype_and_gender = function (state_main_menu, archetype_name, gender)
@@ -56,7 +56,7 @@ local StateMainMenuTestify = {
 		if player_profile and not Managers.narrative:is_narrative_loaded_for_player_character() then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return StateMainMenuTestify

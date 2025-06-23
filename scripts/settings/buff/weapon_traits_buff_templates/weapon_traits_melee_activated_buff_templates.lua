@@ -12,10 +12,10 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_damage_taken = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.8,
+		[stat_buffs.damage_taken_multiplier] = 0.8
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -23,13 +23,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_damage
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_crit_chance = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.1,
+		[stat_buffs.critical_strike_chance] = 0.1
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -37,13 +37,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_cri
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_impact = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = 0.5,
+		[stat_buffs.melee_impact_modifier] = 0.5
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -51,13 +51,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_imp
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_attack = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.melee_damage] = 0.2,
+		[stat_buffs.melee_damage] = 0.2
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -65,13 +65,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_att
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_movement_speed = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.movement_speed] = 0.15,
+		[stat_buffs.movement_speed] = 0.15
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -79,13 +79,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increased_mov
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_corruption_taken = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.corruption_taken_multiplier] = 0.66,
+		[stat_buffs.corruption_taken_multiplier] = 0.66
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -93,13 +93,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_corrup
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_toughness_taken = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = 0.66,
+		[stat_buffs.toughness_damage_taken_modifier] = 0.66
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -107,13 +107,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_reduce_toughn
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_finesse_bonus = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.finesse_modifier_bonus] = 0.2,
+		[stat_buffs.finesse_modifier_bonus] = 0.2
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -121,13 +121,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_finesse_bonus
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_unarmored = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.unarmored_damage] = 0.4,
+		[stat_buffs.unarmored_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -135,13 +135,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_armored = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.armored_damage] = 0.4,
+		[stat_buffs.armored_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -149,13 +149,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_resistant = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.resistant_damage] = 0.4,
+		[stat_buffs.resistant_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -163,13 +163,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_berserker = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.berserker_damage] = 0.4,
+		[stat_buffs.berserker_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -177,13 +177,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_super_armor = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.super_armor_damage] = 0.4,
+		[stat_buffs.super_armor_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -191,13 +191,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_damage_vs_disgustingly_resilient = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.disgustingly_resilient_damage] = 0.4,
+		[stat_buffs.disgustingly_resilient_damage] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -205,13 +205,13 @@ templates.weapon_trait_melee_activated_wield_during_weapon_special_increase_dama
 		end
 
 		return ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_impact_of_next_attack = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_weapon_special_activate] = 1,
+		[proc_events.on_weapon_special_activate] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context)
@@ -221,17 +221,17 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_impact_o
 		local t = FixedFrame.get_latest_fixed_time()
 
 		buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_impact_of_next_attack_buff = {
-	class_name = "proc_buff",
-	predicted = false,
 	unique_buff_id = "weapon_trait_melee_activated_wield_on_weapon_special_increase_impact_of_next_attack_buff",
+	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = 0.5,
+		[stat_buffs.melee_impact_modifier] = 0.5
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finished = true
@@ -240,13 +240,13 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_impact_o
 		local special_inactive = not ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
 
 		return template_data.finished or special_inactive
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_of_next_attack = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_weapon_special_activate] = 1,
+		[proc_events.on_weapon_special_activate] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	proc_func = function (params, template_data, template_context)
@@ -256,17 +256,17 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_o
 		local t = FixedFrame.get_latest_fixed_time()
 
 		buff_extension:add_internally_controlled_buff(buff_to_add, t, "item_slot_name", template_context.item_slot_name)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_of_next_attack_buff = {
-	class_name = "proc_buff",
-	predicted = false,
 	unique_buff_id = "weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_of_next_attack_buff",
+	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 0.3,
+		[stat_buffs.melee_damage] = 0.3
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finished = true
@@ -275,65 +275,65 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_increase_attack_o
 		local special_inactive = not ConditionalFunctions.melee_weapon_special_active(template_data, template_context)
 
 		return template_data.finished or special_inactive
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_increase_attack = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = 0.3,
+		[stat_buffs.melee_damage] = 0.3
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
+	check_proc_func = CheckProcFunctions.on_weapon_special_kill
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_increase_impact = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = 0.5,
+		[stat_buffs.melee_impact_modifier] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
+	check_proc_func = CheckProcFunctions.on_weapon_special_kill
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_reduce_toughness_damage_taken = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	proc_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = 0.66,
+		[stat_buffs.toughness_damage_taken_modifier] = 0.66
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
+	check_proc_func = CheckProcFunctions.on_weapon_special_kill
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_increase_finesse_modifier_bonus = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	proc_stat_buffs = {
-		[stat_buffs.finesse_modifier_bonus] = 0.33,
+		[stat_buffs.finesse_modifier_bonus] = 0.33
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
+	check_proc_func = CheckProcFunctions.on_weapon_special_kill
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_replenish_toughness = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
@@ -342,13 +342,13 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_re
 		local percentage = 0.25
 
 		Toughness.replenish_percentage(unit, percentage)
-	end,
+	end
 }
 templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_remove_corruption = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 0.33,
+		[proc_events.on_kill] = 0.33
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_weapon_special_kill,
@@ -358,7 +358,7 @@ templates.weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_re
 		local corruption_value = 25
 
 		health_extension:reduce_permanent_damage(corruption_value)
-	end,
+	end
 }
 
 return templates

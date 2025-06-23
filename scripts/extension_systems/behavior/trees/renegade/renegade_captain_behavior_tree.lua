@@ -5,12 +5,12 @@ local action_data = BreedActions.renegade_captain
 local HELLGUN = {
 	"BtRandomUtilityNode",
 	condition_args = {
-		slot_name = "slot_hellgun",
+		slot_name = "slot_hellgun"
 	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
-		action_data = action_data.ranged_follow,
+		action_data = action_data.ranged_follow
 	},
 	{
 		"BtShootAction",
@@ -19,17 +19,17 @@ local HELLGUN = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
 	{
 		"BtShootAction",
@@ -38,32 +38,32 @@ local HELLGUN = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
-	condition = "slot_wielded",
 	name = "hellgun_combat",
+	condition = "slot_wielded"
 }
 local NETGUN = {
 	"BtSelectorNode",
 	condition_args = {
-		slot_name = "slot_netgun",
+		slot_name = "slot_netgun"
 	},
 	{
 		"BtSequenceNode",
 		{
 			"BtRenegadeNetgunnerApproachAction",
 			name = "approach_target",
-			action_data = action_data.approach_target,
+			action_data = action_data.approach_target
 		},
 		{
 			"BtShootNetAction",
@@ -72,27 +72,27 @@ local NETGUN = {
 			leave_hook = {
 				hook = "set_component_value",
 				args = {
-					component_name = "phase",
-					field = "force_next_phase",
 					value = true,
-				},
-			},
+					field = "force_next_phase",
+					component_name = "phase"
+				}
+			}
 		},
 		condition = "can_shoot_net",
-		name = "net_sequence_far",
+		name = "net_sequence_far"
 	},
-	condition = "slot_wielded",
 	name = "netgun_combat",
+	condition = "slot_wielded"
 }
 local BOLT_PISTOL = {
 	"BtRandomUtilityNode",
 	condition_args = {
-		slot_name = "slot_bolt_pistol",
+		slot_name = "slot_bolt_pistol"
 	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
-		action_data = action_data.ranged_follow,
+		action_data = action_data.ranged_follow
 	},
 	{
 		"BtShootAction",
@@ -101,30 +101,30 @@ local BOLT_PISTOL = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
-	condition = "slot_wielded",
 	name = "bolt_pistol_combat",
+	condition = "slot_wielded"
 }
 local PLASMA_PISTOL = {
 	"BtRandomUtilityNode",
 	condition_args = {
-		slot_name = "slot_plasma_pistol",
+		slot_name = "slot_plasma_pistol"
 	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
-		action_data = action_data.ranged_follow,
+		action_data = action_data.ranged_follow
 	},
 	{
 		"BtShootAction",
@@ -133,17 +133,17 @@ local PLASMA_PISTOL = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
 	{
 		"BtShootAction",
@@ -152,30 +152,30 @@ local PLASMA_PISTOL = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
-	condition = "slot_wielded",
 	name = "plasma_pistol_combat",
+	condition = "slot_wielded"
 }
 local SHOTGUN = {
 	"BtRandomUtilityNode",
 	condition_args = {
-		slot_name = "slot_shotgun",
+		slot_name = "slot_shotgun"
 	},
 	{
 		"BtRangedFollowTargetAction",
 		name = "ranged_follow",
-		action_data = action_data.ranged_follow,
+		action_data = action_data.ranged_follow
 	},
 	{
 		"BtShootAction",
@@ -184,32 +184,32 @@ local SHOTGUN = {
 		enter_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = true,
-			},
+				field = "is_blocking_captain_special_actions"
+			}
 		},
 		leave_hook = {
 			hook = "set_scratchpad_value",
 			args = {
-				field = "is_blocking_captain_special_actions",
 				value = false,
-			},
-		},
+				field = "is_blocking_captain_special_actions"
+			}
+		}
 	},
-	condition = "slot_wielded",
 	name = "shotgun_combat",
+	condition = "slot_wielded"
 }
 local POWER_SWORD = {
 	"BtSelectorNode",
 	condition_args = {
-		slot_name = "slot_power_sword",
+		slot_name = "slot_power_sword"
 	},
 	{
 		"BtRandomUtilityNode",
 		{
 			"BtMeleeFollowTargetAction",
 			name = "melee_follow_power_sword",
-			action_data = action_data.melee_follow_power_sword,
+			action_data = action_data.melee_follow_power_sword
 		},
 		{
 			"BtMeleeAttackAction",
@@ -218,17 +218,17 @@ local POWER_SWORD = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -237,17 +237,17 @@ local POWER_SWORD = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -256,17 +256,17 @@ local POWER_SWORD = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -275,43 +275,43 @@ local POWER_SWORD = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
-		name = "power_sword_melee_combat",
+		name = "power_sword_melee_combat"
 	},
 	{
 		"BtCombatIdleAction",
-		condition = "should_use_combat_idle",
 		name = "melee_combat_idle",
+		condition = "should_use_combat_idle",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_combat_idle,
+		action_data = action_data.melee_combat_idle
 	},
-	condition = "slot_wielded",
 	name = "power_sword_combat",
+	condition = "slot_wielded"
 }
 local POWERMAUL = {
 	"BtSelectorNode",
 	condition_args = {
-		slot_name = "slot_powermaul",
+		slot_name = "slot_powermaul"
 	},
 	{
 		"BtRandomUtilityNode",
 		{
 			"BtMeleeFollowTargetAction",
 			name = "melee_follow_powermaul",
-			action_data = action_data.melee_follow_powermaul,
+			action_data = action_data.melee_follow_powermaul
 		},
 		{
 			"BtMeleeAttackAction",
@@ -320,17 +320,17 @@ local POWERMAUL = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -339,17 +339,17 @@ local POWERMAUL = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -358,17 +358,17 @@ local POWERMAUL = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -377,17 +377,17 @@ local POWERMAUL = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
 		{
 			"BtMeleeAttackAction",
@@ -396,51 +396,51 @@ local POWERMAUL = {
 			enter_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = true,
-				},
+					field = "is_blocking_captain_special_actions"
+				}
 			},
 			leave_hook = {
 				hook = "set_scratchpad_value",
 				args = {
-					field = "is_blocking_captain_special_actions",
 					value = false,
-				},
-			},
+					field = "is_blocking_captain_special_actions"
+				}
+			}
 		},
-		name = "powermaul_melee_combat",
+		name = "powermaul_melee_combat"
 	},
 	{
 		"BtCombatIdleAction",
-		condition = "should_use_combat_idle",
 		name = "melee_combat_idle",
+		condition = "should_use_combat_idle",
 		condition_args = {
-			attack_type = "melee",
+			attack_type = "melee"
 		},
-		action_data = action_data.melee_combat_idle,
+		action_data = action_data.melee_combat_idle
 	},
-	condition = "slot_wielded",
 	name = "powermaul_combat",
+	condition = "slot_wielded"
 }
 local CHARGE = {
 	"BtChargeAction",
-	condition = "is_aggroed_in_combat_range",
 	name = "charge",
+	condition = "is_aggroed_in_combat_range",
 	action_data = action_data.charge,
 	condition_args = {
 		combat_ranges = {
-			melee = true,
-		},
+			melee = true
+		}
 	},
 	enter_hook = {
-		hook = "captain_charge_enter",
+		hook = "captain_charge_enter"
 	},
 	leave_hook = {
 		hook = "captain_charge_exit",
 		args = {
-			exit_anim_states = action_data.exit_anim_states,
-		},
-	},
+			exit_anim_states = action_data.exit_anim_states
+		}
+	}
 }
 local VOID_SHIELD_EXPLOSION = {
 	"BtVoidShieldExplosionAction",
@@ -449,137 +449,137 @@ local VOID_SHIELD_EXPLOSION = {
 	enter_hook = {
 		hook = "set_component_value",
 		args = {
-			component_name = "phase",
-			field = "lock",
 			value = true,
-		},
+			field = "lock",
+			component_name = "phase"
+		}
 	},
 	leave_hook = {
 		hook = "set_component_value",
 		args = {
-			component_name = "phase",
-			field = "lock",
 			value = false,
-		},
-	},
+			field = "lock",
+			component_name = "phase"
+		}
+	}
 }
 local FIRE_GRENADE = {
 	"BtQuickGrenadeThrowAction",
 	name = "throw_fire_grenade",
 	action_data = action_data.throw_fire_grenade,
 	enter_hook = {
-		hook = "captain_grenade_enter",
+		hook = "captain_grenade_enter"
 	},
 	leave_hook = {
 		hook = "captain_grenade_exit",
 		args = {
-			exit_anim_states = action_data.exit_anim_states,
-		},
-	},
+			exit_anim_states = action_data.exit_anim_states
+		}
+	}
 }
 local FRAG_GRENADE = {
 	"BtQuickGrenadeThrowAction",
 	name = "throw_frag_grenade",
 	action_data = action_data.throw_frag_grenade,
 	enter_hook = {
-		hook = "captain_grenade_enter",
+		hook = "captain_grenade_enter"
 	},
 	leave_hook = {
 		hook = "captain_grenade_exit",
 		args = {
-			exit_anim_states = action_data.exit_anim_states,
-		},
-	},
+			exit_anim_states = action_data.exit_anim_states
+		}
+	}
 }
 local KICK = {
 	"BtMeleeAttackAction",
-	condition = "is_aggroed_in_combat_range",
 	name = "kick",
+	condition = "is_aggroed_in_combat_range",
 	action_data = action_data.kick,
 	condition_args = {
 		combat_ranges = {
-			close = true,
 			melee = true,
-		},
-	},
+			close = true
+		}
+	}
 }
 local PUNCH = {
 	"BtMeleeAttackAction",
-	condition = "is_aggroed_in_combat_range",
 	name = "punch",
+	condition = "is_aggroed_in_combat_range",
 	action_data = action_data.punch,
 	condition_args = {
 		combat_ranges = {
-			close = true,
 			melee = true,
-		},
-	},
+			close = true
+		}
+	}
 }
 local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
-		action_data = action_data.death,
+		condition = "is_dead",
+		action_data = action_data.death
 	},
 	{
 		"BtExitSpawnerAction",
-		condition = "is_exiting_spawner",
 		name = "exit_spawner",
-		action_data = action_data.exit_spawner,
+		condition = "is_exiting_spawner",
+		action_data = action_data.exit_spawner
 	},
 	{
 		"BtSelectorNode",
 		{
 			"BtTeleportAction",
 			condition = "at_teleport_smart_object",
-			name = "teleport",
+			name = "teleport"
 		},
 		{
 			"BtClimbAction",
-			condition = "at_climb_smart_object",
 			name = "climb",
-			action_data = action_data.climb,
+			condition = "at_climb_smart_object",
+			action_data = action_data.climb
 		},
 		{
 			"BtJumpAcrossAction",
-			condition = "at_jump_smart_object",
 			name = "jump_across",
-			action_data = action_data.jump_across,
+			condition = "at_jump_smart_object",
+			action_data = action_data.jump_across
 		},
 		{
 			"BtSmashObstacleAction",
-			condition = "at_smashable_obstacle_smart_object",
 			name = "smash_obstacle",
-			action_data = action_data.smash_obstacle,
+			condition = "at_smashable_obstacle_smart_object",
+			action_data = action_data.smash_obstacle
 		},
 		{
 			"BtOpenDoorAction",
-			condition = "at_door_smart_object",
 			name = "open_door",
-			action_data = action_data.open_door,
+			condition = "at_door_smart_object",
+			action_data = action_data.open_door
 		},
 		condition = "at_smart_object",
-		name = "smart_object",
+		name = "smart_object"
 	},
 	{
 		"BtStaggerAction",
-		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		condition = "is_staggered",
+		action_data = action_data.stagger
 	},
 	{
 		"BtBlockedAction",
-		condition = "is_blocked",
 		name = "blocked",
-		action_data = action_data.blocked,
+		condition = "is_blocked",
+		action_data = action_data.blocked
 	},
 	{
 		"BtSwitchWeaponAction",
-		condition = "should_switch_weapon",
 		name = "switch_weapon",
-		action_data = action_data.switch_weapon,
+		condition = "should_switch_weapon",
+		action_data = action_data.switch_weapon
 	},
 	{
 		"BtSelectorNode",
@@ -591,7 +591,7 @@ local behavior_tree = {
 			CHARGE,
 			VOID_SHIELD_EXPLOSION,
 			condition = "captain_can_use_special_actions",
-			name = "renegade_captain_specials",
+			name = "renegade_captain_specials"
 		},
 		POWERMAUL,
 		POWER_SWORD,
@@ -601,14 +601,14 @@ local behavior_tree = {
 		NETGUN,
 		SHOTGUN,
 		condition = "is_aggroed",
-		name = "renegade_captain_combat",
+		name = "renegade_captain_combat"
 	},
 	{
 		"BtIdleAction",
 		name = "idle",
-		action_data = action_data.idle,
+		action_data = action_data.idle
 	},
-	name = "renegade_captain",
+	name = "renegade_captain"
 }
 
 return behavior_tree

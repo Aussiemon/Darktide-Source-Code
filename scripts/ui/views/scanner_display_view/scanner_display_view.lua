@@ -18,7 +18,7 @@ ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.balance] = MinigameBalanceView,
 	[MinigameSettings.types.decode_symbols] = MinigameDecodeSymbolsView,
 	[MinigameSettings.types.drill] = MinigameDrillView,
-	[MinigameSettings.types.frequency] = MinigameFrequencyView,
+	[MinigameSettings.types.frequency] = MinigameFrequencyView
 }
 
 ScannerDisplayView.init = function (self, settings, context)

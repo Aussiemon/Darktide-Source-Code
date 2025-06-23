@@ -31,7 +31,7 @@ local hammer_smiter_light_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -41,8 +41,8 @@ local hammer_smiter_light_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local hammer_smiter_light_default_am = {
 	attack = {
@@ -53,7 +53,7 @@ local hammer_smiter_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -63,8 +63,8 @@ local hammer_smiter_light_default_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+	}
 }
 local hammer_tank_heavy_first_am = {
 	attack = {
@@ -75,7 +75,7 @@ local hammer_tank_heavy_first_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -85,8 +85,8 @@ local hammer_tank_heavy_first_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local hammer_tank_heavy_first_active_am = {
 	attack = {
@@ -97,7 +97,7 @@ local hammer_tank_heavy_first_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -107,8 +107,8 @@ local hammer_tank_heavy_first_active_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local hammer_tank_heavy_am = {
 	attack = {
@@ -119,7 +119,7 @@ local hammer_tank_heavy_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -129,14 +129,14 @@ local hammer_tank_heavy_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.thunderhammer_light = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 500,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.blunt_thunder,
@@ -147,7 +147,7 @@ damage_templates.thunderhammer_light = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	stagger_duration_modifier = {
 		0.1,
-		0.5,
+		0.5
 	},
 	targets = {
 		{
@@ -160,7 +160,7 @@ damage_templates.thunderhammer_light = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -170,18 +170,18 @@ damage_templates.thunderhammer_light = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				}
 			},
 			power_distribution = {
 				attack = {
 					180,
-					350,
+					350
 				},
 				impact = {
 					8,
-					22,
-				},
+					22
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
@@ -191,41 +191,41 @@ damage_templates.thunderhammer_light = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.3,
+				[armor_types.void_shield] = 0.3
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					15,
-					25,
+					25
 				},
 				impact = {
 					9,
-					11,
-				},
-			},
+					11
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					8,
-					12,
+					12
 				},
 				impact = {
 					5,
-					5,
-				},
+					5
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
@@ -236,16 +236,16 @@ damage_templates.thunderhammer_light = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_light_plus = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 500,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.blunt_thunder,
@@ -256,7 +256,7 @@ damage_templates.thunderhammer_light_plus = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	stagger_duration_modifier = {
 		0.1,
-		0.5,
+		0.5
 	},
 	targets = {
 		{
@@ -269,7 +269,7 @@ damage_templates.thunderhammer_light_plus = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -279,18 +279,18 @@ damage_templates.thunderhammer_light_plus = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				}
 			},
 			power_distribution = {
 				attack = {
 					200,
-					380,
+					380
 				},
 				impact = {
 					8,
-					22,
-				},
+					22
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75,
@@ -300,41 +300,41 @@ damage_templates.thunderhammer_light_plus = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.3,
+				[armor_types.void_shield] = 0.3
 			},
 			boost_curve_multiplier_finesse = {
 				1,
-				2,
+				2
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					15,
-					25,
+					25
 				},
 				impact = {
 					9,
-					11,
-				},
-			},
+					11
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					8,
-					12,
+					12
 				},
 				impact = {
 					5,
-					5,
-				},
+					5
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
@@ -345,16 +345,16 @@ damage_templates.thunderhammer_light_plus = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_light_linesman = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 800,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.blunt_thunder,
@@ -365,7 +365,7 @@ damage_templates.thunderhammer_light_linesman = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	stagger_duration_modifier = {
 		0.1,
-		0.5,
+		0.5
 	},
 	targets = {
 		{
@@ -378,7 +378,7 @@ damage_templates.thunderhammer_light_linesman = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -388,18 +388,18 @@ damage_templates.thunderhammer_light_linesman = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				}
 			},
 			power_distribution = {
 				attack = {
 					100,
-					200,
+					200
 				},
 				impact = {
 					8,
-					22,
-				},
+					22
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
@@ -409,41 +409,41 @@ damage_templates.thunderhammer_light_linesman = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.3,
+				[armor_types.void_shield] = 0.3
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					80,
-					160,
+					160
 				},
 				impact = {
 					9,
-					18,
-				},
-			},
+					18
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					20,
-					40,
+					40
 				},
 				impact = {
 					5,
-					10,
-				},
+					10
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
@@ -454,11 +454,11 @@ damage_templates.thunderhammer_light_linesman = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 overrides.thunderhammer_light_linesman_active_sweep = {
 	parent_template_name = "thunderhammer_light_linesman",
@@ -468,16 +468,16 @@ overrides.thunderhammer_light_linesman_active_sweep = {
 			"attack",
 			{
 				4,
-				8,
-			},
+				8
+			}
 		},
 		{
 			"cleave_distribution",
 			"impact",
 			{
 				3,
-				3,
-			},
+				3
+			}
 		},
 		{
 			"targets",
@@ -486,8 +486,8 @@ overrides.thunderhammer_light_linesman_active_sweep = {
 			"attack",
 			{
 				110,
-				250,
-			},
+				250
+			}
 		},
 		{
 			"targets",
@@ -496,8 +496,8 @@ overrides.thunderhammer_light_linesman_active_sweep = {
 			"impact",
 			{
 				12,
-				24,
-			},
+				24
+			}
 		},
 		{
 			"targets",
@@ -506,8 +506,8 @@ overrides.thunderhammer_light_linesman_active_sweep = {
 			"attack",
 			{
 				55,
-				135,
-			},
+				135
+			}
 		},
 		{
 			"targets",
@@ -516,15 +516,15 @@ overrides.thunderhammer_light_linesman_active_sweep = {
 			"impact",
 			{
 				10,
-				20,
-			},
-		},
-	},
+				20
+			}
+		}
+	}
 }
 damage_templates.thunderhammer_light_tank = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 500,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = large_cleave,
 	damage_type = damage_types.blunt_thunder,
@@ -535,7 +535,7 @@ damage_templates.thunderhammer_light_tank = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	stagger_duration_modifier = {
 		0.1,
-		0.5,
+		0.5
 	},
 	targets = {
 		{
@@ -548,7 +548,7 @@ damage_templates.thunderhammer_light_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -558,18 +558,18 @@ damage_templates.thunderhammer_light_tank = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+				}
 			},
 			power_distribution = {
 				attack = {
 					100,
-					200,
+					200
 				},
 				impact = {
 					8,
-					20,
-				},
+					20
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
@@ -579,67 +579,67 @@ damage_templates.thunderhammer_light_tank = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.3,
+				[armor_types.void_shield] = 0.3
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					50,
-					70,
+					70
 				},
 				impact = {
 					9,
-					18,
-				},
-			},
+					18
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
-					70,
+					70
 				},
 				impact = {
 					6,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					15,
-					25,
+					25
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					8,
-					12,
+					12
 				},
 				impact = {
 					5,
-					5,
-				},
+					5
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
@@ -650,24 +650,24 @@ damage_templates.thunderhammer_light_tank = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_light_active = {
-	finesse_ability_damage_multiplier = 1.5,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
-	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
 	weapon_special = true,
+	finesse_ability_damage_multiplier = 1.5,
+	shield_override_stagger_strength = 500,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.default,
@@ -680,12 +680,12 @@ damage_templates.thunderhammer_light_active = {
 			power_distribution = {
 				attack = {
 					400,
-					750,
+					750
 				},
 				impact = {
 					25,
-					35,
-				},
+					35
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 1,
@@ -695,41 +695,41 @@ damage_templates.thunderhammer_light_active = {
 				[armor_types.berserker] = 0.5,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 0.3,
-				[armor_types.void_shield] = 0.3,
+				[armor_types.void_shield] = 0.3
 			},
 			boost_curve_multiplier_finesse = {
 				0.65,
-				1.15,
+				1.15
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					15,
-					25,
+					25
 				},
 				impact = {
 					8,
-					12,
-				},
-			},
+					12
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					8,
-					12,
+					12
 				},
 				impact = {
 					4,
-					6,
-				},
+					6
+				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
@@ -740,11 +740,11 @@ damage_templates.thunderhammer_light_active = {
 				[armor_types.berserker] = 0.1,
 				[armor_types.super_armor] = 0.1,
 				[armor_types.disgustingly_resilient] = 0.5,
-				[armor_types.void_shield] = 0.5,
-			},
-		},
+				[armor_types.void_shield] = 0.5
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 overrides.thunderhammer_pushfollow_active = {
 	parent_template_name = "thunderhammer_light_active",
@@ -752,39 +752,39 @@ overrides.thunderhammer_pushfollow_active = {
 		{
 			"cleave_distribution",
 			"attack",
-			0.01,
+			0.01
 		},
 		{
 			"cleave_distribution",
 			"impact",
-			0.01,
-		},
-	},
+			0.01
+		}
+	}
 }
 overrides.thunderhammer_pushfollow = {
 	parent_template_name = "thunderhammer_light_tank",
 	overrides = {
 		{
 			"ragdoll_push_force",
-			250,
-		},
-	},
+			250
+		}
+	}
 }
 damage_templates.thunderhammer_heavy = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 750,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = {
 			10,
-			20,
+			20
 		},
 		impact = {
 			10,
-			20,
-		},
+			20
+		}
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_power = gibbing_power.always,
@@ -793,7 +793,7 @@ damage_templates.thunderhammer_heavy = {
 	wounds_template = WoundsTemplates.thunder_hammer,
 	stagger_duration_modifier = {
 		0.3,
-		0.6,
+		0.6
 	},
 	targets = {
 		{
@@ -801,91 +801,91 @@ damage_templates.thunderhammer_heavy = {
 			power_distribution = {
 				attack = {
 					180,
-					350,
+					350
 				},
 				impact = {
 					25,
-					35,
-				},
+					35
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.25,
-				0.75,
+				0.75
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					100,
-					200,
+					200
 				},
 				impact = {
 					20,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					75,
-					150,
+					150
 				},
 				impact = {
 					14,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					10,
-					24,
-				},
-			},
+					24
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
-					60,
+					60
 				},
 				impact = {
 					8,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					20,
-					40,
+					40
 				},
 				impact = {
 					8,
-					16,
-				},
+					16
+				}
 			},
 			armor_damage_modifier = hammer_tank_heavy_am,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 overrides.thunderhammer_heavy_active_sweep = {
 	parent_template_name = "thunderhammer_heavy",
@@ -895,16 +895,16 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				10,
-				20,
-			},
+				20
+			}
 		},
 		{
 			"cleave_distribution",
 			"impact",
 			{
 				4,
-				8,
-			},
+				8
+			}
 		},
 		{
 			"targets",
@@ -913,8 +913,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				250,
-				500,
-			},
+				500
+			}
 		},
 		{
 			"targets",
@@ -923,8 +923,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				35,
-				45,
-			},
+				45
+			}
 		},
 		{
 			"targets",
@@ -933,8 +933,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				200,
-				400,
-			},
+				400
+			}
 		},
 		{
 			"targets",
@@ -943,8 +943,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				30,
-				40,
-			},
+				40
+			}
 		},
 		{
 			"targets",
@@ -953,8 +953,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				150,
-				300,
-			},
+				300
+			}
 		},
 		{
 			"targets",
@@ -963,8 +963,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				25,
-				35,
-			},
+				35
+			}
 		},
 		{
 			"targets",
@@ -973,8 +973,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				120,
-				240,
-			},
+				240
+			}
 		},
 		{
 			"targets",
@@ -983,8 +983,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				20,
-				30,
-			},
+				30
+			}
 		},
 		{
 			"targets",
@@ -993,8 +993,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				80,
-				160,
-			},
+				160
+			}
 		},
 		{
 			"targets",
@@ -1003,8 +1003,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				15,
-				25,
-			},
+				25
+			}
 		},
 		{
 			"targets",
@@ -1013,8 +1013,8 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"attack",
 			{
 				50,
-				100,
-			},
+				100
+			}
 		},
 		{
 			"targets",
@@ -1023,14 +1023,14 @@ overrides.thunderhammer_heavy_active_sweep = {
 			"impact",
 			{
 				10,
-				20,
-			},
+				20
+			}
 		},
 		{
 			"ragdoll_push_force",
-			1250,
-		},
-	},
+			1250
+		}
+	}
 }
 overrides.thunderhammer_heavy_active_sweep_m1 = {
 	parent_template_name = "thunderhammer_heavy",
@@ -1040,16 +1040,16 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				1,
-				3,
-			},
+				3
+			}
 		},
 		{
 			"cleave_distribution",
 			"impact",
 			{
 				1,
-				3,
-			},
+				3
+			}
 		},
 		{
 			"targets",
@@ -1058,8 +1058,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				400,
-				800,
-			},
+				800
+			}
 		},
 		{
 			"targets",
@@ -1068,8 +1068,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				35,
-				45,
-			},
+				45
+			}
 		},
 		{
 			"targets",
@@ -1078,8 +1078,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				200,
-				400,
-			},
+				400
+			}
 		},
 		{
 			"targets",
@@ -1088,8 +1088,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				30,
-				40,
-			},
+				40
+			}
 		},
 		{
 			"targets",
@@ -1098,8 +1098,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				150,
-				300,
-			},
+				300
+			}
 		},
 		{
 			"targets",
@@ -1108,8 +1108,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				25,
-				35,
-			},
+				35
+			}
 		},
 		{
 			"targets",
@@ -1118,8 +1118,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				120,
-				240,
-			},
+				240
+			}
 		},
 		{
 			"targets",
@@ -1128,8 +1128,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				20,
-				30,
-			},
+				30
+			}
 		},
 		{
 			"targets",
@@ -1138,8 +1138,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				80,
-				160,
-			},
+				160
+			}
 		},
 		{
 			"targets",
@@ -1148,8 +1148,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				15,
-				25,
-			},
+				25
+			}
 		},
 		{
 			"targets",
@@ -1158,8 +1158,8 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"attack",
 			{
 				50,
-				100,
-			},
+				100
+			}
 		},
 		{
 			"targets",
@@ -1168,28 +1168,28 @@ overrides.thunderhammer_heavy_active_sweep_m1 = {
 			"impact",
 			{
 				10,
-				20,
-			},
+				20
+			}
 		},
 		{
 			"ragdoll_push_force",
-			1250,
-		},
-	},
+			1250
+		}
+	}
 }
 damage_templates.thunderhammer_m2_heavy_active_strikedown = {
-	finesse_ability_damage_multiplier = 2,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
 	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
+	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.explosion,
@@ -1202,53 +1202,53 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 			power_distribution = {
 				attack = {
 					450,
-					900,
+					900
 				},
 				impact = {
 					45,
-					55,
-				},
+					55
+				}
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					35,
-					65,
+					65
 				},
 				impact = {
 					25,
-					35,
-				},
-			},
+					35
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
-					0,
+					0
 				},
 				impact = {
 					5,
-					15,
-				},
+					15
+				}
 			},
 			armor_damage_modifier = hammer_tank_heavy_am,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.thunderhammer_heavy_smiter = {
 	finesse_ability_damage_multiplier = 1.5,
-	ragdoll_only = true,
 	ragdoll_push_force = 750,
+	ragdoll_only = true,
 	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = double_cleave,
@@ -1259,7 +1259,7 @@ damage_templates.thunderhammer_heavy_smiter = {
 	wounds_template = WoundsTemplates.thunder_hammer,
 	stagger_duration_modifier = {
 		0.3,
-		0.6,
+		0.6
 	},
 	targets = {
 		{
@@ -1272,7 +1272,7 @@ damage_templates.thunderhammer_heavy_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1282,72 +1282,72 @@ damage_templates.thunderhammer_heavy_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			power_distribution = {
 				attack = {
 					300,
-					600,
+					600
 				},
 				impact = {
 					25,
-					50,
-				},
+					50
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.25,
-				0.95,
+				0.95
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					35,
-					65,
+					65
 				},
 				impact = {
 					20,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
-					0,
+					0
 				},
 				impact = {
 					8,
-					16,
-				},
+					16
+				}
 			},
 			armor_damage_modifier = hammer_tank_heavy_am,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_light,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_light
 }
 damage_templates.thunderhammer_heavy_active = {
-	finesse_ability_damage_multiplier = 2,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
 	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
+	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.explosion,
@@ -1360,101 +1360,101 @@ damage_templates.thunderhammer_heavy_active = {
 			power_distribution = {
 				attack = {
 					500,
-					1000,
+					1000
 				},
 				impact = {
 					45,
-					55,
-				},
+					55
+				}
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
+				1.25
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					35,
-					65,
+					65
 				},
 				impact = {
 					25,
-					35,
-				},
-			},
+					35
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					10,
-					40,
+					40
 				},
 				impact = {
 					15,
-					25,
-				},
-			},
+					25
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
-					0,
+					0
 				},
 				impact = {
 					10,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
-					0,
+					0
 				},
 				impact = {
 					10,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
-					0,
+					0
 				},
 				impact = {
 					5,
-					15,
-				},
+					15
+				}
 			},
 			armor_damage_modifier = hammer_tank_heavy_am,
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.thunderhammer_m1_heavy_active = {
-	finesse_ability_damage_multiplier = 2,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
 	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
+	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.explosion,
@@ -1467,34 +1467,34 @@ damage_templates.thunderhammer_m1_heavy_active = {
 			power_distribution = {
 				attack = {
 					500,
-					1000,
+					1000
 				},
 				impact = {
 					45,
-					55,
-				},
+					55
+				}
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
-		},
+				1.25
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.thunderhammer_m2_heavy_active = {
-	finesse_ability_damage_multiplier = 2,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
 	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
+	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.explosion,
@@ -1507,33 +1507,33 @@ damage_templates.thunderhammer_m2_heavy_active = {
 			power_distribution = {
 				attack = {
 					400,
-					800,
+					800
 				},
 				impact = {
 					45,
-					55,
-				},
+					55
+				}
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
-		},
+				1.25
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.thunderhammer_m2_light_active = {
-	finesse_ability_damage_multiplier = 1.5,
-	gibbing_power = 0,
-	ignore_stagger_reduction = true,
-	ragdoll_only = true,
-	ragdoll_push_force = 1000,
-	shield_override_stagger_strength = 500,
-	stagger_category = "melee",
 	weapon_special = true,
+	finesse_ability_damage_multiplier = 1.5,
+	shield_override_stagger_strength = 500,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.01,
-		impact = 0.01,
+		impact = 0.01
 	},
 	damage_type = damage_types.blunt_thunder,
 	gibbing_type = gibbing_types.default,
@@ -1547,12 +1547,12 @@ damage_templates.thunderhammer_m2_light_active = {
 			power_distribution = {
 				attack = {
 					300,
-					600,
+					600
 				},
 				impact = {
 					25,
-					35,
-				},
+					35
+				}
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 1,
@@ -1562,15 +1562,15 @@ damage_templates.thunderhammer_m2_light_active = {
 				[armor_types.berserker] = 0.75,
 				[armor_types.super_armor] = 0.75,
 				[armor_types.disgustingly_resilient] = 0.75,
-				[armor_types.void_shield] = 0.25,
+				[armor_types.void_shield] = 0.25
 			},
 			power_level_multiplier = {
 				0.75,
-				1.25,
-			},
-		},
+				1.25
+			}
+		}
 	},
-	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 overrides.thunderhammer_m2_pushfollow_active = {
 	parent_template_name = "thunderhammer_m2_light_active",
@@ -1578,17 +1578,17 @@ overrides.thunderhammer_m2_pushfollow_active = {
 		{
 			"cleave_distribution",
 			"attack",
-			0.01,
+			0.01
 		},
 		{
 			"cleave_distribution",
 			"impact",
-			0.01,
-		},
-	},
+			0.01
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

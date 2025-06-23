@@ -13,7 +13,7 @@ local CinematicManagerTestify = {
 		if not has_mission_intro_played then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return CinematicManagerTestify

@@ -14,7 +14,7 @@ local SFX_IDLE_STOP = "wwise/events/minions/stop_enemy_daemonhost_ambience_idle"
 local resources = {
 	sfx_idle_start = SFX_IDLE_START,
 	sfx_idle_stop = SFX_IDLE_STOP,
-	ambience_settings = AMBIENCE_SETTINGS,
+	ambience_settings = AMBIENCE_SETTINGS
 }
 local _update_ambience, _update_dying, _update_passive, _update_frost_screen_space, _switch_stage, _screen_distortion_intensity, _screen_frost_intensity, _sfx_distortion_intensity, _distance_to_local_player_or_nil
 local effect_template = {
@@ -145,7 +145,7 @@ local effect_template = {
 		if frost_effect_id then
 			World.destroy_particles(world, frost_effect_id)
 		end
-	end,
+	end
 }
 
 function _switch_stage(template_data, template_context, new_stage)

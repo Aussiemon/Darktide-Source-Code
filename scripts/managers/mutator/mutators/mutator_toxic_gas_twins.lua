@@ -21,43 +21,43 @@ local aggro_states = PerceptionSettings.aggro_states
 local MutatorToxicGasTwins = class("MutatorToxicGasTwins", "MutatorBase")
 local TWIN_SPAWN_ORDER = {
 	{
-		"renegade_twin_captain_two",
+		"renegade_twin_captain_two"
+	},
+	{
+		"renegade_twin_captain"
+	},
+	{
+		"renegade_twin_captain_two"
 	},
 	{
 		"renegade_twin_captain",
-	},
-	{
-		"renegade_twin_captain_two",
-	},
-	{
-		"renegade_twin_captain",
-		"renegade_twin_captain_two",
+		"renegade_twin_captain_two"
 	},
 	{
 		"renegade_twin_captain",
-		"renegade_twin_captain_two",
-	},
+		"renegade_twin_captain_two"
+	}
 }
 local TWIN_DESPAWN_DISTANCES = {
 	115,
 	385,
 	590,
 	700,
-	false,
+	false
 }
 local HORDE_SPAWN = {
 	false,
 	true,
 	true,
 	true,
-	false,
+	false
 }
 local SPAWN_GAS_LIST = {
 	true,
 	true,
 	true,
 	true,
-	true,
+	true
 }
 local SPECIALS_MULTIPLIER_TWINS_ACTIVE = 3
 local SPECIALS_MULTIPLIER_TWINS_ACTIVE_BOSS_FIGHT = 1
@@ -65,31 +65,31 @@ local SPECIALS_MULTIPLIER_TWINS_INACTIVE = 0.2
 local SPECIALS_MULTIPLIER_GAS_PHASE = 4
 local TWIN_IDS = {
 	renegade_twin_captain = 1,
-	renegade_twin_captain_two = 2,
+	renegade_twin_captain_two = 2
 }
 local appear_ambisonics_sound_event = "wwise/events/minions/play_minion_twins_ambush_spawn_impact"
 local gas_wave_ambisonics = "wwise/events/play_event_twins_arena_gas_wave_ambisonics"
 local MAINPATH_SOUND_EVENTS = {
 	{
-		distance = 25,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 25
 	},
 	{
-		distance = 275,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 275
 	},
 	{
-		distance = 485,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 485
 	},
 	{
-		distance = 500,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
+		distance = 500
 	},
 	{
-		distance = 610,
 		event = "wwise/events/minions/play_minion_special_twins_ambush_spawn",
-	},
+		distance = 610
+	}
 }
 
 MutatorToxicGasTwins.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, level_seed)
@@ -158,7 +158,7 @@ MutatorToxicGasTwins._activate_cloud = function (self, cloud, is_other_cloud, de
 
 	if not self._active_gas_clouds[section_id] then
 		self._active_gas_clouds[section_id] = {
-			cloud,
+			cloud
 		}
 	else
 		self._active_gas_clouds[section_id][#self._active_gas_clouds[section_id] + 1] = cloud
@@ -411,7 +411,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 				twin_spawn_data[section_id][id][twin_id] = {
 					has_spawned = false,
 					spawn_position = Vector3Box(position_on_navmesh),
-					spawn_rotation = QuaternionBox(Unit.local_rotation(twin_captain_spawner, 1)),
+					spawn_rotation = QuaternionBox(Unit.local_rotation(twin_captain_spawner, 1))
 				}
 			end
 		end
@@ -456,7 +456,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 				position = boxed_position,
 				travel_distance = travel_distance,
 				fog_component = fog_component,
-				dont_trigger_this_cloud = dont_trigger_this_cloud,
+				dont_trigger_this_cloud = dont_trigger_this_cloud
 			}
 
 			table.insert(gas_clouds[section_id][id], entry)
@@ -496,7 +496,7 @@ MutatorToxicGasTwins.on_gameplay_post_init = function (self, level, themes)
 				id = id,
 				section_id = section_id,
 				trigger_clouds = trigger_clouds,
-				dont_trigger_this_cloud = dont_trigger_this_cloud,
+				dont_trigger_this_cloud = dont_trigger_this_cloud
 			}
 		end
 
@@ -547,7 +547,7 @@ local DISABLE_SPECIALS_DURATIONS = {
 	17,
 	31.4,
 	27,
-	24.3,
+	24.3
 }
 
 MutatorToxicGasTwins._update_twins = function (self, dt, t, ahead_travel_distance)
@@ -773,7 +773,7 @@ MutatorToxicGasTwins.start_boss_fight = function (self)
 	local spawn_types = {
 		"hordes",
 		"monsters",
-		"trickle_hordes",
+		"trickle_hordes"
 	}
 	local enabled = false
 
@@ -892,51 +892,51 @@ local GAS_TERROR_EVENTS = {
 		{
 			"km_enforcer_twins_gas_phase_west",
 			"km_enforcer_twins_gas_phase_north",
-			"km_enforcer_twins_gas_phase_middle",
+			"km_enforcer_twins_gas_phase_middle"
 		},
 		{
 			"km_enforcer_twins_gas_phase_east",
 			"km_enforcer_twins_gas_phase_north",
-			"km_enforcer_twins_gas_phase_middle",
-		},
+			"km_enforcer_twins_gas_phase_middle"
+		}
 	},
 	{
 		{
 			"km_enforcer_twins_gas_phase_2_west",
 			"km_enforcer_twins_gas_phase_2_north",
-			"km_enforcer_twins_gas_phase_2_middle",
+			"km_enforcer_twins_gas_phase_2_middle"
 		},
 		{
 			"km_enforcer_twins_gas_phase_2_east",
 			"km_enforcer_twins_gas_phase_2_north",
-			"km_enforcer_twins_gas_phase_2_middle",
-		},
+			"km_enforcer_twins_gas_phase_2_middle"
+		}
 	},
 	{
 		{
 			"km_enforcer_twins_gas_phase_3_west",
 			"km_enforcer_twins_gas_phase_3_north",
-			"km_enforcer_twins_gas_phase_3_middle",
+			"km_enforcer_twins_gas_phase_3_middle"
 		},
 		{
 			"km_enforcer_twins_gas_phase_3_east",
 			"km_enforcer_twins_gas_phase_3_north",
-			"km_enforcer_twins_gas_phase_3_middle",
-		},
-	},
+			"km_enforcer_twins_gas_phase_3_middle"
+		}
+	}
 }
 local FIGHT_TERROR_EVENTS = {
 	"km_enforcer_twins_elite_trickle_1",
 	"km_enforcer_twins_elite_trickle_2",
-	"km_enforcer_twins_elite_trickle_3",
+	"km_enforcer_twins_elite_trickle_3"
 }
 local LAST_PHASTE_TERROR_EVENTS = {
-	"km_enforcer_twins_last_phase_trickle",
+	"km_enforcer_twins_last_phase_trickle"
 }
 local GAS_EVENT_DURATION = {
 	30,
 	40,
-	50,
+	50
 }
 local GAS_ALARM_DURATION = 5
 
@@ -1085,73 +1085,73 @@ local ALTERNATING_GAS_BY_CHALLENGE = {
 	false,
 	true,
 	true,
-	true,
+	true
 }
 local FIRST_ALTERNATING_GAS_DURATION_RANGES = {
 	{
 		600,
-		600,
+		600
 	},
 	{
 		600,
-		600,
+		600
 	},
 	{
 		600,
-		600,
+		600
 	},
 	{
 		35,
-		40,
+		40
 	},
 	{
 		20,
-		25,
-	},
+		25
+	}
 }
 local ALTERNATING_GAS_DURATION_RANGES = {
 	{
 		40,
-		45,
+		45
 	},
 	{
 		40,
-		45,
+		45
 	},
 	{
 		18,
-		25,
+		25
 	},
 	{
 		16,
-		24,
+		24
 	},
 	{
 		15,
-		22,
-	},
+		22
+	}
 }
 local HARD_MODE_GAS_DURATION_RANGES = {
 	{
 		20,
-		30,
+		30
 	},
 	{
 		20,
-		30,
+		30
 	},
 	{
 		15,
-		20,
+		20
 	},
 	{
 		14,
-		20,
+		20
 	},
 	{
 		14,
-		18,
-	},
+		18
+	}
 }
 local GAS_PHASE_BUILDUP_DELAY = 7
 local FIRST_GAS_PHASE_BUILDUP_DELAY = 12
@@ -1308,7 +1308,7 @@ local DISAPPEAR_INDICES = {
 	1,
 	1,
 	2,
-	2,
+	2
 }
 
 MutatorToxicGasTwins._ready_to_escape = function (self, unit)
@@ -1391,7 +1391,7 @@ local HARD_MODE_AVAILABLE = {
 	false,
 	false,
 	false,
-	true,
+	true
 }
 
 MutatorToxicGasTwins._has_hard_mode = function (self)

@@ -14,15 +14,15 @@ local BackendManagerTestify = {
 		local side_mission = params.side_mission
 
 		Managers.backend.interfaces.mission_board:create_mission({
-			credits = 0,
 			xp = 0,
+			credits = 0,
 			map = map,
 			flags = {},
 			circumstance = circumstance_name,
 			sideMission = side_mission,
 			bonuses = {},
 			challenge = challenge,
-			resistance = resistance,
+			resistance = resistance
 		}):next(function (response)
 			return response.mission
 		end):next(function (mission)
@@ -33,7 +33,7 @@ local BackendManagerTestify = {
 		end):catch(function (error)
 			Log.error("BackendManagerTestify", "Could not create debug mission " .. table.tostring(error, 5))
 		end)
-	end,
+	end
 }
 
 return BackendManagerTestify

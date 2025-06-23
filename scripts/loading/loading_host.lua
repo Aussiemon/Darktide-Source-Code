@@ -127,7 +127,7 @@ LoadingHost.update = function (self, dt)
 			sync_issue_timer = 0,
 			id = next_spawn_group_id,
 			peers = group_peers,
-			level_loaded = Script.new_map(#group_peers),
+			level_loaded = Script.new_map(#group_peers)
 		}
 
 		spawn_groups[#spawn_groups + 1] = spawn_group
@@ -281,11 +281,11 @@ LoadingHost._determine_spawn_group_sync_issues = function (self, spawn_group, sy
 		local non_synced_peer_ids = Script.new_map(4)
 		local non_synced_peers = {
 			Profile = {
-				profile_sync_host:peers_not_synced_with(peer_id, sync_peers_filter),
+				profile_sync_host:peers_not_synced_with(peer_id, sync_peers_filter)
 			},
 			Package = {
-				package_sync_host:peers_not_synced_with(peer_id, sync_peers_filter),
-			},
+				package_sync_host:peers_not_synced_with(peer_id, sync_peers_filter)
+			}
 		}
 
 		for sync_type, peers in pairs(non_synced_peers) do

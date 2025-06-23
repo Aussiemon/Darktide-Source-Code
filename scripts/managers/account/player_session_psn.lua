@@ -11,45 +11,45 @@ PlayerSessionPSN.create_session = function (web_api, user_id, max_players, join_
 		local content = cjson.encode({
 			playerSessions = {
 				{
-					invitableUserType = "MEMBER",
 					maxSpectators = 0,
 					swapSupported = false,
+					invitableUserType = "MEMBER",
 					joinDisabled = join_disabled,
 					joinableUserType = joinable_user_type,
 					exclusiveLeaderPrivileges = {
 						"KICK",
 						"UPDATE_JOINABLE_USER_TYPE",
 						"UPDATE_INVITABLE_USER_TYPE",
-						"PROMOTE_TO_LEADER",
+						"PROMOTE_TO_LEADER"
 					},
 					maxPlayers = max_players,
 					localizedSessionName = {
 						defaultLanguage = "en-US",
 						localizedText = {
-							["en-US"] = "Join me NOW!",
-						},
+							["en-US"] = "Join me NOW!"
+						}
 					},
 					supportedPlatforms = {
-						"PS5",
+						"PS5"
 					},
 					member = {
 						players = {
 							{
-								accountId = "me",
 								platform = "PS5",
+								accountId = "me",
 								pushContexts = {
 									{
-										pushContextId = push_context_id,
-									},
+										pushContextId = push_context_id
+									}
 								},
-								customData1 = invite_code_base64,
-							},
-						},
+								customData1 = invite_code_base64
+							}
+						}
 					},
 					expirationTime = not has_crossplay_restriction and 86400 or nil,
-					nonPsnSupported = not has_crossplay_restriction,
-				},
-			},
+					nonPsnSupported = not has_crossplay_restriction
+				}
+			}
 		})
 		local api_group = "sessionManager"
 		local path = "/v1/playerSessions"
@@ -74,16 +74,16 @@ PlayerSessionPSN.join_session = function (web_api, user_id, session_id)
 		local content = cjson.encode({
 			players = {
 				{
-					accountId = "me",
 					platform = "PS5",
+					accountId = "me",
 					pushContexts = {
 						{
-							pushContextId = push_context_id,
-						},
+							pushContextId = push_context_id
+						}
 					},
-					customData1 = invite_code_base64,
-				},
-			},
+					customData1 = invite_code_base64
+				}
+			}
 		})
 		local api_group = "sessionManager"
 		local path = string.format("/v1/playerSessions/%s/member/players", session_id)
@@ -116,7 +116,7 @@ PlayerSessionPSN.is_session_leader = function (web_api, user_id, session_id)
 	local method = WebApi.GET
 	local content
 	local headers = {
-		["X-PSN-SESSION-MANAGER-SESSION-IDS"] = tostring(session_id),
+		["X-PSN-SESSION-MANAGER-SESSION-IDS"] = tostring(session_id)
 	}
 	local response_format
 
@@ -125,7 +125,7 @@ PlayerSessionPSN.is_session_leader = function (web_api, user_id, session_id)
 
 		if not session then
 			return Promise.rejected({
-				string.format("PSN session %s not found", session_id),
+				string.format("PSN session %s not found", session_id)
 			})
 		end
 
@@ -147,7 +147,7 @@ PlayerSessionPSN.update_session_max_players = function (web_api, user_id, sessio
 	local path = string.format("/v1/playerSessions/%s", session_id)
 	local method = WebApi.PATCH
 	local content = cjson.encode({
-		maxPlayers = max_players,
+		maxPlayers = max_players
 	})
 
 	return web_api:send_request(user_id, api_group, path, method, content):catch(function (err)
@@ -162,7 +162,7 @@ PlayerSessionPSN.update_session_join_disabled = function (web_api, user_id, sess
 	local path = string.format("/v1/playerSessions/%s", session_id)
 	local method = WebApi.PATCH
 	local content = cjson.encode({
-		joinDisabled = disabled,
+		joinDisabled = disabled
 	})
 
 	return web_api:send_request(user_id, api_group, path, method, content):catch(function (err)
@@ -181,11 +181,11 @@ PlayerSessionPSN.update_session_privacy = function (web_api, user_id, session_id
 		exclusiveLeaderPrivileges = {
 			"KICK",
 			"UPDATE_INVITABLE_USER_TYPE",
-			"PROMOTE_TO_LEADER",
-		},
+			"PROMOTE_TO_LEADER"
+		}
 	})):next(function ()
 		return web_api:send_request(user_id, api_group, path, method, cjson.encode({
-			joinableUserType = is_private and "FRIENDS_OF_FRIENDS" or "ANYONE",
+			joinableUserType = is_private and "FRIENDS_OF_FRIENDS" or "ANYONE"
 		}))
 	end):next(function ()
 		return web_api:send_request(user_id, api_group, path, method, cjson.encode({
@@ -193,8 +193,8 @@ PlayerSessionPSN.update_session_privacy = function (web_api, user_id, session_id
 				"KICK",
 				"UPDATE_JOINABLE_USER_TYPE",
 				"UPDATE_INVITABLE_USER_TYPE",
-				"PROMOTE_TO_LEADER",
-			},
+				"PROMOTE_TO_LEADER"
+			}
 		}))
 	end):catch(function (err)
 		Log.error("PlayerSessionPSN", "Failed updating session joinableUserType: %s", table.tostring(err, 5))
@@ -209,7 +209,7 @@ PlayerSessionPSN.get_session_invite_code = function (web_api, user_id, session_i
 	local method = WebApi.GET
 	local content
 	local headers = {
-		["X-PSN-SESSION-MANAGER-SESSION-IDS"] = tostring(session_id),
+		["X-PSN-SESSION-MANAGER-SESSION-IDS"] = tostring(session_id)
 	}
 	local response_format
 
@@ -218,7 +218,7 @@ PlayerSessionPSN.get_session_invite_code = function (web_api, user_id, session_i
 
 		if not session then
 			Promise.rejected({
-				string.format("PSN session %s not found", session_id),
+				string.format("PSN session %s not found", session_id)
 			})
 		end
 
@@ -246,10 +246,10 @@ PlayerSessionPSN.send_session_invite = function (web_api, user_id, session_id, i
 		invitations = {
 			{
 				to = {
-					accountId = invitee_account_id,
-				},
-			},
-		},
+					accountId = invitee_account_id
+				}
+			}
+		}
 	})
 	local api_group = "sessionManager"
 	local path = string.format("/v1/playerSessions/%s/invitations", session_id)

@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/proximity/side_relation_proximity_extension.lua
 
+require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_area_buff_drone")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal")
+require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_shock_mine")
 
 local JobInterface = require("scripts/managers/unit_job/job_interface")
 local Proximity = require("scripts/utilities/proximity")
@@ -21,7 +23,7 @@ SideRelationProximityExtension.init = function (self, extension_init_context, un
 		unit = unit,
 		side_name = side_name,
 		world = extension_init_context.world,
-		physics_world = extension_init_context.physics_world,
+		physics_world = extension_init_context.physics_world
 	}
 	self._job_logic = nil
 
@@ -60,8 +62,8 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 	local proximity_radius = relation_init_data.proximity_radius
 	local logic = {}
 	local data = {
-		num_in_proximity = 0,
 		num_logic = 0,
+		num_in_proximity = 0,
 		units_in_proximity = {},
 		temp = {},
 		stickiness_table = {},
@@ -69,7 +71,7 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 		stickiness_limit = relation_init_data.stickiness_limit,
 		stickiness_time = relation_init_data.stickiness_time,
 		logic = logic,
-		owner_unit_or_nil = owner_unit_or_nil,
+		owner_unit_or_nil = owner_unit_or_nil
 	}
 	local logic_context = self._logic_context
 	local logic_configuration = relation_init_data.logic

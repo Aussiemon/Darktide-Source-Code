@@ -37,7 +37,7 @@ BackendUtilities.ERROR_METATABLE = {
 		end
 
 		return msg
-	end,
+	end
 }
 
 local function page_from_link(paged, link, prev_links)
@@ -94,14 +94,14 @@ BackendUtilities.wrap_paged_response = function (paged, prev_links)
 		end,
 		first_page = function ()
 			return page_from_hal_link(paged, "first", {})
-		end,
+		end
 	}
 end
 
 BackendUtilities.create_error = function (code, description)
 	local t = {
 		code = code,
-		description = tostring(description),
+		description = tostring(description)
 	}
 
 	setmetatable(t, BackendUtilities.ERROR_METATABLE)
@@ -234,22 +234,22 @@ local function _fetch_root(optional_top_node)
 			body = {
 				_links = {
 					self = {
-						href = "/data",
+						href = "/data"
 					},
 					characters = {
-						href = "{accountSub}/characters",
 						templated = true,
+						href = "{accountSub}/characters"
 					},
 					progression = {
-						href = "{accountSub}/progression",
 						templated = true,
+						href = "{accountSub}/progression"
 					},
 					account = {
-						href = "{accountSub}/account",
 						templated = true,
-					},
-				},
-			},
+						href = "{accountSub}/account"
+					}
+				}
+			}
 		})
 	end
 end
@@ -260,7 +260,7 @@ BackendUtilities.build_account_path = function (hal_link, requested_account_id, 
 	end):next(function (account_id)
 		return _fetch_root(optional_top_node):next(function (data)
 			return BackendUtilities.fetch_link(data.body, hal_link, {
-				accountSub = requested_account_id or account_id,
+				accountSub = requested_account_id or account_id
 			})
 		end)
 	end)

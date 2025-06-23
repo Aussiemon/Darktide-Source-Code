@@ -7,7 +7,7 @@ local MinionSpawnerSystem = class("MinionSpawnerSystem", "ExtensionSystemBase")
 local BROADPHASE_CELL_RADIUS = 50
 local BROADPHASE_MAX_NUM_ENTITIES = 256
 local BROADPHASE_CATEGORIES = {
-	"minion_spawner",
+	"minion_spawner"
 }
 local BROADPHASE_UNIT_RADIUS = 1
 

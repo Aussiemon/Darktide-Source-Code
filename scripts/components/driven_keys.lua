@@ -4,12 +4,12 @@ local DrivenKeys = component("DrivenKeys")
 local TRANSLATE_LABELS = {
 	"translateX",
 	"translateY",
-	"translateZ",
+	"translateZ"
 }
 local ROTATE_LABELS = {
 	"rotateX",
 	"rotateY",
-	"rotateZ",
+	"rotateZ"
 }
 
 DrivenKeys.init = function (self, unit)
@@ -217,15 +217,15 @@ end
 DrivenKeys.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 DrivenKeys.component_data = {
 	enabled = {
-		category = "Settings",
-		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = true,
-	},
+		ui_name = "Enabled",
+		category = "Settings"
+	}
 }
 
 return DrivenKeys

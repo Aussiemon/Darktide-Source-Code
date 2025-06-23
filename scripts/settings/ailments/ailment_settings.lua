@@ -11,13 +11,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/fire_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.burning] = {
 		duration = 2,
@@ -25,13 +25,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/fire_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.burning_slow] = {
 		duration = 4.5,
@@ -39,13 +39,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/fire_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.chem_burning_fast] = {
 		duration = 1,
@@ -53,13 +53,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.chem_burning] = {
 		duration = 2.3,
@@ -67,13 +67,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.chem_burning_slow] = {
 		duration = 4.5,
@@ -81,13 +81,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.gas_fast] = {
 		duration = 0.5,
@@ -95,13 +95,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/gas_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.gas] = {
 		duration = 1.8,
@@ -109,13 +109,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/gas_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.gas_slow] = {
 		duration = 6.5,
@@ -123,13 +123,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/gas_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.freezing_fast] = {
 		duration = 1,
@@ -137,13 +137,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/freeze_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/freeze_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.freezing] = {
 		duration = 2.5,
@@ -151,13 +151,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/freeze_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/freeze_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.freezing_slow] = {
 		duration = 5.5,
@@ -165,13 +165,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/freeze_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/freeze_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.warpfire] = {
 		duration = 2.5,
@@ -179,13 +179,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/warp_ramp_controlled_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.electrocution] = {
 		duration = 0.95,
@@ -193,13 +193,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/burn_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/thunder_ramp",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.chain_lightning_ability] = {
 		duration = 0.95,
@@ -207,13 +207,13 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/freeze_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/protectorate_chainlightning_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
+				slot = "effect_gradient"
+			}
+		}
 	},
 	[effects.stun] = {
 		duration = 1.95,
@@ -221,14 +221,14 @@ ailment_settings.effect_templates = {
 		material_textures = {
 			{
 				resource = "content/textures/ailment_masks/freeze_mask_01",
-				slot = "effect_mask",
+				slot = "effect_mask"
 			},
 			{
 				resource = "content/fx/textures/ramps/metal_impact_ramp_01",
-				slot = "effect_gradient",
-			},
-		},
-	},
+				slot = "effect_gradient"
+			}
+		}
+	}
 }
 
 return settings("AilmentSettings", ailment_settings)

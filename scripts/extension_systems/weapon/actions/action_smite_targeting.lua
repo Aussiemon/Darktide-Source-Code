@@ -66,10 +66,10 @@ ActionSmiteTargeting.start = function (self, action_settings, t, time_scale, act
 	end
 end
 
-ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
+ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action, frame)
 	local ignore_charge_module_update = true
 
-	ActionSmiteTargeting.super.fixed_update(self, dt, t, time_in_action, ignore_charge_module_update)
+	ActionSmiteTargeting.super.fixed_update(self, dt, t, time_in_action, frame, ignore_charge_module_update)
 
 	local previously_targeted_unit = self._targeting_component.target_unit_1
 

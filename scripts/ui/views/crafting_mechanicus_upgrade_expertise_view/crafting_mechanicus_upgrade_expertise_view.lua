@@ -21,10 +21,10 @@ CraftingMechanicusUpgradeExpertiseView.init = function (self, settings, context)
 		item = self._item,
 		trait_ids = {},
 		trait_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		trait_items = {},
+		trait_items = {}
 	}
 end
 
@@ -130,7 +130,7 @@ CraftingMechanicusUpgradeExpertiseView._present_crafting = function (self, maste
 		start = start_value,
 		current = start_value,
 		max_available = max_available_value,
-		max = max_value,
+		max = max_value
 	}
 
 	expertise_data.start = math.max(expertise_data.current, expertise_data.start)

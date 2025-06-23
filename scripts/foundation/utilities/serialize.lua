@@ -31,7 +31,7 @@ for _, v in ipairs({
 	"return",
 	"then",
 	"until",
-	"while",
+	"while"
 }) do
 	lua_reserved_words[v] = true
 end
@@ -95,7 +95,7 @@ local function _save(value)
 end
 
 local serialize = {
-	save = _save,
+	save = _save
 }
 
 return serialize

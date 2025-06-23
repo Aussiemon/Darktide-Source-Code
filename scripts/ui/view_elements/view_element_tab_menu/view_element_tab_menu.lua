@@ -23,7 +23,7 @@ ViewElementTabMenu.init = function (self, parent, draw_layer, start_scale, optio
 	self._is_handling_navigation_input = false
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	self:_update_input_action_texts()
@@ -61,7 +61,7 @@ ViewElementTabMenu.add_entry = function (self, display_name, on_pressed_callback
 		display_name = display_name,
 		icon = optional_display_icon,
 		on_pressed_callback = on_pressed_callback,
-		update = optional_update_function,
+		update = optional_update_function
 	}
 	local display_text = no_localization == true and display_name or display_name and self:_localize(display_name)
 	local content = widget.content

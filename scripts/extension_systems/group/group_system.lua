@@ -7,11 +7,11 @@ local BotGroup = require("scripts/extension_systems/group/bot_group")
 local GroupSystem = class("GroupSystem", "ExtensionSystemBase")
 local BOT_SERVER_RPCS = {
 	"rpc_bot_unit_order",
-	"rpc_bot_lookup_order",
+	"rpc_bot_lookup_order"
 }
 local MINION_RPCS = {
 	"rpc_start_group_sfx",
-	"rpc_stop_group_sfx",
+	"rpc_stop_group_sfx"
 }
 
 local function _register_bot_rpc(rpc_name)
@@ -191,7 +191,7 @@ GroupSystem._create_group = function (self, id)
 	local group = {
 		min_members_spawned = false,
 		id = id,
-		members = {},
+		members = {}
 	}
 
 	groups[index] = group

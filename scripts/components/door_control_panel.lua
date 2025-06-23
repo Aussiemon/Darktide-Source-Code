@@ -51,29 +51,29 @@ end
 
 DoorControlPanel.component_data = {
 	start_active = {
-		ui_name = "Start Active",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Start Active"
 	},
 	interaction_interlude = {
+		ui_type = "number",
 		min = 0,
 		ui_name = "Interaction Interlude (sec.)",
-		ui_type = "number",
-		value = 0.75,
+		value = 0.75
 	},
 	inputs = {
 		activate = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		deactivate = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"DoorControlPanelExtension",
-	},
+		"DoorControlPanelExtension"
+	}
 }
 
 return DoorControlPanel

@@ -9,41 +9,41 @@ local MissionBuffsManager = class("MissionBuffsManager")
 local CLIENT_RPCS = {
 	"rpc_client_mission_buffs_buff_choices_received",
 	"rpc_client_mission_buffs_buff_received",
-	"rpc_client_mission_buffs_family_received",
+	"rpc_client_mission_buffs_family_received"
 }
 local EVENTS = {
 	{
 		"mission_buffs_event_player_spawned",
-		"_manage_player_spawn",
+		"_manage_player_spawn"
 	},
 	{
 		"mission_buffs_event_notify_buff_to_player",
-		"notify_buff_given_to_player",
+		"notify_buff_given_to_player"
 	},
 	{
 		"mission_buffs_event_add_externally_controlled_to_player",
-		"_add_externally_controlled_buff_to_player",
+		"_add_externally_controlled_buff_to_player"
 	},
 	{
 		"mission_buffs_event_request_specific_buff",
-		"_request_specific_buff",
+		"_request_specific_buff"
 	},
 	{
 		"mission_buffs_event_request_family_buff_choice",
-		"_request_buff_family_choice",
+		"_request_buff_family_choice"
 	},
 	{
 		"mission_buffs_event_request_family_buff_for_all",
-		"_request_family_buff_for_all",
+		"_request_family_buff_for_all"
 	},
 	{
 		"mission_buffs_event_request_legendary_buff_choice",
-		"_request_legendary_buff_choice",
+		"_request_legendary_buff_choice"
 	},
 	{
 		"event_surival_mode_buff_choice",
-		"_notify_server_buff_choice",
-	},
+		"_notify_server_buff_choice"
+	}
 }
 
 MissionBuffsManager._register_rpcs = function (self, network_event_delegate)

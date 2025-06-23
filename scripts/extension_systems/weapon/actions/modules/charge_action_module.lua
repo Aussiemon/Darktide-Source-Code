@@ -87,23 +87,23 @@ ChargeActionModule.complete_time = function (self, charge_duration_override)
 end
 
 local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
-	reload_shotgun = true,
-	reload_state = true,
 	unaim = true,
 	unwield = true,
-	unwield_to_specific = true,
 	vent_warp_charge = true,
+	reload_state = true,
+	unwield_to_specific = true,
+	reload_shotgun = true
 }
 local DEFAULT_INTERRUPT_REASONS = {
-	catapulted = true,
+	stunned = true,
 	dead = true,
+	catapulted = true,
 	hold_input_released = true,
-	interacting = true,
 	knocked_down = true,
 	ledge_hanging = true,
-	pounced = true,
-	stunned = true,
 	unwield = true,
+	interacting = true,
+	pounced = true
 }
 
 ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore_reset, reset_action_kinds)

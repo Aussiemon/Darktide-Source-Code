@@ -18,7 +18,7 @@ local effect_template = {
 		local unit = template_data.unit
 
 		Unit.set_scalar_for_materials_in_unit_and_childs(unit, MATERIAL_VARIABLE, 0)
-	end,
+	end
 }
 
 return effect_template

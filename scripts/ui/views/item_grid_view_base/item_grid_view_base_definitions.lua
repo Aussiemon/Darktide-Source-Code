@@ -11,29 +11,29 @@ local grid_width = 640
 local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
-	grid_height,
+	grid_height
 }
 local grid_spacing = {
 	10,
-	10,
+	10
 }
 local mask_size = {
 	grid_width + 40,
-	grid_height,
+	grid_height
 }
 local grid_settings = {
-	scrollbar_horizontal_offset = -7,
 	scrollbar_width = 7,
-	use_is_focused_for_navigation = false,
-	use_select_on_focused = true,
-	use_terminal_background = true,
-	using_custom_gamepad_navigation = false,
 	widget_icon_load_margin = 0,
+	use_select_on_focused = true,
+	use_is_focused_for_navigation = false,
+	use_terminal_background = true,
+	scrollbar_horizontal_offset = -7,
+	using_custom_gamepad_navigation = false,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
 	title_height = title_height,
-	edge_padding = edge_padding,
+	edge_padding = edge_padding
 }
 local weapon_stats_grid_settings
 
@@ -42,183 +42,183 @@ do
 	local width, height = 530, 920
 
 	weapon_stats_grid_settings = {
-		ignore_blur = true,
 		scrollbar_width = 7,
+		ignore_blur = true,
 		title_height = 70,
 		use_parent_world = false,
 		using_custom_gamepad_navigation = false,
 		grid_spacing = {
 			0,
-			0,
+			0
 		},
 		grid_size = {
 			width - padding,
-			height,
+			height
 		},
 		mask_size = {
 			width + 40,
-			height,
+			height
 		},
-		edge_padding = padding,
+		edge_padding = padding
 	}
 end
 
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	item_grid_pivot = {
-		horizontal_alignment = "left",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
 		size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		position = {
 			100,
 			40,
-			1,
-		},
+			1
+		}
 	},
 	grid_tab_panel = {
-		horizontal_alignment = "center",
-		parent = "item_grid_pivot",
 		vertical_alignment = "top",
+		parent = "item_grid_pivot",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			-50,
-			1,
-		},
+			1
+		}
 	},
 	weapon_stats_pivot = {
-		horizontal_alignment = "right",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140,
 			80,
-			3,
-		},
+			3
+		}
 	},
 	weapon_compare_stats_pivot = {
-		horizontal_alignment = "right",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-1140 + (grid_size[1] - 50),
 			80,
-			3,
-		},
+			3
+		}
 	},
 	weapon_viewport = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	weapon_pivot = {
-		horizontal_alignment = "center",
-		parent = "weapon_viewport",
 		vertical_alignment = "center",
+		parent = "weapon_viewport",
+		horizontal_alignment = "center",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			300,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	display_name = {
-		horizontal_alignment = "left",
-		parent = "weapon_stats_pivot",
 		vertical_alignment = "top",
+		parent = "weapon_stats_pivot",
+		horizontal_alignment = "left",
 		size = {
 			1700,
-			50,
+			50
 		},
 		position = {
 			0,
 			-497,
-			3,
-		},
+			3
+		}
 	},
 	sub_display_name = {
-		horizontal_alignment = "center",
-		parent = "display_name",
 		vertical_alignment = "top",
+		parent = "display_name",
+		horizontal_alignment = "center",
 		size = {
 			1700,
-			50,
+			50
 		},
 		position = {
 			0,
 			35,
-			4,
-		},
+			4
+		}
 	},
 	display_name_divider = {
-		horizontal_alignment = "left",
-		parent = "sub_display_name",
 		vertical_alignment = "bottom",
+		parent = "sub_display_name",
+		horizontal_alignment = "left",
 		size = {
 			344,
-			18,
+			18
 		},
 		position = {
 			0,
 			15,
-			-1,
-		},
+			-1
+		}
 	},
 	display_name_divider_glow = {
-		horizontal_alignment = "left",
-		parent = "display_name_divider",
 		vertical_alignment = "bottom",
+		parent = "display_name_divider",
+		horizontal_alignment = "left",
 		size = {
 			300,
-			80,
+			80
 		},
 		position = {
 			20,
 			-16,
-			-1,
-		},
-	},
+			-1
+		}
+	}
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
 
@@ -233,60 +233,60 @@ sub_display_name_style.text_vertical_alignment = "center"
 local widget_definitions = {
 	display_name_divider = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/dividers/skull_rendered_left_01",
+			pass_type = "texture",
 			visibility_function = function (content)
 				return content.texture ~= nil
-			end,
-		},
+			end
+		}
 	}, "display_name_divider"),
 	display_name_divider_glow = UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			style_id = "texture",
 			value = "content/ui/materials/effects/wide_upward_glow",
+			style_id = "texture",
+			pass_type = "texture",
 			visibility_function = function (content)
 				return content.texture ~= nil
-			end,
-		},
+			end
+		}
 	}, "display_name_divider_glow"),
 	display_name = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "text",
-			style = display_name_style,
-		},
+			pass_type = "text",
+			style = display_name_style
+		}
 	}, "display_name"),
 	sub_display_name = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "text",
-			style = sub_display_name_style,
-		},
-	}, "sub_display_name"),
+			pass_type = "text",
+			style = sub_display_name_style
+		}
+	}, "sub_display_name")
 }
 local tab_menu_settings = {
+	layer = 10,
 	button_spacing = 20,
 	fixed_button_size = true,
 	horizontal_alignment = "center",
-	layer = 10,
 	button_size = {
 		200,
-		500,
-	},
+		500
+	}
 }
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
 		{
-			end_time = 0,
 			name = "init",
+			end_time = 0,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent._alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -302,13 +302,13 @@ local animations = {
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
-			end,
-		},
+			end
+		}
 	},
 	grid_entry = {
 		{
-			end_time = 0.5,
 			name = "fade_in",
+			end_time = 0.5,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
@@ -316,9 +316,9 @@ local animations = {
 				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = anim_progress
 				end
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
@@ -327,5 +327,5 @@ return {
 	tab_menu_settings = tab_menu_settings,
 	weapon_stats_grid_settings = weapon_stats_grid_settings,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

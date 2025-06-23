@@ -14,7 +14,7 @@ local proc_events = BuffSettings.proc_events
 local MinionDeathManager = class("MinionDeathManager")
 local _trigger_kill_vo, _trigger_on_kill_procs
 local CLIENT_RPCS = {
-	"rpc_minion_set_dead",
+	"rpc_minion_set_dead"
 }
 
 MinionDeathManager.init = function (self, is_server, network_event_delegate, soft_cap_out_of_bounds_units)
@@ -43,8 +43,8 @@ end
 
 local INSTANT_RAGDOLL_STAGGER_TYPES = {
 	explosion = true,
-	heavy = true,
 	running = true,
+	heavy = true
 }
 
 MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
@@ -131,13 +131,13 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 end
 
 local extensions_to_keep = {
-	FadeExtension = "fade_system",
-	MinionBuffExtension = "buff_system",
-	MinionDissolveExtension = "dissolve_system",
-	MinionProximityExtension = "legacy_v2_proximity_system",
 	MinionUnitDataExtension = "unit_data_system",
+	MinionBuffExtension = "buff_system",
+	MinionProximityExtension = "legacy_v2_proximity_system",
+	FadeExtension = "fade_system",
 	MinionVisualLoadoutExtension = "visual_loadout_system",
 	WoundsExtension = "wounds_system",
+	MinionDissolveExtension = "dissolve_system"
 }
 
 MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_name, damage_profile_name, do_ragdoll_push, herding_template_name)
@@ -152,7 +152,7 @@ MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_n
 		damage_profile_name = damage_profile_name,
 		do_ragdoll_push = do_ragdoll_push,
 		herding_template_name = herding_template_name,
-		death_velocity = death_velocity,
+		death_velocity = death_velocity
 	}
 
 	Unit.flow_event(unit, "on_death")

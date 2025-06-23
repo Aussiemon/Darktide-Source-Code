@@ -4,7 +4,7 @@ local AchievementCategoriesInterface = {
 	"name",
 	"display_name",
 	"parent_name",
-	"sort_index",
+	"sort_index"
 }
 local AchievementCategories = {}
 local sort_index = 0
@@ -15,7 +15,7 @@ local function _add_category(name, loc_key, optional_parent_name)
 		name = name,
 		display_name = loc_key,
 		parent_name = optional_parent_name,
-		sort_index = sort_index,
+		sort_index = sort_index
 	}
 
 	table.make_strict_with_interface(AchievementCategories[name], "AchievementCategories[" .. name .. "]", AchievementCategoriesInterface)
@@ -34,6 +34,9 @@ _add_category("psyker_abilites", "loc_class_abilities_title", "psyker_2")
 _add_category("ogryn_2", "loc_class_ogryn_title")
 _add_category("ogryn_progression", "loc_class_progression_title", "ogryn_2")
 _add_category("ogryn_abilites", "loc_class_abilities_title", "ogryn_2")
+_add_category("adamant", "loc_class_adamant_title")
+_add_category("adamant_progression", "loc_class_progression_title", "adamant")
+_add_category("adamant_abilites", "loc_class_abilities_title", "adamant")
 _add_category("tactical", "loc_achievement_category_tactical_label")
 _add_category("offensive", "loc_achievement_category_offensive_label", "tactical")
 _add_category("defensive", "loc_achievement_category_defensive_label", "tactical")

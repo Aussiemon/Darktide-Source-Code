@@ -69,12 +69,12 @@ ActionFlamerGasBurst.start = function (self, action_settings, t, ...)
 	self:_setup_flame_data(action_settings)
 end
 
-ActionFlamerGasBurst.fixed_update = function (self, dt, t, time_in_action)
+ActionFlamerGasBurst.fixed_update = function (self, dt, t, time_in_action, frame)
 	if not self._flamer_gas_template then
 		self:_setup_flame_data(self._action_settings)
 	end
 
-	ActionFlamerGasBurst.super.fixed_update(self, dt, t, time_in_action)
+	ActionFlamerGasBurst.super.fixed_update(self, dt, t, time_in_action, frame)
 
 	if not self._is_server then
 		return

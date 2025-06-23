@@ -15,7 +15,7 @@ local IMPACT_FX_KEYSET = {}
 for i = 1, NUM_IMPACT_FX_ENTRIES do
 	IMPACT_FX_KEYSET[i] = {
 		impact_position_key = string.format(IMPACT_FX_POSITION_KEY, tostring(i)),
-		impact_start_duration_key = string.format(IMPACT_FX_START_DURATION_KEY, tostring(i)),
+		impact_start_duration_key = string.format(IMPACT_FX_START_DURATION_KEY, tostring(i))
 	}
 end
 
@@ -156,7 +156,7 @@ local effect_template = {
 		local source_id = template_data.source_id
 
 		WwiseWorld.destroy_manual_source(wwise_world, source_id)
-	end,
+	end
 }
 
 function _switch_state(template_data, template_context, new_state, is_toughness_invulnerable)
@@ -179,11 +179,11 @@ end
 local MAX_INTENSITY_LUMEN, MAX_INTENSITY_LUMEN_HIT_SHIELD = 400, 1000
 local FLICKER_DURATION = {
 	0.1,
-	0.3,
+	0.3
 }
 local FLICKER_FREQUENCY = {
 	0.1,
-	0.3,
+	0.3
 }
 
 function _flicker_shield(shield_unit, template_data, t)

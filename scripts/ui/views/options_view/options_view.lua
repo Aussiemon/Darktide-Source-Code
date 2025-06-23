@@ -74,7 +74,7 @@ OptionsView._map_validations = function (self, config)
 		categories[category_config.display_name] = {
 			validation_function = category_config.validation_function,
 			validation_result = validation_result,
-			settings = {},
+			settings = {}
 		}
 	end
 
@@ -93,7 +93,7 @@ OptionsView._map_validations = function (self, config)
 
 		categories[category].settings[id] = {
 			validation_function = setting.validation_function,
-			validation_result = validation_result,
+			validation_result = validation_result
 		}
 	end
 
@@ -154,13 +154,13 @@ OptionsView.cb_reset_category_to_default = function (self)
 	local reset_functions_by_category = self._reset_functions_by_category
 	local reset_function = reset_functions_by_category[selected_category]
 	local context = {
-		description_text = "loc_popup_description_settings_reset_default",
 		title_text = "loc_popup_header_settings_reset_default",
+		description_text = "loc_popup_description_settings_reset_default",
 		type = "warning",
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_button_settings_reset_default",
+				close_on_pressed = true,
 				callback = callback(function ()
 					if reset_function then
 						reset_function()
@@ -180,18 +180,18 @@ OptionsView.cb_reset_category_to_default = function (self)
 					end
 
 					self._popup_id = nil
-				end),
+				end)
 			},
 			{
+				text = "loc_popup_button_cancel_settings_reset_default",
+				template_type = "terminal_button_small",
 				close_on_pressed = true,
 				hotkey = "back",
-				template_type = "terminal_button_small",
-				text = "loc_popup_button_cancel_settings_reset_default",
 				callback = function ()
 					self._popup_id = nil
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -201,12 +201,12 @@ end
 
 OptionsView._restart_popup_info = function (self)
 	local context = {
-		description_text = "loc_popup_settings_require_restart_description",
 		title_text = "loc_popup_settings_require_restart_header",
+		description_text = "loc_popup_settings_require_restart_description",
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_confirm",
+				close_on_pressed = true,
 				callback = callback(function ()
 					self._popup_id = nil
 
@@ -215,9 +215,9 @@ OptionsView._restart_popup_info = function (self)
 					self._require_restart = false
 
 					Managers.ui:close_view(view_name)
-				end),
-			},
-		},
+				end)
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -314,7 +314,7 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			end
 
 			alignment_list[#alignment_list + 1] = widget or {
-				size = size,
+				size = size
 			}
 		end
 	end
@@ -749,7 +749,7 @@ OptionsView._setup_category_config = function (self, config)
 				end,
 				select_function = function (parent, widget, entry)
 					self:present_category_widgets(category_display_name)
-				end,
+				end
 			}
 
 			entries[#entries + 1] = entry
@@ -777,10 +777,10 @@ OptionsView._setup_category_config = function (self, config)
 	self._reset_functions_by_category = reset_functions_by_category
 	self._categories_by_display_name = categories_by_display_name
 	self._navigation_widgets = {
-		self._category_content_widgets,
+		self._category_content_widgets
 	}
 	self._navigation_grids = {
-		self._category_content_grid,
+		self._category_content_grid
 	}
 end
 
@@ -831,7 +831,7 @@ OptionsView._setup_settings_config = function (self, config)
 
 			category_widgets[category][#widgets + 1] = {
 				widget = widget,
-				alignment_widget = alignment_widget,
+				alignment_widget = alignment_widget
 			}
 		end
 	end
@@ -900,7 +900,7 @@ OptionsView._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text,
+			text = localized_text
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
 
@@ -910,13 +910,13 @@ OptionsView._set_tooltip_data = function (self, widget)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
 			width,
-			0,
+			0
 		}, text_options)
 		local height = text_height
 
 		self._widgets_by_name.tooltip.content.size = {
 			width,
-			height,
+			height
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
@@ -993,7 +993,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
 		size[1] - indentation_spacing,
-		size[2],
+		size[2]
 	}
 	local pass_template_function = template.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
@@ -1019,11 +1019,11 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		return widget, {
 			horizontal_alignment = "right",
 			size = size,
-			name = name,
+			name = name
 		}
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end
@@ -1076,7 +1076,7 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 		if entry.cancel_keys then
 			local input_text = entry.cancel_keys[1]
 			local description_text = Localize("loc_setting_keybinding_press_new_button", true, {
-				cancel_input = InputUtils.key_axis_locale(input_text),
+				cancel_input = InputUtils.key_axis_locale(input_text)
 			})
 
 			self._keybind_popup:set_description_text(description_text)

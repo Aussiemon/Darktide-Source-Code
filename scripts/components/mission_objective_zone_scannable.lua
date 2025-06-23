@@ -24,8 +24,8 @@ end
 
 MissionObjectiveZoneScannable.component_data = {
 	extensions = {
-		"MissionObjectiveZoneScannableExtension",
-	},
+		"MissionObjectiveZoneScannableExtension"
+	}
 }
 
 return MissionObjectiveZoneScannable

@@ -13,7 +13,7 @@ LocalLeftSessionState.enter = function (self, reason)
 	reason.channel_id = shared_state.channel_id
 	shared_state.event_list[#shared_state.event_list + 1] = {
 		name = "session_left",
-		parameters = reason,
+		parameters = reason
 	}
 
 	if shared_state.has_joined_session then

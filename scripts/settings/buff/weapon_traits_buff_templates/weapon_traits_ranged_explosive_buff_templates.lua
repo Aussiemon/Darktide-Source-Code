@@ -25,11 +25,11 @@ local function _is_hitting_3_or_more_check(params, template_data, template_conte
 end
 
 templates.weapon_traits_ranged_explosive_wield_explosion_restore_toughness_buff = {
-	class_name = "proc_buff",
 	cooldown_duration = 10,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	check_proc_func = _is_hitting_3_or_more_check,
 	proc_func = function (params, template_data, template_context)
@@ -37,14 +37,14 @@ templates.weapon_traits_ranged_explosive_wield_explosion_restore_toughness_buff 
 		local toughness_percentage = 0.2
 
 		Toughness.replenish_percentage(player_unit, toughness_percentage)
-	end,
+	end
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_heal_corruption_buff = {
-	class_name = "proc_buff",
 	cooldown_duration = 10,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -58,130 +58,130 @@ templates.weapon_traits_ranged_explosive_wield_explosion_heal_corruption_buff = 
 		local corruption_value = 20
 
 		health_extension:reduce_permanent_damage(corruption_value)
-	end,
+	end
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increase_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 0.1,
+		[proc_events.on_explosion_hit] = 0.1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage] = 0.1,
+		[stat_buffs.damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increase_impact_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 0.1,
+		[proc_events.on_explosion_hit] = 0.1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.explosion_impact_modifier] = 0.1,
+		[stat_buffs.explosion_impact_modifier] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_crit_chance_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 0.1,
+		[proc_events.on_explosion_hit] = 0.1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.1,
+		[stat_buffs.critical_strike_chance] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_unarmored_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.unarmored_damage] = 0.1,
+		[stat_buffs.unarmored_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_armored_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.armored_damage] = 0.1,
+		[stat_buffs.armored_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_resistant_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.resistant_damage] = 0.1,
+		[stat_buffs.resistant_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_berserker_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.berserker_damage] = 0.1,
+		[stat_buffs.berserker_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_super_armor_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.super_armor_damage] = 0.1,
+		[stat_buffs.super_armor_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_explosion_increased_disgustingly_resilient_damage_buff = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_explosion_hit] = 1,
+		[proc_events.on_explosion_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.disgustingly_resilient_damage] = 0.1,
+		[stat_buffs.disgustingly_resilient_damage] = 0.1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = _is_hitting_3_or_more_check,
+	check_proc_func = _is_hitting_3_or_more_check
 }
 templates.weapon_traits_ranged_explosive_wield_bleed_on_hit_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_explosion_and_check_item_slot,
@@ -195,7 +195,7 @@ templates.weapon_traits_ranged_explosive_wield_bleed_on_hit_buff = {
 
 			attacked_unit_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", template_context.unit)
 		end
-	end,
+	end
 }
 
 return templates

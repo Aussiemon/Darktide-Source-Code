@@ -96,7 +96,7 @@ local function _cancel_matchmaking_text()
 	local color_tint_text = true
 	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, CANCEL_INPUT_ALIAS, color_tint_text)
 	local loc_context = {
-		input = input_text,
+		input = input_text
 	}
 
 	return Localize("loc_matchmaking_cancel_search", true, loc_context)
@@ -135,7 +135,7 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 		self:_create_or_update_notification({
 			Localize("loc_matchmaking_looking_for_team"),
 			mission_text or "???",
-			(_cancel_matchmaking_text()),
+			(_cancel_matchmaking_text())
 		})
 	elseif new_state == PartyConstants.State.matchmaking_acceptance_vote then
 		self:_remove_notification_if_active()
@@ -148,7 +148,7 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 			self:_create_or_update_notification({
 				Localize("loc_matchmaking_connecting_to_mission"),
 				mission_text or "???",
-				[3] = "",
+				[3] = ""
 			})
 		else
 			self:_remove_notification_if_active()
@@ -189,7 +189,7 @@ MatchmakingNotificationHandler.update = function (self, dt)
 			self:_create_or_update_notification({
 				Localize("loc_matchmaking_looking_for_team"),
 				self._mission_text or "???",
-				(_cancel_matchmaking_text()),
+				(_cancel_matchmaking_text())
 			})
 		end
 
@@ -210,7 +210,7 @@ MatchmakingNotificationHandler._create_or_update_notification = function (self, 
 		Managers.event:trigger("event_update_notification_message", self._notification_id, texts)
 	else
 		Managers.event:trigger("event_add_notification_message", "matchmaking", {
-			texts = texts,
+			texts = texts
 		}, function (id)
 			self._notification_id = id
 		end)

@@ -14,8 +14,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -25,8 +25,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -36,8 +36,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -47,8 +47,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -58,8 +58,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -69,8 +69,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -80,8 +80,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -91,8 +91,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -102,8 +102,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -113,8 +113,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -124,8 +124,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -135,8 +135,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -146,8 +146,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -157,8 +157,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -168,8 +168,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -179,8 +179,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -190,8 +190,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -201,8 +201,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -212,8 +212,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -223,8 +223,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.95,
-			min = 0.05,
-		},
+			min = 0.05
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -233,8 +233,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -243,8 +243,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -253,8 +253,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -263,8 +263,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"still",
@@ -272,8 +272,8 @@ spread_trait_templates.default_spread_stat = {
 		"min_pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		"still",
@@ -281,8 +281,8 @@ spread_trait_templates.default_spread_stat = {
 		"min_yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		"still",
@@ -291,8 +291,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"still",
@@ -301,8 +301,8 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_still",
@@ -310,8 +310,8 @@ spread_trait_templates.default_spread_stat = {
 		"min_pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_still",
@@ -319,8 +319,8 @@ spread_trait_templates.default_spread_stat = {
 		"min_yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_still",
@@ -329,8 +329,8 @@ spread_trait_templates.default_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_still",
@@ -339,9 +339,9 @@ spread_trait_templates.default_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
-	},
+			min = 0.25
+		}
+	}
 }
 spread_trait_templates.mobility_spread_stat = {
 	{
@@ -350,8 +350,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"min_pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		"moving",
@@ -359,8 +359,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"min_yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		"moving",
@@ -369,8 +369,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"moving",
@@ -379,8 +379,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_moving",
@@ -388,8 +388,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"min_pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_moving",
@@ -397,8 +397,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"min_yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_moving",
@@ -407,8 +407,8 @@ spread_trait_templates.mobility_spread_stat = {
 		"pitch",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
+			min = 0.25
+		}
 	},
 	{
 		"crouch_moving",
@@ -417,9 +417,9 @@ spread_trait_templates.mobility_spread_stat = {
 		"yaw",
 		{
 			max = 0.75,
-			min = 0.25,
-		},
-	},
+			min = 0.25
+		}
+	}
 }
 spread_trait_templates.default_spread_perk = {
 	{
@@ -428,7 +428,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		1,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -436,7 +436,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		2,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -444,7 +444,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		3,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -452,7 +452,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		4,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -460,7 +460,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		1,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -468,7 +468,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		2,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -476,7 +476,7 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		3,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
@@ -484,74 +484,74 @@ spread_trait_templates.default_spread_perk = {
 		"shooting",
 		4,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"immediate_spread",
 		"alternate_fire_start",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"immediate_spread",
 		"alternate_fire_start",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"immediate_spread",
 		"crouch_transition",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"immediate_spread",
 		"crouch_transition",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"continuous_spread",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"continuous_spread",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"still",
 		"decay",
 		"player_event",
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		"moving",
 		"continuous_spread",
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		"moving",
 		"continuous_spread",
 		"yaw",
-		0.05,
-	},
+		0.05
+	}
 }
 spread_trait_templates.default_mobility_spread_stat = {
 	{
@@ -562,8 +562,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -573,8 +573,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -584,8 +584,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -595,8 +595,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -606,8 +606,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -617,8 +617,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -628,8 +628,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -639,8 +639,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -650,8 +650,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -661,8 +661,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"pitch",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -672,8 +672,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -683,8 +683,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -694,8 +694,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -705,8 +705,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -716,8 +716,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -727,8 +727,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -738,8 +738,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -749,8 +749,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -760,8 +760,8 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -771,9 +771,9 @@ spread_trait_templates.default_mobility_spread_stat = {
 		"yaw",
 		{
 			max = 1,
-			min = 0,
-		},
-	},
+			min = 0
+		}
+	}
 }
 spread_trait_templates.default_mobility_spread_perk = {
 	{
@@ -782,7 +782,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		1,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -790,7 +790,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		2,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -798,7 +798,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		3,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -806,7 +806,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		4,
 		"pitch",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -814,7 +814,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		1,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -822,7 +822,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		2,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -830,7 +830,7 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		3,
 		"yaw",
-		0.05,
+		0.05
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -838,8 +838,8 @@ spread_trait_templates.default_mobility_spread_perk = {
 		"shooting",
 		4,
 		"yaw",
-		0.05,
-	},
+		0.05
+	}
 }
 spread_trait_templates.spread_killshot_trait_01_a = {
 	{
@@ -848,7 +848,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -856,7 +856,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -864,7 +864,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -872,7 +872,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -880,7 +880,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -888,7 +888,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -896,7 +896,7 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -904,37 +904,37 @@ spread_trait_templates.spread_killshot_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_yaw",
-		0.6,
+		0.6
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 spread_trait_templates.spread_killshot_trait_01_b = {
 	{
@@ -943,7 +943,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -951,7 +951,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -959,7 +959,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -967,7 +967,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -975,7 +975,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -983,7 +983,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -991,7 +991,7 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -999,37 +999,37 @@ spread_trait_templates.spread_killshot_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_pitch",
-		0.8,
+		0.8
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_yaw",
-		0.8,
+		0.8
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_pitch",
-		0.8,
+		0.8
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_yaw",
-		0.8,
+		0.8
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 spread_trait_templates.spread_killshot_trait_01_c = {
 	{
@@ -1038,7 +1038,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -1046,7 +1046,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1054,7 +1054,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1062,7 +1062,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
@@ -1070,7 +1070,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		"still",
@@ -1078,7 +1078,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1086,7 +1086,7 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1094,37 +1094,37 @@ spread_trait_templates.spread_killshot_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"continuous_spread",
 		1,
 		"min_yaw",
-		1,
+		1
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_pitch",
-		1,
+		1
 	},
 	{
 		"still",
 		"start_spread",
 		1,
 		"start_yaw",
-		1,
+		1
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 spread_trait_templates.spread_spraynpray_trait_01_a = {
 	{
@@ -1133,7 +1133,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1141,7 +1141,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1149,7 +1149,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1157,7 +1157,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1165,7 +1165,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1173,7 +1173,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1181,7 +1181,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1189,7 +1189,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1197,7 +1197,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1205,7 +1205,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -1213,7 +1213,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1221,7 +1221,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1229,7 +1229,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1237,7 +1237,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1245,7 +1245,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1253,7 +1253,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1261,7 +1261,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1269,7 +1269,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1277,7 +1277,7 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1285,9 +1285,9 @@ spread_trait_templates.spread_spraynpray_trait_01_a = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 spread_trait_templates.spread_spraynpray_trait_01_b = {
 	{
@@ -1296,7 +1296,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1304,7 +1304,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1312,7 +1312,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1320,7 +1320,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1328,7 +1328,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1336,7 +1336,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1344,7 +1344,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1352,7 +1352,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1360,7 +1360,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1368,7 +1368,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -1376,7 +1376,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1384,7 +1384,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1392,7 +1392,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1400,7 +1400,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1408,7 +1408,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1416,7 +1416,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1424,7 +1424,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1432,7 +1432,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1440,7 +1440,7 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1448,9 +1448,9 @@ spread_trait_templates.spread_spraynpray_trait_01_b = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 spread_trait_templates.spread_spraynpray_trait_01_c = {
 	{
@@ -1459,7 +1459,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1467,7 +1467,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1475,7 +1475,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1483,7 +1483,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1491,7 +1491,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		5,
 		"pitch",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1499,7 +1499,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		6,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1507,7 +1507,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		7,
 		"pitch",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1515,7 +1515,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		8,
 		"pitch",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1523,7 +1523,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		9,
 		"pitch",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1531,7 +1531,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		10,
 		"pitch",
-		0.3,
+		0.3
 	},
 	{
 		"still",
@@ -1539,7 +1539,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		1,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		"still",
@@ -1547,7 +1547,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		2,
 		"yaw",
-		0.7,
+		0.7
 	},
 	{
 		"still",
@@ -1555,7 +1555,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		3,
 		"yaw",
-		0.65,
+		0.65
 	},
 	{
 		"still",
@@ -1563,7 +1563,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		4,
 		"yaw",
-		0.6,
+		0.6
 	},
 	{
 		"still",
@@ -1571,7 +1571,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		5,
 		"yaw",
-		0.55,
+		0.55
 	},
 	{
 		"still",
@@ -1579,7 +1579,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		6,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		"still",
@@ -1587,7 +1587,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		7,
 		"yaw",
-		0.45,
+		0.45
 	},
 	{
 		"still",
@@ -1595,7 +1595,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		8,
 		"yaw",
-		0.4,
+		0.4
 	},
 	{
 		"still",
@@ -1603,7 +1603,7 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		9,
 		"yaw",
-		0.35,
+		0.35
 	},
 	{
 		"still",
@@ -1611,9 +1611,9 @@ spread_trait_templates.spread_spraynpray_trait_01_c = {
 		"shooting",
 		10,
 		"yaw",
-		0.3,
+		0.3
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 spread_trait_templates.spread_assault_trait_01_a = {
 	{
@@ -1622,7 +1622,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1630,7 +1630,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1638,7 +1638,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1646,7 +1646,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1654,7 +1654,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1662,7 +1662,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1670,7 +1670,7 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1678,9 +1678,9 @@ spread_trait_templates.spread_assault_trait_01_a = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.1,
+	[DEFAULT_LERP_VALUE] = 0.1
 }
 spread_trait_templates.spread_assault_trait_01_b = {
 	{
@@ -1689,7 +1689,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1697,7 +1697,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1705,7 +1705,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1713,7 +1713,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1721,7 +1721,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1729,7 +1729,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1737,7 +1737,7 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1745,9 +1745,9 @@ spread_trait_templates.spread_assault_trait_01_b = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.2,
+	[DEFAULT_LERP_VALUE] = 0.2
 }
 spread_trait_templates.spread_assault_trait_01_c = {
 	{
@@ -1756,7 +1756,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1764,7 +1764,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		2,
 		"pitch",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1772,7 +1772,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		3,
 		"pitch",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1780,7 +1780,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		4,
 		"pitch",
-		0.25,
+		0.25
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1788,7 +1788,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1796,7 +1796,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		2,
 		"yaw",
-		0.75,
+		0.75
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1804,7 +1804,7 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		3,
 		"yaw",
-		0.5,
+		0.5
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1812,9 +1812,9 @@ spread_trait_templates.spread_assault_trait_01_c = {
 		"shooting",
 		4,
 		"yaw",
-		0.25,
+		0.25
 	},
-	[DEFAULT_LERP_VALUE] = 0.3,
+	[DEFAULT_LERP_VALUE] = 0.3
 }
 spread_trait_templates.spread_immediate_spread_01 = {
 	{
@@ -1823,7 +1823,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		1,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1831,7 +1831,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		2,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1839,7 +1839,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		3,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1847,7 +1847,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		4,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1855,7 +1855,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		5,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1863,7 +1863,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		6,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1871,7 +1871,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		7,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1879,7 +1879,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		8,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1887,7 +1887,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		9,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1895,7 +1895,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		10,
 		"pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1903,7 +1903,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		1,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1911,7 +1911,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		2,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1919,7 +1919,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		3,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1927,7 +1927,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		4,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1935,7 +1935,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		5,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1943,7 +1943,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		6,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1951,7 +1951,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		7,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1959,7 +1959,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		8,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1967,7 +1967,7 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		9,
 		"yaw",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1975,8 +1975,8 @@ spread_trait_templates.spread_immediate_spread_01 = {
 		"shooting",
 		10,
 		"yaw",
-		0.33,
-	},
+		0.33
+	}
 }
 spread_trait_templates.spread_immediate_spread_02 = {
 	{
@@ -1985,7 +1985,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		1,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -1993,7 +1993,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		2,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2001,7 +2001,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		3,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2009,7 +2009,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		4,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2017,7 +2017,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		5,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2025,7 +2025,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		6,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2033,7 +2033,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		7,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2041,7 +2041,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		8,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2049,7 +2049,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		9,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2057,7 +2057,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		10,
 		"pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2065,7 +2065,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		1,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2073,7 +2073,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		2,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2081,7 +2081,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		3,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2089,7 +2089,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		4,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2097,7 +2097,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		5,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2105,7 +2105,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		6,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2113,7 +2113,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		7,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2121,7 +2121,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		8,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2129,7 +2129,7 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		9,
 		"yaw",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2137,8 +2137,8 @@ spread_trait_templates.spread_immediate_spread_02 = {
 		"shooting",
 		10,
 		"yaw",
-		0.66,
-	},
+		0.66
+	}
 }
 spread_trait_templates.spread_immediate_spread_03 = {
 	{
@@ -2147,7 +2147,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		1,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2155,7 +2155,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		2,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2163,7 +2163,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		3,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2171,7 +2171,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		4,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2179,7 +2179,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		5,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2187,7 +2187,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		6,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2195,7 +2195,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		7,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2203,7 +2203,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		8,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2211,7 +2211,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		9,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2219,7 +2219,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		10,
 		"pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2227,7 +2227,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		1,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2235,7 +2235,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		2,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2243,7 +2243,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		3,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2251,7 +2251,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		4,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2259,7 +2259,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		5,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2267,7 +2267,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		6,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2275,7 +2275,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		7,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2283,7 +2283,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		8,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2291,7 +2291,7 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		9,
 		"yaw",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
@@ -2299,50 +2299,50 @@ spread_trait_templates.spread_immediate_spread_03 = {
 		"shooting",
 		10,
 		"yaw",
-		1,
-	},
+		1
+	}
 }
 spread_trait_templates.spread_continuous_spread_01 = {
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_pitch",
-		0.33,
+		0.33
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_yaw",
-		0.33,
-	},
+		0.33
+	}
 }
 spread_trait_templates.spread_continuous_spread_02 = {
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_pitch",
-		0.66,
+		0.66
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_yaw",
-		0.66,
-	},
+		0.66
+	}
 }
 spread_trait_templates.spread_continuous_spread_03 = {
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_pitch",
-		1,
+		1
 	},
 	{
 		ALL_WEAPON_MOVEMENT_STATES,
 		"continuous_spread",
 		"min_yaw",
-		1,
-	},
+		1
+	}
 }
 
 return spread_trait_templates

@@ -8,17 +8,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						1,
-					},
+						1
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						2,
-						4,
-					},
-				},
-			},
+						4
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -26,17 +26,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						2,
-					},
+						2
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						4,
-						6,
-					},
-				},
-			},
+						6
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -44,17 +44,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						3,
-					},
+						3
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						4,
-						6,
-					},
-				},
-			},
+						6
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -62,17 +62,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						3,
-						4,
-					},
+						4
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						8,
-						10,
-					},
-				},
-			},
+						10
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -80,18 +80,18 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						4,
-						5,
-					},
+						5
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						10,
-						12,
-					},
-				},
-			},
-		},
+						12
+					}
+				}
+			}
+		}
 	},
 	havoc_cultist_coordinated_blockade_ahead = {
 		{
@@ -100,35 +100,35 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						4,
+						5
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
 						5,
-					},
+						6
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						5,
-						6,
-					},
-				},
-				{
-					name = "cultist_gunner",
-					amount = {
-						1,
-						2,
-					},
-				},
-			},
+						2
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -136,17 +136,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						3,
-						6,
-					},
+						6
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						2,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -154,17 +154,17 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						6,
-						7,
-					},
+						7
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						2,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		{
 			breeds = {
@@ -172,19 +172,19 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						7,
-						8,
-					},
+						8
+					}
 				},
 				{
 					name = "cultist_gunner",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
-		},
-	},
+						4
+					}
+				}
+			}
+		}
+	}
 }
 
 return horde_compositions

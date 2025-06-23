@@ -12,13 +12,13 @@ local _mission_info_panel_widgets = {
 	"panel_scrollbar",
 	"list_interaction",
 	"list_mask",
-	"mission_header",
+	"mission_header"
 }
 
 animations.sequence_animations.resize_mission_window = {
 	{
-		end_time = 0.2,
 		name = "fade_in_panel",
+		end_time = 0.2,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
@@ -61,11 +61,11 @@ animations.sequence_animations.resize_mission_window = {
 			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
-		end,
+		end
 	},
 	{
-		end_time = 0.3,
 		name = "change_background_color",
+		end_time = 0.3,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local color_copy = ColorUtilities.color_copy
@@ -191,11 +191,11 @@ animations.sequence_animations.resize_mission_window = {
 			panel_style.frame_top_red.visible = flag_flash or flag_locked
 			panel_style.frame_top_event.visible = flag_happening and not flag_flash and not flag_locked
 			panel_style.frame_top_regular.visible = not flag_flash and not flag_locked and not flag_happening
-		end,
+		end
 	},
 	{
-		end_time = 0.4,
 		name = "resize",
+		end_time = 0.4,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			params.start_heights = params.start_heights or {}
@@ -248,11 +248,11 @@ animations.sequence_animations.resize_mission_window = {
 			ui_scenegraph.info_area.position[2] = mission_header_height
 
 			return true
-		end,
+		end
 	},
 	{
-		end_time = 0.4,
 		name = "fade_content",
+		end_time = 0.4,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local widgets_to_fade = params._widgets_to_fade
@@ -360,8 +360,8 @@ animations.sequence_animations.resize_mission_window = {
 				widget.alpha_multiplier = target_alpha
 				widget.visible = target_alpha > 0
 			end
-		end,
-	},
+		end
+	}
 }
 
 local _status_report_panel_widgets = {
@@ -369,13 +369,13 @@ local _status_report_panel_widgets = {
 	"panel_scrollbar",
 	"list_interaction",
 	"list_mask",
-	"report_background",
+	"report_background"
 }
 
 animations.sequence_animations.resize_report_window = {
 	{
-		end_time = 0.2,
 		name = "fade_in_panel",
+		end_time = 0.2,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.report_background
@@ -418,11 +418,11 @@ animations.sequence_animations.resize_report_window = {
 			for i = 1, #widgets do
 				widgets[i].alpha_multiplier = 1
 			end
-		end,
+		end
 	},
 	{
-		end_time = 0.3,
 		name = "change_background_color",
+		end_time = 0.3,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local color_copy = ColorUtilities.color_copy
@@ -502,11 +502,11 @@ animations.sequence_animations.resize_report_window = {
 
 			panel_widget_content.can_flash = true
 			panel_widget_content.anim_time = 0
-		end,
+		end
 	},
 	{
-		end_time = 0.4,
 		name = "resize",
+		end_time = 0.4,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local target_height_params = params.target_heights
@@ -579,13 +579,13 @@ animations.sequence_animations.resize_report_window = {
 			end
 
 			return true
-		end,
-	},
+		end
+	}
 }
 animations.sequence_animations.retract_window = {
 	{
-		end_time = 0.4,
 		name = "resize_window",
+		end_time = 0.4,
 		start_time = 0,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local scenegraph_ids = params.scnengraph_ids
@@ -679,11 +679,11 @@ animations.sequence_animations.retract_window = {
 			end
 
 			ui_scenegraph.info_area.position[2] = ui_scenegraph.panel_header.size[2]
-		end,
+		end
 	},
 	{
-		end_time = 0.4,
 		name = "change_background_color",
+		end_time = 0.4,
 		start_time = 0.1,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
@@ -719,11 +719,11 @@ animations.sequence_animations.retract_window = {
 			local insignia_target_color = insignia_style.color_default
 
 			ColorUtilities.color_lerp(insignia_start_color, insignia_target_color, eased_progress, insignia_style.color, true)
-		end,
+		end
 	},
 	{
-		end_time = 0.4,
 		name = "fade_out",
+		end_time = 0.4,
 		start_time = 0.1,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets_by_name, params)
 			local panel_widget = widgets_by_name.panel
@@ -772,8 +772,8 @@ animations.sequence_animations.retract_window = {
 			frame_top_regular_style.color[1] = frame_top_regular_style.anim_lower_alpha
 			panel_style.frame_top_event.visible = false
 			panel_style.frame_top_red.visible = false
-		end,
-	},
+		end
+	}
 }
 animations.change_functions = {}
 

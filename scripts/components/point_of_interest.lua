@@ -43,81 +43,81 @@ end
 
 PointOfInterest.component_data = {
 	view_distance = {
-		decimals = 0,
-		min = 1,
-		step = 1,
-		ui_name = "View Distance (in m.)",
 		ui_type = "number",
+		min = 1,
+		decimals = 0,
 		value = 10,
+		ui_name = "View Distance (in m.)",
+		step = 1
 	},
 	is_dynamic = {
-		ui_name = "Is Dynamic",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Is Dynamic"
 	},
 	tag = {
-		ui_name = "Tag",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Tag"
 	},
 	dialogue_event = {
+		value = "",
+		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Dialogue Event Name",
-		ui_type = "combo_box",
-		value = "",
 		options_keys = {
 			"",
-			"look_at",
+			"look_at"
 		},
 		options_values = {
 			"",
-			"look_at",
-		},
+			"look_at"
+		}
 	},
 	dialogue_target_filter = {
+		value = "none",
+		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Dialogue Target Filter",
-		ui_type = "combo_box",
-		value = "none",
 		options_keys = {
 			"none",
 			"faction",
 			"mission_giver_mission_default",
-			"mission_giver_selected_voice",
+			"mission_giver_selected_voice"
 		},
 		options_values = {
 			"none",
 			"faction",
 			"mission_giver_mission_default",
-			"mission_giver_selected_voice",
-		},
+			"mission_giver_selected_voice"
+		}
 	},
 	faction_breed_name = {
+		value = "",
+		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Faction Name",
-		ui_type = "combo_box",
-		value = "",
 		options_keys = {
 			"",
-			"npc",
+			"npc"
 		},
 		options_values = {
 			"",
-			"npc",
-		},
+			"npc"
+		}
 	},
 	mission_giver_selected_voice = {
+		value = "",
+		ui_type = "combo_box",
 		category = "Dialogue",
 		ui_name = "Mission Giver Selected Voice",
-		ui_type = "combo_box",
-		value = "",
 		options_keys = {
 			"",
 			"sergeant_a",
 			"pilot_a",
 			"explicator_a",
 			"tech_priest_a",
-			"training_ground_psyker_a",
+			"training_ground_psyker_a"
 		},
 		options_values = {
 			"",
@@ -125,17 +125,17 @@ PointOfInterest.component_data = {
 			"pilot_a",
 			"explicator_a",
 			"tech_priest_a",
-			"training_ground_psyker_a",
-		},
+			"training_ground_psyker_a"
+		}
 	},
 	disabled = {
-		ui_name = "Disabled",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Disabled"
 	},
 	extensions = {
-		"PointOfInterestTargetExtension",
-	},
+		"PointOfInterestTargetExtension"
+	}
 }
 
 return PointOfInterest

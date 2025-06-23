@@ -12,22 +12,22 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 	self._equipped_abilities = {}
 	self._enabled_abilities = {
 		combat_ability = false,
-		grenade_ability = false,
+		grenade_ability = false
 	}
 	self._ability_max_charges = {
 		combat_ability = 0,
-		grenade_ability = 0,
+		grenade_ability = 0
 	}
 	self._ability_max_cooldown = {
 		combat_ability = 0,
-		grenade_ability = 0,
+		grenade_ability = 0
 	}
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 	self._components = {
 		grenade_ability = unit_data_extension:read_component("grenade_ability"),
-		combat_ability = unit_data_extension:read_component("combat_ability"),
+		combat_ability = unit_data_extension:read_component("combat_ability")
 	}
 	self._equipped_ability_effect_scripts = {}
 	self._equipped_ability_effect_scripts_context = {
@@ -37,7 +37,7 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 		unit = unit,
 		unit_data_extension = unit_data_extension,
 		is_local_unit = extension_init_data.is_server,
-		is_server = extension_init_data.is_local_unit,
+		is_server = extension_init_data.is_local_unit
 	}
 
 	self:_read_game_object(game_session, game_object_id)
@@ -78,14 +78,14 @@ PlayerHuskAbilityExtension.post_update = function (self, unit, dt, t, fixed_fram
 end
 
 local game_object_fields = {
-	combat_ability_enabled = false,
-	combat_ability_equipped = 0,
 	combat_ability_max_charges = 0,
-	combat_ability_max_cooldown = 0,
 	grenade_ability_enabled = false,
-	grenade_ability_equipped = 0,
-	grenade_ability_max_charges = 0,
 	grenade_ability_max_cooldown = 0,
+	grenade_ability_equipped = 0,
+	combat_ability_equipped = 0,
+	combat_ability_enabled = false,
+	grenade_ability_max_charges = 0,
+	combat_ability_max_cooldown = 0
 }
 
 PlayerHuskAbilityExtension._read_game_object = function (self, game_session, game_object_id)

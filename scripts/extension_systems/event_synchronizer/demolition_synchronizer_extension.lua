@@ -121,7 +121,7 @@ DemolitionSynchronizerExtension.setup_stages = function (self, registered_units)
 			segments[#segments + 1] = segment
 		else
 			segments[#segments + 1] = {
-				stage,
+				stage
 			}
 			stage = stage - 1
 		end

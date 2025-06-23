@@ -232,7 +232,7 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 					vfx_1p = vfx_1p,
 					vfx_3p = vfx_3p,
 					linked_decal = _extract_armor_hit_fx(linked_decal_config, hit_type),
-					blood_ball = _extract_armor_hit_fx(blood_ball_config, hit_type),
+					blood_ball = _extract_armor_hit_fx(blood_ball_config, hit_type)
 				}
 
 				if table.size(fx_table) == 0 then

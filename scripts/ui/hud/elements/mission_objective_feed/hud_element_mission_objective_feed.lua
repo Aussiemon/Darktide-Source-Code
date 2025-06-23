@@ -58,7 +58,7 @@ local ALERT_COLOR = {
 	255,
 	0,
 	0,
-	0,
+	0
 }
 
 HudElementMissionObjectiveFeed._update_widgets = function (self, dt, t)
@@ -168,7 +168,7 @@ HudElementMissionObjectiveFeed.event_add_objective = function (self, objective, 
 	self._event_objectives_to_add[#self._event_objectives_to_add + 1] = {
 		objective = objective,
 		locally_added = locally_added,
-		on_add_callback = on_add_callback,
+		on_add_callback = on_add_callback
 	}
 end
 
@@ -208,7 +208,7 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 		local header_size = HudElementMissionObjectiveFeedSettings.header_size
 		local text_size = {
 			header_text_style.size[1],
-			1000,
+			1000
 		}
 		local text_options = UIFonts.get_font_options_by_style(header_text_style)
 		local _, text_height = UIRenderer.text_size(ui_renderer, header_text, header_text_style.font_type, header_text_style.font_size, text_size, text_options)
@@ -454,7 +454,7 @@ HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_obje
 		local text_style = style.timer_text
 		local optional_size = {
 			500,
-			40,
+			40
 		}
 		local ui_renderer = self._parent:ui_renderer()
 		local width = self:_text_size_for_style(ui_renderer, realignment_text, text_style, optional_size)

@@ -11,7 +11,7 @@ InputUtils.input_device_list = {
 		rawget(_G, "Pad5"),
 		rawget(_G, "Pad6"),
 		rawget(_G, "Pad7"),
-		rawget(_G, "Pad8"),
+		rawget(_G, "Pad8")
 	},
 	ps4_controller = {
 		rawget(_G, "PS5Pad1"),
@@ -21,14 +21,14 @@ InputUtils.input_device_list = {
 		rawget(_G, "PS5Pad5"),
 		rawget(_G, "PS5Pad6"),
 		rawget(_G, "PS5Pad7"),
-		rawget(_G, "PS5Pad8"),
+		rawget(_G, "PS5Pad8")
 	},
 	mouse = {
-		rawget(_G, "Mouse"),
+		rawget(_G, "Mouse")
 	},
 	keyboard = {
-		rawget(_G, "Keyboard"),
-	},
+		rawget(_G, "Keyboard")
+	}
 }
 InputUtils.replaced_strings = {}
 InputUtils.replaced_strings.oem_period = "oem_period (> .)"
@@ -217,15 +217,15 @@ end
 
 local _keyboard_devices = {
 	"keyboard",
-	"mouse",
+	"mouse"
 }
 local _gamepad_devices = {
 	xbox_controller = {
-		"xbox_controller",
+		"xbox_controller"
 	},
 	ps4_controller = {
-		"ps4_controller",
-	},
+		"ps4_controller"
+	}
 }
 
 InputUtils.get_gamepad_device_type = function ()

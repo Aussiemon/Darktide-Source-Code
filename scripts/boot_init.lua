@@ -213,7 +213,7 @@ if not LUA_FUNCTIONS_WRAPPED then
 
 	local function pack_pcall(status, ...)
 		return status, {
-			...,
+			...
 		}, select("#", ...)
 	end
 

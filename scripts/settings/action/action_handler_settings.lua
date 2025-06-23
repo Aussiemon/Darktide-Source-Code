@@ -8,7 +8,7 @@ action_handler_settings.abort_sprint = {
 	"reload_shotgun",
 	"vent_overheat",
 	"vent_warp_charge",
-	"inspect",
+	"inspect"
 }
 action_handler_settings.prevent_sprint = {
 	"block",
@@ -18,15 +18,15 @@ action_handler_settings.prevent_sprint = {
 	"throw_grenade",
 	"throw_luggable",
 	"aim_projectile",
-	"inspect",
+	"inspect"
 }
 action_handler_settings.sprint_requires_press_to_interrupt = {
 	"reload_state",
 	"reload_shotgun",
-	"inspect",
+	"inspect"
 }
 action_handler_settings.no_interruption_for_sprint = {
-	"shoot_pellets",
+	"shoot_pellets"
 }
 action_handler_settings.allowed_action_kinds_during_sprint = {
 	"block",
@@ -35,21 +35,21 @@ action_handler_settings.allowed_action_kinds_during_sprint = {
 	"unwield_to_previous",
 	"unwield_to_specific",
 	"unwield",
-	"inspect",
+	"inspect"
 }
 action_handler_settings.disallowed_action_kinds_during_lunge = {
 	"reload_shotgun",
-	"reload_state",
+	"reload_state"
 }
 action_handler_settings.combo_increase = {
 	"sweep",
 	"shoot_hit_scan",
 	"shoot_pellets",
 	"shoot_projectile",
-	"spawn_projectile",
+	"spawn_projectile"
 }
 action_handler_settings.combo_hold = {
-	"windup",
+	"windup"
 }
 
 return settings("ActionHandlerSettings", action_handler_settings)

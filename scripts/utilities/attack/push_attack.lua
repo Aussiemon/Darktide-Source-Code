@@ -7,10 +7,10 @@ local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local IMPACT_FX_DATA_PREDICTED = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local IMPACT_FX_DATA_PREDICTED_NON_PREDICTED = {
-	will_be_predicted = false,
+	will_be_predicted = false
 }
 local UNIT_LENGTH_THRESHOLD = 0.99
 local PushAttack = {}

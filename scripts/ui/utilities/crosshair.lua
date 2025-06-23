@@ -82,23 +82,23 @@ end
 
 Crosshair.center_dot = function ()
 	return table.clone({
-		pass_type = "texture",
-		style_id = "center",
 		value = "content/ui/materials/hud/crosshairs/center_dot",
+		style_id = "center",
+		pass_type = "texture",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				4,
-				4,
+				4
 			},
-			color = UIHudSettings.color_tint_main_1,
-		},
+			color = UIHudSettings.color_tint_main_1
+		}
 	})
 end
 
@@ -107,7 +107,7 @@ Crosshair.hit_indicator_segment = function (position_name)
 	local texture = "content/ui/materials/hud/crosshairs/hit_marker"
 	local hit_size = {
 		15,
-		3,
+		3
 	}
 	local center_size = 4
 	local hit_marker_distance = 10
@@ -120,7 +120,7 @@ Crosshair.weakspot_hit_indicator_segment = function (position_name)
 	local texture = "content/ui/materials/hud/crosshairs/hit_marker_weakspot"
 	local hit_size = {
 		15,
-		5,
+		5
 	}
 	local center_size = 4
 	local hit_marker_distance = 10
@@ -150,17 +150,17 @@ function _hit_indicator_segment(style_id, texture, hit_marker_size, center_size,
 		value = texture,
 		style_id = style_id,
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			offset = _hit_indicator_offset(position_name, center_size * 0.5, hit_marker_distance),
 			size = {
 				hit_marker_size[1],
-				hit_marker_size[2],
+				hit_marker_size[2]
 			},
 			pivot = _hit_indicator_pivot(position_name, hit_marker_size),
 			angle = _hit_indicator_angle(position_name),
-			color = hit_indicator_colors.damage_normal,
-		},
+			color = hit_indicator_colors.damage_normal
+		}
 	})
 end
 
@@ -169,25 +169,25 @@ function _hit_indicator_offset(position_name, center_half_width, hit_marker_dist
 		return {
 			-center_half_width - hit_marker_distance,
 			-center_half_width - hit_marker_distance,
-			1,
+			1
 		}
 	elseif position_name == "bottom_left" then
 		return {
 			-center_half_width - hit_marker_distance,
 			center_half_width + hit_marker_distance,
-			1,
+			1
 		}
 	elseif position_name == "top_right" then
 		return {
 			center_half_width + hit_marker_distance,
 			-center_half_width - hit_marker_distance,
-			1,
+			1
 		}
 	elseif position_name == "bottom_right" then
 		return {
 			center_half_width + hit_marker_distance,
 			center_half_width + hit_marker_distance,
-			1,
+			1
 		}
 	end
 end
@@ -196,22 +196,22 @@ function _hit_indicator_pivot(position_name, hit_marker_size)
 	if position_name == "top_left" then
 		return {
 			hit_marker_size[1] * 0.5,
-			hit_marker_size[2] * 0.5,
+			hit_marker_size[2] * 0.5
 		}
 	elseif position_name == "bottom_left" then
 		return {
 			hit_marker_size[1] * 0.5,
-			hit_marker_size[2] * 0.5,
+			hit_marker_size[2] * 0.5
 		}
 	elseif position_name == "top_right" then
 		return {
 			hit_marker_size[1] * 0.5,
-			hit_marker_size[2] * 0.5,
+			hit_marker_size[2] * 0.5
 		}
 	elseif position_name == "bottom_right" then
 		return {
 			hit_marker_size[1] * 0.5,
-			hit_marker_size[2] * 0.5,
+			hit_marker_size[2] * 0.5
 		}
 	end
 end

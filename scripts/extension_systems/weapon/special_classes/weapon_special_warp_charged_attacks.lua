@@ -19,6 +19,10 @@ WeaponSpecialWarpChargedAttacks.init = function (self, weapon_special_context, w
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 end
 
+WeaponSpecialWarpChargedAttacks.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialWarpChargedAttacks.fixed_update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension, self._weapon_extension)
 end
@@ -62,6 +66,10 @@ WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_
 	end
 
 	self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "max_activations")
+end
+
+WeaponSpecialWarpChargedAttacks.blocked_attack = function (self, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialWarpChargedAttacks.on_exit_damage_window = function (self, t, num_hit_enemies)

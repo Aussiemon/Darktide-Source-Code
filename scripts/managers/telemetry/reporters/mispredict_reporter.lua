@@ -26,7 +26,7 @@ MispredictReporter.register_event = function (self, tsm, component_name, field_n
 		average_t = 0,
 		count = 0,
 		component = component_name,
-		field = field_name,
+		field = field_name
 	}
 
 	component_data[field_name] = field_data

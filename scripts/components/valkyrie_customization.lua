@@ -271,372 +271,372 @@ end
 
 ValkyrieCustomization.component_data = {
 	body = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Body",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "content/environment/artsets/imperial/global/props/machinery/valkyrie/valkyrie_01",
+		ui_name = "Body",
+		filter = "unit"
 	},
 	body_node = {
-		category = "Parts",
-		ui_name = "Body Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_01",
+		ui_name = "Body Node",
+		category = "Parts"
 	},
 	cockpit = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Cockpit",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Cockpit",
+		filter = "unit"
 	},
 	cockpit_node = {
-		category = "Parts",
-		ui_name = "Cockpit Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_cockpit_01",
+		ui_name = "Cockpit Node",
+		category = "Parts"
 	},
 	interior = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Interior",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Interior",
+		filter = "unit"
 	},
 	interior_node = {
-		category = "Parts",
-		ui_name = "Interior Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_interior_01",
+		ui_name = "Interior Node",
+		category = "Parts"
 	},
 	thruster = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Thruster",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Thruster",
+		filter = "unit"
 	},
 	thruster_node_01 = {
-		category = "Parts",
-		ui_name = "Thruster Node 01",
 		ui_type = "text_box",
 		value = "ap_valkyrie_thruster_01_01",
+		ui_name = "Thruster Node 01",
+		category = "Parts"
 	},
 	thruster_node_02 = {
-		category = "Parts",
-		ui_name = "Thruster Node 02",
 		ui_type = "text_box",
 		value = "ap_valkyrie_thruster_01_02",
+		ui_name = "Thruster Node 02",
+		category = "Parts"
 	},
 	floodlight = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Floodlight",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Floodlight",
+		filter = "unit"
 	},
 	floodlight_node = {
-		category = "Parts",
-		ui_name = "Floodlight Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_floodlight_01",
+		ui_name = "Floodlight Node",
+		category = "Parts"
 	},
 	hatch = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Hatch",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Hatch",
+		filter = "unit"
 	},
 	hatch_node = {
-		category = "Parts",
-		ui_name = "Hatch Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_hatch_01",
+		ui_name = "Hatch Node",
+		category = "Parts"
 	},
 	backhatch = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Back Hatch",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Back Hatch",
+		filter = "unit"
 	},
 	backhatch_node = {
-		category = "Parts",
-		ui_name = "Back Hatch Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_backhatch_01",
+		ui_name = "Back Hatch Node",
+		category = "Parts"
 	},
 	wingflaps = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Wingflaps",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "content/environment/artsets/imperial/global/props/machinery/valkyrie/valkyrie_wingflaps_01",
+		ui_name = "Wingflaps",
+		filter = "unit"
 	},
 	wingflaps_node = {
-		category = "Parts",
-		ui_name = "Wingflaps Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_wingflaps_01",
+		ui_name = "Wingflaps Node",
+		category = "Parts"
 	},
 	landinggear = {
-		category = "Landing Gear",
-		filter = "unit",
-		preview = true,
-		ui_name = "Landing Gear",
 		ui_type = "resource",
+		preview = true,
+		category = "Landing Gear",
 		value = "",
+		ui_name = "Landing Gear",
+		filter = "unit"
 	},
 	not_used = {
-		category = "Landing Gear",
-		ui_name = "Landing Gears are special, ask a TA/Coder.",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Landing Gears are special, ask a TA/Coder.",
+		category = "Landing Gear"
 	},
 	landinggear_node_01 = {
-		category = "Landing Gear",
-		ui_name = "Landing Gear Node 01",
 		ui_type = "text_box",
 		value = "ap_valkyrie_landinggear_01",
+		ui_name = "Landing Gear Node 01",
+		category = "Landing Gear"
 	},
 	landinggear_node_02 = {
-		category = "Landing Gear",
-		ui_name = "Landing Gear Node 02",
 		ui_type = "text_box",
 		value = "ap_valkyrie_landinggear_02",
+		ui_name = "Landing Gear Node 02",
+		category = "Landing Gear"
 	},
 	landinggear_node_03 = {
-		category = "Landing Gear",
-		ui_name = "Landing Gear Node 03",
 		ui_type = "text_box",
 		value = "ap_valkyrie_landinggear_03",
+		ui_name = "Landing Gear Node 03",
+		category = "Landing Gear"
 	},
 	landinggear_node_04 = {
-		category = "Landing Gear",
-		ui_name = "Landing Gear Node 04",
 		ui_type = "text_box",
 		value = "ap_valkyrie_landinggear_04",
+		ui_name = "Landing Gear Node 04",
+		category = "Landing Gear"
 	},
 	sidedoor_01 = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Side Door Left",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Side Door Left",
+		filter = "unit"
 	},
 	sidedoor_node_01 = {
-		category = "Parts",
-		ui_name = "Side Door Left Node",
 		ui_type = "text_box",
 		value = "ap_side_door_01",
+		ui_name = "Side Door Left Node",
+		category = "Parts"
 	},
 	sidedoor_02 = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Side Door Right",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Side Door Right",
+		filter = "unit"
 	},
 	sidedoor_node_02 = {
-		category = "Parts",
-		ui_name = "Side Door Right Node",
 		ui_type = "text_box",
 		value = "ap_side_door_02",
+		ui_name = "Side Door Right Node",
+		category = "Parts"
 	},
 	propeller_type_01 = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Propeller Type 01",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Propeller Type 01",
+		filter = "unit"
 	},
 	propeller_type_01_01_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 01 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_01_01",
+		ui_name = "Propeller Type 01 Node",
+		category = "Parts"
 	},
 	propeller_type_01_02_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 01 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_01_02",
+		ui_name = "Propeller Type 01 Node",
+		category = "Parts"
 	},
 	propeller_type_01_03_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 01 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_01_03",
+		ui_name = "Propeller Type 01 Node",
+		category = "Parts"
 	},
 	propeller_type_01_04_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 01 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_01_04",
+		ui_name = "Propeller Type 01 Node",
+		category = "Parts"
 	},
 	propeller_type_02 = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Propeller Type 02",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Propeller Type 02",
+		filter = "unit"
 	},
 	propeller_type_02_01_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 02 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_02_01",
+		ui_name = "Propeller Type 02 Node",
+		category = "Parts"
 	},
 	propeller_type_02_02_node = {
-		category = "Parts",
-		ui_name = "Propeller Type 02 Node",
 		ui_type = "text_box",
 		value = "ap_propeller_02_02",
+		ui_name = "Propeller Type 02 Node",
+		category = "Parts"
 	},
 	sidearm = {
-		category = "Parts",
-		filter = "unit",
-		preview = true,
-		ui_name = "Side Arm",
 		ui_type = "resource",
+		preview = true,
+		category = "Parts",
 		value = "",
+		ui_name = "Side Arm",
+		filter = "unit"
 	},
 	sidearm_node = {
-		category = "Parts",
-		ui_name = "Side Arm Node",
 		ui_type = "text_box",
 		value = "ap_valkyrie_sidearm_01",
+		ui_name = "Side Arm Node",
+		category = "Parts"
 	},
 	valkyrie_scale = {
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Valkyrie Scale (Only use on op_base_platform)",
 		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Valkyrie Scale (Only use on op_base_platform)",
+		step = 0.01
 	},
 	inputs = {
 		VFX_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_vtol_thrusters_on = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_vtol_thrusters_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_thrusters_on = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_thrusters_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_ignition_on = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		VFX_ignition_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_lift = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_land = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_land_finish = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_idle = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_jets = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_intro_gen = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_lascannon_charge = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_lascannon_fire = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_rocket_launch = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		SFX_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_takeoff = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_takeoff_intro = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_lift = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_idle = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_thrusters_off = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_land = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		fx_landed = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		lights_enter = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		lights_exit = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		lights_off = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return ValkyrieCustomization

@@ -14,7 +14,7 @@ for name, settings in pairs(GameModeSettings) do
 end
 
 local CLIENT_RPCS = {
-	"rpc_game_mode_end_conditions_met",
+	"rpc_game_mode_end_conditions_met"
 }
 local GameModeManager = class("GameModeManager")
 
@@ -262,6 +262,12 @@ GameModeManager.is_prologue = function (self)
 	local is_prologue = not not game_mode_settings.is_prologue
 
 	return is_prologue
+end
+
+GameModeManager.is_prologue_hub = function (self)
+	local game_mode_settings = self._game_mode:settings()
+
+	return game_mode_settings.name == "prologue_hub"
 end
 
 GameModeManager.is_social_hub = function (self)

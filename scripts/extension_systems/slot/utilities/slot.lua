@@ -40,7 +40,7 @@ Slot.create_slots = function (target_unit)
 				type = slot_type,
 				radians = radians_per_slot,
 				priority = setting.priority,
-				position_check_index = check_middle_index,
+				position_check_index = check_middle_index
 			}
 
 			slots[i] = slot
@@ -50,7 +50,7 @@ Slot.create_slots = function (target_unit)
 			disabled_slots_count = 0,
 			slots_count = 0,
 			total_slots_count = total_slots_count,
-			slots = slots,
+			slots = slots
 		}
 
 		all_slots[slot_type] = slot_data

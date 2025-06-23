@@ -278,7 +278,7 @@ end
 
 local _temp_optional_size = {
 	0,
-	0,
+	0
 }
 
 HudElementBase._text_size_for_style = function (self, ui_renderer, text, text_style, optional_size)

@@ -22,13 +22,13 @@ local templates = {}
 table.make_unique(templates)
 
 templates.knocked_down_damage_reduction = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
 			max = 1,
-			min = 0,
-		},
+			min = 0
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -55,7 +55,7 @@ templates.knocked_down_damage_reduction = {
 		end
 
 		return 0
-	end,
+	end
 }
 
 local MIN_DISTANCE_SQUARED = 2500
@@ -64,12 +64,12 @@ local MIN_POWER_LEVEL = PowerLevelSettings.default_power_level
 local MAX_POWER_LEVEL = PowerLevelSettings.max_power_level
 
 templates.knocked_down_damage_tick = {
-	class_name = "interval_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
-	hud_priority = 1,
 	interval = 2,
-	is_negative = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	predicted = false,
+	hud_priority = 1,
+	class_name = "interval_buff",
+	is_negative = true,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
@@ -120,12 +120,12 @@ templates.knocked_down_damage_tick = {
 		local is_critical_strike = false
 
 		Attack.execute(unit, damage_profile, "target_index", target_index, "target_number", target_number, "power_level", power_level, "is_critical_strike", is_critical_strike)
-	end,
+	end
 }
 templates.netted_damage_tick = {
-	class_name = "interval_buff",
 	interval = 5,
 	predicted = false,
+	class_name = "interval_buff",
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
@@ -141,14 +141,14 @@ templates.netted_damage_tick = {
 		250,
 		300,
 		350,
-		350,
+		350
 	},
 	ticks_to_full_power_level = {
 		12,
 		10,
 		8,
 		7,
-		7,
+		7
 	},
 	interval_func = function (template_data, template_context)
 		local assisted_state_input = template_data.assisted_state_input
@@ -175,49 +175,61 @@ templates.netted_damage_tick = {
 		end
 	end,
 	player_effects = {
-		effect_template = EffectTemplates.netted,
-	},
+		effect_template = EffectTemplates.netted
+	}
 }
 templates.grimoire_damage_tick = {
 	class_name = "grimoire_buff",
-	predicted = false,
+	predicted = false
 }
 templates.weakspot_kill_reload_speed = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[buff_proc_events.on_kill] = 0.5,
+		[buff_proc_events.on_kill] = 0.5
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.reload_speed] = 0.5,
+		[buff_stat_buffs.reload_speed] = 0.5
 	},
-	check_proc_func = CheckProcFunctions.on_weakspot_kill,
+	check_proc_func = CheckProcFunctions.on_weakspot_kill
 }
 templates.coherency_toughness_regen = {
-	class_name = "stepped_stat_buff",
 	description = "Increased thoughness regeneration while near squad members.\nEffect stacks with each member nearby.",
 	display_description = "loc_player_buff_coherency_toughness_regen_desc",
 	display_title = "loc_player_buff_coherency_toughness_regen",
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_coherence_buff_hud",
-	hud_priority = 0,
-	max_stacks = 4,
-	predicted = false,
 	title = "Coherency",
+	predicted = false,
+	hud_priority = 0,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_coherence_buff_hud",
+	max_stacks = 8,
+	class_name = "stepped_stat_buff",
 	keywords = {},
 	stepped_stat_buffs = {
 		{
-			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0,
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0
 		},
 		{
-			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5,
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5
 		},
 		{
-			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0.75,
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 0.75
 		},
 		{
-			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1,
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1
 		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.25
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.5
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.75
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 2
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -236,16 +248,16 @@ templates.coherency_toughness_regen = {
 		end
 
 		return 0, nil
-	end,
+	end
 }
 templates.sprint_with_stamina_buff = {
-	class_name = "buff",
 	description = "Increased sprint by consuming available stamina.",
 	display_description = "loc_player_buff_sprint_with_stamina_buff_desc",
 	display_title = "loc_player_buff_sprint_with_stamina_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
-	predicted = false,
 	title = "Better run faster!",
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
+	class_name = "buff",
 	hud_priority = math.huge,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -263,886 +275,949 @@ templates.sprint_with_stamina_buff = {
 		local is_sprinting = Sprint.is_sprinting(template_data.sprint_character_state_component)
 
 		return is_sprinting and current_stamina > 0
-	end,
+	end
 }
 templates.no_toughness_damage_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	stat_buffs = {
-		[buff_stat_buffs.toughness_damage_taken_multiplier] = 0,
+		[buff_stat_buffs.toughness_damage_taken_multiplier] = 0
 	},
 	proc_events = {
-		[buff_proc_events.on_lunge_end] = 1,
+		[buff_proc_events.on_lunge_end] = 1
 	},
 	proc_func = function (params, template_data)
 		template_data.finish = true
 	end,
 	conditional_exit_func = function (template_data)
 		return template_data.finish
-	end,
+	end
 }
 templates.player_spawn_grace = {
-	class_name = "buff",
 	duration = 5,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_grace_time_hud",
 	predicted = false,
+	class_name = "buff",
 	keywords = {
-		keywords.unperceivable,
+		keywords.unperceivable
 	},
 	stat_buffs = {
-		[buff_stat_buffs.damage_taken_multiplier] = 0,
-	},
+		[buff_stat_buffs.damage_taken_multiplier] = 0
+	}
 }
 templates.player_toughness_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness] = 7.5,
+		[stat_buffs.toughness] = 7.5
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 15,
-			},
+				[stat_buffs.toughness] = 15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 20,
-			},
+				[stat_buffs.toughness] = 20
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 25,
-			},
+				[stat_buffs.toughness] = 25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 30,
-			},
-		},
-	},
+				[stat_buffs.toughness] = 30
+			}
+		}
+	}
 }
 templates.player_toughness_node_buff_low_2 = table.clone(templates.player_toughness_node_buff_low_1)
 templates.player_toughness_node_buff_low_3 = table.clone(templates.player_toughness_node_buff_low_1)
 templates.player_toughness_node_buff_low_4 = table.clone(templates.player_toughness_node_buff_low_1)
 templates.player_toughness_node_buff_low_5 = table.clone(templates.player_toughness_node_buff_low_1)
 templates.player_toughness_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness] = 15,
+		[stat_buffs.toughness] = 15
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 25,
-			},
+				[stat_buffs.toughness] = 25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 30,
-			},
+				[stat_buffs.toughness] = 30
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 45,
-			},
+				[stat_buffs.toughness] = 45
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness] = 60,
-			},
-		},
-	},
+				[stat_buffs.toughness] = 60
+			}
+		}
+	}
 }
 templates.player_toughness_node_buff_medium_2 = table.clone(templates.player_toughness_node_buff_medium_1)
 templates.player_toughness_node_buff_medium_3 = table.clone(templates.player_toughness_node_buff_medium_1)
 templates.player_toughness_node_buff_medium_4 = table.clone(templates.player_toughness_node_buff_medium_1)
 templates.player_toughness_node_buff_medium_5 = table.clone(templates.player_toughness_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = -0.05,
+		[stat_buffs.toughness_damage_taken_modifier] = -0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.05,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.1,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.15,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.2,
-			},
-		},
-	},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.2
+			}
+		}
+	}
 }
 templates.player_toughness_damage_reduction_node_buff_low_2 = table.clone(templates.player_toughness_damage_reduction_node_buff_low_1)
 templates.player_toughness_damage_reduction_node_buff_low_3 = table.clone(templates.player_toughness_damage_reduction_node_buff_low_1)
 templates.player_toughness_damage_reduction_node_buff_low_4 = table.clone(templates.player_toughness_damage_reduction_node_buff_low_1)
 templates.player_toughness_damage_reduction_node_buff_low_5 = table.clone(templates.player_toughness_damage_reduction_node_buff_low_1)
 templates.player_toughness_damage_reduction_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = -0.1,
+		[stat_buffs.toughness_damage_taken_modifier] = -0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.1,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.2,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.3,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.4,
-			},
-		},
-	},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.4
+			}
+		}
+	}
 }
 templates.player_toughness_damage_reduction_node_buff_medium_2 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_toughness_damage_reduction_node_buff_medium_1)
 templates.player_ranged_toughness_damage_reduction_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1,
+		[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1,
-			},
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.2,
-			},
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.3,
-			},
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.4,
-			},
-		},
-	},
+				[stat_buffs.ranged_toughness_damage_taken_modifier] = -0.4
+			}
+		}
+	}
 }
 templates.player_ranged_toughness_damage_reduction_node_buff_medium_2 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
 templates.player_ranged_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
 templates.player_ranged_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
 templates.player_ranged_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_ranged_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_modifier] = -0.1,
+		[stat_buffs.toughness_damage_taken_modifier] = -0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.1,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.2,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.3,
-			},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_damage_taken_modifier] = -0.4,
-			},
-		},
-	},
+				[stat_buffs.toughness_damage_taken_modifier] = -0.4
+			}
+		}
+	}
 }
 templates.player_melee_toughness_damage_reduction_node_buff_medium_2 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.reduced_stamina_regen_delay_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.stamina_regeneration_delay] = -0.25,
-	},
+		[stat_buffs.stamina_regeneration_delay] = -0.25
+	}
 }
 templates.reduced_stamina_regen_delay_2 = table.clone(templates.reduced_stamina_regen_delay_1)
 templates.reduced_stamina_regen_delay_3 = table.clone(templates.reduced_stamina_regen_delay_1)
 templates.reduced_stamina_regen_delay_4 = table.clone(templates.reduced_stamina_regen_delay_1)
 templates.reduced_stamina_regen_delay_5 = table.clone(templates.reduced_stamina_regen_delay_1)
 templates.player_armor_pen_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.05,
+		[stat_buffs.rending_multiplier] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.05,
-			},
+				[stat_buffs.rending_multiplier] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.1,
-			},
+				[stat_buffs.rending_multiplier] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.15,
-			},
+				[stat_buffs.rending_multiplier] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.rending_multiplier] = 0.2
+			}
+		}
+	}
 }
 templates.player_armor_pen_node_buff_low_2 = table.clone(templates.player_armor_pen_node_buff_low_1)
 templates.player_armor_pen_node_buff_low_3 = table.clone(templates.player_armor_pen_node_buff_low_1)
 templates.player_armor_pen_node_buff_low_4 = table.clone(templates.player_armor_pen_node_buff_low_1)
 templates.player_armor_pen_node_buff_low_5 = table.clone(templates.player_armor_pen_node_buff_low_1)
 templates.player_stamina_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.stamina_modifier] = 1,
+		[stat_buffs.stamina_modifier] = 1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.stamina_modifier] = 1,
-			},
+				[stat_buffs.stamina_modifier] = 1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stamina_modifier] = 2,
-			},
+				[stat_buffs.stamina_modifier] = 2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stamina_modifier] = 3,
-			},
+				[stat_buffs.stamina_modifier] = 3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stamina_modifier] = 4,
-			},
-		},
-	},
+				[stat_buffs.stamina_modifier] = 4
+			}
+		}
+	}
 }
 templates.player_stamina_node_buff_low_2 = table.clone(templates.player_stamina_node_buff_low_1)
 templates.player_stamina_node_buff_low_3 = table.clone(templates.player_stamina_node_buff_low_1)
 templates.player_stamina_node_buff_low_4 = table.clone(templates.player_stamina_node_buff_low_1)
 templates.player_stamina_node_buff_low_5 = table.clone(templates.player_stamina_node_buff_low_1)
 templates.player_crit_chance_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05,
+		[stat_buffs.critical_strike_chance] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05,
-			},
+				[stat_buffs.critical_strike_chance] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.1,
-			},
+				[stat_buffs.critical_strike_chance] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.15,
-			},
+				[stat_buffs.critical_strike_chance] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.critical_strike_chance] = 0.2
+			}
+		}
+	}
 }
 templates.player_crit_chance_node_buff_low_2 = table.clone(templates.player_crit_chance_node_buff_low_1)
 templates.player_crit_chance_node_buff_low_3 = table.clone(templates.player_crit_chance_node_buff_low_1)
 templates.player_crit_chance_node_buff_low_4 = table.clone(templates.player_crit_chance_node_buff_low_1)
 templates.player_crit_chance_node_buff_low_5 = table.clone(templates.player_crit_chance_node_buff_low_1)
 templates.player_movement_speed_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.movement_speed] = 0.05,
+		[stat_buffs.movement_speed] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 0.05,
-			},
+				[stat_buffs.movement_speed] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 0.1,
-			},
+				[stat_buffs.movement_speed] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 0.15,
-			},
+				[stat_buffs.movement_speed] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.movement_speed] = 0.2
+			}
+		}
+	}
 }
 templates.player_movement_speed_node_buff_low_2 = table.clone(templates.player_movement_speed_node_buff_low_1)
 templates.player_movement_speed_node_buff_low_3 = table.clone(templates.player_movement_speed_node_buff_low_1)
 templates.player_movement_speed_node_buff_low_4 = table.clone(templates.player_movement_speed_node_buff_low_1)
 templates.player_movement_speed_node_buff_low_5 = table.clone(templates.player_movement_speed_node_buff_low_1)
 templates.player_coherency_regen_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_regen_rate_modifier] = 0.1,
+		[stat_buffs.toughness_regen_rate_modifier] = 0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_regen_rate_modifier] = 0.1,
-			},
+				[stat_buffs.toughness_regen_rate_modifier] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_regen_rate_modifier] = 0.2,
-			},
+				[stat_buffs.toughness_regen_rate_modifier] = 0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_regen_rate_modifier] = 0.3,
-			},
+				[stat_buffs.toughness_regen_rate_modifier] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_regen_rate_modifier] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.toughness_regen_rate_modifier] = 0.4
+			}
+		}
+	}
 }
 templates.player_coherency_regen_node_buff_low_2 = table.clone(templates.player_coherency_regen_node_buff_low_1)
 templates.player_coherency_regen_node_buff_low_3 = table.clone(templates.player_coherency_regen_node_buff_low_1)
 templates.player_coherency_regen_node_buff_low_4 = table.clone(templates.player_coherency_regen_node_buff_low_1)
 templates.player_coherency_regen_node_buff_low_5 = table.clone(templates.player_coherency_regen_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.warp_charge_amount] = 0.95,
+		[stat_buffs.warp_charge_amount] = 0.95
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.95,
-			},
+				[stat_buffs.warp_charge_amount] = 0.95
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.9,
-			},
+				[stat_buffs.warp_charge_amount] = 0.9
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.85,
-			},
+				[stat_buffs.warp_charge_amount] = 0.85
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.warp_charge_amount] = 0.8,
-			},
-		},
-	},
+				[stat_buffs.warp_charge_amount] = 0.8
+			}
+		}
+	}
 }
 templates.player_warp_charge_node_buff_low_2 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_3 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_4 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_5 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_health_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.max_health_modifier] = 0.05,
+		[stat_buffs.max_health_modifier] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.05,
-			},
+				[stat_buffs.max_health_modifier] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.1,
-			},
+				[stat_buffs.max_health_modifier] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.15,
-			},
+				[stat_buffs.max_health_modifier] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.max_health_modifier] = 0.2
+			}
+		}
+	}
 }
 templates.player_health_node_buff_low_2 = table.clone(templates.player_health_node_buff_low_1)
 templates.player_health_node_buff_low_3 = table.clone(templates.player_health_node_buff_low_1)
 templates.player_health_node_buff_low_4 = table.clone(templates.player_health_node_buff_low_1)
 templates.player_health_node_buff_low_5 = table.clone(templates.player_health_node_buff_low_1)
 templates.player_health_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.max_health_modifier] = 0.1,
+		[stat_buffs.max_health_modifier] = 0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.1,
-			},
+				[stat_buffs.max_health_modifier] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.2,
-			},
+				[stat_buffs.max_health_modifier] = 0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.3,
-			},
+				[stat_buffs.max_health_modifier] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_health_modifier] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.max_health_modifier] = 0.4
+			}
+		}
+	}
 }
 templates.player_health_node_buff_medium_2 = table.clone(templates.player_health_node_buff_medium_1)
 templates.player_health_node_buff_medium_3 = table.clone(templates.player_health_node_buff_medium_1)
 templates.player_health_node_buff_medium_4 = table.clone(templates.player_health_node_buff_medium_1)
 templates.player_health_node_buff_medium_5 = table.clone(templates.player_health_node_buff_medium_1)
 templates.player_melee_damage_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 0.05,
+		[stat_buffs.melee_damage] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.05,
-			},
+				[stat_buffs.melee_damage] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1,
-			},
+				[stat_buffs.melee_damage] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.15,
-			},
+				[stat_buffs.melee_damage] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.melee_damage] = 0.2
+			}
+		}
+	}
 }
 templates.player_melee_damage_node_buff_low_2 = table.clone(templates.player_melee_damage_node_buff_low_1)
 templates.player_melee_damage_node_buff_low_3 = table.clone(templates.player_melee_damage_node_buff_low_1)
 templates.player_melee_damage_node_buff_low_4 = table.clone(templates.player_melee_damage_node_buff_low_1)
 templates.player_melee_damage_node_buff_low_5 = table.clone(templates.player_melee_damage_node_buff_low_1)
-templates.player_melee_damage_node_buff_medium_1 = {
-	class_name = "buff",
+templates.player_impact_node_buff_medium_1 = {
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 0.1,
+		[stat_buffs.impact_modifier] = 0.25
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1,
-			},
+				[stat_buffs.impact_modifier] = 0.25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.2,
-			},
+				[stat_buffs.impact_modifier] = 0.25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.3,
-			},
+				[stat_buffs.impact_modifier] = 0.25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.4,
-			},
-		},
+				[stat_buffs.impact_modifier] = 0.25
+			}
+		}
+	}
+}
+templates.player_cleave_node_buff_medium_1 = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+		[stat_buffs.max_hit_mass_impact_modifier] = 0.25
 	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25
+			}
+		}
+	}
+}
+templates.player_melee_damage_node_buff_medium_1 = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.melee_damage] = 0.1
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.1
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.2
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.3
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.4
+			}
+		}
+	}
 }
 templates.player_melee_damage_node_buff_medium_2 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_damage_node_buff_medium_3 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_damage_node_buff_medium_4 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_damage_node_buff_medium_5 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_heavy_damage_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = 0.05,
+		[stat_buffs.melee_heavy_damage] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.05,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.1,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.15,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.melee_heavy_damage] = 0.2
+			}
+		}
+	}
 }
 templates.player_melee_heavy_damage_node_buff_low_2 = table.clone(templates.player_melee_heavy_damage_node_buff_low_1)
 templates.player_melee_heavy_damage_node_buff_low_3 = table.clone(templates.player_melee_heavy_damage_node_buff_low_1)
 templates.player_melee_heavy_damage_node_buff_low_4 = table.clone(templates.player_melee_heavy_damage_node_buff_low_1)
 templates.player_melee_heavy_damage_node_buff_low_5 = table.clone(templates.player_melee_heavy_damage_node_buff_low_1)
 templates.player_melee_heavy_damage_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = 0.1,
+		[stat_buffs.melee_heavy_damage] = 0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.1,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.2,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.3,
-			},
+				[stat_buffs.melee_heavy_damage] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_heavy_damage] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.melee_heavy_damage] = 0.4
+			}
+		}
+	}
 }
 templates.player_melee_heavy_damage_node_buff_medium_2 = table.clone(templates.player_melee_heavy_damage_node_buff_medium_1)
 templates.player_melee_heavy_damage_node_buff_medium_3 = table.clone(templates.player_melee_heavy_damage_node_buff_medium_1)
 templates.player_melee_heavy_damage_node_buff_medium_4 = table.clone(templates.player_melee_heavy_damage_node_buff_medium_1)
 templates.player_melee_heavy_damage_node_buff_medium_5 = table.clone(templates.player_melee_heavy_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.05,
+		[stat_buffs.ranged_damage] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.05,
-			},
+				[stat_buffs.ranged_damage] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1,
-			},
+				[stat_buffs.ranged_damage] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.15,
-			},
+				[stat_buffs.ranged_damage] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.ranged_damage] = 0.2
+			}
+		}
+	}
 }
 templates.player_ranged_damage_node_buff_low_2 = table.clone(templates.player_ranged_damage_node_buff_low_1)
 templates.player_ranged_damage_node_buff_low_3 = table.clone(templates.player_ranged_damage_node_buff_low_1)
 templates.player_ranged_damage_node_buff_low_4 = table.clone(templates.player_ranged_damage_node_buff_low_1)
 templates.player_ranged_damage_node_buff_low_5 = table.clone(templates.player_ranged_damage_node_buff_low_1)
 templates.player_ranged_damage_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = 0.1,
+		[stat_buffs.ranged_damage] = 0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1,
-			},
+				[stat_buffs.ranged_damage] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.2,
-			},
+				[stat_buffs.ranged_damage] = 0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.3,
-			},
+				[stat_buffs.ranged_damage] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.ranged_damage] = 0.4
+			}
+		}
+	}
 }
 templates.player_ranged_damage_node_buff_medium_2 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_medium_3 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_medium_4 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_medium_5 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_reload_speed_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.05,
+		[stat_buffs.reload_speed] = 0.05
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05,
-			},
+				[stat_buffs.reload_speed] = 0.05
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.1,
-			},
+				[stat_buffs.reload_speed] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.15,
-			},
+				[stat_buffs.reload_speed] = 0.15
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.2,
-			},
-		},
-	},
+				[stat_buffs.reload_speed] = 0.2
+			}
+		}
+	}
 }
 templates.player_reload_speed_node_buff_low_2 = table.clone(templates.player_reload_speed_node_buff_low_1)
 templates.player_reload_speed_node_buff_low_3 = table.clone(templates.player_reload_speed_node_buff_low_1)
 templates.player_reload_speed_node_buff_low_4 = table.clone(templates.player_reload_speed_node_buff_low_1)
 templates.player_reload_speed_node_buff_low_5 = table.clone(templates.player_reload_speed_node_buff_low_1)
 templates.player_reload_speed_node_buff_medium_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.1,
+		[stat_buffs.reload_speed] = 0.1
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.1,
-			},
+				[stat_buffs.reload_speed] = 0.1
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.2,
-			},
+				[stat_buffs.reload_speed] = 0.2
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.3,
-			},
+				[stat_buffs.reload_speed] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.reload_speed] = 0.4
+			}
+		}
+	}
 }
 templates.player_reload_speed_node_buff_medium_2 = table.clone(templates.player_reload_speed_node_buff_medium_1)
 templates.player_reload_speed_node_buff_medium_3 = table.clone(templates.player_reload_speed_node_buff_medium_1)
 templates.player_reload_speed_node_buff_medium_4 = table.clone(templates.player_reload_speed_node_buff_medium_1)
 templates.player_reload_speed_node_buff_medium_5 = table.clone(templates.player_reload_speed_node_buff_medium_1)
 templates.player_suppression_node_buff_low_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = 0.25,
+		[stat_buffs.suppression_dealt] = 0.25
 	},
 	talent_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.25,
-			},
+				[stat_buffs.suppression_dealt] = 0.25
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.3,
-			},
+				[stat_buffs.suppression_dealt] = 0.3
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.35,
-			},
+				[stat_buffs.suppression_dealt] = 0.35
+			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.4,
-			},
-		},
-	},
+				[stat_buffs.suppression_dealt] = 0.4
+			}
+		}
+	}
 }
 templates.player_suppression_node_buff_low_2 = table.clone(templates.player_suppression_node_buff_low_1)
 templates.player_suppression_node_buff_low_3 = table.clone(templates.player_suppression_node_buff_low_1)
 templates.player_suppression_node_buff_low_4 = table.clone(templates.player_suppression_node_buff_low_1)
 templates.player_suppression_node_buff_low_5 = table.clone(templates.player_suppression_node_buff_low_1)
 templates.player_wounds_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_wounds] = 1,
-	},
+		[stat_buffs.extra_max_amount_of_wounds] = 1
+	}
 }
 templates.player_wounds_node_buff_2 = table.clone(templates.player_wounds_node_buff_1)
 templates.player_wounds_node_buff_2.stats_buffs = {
-	[stat_buffs.extra_max_amount_of_wounds] = 2,
+	[stat_buffs.extra_max_amount_of_wounds] = 2
 }
 templates.player_stamina_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.stamina_modifier] = 1,
-	},
+		[stat_buffs.stamina_modifier] = 1
+	}
 }
 templates.player_stamina_node_buff_2 = table.clone(templates.player_stamina_node_buff_1)
 templates.player_stamina_node_buff_2.stats_buffs = {
-	[stat_buffs.stamina_modifier] = 2,
+	[stat_buffs.stamina_modifier] = 2
 }
 templates.player_max_warp_charge_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.warp_charge_amount] = 1,
-	},
+		[stat_buffs.warp_charge_amount] = 1
+	}
 }
 templates.player_max_warp_charge_node_buff_2 = table.clone(templates.player_max_warp_charge_node_buff_1)
 templates.player_max_warp_charge_node_buff_2.stats_buffs = {
-	[stat_buffs.warp_charge_amount] = 2,
+	[stat_buffs.warp_charge_amount] = 2
 }
 templates.player_dodge_count_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.extra_consecutive_dodges] = 1,
-	},
+		[stat_buffs.extra_consecutive_dodges] = 1
+	}
 }
 templates.player_dodge_count_node_buff_2 = table.clone(templates.player_dodge_count_node_buff_1)
 templates.player_dodge_count_node_buff_2.stats_buffs = {
-	[stat_buffs.extra_consecutive_dodges] = 2,
+	[stat_buffs.extra_consecutive_dodges] = 2
 }
 templates.player_crit_chance_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.1,
-	},
+		[stat_buffs.critical_strike_chance] = 0.1
+	}
 }
 templates.player_crit_chance_node_buff_2 = table.clone(templates.player_crit_chance_node_buff_1)
 templates.player_crit_chance_node_buff_2.stats_buffs = {
-	[stat_buffs.critical_strike_chance] = 0.2,
+	[stat_buffs.critical_strike_chance] = 0.2
 }
 templates.player_max_ammo_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = 0.15,
-	},
+		[stat_buffs.ammo_reserve_capacity] = 0.15
+	}
 }
 templates.player_max_ammo_node_buff_2 = table.clone(templates.player_max_ammo_node_buff_1)
 templates.player_coherency_regen_node_buff_1 = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.1,
-	},
+		[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.1
+	}
 }
 templates.player_coherency_regen_node_buff_2 = table.clone(templates.player_coherency_regen_node_buff_1)
 templates.player_coherency_regen_node_buff_2.stats_buffs = {
-	[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.2,
+	[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.2
 }
 
 local valid_help_interactions = {
-	pull_up = true,
-	remove_net = true,
 	rescue = true,
+	pull_up = true,
 	revive = true,
+	remove_net = true
 }
 
 local function _passive_revive_conditional(template_data, template_context)
@@ -1162,20 +1237,20 @@ templates.bot_medium_buff = {
 	predicted = false,
 	keywords = {
 		keywords.uninterruptible,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.5,
 		[stat_buffs.toughness] = 50,
 		[stat_buffs.extra_max_amount_of_wounds] = 1,
 		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15,
-		[buff_stat_buffs.block_cost_multiplier] = 0.2,
+		[buff_stat_buffs.block_cost_multiplier] = 0.2
 	},
 	conditional_keywords = {
-		keywords.uninterruptible,
+		keywords.uninterruptible
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.1,
+		[stat_buffs.damage_taken_multiplier] = 0.1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1184,27 +1259,27 @@ templates.bot_medium_buff = {
 		template_data.interactor_extension = interactor_extension
 	end,
 	conditional_keywords_func = _passive_revive_conditional,
-	conditional_stat_buffs_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 templates.bot_high_buff = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {
 		keywords.uninterruptible,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	stat_buffs = {
 		[stat_buffs.max_health_modifier] = 0.8,
 		[stat_buffs.toughness] = 100,
 		[stat_buffs.extra_max_amount_of_wounds] = 2,
 		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3,
-		[buff_stat_buffs.block_cost_multiplier] = 0.2,
+		[buff_stat_buffs.block_cost_multiplier] = 0.2
 	},
 	conditional_keywords = {
-		keywords.uninterruptible,
+		keywords.uninterruptible
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.1,
+		[stat_buffs.damage_taken_multiplier] = 0.1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1213,7 +1288,7 @@ templates.bot_high_buff = {
 		template_data.interactor_extension = interactor_extension
 	end,
 	conditional_keywords_func = _passive_revive_conditional,
-	conditional_stat_buffs_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 
 return templates

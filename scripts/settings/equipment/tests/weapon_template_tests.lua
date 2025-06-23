@@ -79,7 +79,7 @@ function _template_settings_test(weapon_template)
 end
 
 local MANDATORY_ACTIONS = {
-	action_wield = true,
+	action_wield = true
 }
 
 function _action_settings_test(weapon_template)
@@ -202,10 +202,10 @@ function _validate_hit_zone_priority(weapon_template, action_settings)
 end
 
 local _skip_ability_check_action_kinds = {
-	inspect = true,
-	toggle_special = true,
-	unwield = true,
 	unwield_to_specific = true,
+	unwield = true,
+	toggle_special = true,
+	inspect = true
 }
 
 function _validate_chain_actions(weapon_template, action_settings)
@@ -303,6 +303,8 @@ function _validate_chain_actions(weapon_template, action_settings)
 
 	local kind = action_settings.kind
 	local make_ability_check = not _skip_ability_check_action_kinds[kind]
+
+	make_ability_check = make_ability_check and not action_settings.skip_ability_chain_action_check
 
 	if is_weapon and make_ability_check then
 		if not has_grenade_ability then

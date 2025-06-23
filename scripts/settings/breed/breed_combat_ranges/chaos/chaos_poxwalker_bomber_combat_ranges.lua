@@ -6,35 +6,35 @@ local combat_ranges = {
 	config = {
 		far = {
 			{
-				distance = 30,
-				distance_operator = "lesser",
-				sticky_time = 0,
 				switch_combat_range = "close",
-			},
+				distance_operator = "lesser",
+				distance = 30,
+				sticky_time = 0
+			}
 		},
 		close = {
 			{
-				distance = 10,
-				distance_operator = "lesser",
-				sticky_time = 1,
 				switch_combat_range = "melee",
+				distance_operator = "lesser",
+				distance = 10,
+				sticky_time = 1
 			},
 			{
-				distance = 32,
-				distance_operator = "greater",
-				sticky_time = 0,
 				switch_combat_range = "far",
-			},
+				distance_operator = "greater",
+				distance = 32,
+				sticky_time = 0
+			}
 		},
 		melee = {
 			{
-				distance = 13,
-				distance_operator = "greater",
-				sticky_time = 0,
 				switch_combat_range = "close",
-			},
-		},
-	},
+				distance_operator = "greater",
+				distance = 13,
+				sticky_time = 0
+			}
+		}
+	}
 }
 
 return combat_ranges

@@ -56,65 +56,65 @@ local function _penance_start_func(buff_name)
 end
 
 templates.ogryn_base_passive_tank = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_shared.tank.toughness_damage_taken_multiplier,
 		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.tank.damage_taken_multiplier,
-		[stat_buffs.static_movement_reduction_multiplier] = talent_settings_shared.tank.static_movement_reduction_multiplier,
+		[stat_buffs.static_movement_reduction_multiplier] = talent_settings_shared.tank.static_movement_reduction_multiplier
 	},
 	related_talents = {
-		"ogryn_base_tank_passive",
-	},
+		"ogryn_base_tank_passive"
+	}
 }
 templates.ogryn_base_passive_revive = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.revive_speed_modifier] = talent_settings_shared.revive.revive_speed_modifier,
-		[stat_buffs.assist_speed_modifier] = talent_settings_shared.revive.assist_speed_modifier,
+		[stat_buffs.assist_speed_modifier] = talent_settings_shared.revive.assist_speed_modifier
 	},
 	related_talents = {
-		"ogryn_2_base_2",
-	},
+		"ogryn_2_base_2"
+	}
 }
 templates.coherency_aura_size_increase = {
 	class_name = "buff",
 	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.coherency_radius_modifier] = talent_settings_shared.radius.coherency_aura_size_increase,
+		[stat_buffs.coherency_radius_modifier] = talent_settings_shared.radius.coherency_aura_size_increase
 	},
 	related_talents = {
-		"ogryn_coherency_radius_increase",
-	},
+		"ogryn_coherency_radius_increase"
+	}
 }
 templates.ogryn_toughness_regen_aura = {
-	class_name = "buff",
 	coherency_id = "ogryn_toughness_regen_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_stay_close",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
 	max_stacks = 1,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = talent_settings_shared.toughness_coherency_aura.toughness_replenish_modifier,
+		[stat_buffs.toughness_replenish_modifier] = talent_settings_shared.toughness_coherency_aura.toughness_replenish_modifier
 	},
 	start_func = _penance_start_func("ogryn_toughness_restored_aura_tracking_buff"),
 	related_talents = {
-		"ogryn_toughness_regen_aura",
-	},
+		"ogryn_toughness_regen_aura"
+	}
 }
 
 local toughness_aura_increase = talent_settings_shared.toughness_coherency_aura.toughness_replenish_modifier
 
 templates.ogryn_toughness_restored_aura_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_toughness_replenished] = 1,
+		[proc_events.on_toughness_replenished] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -143,8 +143,8 @@ templates.ogryn_toughness_restored_aura_tracking_buff = {
 		end
 	end,
 	related_talents = {
-		"ogryn_toughness_regen_aura",
-	},
+		"ogryn_toughness_regen_aura"
+	}
 }
 
 local heavy_hitter_max_stacks = talent_settings_shared.ogryn_heavy_hitter.max_stacks
@@ -154,7 +154,7 @@ templates.ogryn_passive_heavy_hitter = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -234,98 +234,98 @@ templates.ogryn_passive_heavy_hitter = {
 		end
 	end,
 	related_talents = {
-		"ogryn_passive_heavy_hitter",
-	},
+		"ogryn_passive_heavy_hitter"
+	}
 }
 templates.ogryn_heavy_hitter_damage_effect = {
-	class_name = "buff",
-	duration = 7.5,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_keystone_heavy_hitter",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	duration = 7.5,
+	class_name = "buff",
 	max_stacks = heavy_hitter_max_stacks,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_heavy_hitter.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_heavy_hitter.melee_damage
 	},
 	related_talents = {
-		"ogryn_passive_heavy_hitter",
-	},
+		"ogryn_passive_heavy_hitter"
+	}
 }
 templates.ogryn_heavy_hitter_max_stacks_improves_toughness = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_melee_replenish] = {
 			min = 0,
-			max = talent_settings_shared.ogryn_heavy_hitter.toughness_melee_replenish * heavy_hitter_max_stacks,
-		},
+			max = talent_settings_shared.ogryn_heavy_hitter.toughness_melee_replenish * heavy_hitter_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return heavy_hitter_lerp_value
-	end,
+	end
 }
 templates.ogryn_heavy_hitter_tdr = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = {
 			min = 1,
-			max = 1 - talent_settings_shared.ogryn_heavy_hitter.tdr * heavy_hitter_max_stacks,
-		},
+			max = 1 - talent_settings_shared.ogryn_heavy_hitter.tdr * heavy_hitter_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return heavy_hitter_lerp_value
-	end,
+	end
 }
 templates.ogryn_heavy_hitter_cleave = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.max_melee_hit_mass_attack_modifier] = {
 			min = 0,
-			max = talent_settings_shared.ogryn_heavy_hitter.cleave * heavy_hitter_max_stacks,
-		},
+			max = talent_settings_shared.ogryn_heavy_hitter.cleave * heavy_hitter_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return heavy_hitter_lerp_value
-	end,
+	end
 }
 templates.ogryn_heavy_hitter_stagger = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.melee_impact_modifier] = {
 			min = 0,
-			max = talent_settings_shared.ogryn_heavy_hitter.stagger * heavy_hitter_max_stacks,
-		},
+			max = talent_settings_shared.ogryn_heavy_hitter.stagger * heavy_hitter_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return heavy_hitter_lerp_value
-	end,
+	end
 }
 templates.ogryn_heavy_hitter_attack_speed_effect = {
 	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
 	stat_buffs = {
-		[stat_buffs.attack_speed] = 0.1,
+		[stat_buffs.attack_speed] = 0.1
 	},
 	conditional_exit_func = function (template_data, template_context)
 		return heavy_hitter_lerp_value < 1
-	end,
+	end
 }
 templates.ogryn_heavy_hitter_toughness_regen_effect = {
 	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
 	stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = 1,
+		[stat_buffs.toughness_melee_replenish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
@@ -337,26 +337,26 @@ templates.ogryn_heavy_hitter_toughness_regen_effect = {
 		local current_stacks = buff_extension:current_stacks("ogryn_heavy_hitter_damage_effect")
 
 		return current_stacks < max_stacks
-	end,
+	end
 }
 templates.ogryn_rending_on_elite_kills = {
-	active_duration = 10,
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_rending_on_elite_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 10,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
+		[stat_buffs.rending_multiplier] = 0.1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_kill,
 	related_talents = {
-		"ogryn_rending_on_elite_kills",
-	},
+		"ogryn_rending_on_elite_kills"
+	}
 }
 
 local function _pulse(template_data, template_context)
@@ -388,9 +388,9 @@ local function _pulse(template_data, template_context)
 end
 
 templates.ogryn_repeat_taunt = {
-	class_name = "buff",
-	duration = 6,
 	predicted = false,
+	duration = 6,
+	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
 
@@ -409,14 +409,14 @@ templates.ogryn_repeat_taunt = {
 	end,
 	stop_func = function (template_data, template_context)
 		_pulse(template_data, template_context)
-	end,
+	end
 }
 templates.ogryn_taunt_staggers_reduce_cooldown = {
+	predicted = false,
 	class_name = "proc_buff",
 	cooldown_reduction_percentage = 0.025,
-	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_stagger_hit,
 	proc_func = function (params, template_data, template_context)
@@ -442,31 +442,31 @@ templates.ogryn_taunt_staggers_reduce_cooldown = {
 		ability_extension:reduce_ability_cooldown_percentage(ability_type, cd_reduction)
 
 		template_data.next_proc_t = t + 0.1
-	end,
+	end
 }
 templates.ogryn_taunt_radius_increase = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.shout_radius_modifier] = 0.5,
-	},
+		[stat_buffs.shout_radius_modifier] = 0.5
+	}
 }
 templates.ogryn_taunt_increased_damage_taken_buff = {
-	class_name = "buff",
+	predicted = false,
 	duration = 15,
 	max_stacks = 1,
-	predicted = false,
 	refresh_duration_on_stack = true,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 1.25,
-	},
+		[stat_buffs.damage_taken_multiplier] = 1.25
+	}
 }
 templates.ogryn_blocking_ranged_taunts = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_block] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local affected_unit = params.attacking_unit or params.pushed_unit
@@ -492,13 +492,13 @@ templates.ogryn_blocking_ranged_taunts = {
 				buff_extension:add_internally_controlled_buff("taunted_short", t, "owner_unit", template_context.unit)
 			end
 		end
-	end,
+	end
 }
 templates.ogryn_windup_reduces_damage_taken = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.85,
+		[stat_buffs.damage_taken_multiplier] = 0.85
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -513,16 +513,16 @@ templates.ogryn_windup_reduces_damage_taken = {
 		local is_windup = action_settings and action_settings.kind == "windup"
 
 		return is_windup
-	end,
+	end
 }
 templates.ogryn_windup_is_uninterruptible = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_keywords = {
-		buff_keywords.uninterruptible,
+		buff_keywords.uninterruptible
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -537,16 +537,16 @@ templates.ogryn_windup_is_uninterruptible = {
 		local is_windup = action_settings and action_settings.kind == "windup"
 
 		return is_windup
-	end,
+	end
 }
 templates.ogryn_bracing_reduces_damage_taken = {
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_bracing_reduces_damage_taken",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.8,
+		[stat_buffs.damage_taken_multiplier] = 0.8
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -561,21 +561,21 @@ templates.ogryn_bracing_reduces_damage_taken = {
 		return braced
 	end,
 	realted_talents = {
-		"ogryn_bracing_reduces_damage_taken",
-	},
+		"ogryn_bracing_reduces_damage_taken"
+	}
 }
 templates.ogryn_carapace_armor_child = {
-	class_name = "buff",
 	max_stacks = 10,
-	predicted = false,
 	refresh_start_time_on_stack = true,
+	predicted = false,
 	stack_offset = -1,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.toughness_replenish_modifier] = 0.025,
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.975,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.975
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = 0.025,
+		[stat_buffs.toughness_replenish_modifier] = 0.025
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -588,27 +588,27 @@ templates.ogryn_carapace_armor_child = {
 		local ogryn_carapace_armor_more_toughness_special_rule = talent_extension:has_special_rule(special_rules.ogryn_carapace_armor_more_toughness)
 
 		return ogryn_carapace_armor_more_toughness_special_rule
-	end,
+	end
 }
 templates.ogryn_carapace_armor_parent = {
-	always_show_in_hud = true,
-	child_buff_template = "ogryn_carapace_armor_child",
-	class_name = "parent_proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_keystone_carapace_armor",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	child_buff_template = "ogryn_carapace_armor_child",
 	predicted = false,
-	restore_child_duration = 3,
 	start_at_max = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_keystone_carapace_armor",
+	restore_child_duration = 3,
+	class_name = "parent_proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
 		[proc_events.on_push_finish] = 1,
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	remove_child_proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	specific_check_proc_funcs = {
 		[proc_events.on_player_hit_received] = function (params, template_data, template_context, t)
@@ -656,7 +656,7 @@ templates.ogryn_carapace_armor_parent = {
 			end
 
 			Managers.stats:record_private("hook_ogryn_feel_no_pain_kills_at_max", template_context.player)
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -681,20 +681,20 @@ templates.ogryn_carapace_armor_parent = {
 		end
 	end,
 	realted_talents = {
-		"ogryn_carapace_armor",
-	},
+		"ogryn_carapace_armor"
+	}
 }
 
 local _toughness_ammount = talent_settings_shared.ogryn_carapace_explosion.toughness
 
 templates.ogryn_carapace_armor_explosion_on_zero_stacks_effect = {
-	class_name = "buff",
-	duration = 30,
+	unique_buff_id = "ogryn_carapace_armor_explosion_on_zero_stacks_effect",
+	predicted = false,
+	inverse_duration_progress = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_carapace_armor_trigger_on_zero_stacks",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	inverse_duration_progress = true,
-	predicted = false,
-	unique_buff_id = "ogryn_carapace_armor_explosion_on_zero_stacks_effect",
+	duration = 30,
+	class_name = "buff",
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
 			return
@@ -722,25 +722,25 @@ templates.ogryn_carapace_armor_explosion_on_zero_stacks_effect = {
 		Explosion.create_explosion(world, physics_world, position + Vector3.up(), nil, unit, explosion_template, power_level, 1, attack_type)
 	end,
 	related_talents = {
-		"ogryn_carapace_armor_trigger_on_zero_stacks",
-	},
+		"ogryn_carapace_armor_trigger_on_zero_stacks"
+	}
 }
 templates.ogryn_increase_explosion_radius = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.explosion_radius_modifier] = 0.275,
-	},
+		[stat_buffs.explosion_radius_modifier] = 0.275
+	}
 }
 templates.ogryn_targets_recieve_damage_taken_increase_debuff = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_targets_recieve_damage_taken_increase_debuff",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_kill),
 	proc_func = function (params, template_data, template_context, t)
@@ -758,63 +758,63 @@ templates.ogryn_targets_recieve_damage_taken_increase_debuff = {
 		end
 	end,
 	related_talents = {
-		"ogryn_targets_recieve_damage_taken_increase_debuff",
-	},
+		"ogryn_targets_recieve_damage_taken_increase_debuff"
+	}
 }
 templates.ogryn_recieve_damage_taken_increase_debuff = {
-	class_name = "buff",
-	duration = 5,
-	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 5,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = 0.15,
-	},
+		[stat_buffs.damage_taken_modifier] = 0.15
+	}
 }
 templates.ogryn_decrease_suppressed_decay = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppressor_decay_multiplier] = 0.5,
-	},
+		[stat_buffs.suppressor_decay_multiplier] = 0.5
+	}
 }
 templates.ogryn_block_cost_reduction = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.block_cost_multiplier] = 0.8,
-	},
+		[stat_buffs.block_cost_multiplier] = 0.8
+	}
 }
 templates.ogryn_blocking_reduces_push_cost = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blocking_reduces_push_cost",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	predicted = true,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.push_cost_multiplier] = 0.8,
+		[stat_buffs.push_cost_multiplier] = 0.8
 	},
 	related_talents = {
-		"ogryn_blocking_reduces_push_cost",
-	},
+		"ogryn_blocking_reduces_push_cost"
+	}
 }
 templates.ogryn_empowered_push = {
-	class_name = "proc_buff",
+	max_stacks = 1,
 	cooldown_duration = 8,
+	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blocking_reduces_push_cost",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	max_stacks = 1,
-	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_push_finish] = 1,
+		[proc_events.on_push_finish] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.push_impact_modifier] = 2.5,
+		[stat_buffs.push_impact_modifier] = 2.5
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_context.active
@@ -823,21 +823,21 @@ templates.ogryn_empowered_push = {
 		return
 	end,
 	related_talents = {
-		"ogryn_blocking_reduces_push_cost",
-	},
+		"ogryn_blocking_reduces_push_cost"
+	}
 }
 templates.ogryn_fully_charged_attacks_gain_damage_and_stagger = {
-	class_name = "proc_buff",
+	predicted = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_fully_charged_attacks_gain_damage_and_stagger",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	predicted = true,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.melee_damage] = 0.4,
-		[stat_buffs.melee_impact_modifier] = 0.4,
+		[stat_buffs.melee_impact_modifier] = 0.4
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_fully_charged
@@ -851,37 +851,37 @@ templates.ogryn_fully_charged_attacks_gain_damage_and_stagger = {
 		end,
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			template_data.is_fully_charged = false
-		end,
+		end
 	},
 	related_talents = {
-		"ogryn_fully_charged_attacks_gain_damage_and_stagger",
-	},
+		"ogryn_fully_charged_attacks_gain_damage_and_stagger"
+	}
 }
 templates.ogryn_charge_speed_on_lunge = {
-	class_name = "proc_buff",
-	force_predicted_proc = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_bull_rush",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 3,
 	predicted = false,
+	hud_priority = 3,
+	force_predicted_proc = true,
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.combat_ability.active_duration,
 	proc_events = {
-		[proc_events.on_lunge_end] = talent_settings_2.combat_ability.on_lunge_end_proc_chance,
+		[proc_events.on_lunge_end] = talent_settings_2.combat_ability.on_lunge_end_proc_chance
 	},
 	proc_stat_buffs = {
 		[stat_buffs.movement_speed] = talent_settings_2.combat_ability.movement_speed,
-		[stat_buffs.melee_attack_speed] = talent_settings_2.combat_ability.melee_attack_speed,
+		[stat_buffs.melee_attack_speed] = talent_settings_2.combat_ability.melee_attack_speed
 	},
 	related_talents = {
-		"ogryn_charge",
-	},
+		"ogryn_charge"
+	}
 }
 templates.ogryn_charge_bleed = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_lunge_start] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -897,7 +897,7 @@ templates.ogryn_charge_bleed = {
 			end
 
 			return true
-		end,
+		end
 	},
 	specific_proc_func = {
 		[proc_events.on_lunge_start] = function (params, template_data, template_context, t)
@@ -917,14 +917,14 @@ templates.ogryn_charge_bleed = {
 
 				hit_units[hit_unit] = true
 			end
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_charge_trample = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = function (params)
 		if not params.damage_type or params.damage_type ~= damage_types.ogryn_lunge then
@@ -935,39 +935,39 @@ templates.ogryn_charge_trample = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_charge_trample_buff", t)
-	end,
+	end
 }
 templates.ogryn_charge_trample_buff = {
 	class_name = "buff",
-	duration = 8,
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_charge_trample",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	max_stacks = 25,
 	max_stacks_cap = 25,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_charge_trample",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 25,
+	duration = 8,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.02,
+		[stat_buffs.damage] = 0.02
 	},
 	related_talents = {
-		"ogryn_charge_trample",
-	},
+		"ogryn_charge_trample"
+	}
 }
 templates.ogryn_base_lunge_toughness_and_damage_resistance = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.melee_heavy_damage] = talent_settings_2.passive_2.melee_heavy_damage,
-		[stat_buffs.damage_taken_multiplier] = talent_settings_2.passive_2.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings_2.passive_2.damage_taken_multiplier
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_lunging,
+	conditional_stat_buffs_func = ConditionalFunctions.is_lunging
 }
 
 local valid_help_interactions = {
-	pull_up = true,
-	remove_net = true,
 	rescue = true,
+	pull_up = true,
 	revive = true,
+	remove_net = true
 }
 
 function _passive_revive_conditional(template_data, template_context)
@@ -983,13 +983,13 @@ function _passive_revive_conditional(template_data, template_context)
 end
 
 templates.ogryn_passive_revive = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_keywords = {
-		buff_keywords.uninterruptible,
+		buff_keywords.uninterruptible
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.push_speed_modifier] = -0.9,
+		[stat_buffs.push_speed_modifier] = -0.9
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -998,7 +998,7 @@ templates.ogryn_passive_revive = {
 		template_data.interactor_extension = interactor_extension
 	end,
 	conditional_keywords_func = _passive_revive_conditional,
-	conditional_stat_buffs_func = _passive_revive_conditional,
+	conditional_stat_buffs_func = _passive_revive_conditional
 }
 
 local function _stagger_add_stamina(params, template_data, template_context)
@@ -1015,19 +1015,19 @@ end
 
 templates.ogryn_passive_stagger = {
 	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_melee_stagger",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
 	stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = talent_settings_2.passive_1.impact_modifier,
+		[stat_buffs.melee_impact_modifier] = talent_settings_2.passive_1.impact_modifier
 	},
 	related_talents = {
-		"ogryn_melee_stagger",
+		"ogryn_melee_stagger"
 	},
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	cooldown_duration = talent_settings_2.passive_1.cooldown,
 	specific_proc_func = {
@@ -1036,21 +1036,21 @@ templates.ogryn_passive_stagger = {
 		end,
 		on_push_hit = function (params, template_data, template_context, t)
 			_stagger_add_stamina(params, template_data, template_context)
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_increased_coherency_regen = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_regen_rate_modifier] = talent_settings_2.toughness_1.toughness_bonus,
-	},
+		[stat_buffs.toughness_regen_rate_modifier] = talent_settings_2.toughness_1.toughness_bonus
+	}
 }
 templates.ogryn_heavy_hits_toughness = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = talent_settings_2.toughness_2.on_sweep_finish_proc_chance,
+		[proc_events.on_sweep_finish] = talent_settings_2.toughness_2.on_sweep_finish_proc_chance
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.num_hit_units ~= 1 then
@@ -1061,13 +1061,13 @@ templates.ogryn_heavy_hits_toughness = {
 		local amount = heavy and talent_settings_2.toughness_2.toughness or talent_settings_2.toughness_2.reduced_toughness
 
 		Toughness.replenish_percentage(template_context.unit, amount, false, "talent_toughness_2")
-	end,
+	end
 }
 templates.ogryn_multiple_enemy_heavy_hits_restore_toughness = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = talent_settings_2.toughness_3.on_sweep_finish_proc_chance,
+		[proc_events.on_sweep_finish] = talent_settings_2.toughness_3.on_sweep_finish_proc_chance
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.num_hit_units <= 1 then
@@ -1078,23 +1078,23 @@ templates.ogryn_multiple_enemy_heavy_hits_restore_toughness = {
 		local toughness = heavy and talent_settings_2.toughness_3.heavy_toughness or talent_settings_2.toughness_3.toughness
 
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "talent_toughness_3")
-	end,
+	end
 }
 templates.ogryn_better_ogryn_fighting = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.damage_vs_ogryn] = talent_settings_2.offensive_1.damage_vs_ogryn,
 		[stat_buffs.damage_vs_chaos_plague_ogryn] = talent_settings_2.offensive_1.damage_vs_ogryn,
 		[stat_buffs.damage_taken_by_chaos_plague_ogryn_multiplier] = talent_settings_2.offensive_1.ogryn_damage_taken_multiplier,
-		[stat_buffs.ogryn_damage_taken_multiplier] = talent_settings_2.offensive_1.ogryn_damage_taken_multiplier,
-	},
+		[stat_buffs.ogryn_damage_taken_multiplier] = talent_settings_2.offensive_1.ogryn_damage_taken_multiplier
+	}
 }
 templates.ogryn_heavy_attacks_bleed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_non_kill),
 	proc_func = function (params, template_data, template_context, t)
@@ -1111,17 +1111,17 @@ templates.ogryn_heavy_attacks_bleed = {
 
 			buff_extension:add_internally_controlled_buff_with_stacks("bleed", num_stacks, t, "owner_unit", template_context.unit)
 		end
-	end,
+	end
 }
 
 local external_properties = {}
 
 templates.ogryn_friend_grenade_replenishment = {
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blitz_big_friendly_rock_replenish",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
@@ -1204,14 +1204,14 @@ templates.ogryn_friend_grenade_replenishment = {
 		return 1 - percentage_left
 	end,
 	related_talents = {
-		"ogryn_grenade_friend_rock",
-	},
+		"ogryn_grenade_friend_rock"
+	}
 }
 templates.ogryn_frag_grenade_thrown = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_grenade_thrown] = 1,
+		[proc_events.on_grenade_thrown] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local unit = template_context.unit
@@ -1220,14 +1220,14 @@ templates.ogryn_frag_grenade_thrown = {
 		local buff_name = "ogryn_kills_during_frag_grenade"
 
 		buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
-	end,
+	end
 }
 templates.ogryn_kills_during_frag_grenade = {
-	class_name = "proc_buff",
-	duration = 5,
 	predicted = false,
+	duration = 5,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.damage_type == "grenade_frag" then
@@ -1242,20 +1242,20 @@ templates.ogryn_kills_during_frag_grenade = {
 		if template_data.amount_killed >= template_data.achievement_target_amount then
 			Managers.stats:record_private("hook_ogryn_frag_grenade", template_context.player)
 		end
-	end,
+	end
 }
 templates.ogryn_bigger_coherency_radius = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.coherency_radius_modifier] = talent_settings_2.coop_1.coherency_aura_size_increase,
-	},
+		[stat_buffs.coherency_radius_modifier] = talent_settings_2.coop_1.coherency_aura_size_increase
+	}
 }
 templates.ogryn_charge_grants_allied_movement_speed = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = talent_settings_2.coop_2.on_lunge_start_proc_chance,
+		[proc_events.on_combat_ability] = talent_settings_2.coop_2.on_lunge_start_proc_chance
 	},
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1276,71 +1276,71 @@ templates.ogryn_charge_grants_allied_movement_speed = {
 				coherency_buff_extension:add_internally_controlled_buff(movement_speed_buff, t, "owner_unit", unit)
 			end
 		end
-	end,
+	end
 }
 templates.ogryn_allied_movement_speed_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ally_movement_boost_on_ability",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_2.coop_2.duration,
 	buff_category = buff_categories.talents_secondary,
 	max_stacks = talent_settings_2.coop_2.max_stacks,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = talent_settings_2.coop_2.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings_2.coop_2.movement_speed
 	},
 	keywords = {
 		buff_keywords.stun_immune,
-		buff_keywords.suppression_immune,
+		buff_keywords.suppression_immune
 	},
 	related_talents = {
-		"ogryn_ally_movement_boost_on_ability",
-	},
+		"ogryn_ally_movement_boost_on_ability"
+	}
 }
 templates.ogryn_coherency_increased_melee_damage = {
-	class_name = "buff",
 	coherency_id = "ogryn_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_intimidating_presence",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = talent_settings_2.coherency.melee_damage,
+		[stat_buffs.melee_heavy_damage] = talent_settings_2.coherency.melee_damage
 	},
 	related_talents = {
-		"ogryn_melee_damage_coherency",
-	},
+		"ogryn_melee_damage_coherency"
+	}
 }
 templates.ogryn_melee_damage_coherency_improved = {
-	class_name = "buff",
 	coherency_id = "ogryn_coherency_aura_improved",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bonebreakers_aura",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_2.coherency.melee_damage_improved,
+		[stat_buffs.melee_damage] = talent_settings_2.coherency.melee_damage_improved
 	},
 	start_func = _penance_start_func("ogryn_heavy_kills_in_coherency_tracking_buff"),
 	related_talents = {
-		"ogryn_melee_damage_coherency_improved",
-	},
+		"ogryn_melee_damage_coherency_improved"
+	}
 }
 templates.ogryn_heavy_kills_in_coherency_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1367,13 +1367,13 @@ templates.ogryn_heavy_kills_in_coherency_tracking_buff = {
 
 			template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name)
 		end
-	end,
+	end
 }
 templates.ogryn_cooldown_on_elite_kills_by_coherence = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local breed_name = params.breed_name
@@ -1400,16 +1400,16 @@ templates.ogryn_cooldown_on_elite_kills_by_coherence = {
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_cooldown_on_elite_kills_buff", t)
-	end,
+	end
 }
 templates.ogryn_cooldown_on_elite_kills_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ally_elite_kills_grant_cooldown",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_2.coop_3.duration,
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1438,26 +1438,26 @@ templates.ogryn_cooldown_on_elite_kills_buff = {
 		end
 	end,
 	related_talents = {
-		"ogryn_ally_elite_kills_grant_cooldown",
-	},
+		"ogryn_ally_elite_kills_grant_cooldown"
+	}
 }
 
 local bleed_dr_max_stacks = talent_settings_2.defensive_1.max_stacks
 local bleed_range = DamageSettings.in_melee_range
 
 templates.ogryn_reduce_damage_taken_per_bleed = {
-	always_show_in_hud = true,
-	class_name = "buff",
 	hud_always_show_stacks = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_nearby_bleeds_reduce_damage_taken",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "buff",
+	always_show_in_hud = true,
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
 			min = talent_settings_2.defensive_1.min,
-			max = talent_settings_2.defensive_1.max,
-		},
+			max = talent_settings_2.defensive_1.max
+		}
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -1514,24 +1514,24 @@ templates.ogryn_reduce_damage_taken_per_bleed = {
 		return math.clamp(template_data.num_stacks, 0, bleed_dr_max_stacks)
 	end,
 	related_talents = {
-		"ogryn_nearby_bleeds_reduce_damage_taken",
-	},
+		"ogryn_nearby_bleeds_reduce_damage_taken"
+	}
 }
 
 local reduced_damage_distance = talent_settings_2.defensive_2.distance * talent_settings_2.defensive_2.distance
 
 templates.ogryn_reduce_damage_taken_on_disabled_allies = {
-	class_name = "buff",
 	hud_always_show_stacks = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_knocked_allies_grant_damage_reduction",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
 			min = talent_settings_2.defensive_2.min,
-			max = talent_settings_2.defensive_2.max,
-		},
+			max = talent_settings_2.defensive_2.max
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1587,20 +1587,20 @@ templates.ogryn_reduce_damage_taken_on_disabled_allies = {
 		return stack_count
 	end,
 	related_talents = {
-		"ogryn_knocked_allies_grant_damage_reduction",
-	},
+		"ogryn_knocked_allies_grant_damage_reduction"
+	}
 }
 
 local increased_toughness_health_threshold = talent_settings_2.defensive_3.increased_toughness_health_threshold
 
 templates.ogryn_increased_toughness_at_low_health = {
-	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_toughness_on_low_health",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
 	predicted = false,
+	hud_priority = 3,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = talent_settings_2.defensive_3.toughness_replenish_modifier,
+		[stat_buffs.toughness_replenish_modifier] = talent_settings_2.defensive_3.toughness_replenish_modifier
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1613,54 +1613,56 @@ templates.ogryn_increased_toughness_at_low_health = {
 		end
 	end,
 	related_talents = {
-		"ogryn_toughness_on_low_health",
-	},
+		"ogryn_toughness_on_low_health"
+	}
 }
 
 local breed_name_size = {
-	chaos_armored_infected = 1,
-	chaos_beast_of_nurgle = 10,
-	chaos_daemonhost = 8,
-	chaos_hound = 3,
 	chaos_hound_mutator = 3,
-	chaos_lesser_mutated_poxwalker = 1,
-	chaos_mutated_poxwalker = 1,
 	chaos_mutator_daemonhost = 8,
-	chaos_mutator_ritualist = 1,
-	chaos_newly_infected = 1,
-	chaos_ogryn_bulwark = 5,
-	chaos_ogryn_executor = 5,
-	chaos_ogryn_gunner = 5,
-	chaos_plague_ogryn = 10,
-	chaos_poxwalker = 1,
-	chaos_poxwalker_bomber = 2,
-	chaos_spawn = 10,
-	cultist_assault = 1,
-	cultist_berzerker = 3,
-	cultist_captain = 8,
-	cultist_flamer = 2,
-	cultist_grenadier = 2,
-	cultist_gunner = 2,
-	cultist_melee = 1,
-	cultist_mutant = 5,
-	cultist_mutant_mutator = 5,
-	cultist_ritualist = 1,
-	cultist_shocktrooper = 2,
 	renegade_assault = 1,
-	renegade_berzerker = 3,
-	renegade_captain = 8,
-	renegade_executor = 3,
-	renegade_flamer = 2,
-	renegade_grenadier = 2,
+	chaos_beast_of_nurgle = 10,
+	cultist_berzerker = 3,
+	cultist_melee = 1,
+	chaos_plague_ogryn = 10,
+	cultist_ritualist = 1,
+	cultist_mutant = 5,
+	chaos_poxwalker = 1,
+	chaos_daemonhost = 8,
+	cultist_shocktrooper = 2,
+	chaos_ogryn_gunner = 5,
+	cultist_grenadier = 2,
+	cultist_flamer = 2,
+	chaos_mutated_poxwalker = 1,
+	chaos_poxwalker_bomber = 2,
+	chaos_armored_infected = 1,
 	renegade_gunner = 2,
-	renegade_melee = 1,
-	renegade_netgunner = 2,
-	renegade_radio_operator = 2,
-	renegade_rifleman = 1,
-	renegade_shocktrooper = 2,
-	renegade_sniper = 1,
+	renegade_flamer = 2,
+	chaos_mutator_ritualist = 1,
+	renegade_flamer_mutator = 2,
 	renegade_twin_captain = 2,
+	chaos_newly_infected = 1,
+	renegade_radio_operator = 2,
+	chaos_spawn = 10,
+	renegade_executor = 3,
 	renegade_twin_captain_two = 2,
+	renegade_rifleman = 1,
+	renegade_melee = 1,
+	renegade_shocktrooper = 2,
+	chaos_ogryn_executor = 5,
+	cultist_assault = 1,
+	renegade_grenadier = 2,
+	cultist_mutant_mutator = 5,
+	cultist_captain = 8,
+	chaos_lesser_mutated_poxwalker = 1,
+	renegade_berzerker = 3,
+	renegade_sniper = 1,
+	renegade_netgunner = 2,
+	renegade_captain = 8,
+	chaos_hound = 3,
+	chaos_ogryn_bulwark = 5,
+	cultist_gunner = 2,
+	companion_dog = 1
 }
 
 function _big_bull_add_stacks(template_context, stacks)
@@ -1677,12 +1679,12 @@ function _big_bull_add_stacks(template_context, stacks)
 end
 
 templates.ogryn_big_bully_heavy_hits = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.stacks = 0
@@ -1712,7 +1714,7 @@ templates.ogryn_big_bully_heavy_hits = {
 		on_sweep_finish = function (params, template_data, template_context)
 			template_data.sweep_done = true
 			template_data.in_sweep = nil
-		end,
+		end
 	},
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.sweep_done then
@@ -1738,23 +1740,23 @@ templates.ogryn_big_bully_heavy_hits = {
 			template_data.stacks = 0
 			template_data.delay = nil
 		end
-	end,
+	end
 }
 templates.ogryn_big_bully_heavy_hits_buff = {
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_staggering_increases_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "proc_buff",
 	duration = talent_settings_2.offensive_2_2.duration,
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = talent_settings_2.offensive_2_2.melee_heavy_damage,
+		[stat_buffs.melee_heavy_damage] = talent_settings_2.offensive_2_2.melee_heavy_damage
 	},
 	max_stacks = talent_settings_2.offensive_2_2.max_stacks,
 	specific_proc_func = {
@@ -1764,21 +1766,21 @@ templates.ogryn_big_bully_heavy_hits_buff = {
 		end,
 		on_sweep_finish = function (params, template_data, template_context)
 			template_data.finished = true
-		end,
+		end
 	},
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.can_finish and template_data.finished
 	end,
 	realated_talents = {
-		"ogryn_staggering_increases_damage",
-	},
+		"ogryn_staggering_increases_damage"
+	}
 }
 templates.ogryn_melee_revenge_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -1803,46 +1805,46 @@ templates.ogryn_melee_revenge_damage = {
 
 			template_data.buff_extension:add_internally_controlled_buff("ogryn_melee_revenge_damage_buff", t)
 		end
-	end,
+	end
 }
 templates.ogryn_melee_revenge_damage_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_revenge_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage] = talent_settings_2.offensive_2_1.damage,
+		[stat_buffs.damage] = talent_settings_2.offensive_2_1.damage
 	},
 	duration = talent_settings_2.offensive_2_1.time,
 	related_talents = {
-		"ogryn_revenge_damage",
-	},
+		"ogryn_revenge_damage"
+	}
 }
 templates.ogryn_hitting_multiple_with_melee_grants_melee_damage_bonus = {
-	class_name = "proc_buff",
 	force_predicted_proc = true,
 	hud_always_show_stacks = true,
+	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_more_hits_more_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = talent_settings_2.offensive_2_3.on_sweep_finish_proc_chance,
+		[proc_events.on_sweep_finish] = talent_settings_2.offensive_2_3.on_sweep_finish_proc_chance
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
 			min = 0,
-			max = talent_settings_2.offensive_2_3.melee_damage * talent_settings_2.offensive_2_3.max_targets,
-		},
+			max = talent_settings_2.offensive_2_3.melee_damage * talent_settings_2.offensive_2_3.max_targets
+		}
 	},
 	specific_proc_func = {
 		on_sweep_finish = function (params, template_data, template_context)
 			local hits = params.num_hit_units
 
 			template_data.hits = hits
-		end,
+		end
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local hits = template_data.hits or 0
@@ -1863,14 +1865,14 @@ templates.ogryn_hitting_multiple_with_melee_grants_melee_damage_bonus = {
 		return show
 	end,
 	related_talents = {
-		"ogryn_more_hits_more_damage",
-	},
+		"ogryn_more_hits_more_damage"
+	}
 }
 templates.ogryn_bull_rush_hits_replenish_toughness = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1893,23 +1895,23 @@ templates.ogryn_bull_rush_hits_replenish_toughness = {
 		end
 
 		Toughness.replenish_percentage(template_context.unit, talent_settings_2.combat_ability_3.toughness, false, "bull_rush_toughness_talent")
-	end,
+	end
 }
 
 local stance_duration = 10
 
 templates.ogryn_ranged_stance = {
-	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_speshul_ammo",
-	predicted = true,
 	unique_buff_id = "ogryn_ranged_stance",
+	predicted = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_speshul_ammo",
+	class_name = "buff",
 	duration = stance_duration,
 	keywords = {
-		buff_keywords.ogryn_combat_ability_stance,
+		buff_keywords.ogryn_combat_ability_stance
 	},
 	stat_buffs = {
 		[stat_buffs.ranged_attack_speed] = 0.25,
-		[stat_buffs.reload_speed] = 0.65,
+		[stat_buffs.reload_speed] = 0.65
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1961,15 +1963,15 @@ templates.ogryn_ranged_stance = {
 		template_data.evaluate_max_stacks_stat = true
 	end,
 	related_talents = {
-		"ogryn_special_ammo_movement",
-	},
+		"ogryn_special_ammo_movement"
+	}
 }
 templates.ogryn_kills_during_barrage = {
-	class_name = "proc_buff",
-	duration = 11,
 	predicted = false,
+	duration = 11,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_minion_death] = 1,
+		[proc_events.on_minion_death] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.amount_killed = template_data.amount_killed + 1
@@ -1989,20 +1991,20 @@ templates.ogryn_kills_during_barrage = {
 
 			template_data.triggered = true
 		end
-	end,
+	end
 }
 templates.ogryn_increased_ammo_reserve_passive = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ammo_reserve_capacity] = talent_settings_1.passive_3.increased_max_ammo,
-	},
+		[stat_buffs.ammo_reserve_capacity] = talent_settings_1.passive_3.increased_max_ammo
+	}
 }
 templates.ogryn_leadbelcher_aura_tracking_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.is_leadbelcher_shot then
@@ -2014,13 +2016,13 @@ templates.ogryn_leadbelcher_aura_tracking_buff = {
 
 		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
 		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-	end,
+	end
 }
 templates.ogryn_passive_proc_combat_ability_cooldown_reduction = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local talent_extension = template_data.talent_extension
@@ -2036,16 +2038,16 @@ templates.ogryn_passive_proc_combat_ability_cooldown_reduction = {
 
 		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
 		template_data.buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-	end,
+	end
 }
 templates.ogryn_no_ammo_consumption_passive_cooldown_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_leadbelcher_cooldown_reduction",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_1.spec_passive_1.duration,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2066,32 +2068,32 @@ templates.ogryn_no_ammo_consumption_passive_cooldown_buff = {
 		end
 	end,
 	related_talents = {
-		"ogryn_leadbelcher_cooldown_reduction",
-	},
+		"ogryn_leadbelcher_cooldown_reduction"
+	}
 }
 templates.ogryn_aura_increased_damage_vs_suppressed = {
-	class_name = "buff",
 	coherency_id = "ogryn_aura_increased_damage_vs_suppressed",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bringing_big_guns",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
 	max_stacks = 1,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.damage_vs_suppressed] = 0.2,
+		[stat_buffs.damage_vs_suppressed] = 0.2
 	},
 	start_func = _penance_start_func("ogryn_suppressed_kills_aura_tracking_buff"),
 	related_talents = {
-		"ogryn_damage_vs_suppressed_coherency",
-	},
+		"ogryn_damage_vs_suppressed_coherency"
+	}
 }
 templates.ogryn_suppressed_kills_aura_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2120,38 +2122,38 @@ templates.ogryn_suppressed_kills_aura_tracking_buff = {
 		local parent_buff_name = "ogryn_damage_vs_suppressed_coherency"
 
 		template_data.last_num_in_coherency = template_data.coherency_extension:evaluate_and_send_achievement_data(parent_buff_name, hook_name)
-	end,
+	end
 }
 templates.ogryn_increased_damage_after_reload = {
+	predicted = false,
+	hud_priority = 4,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_reloading_grants_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_1.mixed_1.duration,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings_1.mixed_1.damage_after_reload,
+		[stat_buffs.ranged_damage] = talent_settings_1.mixed_1.damage_after_reload
 	},
 	related_talents = {
-		"ogryn_reloading_grants_damage",
-	},
+		"ogryn_reloading_grants_damage"
+	}
 }
 templates.ogryn_increased_clip_size = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.clip_size_modifier] = talent_settings_1.mixed_3.increased_clip_size,
-	},
+		[stat_buffs.clip_size_modifier] = talent_settings_1.mixed_3.increased_clip_size
+	}
 }
 templates.ogryn_crit_chance_on_kill = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local unit = template_context.unit
@@ -2163,37 +2165,37 @@ templates.ogryn_crit_chance_on_kill = {
 			buff_extension:add_internally_controlled_buff("ogryn_crit_chance_on_kill_effect", t)
 		end
 	end,
-	check_proc_func = CheckProcFunctions.on_kill,
+	check_proc_func = CheckProcFunctions.on_kill
 }
 templates.ogryn_crit_chance_on_kill_effect = {
-	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_kills_grant_crit_chance",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_kills_grant_crit_chance",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	class_name = "buff",
 	duration = talent_settings_1.offensive_1.duration,
 	max_stacks = talent_settings_1.offensive_1.max_stacks,
 	max_stacks_cap = talent_settings_1.offensive_1.max_stacks,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings_1.offensive_1.crit_chance_on_kill,
+		[stat_buffs.critical_strike_chance] = talent_settings_1.offensive_1.crit_chance_on_kill
 	},
 	related_talents = {
-		"ogryn_kills_grant_crit_chance",
-	},
+		"ogryn_kills_grant_crit_chance"
+	}
 }
 templates.ogryn_increased_suppression = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = talent_settings_1.offensive_2.increased_suppression,
-	},
+		[stat_buffs.suppression_dealt] = talent_settings_1.offensive_2.increased_suppression
+	}
 }
 templates.ogryn_increased_reload_speed_on_multiple_hits = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.hit_units = {}
@@ -2232,21 +2234,21 @@ templates.ogryn_increased_reload_speed_on_multiple_hits = {
 
 			buff_extension:add_internally_controlled_buff(reload_buff, t)
 		end
-	end,
+	end
 }
 templates.ogryn_increased_reload_speed_on_multiple_hits_effect = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_multi_hits_grant_reload_speed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 1,
 	max_stacks = 1,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings_1.offensive_3.reload_speed_on_multi_hit,
+		[stat_buffs.reload_speed] = talent_settings_1.offensive_3.reload_speed_on_multi_hit
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2273,33 +2275,33 @@ templates.ogryn_increased_reload_speed_on_multiple_hits_effect = {
 		return template_data.done and not is_reloading
 	end,
 	related_talents = {
-		"ogryn_multi_hits_grant_reload_speed",
-	},
+		"ogryn_multi_hits_grant_reload_speed"
+	}
 }
 templates.ogryn_movement_speed_on_ranged_kill = {
-	class_name = "proc_buff",
+	predicted = true,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_movement_speed_after_ranged_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = true,
+	class_name = "proc_buff",
 	active_duration = talent_settings_1.defensive_2.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = talent_settings_1.defensive_2.move_speed_on_ranged_kill,
+		[stat_buffs.movement_speed] = talent_settings_1.defensive_2.move_speed_on_ranged_kill
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	related_talents = {
-		"ogryn_movement_speed_after_ranged_kills",
-	},
+		"ogryn_movement_speed_after_ranged_kills"
+	}
 }
 templates.ogryn_regen_toughness_on_braced = {
-	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_toughness_while_bracing",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	predicted = false,
+	hud_priority = 4,
+	class_name = "buff",
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
@@ -2320,22 +2322,22 @@ templates.ogryn_regen_toughness_on_braced = {
 		return template_data.braced
 	end,
 	related_talents = {
-		"ogryn_toughness_while_bracing",
-	},
+		"ogryn_toughness_while_bracing"
+	}
 }
 templates.ogryn_ranged_stance_no_movement_penalty_buff = {
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	duration = stance_duration,
 	proc_events = {
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_wield_melee] = 1,
+		[proc_events.on_wield_melee] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings_1.combat_ability_3.reduced_move_penalty,
 		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings_1.combat_ability_3.reduced_move_penalty,
-		[stat_buffs.damage_near] = talent_settings_1.combat_ability_3.increased_damage_vs_close,
+		[stat_buffs.damage_near] = talent_settings_1.combat_ability_3.increased_damage_vs_close
 	},
 	start_func = function (template_data, template_context)
 		template_data.wielding_ranged = true
@@ -2346,20 +2348,20 @@ templates.ogryn_ranged_stance_no_movement_penalty_buff = {
 		end,
 		on_wield_melee = function (params, template_data, template_context)
 			template_data.wielding_ranged = false
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.wielding_ranged
-	end,
+	end
 }
 templates.ogryn_ranged_stance_toughness_regen = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	duration = stance_duration,
 	proc_events = {
 		[proc_events.on_shoot] = 1,
 		[proc_events.on_shoot_projectile] = 1,
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	specific_proc_func = {
 		on_shoot = function (params, template_data, template_context)
@@ -2370,21 +2372,21 @@ templates.ogryn_ranged_stance_toughness_regen = {
 		end,
 		on_reload = function (params, template_data, template_context)
 			Toughness.replenish_percentage(template_context.unit, 0.1, false, "ogryn_ranged_stance_reload")
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_ranged_stance_armor_pierce = {
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	duration = stance_duration,
 	proc_events = {
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_wield_melee] = 1,
+		[proc_events.on_wield_melee] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_rending_multiplier] = talent_settings_shared.special_ammo_armor_pen.rending_multiplier,
-		[stat_buffs.ranged_damage] = talent_settings_shared.special_ammo_armor_pen.damage,
+		[stat_buffs.ranged_damage] = talent_settings_shared.special_ammo_armor_pen.damage
 	},
 	start_func = function (template_data, template_context)
 		template_data.wielding_ranged = true
@@ -2395,11 +2397,11 @@ templates.ogryn_ranged_stance_armor_pierce = {
 		end,
 		on_wield_melee = function (params, template_data, template_context)
 			template_data.wielding_ranged = false
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return true
-	end,
+	end
 }
 
 local fire_targets_hit = {}
@@ -2407,13 +2409,13 @@ local burning_buff = "flamer_assault"
 local max_burn_stacks = talent_settings_1.combat_ability_1.max_stacks
 
 templates.ogryn_ranged_stance_fire_shots = {
-	class_name = "proc_buff",
-	duration = 10,
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	duration = 10,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.new_shot = true
@@ -2453,21 +2455,21 @@ templates.ogryn_ranged_stance_fire_shots = {
 		end,
 		on_shoot = function (params, template_data, template_context)
 			table.clear(fire_targets_hit)
-		end,
-	},
+		end
+	}
 }
 
 local ogryn_explosions_burn_blacklist = {
-	powermaul_explosion = true,
+	powermaul_explosion = true
 }
 local max_burn_stacks_explosions = talent_settings_shared.explosions_burn.max_stacks
 
 templates.ogryn_explosions_burn = {
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_kill, CheckProcFunctions.on_explosion_hit),
 	proc_func = function (params, template_data, template_context, t)
@@ -2495,13 +2497,13 @@ templates.ogryn_explosions_burn = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.ogryn_frag_bomb_bleed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_kill, CheckProcFunctions.on_explosion_hit),
 	proc_func = function (params, template_data, template_context, t)
@@ -2521,16 +2523,16 @@ templates.ogryn_frag_bomb_bleed = {
 
 			buff_extension:add_internally_controlled_buff_with_stacks("bleed", num_stacks, t, "owner_unit", unit)
 		end
-	end,
+	end
 }
 templates.ogryn_windup_increases_power_parent = {
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
+	allow_proc_while_active = true,
 	proc_events = {
 		[proc_events.on_windup_trigger] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	specific_proc_func = {
 		[proc_events.on_sweep_start] = function (params, template_data, template_context, t)
@@ -2549,23 +2551,23 @@ templates.ogryn_windup_increases_power_parent = {
 		end,
 		[proc_events.on_windup_trigger] = function (params, template_data, template_context, t)
 			template_context.buff_extension:add_internally_controlled_buff("ogryn_windup_increases_power_child", t)
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_windup_increases_power_child = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_fully_charged_attacks_gain_damage_and_stagger",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	max_stacks = talent_settings_shared.ogryn_thrust.max_stacks,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	stat_buffs = {
 		[stat_buffs.melee_damage] = 0.1,
-		[stat_buffs.melee_impact_modifier] = 0.1,
+		[stat_buffs.melee_impact_modifier] = 0.1
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finish = true
@@ -2574,14 +2576,14 @@ templates.ogryn_windup_increases_power_child = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_fully_charged_attacks_gain_damage_and_stagger",
-	},
+		"ogryn_fully_charged_attacks_gain_damage_and_stagger"
+	}
 }
 templates.ogryn_box_bleed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_kill, CheckProcFunctions.on_explosion_hit),
 	proc_func = function (params, template_data, template_context, t)
@@ -2601,16 +2603,16 @@ templates.ogryn_box_bleed = {
 
 			buff_extension:add_internally_controlled_buff_with_stacks("bleed", num_stacks, t, "owner_unit", unit)
 		end
-	end,
+	end
 }
 templates.ogryn_suppression_immunity_on_high_toughness = {
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_movement_speed_after_ranged_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	conditional_keywords = {
-		buff_keywords.suppression_immune,
+		buff_keywords.suppression_immune
 	},
 	start_func = function (template_data, template_context)
 		local toughness_extension = ScriptUnit.has_extension(template_context.unit, "toughness_system")
@@ -2624,37 +2626,37 @@ templates.ogryn_suppression_immunity_on_high_toughness = {
 		return above_threshold
 	end,
 	related_talents = {
-		"ogryn_suppression_toughness",
-	},
+		"ogryn_suppression_toughness"
+	}
 }
 templates.ogryn_movement_boost_on_ranged_damage = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_rending_on_elite_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_movement_boost_on_ranged_damage.duration,
 	cooldown_duration = talent_settings_shared.ogryn_movement_boost_on_ranged_damage.cooldown_duration,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_hit,
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage_taken_multiplier] = talent_settings_shared.ogryn_movement_boost_on_ranged_damage.ranged_damage_taken_multiplier,
+		[stat_buffs.ranged_damage_taken_multiplier] = talent_settings_shared.ogryn_movement_boost_on_ranged_damage.ranged_damage_taken_multiplier
 	},
 	related_talents = {
-		"ogryn_movement_boost_on_ranged_damage",
-	},
+		"ogryn_movement_boost_on_ranged_damage"
+	}
 }
 templates.ogryn_replenish_rock_on_miss = {
 	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_replenish_rock_on_miss",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
-	hud_priority = 3,
-	predicted = false,
 	cooldown_duration = talent_settings_shared.ogryn_replenish_rock_on_miss.cooldown_duration,
 	proc_events = {
-		[proc_events.on_player_projectile_finished] = 1,
+		[proc_events.on_player_projectile_finished] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local projectile_name = params.projectile_name
@@ -2693,80 +2695,80 @@ templates.ogryn_replenish_rock_on_miss = {
 		end
 	end,
 	related_talents = {
-		"ogryn_replenish_rock_on_miss",
-	},
+		"ogryn_replenish_rock_on_miss"
+	}
 }
 templates.ogryn_protect_allies_toughness_broken = {
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_protect_allies",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_protect_allies.duration,
 	cooldown_duration = talent_settings_shared.ogryn_protect_allies.cooldown_duration,
 	proc_events = {
-		[proc_events.on_player_toughness_broken] = 1,
+		[proc_events.on_player_toughness_broken] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.unit ~= template_context.unit
 	end,
 	proc_stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_shared.ogryn_protect_allies.toughness_damage_reduction,
-		[stat_buffs.power_level_modifier] = talent_settings_shared.ogryn_protect_allies.power_level_modifier,
+		[stat_buffs.power_level_modifier] = talent_settings_shared.ogryn_protect_allies.power_level_modifier
 	},
 	related_talents = {
-		"ogryn_protect_allies",
-	},
+		"ogryn_protect_allies"
+	}
 }
 templates.ogryn_protect_allies = {
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_protect_allies",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_protect_allies.duration,
 	proc_events = {
-		[proc_events.on_ally_knocked_down] = 1,
+		[proc_events.on_ally_knocked_down] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.downed_unit ~= template_context.unit
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.revive_speed_modifier] = talent_settings_shared.ogryn_protect_allies.revive_speed_modifier,
+		[stat_buffs.revive_speed_modifier] = talent_settings_shared.ogryn_protect_allies.revive_speed_modifier
 	},
 	proc_keywords = {
-		buff_keywords.stun_immune,
+		buff_keywords.stun_immune
 	},
 	related_talents = {
-		"ogryn_protect_allies",
-	},
+		"ogryn_protect_allies"
+	}
 }
 templates.ogryn_damage_reduction_after_elite_kill = {
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_damage_reduction_after_elite_kill",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_damage_reduction_after_elite_kill.duration,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.ogryn_damage_reduction_after_elite_kill.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.ogryn_damage_reduction_after_elite_kill.damage_taken_multiplier
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	related_talents = {
-		"ogryn_damage_reduction_after_elite_kill",
-	},
+		"ogryn_damage_reduction_after_elite_kill"
+	}
 }
 templates.ogryn_melee_attacks_give_mtdr = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local num_hit_units = params.num_hit_units
@@ -2775,21 +2777,21 @@ templates.ogryn_melee_attacks_give_mtdr = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_melee_attacks_give_mtdr_stacking_buff", t)
-	end,
+	end
 }
 templates.ogryn_melee_attacks_give_mtdr_stacking_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_melee_attacks_give_mtdr",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	max_stacks = talent_settings_shared.ogryn_melee_attacks_give_mtdr.stacks,
 	stat_buffs = {
-		[stat_buffs.melee_damage_taken_multiplier] = talent_settings_shared.ogryn_melee_attacks_give_mtdr.damage_taken_multiplier,
+		[stat_buffs.melee_damage_taken_multiplier] = talent_settings_shared.ogryn_melee_attacks_give_mtdr.damage_taken_multiplier
 	},
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context)
@@ -2799,17 +2801,17 @@ templates.ogryn_melee_attacks_give_mtdr_stacking_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_melee_attacks_give_mtdr",
-	},
+		"ogryn_melee_attacks_give_mtdr"
+	}
 }
 templates.ogryn_reload_speed_on_empty = {
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_reload_speed_on_empty",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.reload_speed] = talent_settings_shared.ogryn_reload_speed_on_empty.reload_speed,
+		[stat_buffs.reload_speed] = talent_settings_shared.ogryn_reload_speed_on_empty.reload_speed
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.is_active
@@ -2835,14 +2837,14 @@ templates.ogryn_reload_speed_on_empty = {
 	end,
 	check_active_func = ConditionalFunctions.is_reloading,
 	related_talents = {
-		"ogryn_reload_speed_on_empty",
-	},
+		"ogryn_reload_speed_on_empty"
+	}
 }
 templates.ogryn_stagger_cleave_on_third = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		return
@@ -2856,24 +2858,24 @@ templates.ogryn_stagger_cleave_on_third = {
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_stagger_cleave_on_third_active_buff", t)
 	end,
 	related_talents = {
-		"ogryn_stagger_cleave_on_third",
-	},
+		"ogryn_stagger_cleave_on_third"
+	}
 }
 templates.ogryn_stagger_cleave_on_third_active_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_stagger_cleave_on_third",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	max_stacks = talent_settings_shared.ogryn_stagger_cleave_on_third.count,
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings_shared.ogryn_stagger_cleave_on_third.max_hit_mass_attack_modifier,
-		[stat_buffs.melee_impact_modifier] = talent_settings_shared.ogryn_stagger_cleave_on_third.melee_impact_modifier,
+		[stat_buffs.melee_impact_modifier] = talent_settings_shared.ogryn_stagger_cleave_on_third.melee_impact_modifier
 	},
 	specific_proc_func = {
 		on_sweep_start = function (params, template_data, template_context)
@@ -2885,7 +2887,7 @@ templates.ogryn_stagger_cleave_on_third_active_buff = {
 			if template_data.should_end then
 				template_data.finish = true
 			end
-		end,
+		end
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_context.stack_count == talent_settings_shared.ogryn_stagger_cleave_on_third.count
@@ -2894,22 +2896,22 @@ templates.ogryn_stagger_cleave_on_third_active_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_stagger_cleave_on_third",
-	},
+		"ogryn_stagger_cleave_on_third"
+	}
 }
 templates.ogryn_melee_damage_after_heavy = {
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_melee_damage_after_heavy",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_melee_damage_after_heavy.duration,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_melee_damage_after_heavy.melee_damage_modifier,
+		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_melee_damage_after_heavy.melee_damage_modifier
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local num_hit_units = params.num_hit_units
@@ -2927,76 +2929,76 @@ templates.ogryn_melee_damage_after_heavy = {
 		return true
 	end,
 	related_talents = {
-		"ogryn_melee_damage_after_heavy",
-	},
+		"ogryn_melee_damage_after_heavy"
+	}
 }
 templates.ogryn_far_damage = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_far] = talent_settings_shared.ogryn_far_damage.damage_far,
-	},
+		[stat_buffs.damage_far] = talent_settings_shared.ogryn_far_damage.damage_far
+	}
 }
 templates.ogryn_corruption_resistance = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.corruption_taken_multiplier] = talent_settings_shared.ogryn_corruption_resistance.corruption_taken_multiplier,
-	},
+		[stat_buffs.corruption_taken_multiplier] = talent_settings_shared.ogryn_corruption_resistance.corruption_taken_multiplier
+	}
 }
 templates.ogryn_taking_damage_improves_handling = {
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_rending_on_elite_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_taking_damage_improves_handling.duration,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	proc_stat_buffs = {
 		[stat_buffs.spread_modifier] = talent_settings_shared.ogryn_taking_damage_improves_handling.spread_modifier,
-		[stat_buffs.recoil_modifier] = talent_settings_shared.ogryn_taking_damage_improves_handling.recoil_modifier,
+		[stat_buffs.recoil_modifier] = talent_settings_shared.ogryn_taking_damage_improves_handling.recoil_modifier
 	},
 	related_talents = {
-		"ogryn_taking_damage_improves_handling",
-	},
+		"ogryn_taking_damage_improves_handling"
+	}
 }
 templates.ogryn_block_increases_power = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_block_increases_power_active_buff", t)
-	end,
+	end
 }
 templates.ogryn_block_increases_power_active_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_rending_on_elite_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_shared.ogryn_block_increases_power.duration,
 	max_stacks = talent_settings_shared.ogryn_block_increases_power.stacks,
 	stat_buffs = {
-		[stat_buffs.melee_impact_modifier] = talent_settings_shared.ogryn_block_increases_power.melee_impact_modifier,
+		[stat_buffs.melee_impact_modifier] = talent_settings_shared.ogryn_block_increases_power.melee_impact_modifier
 	},
 	related_talents = {
-		"ogryn_block_increases_power",
-	},
+		"ogryn_block_increases_power"
+	}
 }
 templates.ogryn_damage_reduction_on_high_stamina = {
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_damage_reduction_on_high_stamina",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.ogryn_damage_reduction_on_high_stamina.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.ogryn_damage_reduction_on_high_stamina.damage_taken_multiplier
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
@@ -3011,14 +3013,14 @@ templates.ogryn_damage_reduction_on_high_stamina = {
 		return above_threshold
 	end,
 	related_talents = {
-		"ogryn_damage_reduction_on_high_stamina",
-	},
+		"ogryn_damage_reduction_on_high_stamina"
+	}
 }
 templates.ogryn_multiple_staggers_restore_stamina = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.num_hit_units <= 1 then
@@ -3028,13 +3030,13 @@ templates.ogryn_multiple_staggers_restore_stamina = {
 		local stamina = talent_settings_shared.ogryn_multiple_staggers_restore_stamina.stamina
 
 		Stamina.add_stamina_percent(template_context.unit, stamina)
-	end,
+	end
 }
 templates.ogryn_stacking_attack_speed = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.chained = 0
@@ -3049,23 +3051,23 @@ templates.ogryn_stacking_attack_speed = {
 		if template_data.chained > 1 then
 			template_context.buff_extension:add_internally_controlled_buff("ogryn_stacking_attack_speed_active_buff", t)
 		end
-	end,
+	end
 }
 templates.ogryn_stacking_attack_speed_active_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_stacking_attack_speed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	max_stacks = talent_settings_shared.ogryn_stacking_attack_speed.max_stacks,
 	duration = talent_settings_shared.ogryn_stacking_attack_speed.duration,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings_shared.ogryn_stacking_attack_speed.melee_attack_speed,
+		[stat_buffs.melee_attack_speed] = talent_settings_shared.ogryn_stacking_attack_speed.melee_attack_speed
 	},
 	proc_func = function (params, template_data, template_context)
 		if params.num_hit_units == 0 then
@@ -3076,8 +3078,8 @@ templates.ogryn_stacking_attack_speed_active_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_stacking_attack_speed",
-	},
+		"ogryn_stacking_attack_speed"
+	}
 }
 
 local function dodge_update(template_data, template_context)
@@ -3116,18 +3118,18 @@ local function dodge_update(template_data, template_context)
 end
 
 templates.ogryn_suppression_increase = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = talent_settings_shared.ogryn_suppression_increase.suppression,
-	},
+		[stat_buffs.suppression_dealt] = talent_settings_shared.ogryn_suppression_increase.suppression
+	}
 }
 templates.ogryn_dodge_stagger = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_dodge_start] = 1,
-		[proc_events.on_dodge_end] = 1,
+		[proc_events.on_dodge_end] = 1
 	},
 	start_func = function (template_data, template_context)
 		local physics_world = World.physics_world(template_context.world)
@@ -3152,7 +3154,7 @@ templates.ogryn_dodge_stagger = {
 		end,
 		on_dodge_end = function (params, template_data, template_context)
 			template_data.active = false
-		end,
+		end
 	},
 	update_func = function (template_data, template_context)
 		if not template_data.active then
@@ -3160,28 +3162,28 @@ templates.ogryn_dodge_stagger = {
 		end
 
 		dodge_update(template_data, template_context)
-	end,
+	end
 }
 templates.ogryn_weakspot_damage = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_weakspot_power_modifier] = talent_settings_shared.ogryn_weakspot_damage.power,
-	},
+		[stat_buffs.melee_weakspot_power_modifier] = talent_settings_shared.ogryn_weakspot_damage.power
+	}
 }
 templates.ogryn_big_box_of_hurt_more_bombs = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ogryn_grenade_box_cluster_amount] = talent_settings_shared.ogryn_big_box_of_hurt_more_bombs.amount,
-	},
+		[stat_buffs.ogryn_grenade_box_cluster_amount] = talent_settings_shared.ogryn_big_box_of_hurt_more_bombs.amount
+	}
 }
 templates.ogryn_staggering_increases_damage_taken = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -3216,18 +3218,18 @@ templates.ogryn_staggering_increases_damage_taken = {
 
 				buff_extension:add_internally_controlled_buff_with_stacks("ogryn_staggering_damage_taken_increase", num_stacks, t, "owner_unit", template_context.unit)
 			end
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_staggering_damage_taken_increase = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	class_name = "buff",
 	duration = talent_settings_shared.ogryn_staggering_increases_damage_taken.duration,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = talent_settings_shared.ogryn_staggering_increases_damage_taken.damage,
-	},
+		[stat_buffs.damage_taken_modifier] = talent_settings_shared.ogryn_staggering_increases_damage_taken.damage
+	}
 }
 
 function _is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
@@ -3261,16 +3263,16 @@ function _is_in_weapon_alternate_fire_with_stamina(template_data, template_conte
 end
 
 templates.ogryn_drain_stamina_for_handling = {
-	class_name = "buff",
+	predicted = true,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_drain_stamina_for_handling",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = true,
+	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings_shared.ogryn_drain_stamina_for_handling.critical_strike_chance,
 		[stat_buffs.spread_modifier] = talent_settings_shared.ogryn_drain_stamina_for_handling.spread_modifier,
 		[stat_buffs.recoil_modifier] = talent_settings_shared.ogryn_drain_stamina_for_handling.recoil_modifier,
-		[stat_buffs.sway_modifier] = talent_settings_shared.ogryn_drain_stamina_for_handling.sway_modifier,
+		[stat_buffs.sway_modifier] = talent_settings_shared.ogryn_drain_stamina_for_handling.sway_modifier
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -3314,28 +3316,28 @@ templates.ogryn_drain_stamina_for_handling = {
 		end
 
 		return 0.01
-	end,
+	end
 }
 templates.ogryn_wield_speed_increase = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.wield_speed] = talent_settings_shared.ogryn_wield_speed_increase.wield_speed,
-	},
+		[stat_buffs.wield_speed] = talent_settings_shared.ogryn_wield_speed_increase.wield_speed
+	}
 }
 templates.ogryn_ranged_damage_immunity = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_movement_boost_on_ranged_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_ranged_damage_immunity.duration,
 	cooldown_duration = talent_settings_shared.ogryn_ranged_damage_immunity.cooldown,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.ranged_damage_taken_multiplier] = talent_settings_shared.ogryn_ranged_damage_immunity.ranged_damage_taken_multiplier,
+		[stat_buffs.ranged_damage_taken_multiplier] = talent_settings_shared.ogryn_ranged_damage_immunity.ranged_damage_taken_multiplier
 	},
 	check_proc_func = function (params, template_data, template_context)
 		if params.attack_type ~= attack_types.ranged then
@@ -3349,41 +3351,41 @@ templates.ogryn_ranged_damage_immunity = {
 		return true
 	end,
 	related_talents = {
-		"ogryn_ranged_damage_immunity",
-	},
+		"ogryn_ranged_damage_immunity"
+	}
 }
 templates.ogryn_melee_improves_ranged = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_melee_improves_ranged_stacking_buff", t)
-	end,
+	end
 }
 templates.ogryn_melee_improves_ranged_stacking_buff = {
-	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_melee_improves_ranged",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 3,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_melee_improves_ranged",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	class_name = "buff",
 	duration = talent_settings_shared.ogryn_melee_improves_ranged.duration,
 	max_stacks = talent_settings_shared.ogryn_melee_improves_ranged.max_stacks,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings_shared.ogryn_melee_improves_ranged.ranged_damage,
+		[stat_buffs.ranged_damage] = talent_settings_shared.ogryn_melee_improves_ranged.ranged_damage
 	},
 	related_talents = {
-		"ogryn_melee_improves_ranged",
-	},
+		"ogryn_melee_improves_ranged"
+	}
 }
 templates.ogryn_taunt_restore_toughness = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_ogryn_shout] = 1,
+		[proc_events.on_ogryn_shout] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local unit = template_context.unit
@@ -3395,15 +3397,15 @@ templates.ogryn_taunt_restore_toughness = {
 		local num_hits = math.min(params.num_hits, settings.max_stacks)
 
 		template_context.buff_extension:add_internally_controlled_buff_with_stacks("ogryn_taunt_restore_toughness_over_time", num_hits, t)
-	end,
+	end
 }
 templates.ogryn_taunt_restore_toughness_over_time = {
-	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_taunt_restore_toughness",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	hud_priority = 3,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_taunt_restore_toughness",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	class_name = "buff",
 	max_stacks = talent_settings_shared.ogryn_taunt_restore_toughness.max_stacks,
 	max_stacks_cap = talent_settings_shared.ogryn_taunt_restore_toughness.max_stacks,
 	duration = talent_settings_shared.ogryn_taunt_restore_toughness.duration,
@@ -3413,14 +3415,14 @@ templates.ogryn_taunt_restore_toughness_over_time = {
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "ogryn_taunt_restore_toughness_over_time")
 	end,
 	related_talents = {
-		"ogryn_taunt_restore_toughness",
-	},
+		"ogryn_taunt_restore_toughness"
+	}
 }
 templates.ogryn_pushing_applies_brittleness = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_push_hit] = 1,
+		[proc_events.on_push_hit] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local pushed_unit = params.pushed_unit
@@ -3436,21 +3438,21 @@ templates.ogryn_pushing_applies_brittleness = {
 
 			buff_extension:add_internally_controlled_buff_with_stacks("rending_debuff", stacks, t)
 		end
-	end,
+	end
 }
 templates.ogryn_ranged_improves_melee = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ranged_improves_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_shared.ogryn_ranged_improves_melee.duration,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	proc_stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_ranged_improves_melee.melee_damage,
-		[stat_buffs.melee_attack_speed] = talent_settings_shared.ogryn_ranged_improves_melee.melee_attack_speed,
+		[stat_buffs.melee_attack_speed] = talent_settings_shared.ogryn_ranged_improves_melee.melee_attack_speed
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -3468,24 +3470,24 @@ templates.ogryn_ranged_improves_melee = {
 		return ammo_percentage == 0
 	end,
 	related_talents = {
-		"ogryn_ranged_improves_melee",
-	},
+		"ogryn_ranged_improves_melee"
+	}
 }
 templates.ogryn_block_all_attacks = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	keywords = {
-		buff_keywords.block_unblockable,
-	},
+		buff_keywords.block_unblockable
+	}
 }
 templates.ogryn_block_all_attacks_perfect = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_perfect_block] = 1
 	},
 	conditional_keywords = {
-		buff_keywords.block_unblockable,
+		buff_keywords.block_unblockable
 	},
 	start_func = function (template_data, template_context)
 		local unit_data = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -3498,22 +3500,22 @@ templates.ogryn_block_all_attacks_perfect = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_block_all_attacks_perfect_damage_boost", t)
-	end,
+	end
 }
 templates.ogryn_block_all_attacks_perfect_damage_boost = {
-	class_name = "proc_buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_block_all_attacks",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "proc_buff",
 	duration = talent_settings_shared.ogryn_block_all_attacks.duration,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_block_all_attacks.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_block_all_attacks.melee_damage
 	},
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finish = true
@@ -3522,22 +3524,22 @@ templates.ogryn_block_all_attacks_perfect_damage_boost = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_block_all_attacks_perfect",
-	},
+		"ogryn_block_all_attacks_perfect"
+	}
 }
 templates.ogryn_crit_damage_increase = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.critical_strike_damage] = talent_settings_shared.ogryn_crit_damage_increase.critical_strike_damage,
-	},
+		[stat_buffs.critical_strike_damage] = talent_settings_shared.ogryn_crit_damage_increase.critical_strike_damage
+	}
 }
 templates.ogryn_blo_melee = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -3555,22 +3557,22 @@ templates.ogryn_blo_melee = {
 		end,
 		on_sweep_start = function (params, template_data, template_context, t)
 			template_data.allowed = true
-		end,
-	},
+		end
+	}
 }
 templates.ogryn_blo_melee_active_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blo_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	max_stacks = talent_settings_shared.ogryn_blo_melee.max_stacks,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.leadbelcher_chance_bonus] = talent_settings_shared.ogryn_blo_melee.chance,
+		[stat_buffs.leadbelcher_chance_bonus] = talent_settings_shared.ogryn_blo_melee.chance
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finish = true
@@ -3579,35 +3581,35 @@ templates.ogryn_blo_melee_active_buff = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_blo_melee",
-	},
+		"ogryn_blo_melee"
+	}
 }
 templates.ogryn_blo_new_passive = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_blo_stacking_buff", t)
-	end,
+	end
 }
 
 local blo_passive_max_stacks = talent_settings_1.passive_1.max_stacks
 local blo_passive_lerp_value = 0
 
 templates.ogryn_blo_stacking_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blo_wield_speed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 3,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	max_stacks = blo_passive_max_stacks,
 	duration = talent_settings_1.passive_1.duration,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings_1.passive_1.ranged_damage,
+		[stat_buffs.ranged_damage] = talent_settings_1.passive_1.ranged_damage
 	},
 	update_func = function (template_data, template_context)
 		local stacks = template_context.stack_count
@@ -3619,45 +3621,45 @@ templates.ogryn_blo_stacking_buff = {
 		blo_passive_lerp_value = 0
 	end,
 	related_talents = {
-		"ogryn_leadbelcher_no_ammo_chance",
-	},
+		"ogryn_leadbelcher_no_ammo_chance"
+	}
 }
 templates.ogryn_blo_wield_speed = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.wield_speed] = {
 			min = 0,
-			max = talent_settings_1.passive_1.wield_speed * blo_passive_max_stacks,
-		},
+			max = talent_settings_1.passive_1.wield_speed * blo_passive_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return blo_passive_lerp_value
 	end,
 	related_talents = {
-		"ogryn_blo_wield_speed",
-	},
+		"ogryn_blo_wield_speed"
+	}
 }
 templates.ogryn_blo_fire_rate = {
-	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.ranged_attack_speed] = {
 			min = 0,
-			max = talent_settings_1.passive_1.fire_rate * blo_passive_max_stacks,
-		},
+			max = talent_settings_1.passive_1.fire_rate * blo_passive_max_stacks
+		}
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		return blo_passive_lerp_value
-	end,
+	end
 }
 templates.ogryn_blo_ally_ranged_buffs = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		return params.is_leadbelcher_shot
@@ -3675,23 +3677,23 @@ templates.ogryn_blo_ally_ranged_buffs = {
 				coherency_buff_extension:add_internally_controlled_buff("ogryn_blo_ally_ranged_buff", t, "owner_unit", unit)
 			end
 		end
-	end,
+	end
 }
 templates.ogryn_blo_ally_ranged_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_blo_ally_ranged_buffs",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings_shared.ogryn_blo_ally_ranged_buffs.ranged_damage,
+		[stat_buffs.ranged_damage] = talent_settings_shared.ogryn_blo_ally_ranged_buffs.ranged_damage
 	},
 	duration = talent_settings_shared.ogryn_blo_ally_ranged_buffs.duration,
 	related_talents = {
-		"ogryn_blo_ally_ranged_buffs",
-	},
+		"ogryn_blo_ally_ranged_buffs"
+	}
 }
 
 local ally_defense_max_stacks = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.max_stacks
@@ -3700,7 +3702,7 @@ templates.ogryn_damage_taken_by_all_increases_strength_tdr = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	check_proc_func = function (params)
 		return true
@@ -3713,37 +3715,37 @@ templates.ogryn_damage_taken_by_all_increases_strength_tdr = {
 		if num_stacks == ally_defense_max_stacks then
 			template_context.buff_extension:add_internally_controlled_buff("ogryn_damage_taken_by_all_increases_strength_tdr_max_buff", t)
 		end
-	end,
+	end
 }
 templates.ogryn_damage_taken_by_all_increases_strength_tdr_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_stamina_restores_toughness",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	max_stacks = ally_defense_max_stacks,
 	duration = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.duration,
 	stat_buffs = {
-		[stat_buffs.power_level_modifier] = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.power_level_modifier,
+		[stat_buffs.power_level_modifier] = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.power_level_modifier
 	},
 	related_talents = {
-		"ogryn_damage_taken_by_all_increases_strength_tdr",
-	},
+		"ogryn_damage_taken_by_all_increases_strength_tdr"
+	}
 }
 templates.ogryn_damage_taken_by_all_increases_strength_tdr_max_buff = {
 	class_name = "buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.tdr,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_shared.ogryn_damage_taken_by_all_increases_strength_tdr.tdr
 	},
 	conditional_exit_func = function (template_data, template_context)
 		local num_stacks = template_context.buff_extension:current_stacks("ogryn_damage_taken_by_all_increases_strength_tdr_buff")
 		local max_stacks = ally_defense_max_stacks
 
 		return num_stacks < max_stacks
-	end,
+	end
 }
 
 return templates

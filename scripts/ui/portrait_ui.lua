@@ -128,10 +128,23 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local optional_state_machine = render_context and render_context.state_machine
 	local optional_animation_event = render_context and render_context.animation_event
 	local optional_face_animation_event = render_context and render_context.face_animation_event
+	local optional_companion_state_machine = render_context and render_context.companion_state_machine
+	local optional_companion_animation_event = render_context and render_context.companion_animation_event
+	local ignore_companion = true
+
+	if render_context and render_context.ignore_companion ~= nil then
+		ignore_companion = render_context.ignore_companion
+	end
+
 	local force_highest_mip = true
 	local disable_hair_state_machine = true
+	local companion_data = {
+		state_machine = optional_companion_state_machine,
+		animation_event = optional_companion_animation_event,
+		ignore = ignore_companion
+	}
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, nil, optional_face_animation_event, force_highest_mip, disable_hair_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, nil, optional_face_animation_event, force_highest_mip, disable_hair_state_machine, nil, nil, companion_data)
 
 	local archetype = profile.archetype
 	local breed = archetype.breed
@@ -282,7 +295,7 @@ PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
 				slot_name = slot_name,
 				camera_unit = slot_camera_unit,
 				boxed_camera_start_position = Vector3.to_array(slot_camera_position),
-				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation),
+				boxed_camera_start_rotation = QuaternionBox(slot_camera_rotation)
 			}
 		end
 	end
@@ -295,7 +308,7 @@ PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
 		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
-		camera_settings_by_item_slot = camera_settings_by_item_slot,
+		camera_settings_by_item_slot = camera_settings_by_item_slot
 	}
 end
 

@@ -70,13 +70,13 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 		255,
 		255,
 		151,
-		29,
+		29
 	} or UIHudSettings.get_hud_color("color_tint_main_3", 255)
 	widget.style.effect.color = alert and UIHudSettings.get_hud_color("color_tint_alert_3", 255) or {
 		100,
 		101,
 		133,
-		96,
+		96
 	}
 	widget.style.background.color = UIHudSettings.get_hud_color(alert and "color_tint_alert_3" or "color_tint_main_3", 255)
 
@@ -122,7 +122,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 		title_text = title_text,
 		description_text = description_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_new,
+		sound_event = UISoundEvents.mission_objective_popup_new
 	}
 
 	if self._popup_animation_id then
@@ -170,7 +170,7 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 		description_text = description_text,
 		update_text = update_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_part_complete,
+		sound_event = UISoundEvents.mission_objective_popup_part_complete
 	}
 
 	if self._popup_animation_id then
@@ -198,7 +198,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 		alert = alert,
 		description_text = description_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_complete,
+		sound_event = UISoundEvents.mission_objective_popup_complete
 	}
 
 	if self._popup_animation_id then

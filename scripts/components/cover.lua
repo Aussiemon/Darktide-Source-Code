@@ -153,26 +153,26 @@ end
 
 Cover.component_data = {
 	cover_type = {
-		ui_name = "Cover Type",
-		ui_type = "combo_box",
 		value = "high",
+		ui_type = "combo_box",
+		ui_name = "Cover Type",
 		options_keys = {
 			"high",
-			"low",
+			"low"
 		},
 		options_values = {
 			"high",
-			"low",
-		},
+			"low"
+		}
 	},
 	enabled = {
-		ui_name = "Enabled",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Enabled"
 	},
 	extensions = {
-		"CoverExtension",
-	},
+		"CoverExtension"
+	}
 }
 
 return Cover

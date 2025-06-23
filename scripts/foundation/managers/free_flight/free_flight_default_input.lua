@@ -115,7 +115,7 @@ local null_service = {
 		else
 			ferror("unsupported input type %q for action %q", input_type, action_name)
 		end
-	end,
+	end
 }
 
 FreeFlightDefaultInput.null_service = function (self)

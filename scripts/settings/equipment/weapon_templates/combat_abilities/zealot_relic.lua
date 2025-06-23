@@ -14,183 +14,183 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	combat_ability = {
-		buffer_time = 0,
+		buffer_time = 0
 	},
 	channel = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
+				input = "combat_ability_pressed"
+			}
+		}
 	},
 	wield_previous = {
 		buffer_time = 1,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
+				input = "combat_ability_pressed"
+			}
+		}
 	},
 	grenade_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "grenade_ability_pressed",
 				value = true,
-			},
-		},
+				input = "grenade_ability_pressed"
+			}
+		}
 	},
 	cancel_channeling = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
-	},
+				input = "action_two_pressed"
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
 	{
-		input = "wield",
 		transition = "stay",
+		input = "wield"
 	},
 	{
-		input = "wield_previous",
 		transition = "stay",
+		input = "wield_previous"
 	},
 	{
 		input = "channel",
 		transition = {
 			{
-				input = "cancel_channeling",
 				transition = "base",
+				input = "cancel_channeling"
 			},
 			{
-				input = "wield_previous",
 				transition = "base",
+				input = "wield_previous"
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
 				input = "grenade_ability",
 				transition = {
 					{
-						input = "wield_previous",
 						transition = "base",
-					},
-				},
-			},
-		},
-	},
+						input = "wield_previous"
+					}
+				}
+			}
+		}
+	}
 }
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
-		kind = "unwield",
 		start_input = "wield",
-		total_time = 0,
 		uninterruptible = true,
-		allowed_chain_actions = {},
+		kind = "unwield",
+		total_time = 0,
+		allowed_chain_actions = {}
 	},
 	action_wield = {
-		abort_sprint = true,
-		allowed_during_sprint = true,
-		anim_event = "equip_relic",
-		kind = "wield",
 		sprint_requires_press_to_interrupt = true,
-		total_time = 0.5,
+		allowed_during_sprint = true,
+		kind = "wield",
+		abort_sprint = true,
 		uninterruptible = true,
+		anim_event = "equip_relic",
+		total_time = 0.5,
 		allowed_chain_actions = {
 			channel = {
-				action_name = "action_zealot_channel",
+				action_name = "action_zealot_channel"
 			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions()
 		},
 		conditional_state_to_action_input = {
 			auto_chain = {
-				input_name = "channel",
-			},
-		},
+				input_name = "channel"
+			}
+		}
 	},
 	action_zealot_channel = {
-		ability_type = "combat_ability",
-		abort_sprint = true,
-		add_buff_time = 4,
-		allowed_during_sprint = true,
-		defensive_buff = "zealot_channel_toughness_damage_reduction",
-		force_stagger_duration = 2,
-		force_stagger_radius = 4,
 		kind = "zealot_channel",
-		offensive_buff = "zealot_channel_damage",
-		power_level = 500,
-		power_level_time_in_action_multiplier = 0.25,
 		radius = 10,
-		radius_time_in_action_multiplier = 0.1,
-		sprint_requires_press_to_interrupt = true,
 		start_input = "channel",
+		force_stagger_duration = 2,
+		sprint_requires_press_to_interrupt = true,
+		power_level_time_in_action_multiplier = 0.25,
+		offensive_buff = "zealot_channel_damage",
+		defensive_buff = "zealot_channel_toughness_damage_reduction",
+		force_stagger_radius = 4,
+		toughness_bonus_buff = "zealot_channel_toughness_bonus",
+		radius_time_in_action_multiplier = 0.1,
+		allowed_during_sprint = true,
+		ability_type = "combat_ability",
+		add_buff_time = 4,
+		vo_tag = "ability_litany",
+		abort_sprint = true,
+		uninterruptible = true,
+		power_level = 500,
 		stop_input = "cancel_channeling",
 		total_time = 5.5,
-		toughness_bonus_buff = "zealot_channel_toughness_bonus",
-		uninterruptible = true,
-		vo_tag = "ability_litany",
 		damage_profile = DamageProfileTemplates.zealot_channel_stagger,
 		allowed_chain_actions = {
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			cancel_channeling = {
 				action_name = "action_unwield_to_previous",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
 			wield_previous = {
 				action_name = "action_unwield_to_previous",
-				chain_time = 0.5,
+				chain_time = 0.5
 			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions()
 		},
 		conditional_state_to_action_input = {
 			auto_chain = {
-				input_name = "wield_previous",
-			},
-		},
+				input_name = "wield_previous"
+			}
+		}
 	},
 	action_unwield_to_previous = {
 		allowed_during_sprint = true,
-		kind = "unwield_to_previous",
 		start_input = "wield_previous",
-		total_time = 0,
 		uninterruptible = true,
+		kind = "unwield_to_previous",
 		unwield_to_weapon = true,
-		allowed_chain_actions = {},
-	},
+		total_time = 0,
+		allowed_chain_actions = {}
+	}
 }
 weapon_template.actions.grenade_ability_zealot_throwing_knives = table.clone_instance(BaseTemplateSettings.actions.grenade_ability_zealot_throwing_knives)
 weapon_template.actions.grenade_ability_zealot_throwing_knives.conditional_state_to_action_input = {
 	auto_chain = {
-		input_name = "wield_previous",
-	},
+		input_name = "wield_previous"
+	}
 }
 weapon_template.actions.grenade_ability_zealot_throwing_knives.allowed_chain_actions = {
 	wield_previous = {
-		action_name = "action_unwield_to_previous",
-	},
+		action_name = "action_unwield_to_previous"
+	}
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
@@ -199,16 +199,16 @@ weapon_template.keywords = {}
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "combat_ability_charges_left",
-		input_name = "channel",
+		input_name = "channel"
 	},
 	{
 		conditional_state = "no_combat_ability_charges_left",
-		input_name = "wield_previous",
+		input_name = "wield_previous"
 	},
 	{
 		conditional_state = "no_running_action",
-		input_name = "wield_previous",
-	},
+		input_name = "wield_previous"
+	}
 }
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/pocketables"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/preacher_relic"
@@ -216,20 +216,20 @@ weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.can_use_while_vaulting = true
 weapon_template.spread_template = "no_spread"
 weapon_template.hud_configuration = {
-	uses_ammunition = false,
 	uses_overheat = false,
+	uses_ammunition = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type = "dot"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
-	_emit = "fx_emit",
+	_emit = "fx_emit"
 }
 weapon_template.vfx = {
-	name = "content/fx/particles/abilities/zealot_relic_pulse_activate",
+	name = "content/fx/particles/abilities/zealot_relic_pulse_activate"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

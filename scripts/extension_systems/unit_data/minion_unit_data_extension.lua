@@ -4,7 +4,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local Breed = require("scripts/utilities/breed")
 local MinionUnitDataExtension = class("MinionUnitDataExtension")
 local CLIENT_RPCS = {
-	"rpc_destroy_hit_zone",
+	"rpc_destroy_hit_zone"
 }
 local NODE_TO_BIND_POSE_BY_BREED_NAME = {}
 
@@ -113,6 +113,12 @@ end
 
 MinionUnitDataExtension.faction_name = function (self)
 	return self._breed.faction_name
+end
+
+MinionUnitDataExtension.is_companion = function (self)
+	local is_companion = Breed.is_companion(self._breed)
+
+	return is_companion
 end
 
 MinionUnitDataExtension.breed_name = function (self)

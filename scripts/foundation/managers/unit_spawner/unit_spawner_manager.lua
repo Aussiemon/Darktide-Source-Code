@@ -18,7 +18,7 @@ UnitSpawnerManager.DELETION_STATES = DELETION_STATES
 
 local NUM_ESTIMATED_TEMPLATE_UNITS = 256
 local CLIENT_RPCS = {
-	"rpc_is_fully_hot_join_synced",
+	"rpc_is_fully_hot_join_synced"
 }
 
 if Managers.state and Managers.state.unit_spawner and Managers.state.unit_spawner._deletion_state ~= DELETION_STATES.default then
@@ -45,7 +45,7 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._unit_template_by_unit = Script.new_map(NUM_ESTIMATED_TEMPLATE_UNITS)
 	self._unit_template_context = {
 		is_server = is_server,
-		world = world,
+		world = world
 	}
 	self._unit_template_network_lookup = self:_build_network_lookup(self._unit_templates)
 
@@ -315,7 +315,7 @@ end
 UnitSpawnerManager.spawn_network_unit = function (self, unit_name, unit_template_name, position, rotation, material, ...)
 	local game_object_data = {
 		game_object_type = UNIT_TEMPLATE_GAME_OBJECT_TYPE,
-		unit_template = self._unit_template_network_lookup[unit_template_name],
+		unit_template = self._unit_template_network_lookup[unit_template_name]
 	}
 	local unit = self:_spawn_unit_with_extensions(unit_name, unit_template_name, position, rotation, material, game_object_data, ...)
 	local unit_template = self._unit_templates[unit_template_name]

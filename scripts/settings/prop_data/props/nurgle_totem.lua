@@ -8,8 +8,8 @@ local hit_effect_armor_type = ArmorSettings.hit_effect_types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local prop_data = {
-	hit_mass = 50,
 	name = "nurgle_totem",
+	hit_mass = 50,
 	breed_type = breed_types.objective_prop,
 	armor_type = armor_types.super_armor,
 	hit_effect_armor_override = hit_effect_armor_type.nurgle_totem,
@@ -17,19 +17,19 @@ local prop_data = {
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
-				"c_destructible",
-			},
-		},
+				"c_destructible"
+			}
+		}
 	},
 	hitzone_damage_multiplier = {
 		melee = {
-			[hit_zone_names.center_mass] = 0.45,
+			[hit_zone_names.center_mass] = 0.45
 		},
 		ranged = {
-			[hit_zone_names.center_mass] = 0.05,
-		},
+			[hit_zone_names.center_mass] = 0.05
+		}
 	},
-	tags = {},
+	tags = {}
 }
 
 return prop_data

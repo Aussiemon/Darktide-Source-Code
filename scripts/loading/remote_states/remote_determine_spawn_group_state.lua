@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/loading/remote_states/remote_determine_spawn_group_state.lua
 
 local RPCS = {
-	"rpc_request_spawn_group",
+	"rpc_request_spawn_group"
 }
 local RemoteDetermineSpawnGroupState = class("RemoteDetermineSpawnGroupState")
 

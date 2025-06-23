@@ -31,7 +31,7 @@ SweepSpline.init = function (self, spline_settings)
 		spline_settings.anchor_point_offset = {
 			0,
 			0,
-			0,
+			0
 		}
 	end
 
@@ -108,7 +108,7 @@ SweepSpline._build_splines = function (self, points)
 
 	while index do
 		local spline_points = {
-			Hermite.spline_points(points, index),
+			Hermite.spline_points(points, index)
 		}
 
 		for i, point in ipairs(spline_points) do
@@ -116,7 +116,7 @@ SweepSpline._build_splines = function (self, points)
 		end
 
 		splines[spline_index] = {
-			points = spline_points,
+			points = spline_points
 		}
 		index = Hermite.next_index(points, index)
 		spline_index = spline_index + 1

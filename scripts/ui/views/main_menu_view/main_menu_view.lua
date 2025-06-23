@@ -6,6 +6,8 @@ local InputDevice = require("scripts/managers/input/input_device")
 local MainMenuViewSettings = require("scripts/ui/views/main_menu_view/main_menu_view_settings")
 local MainMenuViewTestify = GameParameters.testify and require("scripts/ui/views/main_menu_view/main_menu_view_testify")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -28,6 +30,7 @@ MainMenuView.init = function (self, settings, context)
 	self._pass_draw = true
 	self._keybind_is_reset_on_start = false
 	self._show_news_popup = context.show_news_popup
+	self._promise_container = PromiseContainer:new()
 end
 
 MainMenuView.on_enter = function (self)
@@ -109,7 +112,7 @@ end
 
 MainMenuView._create_server_migration_element = function (self, data)
 	self._server_migration_element = self:_add_element(ViewElementServerMigration, "server_migration_element", 200, {
-		on_destroy_callback = callback(self, "on_server_migration_removed"),
+		on_destroy_callback = callback(self, "on_server_migration_removed")
 	})
 
 	self._server_migration_element:present(data)
@@ -144,15 +147,15 @@ MainMenuView._create_wallet_element = function (self)
 		"credits",
 		"marks",
 		"plasteel",
-		"diamantine",
+		"diamantine"
 	}
 
 	self._wallet_element:_generate_currencies(currencies, {
 		150,
-		30,
+		30
 	}, #currencies, {
 		nil,
-		10,
+		10
 	})
 
 	self._widgets_by_name.wallet_element_background.content.visible = true
@@ -304,7 +307,7 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 	local slots_remaining = num_characters < max_num_characters and max_num_characters - num_characters or 0
 
 	self._widgets_by_name.slots_count.content.text = Localize("loc_main_menu_slots_remaining", true, {
-		count = slots_remaining,
+		count = slots_remaining
 	})
 
 	if num_characters == 0 then
@@ -390,7 +393,7 @@ end
 
 MainMenuView._reset_news_list = function (self)
 	return {
-		slides = {},
+		slides = {}
 	}
 end
 
@@ -403,7 +406,7 @@ MainMenuView._populate_news_list = function (self)
 		if #slides > 0 then
 			self._news_list = {
 				starting_slide_index = 1,
-				slides = slides,
+				slides = slides
 			}
 		else
 			self._news_list = self:_reset_news_list()
@@ -443,7 +446,7 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 		Managers.ui:open_view("news_view", nil, nil, nil, nil, {
 			on_startup = true,
-			slide_data = slide_data,
+			slide_data = slide_data
 		})
 
 		self._news_list = self:_reset_news_list()
@@ -557,9 +560,8 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 
 	local selected_character_list_index = self._selected_character_list_index
 	local create_button = self._widgets_by_name.create_button.content
-	local play_button = self._widgets_by_name.play_button.content
+	local play_button = self._widgets_by_name.play_button
 
-	play_button.hotspot.disabled = self._is_main_menu_open
 	create_button.hotspot.disabled = self._is_main_menu_open or self:_are_slots_full()
 
 	local character_slot_widgets = self._character_list_widgets
@@ -590,10 +592,10 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= max_num_characters then
 				self:_on_character_widget_selected(selected_character_list_index + 1)
 			end
-		elseif play_button.visible and play_button.hotspot.disabled ~= true and input_service:get("confirm_pressed") then
-			self:_on_play_pressed()
+		elseif play_button.content.visible and not play_button.disabled and input_service:get("confirm_pressed") then
+			play_button.content.hotspot.pressed_callback()
 		elseif create_button.hotspot.disabled ~= true and input_service:get("hotkey_menu_special_1") then
-			self:_on_create_character_pressed()
+			self._widgets_by_name.create_button.content.hotspot.pressed_callback()
 		elseif IS_XBS and input_service:get("cycle_list_secondary") then
 			Managers.account:show_profile_picker()
 		elseif (IS_XBS or IS_PLAYSTATION) and input_service:get("back") and InputDevice.gamepad_active then
@@ -626,17 +628,17 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 
 	popup_params.title_text = "loc_main_menu_delete_character_popup_title"
 	popup_params.title_text_params = {
-		character_name = ProfileUtils.character_name(profile),
+		character_name = ProfileUtils.character_name(profile)
 	}
 	popup_params.title_text = "loc_main_menu_delete_character_popup_title"
 	popup_params.description_text = "loc_main_menu_delete_character_popup_description"
 	popup_params.type = "warning"
 	popup_params.options = {
 		{
-			close_on_pressed = true,
-			stop_exit_sound = true,
-			template_type = "terminal_button_hold_small",
 			text = "loc_main_menu_delete_character_popup_confirm",
+			template_type = "terminal_button_hold_small",
+			stop_exit_sound = true,
+			close_on_pressed = true,
 			on_complete_sound = UISoundEvents.delete_character_confirm,
 			callback = callback(function ()
 				local character_id = profile.character_id
@@ -647,19 +649,19 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 			end),
 			template_options = {
 				start_delay = 2,
-				start_input_action = "confirm_pressed",
 				timer = 3,
-			},
+				start_input_action = "confirm_pressed"
+			}
 		},
 		{
+			text = "loc_main_menu_delete_character_popup_cancel",
+			template_type = "terminal_button_small",
 			close_on_pressed = true,
 			hotkey = "back",
-			template_type = "terminal_button_small",
-			text = "loc_main_menu_delete_character_popup_cancel",
 			callback = callback(function ()
 				self._delete_popup_id = nil
-			end),
-		},
+			end)
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
@@ -680,6 +682,8 @@ MainMenuView._destroy_character_list_renderer = function (self)
 end
 
 MainMenuView.on_exit = function (self)
+	self._promise_container:delete()
+
 	if self._input_legend_element then
 		self._input_legend_element = nil
 
@@ -740,7 +744,7 @@ MainMenuView._sync_character_slots = function (self)
 
 	local grid = UIWidgetGrid:new(char_list, char_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
 		0,
-		0,
+		0
 	})
 	local scrollbar_widget = self._widgets_by_name.character_grid_scrollbar
 	local grid_content_scenegraph_id = "character_grid_content_pivot"
@@ -821,7 +825,7 @@ MainMenuView._create_character_list_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -871,6 +875,43 @@ MainMenuView._show_character_details = function (self, show, profile)
 		if player_title then
 			self._widgets_by_name.character_info.content.character_title = player_title
 		end
+
+		local selected_archetype = profile.archetype
+
+		if self._current_archetype_available_promise and not self._current_archetype_available_promise:is_fulfilled() then
+			self._current_archetype_available_promise:cancel()
+		end
+
+		local is_archetype_available_promise = Promise:resolved(false)
+
+		if selected_archetype.is_available then
+			is_archetype_available_promise = selected_archetype:is_available()
+		end
+
+		if not is_archetype_available_promise:is_fulfilled() then
+			self._widgets_by_name.play_button.visible = false
+			self._widgets_by_name.play_button.disabled = true
+		end
+
+		self._current_archetype_available_promise = is_archetype_available_promise
+
+		self._promise_container:cancel_on_destroy(is_archetype_available_promise):next(function (result)
+			self._widgets_by_name.play_button.visible = true
+			self._widgets_by_name.play_button.content.original_text = result.available and Utf8.upper(Localize("loc_main_menu_play_button")) or Utf8.upper(Localize("loc_dlc_cta"))
+			self._widgets_by_name.play_button.disabled = false
+
+			self._widgets_by_name.play_button.content.hotspot.pressed_callback = function ()
+				if result.available then
+					self:_on_play_pressed()
+				else
+					selected_archetype:acquire_callback(function (is_success)
+						if is_success then
+							self:_show_character_details(show, profile)
+						end
+					end)
+				end
+			end
+		end)
 	end
 end
 

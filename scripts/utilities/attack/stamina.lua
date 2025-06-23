@@ -99,7 +99,12 @@ Stamina.add_stamina = function (unit, amount)
 end
 
 Stamina.add_stamina_percent = function (unit, percent_amount)
-	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local unit_data_ext = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if not unit_data_ext then
+		return
+	end
+
 	local stamina_write_component = unit_data_ext:write_component("stamina")
 	local archetype = unit_data_ext:archetype()
 	local base_stamina_template = archetype.stamina

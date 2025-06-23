@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/extension_systems/dialogue/utils/wwise_actor_mixer_effect_utils.lua
 
 local WwiseActorMixerEffectSettings = require("scripts/settings/dialogue/wwise_actor_mixer_effect_settings")
-local WwiseActorMixerEffectUtilities = {}
+local WwiseActorMixerEffect = {}
 
-WwiseActorMixerEffectUtilities.apply_preset = function (preset_name)
+WwiseActorMixerEffect.apply_preset = function (preset_name)
 	local preset = WwiseActorMixerEffectSettings.presets[preset_name]
 
 	if not preset then
-		Log.error("[WwiseActorMixerEffectUtilities] Preset %q not found", preset_name)
+		Log.error("WwiseActorMixerEffect", "Preset %q not found", preset_name)
 
 		return false
 	end
@@ -19,7 +19,7 @@ WwiseActorMixerEffectUtilities.apply_preset = function (preset_name)
 		local effect_id = WwiseActorMixerEffectSettings.effects[effect_name]
 
 		if not effect_id then
-			Log.error("[WwiseActorMixerEffectUtilities] Error: Effect %q not found", effect_name)
+			Log.error("WwiseActorMixerEffect", "Error: Effect %q not found", effect_name)
 
 			return false
 		end
@@ -37,7 +37,7 @@ WwiseActorMixerEffectUtilities.apply_preset = function (preset_name)
 		local effect_id = WwiseActorMixerEffectSettings.effects[effect_name]
 
 		if not effect_id then
-			Log.error("[WwiseActorMixerEffectUtilities] Error: Effect %q not found", effect_name)
+			Log.error("WwiseActorMixerEffect", "Error: Effect %q not found", effect_name)
 
 			return false
 		end
@@ -52,7 +52,7 @@ WwiseActorMixerEffectUtilities.apply_preset = function (preset_name)
 	return true
 end
 
-WwiseActorMixerEffectUtilities.clear_effects = function ()
+WwiseActorMixerEffect.clear_effects = function ()
 	for slot_index = 0, 2 do
 		Wwise.set_actor_mixer_effect(WwiseActorMixerEffectSettings.nodes.first_person, slot_index, Wwise.WWISE_INVALID_UNIQUE_ID)
 		Wwise.set_actor_mixer_effect(WwiseActorMixerEffectSettings.nodes.third_person, slot_index, Wwise.WWISE_INVALID_UNIQUE_ID)
@@ -62,13 +62,13 @@ WwiseActorMixerEffectUtilities.clear_effects = function ()
 	Wwise.set_actor_mixer_effect(WwiseActorMixerEffectSettings.nodes.third_person, 3, WwiseActorMixerEffectSettings.effects.radio)
 end
 
-WwiseActorMixerEffectUtilities.preset_exists = function (preset_name)
+WwiseActorMixerEffect.preset_exists = function (preset_name)
 	local preset = WwiseActorMixerEffectSettings.presets[preset_name]
 
 	return preset ~= nil
 end
 
-WwiseActorMixerEffectUtilities.get_presets_list = function ()
+WwiseActorMixerEffect.get_presets_list = function ()
 	local presets_list = {}
 
 	for preset_name, _ in pairs(WwiseActorMixerEffectSettings.presets) do
@@ -78,4 +78,4 @@ WwiseActorMixerEffectUtilities.get_presets_list = function ()
 	return presets_list
 end
 
-return WwiseActorMixerEffectUtilities
+return WwiseActorMixerEffect

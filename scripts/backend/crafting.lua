@@ -10,7 +10,7 @@ local Crafting = class("Crafting")
 local function _send_crafting_operation(request_body)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/crafting"), {
 		method = "POST",
-		body = request_body,
+		body = request_body
 	}):next(function (data)
 		data.body._links = nil
 
@@ -42,7 +42,7 @@ Crafting.refresh_crafting_costs = function (self)
 
 		self._crafting_costs = {
 			weapon = weapon_crafting_costs,
-			gadget = gadget_crafting_costs,
+			gadget = gadget_crafting_costs
 		}
 
 		return self._crafting_costs
@@ -128,54 +128,54 @@ end
 Crafting.upgrade_weapon_rarity = function (self, gear_id)
 	return _send_crafting_operation({
 		op = "upgradeWeaponRarity",
-		gearId = gear_id,
+		gearId = gear_id
 	})
 end
 
 Crafting.upgrade_gadget_rarity = function (self, gear_id)
 	return _send_crafting_operation({
 		op = "upgradeGadgetRarity",
-		gearId = gear_id,
+		gearId = gear_id
 	})
 end
 
 Crafting.extract_trait_from_weapon = function (self, gear_id, trait_index)
 	return _send_crafting_operation({
-		op = "extractTrait",
 		traitType = "traits",
+		op = "extractTrait",
 		gearId = gear_id,
-		traitIndex = trait_index - 1,
+		traitIndex = trait_index - 1
 	})
 end
 
 Crafting.extract_perk_from_weapon = function (self, gear_id, trait_index)
 	return _send_crafting_operation({
-		op = "extractTrait",
 		traitType = "perks",
+		op = "extractTrait",
 		gearId = gear_id,
-		traitIndex = trait_index - 1,
+		traitIndex = trait_index - 1
 	})
 end
 
 Crafting.replace_trait_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id, new_trait_tier)
 	return _send_crafting_operation({
-		op = "replaceTrait",
 		traitType = "traits",
+		op = "replaceTrait",
 		gearId = gear_id,
 		traitIndex = existing_trait_index - 1,
 		traitId = new_trait_id,
-		traitTier = new_trait_tier,
+		traitTier = new_trait_tier
 	})
 end
 
 Crafting.replace_perk_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id, new_trait_tier)
 	return _send_crafting_operation({
-		op = "replaceTrait",
 		traitType = "perks",
+		op = "replaceTrait",
 		gearId = gear_id,
 		traitIndex = existing_trait_index - 1,
 		traitId = new_trait_id,
-		traitTier = new_trait_tier,
+		traitTier = new_trait_tier
 	})
 end
 
@@ -184,7 +184,7 @@ Crafting.reroll_perk_in_item = function (self, gear_id, existing_perk_index, is_
 		op = "rerollPerk",
 		gearId = gear_id,
 		perkIndex = existing_perk_index - 1,
-		itemType = is_gadget and "gadget" or "weapon",
+		itemType = is_gadget and "gadget" or "weapon"
 	})
 end
 
@@ -192,7 +192,7 @@ Crafting.fuse_traits = function (self, character_id, trait_ids)
 	return _send_crafting_operation({
 		op = "fuseTraits",
 		traitIds = trait_ids,
-		characterId = character_id,
+		characterId = character_id
 	})
 end
 
@@ -200,7 +200,7 @@ Crafting.add_weapon_expertise = function (self, gear_id, added_expertise)
 	return _send_crafting_operation({
 		op = "addExpertise",
 		gearId = gear_id,
-		newLevel = added_expertise,
+		newLevel = added_expertise
 	})
 end
 
@@ -208,7 +208,7 @@ Crafting.extract_weapon_mastery = function (self, track_id, gear_ids)
 	return _send_crafting_operation({
 		op = "extractMastery",
 		gearIds = gear_ids,
-		trackId = track_id,
+		trackId = track_id
 	})
 end
 

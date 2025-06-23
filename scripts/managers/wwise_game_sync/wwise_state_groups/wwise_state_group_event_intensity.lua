@@ -23,7 +23,7 @@ local EVENT_INTENSITY = {
 	[MissionSoundEvents.objective_start_scanning] = 0,
 	[MissionSoundEvents.scanning_travel_start] = 80,
 	[MissionSoundEvents.scanning_scan_start] = 80,
-	[MissionSoundEvents.objective_finished] = 0,
+	[MissionSoundEvents.objective_finished] = 0
 }
 local INTENSITY_PROGRESS_RATE = {
 	[MissionSoundEvents.objective_start_collect] = DEFAULT_PROGRESS_VALUE,
@@ -33,7 +33,7 @@ local INTENSITY_PROGRESS_RATE = {
 	[MissionSoundEvents.objective_start_kill] = 0,
 	[MissionSoundEvents.objective_start_timed] = DEFAULT_PROGRESS_VALUE * 2,
 	[MissionSoundEvents.objective_start_demolition] = DEFAULT_PROGRESS_VALUE,
-	[MissionSoundEvents.objective_start_luggable] = DEFAULT_PROGRESS_VALUE * 2,
+	[MissionSoundEvents.objective_start_luggable] = DEFAULT_PROGRESS_VALUE * 2
 }
 
 WwiseStateGroupEventIntensity.init = function (self, wwise_world, wwise_state_group_name)

@@ -13,46 +13,46 @@ weapon_template.action_inputs = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
-				input = "action_one_pressed",
 				value = true,
-			},
-		},
+				input = "action_one_pressed"
+			}
+		}
 	},
 	drop = {
 		buffer_time = 0.4,
 		input_sequence = {
 			{
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
+				input = "action_two_pressed"
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
-	},
+				inputs = wield_inputs
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
 
 weapon_template.action_input_hierarchy = {
 	{
-		input = "wield",
 		transition = "stay",
+		input = "wield"
 	},
 	{
-		input = "deploy",
 		transition = "stay",
+		input = "deploy"
 	},
 	{
-		input = "drop",
 		transition = "stay",
-	},
+		input = "drop"
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
@@ -60,98 +60,98 @@ ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTem
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
-		kind = "unwield",
 		start_input = "wield",
-		total_time = 0,
 		uninterruptible = true,
-		allowed_chain_actions = {},
+		kind = "unwield",
+		total_time = 0,
+		allowed_chain_actions = {}
 	},
 	action_wield = {
-		allowed_during_sprint = true,
-		anim_event = "equip",
-		anim_event_3p = "equip",
 		kind = "wield",
-		total_time = 0,
 		uninterruptible = true,
+		allowed_during_sprint = true,
+		anim_event_3p = "equip",
+		anim_event = "equip",
+		total_time = 0
 	},
 	action_deploy = {
 		allowed_during_sprint = false,
-		anim_end_event = "action_finished",
-		anim_event = "deploy",
-		anim_event_3p = "deploy",
-		kind = "dummy",
 		lock_view = true,
 		start_input = "deploy",
-		total_time = 4,
+		anim_end_event = "action_finished",
+		kind = "dummy",
 		uninterruptible = true,
+		anim_event_3p = "deploy",
+		anim_event = "deploy",
+		total_time = 4,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		allowed_chain_actions = {
 			wield = {
-				action_name = "action_unwield",
-			},
-		},
+				action_name = "action_unwield"
+			}
+		}
 	},
 	action_drop = {
-		allowed_during_sprint = false,
-		anim_end_event = "action_finished",
-		anim_event = "drop",
-		anim_event_3p = "throw",
-		can_crouch = false,
+		start_input = "drop",
 		can_jump = false,
-		disallow_dodging = true,
-		force_look = true,
+		can_crouch = false,
+		anim_end_event = "action_finished",
 		kind = "dummy",
 		lock_view_at_time = 0.2,
-		start_input = "drop",
-		total_time = 2,
+		anim_event = "drop",
+		anim_event_3p = "throw",
 		uninterruptible = true,
+		allowed_during_sprint = false,
+		disallow_dodging = true,
+		force_look = true,
+		total_time = 2,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		allowed_chain_actions = {
 			wield = {
-				action_name = "action_unwield",
-			},
-		},
+				action_name = "action_unwield"
+			}
+		}
 	},
 	action_inspect = {
-		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
-		kind = "inspect",
 		lock_view = true,
 		start_input = "inspect_start",
+		anim_end_event = "inspect_end",
+		kind = "inspect",
 		stop_input = "inspect_stop",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "inspect",
-		},
-	},
+			crosshair_type = "inspect"
+		}
+	}
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.keywords = {
 	"pocketable",
-	"syringe",
+	"syringe"
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.hud_configuration = {
-	uses_ammunition = false,
 	uses_overheat = false,
+	uses_ammunition = false
 }
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/pocketables",
-	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
+	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/breach_charge",
-	ogryn = "content/characters/player/ogryn/first_person/animations/breach_charge",
+	ogryn = "content/characters/player/ogryn/first_person/animations/breach_charge"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.fx_sources = {
-	_passive = "fx_passive",
+	_passive = "fx_passive"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"

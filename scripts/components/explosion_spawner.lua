@@ -85,47 +85,47 @@ end
 
 ExplosionSpawner.component_data = {
 	explosion_template_name = {
-		ui_name = "Explosion Template Name",
 		ui_type = "text_box",
 		value = "explosive_barrel",
+		ui_name = "Explosion Template Name"
 	},
 	power_level = {
-		decimals = 0,
-		step = 1,
-		ui_name = "Power Level",
 		ui_type = "number",
+		decimals = 0,
 		value = 500,
+		ui_name = "Power Level",
+		step = 1
 	},
 	charge_level = {
-		decimals = 3,
-		step = 0.05,
-		ui_name = "Charge Level",
 		ui_type = "number",
+		decimals = 3,
 		value = 1,
+		ui_name = "Charge Level",
+		step = 0.05
 	},
 	spawn_offset = {
-		step = 0.1,
-		ui_name = "Spawn Offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		ui_name = "Spawn Offset",
+		step = 0.1,
+		value = Vector3Box(0, 0, 0)
 	},
 	spawn_node = {
-		ui_name = "Spawn Node",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Spawn Node"
 	},
 	ignore_cover = {
-		ui_name = "Ignore Cover",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Ignore Cover"
 	},
 	inputs = {
 		create_explosion = {
 			accessibility = "private",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
-	extensions = {},
+	extensions = {}
 }
 
 return ExplosionSpawner

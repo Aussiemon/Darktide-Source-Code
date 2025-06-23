@@ -5,7 +5,7 @@ local NETWORK_EVENTS = {
 	"game_object_migrated_to_me",
 	"game_object_created",
 	"game_object_destroyed",
-	"game_session_disconnect",
+	"game_session_disconnect"
 }
 
 local function _info(...)

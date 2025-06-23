@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_version_check_state.lua
 
 local RPCS = {
-	"rpc_check_version_reply",
+	"rpc_check_version_reply"
 }
 local LocalVersionCheckState = class("LocalVersionCheckState")
 
@@ -29,7 +29,7 @@ LocalVersionCheckState.update = function (self, dt)
 		Log.info("LocalVersionCheckState", "Timeout waiting for rpc_check_version_reply")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -39,7 +39,7 @@ LocalVersionCheckState.update = function (self, dt)
 		Log.info("LocalVersionCheckState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 
@@ -50,7 +50,7 @@ LocalVersionCheckState.update = function (self, dt)
 			Log.info("LocalVersionCheckState", "Version mismatch")
 
 			return "versions mismatched", {
-				game_reason = "version_mismatch",
+				game_reason = "version_mismatch"
 			}
 		end
 	end

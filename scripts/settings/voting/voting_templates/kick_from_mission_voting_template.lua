@@ -8,12 +8,12 @@ local highlight_color = {
 	255,
 	239,
 	193,
-	82,
+	82
 }
 local yes_color = {
-	yes_color_b = 255,
 	yes_color_g = 255,
 	yes_color_r = 255,
+	yes_color_b = 255
 }
 
 local function _cast_kick_vote(voting_id, vote)
@@ -42,7 +42,7 @@ local function _instructions_text()
 	local no_input = InputUtils.input_text_for_current_input_device("View", "notification_option_b", false)
 	local context = {
 		yes_input = InputUtils.apply_color_to_input_text(yes_input, highlight_color),
-		no_input = InputUtils.apply_color_to_input_text(no_input, highlight_color),
+		no_input = InputUtils.apply_color_to_input_text(no_input, highlight_color)
 	}
 
 	return Localize("loc_party_kick_instructions_new", true, context)
@@ -52,18 +52,18 @@ local function _show_voting_popup(voting_id, kicked_peer_id)
 	local player_name = _player_name(kicked_peer_id)
 	local instructions_text = _instructions_text()
 	local context = {
-		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color),
+		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color)
 	}
 	local data = {
 		show_timer = true,
 		title = Localize("loc_party_kick_instructions_header", true, context),
 		lines = {
-			instructions_text,
+			instructions_text
 		},
 		inputs = {
 			notification_option_a = callback(_cast_kick_vote, voting_id, OPTIONS.yes),
-			notification_option_b = callback(_cast_kick_vote, voting_id, OPTIONS.no),
-		},
+			notification_option_b = callback(_cast_kick_vote, voting_id, OPTIONS.no)
+		}
 	}
 
 	Managers.voting:create_notification(voting_id, data)
@@ -73,48 +73,48 @@ local function _update_voting_popup(voting_id, kicked_peer_id)
 	local player_name = _player_name(kicked_peer_id)
 	local post_vote_message = Localize("loc_party_kick_instructions_yes_vote", true, yes_color)
 	local context = {
-		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color),
+		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color)
 	}
 	local data = {
 		show_timer = true,
 		title = Localize("loc_party_kick_instructions_header", true, context),
 		lines = {
-			post_vote_message,
+			post_vote_message
 		},
-		inputs = {},
+		inputs = {}
 	}
 
 	Managers.voting:modify_notification(voting_id, data)
 end
 
 local kick_from_mission_voting_template = {
-	abort_on_member_joined = true,
-	abort_on_member_left = true,
+	rpc_start_voting = "rpc_start_voting_kick_player",
 	can_change_vote = false,
+	retry_delay = 70,
 	duration = 30,
 	name = "kick_from_mission",
-	retry_delay = 70,
-	rpc_request_voting = "rpc_request_voting_kick_player",
-	rpc_start_voting = "rpc_start_voting_kick_player",
+	abort_on_member_left = true,
 	voting_impl = "network",
+	rpc_request_voting = "rpc_request_voting_kick_player",
+	abort_on_member_joined = true,
 	options = {
 		OPTIONS.yes,
-		OPTIONS.no,
+		OPTIONS.no
 	},
 	results = {
 		RESULTS.approved,
-		RESULTS.rejected,
+		RESULTS.rejected
 	},
 	timeout_option = OPTIONS.no,
 	required_params = {
-		"kick_peer_id",
+		"kick_peer_id"
 	},
 	pack_params = function (params)
 		return params.kick_peer_id
 	end,
 	unpack_params = function (kick_peer_id)
 		return {
-			kick_peer_id = kick_peer_id,
+			kick_peer_id = kick_peer_id
 		}
 	end,
 	evaluate = function (votes)
@@ -171,7 +171,7 @@ local kick_from_mission_voting_template = {
 	initial_votes = function (params, voting_initiator_peer)
 		return {
 			[voting_initiator_peer] = OPTIONS.yes,
-			[params.kick_peer_id] = OPTIONS.yes,
+			[params.kick_peer_id] = OPTIONS.yes
 		}
 	end,
 	on_started = function (voting_id, template, params)
@@ -213,7 +213,7 @@ local kick_from_mission_voting_template = {
 		if voter_peer_id == Network.peer_id() and vote_option == OPTIONS.yes then
 			_update_voting_popup(voting_id, kick_peer_id)
 		end
-	end,
+	end
 }
 
 return kick_from_mission_voting_template

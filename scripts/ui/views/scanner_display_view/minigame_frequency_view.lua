@@ -67,7 +67,7 @@ MinigameFrequencyView.draw_widgets = function (self, dt, t, input_service, ui_re
 		255,
 		0,
 		128,
-		0,
+		0
 	}
 
 	self:_draw_frequency(target_frequency, color, t, ui_renderer)
@@ -77,14 +77,14 @@ MinigameFrequencyView.draw_widgets = function (self, dt, t, input_service, ui_re
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	else
 		color = {
 			255,
 			255,
 			165,
-			0,
+			0
 		}
 	end
 
@@ -100,21 +100,21 @@ MinigameFrequencyView.draw_widgets = function (self, dt, t, input_service, ui_re
 				255,
 				0,
 				255,
-				0,
+				0
 			}
 		elseif i < current_stage then
 			widget.style.highlight.color = {
 				128,
 				0,
 				128,
-				0,
+				0
 			}
 		else
 			widget.style.highlight.color = {
 				64,
 				0,
 				64,
-				0,
+				0
 			}
 		end
 
@@ -165,19 +165,19 @@ MinigameFrequencyView._create_stage_widgets = function (self)
 		local spacing = ScannerDisplayViewFrequencySettings.stage_spacing
 		local pass_definitions = {
 			{
-				pass_type = "texture",
-				style_id = "highlight",
 				value = "content/ui/materials/backgrounds/default_square",
+				style_id = "highlight",
+				pass_type = "texture",
 				style = {
 					hdr = true,
 					color = {
 						255,
 						0,
 						255,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}
 		local stage_widgets = {}
 
@@ -215,7 +215,7 @@ MinigameFrequencyView._create_frequency_widgets = function (self, name)
 		255,
 		0,
 		255,
-		0,
+		0
 	}
 
 	for x = 1, max_widgets do
@@ -233,9 +233,9 @@ MinigameFrequencyView._create_frequency_widgets = function (self, name)
 				value = material_path,
 				style = {
 					hdr = true,
-					color = color,
-				},
-			},
+					color = color
+				}
+			}
 		}, scenegraph_id, nil, widget_size)
 		local widget = UIWidget.init(widget_name, widget_definition)
 

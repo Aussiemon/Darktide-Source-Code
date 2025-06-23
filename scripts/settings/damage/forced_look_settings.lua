@@ -44,7 +44,7 @@ forced_look_settings.look_functions = {
 		local duration = 0.1
 
 		return pitch, yaw, duration
-	end,
+	end
 }
 
 return settings("ForcedLookSettings", forced_look_settings)

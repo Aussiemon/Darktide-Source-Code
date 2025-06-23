@@ -7,7 +7,7 @@ local PS5PlatformAchievement = require("scripts/managers/achievements/platforms/
 local AchievementPlatforms = setmetatable({}, {
 	__index = function ()
 		return BasePlatformAchievement
-	end,
+	end
 })
 
 AchievementPlatforms[Backend.AUTH_METHOD_XBOXLIVE] = XboxPlatformAchievement

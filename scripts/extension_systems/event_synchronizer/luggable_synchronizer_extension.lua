@@ -22,11 +22,12 @@ LuggableSynchronizerExtension.init = function (self, extension_init_context, uni
 	self._luggable_consume_timers = {}
 	self._spawners_with_marker_on_start = {}
 	self._objective_stages = 1
+	self._shuffle_stages = false
 	self._objective_stage = 1
 	self._is_side_mission_synchronizer = false
 end
 
-LuggableSynchronizerExtension.setup_from_component = function (self, objective_name, objective_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
+LuggableSynchronizerExtension.setup_from_component = function (self, objective_name, objective_stages, shuffle_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
 	local mission_manager = Managers.state.mission
 	local side_mission = mission_manager:side_mission()
 	local should_register_side_mission_unit = is_side_mission_synchronizer and side_mission and mission_manager:side_mission_is_luggable()
@@ -42,6 +43,7 @@ LuggableSynchronizerExtension.setup_from_component = function (self, objective_n
 
 	self._objective_name = objective_name
 	self._objective_stages = objective_stages
+	self._shuffle_stages = shuffle_stages
 	self._auto_start = auto_start
 	self._manual_luggable_spawn = manual_luggable_spawn
 	self._max_socket_target = max_socket_target
@@ -127,6 +129,14 @@ LuggableSynchronizerExtension.register_connected_units = function (self, stage_u
 	end
 
 	return stage_units
+end
+
+LuggableSynchronizerExtension.setup_stages = function (self, registered_units)
+	if self._shuffle_stages then
+		table.shuffle(registered_units, self._setup_seed)
+	end
+
+	return self._objective_stages
 end
 
 LuggableSynchronizerExtension._check_boundaries = function (self)

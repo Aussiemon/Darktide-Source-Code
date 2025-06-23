@@ -75,7 +75,7 @@ StickyEffects.update_first_person_mode = function (self, first_person_mode)
 end
 
 local _external_properties = {
-	armor_type = "n/a",
+	armor_type = "n/a"
 }
 
 StickyEffects._start_stickyness = function (self, t)

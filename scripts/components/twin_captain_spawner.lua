@@ -60,32 +60,32 @@ end
 
 TwinCaptainSpawner.component_data = {
 	id = {
-		category = "Circumstance Gameplay Data",
-		max = 100,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "ID",
-		ui_type = "number",
+		category = "Circumstance Gameplay Data",
 		value = 1,
+		ui_name = "ID",
+		max = 100
 	},
 	section = {
-		category = "Circumstance Gameplay Data",
-		max = 50,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Section ID",
-		ui_type = "number",
+		category = "Circumstance Gameplay Data",
 		value = 1,
+		ui_name = "Section ID",
+		max = 50
 	},
 	twin_id = {
-		category = "Circumstance Gameplay Data",
-		max = 2,
+		ui_type = "number",
 		min = 1,
 		step = 1,
-		ui_name = "Twin ID",
-		ui_type = "number",
+		category = "Circumstance Gameplay Data",
 		value = 1,
-	},
+		ui_name = "Twin ID",
+		max = 2
+	}
 }
 
 return TwinCaptainSpawner

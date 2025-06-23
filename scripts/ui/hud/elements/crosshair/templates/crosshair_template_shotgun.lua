@@ -4,11 +4,11 @@ local Crosshair = require("scripts/ui/utilities/crosshair")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local template = {
-	name = "shotgun",
+	name = "shotgun"
 }
 local SIZE = {
 	24,
-	8,
+	8
 }
 local HALF_SIZE_X = SIZE[1] * 0.5
 local HALF_SIZE_Y = SIZE[2] * 0.5
@@ -17,24 +17,24 @@ local MIN_OFFSET = HALF_SIZE_Y + 12
 
 local function _crosshair_segment(style_id, angle)
 	return table.clone({
-		pass_type = "rotated_texture",
 		value = "content/ui/materials/hud/crosshairs/shotgun_spread_2",
+		pass_type = "rotated_texture",
 		style_id = style_id,
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
+			horizontal_alignment = "center",
 			angle = angle,
 			offset = {
 				0,
 				0,
-				1,
+				1
 			},
 			size = {
 				SIZE[1],
-				SIZE[2],
+				SIZE[2]
 			},
-			color = UIHudSettings.color_tint_main_1,
-		},
+			color = UIHudSettings.color_tint_main_1
+		}
 	})
 end
 
@@ -51,7 +51,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		_crosshair_segment("top", math.rad(0)),
 		_crosshair_segment("bottom", math.rad(180)),
 		_crosshair_segment("left", math.rad(90)),
-		_crosshair_segment("right", math.rad(-90)),
+		_crosshair_segment("right", math.rad(-90))
 	}, scenegraph_id)
 end
 

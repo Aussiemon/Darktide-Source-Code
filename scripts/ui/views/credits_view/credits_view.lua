@@ -148,7 +148,7 @@ CreditsView._handle_carousel = function (self, dt, t)
 		local img_index = self._carousel_start_index + 1 <= #view_settings.carousel and self._carousel_start_index + 1 or 1
 
 		self:_start_animation("backgorund_transition", bg_widget, {
-			new_image = view_settings.carousel[img_index],
+			new_image = view_settings.carousel[img_index]
 		})
 
 		self._carousel_start_index = img_index

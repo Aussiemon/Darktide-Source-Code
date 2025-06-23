@@ -11,7 +11,7 @@ BotUnitInput.init = function (self, physics_world, player)
 	self._ephemeral_input = Script.new_map(num_ephemeral_actions)
 	self._move = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._player = player
 	self._aim_position = Vector3Box(0, 0, 0)

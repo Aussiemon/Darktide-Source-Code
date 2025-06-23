@@ -69,21 +69,21 @@ local HARD_MODE_REGEN_SPEED = {
 	800,
 	800,
 	800,
-	1600,
+	1600
 }
 local DRAIN_SPEED = {
 	200,
 	200,
 	200,
 	200,
-	150,
+	150
 }
 local HARD_MODE_DRAIN_SPEED = {
 	200,
 	200,
 	200,
 	200,
-	150,
+	150
 }
 
 BtRenegadeTwinCaptainShieldDownAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

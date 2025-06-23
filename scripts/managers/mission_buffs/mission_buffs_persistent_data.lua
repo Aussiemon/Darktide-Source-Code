@@ -6,7 +6,7 @@ local MissionBuffsPersistentData = class("MissionBuffsPersistentData")
 MissionBuffsPersistentData.init = function (self)
 	self._persistent_data = {
 		should_have_buff_family_selected = false,
-		players_data = {},
+		players_data = {}
 	}
 end
 
@@ -28,7 +28,7 @@ MissionBuffsPersistentData.init_player_data = function (self, player)
 		family_buffs_available = {},
 		legendary_buffs_available = {},
 		buffs_received = {},
-		choices_queue = {},
+		choices_queue = {}
 	}
 
 	return players_data[player_account_id]
@@ -137,7 +137,7 @@ MissionBuffsPersistentData._add_buff_to_player_data = function (self, player, bu
 		player_buffs[buff_name] = {
 			stacks = 1,
 			buff_name = buff_name,
-			buff_indexes = {},
+			buff_indexes = {}
 		}
 
 		local is_family_buff = HordesBuffsData[buff_name].is_family_buff
@@ -272,7 +272,7 @@ MissionBuffsPersistentData.add_choice_for_player = function (self, player, optio
 	local target_player_data = self:_get_or_create_player_data(player)
 	local new_choice = {
 		is_buff_family_choice = is_buff_family_choice and true or false,
-		options = options,
+		options = options
 	}
 
 	table.insert(target_player_data.choices_queue, new_choice)

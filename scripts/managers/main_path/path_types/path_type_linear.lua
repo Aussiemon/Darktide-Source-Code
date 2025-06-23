@@ -13,12 +13,12 @@ PathTypeLinear.init = function (self, world, nav_world, num_sides, is_server, us
 
 	for i = 1, num_sides do
 		side_progress_on_path[i] = {
-			behind_travel_changed_t = 0,
-			forward_travel_changed_t = 0,
-			furthest_travel_distance = 0,
 			furthest_worst_travel_distance = 0,
+			forward_travel_changed_t = 0,
+			behind_travel_changed_t = 0,
+			furthest_travel_distance = 0,
 			ahead_path_position = Vector3Box(invalid_vector),
-			behind_path_position = Vector3Box(invalid_vector),
+			behind_path_position = Vector3Box(invalid_vector)
 		}
 	end
 
@@ -125,12 +125,12 @@ PathTypeLinear.update_progress_on_path = function (self, t)
 
 				if latest_position_on_nav_mesh then
 					group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+				else
+					group_index = previous_frame_group_index_by_unit[player_unit]
 				end
-
-				group_index = group_index or previous_frame_group_index_by_unit[player_unit]
 			end
 
-			local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
 			local end_index = start_index + 1
 			local path_position, travel_distance, _, _, segment_index = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
 

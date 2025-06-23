@@ -36,7 +36,7 @@ ViewElementAccolade._create_template_widget = function (self, template_type)
 		local localization_str = "loc_accolade_title_player_of_the_game_new"
 
 		title_key = self:_localize(localization_str, no_cache, {
-			new = new_str,
+			new = new_str
 		})
 	else
 		local localization_str = "loc_accolade_title_player_of_the_game"

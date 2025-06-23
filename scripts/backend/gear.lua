@@ -1,10 +1,9 @@
 ﻿-- chunkname: @scripts/backend/gear.lua
 
 local Promise = require("scripts/foundation/utilities/promise")
-local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Interface = {
-	"fetch",
+	"fetch"
 }
 local Gear = class("Gear")
 
@@ -59,7 +58,7 @@ end
 Gear.delete_gear = function (self, item_id)
 	return self:_gear_path():next(function (path)
 		return Managers.backend:title_request(path .. "/" .. item_id, {
-			method = "DELETE",
+			method = "DELETE"
 		}):next(function (data)
 			return data.body
 		end)
@@ -74,7 +73,7 @@ Gear.delete_gear_batch = function (self, gear_ids)
 
 		operations[#operations + 1] = {
 			op = "delete",
-			gearId = gear_id,
+			gearId = gear_id
 		}
 	end
 
@@ -82,8 +81,8 @@ Gear.delete_gear_batch = function (self, gear_ids)
 		return Managers.backend:title_request(path, {
 			method = "POST",
 			body = {
-				operations = operations,
-			},
+				operations = operations
+			}
 		}):next(function (data)
 			return data.body
 		end)
@@ -99,13 +98,13 @@ Gear.create = function (self, master_id, slot, character_id, overrides, allow_du
 			body = {
 				characterId = character_id,
 				slots = {
-					slot,
+					slot
 				},
 				masterDataInstance = {
-					id = master_id,
+					id = master_id
 				},
-				overrides = overrides,
-			},
+				overrides = overrides
+			}
 		}):next(function (data)
 			return data.body
 		end)
@@ -116,8 +115,8 @@ Gear.set_traits = function (self, item_id, traits)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/gear/"):path(item_id):path("/overrides/bound_traits"), {
 		method = "PUT",
 		body = {
-			data = traits,
-		},
+			data = traits
+		}
 	}):next(function (data)
 		return nil
 	end)
@@ -126,7 +125,7 @@ end
 Gear.attach_item_as_override = function (self, item_id, attach_point, gear_id)
 	local string_path = {
 		method = "PUT",
-		body = {},
+		body = {}
 	}
 
 	if gear_id then

@@ -2,7 +2,7 @@
 
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local DataServiceBackendCache = require("scripts/managers/data_service/data_service_backend_cache")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -15,7 +15,7 @@ local function get_all_trait_category_ids()
 	for id, data in pairs(UISettings.weapon_patterns) do
 		if data.marks and data.marks[1] then
 			local item = MasterItems.get_item(data.marks[1].item)
-			local trait_category = item and ItemUtils.trait_category(item)
+			local trait_category = item and Items.trait_category(item)
 
 			if trait_category then
 				trait_categories[trait_category] = true
@@ -224,7 +224,7 @@ CraftingService._on_trait_extracted = function (self, extracted_traits)
 
 	for i = 1, #extracted_traits do
 		local trait = extracted_traits[i]
-		local trait_category = ItemUtils.trait_category(trait)
+		local trait_category = Items.trait_category(trait)
 		local trait_name = trait.name
 		local trait_rarity = trait.rarity
 		local cached_category_traits = cache:cached_data_by_key(trait_category)
@@ -249,7 +249,7 @@ CraftingService.on_gear_created = function (self, gear_id, gear)
 	local item = MasterItems.get_item_instance(gear, gear_id)
 
 	if item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED" then
-		local trait_category_id = ItemUtils.trait_category(item)
+		local trait_category_id = Items.trait_category(item)
 
 		if trait_category_id then
 			cache:get_data(trait_category_id, function ()
@@ -308,7 +308,7 @@ CraftingService.extract_weapon_mastery = function (self, mastery_id, gear_ids)
 
 	return self:_extract_weapon_mastery_batches(track_id, gear_batches, {
 		amount = 0,
-		gear_ids = {},
+		gear_ids = {}
 	})
 end
 

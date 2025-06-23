@@ -28,10 +28,10 @@ local CLIENT_RPCS = {
 	"rpc_spawn_player_particles",
 	"rpc_stop_looping_particles",
 	"rpc_stop_looping_player_sound",
-	"rpc_stop_player_particles",
+	"rpc_stop_player_particles"
 }
 local FLOW_CONTROLLED_WWISE_SOURCES = {
-	j_hips = true,
+	j_hips = true
 }
 local _closest_point_on_line
 
@@ -62,13 +62,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	for i = 1, ALIGNED_VFX_RING_BUFFER_SIZE do
 		aligned_vfx_buffer[i] = {
-			end_position = Vector3Box(),
+			end_position = Vector3Box()
 		}
 	end
 
 	self._aligned_vfx = {
 		size = 0,
-		buffer = aligned_vfx_buffer,
+		buffer = aligned_vfx_buffer
 	}
 
 	local moving_sfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
@@ -76,13 +76,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
 		moving_sfx_buffer[ii] = {
 			position = Vector3Box(),
-			direction = Vector3Box(),
+			direction = Vector3Box()
 		}
 	end
 
 	self._moving_sfx = {
 		size = 0,
-		buffer = moving_sfx_buffer,
+		buffer = moving_sfx_buffer
 	}
 
 	local moving_vfx_buffer = Script.new_array(MOVING_FX_RING_BUFFER_SIZE)
@@ -90,13 +90,13 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
 		moving_vfx_buffer[ii] = {
 			position = Vector3Box(),
-			direction = Vector3Box(),
+			direction = Vector3Box()
 		}
 	end
 
 	self._moving_vfx = {
 		size = 0,
-		buffer = moving_vfx_buffer,
+		buffer = moving_vfx_buffer
 	}
 	self._wwise_source_node_cache = {}
 	self._sources = {}
@@ -138,36 +138,22 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	local num_looping_sounds = table.size(PlayerCharacterLoopingSoundAliases)
 	local looping_sounds = Script.new_map(num_looping_sounds)
-	local looping_sounds_components
-
-	if is_local_unit or is_server then
-		looping_sounds_components = Script.new_map(num_looping_sounds)
-		self._looping_sounds_components = looping_sounds_components
-	end
+	local looping_sound_trigger_data = Script.new_map(num_looping_sounds)
 
 	for alias_name, config in pairs(PlayerCharacterLoopingSoundAliases) do
 		if not config.exclude_from_unit_data_components then
+			looping_sound_trigger_data[alias_name] = {
+				should_trigger = false
+			}
 			looping_sounds[alias_name] = {
 				is_playing = false,
-				source_attach_name = "n/a",
-				source_name = "n/a",
+				ignored_as_exclusive_event = false,
+				timestamp = -1
 			}
-
-			if is_local_unit or is_server then
-				local component_name = PlayerUnitData.looping_sound_component_name(alias_name)
-				local component = unit_data_extension:write_component(component_name)
-
-				component.is_playing = false
-
-				if not config.is_2d then
-					component.source_name = "n/a"
-				end
-
-				looping_sounds_components[alias_name] = component
-			end
 		end
 	end
 
+	self._looping_sound_trigger_data = looping_sound_trigger_data
 	self._looping_sounds = looping_sounds
 
 	local num_looping_particles = table.size(PlayerCharacterLoopingParticleAliases)
@@ -188,7 +174,7 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 				is_playing = false,
 				spawner_attach_name = "n/a",
 				spawner_name = "n/a",
-				external_properties = {},
+				external_properties = {}
 			}
 
 			if is_local_unit or is_server then
@@ -228,7 +214,7 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 		health_extension = ScriptUnit.extension(unit, "health_system"),
 		toughness_extension = ScriptUnit.extension(unit, "toughness_system"),
 		action_module_charge_component = unit_data_extension:read_component("action_module_charge"),
-		talent_resource_component = unit_data_extension:read_component("talent_resource"),
+		talent_resource_component = unit_data_extension:read_component("talent_resource")
 	}
 
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
@@ -321,13 +307,12 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 		end
 	end
 
-	local looping_sounds = self._looping_sounds
-
-	for looping_sounds_alias, data in pairs(looping_sounds) do
+	for looping_sounds_alias, data in pairs(self._looping_sounds) do
 		if data.is_playing then
 			local force_stop = true
+			local is_moving_sound_source = false
 
-			self:_stop_looping_wwise_event(looping_sounds_alias, force_stop)
+			self:_stop_looping_wwise_event(looping_sounds_alias, force_stop, is_moving_sound_source)
 		end
 	end
 
@@ -361,6 +346,18 @@ end
 
 PlayerUnitFxExtension.destroy_particle_group = function (self)
 	World.destroy_particle_group(self._world, self._player_particle_group_id)
+end
+
+PlayerUnitFxExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	if not self._is_local_unit and not self._is_server then
+		return
+	end
+
+	if self._unit_data_extension.is_resimulating then
+		return
+	end
+
+	self:_update_looping_sounds(fixed_frame)
 end
 
 PlayerUnitFxExtension.update = function (self, unit, dt, t)
@@ -707,41 +704,6 @@ end
 local server_correction_external_properties = {}
 
 PlayerUnitFxExtension.server_correction_occurred = function (self, unit, from_frame, to_frame, simulated_components)
-	local visual_loadout_extension = self._visual_loadout_extension
-	local looping_sounds, looping_sounds_components = self._looping_sounds, self._looping_sounds_components
-
-	for alias_name, data in pairs(looping_sounds) do
-		local event_alias = data.event_alias
-		local _, event_name
-
-		if event_alias then
-			_, event_name = visual_loadout_extension:resolve_gear_sound(event_alias)
-		end
-
-		local sound_config = PlayerCharacterLoopingSoundAliases[alias_name]
-		local is_2d = sound_config.is_2d
-		local component = looping_sounds_components[alias_name]
-		local should_be_playing = component.is_playing
-		local locally_is_playing = data.is_playing
-		local source_name_or_nil, current_source_name = nil, data.source_name
-
-		if not is_2d then
-			source_name_or_nil = component.source_name
-		end
-
-		local different_sources = source_name_or_nil ~= current_source_name
-
-		if should_be_playing ~= locally_is_playing or different_sources or data.event_name ~= event_name then
-			if locally_is_playing then
-				self:_stop_looping_wwise_event(alias_name)
-			end
-
-			if should_be_playing then
-				self:_trigger_looping_wwise_event(alias_name, source_name_or_nil, nil)
-			end
-		end
-	end
-
 	local looping_particles, looping_particles_components = self._looping_particles, self._looping_particles_components
 
 	for alias_name, data in pairs(looping_particles) do
@@ -809,7 +771,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 
 		unit_cache[node_name] = {
 			num_registered_sources = 0,
-			source = source,
+			source = source
 		}
 	end
 
@@ -819,7 +781,7 @@ local function _register_sound_source(wwise_source_node_cache, unit, node_name, 
 
 	local source_name_to_node_cache_lookup = {
 		unit = unit,
-		node_name = node_name,
+		node_name = node_name
 	}
 
 	wwise_source_node_cache[source_name] = source_name_to_node_cache_lookup
@@ -908,13 +870,14 @@ PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_un
 
 	table.clear(temp_playing_looping_sounds)
 
-	local looping_sounds = self._looping_sounds
-
-	for sound_alias, data in pairs(looping_sounds) do
+	for sound_alias, data in pairs(self._looping_sounds) do
 		if data.is_playing and data.source_name == source_name then
 			temp_playing_looping_sounds[sound_alias] = data.source_attach_name
 
-			self:_stop_looping_wwise_event(sound_alias)
+			local force_stop = false
+			local is_moving_sound_source = true
+
+			self:_stop_looping_wwise_event(sound_alias, force_stop, is_moving_sound_source)
 		end
 	end
 
@@ -986,8 +949,9 @@ PlayerUnitFxExtension._unregister_sound_source = function (self, source_name)
 			Log.warning("PlayerUnitFxExtension", "Stopping looping sound %q due to unregistering of sound_source %q. Should clean this up properly before unregistering.", looping_sound_alias, source_name)
 
 			local force_stop = true
+			local is_moving_sound_source = false
 
-			self:_stop_looping_wwise_event(looping_sound_alias, force_stop)
+			self:_stop_looping_wwise_event(looping_sound_alias, force_stop, is_moving_sound_source)
 		end
 	end
 
@@ -1777,26 +1741,63 @@ PlayerUnitFxExtension.spawn_exclusive_particle = function (self, particle_name, 
 	end
 end
 
+PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_source_name, optional_attachment_name, frame)
+	if not self._is_local_unit and not self._is_server then
+		return
+	end
+
+	local sound_config = PlayerCharacterLoopingSoundAliases[sound_alias]
+	local is_2d = sound_config.is_2d
+
+	if is_2d then
+		-- Nothing
+	end
+
+	local looping_sound = self._looping_sounds[sound_alias]
+
+	optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	if not looping_sound.is_playing or looping_sound.source_name ~= optional_source_name or looping_sound.source_attach_name ~= optional_attachment_name then
+		local trigger_data = self._looping_sound_trigger_data[sound_alias]
+
+		trigger_data.should_trigger, trigger_data.source_name, trigger_data.source_attach_name = true, optional_source_name, optional_attachment_name
+	end
+
+	looping_sound.timestamp = frame
+end
+
+PlayerUnitFxExtension._update_looping_sounds = function (self, fixed_frame)
+	if not self._is_local_unit and not self._is_server then
+		return
+	end
+
+	for sound_alias, data in pairs(self._looping_sounds) do
+		local trigger_data = self._looping_sound_trigger_data[sound_alias]
+
+		if trigger_data.should_trigger then
+			if data.is_playing then
+				self:stop_looping_wwise_event(sound_alias)
+			end
+
+			self:trigger_looping_wwise_event(sound_alias, trigger_data.source_name, trigger_data.source_attach_name)
+		elseif data.is_playing then
+			local previous_frame = fixed_frame - 1
+
+			if previous_frame > data.timestamp then
+				self:stop_looping_wwise_event(sound_alias)
+			end
+		end
+	end
+end
+
+PlayerUnitFxExtension.is_looping_sound_playing = function (self, sound_alias)
+	return self._looping_sounds[sound_alias].is_playing
+end
+
 PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
 	local is_server, is_local = self._is_server, self._is_local_unit
-	local config = PlayerCharacterLoopingSoundAliases[sound_alias]
-	local trigger_event = true
 
-	if config.is_exclusive then
-		trigger_event = self._first_person_extension:is_camera_follow_target()
-	end
-
-	if trigger_event then
-		self:_trigger_looping_wwise_event(sound_alias, optional_source_name, optional_attachment_name)
-	end
-
-	local component = self._looping_sounds_components[sound_alias]
-
-	component.is_playing = true
-
-	if not config.is_2d then
-		component.source_name = optional_source_name
-	end
+	self:_trigger_looping_wwise_event(sound_alias, optional_source_name, optional_attachment_name)
 
 	if is_server then
 		local channel_id, game_object_id, sound_alias_id = self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_looping_sound_aliases[sound_alias]
@@ -1816,6 +1817,7 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 		-- Nothing
 	end
 
+	local ignored_as_exclusive_event = false
 	local is_husk = self:should_play_husk_effect()
 
 	if not is_husk or has_husk_events then
@@ -1826,15 +1828,25 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 
 		if resolved then
 			local wwise_event_name = is_husk and has_husk_events and event_name .. "_husk" or event_name
+			local config = PlayerCharacterLoopingSoundAliases[sound_alias]
+			local trigger_event = true
 
-			if is_2d then
-				event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
+			if config.is_exclusive then
+				trigger_event = self._first_person_extension:is_camera_follow_target()
+			end
+
+			if trigger_event then
+				if is_2d then
+					event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
+				else
+					local source = self._sources[optional_source_name]
+
+					optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+					source = source[optional_attachment_name]
+					event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
+				end
 			else
-				local source = self._sources[optional_source_name]
-
-				optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
-				source = source[optional_attachment_name]
-				event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
+				ignored_as_exclusive_event = true
 			end
 
 			data.id, data.event_alias, data.event_name = event_id, event_alias, event_name
@@ -1852,29 +1864,18 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 		end
 	end
 
-	data.is_playing, data.is_husk, data.source_name, data.source_attach_name = true, is_husk, optional_source_name, optional_attachment_name
+	local trigger_data = self._looping_sound_trigger_data[sound_alias]
+
+	trigger_data.should_trigger, trigger_data.source_name, trigger_data.source_attach_name = false
+	data.is_playing, data.is_husk, data.source_name, data.source_attach_name, data.ignored_as_exclusive_event = true, is_husk, optional_source_name, optional_attachment_name, ignored_as_exclusive_event
 end
 
 PlayerUnitFxExtension.stop_looping_wwise_event = function (self, sound_alias)
 	local is_server, is_local = self._is_server, self._is_local_unit
-	local config = PlayerCharacterLoopingSoundAliases[sound_alias]
-	local trigger_event = true
+	local force_stop = false
+	local is_moving_sound_source = false
 
-	if config.is_exclusive then
-		trigger_event = self._first_person_extension:is_camera_follow_target()
-	end
-
-	if trigger_event then
-		self:_stop_looping_wwise_event(sound_alias)
-	end
-
-	local component = self._looping_sounds_components[sound_alias]
-
-	component.is_playing = false
-
-	if not config.is_2d then
-		component.source_name = "n/a"
-	end
+	self:_stop_looping_wwise_event(sound_alias, force_stop, is_moving_sound_source)
 
 	if is_server then
 		local channel_id, game_object_id, sound_alias_id = self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_looping_sound_aliases[sound_alias]
@@ -1883,35 +1884,35 @@ PlayerUnitFxExtension.stop_looping_wwise_event = function (self, sound_alias)
 	end
 end
 
-PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, force_stop)
+PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, force_stop, is_moving_sound_source)
 	local data = self._looping_sounds[sound_alias]
 	local config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local is_husk = data.is_husk
-	local stop_event_name, event_id = data.stop_event_name, data.id
+	local stop_event_name, event_id, ignored_as_exclusive_event = data.stop_event_name, data.id, data.ignored_as_exclusive_event
 
-	if stop_event_name and not force_stop then
-		local wwise_event_name = is_husk and stop_event_name .. "_husk" or stop_event_name
+	if not ignored_as_exclusive_event then
+		if stop_event_name and not force_stop then
+			local wwise_event_name = is_husk and stop_event_name .. "_husk" or stop_event_name
 
-		if config.is_2d then
-			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
-		else
-			local source_name = data.source_name
-			local attachment_name = data.source_attach_name
-			local source = self._sources[source_name][attachment_name]
+			if config.is_2d then
+				WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name)
+			else
+				local source_name = data.source_name
+				local attachment_name = data.source_attach_name
+				local source = self._sources[source_name][attachment_name]
 
-			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
+				WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
+			end
+		elseif event_id then
+			WwiseWorld.stop_event(self._wwise_world, event_id)
 		end
-	elseif event_id then
-		WwiseWorld.stop_event(self._wwise_world, event_id)
 	end
 
-	data.is_playing, data.is_husk, data.id, data.event_alias, data.event_name, data.stop_event_name, data.source_name, data.source_attach_name = false
-end
+	data.is_playing, data.is_husk, data.id, data.event_alias, data.event_name, data.stop_event_name, data.source_name, data.source_attach_name, data.ignored_as_exclusive_event = false, nil, nil, nil, nil, nil, nil, nil, false
 
-PlayerUnitFxExtension.is_looping_wwise_event_playing = function (self, looping_sound_alias)
-	local component = self._looping_sounds_components[looping_sound_alias]
-
-	return component and component.is_playing
+	if not is_moving_sound_source then
+		data.timestamp = 0
+	end
 end
 
 local function _register_vfx_spawner_from_attachments(parent_unit, attachments_by_unit, attachment_name_lookup, node_name, spawner_name)
@@ -1927,7 +1928,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 				spawners[attachment_name] = {
 					unit = attachment_unit,
-					node = node,
+					node = node
 				}
 
 				break
@@ -1941,7 +1942,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 		spawners[parent_id_name] = {
 			unit = parent_unit,
-			node = node,
+			node = node
 		}
 	end
 
@@ -1962,7 +1963,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 	spawners[VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
 		node = 1,
-		unit = parent_unit,
+		unit = parent_unit
 	}
 
 	return spawners
@@ -1992,7 +1993,7 @@ PlayerUnitFxExtension._register_vfx_spawner = function (self, spawners, spawner_
 		spawners[spawner_name][VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
 			unit = parent_unit,
 			node = node,
-			node_3p = node_3p,
+			node_3p = node_3p
 		}
 	end
 end
@@ -2033,16 +2034,6 @@ end
 
 PlayerUnitFxExtension.unregister_vfx_spawner = function (self, spawner_name)
 	self._vfx_spawners[spawner_name] = nil
-end
-
-PlayerUnitFxExtension.stop_looping_wwise_events_for_source_on_mispredict = function (self, source_name)
-	local looping_sounds = self._looping_sounds
-
-	for alias_name, data in pairs(looping_sounds) do
-		if data.source_name == source_name then
-			self:_stop_looping_wwise_event(alias_name)
-		end
-	end
 end
 
 PlayerUnitFxExtension.spawn_looping_particles = function (self, looping_particle_alias, optional_spawner_name, external_properties, optional_attachment_name)
@@ -2410,7 +2401,7 @@ PlayerUnitFxExtension.rpc_stop_looping_player_sound = function (self, channel_id
 		return
 	end
 
-	self:_stop_looping_wwise_event(sound_alias)
+	self:_stop_looping_wwise_event(sound_alias, false, false)
 end
 
 PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, attachment_id, link, position_offset, rotation_offset, scale, optional_server_particle_index)

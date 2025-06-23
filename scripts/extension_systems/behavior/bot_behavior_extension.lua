@@ -28,7 +28,7 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 		cover_position = Vector3Box(Vector3.invalid_vector()),
 		threats = {},
 		active_threats = {},
-		failed_cover_positions = {},
+		failed_cover_positions = {}
 	}
 	self._using_navigation_destination_override = false
 	self._hold_position = nil
@@ -37,20 +37,20 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 	self._stay_near_player, self._stay_near_player_range = false, math.huge
 	self._attempted_ally_paths, self._attempted_enemy_paths = {}, {}
 	self._last_health_pickup_attempt = {
-		blacklist = false,
+		path_failed = false,
 		distance = 0,
 		index = 1,
-		path_failed = false,
+		blacklist = false,
 		rotation = QuaternionBox(),
-		path_position = Vector3Box(),
+		path_position = Vector3Box()
 	}
 	self._last_mule_pickup_attempt = {
-		blacklist = false,
+		path_failed = false,
 		distance = 0,
 		index = 1,
-		path_failed = false,
+		blacklist = false,
 		rotation = QuaternionBox(),
-		path_position = Vector3Box(),
+		path_position = Vector3Box()
 	}
 	self._hit_by_projectile = {}
 
@@ -61,7 +61,7 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 	self:_set_nav_spawn_points()
 end
 
-BotBehaviorExtension.on_gameplay_post_init = function (self, level)
+BotBehaviorExtension.on_gameplay_post_init = function (self, unit)
 	self:_set_nav_spawn_points()
 end
 
@@ -81,7 +81,7 @@ end
 
 local NO_GESTALTS = {
 	melee = behavior_gestalts.none,
-	ranged = behavior_gestalts.none,
+	ranged = behavior_gestalts.none
 }
 
 local function _gestalts_or_default(gestalts_or_nil)
@@ -842,7 +842,7 @@ local PICKUP_ROTATIONS = {
 	QuaternionBox(Quaternion(Vector3.up(), -math.pi * 0.5)),
 	QuaternionBox(Quaternion(Vector3.up(), math.pi * 0.75)),
 	QuaternionBox(Quaternion(Vector3.up(), -math.pi * 0.75)),
-	QuaternionBox(Quaternion(Vector3.up(), math.pi)),
+	QuaternionBox(Quaternion(Vector3.up(), math.pi))
 }
 local PICKUP_NAV_MESH_ABOVE, PICKUP_NAV_MESH_BELOW = 1.5, 2.2
 local PICKUP_ATTEMPT_DISTANCE = 0.1
@@ -965,7 +965,7 @@ BotBehaviorExtension.cb_ally_path_result = function (self, ally_unit, success, d
 
 	if not path_status then
 		path_status = {
-			last_path_destination = Vector3Box(),
+			last_path_destination = Vector3Box()
 		}
 		paths[ally_unit] = path_status
 	end
@@ -997,7 +997,7 @@ BotBehaviorExtension.cb_enemy_path_result = function (self, enemy_unit, success,
 
 	if not path_status then
 		path_status = {
-			last_path_destination = Vector3Box(),
+			last_path_destination = Vector3Box()
 		}
 		paths[enemy_unit] = path_status
 	end

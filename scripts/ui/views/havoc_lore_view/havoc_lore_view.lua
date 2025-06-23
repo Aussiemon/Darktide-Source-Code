@@ -57,8 +57,8 @@ HavocLoreView._cb_on_trailer_button_pressed = function (self)
 
 	self:_play_sound(UISoundEvents.story_mission_lore_screen_play_video)
 	Managers.ui:open_view("video_view", nil, nil, nil, nil, {
-		allow_skip_input = true,
 		template = "s1_intro",
+		allow_skip_input = true
 	})
 end
 
@@ -90,22 +90,22 @@ HavocLoreView._setup_lore_grid = function (self)
 		local grid_size = grid_scenegraph.size
 		local mask_padding_size = 0
 		local grid_settings = {
-			enable_gamepad_scrolling = true,
-			hide_background = true,
-			hide_dividers = true,
-			scrollbar_horizontal_offset = 25,
 			scrollbar_width = 7,
-			title_height = 0,
+			hide_dividers = true,
 			widget_icon_load_margin = 0,
+			enable_gamepad_scrolling = true,
+			title_height = 0,
+			scrollbar_horizontal_offset = 25,
+			hide_background = true,
 			grid_spacing = {
 				0,
-				0,
+				0
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -122,104 +122,104 @@ HavocLoreView._setup_lore_grid = function (self)
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			25,
-		},
+			25
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_1"),
+		text = Localize("loc_story_mission_lore_menu_body_text_1")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			50,
-		},
+			50
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body_centered",
 		text = Localize("loc_story_mission_lore_menu_body_text_2"),
-		text_color = Color.terminal_text_body(255, true),
+		text_color = Color.terminal_text_body(255, true)
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			40,
-		},
+			40
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			25,
-		},
+			25
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_3"),
+		text = Localize("loc_story_mission_lore_menu_body_text_3")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			50,
-		},
+			50
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_4"),
+		text = Localize("loc_story_mission_lore_menu_body_text_4")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			50,
-		},
+			50
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_5"),
+		text = Localize("loc_story_mission_lore_menu_body_text_5")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			50,
-		},
+			50
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_6"),
+		text = Localize("loc_story_mission_lore_menu_body_text_6")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10,
-		},
+			10
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_7"),
+		text = Localize("loc_story_mission_lore_menu_body_text_7")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10,
-		},
+			10
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "body",
-		text = Localize("loc_story_mission_lore_menu_body_text_8"),
+		text = Localize("loc_story_mission_lore_menu_body_text_8")
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			25,
-		},
+			25
+		}
 	}
 
 	grid:present_grid_layout(layout, HavocLoreViewDefinitions.grid_blueprints)

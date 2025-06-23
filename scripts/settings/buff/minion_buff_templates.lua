@@ -21,14 +21,14 @@ local templates = {}
 table.make_unique(templates)
 
 templates.cultist_flamer_hit_by_flame = {
-	class_name = "interval_buff",
-	duration = 1,
 	interval = 0.5,
-	max_stacks = 1,
+	duration = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -42,17 +42,17 @@ templates.cultist_flamer_hit_by_flame = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
+	minion_effects = minion_burning_buff_effects.chemfire
 }
 templates.hit_by_common_enemy_flame = {
-	class_name = "interval_buff",
-	duration = 1,
 	interval = 0.5,
-	max_stacks = 1,
+	duration = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -66,49 +66,49 @@ templates.hit_by_common_enemy_flame = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
+	minion_effects = minion_burning_buff_effects.chemfire
 }
 templates.hit_by_poxburster_bile = {
-	class_name = "buff",
 	duration = 10,
-	is_negative = true,
 	predicted = false,
+	class_name = "buff",
+	is_negative = true,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = -0.3,
+		[buff_stat_buffs.movement_speed] = -0.3
 	},
 	keywords = {
-		buff_keywords.puked_on,
+		buff_keywords.puked_on
 	},
 	player_effects = {
-		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_loop",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
 		stop_type = "stop",
 		wwise_state = {
 			group = "swamped",
-			off_state = "none",
 			on_state = "on",
-		},
-	},
+			off_state = "none"
+		}
+	}
 }
 templates.cultist_flamer_liquid_immunity = {
-	class_name = "buff",
-	predicted = false,
 	unique_buff_id = "cultist_flamer_liquid_immunity",
 	unique_buff_priority = 1,
+	predicted = false,
+	class_name = "buff",
 	keywords = {
-		buff_keywords.cultist_flamer_liquid_immunity,
-	},
+		buff_keywords.cultist_flamer_liquid_immunity
+	}
 }
 templates.renegade_flamer_hit_by_flame = {
-	class_name = "interval_buff",
-	duration = 1,
 	interval = 0.5,
-	max_stacks = 1,
+	duration = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	class_name = "interval_buff",
 	keywords = {
-		buff_keywords.burning,
+		buff_keywords.burning
 	},
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -122,34 +122,34 @@ templates.renegade_flamer_hit_by_flame = {
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.fire,
+	minion_effects = minion_burning_buff_effects.fire
 }
 templates.renegade_flamer_liquid_immunity = {
-	class_name = "buff",
-	predicted = false,
 	unique_buff_id = "renegade_flamer_liquid_immunity",
 	unique_buff_priority = 1,
+	predicted = false,
+	class_name = "buff",
 	keywords = {
-		buff_keywords.renegade_flamer_liquid_immunity,
-	},
+		buff_keywords.renegade_flamer_liquid_immunity
+	}
 }
 templates.renegade_grenadier_liquid_immunity = {
-	class_name = "buff",
-	predicted = false,
 	unique_buff_id = "renegade_grenadier_liquid_immunity",
 	unique_buff_priority = 1,
+	predicted = false,
+	class_name = "buff",
 	keywords = {
-		buff_keywords.renegade_grenadier_liquid_immunity,
-	},
+		buff_keywords.renegade_grenadier_liquid_immunity
+	}
 }
 templates.beast_of_nurgle_liquid_immunity = {
-	class_name = "buff",
-	predicted = false,
 	unique_buff_id = "beast_of_nurgle_liquid_immunity",
 	unique_buff_priority = 1,
+	predicted = false,
+	class_name = "buff",
 	keywords = {
-		buff_keywords.beast_of_nurgle_liquid_immunity,
-	},
+		buff_keywords.beast_of_nurgle_liquid_immunity
+	}
 }
 
 local RELATION = "enemy"
@@ -161,15 +161,15 @@ local CORRUPTION_AURA_PERMANENT_PERCENT = {
 	0.25,
 	0.45,
 	0.45,
-	0.45,
+	0.45
 }
 
 templates.daemonhost_corruption_aura = {
-	class_name = "interval_buff",
 	interval = 1,
 	max_stacks = 1,
-	predicted = false,
 	refresh_duration_on_stack = true,
+	predicted = false,
+	class_name = "interval_buff",
 	duration = math.huge,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -211,50 +211,50 @@ templates.daemonhost_corruption_aura = {
 				end
 			end
 		end
-	end,
+	end
 }
 templates.chaos_beast_of_nurgle_hit_by_vomit = {
-	class_name = "buff",
-	duration = 10,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_vomit_buff_hud",
-	hud_priority = 1,
-	is_negative = true,
-	max_stacks = 3,
-	predicted = false,
 	refresh_duration_on_stack = true,
+	duration = 10,
+	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_vomit_buff_hud",
+	max_stacks = 3,
+	class_name = "buff",
+	is_negative = true,
 	keywords = {
-		buff_keywords.beast_of_nurgle_vomit,
+		buff_keywords.beast_of_nurgle_vomit
 	},
 	forbidden_keywords = {
-		buff_keywords.beast_of_nurgle_liquid_immunity,
+		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = -0.15000000000000002,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	player_effects = {
-		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_loop",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
 		stop_type = "stop",
 		wwise_state = {
 			group = "swamped",
-			off_state = "none",
 			on_state = "on",
-		},
-	},
+			off_state = "none"
+		}
+	}
 }
 templates.chaos_beast_of_nurgle_being_eaten = {
-	class_name = "interval_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
-	hud_priority = 1,
 	interval = 1,
-	is_negative = true,
-	max_stacks = 1,
 	predicted = false,
+	hud_priority = 1,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_nurgle_eaten_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
 	keywords = {
 		buff_keywords.beast_of_nurgle_vomit,
-		buff_keywords.beast_of_nurgle_liquid_immunity,
+		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
 	damage_type = damage_types.minion_vomit,
@@ -283,10 +283,10 @@ templates.chaos_beast_of_nurgle_being_eaten = {
 		end
 	end,
 	player_effects = {
-		looping_wwise_start_event = "wwise/events/minions/play_beast_of_nurgle_stomach_loop",
-		looping_wwise_stop_event = "wwise/events/minions/stop_beast_of_nurgle_stomach_loop",
 		on_screen_effect = "content/fx/particles/screenspace/screen_bon_vomit_hit",
-	},
+		looping_wwise_start_event = "wwise/events/minions/play_beast_of_nurgle_stomach_loop",
+		looping_wwise_stop_event = "wwise/events/minions/stop_beast_of_nurgle_stomach_loop"
+	}
 }
 
 local RENEAGDE_FLAMER_VFX_STAGES = {
@@ -296,9 +296,9 @@ local RENEAGDE_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
-				stop_type = "stop",
-			},
-		},
+				stop_type = "stop"
+			}
+		}
 	},
 	second_stage = {
 		{
@@ -306,9 +306,9 @@ local RENEAGDE_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
-				stop_type = "stop",
-			},
-		},
+				stop_type = "stop"
+			}
+		}
 	},
 	third_stage = {
 		{
@@ -316,17 +316,17 @@ local RENEAGDE_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_backpack_ignited",
-				stop_type = "stop",
-			},
+				stop_type = "stop"
+			}
 		},
 		{
 			node_name = "ap_5h",
 			sfx = {
-				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame",
 				looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse_flame",
-			},
-		},
-	},
+				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame"
+			}
+		}
+	}
 }
 local CULTIST_FLAMER_VFX_STAGES = {
 	first_stage = {
@@ -335,9 +335,9 @@ local CULTIST_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop",
-				stop_type = "stop",
-			},
-		},
+				stop_type = "stop"
+			}
+		}
 	},
 	second_stage = {
 		{
@@ -345,9 +345,9 @@ local CULTIST_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop",
-				stop_type = "stop",
-			},
-		},
+				stop_type = "stop"
+			}
+		}
 	},
 	third_stage = {
 		{
@@ -355,49 +355,49 @@ local CULTIST_FLAMER_VFX_STAGES = {
 			vfx = {
 				orphaned_policy = "destroy",
 				particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_backpack_ignited",
-				stop_type = "stop",
-			},
+				stop_type = "stop"
+			}
 		},
 		{
 			node_name = "ap_5h",
 			sfx = {
-				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame",
 				looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse_flame",
-			},
-		},
-	},
+				looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse_flame"
+			}
+		}
+	}
 }
 local FLINCH_ANIMS = {
 	{
 		duration = 0.8,
-		name = "suppressed_loop_01",
+		name = "suppressed_loop_01"
 	},
 	{
 		duration = 0.8,
-		name = "suppressed_loop_02",
+		name = "suppressed_loop_02"
 	},
 	{
 		duration = 0.8,
-		name = "suppressed_loop_03",
-	},
+		name = "suppressed_loop_03"
+	}
 }
 local HEALTH_STEPS = {
 	{
 		health_step = 1,
-		health_threshold = 0.95,
+		health_threshold = 0.95
 	},
 	{
 		health_step = 2,
-		health_threshold = 0.9,
+		health_threshold = 0.9
 	},
 	{
 		health_step = 3,
-		health_threshold = 0.75,
+		health_threshold = 0.75
 	},
 	{
 		health_step = 4,
-		health_threshold = 0.5,
-	},
+		health_threshold = 0.5
+	}
 }
 
 local function _flamer_explode(unit, template_context)
@@ -424,10 +424,10 @@ local function _play_flinch_anim(data, context)
 end
 
 templates.flamer_backpack_counter = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
+		[proc_events.on_minion_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		template_data.blackboard = BLACKBOARDS[template_context.unit]
@@ -473,12 +473,12 @@ templates.flamer_backpack_counter = {
 				buff_extension:_update_stat_buffs_and_keywords(t)
 			end
 		end
-	end,
+	end
 }
 templates.renegade_flamer_backpack_damaged = {
-	class_name = "buff",
-	max_stacks = 4,
 	predicted = false,
+	max_stacks = 4,
+	class_name = "buff",
 	start_func = function (template_data, template_context)
 		template_data.is_triggered = false
 		template_data.fuse_timer = nil
@@ -506,6 +506,13 @@ templates.renegade_flamer_backpack_damaged = {
 				_flamer_explode(unit, template_context)
 			end
 
+			local blackboard = template_data.blackboard
+			local disable_component = blackboard and blackboard.disable
+
+			if disable_component and disable_component.is_disabled then
+				return
+			end
+
 			if t >= template_data.duration then
 				template_data.duration = _play_flinch_anim(template_data, template_context)
 				template_data.duration = template_data.duration + t
@@ -516,32 +523,32 @@ templates.renegade_flamer_backpack_damaged = {
 		stack_node_effects = {
 			[2] = RENEAGDE_FLAMER_VFX_STAGES.first_stage,
 			[3] = RENEAGDE_FLAMER_VFX_STAGES.second_stage,
-			[4] = RENEAGDE_FLAMER_VFX_STAGES.third_stage,
+			[4] = RENEAGDE_FLAMER_VFX_STAGES.third_stage
 		},
 		node_effects = {
 			{
 				node_name = "ap_3h",
 				sfx = {
-					looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse",
 					looping_wwise_stop_event = "wwise/events/weapon/stop_flamer_explosion_fuse",
-				},
+					looping_wwise_start_event = "wwise/events/weapon/play_flamer_explosion_fuse"
+				}
 			},
 			{
 				node_name = "ap_3h",
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/renegade_flamer/renegade_flamer_fuse_loop",
-					stop_type = "stop",
-				},
-			},
-		},
-	},
+					stop_type = "stop"
+				}
+			}
+		}
+	}
 }
 templates.cultist_flamer_backpack_damaged = table.clone(templates.renegade_flamer_backpack_damaged)
 templates.cultist_flamer_backpack_damaged.minion_effects.stack_node_effects = {
 	[2] = CULTIST_FLAMER_VFX_STAGES.first_stage,
 	[3] = CULTIST_FLAMER_VFX_STAGES.second_stage,
-	[4] = CULTIST_FLAMER_VFX_STAGES.third_stage,
+	[4] = CULTIST_FLAMER_VFX_STAGES.third_stage
 }
 templates.cultist_flamer_backpack_damaged.minion_effects.node_effects[2].vfx.particle_effect = "content/fx/particles/enemies/cultist_flamer/cultist_flamer_fuse_loop"
 

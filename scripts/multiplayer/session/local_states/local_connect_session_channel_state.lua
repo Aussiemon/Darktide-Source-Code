@@ -19,7 +19,7 @@ LocalConnectSessionChannelState.update = function (self, dt)
 				Log.info("LocalConnectSessionChannelState", "Denied a channel to %s after several attempts", shared_state.peer_id)
 
 				return "denied", {
-					engine_reason = reason,
+					engine_reason = reason
 				}
 			end
 

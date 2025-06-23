@@ -128,7 +128,7 @@ SocialPSN.fetch_blocked_list = function (self)
 		self._blocked_promise:resolve(blocked_list)
 	end):catch(function (error)
 		self._blocked_promise:reject({
-			error,
+			error
 		})
 	end)
 

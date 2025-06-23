@@ -13,8 +13,8 @@ local UIManagerTestify = {
 	end,
 	open_view = function (ui_manager, view)
 		local context = view.dummy_data or {
-			can_exit = true,
 			debug_preview = true,
+			can_exit = true
 		}
 
 		ui_manager:open_view(view.view_name, nil, nil, nil, nil, context)
@@ -28,7 +28,7 @@ local UIManagerTestify = {
 		if ui_manager:view_active(view_name) then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return UIManagerTestify

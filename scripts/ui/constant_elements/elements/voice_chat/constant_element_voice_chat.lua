@@ -63,7 +63,7 @@ local widgets_names = {
 	"player_1",
 	"player_2",
 	"player_3",
-	"player_4",
+	"player_4"
 }
 
 ConstantElementVoiceChat._update_players_speaking = function (self, dt, t, ui_renderer)

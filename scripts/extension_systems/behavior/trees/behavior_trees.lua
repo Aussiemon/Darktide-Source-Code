@@ -57,6 +57,8 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/r
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_sniper_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_twin_captain_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_twin_captain_two_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/companion/companion_dog_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/companion/companion_dog_hub_behavior_tree")
 
 local function _setup_generated_behavior_trees()
 	for bt_name, bt_node in pairs(behavior_trees) do

@@ -5,11 +5,11 @@ local LoadingStateData = class("LoadingStateData")
 LoadingStateData.WAIT_REASON = table.index_lookup_table("read_disk", "backend", "store", "other_player", "dedicated_server", "platform")
 
 local REASON_LOOKUP = {
-	backend = "loc_wait_reason_backend",
-	dedicated_server = "loc_wait_reason_dedicated_server",
-	other_player = "loc_wait_reason_other_player",
-	read_disk = "loc_wait_reason_read_from_disk",
 	store = "loc_wait_reason_store",
+	read_disk = "loc_wait_reason_read_from_disk",
+	other_player = "loc_wait_reason_other_player",
+	dedicated_server = "loc_wait_reason_dedicated_server",
+	backend = "loc_wait_reason_backend"
 }
 
 if IS_GDK then
@@ -89,7 +89,7 @@ end
 
 LoadingStateData.destroy = function (self)
 	Managers.event:unregister(self, "event_start_waiting")
-	Managers.event:unregister(self, "event_set_loading_state")
+	Managers.event:unregister(self, "event_set_waiting_state")
 	Managers.event:unregister(self, "event_stop_waiting")
 end
 

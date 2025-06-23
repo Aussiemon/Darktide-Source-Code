@@ -10,11 +10,11 @@ local BtCombatIdleAction = class("BtCombatIdleAction", "BtNode")
 
 BtCombatIdleAction.TIME_TO_FIRST_EVALUATE = {
 	0.3,
-	0.5,
+	0.5
 }
 BtCombatIdleAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.2,
-	0.25,
+	0.25
 }
 
 BtCombatIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

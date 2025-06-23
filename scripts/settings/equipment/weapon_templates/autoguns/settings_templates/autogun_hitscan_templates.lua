@@ -11,27 +11,27 @@ hitscan_templates.default_autogun_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_autogun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_autogun_assault
+		}
+	}
 }
 hitscan_templates.autogun_p1_m2_bullet = {
 	power_level = 385,
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p1_m2,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p1_m2
+		}
+	}
 }
 hitscan_templates.autogun_p1_m1_bullet = {
 	power_level = 700,
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_autogun_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_autogun_assault
+		}
+	}
 }
 overrides.snp_autogun_bullet = {
 	parent_template_name = "default_autogun_bullet",
@@ -40,9 +40,9 @@ overrides.snp_autogun_bullet = {
 			"damage",
 			"impact",
 			"damage_profile",
-			DamageProfileTemplates.default_autogun_snp,
-		},
-	},
+			DamageProfileTemplates.default_autogun_snp
+		}
+	}
 }
 overrides.killshot_autogun_bullet = {
 	parent_template_name = "default_autogun_bullet",
@@ -51,9 +51,9 @@ overrides.killshot_autogun_bullet = {
 			"damage",
 			"impact",
 			"damage_profile",
-			DamageProfileTemplates.default_autogun_killshot,
-		},
-	},
+			DamageProfileTemplates.default_autogun_killshot
+		}
+	}
 }
 overrides.burst_autogun_bullet = {
 	parent_template_name = "default_autogun_bullet",
@@ -62,60 +62,60 @@ overrides.burst_autogun_bullet = {
 			"damage",
 			"impact",
 			"damage_profile",
-			DamageProfileTemplates.autogun_burst_shot,
-		},
-	},
+			DamageProfileTemplates.autogun_burst_shot
+		}
+	}
 }
 hitscan_templates.autogun_p2_m1_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p2_m1,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p2_m1
+		}
+	}
 }
 hitscan_templates.autogun_p2_m2_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p2_m2,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p2_m2
+		}
+	}
 }
 hitscan_templates.autogun_p2_m3_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p2_m3,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p2_m3
+		}
+	}
 }
 hitscan_templates.autogun_p3_m1_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p3_m1,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p3_m1
+		}
+	}
 }
 hitscan_templates.autogun_p3_m2_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p3_m2,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p3_m2
+		}
+	}
 }
 hitscan_templates.autogun_p3_m3_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.autogun_p3_m3,
-		},
-	},
+			damage_profile = DamageProfileTemplates.autogun_p3_m3
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

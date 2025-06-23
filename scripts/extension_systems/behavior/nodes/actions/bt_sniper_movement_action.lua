@@ -10,11 +10,11 @@ local BtSniperMovementAction = class("BtSniperMovementAction", "BtNode")
 
 BtSniperMovementAction.TIME_TO_FIRST_EVALUATE = {
 	2,
-	2.5,
+	2.5
 }
 BtSniperMovementAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	2,
+	2
 }
 
 BtSniperMovementAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -51,7 +51,7 @@ BtSniperMovementAction.enter = function (self, unit, breed, blackboard, scratchp
 		0,
 		0,
 		0,
-		0,
+		0
 	}
 
 	self:_set_destinations(scratchpad, action_data)
@@ -78,10 +78,10 @@ end
 
 local DESTINATION_TYPES = {
 	combat_vector = 3,
+	main_path_ahead = 1,
 	cover = 4,
 	done = 0,
-	main_path_ahead = 1,
-	main_path_behind = 2,
+	main_path_behind = 2
 }
 
 BtSniperMovementAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

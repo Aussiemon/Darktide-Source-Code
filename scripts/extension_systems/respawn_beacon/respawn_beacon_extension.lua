@@ -34,7 +34,7 @@ RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore
 
 	for i = 1, num_valid_spawn_positions do
 		self._valid_spawn_positions[i] = {
-			position = Vector3Box(valid_spawn_positions[i]),
+			position = Vector3Box(valid_spawn_positions[i])
 		}
 	end
 end
@@ -190,7 +190,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 	local settings = Managers.state.difficulty:get_table_entry_by_challenge(RespawnBeaconGuardSettings)
 	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
 	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, spawn_position)
-	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
 	local end_index = start_index + 1
 	local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(spawn_position, start_index, end_index)
 	local travel_distance_threshold = settings.travel_distance_threshold

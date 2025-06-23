@@ -5,14 +5,14 @@ local PowerWeaponOverheatEffects = class("PowerWeaponOverheatEffects")
 local PARTICLE_STAGE_LOOP_FX = "weapon_overload_loop"
 local FX_SOURCE_NAME = "_special_active"
 local THRESHOLDS = {
-	critical = 0.9,
 	high = 0.7,
-	low = 0.3,
+	critical = 0.9,
+	low = 0.3
 }
 local STAGE_RANKING = {
-	critical = 3,
 	high = 2,
-	low = 1,
+	critical = 3,
+	low = 1
 }
 local _external_properties = {}
 

@@ -23,7 +23,7 @@ BlendCamera.init = function (self, root_node)
 			local match = blend_definition.match_value
 
 			return 1 - math.min(math.abs(blend - match), 1)
-		end,
+		end
 	}
 end
 
@@ -42,7 +42,7 @@ BlendCamera.add_child_node = function (self, node)
 	self._blend_setups[child_index] = {
 		node = node,
 		weight_function = self._blend_functions[def.blend_function],
-		definition = def,
+		definition = def
 	}
 end
 

@@ -17,7 +17,7 @@ local SFX_SOURCE = "head"
 local STINGER_ENTER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
 local STINGER_PROPERTIES = {
-	stinger_type = "pounced",
+	stinger_type = "pounced"
 }
 local VCE_ALIAS = "scream_long_vce"
 

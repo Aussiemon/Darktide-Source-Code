@@ -15,7 +15,7 @@ local INTERACTIONS = {
 		local event_name = "heal_start"
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
-	end,
+	end
 }
 
 Vo.health_critical_event = function (unit)
@@ -1272,7 +1272,7 @@ Vo.substring_exists_in_backend_vo = function (backend_group_id, substring)
 	return exists
 end
 
-Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo)
+Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo, specific_lines)
 	local vo_unit, dialogue_extension
 	local unit_to_extension_map = dialogue_system:unit_to_extension_map()
 
@@ -1302,7 +1302,7 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 				dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
 			end
 		else
-			dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed)
+			dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed, specific_lines)
 		end
 
 		return vo_unit
@@ -1422,6 +1422,10 @@ Vo.set_ignore_server_play_requests = function (value)
 end
 
 Vo.set_unit_vo_memory = function (unit, memory_type, memory_id, value)
+	if value == "timeset" then
+		value = Managers.time:time("gameplay") + 900
+	end
+
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 	if dialogue_extension then

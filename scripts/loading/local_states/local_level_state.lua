@@ -44,8 +44,8 @@ end
 
 LocalLevelState._spawn_level = function (self, level_name)
 	local world_parameters = {
-		layer = 1,
 		timer_name = "gameplay",
+		layer = 1
 	}
 	local shared_state = self._shared_state
 	local object_sets_to_hide = ScriptTheme.object_sets_to_hide(shared_state.themes)

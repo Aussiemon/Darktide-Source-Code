@@ -63,6 +63,22 @@ AmmoDisplay.set_ammo = function (self, unit, ammo, max_ammo, critical_threshold)
 	end
 end
 
+AmmoDisplay.set_charges = function (self, unit, charge_level, max_charges, charges_active)
+	if max_charges == 0 then
+		max_charges = 1
+	end
+
+	if max_charges ~= self._max_charges then
+		self._max_charges = max_charges
+	end
+
+	if charge_level ~= self._charge_level then
+		self._charge_level = charge_level
+
+		self:_update_material_values(unit, charge_level, false, charges_active and Vector3(0, 0.5, 0) or Vector3(0.5, 0, 0))
+	end
+end
+
 AmmoDisplay._update_material_values = function (self, unit, charge_value, is_critical, color)
 	local material_slot_name = self._material_slot_name
 	local num_steps = self._ammo_display_steps
@@ -75,40 +91,40 @@ end
 
 AmmoDisplay.component_data = {
 	ammo_display_steps = {
-		decimals = 0,
-		step = 1,
-		ui_name = "Ammo Steps",
 		ui_type = "slider",
+		decimals = 0,
 		value = 6,
+		ui_name = "Ammo Steps",
+		step = 1
 	},
 	max_ammo = {
-		decimals = 0,
-		step = 1,
-		ui_name = "Max Ammo",
 		ui_type = "slider",
+		decimals = 0,
 		value = 30,
+		ui_name = "Max Ammo",
+		step = 1
 	},
 	ammo = {
-		decimals = 0,
-		max = 30,
-		step = 1,
-		ui_name = "Ammo",
 		ui_type = "slider",
+		step = 1,
+		decimals = 0,
 		value = 30,
+		ui_name = "Ammo",
+		max = 30
 	},
 	critical_threshold = {
-		decimals = 0,
-		max = 30,
-		step = 1,
-		ui_name = "Critical Threshold",
 		ui_type = "slider",
+		step = 1,
+		decimals = 0,
 		value = 3,
+		ui_name = "Critical Threshold",
+		max = 30
 	},
 	material_slot_name = {
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "display_01",
-	},
+		ui_name = "Material Slot Name"
+	}
 }
 
 return AmmoDisplay

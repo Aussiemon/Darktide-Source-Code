@@ -4,6 +4,7 @@ require("scripts/ui/views/vendor_view_base/vendor_view_base")
 
 local Definitions = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CosmeticsVendorViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
@@ -39,6 +40,12 @@ end
 CosmeticsVendorView.on_enter = function (self)
 	CosmeticsVendorView.super.on_enter(self)
 
+	self._options_voice_fx = Application.user_setting("sound_settings", "voice_fx_setting") ~= false
+
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "on")
+	end
+
 	self._render_settings.alpha_multiplier = 0
 
 	local context = self._context
@@ -50,18 +57,18 @@ CosmeticsVendorView.on_enter = function (self)
 
 	self._item_grid:update_dividers("content/ui/materials/frames/cosmetics_vendor/details_upper_cosmetic", {
 		654,
-		80,
+		80
 	}, {
 		0,
 		-55,
-		20,
+		20
 	}, "content/ui/materials/frames/cosmetics_vendor/details_lower_cosmetic", {
 		470,
-		50,
+		50
 	}, {
 		0,
 		13,
-		20,
+		20
 	})
 	self:_setup_background_world()
 	self._item_grid:set_sort_button_offset(0, 40)
@@ -80,10 +87,12 @@ CosmeticsVendorView._setup_tabs = function (self)
 	end
 
 	for archetype_name, archetype in pairs(Archetypes) do
-		cosmetic_tabs[#cosmetic_tabs + 1] = {
-			display_name = archetype.archetype_name,
-			ui_selection_order = archetype.ui_selection_order,
-		}
+		if table.contains(ArchetypeSettings.archetype_cosmetics_whitelist, archetype_name) then
+			cosmetic_tabs[#cosmetic_tabs + 1] = {
+				display_name = archetype.archetype_name,
+				ui_selection_order = archetype.ui_selection_order
+			}
+		end
 	end
 
 	table.sort(cosmetic_tabs, function (a, b)
@@ -304,36 +313,36 @@ CosmeticsVendorView._setup_set_item_parts_representation = function (self, items
 	local item_type_material_lookup = UISettings.item_type_material_lookup
 	local widget_definition = UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			style_id = "icon",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
 			style = {
-				color = Color.text_default(255, true),
-			},
+				color = Color.text_default(255, true)
+			}
 		},
 		{
-			pass_type = "text",
 			style_id = "text",
-			value = "",
 			value_id = "text",
+			pass_type = "text",
+			value = "",
 			style = {
-				font_size = 28,
-				font_type = "proxima_nova_bold",
-				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
-				text_vertical_alignment = "center",
 				vertical_alignment = "center",
+				font_size = 28,
+				horizontal_alignment = "center",
+				font_type = "proxima_nova_bold",
+				text_vertical_alignment = "center",
+				text_horizontal_alignment = "center",
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					20,
 					20,
-					1,
-				},
+					1
+				}
 			},
 			visibility_function = function (content)
 				return content.owned
-			end,
-		},
+			end
+		}
 	}, "set_item_parts_representation")
 	local set_item_parts_representation_widgets = {}
 
@@ -388,7 +397,7 @@ CosmeticsVendorView._setup_item_texts = function (self, item)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 	local item_size = {
 		700,
-		60,
+		60
 	}
 	local ui_renderer = self._ui_default_renderer
 	local scenegraph_id = "item_name_pivot"
@@ -396,10 +405,10 @@ CosmeticsVendorView._setup_item_texts = function (self, item)
 	local ContentBlueprints = generate_blueprints_function(item_size)
 	local template = ContentBlueprints[widget_type]
 	local config = {
-		horizontal_alignment = "right",
 		vertical_alignment = "bottom",
+		horizontal_alignment = "right",
 		size = item_size,
-		item = item,
+		item = item
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
@@ -453,7 +462,7 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0,
+			0
 		})
 		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
 
@@ -464,7 +473,7 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
 		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
 			max_width,
-			math.huge,
+			math.huge
 		}, text_options)
 
 		y_offset = y_offset + text_height
@@ -520,6 +529,10 @@ end
 CosmeticsVendorView.on_exit = function (self)
 	self:_destroy_side_panel()
 
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "off")
+	end
+
 	if self._on_enter_anim_id then
 		self:_stop_animation(self._on_enter_anim_id)
 
@@ -571,7 +584,7 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 			loadout = loadout,
 			archetype = archetype,
 			gender = gender_name,
-			breed = breed_name,
+			breed = breed_name
 		}
 
 		local slot_items_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name][gender_name].default
@@ -646,7 +659,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	local ignore_focus_on_offer = true
 	local promises = {
 		self:_update_wallets(),
-		self:_fetch_store_items(ignore_focus_on_offer, optional_context),
+		self:_fetch_store_items(ignore_focus_on_offer, optional_context)
 	}
 
 	if not self._player_available_archetypes then
@@ -674,7 +687,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 
 	local context = self._context
 	local optional_camera_breed_name = context and context.optional_camera_breed_name
-	local breed_name = active_archetype and active_archetype.breed or presentation_profile.breed
+	local breed_name = active_archetype.breed
 	local default_camera_settings = self._breeds_default_camera_settings and self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
 
 	if default_camera_settings then
@@ -837,10 +850,10 @@ CosmeticsVendorView._purchase_item = function (self, offer)
 
 		self:present_items({
 			archetype_name = self._active_archetype_name,
-			option_index = self._selected_option_button_index,
+			option_index = self._selected_option_button_index
 		})
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_notification_acqusition_failed"),
+			text = Localize("loc_notification_acqusition_failed")
 		}, nil, UISoundEvents.notification_join_party_failed)
 	end)
 
@@ -1075,18 +1088,18 @@ end
 CosmeticsVendorView._setup_option_buttons = function (self, options)
 	local button_size = {
 		80,
-		80,
+		80
 	}
 	local button_spacing = 10
 	local settings = {
-		grow_vertically = true,
 		vertical_alignment = "top",
+		grow_vertically = true,
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			30,
-		},
+			30
+		}
 	}
 	local options_tab_bar = self:_add_element(ViewElementTabMenu, "options_tab_bar", 10, settings)
 	local item_category_sort_button = table.clone(ButtonPassTemplates.item_category_sort_button)
@@ -1096,7 +1109,7 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 		local pressed_callback = callback(self, "on_option_button_pressed", i, option)
 
 		item_category_sort_button[1].style = {
-			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 		}
 
 		local display_name = option.display_name
@@ -1211,7 +1224,7 @@ CosmeticsVendorView._setup_background_world = function (self)
 				instance._breeds_default_camera_settings[breed_name] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
-					original_rotation_boxed = QuaternionBox(camera_rotation),
+					original_rotation_boxed = QuaternionBox(camera_rotation)
 				}
 
 				instance:_unregister_event(default_camera_event_id)

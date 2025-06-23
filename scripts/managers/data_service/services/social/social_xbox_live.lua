@@ -47,7 +47,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 	if error then
 		XSocial.close_relationships_handle(page_handle)
 		promise:reject({
-			error,
+			error
 		})
 
 		return
@@ -72,7 +72,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 
 	if error then
 		promise:reject({
-			error,
+			error
 		})
 
 		return
@@ -84,7 +84,7 @@ local function _process_relationships_page(user_id, page_handle, promise, xuids)
 		if error then
 			XSocial.close_relationships_handle(next_page_handle)
 			promise:reject({
-				error,
+				error
 			})
 		else
 			_process_relationships_page(user_id, next_page_handle, promise, xuids)
@@ -151,7 +151,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 		self._blocked_promise:resolve(profiles)
 	end):catch(function (error)
 		self._blocked_promise:reject({
-			error,
+			error
 		})
 	end)
 
@@ -197,7 +197,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 	presence_promise:next(function (presence)
 		if not presence then
 			return Promise.rejected({
-				"Missing presence",
+				"Missing presence"
 			})
 		end
 
@@ -213,7 +213,7 @@ SocialXboxLive._update_recent_player = function (self, account_id)
 
 		if not xuid then
 			return Promise.rejected({
-				"Missing xuid",
+				"Missing xuid"
 			})
 		end
 

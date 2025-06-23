@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view.lua
 
 local CraftingViewDefinitions = require("scripts/ui/views/crafting_view/crafting_view_definitions")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 
@@ -30,7 +30,7 @@ CraftingView.show_wallets = function (self, show)
 		self._wallet_type = {
 			"diamantine",
 			"plasteel",
-			"credits",
+			"credits"
 		}
 		wallet_widget.content.visible = true
 		no_wallet_widget.content.visible = false
@@ -40,15 +40,15 @@ CraftingView.show_wallets = function (self, show)
 end
 
 local story_level_order = {
-	camera_recipe_enter_anim = 1,
 	camera_weapon_selection_enter_anim = 2,
+	camera_recipe_enter_anim = 1
 }
 
 CraftingView.go_to_crafting_view = function (self, view_name, item)
 	local tab_data = CraftingViewDefinitions.crafting_tab_params[view_name]
 	local context = {
 		item = item,
-		ui_renderer = self._ui_renderer,
+		ui_renderer = self._ui_renderer
 	}
 
 	self:_setup_tab_bar(tab_data, context)
@@ -110,7 +110,7 @@ CraftingView.on_enter = function (self)
 
 	achievements_manager:unlock_achievement(player, achievement_name)
 	self:play_vo_events({
-		"hub_idle_crafting",
+		"hub_idle_crafting"
 	}, "tech_priest_a", nil, 0.8)
 
 	self._next_tab_index = nil
@@ -136,7 +136,9 @@ CraftingView.start_present_item = function (self, item)
 	end
 
 	local item_base_unit_name = item.base_unit
-	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, item_base_unit_name)
+	local ui_alignment_tag = item.ui_alignment_tag
+	local alignment_key_value = ui_alignment_tag or item_base_unit_name
+	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, alignment_key_value)
 	local default_level_link_unit = self:_get_unit_by_value_key(alignment_key, "content/weapons/player/melee/combat_knife/wpn_combat_knife_chained_rig")
 	local spawn_point_unit = item_level_link_unit or default_level_link_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
@@ -144,7 +146,7 @@ CraftingView.start_present_item = function (self, item)
 	local spawn_scale = Unit.world_scale(spawn_point_unit, 1)
 	local force_highest_mip = true
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, nil, force_highest_mip)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, nil, force_highest_mip)
 
 	self._ui_weapon_spawner = ui_weapon_spawner
 end
@@ -278,7 +280,7 @@ CraftingView._switch_tab_view = function (self, index)
 
 		if view then
 			local context = {
-				parent = self,
+				parent = self
 			}
 			local additional_context = tab_params.context
 			local context_function = tab_params.context_function
@@ -406,7 +408,7 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 		end
 
 		self:play_vo_events({
-			"crafting_complete",
+			"crafting_complete"
 		}, "tech_priest_a", nil, 1.4)
 
 		local input_item = ingredients.item
@@ -432,10 +434,10 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 
 		Log.error("CraftingView", "Craft operation %q failed! Error:\n%s", recipe_name, message)
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_crafting_failure"),
+			text = Localize("loc_crafting_failure")
 		}, callback, nil, done_callback)
 		error({
-			message = message,
+			message = message
 		})
 	end)
 end
@@ -457,7 +459,7 @@ CraftingView._loadout_refresh = function (self, item)
 		local equipped_item = loadout[slot_name]
 
 		if equipped_item and equipped_item.gear_id == gear_id then
-			ItemUtils.refresh_equipped_items()
+			Items.refresh_equipped_items()
 
 			break
 		end

@@ -22,10 +22,10 @@ CraftingMechanicusReplaceTraitView.init = function (self, settings, context)
 		item = self._item,
 		trait_ids = {},
 		trait_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		trait_items = {},
+		trait_items = {}
 	}
 end
 
@@ -223,7 +223,7 @@ CraftingMechanicusReplaceTraitView.cb_on_trait_selected = function (self, widget
 		self._perform_trait_selection_data = {
 			widget = widget,
 			config = config,
-			remove_inventory_focus = remove_inventory_focus,
+			remove_inventory_focus = remove_inventory_focus
 		}
 	end
 end
@@ -351,7 +351,7 @@ CraftingMechanicusReplaceTraitView.update = function (self, dt, t, input_service
 			local preview_trait = {
 				id = marked_trait_item and marked_trait_item.name,
 				value = marked_trait_item and marked_trait_item.value,
-				rarity = marked_trait_item and marked_trait_item.rarity,
+				rarity = marked_trait_item and marked_trait_item.rarity
 			}
 
 			self._weapon_stats:preview_trait(self._ingredients.existing_trait_index, preview_trait)

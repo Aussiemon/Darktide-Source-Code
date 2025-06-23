@@ -7,21 +7,21 @@ local combat_ranges = {
 		far = {
 			{
 				distance = 10,
-				distance_operator = "lesser",
 				require_line_of_sight = true,
 				sticky_time = 2,
-				switch_combat_range = "close",
-			},
+				distance_operator = "lesser",
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
-				distance = 12,
-				distance_operator = "greater",
-				sticky_time = 0,
 				switch_combat_range = "far",
-			},
-		},
-	},
+				distance_operator = "greater",
+				distance = 12,
+				sticky_time = 0
+			}
+		}
+	}
 }
 
 return combat_ranges

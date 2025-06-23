@@ -23,10 +23,10 @@ CraftingMechanicusReplacePerkView.init = function (self, settings, context)
 		item = self._item,
 		perk_ids = {},
 		perk_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		perk_items = {},
+		perk_items = {}
 	}
 end
 
@@ -218,7 +218,7 @@ CraftingMechanicusReplacePerkView.cb_on_perk_selected = function (self, widget, 
 		self._perform_perk_selection_data = {
 			widget = widget,
 			config = config,
-			remove_perk_items_focus = remove_perks_focus,
+			remove_perk_items_focus = remove_perks_focus
 		}
 	end
 end
@@ -351,7 +351,7 @@ CraftingMechanicusReplacePerkView.update = function (self, dt, t, input_service)
 			local preview_perk = {
 				id = marked_perk_item and marked_perk_item.name,
 				value = marked_perk_item and marked_perk_item.value,
-				rarity = marked_perk_item and marked_perk_item.rarity,
+				rarity = marked_perk_item and marked_perk_item.rarity
 			}
 
 			self._weapon_stats:preview_perk(self._ingredients.existing_perk_index, preview_perk)

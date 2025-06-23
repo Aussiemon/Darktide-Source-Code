@@ -13,12 +13,12 @@ PathTypeOpen.init = function (self, world, nav_world, num_sides, is_server, use_
 
 	for i = 1, num_sides do
 		side_progress_on_path[i] = {
-			behind_travel_changed_t = 0,
-			forward_travel_changed_t = 0,
-			furthest_travel_distance = 0,
 			furthest_worst_travel_distance = 0,
+			forward_travel_changed_t = 0,
+			behind_travel_changed_t = 0,
+			furthest_travel_distance = 0,
 			ahead_path_position = Vector3Box(invalid_vector),
-			behind_path_position = Vector3Box(invalid_vector),
+			behind_path_position = Vector3Box(invalid_vector)
 		}
 	end
 

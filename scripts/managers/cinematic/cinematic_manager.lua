@@ -11,15 +11,15 @@ local CinematicManager = class("CinematicManager")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
 	"rpc_cinematic_story_sync",
-	"rpc_cinematic_load_levels",
+	"rpc_cinematic_load_levels"
 }
 local SERVER_RPCS = {
-	"rpc_cinematic_loaded",
+	"rpc_cinematic_loaded"
 }
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 
 CinematicManager.init = function (self, world, is_server, network_event_delegate)
@@ -292,9 +292,9 @@ CinematicManager.update = function (self, dt, t)
 
 									self:_play_next_in_queue()
 									Vo.stop_all_currently_playing_vo()
-								end),
-							},
-						},
+								end)
+							}
+						}
 					}
 
 					Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -345,6 +345,18 @@ end
 
 CinematicManager.has_queued_stories = function (self)
 	return self._queued_stories[1] ~= nil
+end
+
+CinematicManager.last_story_time_left = function (self)
+	local story = self._active_story
+
+	if story and not self:has_queued_stories() then
+		local story_id = story.story_id
+		local story_time = self._storyteller:time(story_id)
+		local length = self._storyteller:length(story_id)
+
+		return length - story_time
+	end
 end
 
 CinematicManager.active_camera = function (self)
@@ -638,7 +650,7 @@ CinematicManager.load_levels = function (self, cinematic_name, level_names, on_l
 	local loader_context = {
 		cinematic_name = cinematic_name,
 		level_names = level_names,
-		callback = on_levels_loaded,
+		callback = on_levels_loaded
 	}
 
 	self._cinematic_level_loader:start_loading(loader_context)

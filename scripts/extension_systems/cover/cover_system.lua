@@ -7,7 +7,7 @@ local CoverSystem = class("CoverSystem", "ExtensionSystemBase")
 local BROADPHASE_CELL_RADIUS = 50
 local MAX_EXPECTED_ENTITIES = 256
 local BROADPHASE_CATEGORIES = {
-	"cover",
+	"cover"
 }
 
 CoverSystem.init = function (self, extension_system_creation_context, ...)

@@ -290,11 +290,11 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 end
 
 local DISALLOWED_CHARACTER_STATES = {
-	catapulted = true,
-	consumed = true,
-	grabbed = true,
 	mutant_charged = true,
+	grabbed = true,
+	catapulted = true,
 	pounced = true,
+	consumed = true
 }
 
 BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)

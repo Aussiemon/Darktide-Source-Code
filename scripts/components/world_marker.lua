@@ -48,9 +48,9 @@ end
 
 WorldMarker.component_data = {
 	marker_type = {
-		ui_name = "Marker Type",
-		ui_type = "combo_box",
 		value = "interaction",
+		ui_type = "combo_box",
+		ui_name = "Marker Type",
 		options_keys = {
 			"beacon",
 			"chat_bubble",
@@ -70,6 +70,7 @@ WorldMarker.component_data = {
 			"training_grounds",
 			"unit_threat",
 			"unit_threat_veteran",
+			"unit_threat_adamant"
 		},
 		options_values = {
 			"beacon",
@@ -90,8 +91,9 @@ WorldMarker.component_data = {
 			"training_grounds",
 			"unit_threat",
 			"unit_threat_veteran",
-		},
-	},
+			"unit_threat_adamant"
+		}
+	}
 }
 
 return WorldMarker

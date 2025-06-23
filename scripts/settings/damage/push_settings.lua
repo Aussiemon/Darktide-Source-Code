@@ -5,233 +5,237 @@ local push_settings = {}
 push_settings.default_max_push_speed = 4
 push_settings.push_templates = {
 	block_broken = {
-		max_speed_override = 3,
 		speed = 3.5,
+		max_speed_override = 3
 	},
 	toughness = {
-		speed = 1.5,
+		speed = 1.5
 	},
 	very_light = {
-		speed = 1.2,
+		speed = 1.2
 	},
 	gunner_very_light = {
-		speed = 0.6,
+		speed = 0.6
 	},
 	gunner_light = {
-		speed = 0.8,
+		speed = 0.8
 	},
 	ogryn_very_light = {
-		speed = 0.25,
+		speed = 0.25
 	},
 	light = {
-		max_speed_override = 2,
 		speed = 2.5,
+		max_speed_override = 2
 	},
 	medium = {
-		max_speed_override = 3,
 		speed = 4,
+		max_speed_override = 3
 	},
 	heavy = {
-		max_speed_override = 3,
 		speed = 5,
+		max_speed_override = 3
 	},
 	shocktrooper_shotgun = {
-		max_speed_override = 4,
 		speed = 7,
+		max_speed_override = 4
 	},
 	renegade_captain_shotgun = {
-		max_speed_override = 4,
 		speed = 7,
+		max_speed_override = 4
 	},
 	sniper_bullet = {
-		max_speed_override = 8,
 		speed = 12,
+		max_speed_override = 8
 	},
 	grenadier_explosion = {
-		max_speed_override = 4,
 		speed = 4,
+		max_speed_override = 4
 	},
 	melee_executor_default = {
-		ignore_stun_immunity = true,
+		speed = 6,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 6,
+		ignore_stun_immunity = true
 	},
 	ogryn_executor_push = {
-		ignore_stun_immunity = true,
+		speed = 8,
 		max_speed_override = 8,
 		push_through_block = true,
-		speed = 8,
+		ignore_stun_immunity = true
 	},
 	shield_push = {
-		ignore_stun_immunity = true,
-		max_speed_override = 8,
 		speed = 8,
+		max_speed_override = 8,
+		ignore_stun_immunity = true
 	},
 	chaos_hound_push = {
-		max_speed_override = 4,
 		speed = 4,
+		max_speed_override = 4
+	},
+	cyber_mastiff_push = {
+		speed = 2,
+		max_speed_override = 2
 	},
 	chaos_ogryn_gunner_bullet = {
-		max_speed_override = 2,
 		speed = 2,
+		max_speed_override = 2
 	},
 	chaos_ogryn_gunner_bullet_ogryn = {
-		max_speed_override = 2,
 		speed = 0.5,
+		max_speed_override = 2
 	},
 	renegade_captain = {
-		ignore_stun_immunity = true,
+		speed = 10,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 10,
+		ignore_stun_immunity = true
 	},
 	renegade_captain_light = {
-		ignore_stun_immunity = true,
+		speed = 6,
 		max_speed_override = 4,
 		push_through_block = true,
-		speed = 6,
+		ignore_stun_immunity = true
 	},
 	renegade_captain_heavy = {
-		abort_stickyness = true,
-		ignore_stun_immunity = true,
-		max_speed_override = 6,
 		push_through_block = true,
+		max_speed_override = 6,
 		speed = 12,
+		abort_stickyness = true,
+		ignore_stun_immunity = true
 	},
 	daemonhost = {
-		ignore_stun_immunity = true,
+		speed = 8,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 8,
+		ignore_stun_immunity = true
 	},
 	daemonhost_offtarget = {
-		max_speed_override = 10,
-		push_through_block = true,
 		speed = 14,
+		max_speed_override = 10,
+		push_through_block = true
 	},
 	cultist_flamer_push = {
-		max_speed_override = 4,
 		speed = 5.5,
+		max_speed_override = 4
 	},
 	renegade_flamer_push = {
-		max_speed_override = 4,
 		speed = 5.5,
+		max_speed_override = 4
 	},
 	shocktrooper_frag = {
-		max_speed_override = 6,
-		push_through_block = true,
 		speed = 12,
+		max_speed_override = 6,
+		push_through_block = true
 	},
 	renegade_grenadier_frag = {
-		max_speed_override = 6,
-		push_through_block = true,
 		speed = 8,
+		max_speed_override = 6,
+		push_through_block = true
 	},
 	chaos_hound_pounced_push = {
-		max_speed_override = 8,
 		speed = 10,
+		max_speed_override = 8
 	},
 	plague_ogryn_charge = {
-		ignore_stun_immunity = true,
+		speed = 12,
 		max_speed_override = 9,
 		push_through_block = true,
-		speed = 12,
+		ignore_stun_immunity = true
 	},
 	plague_ogryn_light = {
-		ignore_stun_immunity = true,
+		speed = 5.5,
 		max_speed_override = 5,
 		push_through_block = true,
-		speed = 5.5,
+		ignore_stun_immunity = true
 	},
 	plague_ogryn_medium = {
-		ignore_stun_immunity = true,
+		speed = 9,
 		max_speed_override = 9,
 		push_through_block = true,
-		speed = 9,
+		ignore_stun_immunity = true
 	},
 	chaos_spawn_light = {
-		max_speed_override = 5,
-		push_through_block = true,
 		speed = 5.5,
+		max_speed_override = 5,
+		push_through_block = true
 	},
 	chaos_spawn_leap = {
-		max_speed_override = 8,
-		push_through_block = true,
 		speed = 8,
+		max_speed_override = 8,
+		push_through_block = true
 	},
 	ranged_light = {
-		dont_trigger_on_toughness = true,
-		max_speed_override = 2,
 		speed = 1,
+		max_speed_override = 2,
+		dont_trigger_on_toughness = true
 	},
 	ranged_light_auto = {
-		dont_trigger_on_toughness = true,
 		speed = 0.1,
+		dont_trigger_on_toughness = true
 	},
 	ogryn_ranged_light_auto = {
-		dont_trigger_on_toughness = true,
 		speed = 0.05,
+		dont_trigger_on_toughness = true
 	},
 	beast_of_nurgle_move_push = {
-		ignore_stun_immunity = true,
+		speed = 8,
 		max_speed_override = 7,
 		push_through_block = true,
-		speed = 8,
+		ignore_stun_immunity = true
 	},
 	chaos_spawn_tentacle = {
-		max_speed_override = 10,
 		speed = 10,
+		max_speed_override = 10,
 		push_through_block = {
-			max_speed_override = 6,
 			speed = 6,
-		},
+			max_speed_override = 6
+		}
 	},
 	chaos_spawn_combo = {
-		ignore_stun_immunity = true,
+		speed = 7,
 		max_speed_override = 7,
 		push_through_block = true,
-		speed = 7,
+		ignore_stun_immunity = true
 	},
 	chaos_spawn_combo_heavy = {
-		ignore_stun_immunity = true,
+		speed = 9,
 		max_speed_override = 9,
 		push_through_block = true,
-		speed = 9,
+		ignore_stun_immunity = true
 	},
 	ogryn_shovel_special = {
-		max_speed_override = 4,
 		speed = 3,
+		max_speed_override = 4
 	},
 	twin_dash = {
-		ignore_stun_immunity = true,
+		speed = 12,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 12,
+		ignore_stun_immunity = true
 	},
 	twin_dash_light = {
-		ignore_stun_immunity = true,
+		speed = 8,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 8,
+		ignore_stun_immunity = true
 	},
 	twin_grenade = {
-		ignore_stun_immunity = true,
-		max_speed_override = 8,
 		speed = 8,
+		max_speed_override = 8,
+		ignore_stun_immunity = true
 	},
 	renegade_twin_captain_sweep = {
-		ignore_stun_immunity = true,
+		speed = 10,
 		max_speed_override = 6,
 		push_through_block = true,
-		speed = 10,
+		ignore_stun_immunity = true
 	},
 	renegade_twin_captain_combo = {
-		ignore_stun_immunity = true,
+		speed = 6,
 		max_speed_override = 4,
 		push_through_block = true,
-		speed = 6,
-	},
+		ignore_stun_immunity = true
+	}
 }
 
 return settings("PushSettings", push_settings)

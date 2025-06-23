@@ -16,7 +16,7 @@ local group_header_font_style = table.clone(UIFontSettings.header_3)
 group_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 group_header_font_style.text_horizontal_alignment = "center"
 group_header_font_style.text_vertical_alignment = "center"
@@ -27,7 +27,7 @@ local sub_header_font_style = table.clone(UIFontSettings.header_3)
 sub_header_font_style.offset = {
 	0,
 	0,
-	3,
+	3
 }
 sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
@@ -43,11 +43,11 @@ item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
 	10,
 	-55,
-	4,
+	4
 }
 item_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_header_text_style.text_color = Color.terminal_text_header(255, true)
 item_header_text_style.font_size = 24
@@ -61,11 +61,11 @@ aquila_header_text_style.font_size = 36
 aquila_header_text_style.offset = {
 	0,
 	3,
-	4,
+	4
 }
 aquila_header_text_style.size_addition = {
 	0,
-	0,
+	0
 }
 
 local item_header_premium_text_style = table.clone(item_header_text_style)
@@ -82,11 +82,11 @@ item_sub_header_text_style.vertical_alignment = "center"
 item_sub_header_text_style.offset = {
 	10,
 	-10,
-	4,
+	4
 }
 item_sub_header_text_style.size_addition = {
 	-20,
-	0,
+	0
 }
 item_sub_header_text_style.text_color = Color.terminal_text_body(255, true)
 item_sub_header_text_style.font_size = 24
@@ -100,11 +100,11 @@ item_description_text_style.vertical_alignment = "bottom"
 item_description_text_style.offset = {
 	0,
 	-60,
-	5,
+	5
 }
 item_description_text_style.size_addition = {
 	-30,
-	-30,
+	-30
 }
 item_description_text_style.text_color = Color.terminal_text_body(255, true)
 
@@ -117,7 +117,7 @@ item_price_text_style.vertical_alignment = "center"
 item_price_text_style.offset = {
 	-30,
 	-10,
-	4,
+	4
 }
 item_price_text_style.text_color = Color.white(255, true)
 
@@ -127,7 +127,7 @@ aquila_price_text_style.text_horizontal_alignment = "center"
 aquila_price_text_style.offset = {
 	0,
 	-10,
-	4,
+	4
 }
 
 local timer_text_style = table.clone(UIFontSettings.body_small)
@@ -140,12 +140,12 @@ timer_text_style.hover_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 timer_text_style.offset = {
 	30,
 	-15,
-	5,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -194,24 +194,24 @@ local blueprints = {
 	dynamic_spacing = {
 		size = {
 			0,
-			0,
+			0
 		},
 		size_function = function (parent, config)
 			return config.size
-		end,
+		end
 	},
 	group_header = {
 		size = {
 			grid_width,
-			70,
+			70
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				value = "",
+				pass_type = "text",
 				value_id = "text",
-				style = group_header_font_style,
-			},
+				style = group_header_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -235,20 +235,20 @@ local blueprints = {
 			end
 
 			content.text = text
-		end,
+		end
 	},
 	sub_header = {
 		size = {
 			grid_width,
-			20,
+			20
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				value = "",
+				pass_type = "text",
 				value_id = "text",
-				style = sub_header_font_style,
-			},
+				style = sub_header_font_style
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -272,38 +272,38 @@ local blueprints = {
 			end
 
 			content.text = text
-		end,
+		end
 	},
 	button = {
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
 				style_id = "highlight",
 				value = "content/ui/materials/frames/dropshadow_medium",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -315,7 +315,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -330,12 +330,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -345,205 +345,205 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				value = "content/ui/materials/base/ui_default_base",
+				pass_type = "texture",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "center",
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "text",
 				style_id = "discount_price",
-				value = "",
+				pass_type = "text",
 				value_id = "discount_price",
+				value = "",
 				style = item_price_text_style,
 				visibility_function = function (content, style)
 					return not content.element.owned and content.element.discount
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "price_icon",
-				value = "content/ui/materials/base/ui_default_base",
 				value_id = "price_icon",
+				style_id = "price_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/base/ui_default_base",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					size = {
 						40,
-						28,
+						28
 					},
 					offset = {
 						-5,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "price",
-				value = "??? ",
+				pass_type = "text",
 				value_id = "price",
-				style = item_price_text_style,
+				value = "??? ",
+				style = item_price_text_style
 			},
 			{
-				pass_type = "texture",
-				style_id = "title_background",
-				value = "content/ui/materials/masks/gradient_horizontal",
 				value_id = "title_background",
+				style_id = "title_background",
+				pass_type = "texture",
+				value = "content/ui/materials/masks/gradient_horizontal",
 				style = {
-					horizontal_alignment = "top",
-					scale_to_material = true,
 					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "top",
 					color = Color.black(153, true),
 					size = {
 						nil,
-						0,
+						0
 					},
 					offset = {
 						0,
 						20,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
+				value_id = "title",
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
-				value_id = "title",
-				style = item_header_text_style,
+				style = item_header_text_style
 			},
 			{
+				value_id = "sub_title",
 				pass_type = "text",
 				style_id = "sub_title",
 				value = "<Sub Title>",
-				value_id = "sub_title",
-				style = item_sub_header_text_style,
+				style = item_sub_header_text_style
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_top",
-				value = "content/ui/materials/frames/premium_store/offer_card_upper_regular",
 				value_id = "divider_top",
+				style_id = "divider_top",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_upper_regular",
 				style = {
+					vertical_alignment = "top",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_bottom",
-				value = "content/ui/materials/frames/premium_store/offer_card_lower_regular",
 				value_id = "divider_bottom",
+				style_id = "divider_bottom",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_lower_regular",
 				style = {
+					vertical_alignment = "bottom",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "background",
-				value = "content/ui/materials/backgrounds/terminal_basic",
 				value_id = "background",
+				style_id = "background",
+				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/terminal_basic",
 				style = {
-					hdr = false,
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					hdr = false,
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
+						20
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.has_media
-				end,
+				end
 			},
 			{
-				pass_type = "texture_uv",
 				style_id = "texture",
+				pass_type = "texture_uv",
 				value = "content/ui/materials/icons/offer_cards/offer_card_container",
 				value_id = "texture",
 				style = {
+					vertical_alignment = "center",
 					hdr = false,
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
-						shine = 0,
-					},
+						shine = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return not not style.material_values and not not style.material_values.main_texture
@@ -561,150 +561,150 @@ local blueprints = {
 					style.uvs[1][2] = start_uv + current_uv
 					style.uvs[2][1] = end_uv - current_uv
 					style.uvs[2][2] = end_uv - current_uv
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "icon",
-				value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 				value_id = "icon",
+				style_id = "icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					material_values = {
-						use_placeholder_texture = 1,
+						use_placeholder_texture = 1
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						192,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.item
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_1",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_1",
+				style_id = "discount_percent_1",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-35,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_1
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_2",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_2",
+				style_id = "discount_percent_2",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-55,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_2
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_3",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_3",
+				style_id = "discount_percent_3",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-75,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_3
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_background",
-				value = "content/ui/materials/frames/premium_store/sale_banner_03",
 				value_id = "discount_percent_background",
+				style_id = "discount_percent_background",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner_03",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						20,
 						-20,
-						5,
+						5
 					},
 					size = {
 						256,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.discount_banner
-				end,
+				end
 			},
 			{
+				value_id = "timer_text",
 				pass_type = "text",
 				value = "",
-				value_id = "timer_text",
 				style = timer_text_style,
 				visibility_function = function (content, style)
 					return content.timer_text
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -722,12 +722,12 @@ local blueprints = {
 			local title_options = UIFonts.get_font_options_by_style(title_style)
 			local _, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
 				title_width,
-				math.huge,
+				math.huge
 			}, title_options)
 			local title_background_margin = 20
 
 			style.title_background.size = {
-				[2] = title_height + title_background_margin,
+				[2] = title_height + title_background_margin
 			}
 			style.title_background.offset[2] = style.title.offset[2]
 			style.title_background.offset[2] = style.title_background.offset[2] - title_background_margin * 0.25
@@ -747,7 +747,7 @@ local blueprints = {
 			if element.aquila_texture then
 				style.texture.size = {
 					215,
-					215,
+					215
 				}
 			end
 
@@ -761,7 +761,7 @@ local blueprints = {
 			local price_options = UIFonts.get_font_options_by_style(price_style)
 			local price_width, price_height = parent:_text_size(content.price, price_style.font_type, price_style.font_size, {
 				title_width,
-				math.huge,
+				math.huge
 			}, price_options)
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
@@ -795,7 +795,7 @@ local blueprints = {
 				local discount_options = UIFonts.get_font_options_by_style(discount_style)
 				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style.font_type, discount_style.font_size, {
 					title_width,
-					math.huge,
+					math.huge
 				}, discount_options)
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
@@ -835,7 +835,7 @@ local blueprints = {
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
-					animation_event = item_animation_event,
+					animation_event = item_animation_event
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -860,38 +860,38 @@ local blueprints = {
 
 				content.icon_load_id = nil
 			end
-		end,
+		end
 	},
 	aquila_button = {
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
 				style_id = "highlight",
 				value = "content/ui/materials/frames/dropshadow_medium",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -903,7 +903,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -918,12 +918,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -933,274 +933,274 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
 				pass_type = "rect",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "center",
 					size_addition = {
 						-2,
-						0,
+						0
 					},
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "price_icon",
-				value = "content/ui/materials/masks/gradient_horizontal",
 				value_id = "price_icon",
+				style_id = "price_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/masks/gradient_horizontal",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "center",
 					size = {
 						30,
-						30,
+						30
 					},
 					offset = {
 						-30,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return content.element and not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "price",
-				value = "??? ",
-				value_id = "price",
-				style = aquila_price_text_style,
-			},
-			{
 				pass_type = "text",
+				value_id = "price",
+				value = "??? ",
+				style = aquila_price_text_style
+			},
+			{
 				style_id = "bonus_description",
-				value = "",
+				pass_type = "text",
 				value_id = "bonus_description",
-				style = item_description_text_style,
+				value = "",
+				style = item_description_text_style
 			},
 			{
-				pass_type = "texture",
-				style_id = "bonus_description_background",
-				value = "content/ui/materials/backgrounds/terminal_basic",
 				value_id = "bonus_description_background",
+				style_id = "bonus_description_background",
+				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/terminal_basic",
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3] - 1,
+						item_description_text_style.offset[3] - 1
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
+					vertical_alignment = item_description_text_style.vertical_alignment
 				},
 				visibility_function = function (content, style)
 					return content.bonus_description ~= ""
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "bonus_description_background_line",
-				value = "content/ui/materials/frames/frame_tile_2px",
 				value_id = "bonus_description_background_line",
+				style_id = "bonus_description_background_line",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/frame_tile_2px",
 				style = {
 					size_addition = {
 						60,
-						20,
+						20
 					},
 					color = Color.terminal_corner(178.5, true),
 					offset = {
 						item_description_text_style.offset[1],
 						item_description_text_style.offset[2],
-						item_description_text_style.offset[3],
+						item_description_text_style.offset[3]
 					},
 					horizontal_alignment = item_description_text_style.horizontal_alignment,
-					vertical_alignment = item_description_text_style.vertical_alignment,
+					vertical_alignment = item_description_text_style.vertical_alignment
 				},
 				visibility_function = function (content, style)
 					return content.bonus_description ~= ""
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "title_background",
-				value = "content/ui/materials/masks/gradient_horizontal",
 				value_id = "title_background",
+				style_id = "title_background",
+				pass_type = "texture",
+				value = "content/ui/materials/masks/gradient_horizontal",
 				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					size_addition = {
 						-2,
-						20,
+						20
 					},
 					color = Color.black(153, true),
 					size = {
 						nil,
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
+				value_id = "title",
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
-				value_id = "title",
-				style = aquila_header_text_style,
+				style = aquila_header_text_style
 			},
 			{
+				value_id = "icon",
 				pass_type = "texture",
 				style_id = "icon",
-				value_id = "icon",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "top",
+					horizontal_alignment = "center",
 					size = {
 						48,
-						33.6,
+						33.6
 					},
 					offset = {
 						0,
 						10,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.icon
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_top",
-				value = "content/ui/materials/frames/premium_store/offer_card_upper_regular",
 				value_id = "divider_top",
+				style_id = "divider_top",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_upper_regular",
 				style = {
+					vertical_alignment = "top",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "top",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						-15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_bottom",
-				value = "content/ui/materials/frames/premium_store/offer_card_lower_regular",
 				value_id = "divider_bottom",
+				style_id = "divider_bottom",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_lower_regular",
 				style = {
+					vertical_alignment = "bottom",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "bottom",
 					size = {
 						nil,
-						30,
+						30
 					},
 					offset = {
 						0,
 						15,
-						6,
+						6
 					},
 					size_addition = {
 						20,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "background",
-				value = "content/ui/materials/backgrounds/terminal_basic",
 				value_id = "background",
+				style_id = "background",
+				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/terminal_basic",
 				style = {
-					hdr = false,
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					hdr = false,
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
-				},
+						20
+					}
+				}
 			},
 			{
-				pass_type = "texture_uv",
 				style_id = "texture",
+				pass_type = "texture_uv",
 				value = "content/ui/materials/icons/offer_cards/offer_card_container",
 				value_id = "texture",
 				style = {
+					vertical_alignment = "center",
 					hdr = false,
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						196,
-						230.99999999999997,
+						230.99999999999997
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
-						shine = 0,
-					},
+						shine = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return not not style.material_values and not not style.material_values.main_texture
@@ -1218,8 +1218,8 @@ local blueprints = {
 					style.uvs[1][2] = start_uv + current_uv
 					style.uvs[2][1] = end_uv - current_uv
 					style.uvs[2][2] = end_uv - current_uv
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -1235,7 +1235,7 @@ local blueprints = {
 			local title_options = UIFonts.get_font_options_by_style(title_style)
 			local title_width, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
 				max_width,
-				200,
+				200
 			}, title_options)
 			local icon_margin = 10
 			local price_text = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
@@ -1252,7 +1252,7 @@ local blueprints = {
 			style.texture.material_values.main_texture = element.texture_map
 			content.icon = icon_texture_small
 			style.title_background.size = {
-				[2] = title_height,
+				[2] = title_height
 			}
 			style.icon.offset[1] = (title_width + style.icon.size[1] + icon_margin) * 0.5
 
@@ -1265,43 +1265,43 @@ local blueprints = {
 				style.texture.offset[2] = -40
 				style.texture.size = {
 					168,
-					198,
+					198
 				}
 			else
 				style.texture.offset[2] = -10
 			end
-		end,
+		end
 	},
 	button_special_offer_1 = {
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot",
 				content = {
-					use_is_focused = true,
+					use_is_focused = true
 				},
 				style = {
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.default_click,
-				},
+					on_pressed_sound = UISoundEvents.default_click
+				}
 			},
 			{
 				pass_type = "texture",
 				style_id = "highlight",
 				value = "content/ui/materials/frames/dropshadow_medium",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					size_addition = {
 						20,
-						20,
-					},
+						20
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1313,7 +1313,7 @@ local blueprints = {
 
 					style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
 					style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
-				end,
+				end
 			},
 			{
 				pass_type = "texture",
@@ -1328,12 +1328,12 @@ local blueprints = {
 					offset = {
 						0,
 						0,
-						5,
+						5
 					},
 					size_addition = {
 						0,
-						-8,
-					},
+						-8
+					}
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
@@ -1343,190 +1343,190 @@ local blueprints = {
 					local color = style.color
 
 					Colors.color_lerp(default_color, hover_color, progress, color)
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				value = "content/ui/materials/base/ui_default_base",
+				pass_type = "texture",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "center",
 					size = {
 						nil,
-						50,
+						50
 					},
 					offset = {
 						0,
 						0,
-						3,
+						3
 					},
 					color = {
 						180,
 						0,
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "text",
 				style_id = "discount_price",
-				value = "",
+				pass_type = "text",
 				value_id = "discount_price",
+				value = "",
 				style = item_price_text_style,
 				visibility_function = function (content, style)
 					return not content.element.owned and content.element.discount
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "price_icon",
-				value = "content/ui/materials/base/ui_default_base",
 				value_id = "price_icon",
+				style_id = "price_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/base/ui_default_base",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					size = {
 						40,
-						28,
+						28
 					},
 					offset = {
 						-5,
 						-10,
-						4,
-					},
+						4
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.element.owned and not content.element.formattedPrice
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "price",
-				value = "??? ",
+				pass_type = "text",
 				value_id = "price",
-				style = item_price_text_style,
+				value = "??? ",
+				style = item_price_text_style
 			},
 			{
+				value_id = "title",
 				pass_type = "text",
 				style_id = "title",
 				value = "<Title>",
-				value_id = "title",
-				style = item_header_premium_text_style,
+				style = item_header_premium_text_style
 			},
 			{
+				value_id = "sub_title",
 				pass_type = "text",
 				style_id = "sub_title",
 				value = "<Sub Title>",
-				value_id = "sub_title",
-				style = item_sub_header_text_style,
+				style = item_sub_header_text_style
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_top",
-				value = "content/ui/materials/frames/premium_store/offer_card_upper_special_1",
 				value_id = "divider_top",
+				style_id = "divider_top",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_upper_special_1",
 				style = {
+					vertical_alignment = "top",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "top",
 					size = {
 						nil,
-						46.199999999999996,
+						46.199999999999996
 					},
 					offset = {
 						0,
 						-20,
-						6,
+						6
 					},
 					size_addition = {
 						8,
-						0,
+						0
 					},
 					material_values = {
 						gunge_size = {
 							147,
-							46.199999999999996,
-						},
-					},
-				},
+							46.199999999999996
+						}
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "divider_bottom",
-				value = "content/ui/materials/frames/premium_store/offer_card_lower_special_1",
 				value_id = "divider_bottom",
+				style_id = "divider_bottom",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/offer_card_lower_special_1",
 				style = {
+					vertical_alignment = "bottom",
 					horizontal_alignment = "center",
 					scale_to_material = true,
-					vertical_alignment = "bottom",
 					size = {
 						nil,
-						42,
+						42
 					},
 					offset = {
 						0,
 						14,
-						6,
+						6
 					},
 					size_addition = {
 						8,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "background",
-				value = "content/ui/materials/backgrounds/terminal_basic",
 				value_id = "background",
+				style_id = "background",
+				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/terminal_basic",
 				style = {
-					hdr = false,
-					horizontal_alignment = "center",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					hdr = false,
+					scale_to_material = true,
+					horizontal_alignment = "center",
 					offset = {
 						0,
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					size_addition = {
 						25,
-						20,
-					},
+						20
+					}
 				},
 				visibility_function = function (content, style)
 					return not content.has_media
-				end,
+				end
 			},
 			{
-				pass_type = "texture_uv",
 				style_id = "texture",
+				pass_type = "texture_uv",
 				value = "content/ui/materials/icons/offer_cards/offer_card_container",
 				value_id = "texture",
 				style = {
+					vertical_alignment = "center",
 					hdr = false,
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					uvs = {
 						{
 							0,
-							0,
+							0
 						},
 						{
 							1,
-							1,
-						},
+							1
+						}
 					},
 					material_values = {
-						shine = 0,
-					},
+						shine = 0
+					}
 				},
 				visibility_function = function (content, style)
 					return not not style.material_values and not not style.material_values.main_texture
@@ -1544,150 +1544,150 @@ local blueprints = {
 					style.uvs[1][2] = start_uv + current_uv
 					style.uvs[2][1] = end_uv - current_uv
 					style.uvs[2][2] = end_uv - current_uv
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "icon",
-				value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 				value_id = "icon",
+				style_id = "icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/containers/item_container_landscape_no_rarity",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					material_values = {
-						use_placeholder_texture = 1,
+						use_placeholder_texture = 1
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size = {
 						192,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.item
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_1",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_1",
+				style_id = "discount_percent_1",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-35,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_1
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_2",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_2",
+				style_id = "discount_percent_2",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-55,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_2
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_3",
-				value = "content/ui/materials/frames/premium_store/sale_banner",
 				value_id = "discount_percent_3",
+				style_id = "discount_percent_3",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						-75,
 						-67,
-						6,
+						6
 					},
 					size = {
 						28,
-						44,
+						44
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.show_discount_percent_3
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
-				style_id = "discount_percent_background",
-				value = "content/ui/materials/frames/premium_store/sale_banner_03",
 				value_id = "discount_percent_background",
+				style_id = "discount_percent_background",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/premium_store/sale_banner_03",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "right",
 					offset = {
 						20,
 						-20,
-						5,
+						5
 					},
 					size = {
 						256,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
+						0
+					}
 				},
 				visibility_function = function (content, style)
 					return content.discount_banner
-				end,
+				end
 			},
 			{
+				value_id = "timer_text",
 				pass_type = "text",
 				value = "",
-				value_id = "timer_text",
 				style = timer_text_style,
 				visibility_function = function (content, style)
 					return content.timer_text
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -1705,7 +1705,7 @@ local blueprints = {
 			local title_options = UIFonts.get_font_options_by_style(title_style)
 			local _, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
 				title_width,
-				math.huge,
+				math.huge
 			}, title_options)
 
 			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
@@ -1724,7 +1724,7 @@ local blueprints = {
 			if element.aquila_texture then
 				style.texture.size = {
 					215,
-					215,
+					215
 				}
 			end
 
@@ -1738,7 +1738,7 @@ local blueprints = {
 			local price_options = UIFonts.get_font_options_by_style(price_style)
 			local price_width, price_height = parent:_text_size(content.price, price_style.font_type, price_style.font_size, {
 				title_width,
-				math.huge,
+				math.huge
 			}, price_options)
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
@@ -1772,7 +1772,7 @@ local blueprints = {
 				local discount_options = UIFonts.get_font_options_by_style(discount_style)
 				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style.font_type, discount_style.font_size, {
 					title_width,
-					math.huge,
+					math.huge
 				}, discount_options)
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
@@ -1820,7 +1820,7 @@ local blueprints = {
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
-					animation_event = item_animation_event,
+					animation_event = item_animation_event
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -1845,8 +1845,8 @@ local blueprints = {
 
 				content.icon_load_id = nil
 			end
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

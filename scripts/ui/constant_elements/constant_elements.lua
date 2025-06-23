@@ -3,14 +3,14 @@
 local ChatElementSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local elements = {
 	{
+		package = "packages/ui/constant_elements/group_finder_status/group_finder_status",
 		class_name = "ConstantGroupFinderStatus",
 		filename = "scripts/ui/constant_elements/elements/group_finder_status/constant_element_group_finder_status",
-		package = "packages/ui/constant_elements/group_finder_status/group_finder_status",
 		visibility_groups = {
 			"in_hub_view",
 			"in_hub",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementTeamProfileLoader",
@@ -26,12 +26,12 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
-		class_name = "ConstantElementSubtitles",
 		draw_layer = 50,
+		class_name = "ConstantElementSubtitles",
 		filename = "scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles",
 		visibility_groups = {
 			"tactical_overlay",
@@ -44,13 +44,13 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
+		package = "packages/ui/constant_elements/popup_handler/popup_handler",
 		class_name = "ConstantElementPopupHandler",
 		filename = "scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler",
-		package = "packages/ui/constant_elements/popup_handler/popup_handler",
 		visibility_groups = {
 			"tactical_overlay",
 			"cutscene",
@@ -62,14 +62,14 @@ local elements = {
 			"in_loading",
 			"skippable_cinematic",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
-		class_name = "ConstantElementNotificationFeed",
-		filename = "scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed",
 		package = "packages/ui/constant_elements/notification_feed/notification_feed",
 		use_hud_scale = true,
+		class_name = "ConstantElementNotificationFeed",
+		filename = "scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed",
 		visibility_groups = {
 			"cutscene",
 			"mission_lobby",
@@ -78,8 +78,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementWatermark",
@@ -93,8 +93,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementBetaLabel",
@@ -108,21 +108,21 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
+		package = "packages/ui/constant_elements/mission_lobby_status/mission_lobby_status",
 		class_name = "ConstantMissionLobbyStatus",
 		filename = "scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status",
-		package = "packages/ui/constant_elements/mission_lobby_status/mission_lobby_status",
 		visibility_groups = {
-			"mission_lobby",
-		},
+			"mission_lobby"
+		}
 	},
 	{
+		package = "packages/ui/constant_elements/cursors/cursors",
 		class_name = "ConstantElementSoftwareCursor",
 		filename = "scripts/ui/constant_elements/elements/software_cursor/constant_element_software_cursor",
-		package = "packages/ui/constant_elements/cursors/cursors",
 		visibility_groups = {
 			"tactical_overlay",
 			"cutscene",
@@ -132,14 +132,14 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
-		class_name = "ConstantElementChat",
-		filename = "scripts/ui/constant_elements/elements/chat/constant_element_chat",
 		package = "packages/ui/constant_elements/chat/chat",
 		visibility_group_parameters_fallback = "default",
+		class_name = "ConstantElementChat",
+		filename = "scripts/ui/constant_elements/elements/chat/constant_element_chat",
 		visibility_groups = {
 			"mission_lobby",
 			"end_of_round",
@@ -148,35 +148,35 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
+			"default"
 		},
 		visibility_group_parameters = {
 			default = {
 				horizontal_alignment = ChatElementSettings.horizontal_alignment,
 				vertical_alignment = ChatElementSettings.vertical_alignment,
 				chat_window_offset = ChatElementSettings.chat_window_offset,
-				chat_window_size = ChatElementSettings.chat_window_size,
+				chat_window_size = ChatElementSettings.chat_window_size
 			},
 			mission_lobby = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1],
-				},
+					-ChatElementSettings.chat_window_offset[1]
+				}
 			},
 			end_of_round = {
 				horizontal_alignment = "right",
 				chat_window_offset = {
-					-ChatElementSettings.chat_window_offset[1],
-				},
-			},
-		},
+					-ChatElementSettings.chat_window_offset[1]
+				}
+			}
+		}
 	},
 	{
 		class_name = "ConstantElementHavocStatus",
 		filename = "scripts/ui/constant_elements/elements/havoc/constant_element_havoc_status",
 		visibility_groups = {
-			"in_hub",
-		},
+			"in_hub"
+		}
 	},
 	{
 		class_name = "ConstantElementLoading",
@@ -189,8 +189,8 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
 		class_name = "ConstantElementOnboardingHandler",
@@ -203,14 +203,14 @@ local elements = {
 			"in_hub_view",
 			"in_hub",
 			"in_mission",
-			"default",
-		},
+			"default"
+		}
 	},
 	{
-		class_name = "ConstantElementVoiceChat",
-		filename = "scripts/ui/constant_elements/elements/voice_chat/constant_element_voice_chat",
 		package = "packages/ui/constant_elements/voice_chat/voice_chat",
 		use_hud_scale = true,
+		class_name = "ConstantElementVoiceChat",
+		filename = "scripts/ui/constant_elements/elements/voice_chat/constant_element_voice_chat",
 		visibility_groups = {
 			"tactical_overlay",
 			"cutscene",
@@ -220,18 +220,18 @@ local elements = {
 			"in_hub_view",
 			"in_loading",
 			"in_mission",
-			"skippable_cinematic",
-		},
+			"skippable_cinematic"
+		}
 	},
 	{
-		class_name = "ConstantElementMissionBuffs",
-		filename = "scripts/ui/constant_elements/elements/mission_buffs/constant_element_mission_buffs",
 		package = "packages/ui/constant_elements/mission_buffs/mission_buffs",
 		use_hud_scale = true,
+		class_name = "ConstantElementMissionBuffs",
+		filename = "scripts/ui/constant_elements/elements/mission_buffs/constant_element_mission_buffs",
 		visibility_groups = {
-			"in_mission",
-		},
-	},
+			"in_mission"
+		}
+	}
 }
 
 return elements

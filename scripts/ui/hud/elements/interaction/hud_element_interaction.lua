@@ -76,7 +76,7 @@ HudElementInteraction._update_interactee_data = function (self, interactee_unit,
 		if not interaction_units[interactee_unit] then
 			interaction_units[interactee_unit] = {
 				requested = true,
-				extension = extension,
+				extension = extension
 			}
 
 			local marker_callback = callback(self, "_on_interaction_marker_spawned", interactee_unit)
@@ -137,13 +137,10 @@ HudElementInteraction._update_can_interact_target = function (self)
 	end
 
 	local interactee_unit = interactor_extension:target_unit()
+	local focus_target = interactor_extension:focus_unit()
 
-	if not interactee_unit then
-		local focus_target = interactor_extension:focus_unit()
-
-		if ALIVE[focus_target] and interactor_extension:hud_block_text() then
-			interactee_unit = focus_target
-		end
+	if not interactee_unit and ALIVE[focus_target] and interactor_extension:hud_block_text() then
+		interactee_unit = focus_target
 	end
 
 	if ALIVE[interactee_unit] and ALIVE[player_unit] then
@@ -192,15 +189,15 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 			self._active_presentation_data = {
 				intro_anim_duration = 0.2,
-				intro_anim_progress = 0,
 				intro_anim_time = 0,
+				intro_anim_progress = 0,
 				interactee_extension = interactee_extension,
 				interactor_extension = interactor_extension,
 				interactee_unit = interactee_unit,
 				player_unit = player_unit,
 				marker_id = marker_id,
 				use_minimal_presentation = use_minimal_presentation,
-				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size,
+				background_size = use_minimal_presentation and HudElementInteractionSettings.background_size_small or HudElementInteractionSettings.background_size
 			}
 
 			self:_setup_interaction_information(interactee_unit, interactee_extension, interactor_extension, use_minimal_presentation)
@@ -254,7 +251,7 @@ local function _get_input_text(alias_name, input_text_key, hold_required)
 	local input_display_text = Localize(input_text_key)
 	local input_action_localization_params = {
 		input = input_text,
-		action = input_display_text,
+		action = input_display_text
 	}
 	local input_type_string = hold_required and "loc_interaction_input_type_hold" or "loc_interaction_input_type"
 
@@ -401,11 +398,11 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 	local max_text_width = background_size[1] - edge_spacing[1] * 2
 	local tag_max_size = {
 		interaction_style.size[1],
-		1080,
+		1080
 	}
 	local description_max_size = {
 		max_text_width,
-		1080,
+		1080
 	}
 	local tag_text_width, tag_text_height = UIRenderer.text_size(ui_renderer, tag_text, tag_style.font_type, tag_style.font_size, tag_max_size, UIFonts.get_font_options_by_style(tag_style))
 
@@ -413,7 +410,7 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 
 	local interaction_max_size = {
 		max_text_width - tag_text_width,
-		1080,
+		1080
 	}
 	local interaction_width, interaction_height = UIRenderer.text_size(ui_renderer, interaction_text, interaction_style.font_type, interaction_style.font_size, interaction_max_size, UIFonts.get_font_options_by_style(interaction_style))
 	local description_width, description_height = UIRenderer.text_size(ui_renderer, description_text, description_style.font_type, description_style.font_size, description_max_size, UIFonts.get_font_options_by_style(description_style))
@@ -428,11 +425,11 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 
 	self._active_presentation_data.background_size = {
 		background_size[1],
-		background_height,
+		background_height
 	}
 	interaction_style.size = {
 		interaction_max_size[1],
-		interaction_height,
+		interaction_height
 	}
 	widgets_by_name.background.style.input_background.size[2] = interaction_height
 	widgets_by_name.background.style.input_background_slim.size[2] = interaction_height
@@ -568,7 +565,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		input_action_text = input_action_text,
 		input_block_text = input_block_text,
 		hud_description = hud_description,
-		is_event = is_event_interaction,
+		is_event = is_event_interaction
 	}
 end
 

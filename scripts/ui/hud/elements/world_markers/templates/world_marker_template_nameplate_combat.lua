@@ -7,15 +7,15 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	400,
-	20,
+	20
 }
 local arrow_size = {
 	60,
-	60,
+	60
 }
 local icon_size = {
 	128,
-	128,
+	128
 }
 
 template.size = size
@@ -24,22 +24,22 @@ template.unit_node = "player_name"
 template.position_offset = {
 	0,
 	0,
-	-0.2,
+	-0.2
 }
 template.check_line_of_sight = false
 template.max_distance = 500
 template.screen_clamp = true
 template.screen_margins = {
 	down = 0.23148148148148148,
-	left = 0.234375,
-	right = 0.234375,
 	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 template.scale_settings = {
-	distance_max = 20,
-	distance_min = 10,
-	scale_from = 0.8,
 	scale_to = 1,
+	scale_from = 0.8,
+	distance_max = 20,
+	distance_min = 10
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -50,81 +50,81 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "text",
 			style_id = "header_text",
-			value = "<header_text>",
+			pass_type = "text",
 			value_id = "header_text",
+			value = "<header_text>",
 			style = {
 				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				text_horizontal_alignment = "center",
 				vertical_alignment = "center",
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				text_color = header_font_color,
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
 				default_font_size = header_font_settings.font_size,
 				default_text_color = header_font_color,
-				size = size,
+				size = size
 			},
 			visibility_function = function (content, style)
 				return not content.is_clamped
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "icon_text",
-			value = "<icon_text>",
+			pass_type = "text",
 			value_id = "icon_text",
+			value = "<icon_text>",
 			style = {
-				drop_shadow = false,
 				font_size = 32,
 				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "center",
+				text_horizontal_alignment = "center",
 				vertical_alignment = "center",
+				drop_shadow = false,
 				offset = {
 					0,
 					-3,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				default_font_size = header_font_settings.font_size,
 				text_color = header_font_color,
 				default_text_color = header_font_color,
-				size = icon_size,
+				size = icon_size
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
-			end,
+			end
 		},
 		{
-			pass_type = "rotated_texture",
-			style_id = "arrow",
-			value = "content/ui/materials/hud/interactions/frames/direction",
 			value_id = "arrow",
+			pass_type = "rotated_texture",
+			value = "content/ui/materials/hud/interactions/frames/direction",
+			style_id = "arrow",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
 					0,
-					5,
+					5
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

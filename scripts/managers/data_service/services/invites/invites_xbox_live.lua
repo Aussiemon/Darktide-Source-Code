@@ -43,7 +43,7 @@ InvitesXboxLive.send_invite = function (self, xuid, invite_address)
 	if not Managers.account:user_detached() then
 		local user_id = Managers.account:user_id()
 		local async_block, error_code = XboxLiveMPA.send_invites(user_id, {
-			xuid,
+			xuid
 		}, true, invite_address)
 
 		if async_block then

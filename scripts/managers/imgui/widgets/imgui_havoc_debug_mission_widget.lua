@@ -24,7 +24,7 @@ Widget.new = function (display_name, button_text, on_activated, maps, havoc_rank
 		maps = maps,
 		havoc_ranks = havoc_ranks,
 		value = default_value,
-		width = optional_width or DEFAULT_INPUT_FIELD_WIDTH,
+		width = optional_width or DEFAULT_INPUT_FIELD_WIDTH
 	}
 end
 

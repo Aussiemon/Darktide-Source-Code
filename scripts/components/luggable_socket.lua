@@ -55,24 +55,24 @@ end
 
 LuggableSocket.component_data = {
 	consume_luggable = {
-		ui_name = "Consume Luggable",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Consume Luggable"
 	},
 	is_side_mission_socket = {
-		category = "Side Mission",
-		ui_name = "Is Side Mission Socket",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Is Side Mission Socket",
+		category = "Side Mission"
 	},
 	lock_offset_node = {
-		ui_name = "Lock Offset Node",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Lock Offset Node"
 	},
 	extensions = {
-		"LuggableSocketExtension",
-	},
+		"LuggableSocketExtension"
+	}
 }
 
 return LuggableSocket

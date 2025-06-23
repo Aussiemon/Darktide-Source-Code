@@ -12,7 +12,7 @@ local TextUtilities = require("scripts/utilities/ui/text")
 local AchievementsManager = class("AchievementsManager")
 local CLIENT_RPCS = {
 	"rpc_unlock_achievement",
-	"rpc_ally_unlocked_achievement",
+	"rpc_ally_unlocked_achievement"
 }
 local PlayerStates = table.enum("loading", "ready")
 local RewardClaimStates = table.enum("idle", "pending", "active", "deactive")
@@ -393,9 +393,9 @@ AchievementsManager._get_player_diff = function (self, player_id)
 		if not player_data.saved[achievement_name] then
 			change_count = change_count + 1
 			changes[change_count] = {
-				complete = true,
 				stat = "none",
-				id = achievement_name,
+				complete = true,
+				id = achievement_name
 			}
 		end
 	end
@@ -404,7 +404,7 @@ AchievementsManager._get_player_diff = function (self, player_id)
 		return {
 			accountId = player_data.account_id,
 			stats = {},
-			completed = changes,
+			completed = changes
 		}
 	end
 end
@@ -494,7 +494,7 @@ AchievementsManager._save_player_diff = function (self, player_id)
 	end
 
 	local backend_promise = Managers.backend.interfaces.commendations:bulk_update_commendations({
-		changes,
+		changes
 	})
 
 	player_data.save_promise = backend_promise
@@ -683,7 +683,7 @@ AchievementsManager._fetch_penance_track_account_state = function (self)
 	local penance_track = backend_interface.tracks
 	local promises = {
 		penance_track:get_track_state(PENANCE_TRACK_ID),
-		penance_track:get_track(PENANCE_TRACK_ID),
+		penance_track:get_track(PENANCE_TRACK_ID)
 	}
 
 	return Promise.all(unpack(promises)):next(function (responses)
@@ -808,7 +808,7 @@ AchievementsManager._advertise_unlocked_achievement = function (self, player_id,
 
 	if broadcast_unlocks then
 		local seen_channels = {
-			[player_data.channel_id] = true,
+			[player_data.channel_id] = true
 		}
 
 		for _, _player_data in pairs(self._players) do
@@ -959,7 +959,7 @@ AchievementsManager._show_unlock_in_chat = function (self, player, achievement_i
 
 		local message = Localize("loc_ally_unlocked_penance", true, {
 			player_name = player_name,
-			achievement_name = achievement_name,
+			achievement_name = achievement_name
 		})
 
 		Managers.event:trigger("system_chat_message", message, "SYSTEM")

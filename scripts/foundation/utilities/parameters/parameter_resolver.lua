@@ -14,7 +14,7 @@ end
 
 ParameterResolver.resolve_command_line = function ()
 	local args = {
-		Application.argv(),
+		Application.argv()
 	}
 
 	ParameterResolver._command_line_parameters = {}
@@ -66,7 +66,7 @@ ParameterResolver.resolve_command_line = function ()
 	local function warn_multiple_definitions(parameter_name, old)
 		local value = parameters[parameter_name]
 		local t = type(value) == "table" and value or {
-			value,
+			value
 		}
 
 		debug("Multiple defintions of '%s'\nUsing [%s].\nold value [%s]", parameter_name, table.tostring(t), table.tostring(old))
@@ -150,7 +150,7 @@ ParameterResolver.resolve_command_line = function ()
 					else
 						local value_table = {
 							current_value,
-							value,
+							value
 						}
 
 						parameters[param] = value_table
@@ -320,7 +320,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 		local defaults = DefaultDevParameters
 		local saved_profile = {
-			mode = mode,
+			mode = mode
 		}
 
 		for param, value in pairs(dev_parameters) do

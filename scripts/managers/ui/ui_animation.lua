@@ -35,7 +35,7 @@ local UIAnimation = {
 			end
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	size_offset_scale = {
 		num_args = 9,
@@ -75,7 +75,7 @@ local UIAnimation = {
 			end
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	pulse_animation = {
 		num_args = 5,
@@ -94,7 +94,7 @@ local UIAnimation = {
 			target[target_index] = current_value
 
 			return true, progressed_time
-		end,
+		end
 	},
 	pulse_animation2 = {
 		num_args = 4,
@@ -114,7 +114,7 @@ local UIAnimation = {
 			end
 
 			return true, progressed_time
-		end,
+		end
 	},
 	pulse_animation3 = {
 		num_args = 6,
@@ -137,7 +137,7 @@ local UIAnimation = {
 			target[target_index] = value
 
 			return alive, progressed_time
-		end,
+		end
 	},
 	text_flash = {
 		num_args = 6,
@@ -162,7 +162,7 @@ local UIAnimation = {
 			end
 
 			return alive, progressed_time
-		end,
+		end
 	},
 	update_function_by_time = {
 		num_args = 6,
@@ -177,7 +177,7 @@ local UIAnimation = {
 			target[target_index] = from + func_ptr(progressed_time) * (to - from)
 
 			return true, progressed_time
-		end,
+		end
 	},
 	linear_scale2 = {
 		num_args = 6,
@@ -194,7 +194,7 @@ local UIAnimation = {
 			target[2] = (to_y - from_y) * delta_time + from_y
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	linear_scale_color = {
 		num_args = 8,
@@ -212,7 +212,7 @@ local UIAnimation = {
 			target[4] = (to_4 - from_4) * delta_time + from_4
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	function_by_time = {
 		num_args = 6,
@@ -230,7 +230,7 @@ local UIAnimation = {
 			target[target_index] = from + func_ptr(delta_time) * (to - from)
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	function_by_time_with_offset = {
 		num_args = 7,
@@ -248,7 +248,7 @@ local UIAnimation = {
 			target[target_index] = from + func_ptr(delta_time, offset) * (to - from)
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	linear_scale = {
 		num_args = 5,
@@ -266,7 +266,7 @@ local UIAnimation = {
 			target[target_index] = (to - from) * delta_time + from
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	wait = {
 		num_args = 1,
@@ -278,7 +278,7 @@ local UIAnimation = {
 			progressed_time = progressed_time + dt
 
 			return progressed_time <= time, progressed_time
-		end,
+		end
 	},
 	set_visible = {
 		num_args = 1,
@@ -290,7 +290,7 @@ local UIAnimation = {
 			target.visible = true
 
 			return false
-		end,
+		end
 	},
 	set_invisible = {
 		num_args = 1,
@@ -302,7 +302,7 @@ local UIAnimation = {
 			target.visible = false
 
 			return false
-		end,
+		end
 	},
 	picture_sequence = {
 		num_args = 4,
@@ -322,7 +322,7 @@ local UIAnimation = {
 			target[target_index] = picture
 
 			return progressed_time < total_time, progressed_time, time_step
-		end,
+		end
 	},
 	timestep_setter_tables = {
 		num_args = 4,
@@ -350,15 +350,15 @@ local UIAnimation = {
 			target[target_index] = timer_value
 
 			return timer_index and true or false, progressed_time
-		end,
-	},
+		end
+	}
 }
 
 UIAnimation.init = function (...)
 	local data_array = {}
 	local ui_animation = {
 		current_index = 1,
-		data_array = data_array,
+		data_array = data_array
 	}
 	local num_varargs = select("#", ...)
 	local i = 0
@@ -411,7 +411,7 @@ UIAnimation.init_debug = function (...)
 	local data_array = {}
 	local ui_animation = {
 		current_index = 1,
-		data_array = data_array,
+		data_array = data_array
 	}
 	local num_varargs = select("#", ...)
 	local i = 0

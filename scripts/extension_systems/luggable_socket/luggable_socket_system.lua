@@ -7,7 +7,7 @@ local LuggableSocketSystem = class("LuggableSocketSystem", "ExtensionSystemBase"
 local CLIENT_RPCS = {
 	"rpc_luggable_socket_luggable",
 	"rpc_luggable_socket_unlock",
-	"rpc_luggable_socket_set_visibility",
+	"rpc_luggable_socket_set_visibility"
 }
 
 LuggableSocketSystem.init = function (self, extension_system_creation_context, ...)

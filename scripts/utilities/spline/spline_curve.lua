@@ -40,11 +40,11 @@ SplineCurve._build_splines = function (self, splines, points, spline_class)
 
 	while index do
 		local spline_points = {
-			spline_class.spline_points(points, index),
+			spline_class.spline_points(points, index)
 		}
 
 		splines[spline_index] = {
-			points = spline_points,
+			points = spline_points
 		}
 		index = spline_class.next_index(points, index)
 		spline_index = spline_index + 1

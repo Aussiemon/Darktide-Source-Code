@@ -93,9 +93,9 @@ PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_stat
 end
 
 local move_state_anim_events = {
-	jog = "to_jog",
 	sprint = "to_sprint",
-	walk = "to_walk",
+	jog = "to_jog",
+	walk = "to_walk"
 }
 
 PlayerCharacterStateHubJog._update_move_state = function (self, hub_jog_character_state, input_extension, anim_extension, move_speed, wants_to_stop, dt, t)
@@ -341,6 +341,12 @@ PlayerCharacterStateHubJog._check_transition = function (self, unit, t, next_sta
 		next_state_params.emote_slot_id = emote_slot_id
 
 		return "hub_emote"
+	end
+
+	local is_player_interacting = Managers.state.companion_interaction:is_player_interacting(unit)
+
+	if is_player_interacting then
+		return "hub_companion_interaction"
 	end
 end
 

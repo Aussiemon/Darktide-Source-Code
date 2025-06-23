@@ -783,7 +783,7 @@ end
 SocialService.join_party = function (self, party_id, context_account_id)
 	return Managers.party_immaterium:join_party({
 		party_id = party_id,
-		context_account_id = context_account_id,
+		context_account_id = context_account_id
 	})
 end
 
@@ -822,7 +822,7 @@ SocialService.can_kick_from_party = function (self, player_info)
 	local voting_template = self:_get_kick_voting_template(player_info)
 
 	if not voting_template or not Managers.voting:can_start_voting("kick_from_mission", {
-		kick_peer_id = peer_id,
+		kick_peer_id = peer_id
 	}) then
 		return false
 	end
@@ -867,7 +867,7 @@ SocialService.initiate_kick_vote = function (self, player_info)
 
 	if voting_template then
 		Managers.voting:start_voting(voting_template, {
-			kick_peer_id = peer_id,
+			kick_peer_id = peer_id
 		}):next(function (data)
 			self._voting_id = data
 		end):catch(function (fail_reason)

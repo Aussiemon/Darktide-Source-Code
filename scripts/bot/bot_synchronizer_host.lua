@@ -92,7 +92,7 @@ BotSynchronizerHost.add_bot = function (self, local_player_id, player_profile)
 
 	spawn_group[local_player_id] = {
 		state = SPAWN_STATES.spawn,
-		profile = player_profile,
+		profile = player_profile
 	}
 	self._bots[local_player_id] = true
 	self._spawn_group = spawn_group

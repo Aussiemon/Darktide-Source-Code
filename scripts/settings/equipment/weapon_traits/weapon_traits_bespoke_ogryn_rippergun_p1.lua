@@ -16,61 +16,61 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
 					"5m",
 					"6m",
 					"7m",
-					"8m",
-				},
-			},
-		},
+					"8m"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
 			{
 				suppression_settings = {
-					distance = 12,
-					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 15,
-				},
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 15
+				}
 			},
 			{
 				suppression_settings = {
-					distance = 12,
-					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 20,
-				},
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 20
+				}
 			},
 			{
 				suppression_settings = {
-					distance = 12,
-					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 25,
-				},
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 25
+				}
 			},
 			{
 				suppression_settings = {
-					distance = 12,
-					instant_aggro = true,
 					suppression_falloff = false,
-					suppression_value = 30,
-				},
-			},
-		},
-	},
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 30
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
 	format_values = {
 		close_damage = {
-			format_type = "percentage",
 			prefix = "+",
+			format_type = "percentage",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent",
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.damage_near,
-				},
-			},
+					stat_buffs.damage_near
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -78,9 +78,9 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent",
 				find_value_type = "trait_override",
 				path = {
-					"child_duration",
-				},
-			},
+					"child_duration"
+				}
+			}
 		},
 		stacks = {
 			format_type = "number",
@@ -88,70 +88,70 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_child",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent = {
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.07,
-				},
+					[stat_buffs.damage_near] = 0.07
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.08,
-				},
+					[stat_buffs.damage_near] = 0.08
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.09,
-				},
+					[stat_buffs.damage_near] = 0.09
+				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.1,
-				},
-			},
-		},
-	},
+					[stat_buffs.damage_near] = 0.1
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 	format_values = {
 		toughness = {
-			format_type = "percentage",
 			prefix = "+",
+			format_type = "percentage",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills",
 				find_value_type = "trait_override",
 				path = {
-					"toughness_fixed_percentage",
-				},
-			},
-		},
+					"toughness_fixed_percentage"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 			{
-				toughness_fixed_percentage = 0.045,
+				toughness_fixed_percentage = 0.045
 			},
 			{
-				toughness_fixed_percentage = 0.05,
+				toughness_fixed_percentage = 0.05
 			},
 			{
-				toughness_fixed_percentage = 0.055,
+				toughness_fixed_percentage = 0.055
 			},
 			{
-				toughness_fixed_percentage = 0.06,
-			},
-		},
-	},
+				toughness_fixed_percentage = 0.06
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff_on_weapon_special = {
 	format_values = {
@@ -162,9 +162,9 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
+					"num_stacks_on_proc"
+				}
+			}
 		},
 		rending = {
 			format_type = "percentage",
@@ -173,9 +173,9 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff
 				find_value_type = "buff_template",
 				path = {
 					"stat_buffs",
-					stat_buffs.rending_multiplier,
-				},
-			},
+					stat_buffs.rending_multiplier
+				}
+			}
 		},
 		time = {
 			format_type = "number",
@@ -183,9 +183,9 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"duration",
-				},
-			},
+					"duration"
+				}
+			}
 		},
 		max_stacks = {
 			format_type = "number",
@@ -193,170 +193,170 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff
 				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"max_stacks",
-				},
-			},
-		},
+					"max_stacks"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_targets_receive_rending_debuff_on_weapon_special = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 10,
-				},
+					num_stacks_on_proc = 10
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 12,
-				},
+					num_stacks_on_proc = 12
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 14,
-				},
+					num_stacks_on_proc = 14
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 16,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 16
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = {
 	format_values = {
 		crit_chance = {
-			format_type = "percentage",
 			prefix = "+",
+			format_type = "percentage",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire",
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.critical_strike_chance,
-				},
-			},
+					stat_buffs.critical_strike_chance
+				}
+			}
 		},
 		ammo = {
-			format_type = "string",
 			value = "10%",
+			format_type = "string"
 		},
 		stacks = {
-			format_type = "string",
 			value = "5",
-		},
+			format_type = "string"
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.035,
-				},
+					[stat_buffs.critical_strike_chance] = 0.035
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.04,
-				},
+					[stat_buffs.critical_strike_chance] = 0.04
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.045,
-				},
+					[stat_buffs.critical_strike_chance] = 0.045
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.05,
-				},
-			},
-		},
-	},
+					[stat_buffs.critical_strike_chance] = 0.05
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 	format_values = {
 		toughness = {
-			format_type = "percentage",
 			prefix = "+",
+			format_type = "percentage",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire",
 				find_value_type = "trait_override",
 				path = {
-					"toughness_fixed_percentage",
-				},
-			},
+					"toughness_fixed_percentage"
+				}
+			}
 		},
 		ammo = {
-			format_type = "string",
 			value = "10%",
+			format_type = "string"
 		},
 		stacks = {
-			format_type = "string",
 			value = "5",
-		},
+			format_type = "string"
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 			{
-				toughness_fixed_percentage = 0.01,
+				toughness_fixed_percentage = 0.01
 			},
 			{
-				toughness_fixed_percentage = 0.02,
+				toughness_fixed_percentage = 0.02
 			},
 			{
-				toughness_fixed_percentage = 0.03,
+				toughness_fixed_percentage = 0.03
 			},
 			{
-				toughness_fixed_percentage = 0.04,
-			},
-		},
-	},
+				toughness_fixed_percentage = 0.04
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 	format_values = {
 		power_level = {
-			format_type = "percentage",
 			prefix = "+",
+			format_type = "percentage",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire",
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.power_level_modifier,
-				},
-			},
+					stat_buffs.power_level_modifier
+				}
+			}
 		},
 		ammo = {
-			format_type = "string",
 			value = "10%",
+			format_type = "string"
 		},
 		stacks = {
-			format_type = "string",
 			value = "5",
-		},
+			format_type = "string"
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.05,
-				},
+					[stat_buffs.power_level_modifier] = 0.05
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.06,
-				},
+					[stat_buffs.power_level_modifier] = 0.06
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.07,
-				},
+					[stat_buffs.power_level_modifier] = 0.07
+				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.08,
-				},
-			},
-		},
-	},
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			}
+		}
+	}
 }
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 	format_values = {
@@ -367,35 +367,35 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 				find_value_type = "trait_override",
 				path = {
 					"target_buff_data",
-					"num_stacks_on_proc",
-				},
-			},
-		},
+					"num_stacks_on_proc"
+				}
+			}
+		}
 	},
 	buffs = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
-				},
+					num_stacks_on_proc = 3
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
-				},
+					num_stacks_on_proc = 4
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 5,
-				},
+					num_stacks_on_proc = 5
+				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6,
-				},
-			},
-		},
-	},
+					num_stacks_on_proc = 6
+				}
+			}
+		}
+	}
 }
 
 return templates

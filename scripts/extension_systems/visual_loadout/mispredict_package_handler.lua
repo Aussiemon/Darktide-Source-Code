@@ -24,10 +24,10 @@ end
 
 MispredictPackageHandler.post_update = function (self)
 	local unit_data_extension = self._unit_data_extension
-	local last_recieved_fixed_frame = unit_data_extension:last_received_fixed_frame()
+	local last_received_fixed_frame = unit_data_extension:last_received_fixed_frame()
 
 	for fixed_frame, items in pairs(self._pending_unloads) do
-		if fixed_frame <= last_recieved_fixed_frame then
+		if fixed_frame <= last_received_fixed_frame then
 			for i = 1, #items do
 				local item = items[i]
 

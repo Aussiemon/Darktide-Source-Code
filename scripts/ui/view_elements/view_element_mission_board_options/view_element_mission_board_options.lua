@@ -38,7 +38,7 @@ local widget_update_functions = {
 
 		local size = {
 			400,
-			50,
+			50
 		}
 		local using_gamepad = not Managers.ui:using_cursor_navigation()
 		local offset = widget.offset
@@ -244,7 +244,7 @@ local widget_update_functions = {
 		if new_value ~= nil and new_value ~= value then
 			on_activated(new_value, entry)
 		end
-	end,
+	end
 }
 
 ViewElemenMissionBoardOptions.init = function (self, parent, draw_layer, start_scale, context)
@@ -279,7 +279,7 @@ ViewElemenMissionBoardOptions._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -457,7 +457,7 @@ ViewElemenMissionBoardOptions.present = function (self, presentation_data)
 	local alignments = {}
 	local size = {
 		800,
-		50,
+		50
 	}
 
 	for i = 1, #presentation_data do
@@ -569,7 +569,7 @@ ViewElemenMissionBoardOptions.present = function (self, presentation_data)
 	local interaction_scenegraph_id = "options_grid_interaction"
 	local grid = UIWidgetGrid:new(widgets, alignments, self._ui_scenegraph, "options_grid", "down", {
 		0,
-		40,
+		40
 	})
 
 	grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
@@ -682,7 +682,7 @@ ViewElemenMissionBoardOptions._setup_presentation = function (self)
 	local on_enter_animation_callback
 	local params = {
 		popup_height = height,
-		additional_widgets = self._grid_widgets,
+		additional_widgets = self._grid_widgets
 	}
 
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
@@ -702,7 +702,7 @@ ViewElemenMissionBoardOptions._cleanup_presentation = function (self)
 	local height = 800
 	local params = {
 		popup_height = height,
-		additional_widgets = self._grid_widgets,
+		additional_widgets = self._grid_widgets
 	}
 
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
@@ -799,7 +799,7 @@ ViewElemenMissionBoardOptions._set_tooltip_data = function (self, widget)
 	if current_widget ~= widget or current_widget == widget and new_y ~= current_y then
 		self._tooltip_data = {
 			widget = widget,
-			text = localized_text,
+			text = localized_text
 		}
 		self._widgets_by_name.tooltip.content.text = localized_text
 
@@ -809,7 +809,7 @@ ViewElemenMissionBoardOptions._set_tooltip_data = function (self, widget)
 		local text_options = UIFonts.get_font_options_by_style(text_style)
 		local _, text_height = UIRenderer.text_size(self._ui_default_renderer, localized_text, text_style.font_type, text_style.font_size, {
 			width,
-			0,
+			0
 		}, text_options)
 		local height = text_height
 

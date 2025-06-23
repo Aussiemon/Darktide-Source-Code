@@ -3,7 +3,7 @@
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local RPCS = {
-	"rpc_update_talents",
+	"rpc_update_talents"
 }
 local PlayerHuskTalentExtension = class("PlayerHuskTalentExtension")
 
@@ -107,7 +107,7 @@ local class_loadout = {
 	passives = {},
 	coherency = {},
 	special_rules = {},
-	buff_template_tiers = {},
+	buff_template_tiers = {}
 }
 
 PlayerHuskTalentExtension._update_talents = function (self, talents)

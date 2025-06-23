@@ -26,166 +26,166 @@ end
 
 sway_templates.default_boltpistol_killshot = {
 	still = {
-		horizontal_speed = 0.2,
 		intensity = 0.3,
-		rotation_speed = 0.125,
+		horizontal_speed = 0.2,
 		visual_pitch_impact_mod = 3.8,
+		rotation_speed = 0.125,
 		visual_yaw_impact_mod = 2.3,
 		max_sway = {
-			pitch = 2.5,
 			yaw = 2.5,
+			pitch = 2.5
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.5,
 			shooting = {
-				pitch = 0.15,
 				yaw = 0.15,
+				pitch = 0.15
 			},
 			idle = {
-				pitch = 0.5,
 				yaw = 0.5,
+				pitch = 0.5
 			},
 			player_event = {
-				pitch = 1.5,
 				yaw = 1.5,
-			},
+				pitch = 1.5
+			}
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_basic = 1.5,
 				lerp_perfect = 0.4,
+				lerp_basic = 1.5
 			},
 			yaw = {
-				lerp_basic = 1.2,
 				lerp_perfect = 0.3,
-			},
+				lerp_basic = 1.2
+			}
 		},
 		immediate_sway = {
 			num_shots_clear_time = 0.6,
 			crouch_transition = {
 				{
-					pitch = 0.25,
 					yaw = 0.25,
-				},
+					pitch = 0.25
+				}
 			},
 			alternate_fire_start = {
 				{
-					pitch = 0.5,
 					yaw = 0.5,
-				},
+					pitch = 0.5
+				}
 			},
 			suppression_hit = {
 				{
-					pitch = 0.2,
 					yaw = 0.2,
-				},
+					pitch = 0.2
+				}
 			},
 			damage_hit = {
 				{
-					pitch = 0.25,
 					yaw = 0.25,
-				},
+					pitch = 0.25
+				}
 			},
 			shooting = {
 				{
 					pitch = {
-						lerp_basic = 1.9,
 						lerp_perfect = 0.5,
+						lerp_basic = 1.9
 					},
 					yaw = {
-						lerp_basic = 2,
 						lerp_perfect = 0.4,
-					},
-				},
-			},
+						lerp_basic = 2
+					}
+				}
+			}
 		},
-		sway_pattern = _default_boltgun_sway_pattern,
+		sway_pattern = _default_boltgun_sway_pattern
 	},
 	moving = {
 		rotation_speed = 0.35,
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
+			"still"
 		},
 		continuous_sway = {
-			pitch = 0.5,
 			yaw = 0.4,
+			pitch = 0.5
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
-				pitch = 0.15,
 				yaw = 0.15,
+				pitch = 0.15
 			},
 			idle = {
-				pitch = 0.5,
 				yaw = 0.75,
+				pitch = 0.5
 			},
 			player_event = {
-				pitch = 3,
 				yaw = 3,
-			},
-		},
+				pitch = 3
+			}
+		}
 	},
 	crouch_still = {
 		rotation_speed = 0.2,
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
+			"still"
 		},
 		continuous_sway = {
-			pitch = 0.4,
 			yaw = 0.15,
+			pitch = 0.4
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
-				pitch = 0.15,
 				yaw = 0.15,
+				pitch = 0.15
 			},
 			idle = {
-				pitch = 0.5,
 				yaw = 0.75,
+				pitch = 0.5
 			},
 			player_event = {
-				pitch = 3,
 				yaw = 3,
-			},
-		},
+				pitch = 3
+			}
+		}
 	},
 	crouch_moving = {
 		rotation_speed = 0.5,
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
+			"still"
 		},
 		continuous_sway = {
-			pitch = 1.75,
 			yaw = 1,
+			pitch = 1.75
 		},
 		decay = {
 			crouch_transition_grace_time = 0.5,
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
-				pitch = 0.15,
 				yaw = 0.15,
+				pitch = 0.15
 			},
 			idle = {
-				pitch = 0.5,
 				yaw = 0.75,
+				pitch = 0.5
 			},
 			player_event = {
-				pitch = 3,
 				yaw = 3,
-			},
-		},
-	},
+				pitch = 3
+			}
+		}
+	}
 }
 
 return {
 	base_templates = sway_templates,
-	overrides = overrides,
+	overrides = overrides
 }

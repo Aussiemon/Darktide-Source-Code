@@ -17,7 +17,7 @@ local Vector3_normalize = Vector3.normalize
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_POWER_LEVEL_RANDOM_RANGE = {
 	max = 1.25,
-	min = 0.75,
+	min = 0.75
 }
 local PROC_EVENTS = BuffSettings.proc_events
 local EXTERNAL_PROPERTIES = {}
@@ -29,7 +29,7 @@ local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
 local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
-	"target_unit_3",
+	"target_unit_3"
 }
 local _on_add_func, _on_remove_func, _set_charge_level, _trigger_gear_sound, _trigger_gear_tail_sound, _trigger_exclusive_gear_sound
 
@@ -51,7 +51,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 			hit_units = self._hit_units,
 			player_unit = self._player_unit,
 			talent_extension = talent_extension,
-			source_item = weapon and weapon.item,
+			source_item = weapon and weapon.item
 		}
 
 		self._jump_on_add_func = function (node, func_context)
@@ -71,6 +71,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	local is_server = self._is_server
 	local unit_data_extension = action_context.unit_data_extension
 
+	self._unit_data_extension = unit_data_extension
 	self._action_component = unit_data_extension:write_component("action_shoot")
 
 	local action_module_charge_component = unit_data_extension:write_component("action_module_charge")
@@ -91,23 +92,6 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	end
 
 	self._charge_module = ActionModules.charge:new(is_server, physics_world, player_unit, first_person_unit, action_module_charge_component, action_settings)
-
-	local fx_settings = action_settings.fx
-	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
-
-	if looping_shoot_sfx_alias then
-		local component_name = PlayerUnitData.looping_sound_component_name(looping_shoot_sfx_alias)
-
-		self._looping_shoot_sound_component = unit_data_extension:read_component(component_name)
-	end
-
-	local looping_shoot_critical_strike_sfx_alias = fx_settings.looping_shoot_critical_strike_sfx_alias
-
-	if looping_shoot_critical_strike_sfx_alias then
-		local component_name = PlayerUnitData.looping_sound_component_name(looping_shoot_critical_strike_sfx_alias)
-
-		self._looping_shoot_critial_strike_sound_component = unit_data_extension:read_component(component_name)
-	end
 
 	local weapon = action_params.weapon
 
@@ -179,7 +163,7 @@ ActionChainLightning._clear_initial_targets = function (self)
 	end
 end
 
-ActionChainLightning.fixed_update = function (self, dt, t, time_in_action)
+ActionChainLightning.fixed_update = function (self, dt, t, time_in_action, frame)
 	self._targeting_module:fixed_update(dt, t)
 
 	local overload_module = self._overload_module
@@ -192,6 +176,10 @@ ActionChainLightning.fixed_update = function (self, dt, t, time_in_action)
 
 	if charge_template and charge_template.charge_on_action_start then
 		self._charge_module:fixed_update(dt, t)
+	end
+
+	if self._run_shoot_loop_sfx then
+		self._fx_extension:run_looping_sound(self._looping_shoot_sfx_alias, self._fx_source_name, nil, frame)
 	end
 
 	if self._is_server then
@@ -229,7 +217,6 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action, a
 		ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
 	end
 
-	self:_stop_looping_shoot_sound()
 	self:_handle_buffs_finish()
 	self:_handle_modules_and_components_finish(reason, data, t)
 	ActionChainLightning.super.finish(self, reason, data, t, time_in_action)
@@ -305,32 +292,28 @@ end
 ActionChainLightning._start_looping_shoot_sound = function (self)
 	local is_critical_strike = self._critical_strike_component.is_active
 	local fx_settings = self._action_settings.fx
-	local looping_shoot_sound_component = self._looping_shoot_sound_component
-	local looping_shoot_critical_strike_sound_component = self._looping_shoot_critial_strike_sound_component
-	local looping_shoot_sfx_alias = is_critical_strike and fx_settings.looping_shoot_critical_strike_sfx_alias or fx_settings.looping_shoot_sfx_alias
-	local can_play = is_critical_strike and looping_shoot_critical_strike_sound_component and not looping_shoot_critical_strike_sound_component.is_playing or looping_shoot_sound_component and not looping_shoot_sound_component.is_playing
+	local fx_extension = self._fx_extension
+	local shoot_alias = fx_settings.looping_shoot_sfx_alias
+	local crit_alias = fx_settings.looping_shoot_critical_strike_sfx_alias or shoot_alias
+
+	if not crit_alias and not shoot_alias then
+		return
+	end
+
+	local is_playing_crit_sfx_loop = fx_extension:is_looping_sound_playing(crit_alias)
+	local is_playing_shoot_sfx_loop = fx_extension:is_looping_sound_playing(shoot_alias)
+	local can_play = is_critical_strike and not is_playing_crit_sfx_loop or not is_playing_shoot_sfx_loop
 
 	if can_play then
 		local fx_hand = fx_settings.fx_hand
 		local fx_source_name = fx_hand == "both" and self._both_fx_source_name or fx_hand == "left" and self._left_fx_source_name or self._right_fx_source_name
+		local looping_sound_alias = is_critical_strike and crit_alias or shoot_alias
 
-		if fx_source_name then
-			self._fx_extension:trigger_looping_wwise_event(looping_shoot_sfx_alias, fx_source_name)
+		if fx_source_name and looping_sound_alias then
+			self._fx_source_name = fx_source_name
+			self._looping_shoot_sfx_alias = looping_sound_alias
+			self._run_shoot_loop_sfx = true
 		end
-	end
-end
-
-ActionChainLightning._stop_looping_shoot_sound = function (self)
-	local fx_settings = self._action_settings.fx
-	local looping_shoot_sound_component = self._looping_shoot_sound_component
-	local looping_shoot_critical_strike_sound_component = self._looping_shoot_critial_strike_sound_component
-
-	if looping_shoot_sound_component and looping_shoot_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(fx_settings.looping_shoot_sfx_alias)
-	end
-
-	if looping_shoot_critical_strike_sound_component and looping_shoot_critical_strike_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(fx_settings.looping_shoot_critical_strike_sfx_alias)
 	end
 end
 

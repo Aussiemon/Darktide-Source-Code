@@ -380,8 +380,8 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 end
 
 local ABILITIES_ALLOW_RECOVERY_REASONS = {
-	ability_stance = true,
 	zealot_channel = true,
+	ability_stance = true
 }
 
 PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block, optional_recovery_type, optional_reason)

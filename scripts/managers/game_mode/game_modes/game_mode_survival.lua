@@ -18,7 +18,7 @@ local CLIENT_RPCS = {
 	"rpc_client_hordes_set_progress_data",
 	"rpc_client_hordes_wave_completed",
 	"rpc_client_hordes_show_wave_completed_notification",
-	"rpc_client_hordes_tag_remaining_enemies",
+	"rpc_client_hordes_tag_remaining_enemies"
 }
 
 local function _log(...)
@@ -27,89 +27,89 @@ end
 
 local MINION_HEALTH_MODIFIER_PER_WAVE = {
 	{
-		captain = 0,
 		default = 0,
 		elite = 0,
-		monster = 0,
 		special = 0,
+		captain = 0,
+		monster = 0
 	},
 	{
-		captain = 0,
 		default = 0,
 		elite = 0,
-		monster = 0,
 		special = 0,
+		captain = 0,
+		monster = 0
 	},
 	{
-		captain = 0,
 		default = 0,
 		elite = 0,
-		monster = 0,
 		special = 0,
+		captain = 0,
+		monster = 0
 	},
 	{
-		captain = 0,
 		default = 0.2,
 		elite = 0.2,
-		monster = 0.2,
 		special = 0.2,
+		captain = 0,
+		monster = 0.2
 	},
 	{
-		captain = 0,
 		default = 0.4,
 		elite = 0.3,
-		monster = 0.3,
 		special = 0.3,
+		captain = 0,
+		monster = 0.3
 	},
 	{
-		captain = 0,
 		default = 0.6,
 		elite = 0.4,
-		monster = 0.3,
 		special = 0.4,
+		captain = 0,
+		monster = 0.3
 	},
 	{
-		captain = 0,
 		default = 0.7,
 		elite = 0.5,
-		monster = 0.4,
 		special = 0.5,
+		captain = 0,
+		monster = 0.4
 	},
 	{
-		captain = 0.1,
 		default = 0.8,
 		elite = 0.6,
-		monster = 0.4,
 		special = 0.6,
+		captain = 0.1,
+		monster = 0.4
 	},
 	{
-		captain = 0.2,
 		default = 1.1,
 		elite = 0.7,
-		monster = 0.5,
 		special = 0.7,
+		captain = 0.2,
+		monster = 0.5
 	},
 	{
-		captain = 0.3,
 		default = 1.1,
 		elite = 0.8,
-		monster = 0.5,
 		special = 0.8,
+		captain = 0.3,
+		monster = 0.5
 	},
 	{
-		captain = 0.4,
 		default = 1.1,
 		elite = 0.9,
-		monster = 0.7,
 		special = 0.9,
+		captain = 0.4,
+		monster = 0.7
 	},
 	{
-		captain = 0.5,
 		default = 1.1,
 		elite = 1.1,
-		monster = 0.7,
 		special = 1.1,
-	},
+		captain = 0.5,
+		monster = 0.7
+	}
 }
 
 GameModeSurvival.init = function (self, game_mode_context, game_mode_name, network_event_delegate)
@@ -278,7 +278,7 @@ GameModeSurvival._gamemode_complete = function (self, result, reason)
 		Managers.mission_server:on_gamemode_completed(result, reason, {
 			completion_time = self._completition_time,
 			current_island = self._current_island or "NONE",
-			waves_completed = total_waves_completed or 0,
+			waves_completed = total_waves_completed or 0
 		})
 	end
 end
@@ -569,7 +569,7 @@ end
 
 local TWIN_BREEDS = {
 	renegade_twin_captain = true,
-	renegade_twin_captain_two = true,
+	renegade_twin_captain_two = true
 }
 
 GameModeSurvival._on_minion_unit_spawned = function (self, unit)
@@ -679,9 +679,9 @@ end
 
 GameModeSurvival._trigger_wave_started_ui_notification = function (self)
 	local wave_started_notification = {
-		state = "start",
 		timer = 5,
-		wave_num = self._current_wave,
+		state = "start",
+		wave_num = self._current_wave
 	}
 
 	Managers.event:trigger("event_mission_buffs_update_presentation", wave_started_notification)
@@ -918,7 +918,7 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 		permanent_damage_percent = permanent_damage_percent,
 		character_state_name = character_state_name,
 		weapon_slot_data = weapon_slot_data,
-		grenades_percent = grenades_percent,
+		grenades_percent = grenades_percent
 	}
 
 	if player:is_human_controlled() then

@@ -8,7 +8,7 @@ local RPCS = {
 	Component.default_rpc_name,
 	"rpc_animation_play_client",
 	"rpc_networked_unique_randomize_roll",
-	"rpc_prop_on_hit_physics",
+	"rpc_prop_on_hit_physics"
 }
 
 ComponentSystem.init = function (self, context, system_init_data, ...)
@@ -78,11 +78,7 @@ ComponentSystem.register_extension_update = function (self, unit, extension_name
 end
 
 ComponentSystem.on_gameplay_post_init = function (self, level)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		extension:on_gameplay_post_init(unit, level)
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 ComponentSystem.enable_component = function (self, unit, guid)

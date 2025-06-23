@@ -5,16 +5,16 @@ local TRIGGER_INDEX = HapticTriggerSettings.trigger_index
 local TRIGGER_MASK = HapticTriggerSettings.trigger_mask
 local haptic_trigger_templates = {
 	ranged = {},
-	melee = {},
+	melee = {}
 }
 
 haptic_trigger_templates.melee.none = {
 	right = {
-		off = {},
+		off = {}
 	},
 	left = {
-		off = {},
-	},
+		off = {}
+	}
 }
 haptic_trigger_templates.melee.light = {
 	right = {
@@ -29,9 +29,9 @@ haptic_trigger_templates.melee.light = {
 				0,
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -45,10 +45,10 @@ haptic_trigger_templates.melee.light = {
 				1,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.medium = {
 	right = {
@@ -63,9 +63,9 @@ haptic_trigger_templates.melee.medium = {
 				1,
 				0,
 				0,
-				1,
-			},
-		},
+				1
+			}
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -79,10 +79,10 @@ haptic_trigger_templates.melee.medium = {
 				0,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.heavy = {
 	right = {
@@ -97,9 +97,9 @@ haptic_trigger_templates.melee.heavy = {
 				3,
 				4,
 				2,
-				7,
-			},
-		},
+				7
+			}
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -113,10 +113,10 @@ haptic_trigger_templates.melee.heavy = {
 				2,
 				3,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.push = {
 	right = {
@@ -131,10 +131,10 @@ haptic_trigger_templates.melee.push = {
 				0,
 				0,
 				1,
-				3,
-			},
-		},
-	},
+				3
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.ogryn_powermaul_slabshield = {
 	right = {
@@ -149,9 +149,9 @@ haptic_trigger_templates.melee.ogryn_powermaul_slabshield = {
 				2,
 				5,
 				6,
-				7,
-			},
-		},
+				7
+			}
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -165,10 +165,10 @@ haptic_trigger_templates.melee.ogryn_powermaul_slabshield = {
 				4,
 				4,
 				4,
-				4,
-			},
-		},
-	},
+				4
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.chainsword = {
 	right = {
@@ -183,14 +183,14 @@ haptic_trigger_templates.melee.chainsword = {
 				0,
 				0,
 				0,
-				1,
-			},
+				1
+			}
 		},
 		vibration = {
-			amplitude = 2,
 			frequency = 0,
 			position = 5,
-		},
+			amplitude = 2
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -204,10 +204,10 @@ haptic_trigger_templates.melee.chainsword = {
 				0,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 haptic_trigger_templates.melee.chainsword_2h = {
 	right = {
@@ -222,14 +222,14 @@ haptic_trigger_templates.melee.chainsword_2h = {
 				0,
 				5,
 				6,
-				7,
-			},
+				7
+			}
 		},
 		vibration = {
-			amplitude = 4,
 			frequency = 0,
 			position = 5,
-		},
+			amplitude = 4
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -243,32 +243,32 @@ haptic_trigger_templates.melee.chainsword_2h = {
 				1,
 				1,
 				1,
-				1,
-			},
-		},
-	},
+				1
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.none = {
 	right = {
-		off = {},
+		off = {}
 	},
 	left = {
-		off = {},
-	},
+		off = {}
+	}
 }
 haptic_trigger_templates.ranged.spray_n_pray = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 3,
 			start_position = 2,
-			strength = 8,
+			end_position = 3,
+			strength = 8
 		},
 		vibration = {
-			amplitude = 5,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 5
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -282,25 +282,25 @@ haptic_trigger_templates.ranged.spray_n_pray = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.heavy_stubber = {
 	right = {
-		scale_vibration_with_ammo = true,
 		use_template_vibration_frequency = true,
+		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 8,
 			start_position = 2,
-			strength = 3,
+			end_position = 8,
+			strength = 3
 		},
 		vibration = {
-			amplitude = 7,
 			frequency = 5,
 			position = 2,
-		},
+			amplitude = 7
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -314,24 +314,24 @@ haptic_trigger_templates.ranged.heavy_stubber = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.heavy_stubber_braced = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 4,
 			start_position = 3,
-			strength = 1,
+			end_position = 4,
+			strength = 1
 		},
 		vibration = {
-			amplitude = 2,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 2
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -345,24 +345,24 @@ haptic_trigger_templates.ranged.heavy_stubber_braced = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.rippergun = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 6,
 			start_position = 2,
-			strength = 8,
+			end_position = 6,
+			strength = 8
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -376,10 +376,10 @@ haptic_trigger_templates.ranged.rippergun = {
 				0,
 				4,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.thumper_p1_m1 = {
 	right = {
@@ -395,14 +395,14 @@ haptic_trigger_templates.ranged.thumper_p1_m1 = {
 				0,
 				0,
 				0,
-				0,
-			},
+				0
+			}
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -416,10 +416,10 @@ haptic_trigger_templates.ranged.thumper_p1_m1 = {
 				0,
 				4,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.thumper_p1_m2 = {
 	right = {
@@ -435,14 +435,14 @@ haptic_trigger_templates.ranged.thumper_p1_m2 = {
 				0,
 				2,
 				3,
-				0,
-			},
+				0
+			}
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -456,24 +456,24 @@ haptic_trigger_templates.ranged.thumper_p1_m2 = {
 				0,
 				4,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.assault = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 4,
 			start_position = 2,
-			strength = 5,
+			end_position = 4,
+			strength = 5
 		},
 		vibration = {
-			amplitude = 7,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 7
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -487,10 +487,10 @@ haptic_trigger_templates.ranged.assault = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.lasgun_p2 = {
 	right = {
@@ -505,9 +505,9 @@ haptic_trigger_templates.ranged.lasgun_p2 = {
 				0,
 				0,
 				8,
-				8,
-			},
-		},
+				8
+			}
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -521,10 +521,10 @@ haptic_trigger_templates.ranged.lasgun_p2 = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.lasgun_p3 = {
 	right = {
@@ -540,14 +540,14 @@ haptic_trigger_templates.ranged.lasgun_p3 = {
 				0,
 				0,
 				8,
-				8,
-			},
+				8
+			}
 		},
 		vibration = {
-			amplitude = 7,
 			frequency = 0,
 			position = 3,
-		},
+			amplitude = 7
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -561,10 +561,10 @@ haptic_trigger_templates.ranged.lasgun_p3 = {
 				0,
 				2,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.forcestaff = {
 	right = {
@@ -580,14 +580,14 @@ haptic_trigger_templates.ranged.forcestaff = {
 				1,
 				1,
 				2,
-				3,
-			},
+				3
+			}
 		},
 		vibration = {
-			amplitude = 5,
 			frequency = 0,
 			position = 5,
-		},
+			amplitude = 5
+		}
 	},
 	left = {
 		scale_vibration_with_ammo = true,
@@ -602,29 +602,29 @@ haptic_trigger_templates.ranged.forcestaff = {
 				6,
 				6,
 				6,
-				6,
-			},
+				6
+			}
 		},
 		vibration = {
-			amplitude = 5,
 			frequency = 0,
 			position = 5,
-		},
-	},
+			amplitude = 5
+		}
+	}
 }
 haptic_trigger_templates.ranged.killshot_burst = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 5,
 			start_position = 2,
-			strength = 4,
+			end_position = 5,
+			strength = 4
 		},
 		vibration = {
-			amplitude = 6,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 6
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -638,24 +638,24 @@ haptic_trigger_templates.ranged.killshot_burst = {
 				3,
 				2,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.killshot_semiauto = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 3,
 			start_position = 2,
-			strength = 3,
+			end_position = 3,
+			strength = 3
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 80,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -669,24 +669,24 @@ haptic_trigger_templates.ranged.killshot_semiauto = {
 				3,
 				2,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.killshot_fast = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 4,
 			start_position = 3,
-			strength = 1,
+			end_position = 4,
+			strength = 1
 		},
 		vibration = {
-			amplitude = 7,
 			frequency = 50,
 			position = 3,
-		},
+			amplitude = 7
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -700,24 +700,24 @@ haptic_trigger_templates.ranged.killshot_fast = {
 				3,
 				2,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.bolter = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 4,
 			start_position = 2,
-			strength = 8,
+			end_position = 4,
+			strength = 8
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 5,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -731,24 +731,24 @@ haptic_trigger_templates.ranged.bolter = {
 				0,
 				4,
 				3,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.demolition = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 7,
 			start_position = 2,
-			strength = 6,
+			end_position = 7,
+			strength = 6
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -762,25 +762,25 @@ haptic_trigger_templates.ranged.demolition = {
 				4,
 				4,
 				4,
-				4,
-			},
-		},
-	},
+				4
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.gauntlet = {
 	right = {
-		scale_vibration_with_ammo = true,
 		use_template_vibration_frequency = true,
+		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 7,
 			start_position = 2,
-			strength = 6,
+			end_position = 7,
+			strength = 6
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 20,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -794,15 +794,15 @@ haptic_trigger_templates.ranged.gauntlet = {
 				4,
 				4,
 				4,
-				4,
-			},
-		},
-	},
+				4
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.flamer = {
 	right = {
-		scale_vibration_with_ammo = true,
 		use_template_vibration_frequency = true,
+		scale_vibration_with_ammo = true,
 		multi_position_feedback = {
 			strength = {
 				0,
@@ -814,18 +814,18 @@ haptic_trigger_templates.ranged.flamer = {
 				3,
 				5,
 				7,
-				8,
-			},
+				8
+			}
 		},
 		vibration = {
-			amplitude = 4,
 			frequency = 25,
 			position = 5,
-		},
+			amplitude = 4
+		}
 	},
 	left = {
-		scale_vibration_with_ammo = true,
 		use_template_vibration_frequency = true,
+		scale_vibration_with_ammo = true,
 		multi_position_feedback = {
 			strength = {
 				0,
@@ -837,15 +837,15 @@ haptic_trigger_templates.ranged.flamer = {
 				3,
 				5,
 				7,
-				8,
-			},
+				8
+			}
 		},
 		vibration = {
-			amplitude = 4,
 			frequency = 25,
 			position = 5,
-		},
-	},
+			amplitude = 4
+		}
+	}
 }
 haptic_trigger_templates.ranged.plasmagun = {
 	right = {
@@ -861,14 +861,14 @@ haptic_trigger_templates.ranged.plasmagun = {
 				3,
 				5,
 				7,
-				8,
-			},
+				8
+			}
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 5,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		scale_vibration_with_ammo = true,
@@ -883,29 +883,29 @@ haptic_trigger_templates.ranged.plasmagun = {
 				4,
 				5,
 				5,
-				6,
-			},
+				6
+			}
 		},
 		vibration = {
-			amplitude = 5,
 			frequency = 0,
 			position = 5,
-		},
-	},
+			amplitude = 5
+		}
+	}
 }
 haptic_trigger_templates.ranged.shotgun_p2_single_shot = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 5,
 			start_position = 2,
-			strength = 6,
+			end_position = 5,
+			strength = 6
 		},
 		vibration = {
-			amplitude = 7,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 7
+		}
 	},
 	left = {
 		multi_position_feedback = {
@@ -919,24 +919,24 @@ haptic_trigger_templates.ranged.shotgun_p2_single_shot = {
 				1,
 				1,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 haptic_trigger_templates.ranged.shotgun_p2_double_shot = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 8,
 			start_position = 2,
-			strength = 8,
+			end_position = 8,
+			strength = 8
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 8
+		}
 	},
 	left = {
 		scale_vibration_with_ammo = true,
@@ -951,29 +951,29 @@ haptic_trigger_templates.ranged.shotgun_p2_double_shot = {
 				1,
 				1,
 				1,
-				0,
-			},
+				0
+			}
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 0,
 			position = 5,
-		},
-	},
+			amplitude = 8
+		}
+	}
 }
 haptic_trigger_templates.ranged.stubrevolver_p1_m2_special_shoot = {
 	right = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 3,
 			start_position = 2,
-			strength = 3,
+			end_position = 3,
+			strength = 3
 		},
 		vibration = {
-			amplitude = 6,
 			frequency = 0,
 			position = 2,
-		},
+			amplitude = 6
+		}
 	},
 	left = {
 		use_template_vibration_frequency = true,
@@ -988,15 +988,15 @@ haptic_trigger_templates.ranged.stubrevolver_p1_m2_special_shoot = {
 				3,
 				5,
 				7,
-				8,
-			},
+				8
+			}
 		},
 		vibration = {
-			amplitude = 8,
 			frequency = 30,
 			position = 1,
-		},
-	},
+			amplitude = 8
+		}
+	}
 }
 
 local function _preprocess(settings_type)

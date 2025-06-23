@@ -9,7 +9,7 @@ local SLOT_ITEM_NAME = "slot_netgun"
 local resources = {
 	net_particle_name = NET_PARTICLE_NAME,
 	net_sound_event = NET_SOUND_EVENT,
-	net_sound_stop_event = NET_SOUND_STOP_EVENT,
+	net_sound_stop_event = NET_SOUND_STOP_EVENT
 }
 
 local function _get_net_position(template_context, template_data)
@@ -82,7 +82,7 @@ local effect_template = {
 		local world, particle_id = template_context.world, template_data.particle_id
 
 		World.destroy_particles(world, particle_id)
-	end,
+	end
 }
 
 return effect_template

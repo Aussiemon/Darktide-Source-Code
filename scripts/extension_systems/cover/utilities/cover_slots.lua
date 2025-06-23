@@ -123,7 +123,7 @@ CoverSlots._add_slot = function (physics_world, unit, navmesh_position, slot_pos
 			type = cover_type,
 			normal = Vector3Box(left),
 			direction = Vector3Box(-left),
-			id = COVER_SLOT_ID,
+			id = COVER_SLOT_ID
 		}
 		local valid_cover_slot = CoverSlots._generate_slot_peek_types(physics_world, cover_slot, cover_type, position_on_navmesh)
 

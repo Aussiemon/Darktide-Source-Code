@@ -17,7 +17,7 @@ local RIGHT_SEGMENT_INDEX = 3
 local VECTOR_TYPES = {
 	"main",
 	"left_flank",
-	"right_flank",
+	"right_flank"
 }
 
 CombatVectorSystem.init = function (self, ...)
@@ -30,9 +30,9 @@ CombatVectorSystem.init = function (self, ...)
 		local astar = GwNavAStar.create(nav_world)
 
 		self._astar_data = {
-			astar_finished = true,
 			astar_timer = 0,
-			astar = astar,
+			astar_finished = true,
+			astar = astar
 		}
 		self._current_from_position = Vector3Box()
 		self._current_to_position = Vector3Box()
@@ -53,7 +53,7 @@ CombatVectorSystem.init = function (self, ...)
 				vector_segments[j] = {
 					Vector3Box(),
 					Vector3Box(),
-					Vector3Box(),
+					Vector3Box()
 				}
 			end
 
@@ -67,7 +67,7 @@ CombatVectorSystem.init = function (self, ...)
 
 				locations[location_type] = {
 					close = {},
-					far = {},
+					far = {}
 				}
 				location_counters[location_type] = 0
 			end
@@ -100,12 +100,12 @@ CombatVectorSystem.init = function (self, ...)
 		self._flank_astar_data = {
 			left_flank = {
 				finished = true,
-				astar = left_flank_astar,
+				astar = left_flank_astar
 			},
 			right_flank = {
 				finished = true,
-				astar = right_flank_astar,
-			},
+				astar = right_flank_astar
+			}
 		}
 		self._next_update_at = 0
 		self._current_update_unit = nil
@@ -115,17 +115,17 @@ CombatVectorSystem.init = function (self, ...)
 end
 
 local NAV_TAG_LAYER_COSTS = {
-	cover_ledges = 10,
-	cover_vaults = 10,
+	teleporters = 100,
+	ledges_with_fence = 10,
 	doors = 10,
 	jumps = 10,
 	ledges = 10,
-	ledges_with_fence = 10,
-	monster_walls = 0,
-	teleporters = 100,
+	cover_ledges = 10,
+	cover_vaults = 10,
+	monster_walls = 0
 }
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/minion_no_destination",
+	"content/volume_types/nav_tag_volumes/minion_no_destination"
 }
 
 CombatVectorSystem.on_gameplay_post_init = function (self, level)
@@ -595,7 +595,7 @@ function _calculate_nav_mesh_locations(nav_world, traverse_logic, segments, segm
 						range_nav_mesh_locations[#range_nav_mesh_locations + 1] = {
 							claimed = false,
 							position = Vector3Box(pos_on_nav_mesh),
-							location_type = location_type,
+							location_type = location_type
 						}
 					end
 				end
@@ -765,12 +765,14 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 					if not group_index then
 						local latest_position_on_nav_mesh = ScriptUnit.extension(player_unit, "navigation_system"):latest_position_on_nav_mesh()
 
-						if latest_position_on_nav_mesh then
-							group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+						if not latest_position_on_nav_mesh then
+							break
 						end
+
+						group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
 					end
 
-					local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+					local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
 					local end_index = start_index + 1
 					local _, travel_distance = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
 

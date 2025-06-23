@@ -111,7 +111,7 @@ HudElementWorldMarkers.event_add_world_marker_unit = function (self, marker_type
 		type = marker_type,
 		unit = unit,
 		position = Vector3Box(),
-		my_player = my_player,
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id
@@ -142,7 +142,7 @@ HudElementWorldMarkers.event_add_world_marker_position = function (self, marker_
 		type = marker_type,
 		world_position = Vector3Box(world_position),
 		position = Vector3Box(),
-		my_player = my_player,
+		my_player = my_player
 	}
 	local id = self:_register_marker(marker)
 	local widget_name = "marker_widget_id_" .. id

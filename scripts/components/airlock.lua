@@ -107,13 +107,13 @@ Airlock.component_data = {
 	inputs = {
 		start_lockdown = {
 			accessibility = "private",
-			type = "event",
+			type = "event"
 		},
 		stop_lockdown = {
 			accessibility = "private",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return Airlock

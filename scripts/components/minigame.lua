@@ -36,16 +36,16 @@ end
 
 Minigame.component_data = {
 	minigame_type = {
-		ui_name = "Minigame Type",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Minigame Type",
 		options_keys = {
 			"None",
 			"Default",
 			"Balance",
 			"Decode Symbols",
 			"Drill",
-			"Find Frequency",
+			"Find Frequency"
 		},
 		options_values = {
 			"none",
@@ -53,12 +53,12 @@ Minigame.component_data = {
 			"balance",
 			"decode_symbols",
 			"drill",
-			"frequency",
-		},
+			"frequency"
+		}
 	},
 	extensions = {
-		"MinigameExtension",
-	},
+		"MinigameExtension"
+	}
 }
 
 return Minigame

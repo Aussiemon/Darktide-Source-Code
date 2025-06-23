@@ -16,117 +16,117 @@ local currency_order = {
 	"marks",
 	"plasteel",
 	"diamantine",
-	"aquilas",
+	"aquilas"
 }
 local widget_passes = {
 	title = {
 		size = {
 			nil,
-			30,
+			30
 		},
 		passes = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "",
 				value_id = "text",
+				style_id = "text",
+				pass_type = "text",
+				value = "",
 				style = {
 					font_size = 30,
-					text_color = Color.terminal_text_header_selected(255, true),
-				},
-			},
+					text_color = Color.terminal_text_header_selected(255, true)
+				}
+			}
 		},
 		init = function (widget, data)
 			local content = widget.content
 
 			content.text = data.display_name
-		end,
+		end
 	},
 	small_title = {
 		size = {
 			nil,
-			24,
+			24
 		},
 		passes = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "",
 				value_id = "text",
+				style_id = "text",
+				pass_type = "text",
+				value = "",
 				style = {
 					font_size = 24,
-					text_color = Color.terminal_text_header(255, true),
-				},
-			},
+					text_color = Color.terminal_text_header(255, true)
+				}
+			}
 		},
 		init = function (widget, data)
 			local content = widget.content
 
 			content.text = data.display_name
-		end,
+		end
 	},
 	currency_text = {
 		size = {
 			nil,
-			28,
+			28
 		},
 		passes = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "text",
-				style_id = "currency",
-				value = "",
 				value_id = "currency",
+				style_id = "currency",
+				pass_type = "text",
+				value = "",
 				style = {
 					font_size = 18,
 					text_vertical_alignment = "center",
-					text_color = Color.terminal_text_body(255, true),
-				},
+					text_color = Color.terminal_text_body(255, true)
+				}
 			},
 			{
+				value_id = "icon",
 				pass_type = "texture",
 				style_id = "icon",
-				value_id = "icon",
 				style = {
-					horizontal_alignment = "right",
 					vertical_alignment = "center",
+					horizontal_alignment = "right",
 					size = {
 						40,
-						28,
-					},
+						28
+					}
 				},
 				visibilty_function = function (parent, content)
 					return not not content.icon
-				end,
+				end
 			},
 			{
-				pass_type = "text",
-				style_id = "value",
-				value = "",
 				value_id = "value",
+				style_id = "value",
+				pass_type = "text",
+				value = "",
 				style = {
 					font_size = 18,
-					text_horizontal_alignment = "right",
 					text_vertical_alignment = "center",
+					text_horizontal_alignment = "right",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						-50,
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (widget, data)
 			local content = widget.content
@@ -135,76 +135,76 @@ local widget_passes = {
 			content.currency = Localize(wallet_data.display_name)
 			content.icon = wallet_data.icon_texture_small
 			content.value = data.value
-		end,
+		end
 	},
 	large_spacing = {
 		size = {
 			nil,
-			20,
-		},
+			20
+		}
 	},
 	spacing = {
 		size = {
 			nil,
-			10,
-		},
+			10
+		}
 	},
 	image = {
 		size = {
 			nil,
-			300,
+			300
 		},
 		passes = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "texture",
-				style_id = "texture",
-				value = "content/ui/materials/base/ui_default_base",
 				value_id = "texture",
+				style_id = "texture",
+				pass_type = "texture",
+				value = "content/ui/materials/base/ui_default_base",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "center",
+					vertical_alignment = "center"
 				},
 				visibilty_function = function (parent, content)
 					return not not content.value_id
-				end,
-			},
+				end
+			}
 		},
 		init = function (widget, data)
 			widget.style.texture.material_values = {
-				texture_map = data.texture,
+				texture_map = data.texture
 			}
-		end,
+		end
 	},
 	description = {
 		size = {
 			nil,
-			70,
+			70
 		},
 		passes = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "text",
-				style_id = "description",
-				value = "",
 				value_id = "description",
+				style_id = "description",
+				pass_type = "text",
+				value = "",
 				style = {
 					font_size = 18,
 					text_vertical_alignment = "top",
-					text_color = Color.terminal_text_body(255, true),
-				},
-			},
+					text_color = Color.terminal_text_body(255, true)
+				}
+			}
 		},
 		init = function (widget, data)
 			widget.content.description = data.text
-		end,
-	},
+		end
+	}
 }
 
 ViewElemenServerMigration.init = function (self, parent, draw_layer, start_scale, context)
@@ -219,7 +219,7 @@ ViewElemenServerMigration.init = function (self, parent, draw_layer, start_scale
 	self:_create_background_gui()
 	ButtonPassTemplates.terminal_button_hold_small.init(self, self._widgets_by_name.close_button, self._ui_default_renderer, {
 		text = Localize("loc_popup_button_close"),
-		complete_function = callback(self, "_close_button_pressed", self._widgets_by_name.close_button),
+		complete_function = callback(self, "_close_button_pressed", self._widgets_by_name.close_button)
 	})
 
 	self._widgets_by_name.next_button.content.original_text = Localize("loc_next")
@@ -244,7 +244,7 @@ ViewElemenServerMigration._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -386,8 +386,8 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 				grid_alignments[#grid_alignments + 1] = {
 					size = {
 						grid_size[1],
-						size[2],
-					},
+						size[2]
+					}
 				}
 				total_height = total_height + size[2]
 			else
@@ -409,8 +409,8 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 					name = "migration_server_element_widget_" .. j .. "_" .. i,
 					size = {
 						grid_size[1],
-						size[2],
-					},
+						size[2]
+					}
 				}
 				total_height = total_height + size[2]
 			end
@@ -418,7 +418,7 @@ ViewElemenServerMigration.change_page_presentation = function (self, index)
 
 		local grid = UIWidgetGrid:new(grid_widgets, grid_alignments, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
 			0,
-			0,
+			0
 		})
 
 		grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
@@ -607,7 +607,7 @@ ViewElemenServerMigration._generate_slider_widget = function (self, current_inde
 		widget.offset = {
 			offset - total_offset_size * 0.5,
 			0,
-			200,
+			200
 		}
 		widget.content.hotspot.is_selected = current_index == i
 		widgets[#widgets + 1] = widget
@@ -642,14 +642,14 @@ ViewElemenServerMigration.present = function (self, migration_data)
 			local character_id = character_profile.character_id
 
 			migration_by_character_id[character_id] = {
-				character_profile.name,
+				character_profile.name
 			}
 		end
 
 		for currency_type, data in pairs(WalletSettings) do
 			if currency_type ~= "aquilas" then
 				wallet_currencies[currency_type] = {
-					[1] = 0,
+					[1] = 0
 				}
 
 				local order_id = table.find(currency_order, currency_type)
@@ -681,10 +681,10 @@ ViewElemenServerMigration.present = function (self, migration_data)
 		local presentation_data = {
 			{
 				{
-					grid_content_scenegraph_id = "change_info_grid_content_pivot",
-					grid_direction = "down",
 					grid_scenegraph_id = "change_info_grid",
 					interaction_scenegraph_id = "change_info_grid_interaction",
+					grid_content_scenegraph_id = "change_info_grid_content_pivot",
+					grid_direction = "down",
 					scrollbar_widget = self._widgets_by_name.change_info_grid_scrollbar,
 					mask_widget = self._widgets_by_name.change_info_grid_mask,
 					widgets = {
@@ -694,12 +694,12 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								texture = "content/ui/textures/images/wallet_merge",
 								size = {
 									300,
-									300,
-								},
-							},
+									300
+								}
+							}
 						},
 						{
-							pass_template = "large_spacing",
+							pass_template = "large_spacing"
 						},
 						{
 							pass_template = "description",
@@ -707,82 +707,82 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								text = Localize("loc_wallet_merge_desc"),
 								size = {
 									nil,
-									100,
+									100
 								},
 								style_overrides = {
 									description = {
-										text_horizontal_alignment = "center",
-									},
-								},
-							},
-						},
-					},
+										text_horizontal_alignment = "center"
+									}
+								}
+							}
+						}
+					}
 				},
-				display_name = "loc_wallet_merge_title",
+				display_name = "loc_wallet_merge_title"
 			},
 			{
 				grid_placement = {
 					{
 						1,
-						2,
+						2
 					},
 					{
-						3,
-					},
+						3
+					}
 				},
 				grid_spacing = {
 					{
 						0,
-						20,
+						20
 					},
 					{
 						0,
-						20,
+						20
 					},
 					{
 						0,
-						20,
-					},
+						20
+					}
 				},
 				{
+					grid_scenegraph_id = "wallet_grid_1",
+					type = "total",
+					interaction_scenegraph_id = "wallet_grid_1_interaction",
 					grid_content_scenegraph_id = "wallet_grid_1_content_pivot",
 					grid_direction = "down",
-					grid_scenegraph_id = "wallet_grid_1",
-					interaction_scenegraph_id = "wallet_grid_1_interaction",
-					type = "total",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_1_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_1_mask,
 					widgets = {
 						{
 							pass_template = "title",
 							data = {
-								display_name = Localize("loc_wallet_merge_account_wallets"),
-							},
-						},
-					},
+								display_name = Localize("loc_wallet_merge_account_wallets")
+							}
+						}
+					}
 				},
 				{
+					grid_scenegraph_id = "wallet_grid_2",
+					type = "character_id",
+					interaction_scenegraph_id = "wallet_grid_2_interaction",
 					grid_content_scenegraph_id = "wallet_grid_2_content_pivot",
 					grid_direction = "down",
-					grid_scenegraph_id = "wallet_grid_2",
-					interaction_scenegraph_id = "wallet_grid_2_interaction",
-					type = "character_id",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_2_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_2_mask,
 					widgets = {
 						{
 							pass_template = "title",
 							data = {
-								display_name = Localize("loc_wallet_merge_character_wallets"),
-							},
-						},
-					},
+								display_name = Localize("loc_wallet_merge_character_wallets")
+							}
+						}
+					}
 				},
 				{
-					grid_content_scenegraph_id = "wallet_grid_3_content_pivot",
-					grid_direction = "down",
 					grid_scenegraph_id = "wallet_grid_3",
 					interaction_scenegraph_id = "wallet_grid_3_interaction",
+					grid_content_scenegraph_id = "wallet_grid_3_content_pivot",
+					grid_direction = "down",
 					scrollbar_widget = self._widgets_by_name.wallet_grid_3_scrollbar,
 					mask_widget = self._widgets_by_name.wallet_grid_3_mask,
 					widgets = {
@@ -792,15 +792,15 @@ ViewElemenServerMigration.present = function (self, migration_data)
 								text = Localize("loc_wallet_merge_receipt_desc"),
 								style_overrides = {
 									description = {
-										text_horizontal_alignment = "center",
-									},
-								},
-							},
-						},
-					},
+										text_horizontal_alignment = "center"
+									}
+								}
+							}
+						}
+					}
 				},
-				display_name = "loc_wallet_merge_receipt_title",
-			},
+				display_name = "loc_wallet_merge_receipt_title"
+			}
 		}
 
 		for i = 1, #presentation_data[2] do
@@ -809,16 +809,16 @@ ViewElemenServerMigration.present = function (self, migration_data)
 
 			if data.type == "total" then
 				widgets[#widgets + 1] = {
-					pass_template = "large_spacing",
+					pass_template = "large_spacing"
 				}
 				widgets[#widgets + 1] = {
 					pass_template = "small_title",
 					data = {
-						display_name = Localize("loc_wallet_merge_total"),
-					},
+						display_name = Localize("loc_wallet_merge_total")
+					}
 				}
 				widgets[#widgets + 1] = {
-					pass_template = "spacing",
+					pass_template = "spacing"
 				}
 
 				for i = 1, #wallet_by_order do
@@ -829,23 +829,23 @@ ViewElemenServerMigration.present = function (self, migration_data)
 						pass_template = "currency_text",
 						data = {
 							currency_type = currency_type,
-							value = TextUtils.format_currency(currency_data[1]),
-						},
+							value = TextUtils.format_currency(currency_data[1])
+						}
 					}
 				end
 			elseif data.type == "character_id" then
 				for character_id, character_data in pairs(migration_by_character_id) do
 					widgets[#widgets + 1] = {
-						pass_template = "large_spacing",
+						pass_template = "large_spacing"
 					}
 					widgets[#widgets + 1] = {
 						pass_template = "small_title",
 						data = {
-							display_name = character_data[1],
-						},
+							display_name = character_data[1]
+						}
 					}
 					widgets[#widgets + 1] = {
-						pass_template = "spacing",
+						pass_template = "spacing"
 					}
 
 					for i = 1, #wallet_by_order do
@@ -856,8 +856,8 @@ ViewElemenServerMigration.present = function (self, migration_data)
 							pass_template = "currency_text",
 							data = {
 								currency_type = currency_type,
-								value = TextUtils.format_currency(currency_data[character_id]),
-							},
+								value = TextUtils.format_currency(currency_data[character_id])
+							}
 						}
 					end
 				end
@@ -897,7 +897,7 @@ ViewElemenServerMigration.update = function (self, dt, t, input_service)
 
 	if self._widgets_by_name.close_button and self._ui_default_renderer then
 		ButtonPassTemplates.terminal_button_hold_small.update(self, self._widgets_by_name.close_button, {
-			input_service = input_service,
+			input_service = input_service
 		}, dt)
 	end
 
@@ -970,11 +970,11 @@ ViewElemenServerMigration._setup_presentation = function (self)
 	local on_enter_animation_callback
 	local additional_widgets = {
 		unpack(self._grid_widgets),
-		unpack(self._selection_widgets),
+		unpack(self._selection_widgets)
 	}
 	local params = {
 		popup_height = height,
-		additional_widgets = additional_widgets,
+		additional_widgets = additional_widgets
 	}
 
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
@@ -994,11 +994,11 @@ ViewElemenServerMigration._cleanup_presentation = function (self)
 	local height = self._grid_height
 	local additional_widgets = {
 		unpack(self._grid_widgets),
-		unpack(self._selection_widgets),
+		unpack(self._selection_widgets)
 	}
 	local params = {
 		popup_height = height,
-		additional_widgets = additional_widgets,
+		additional_widgets = additional_widgets
 	}
 
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)

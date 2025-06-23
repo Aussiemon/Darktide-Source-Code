@@ -17,12 +17,12 @@ local DAMAGE_INDICATOR_ATTACK_RESULTS = {
 	[attack_results.toughness_absorbed_melee] = true,
 	[attack_results.toughness_broken] = true,
 	[attack_results.friendly_fire] = true,
-	[attack_results.blocked] = true,
+	[attack_results.blocked] = true
 }
 local RING_BUFFER_SIZE = 2048
 local MAX_UPDATES_PER_FRAME = 64
 local CLIENT_RPCS = {
-	"rpc_add_attack_result",
+	"rpc_add_attack_result"
 }
 
 AttackReportManager.init = function (self, is_server, network_event_delegate)

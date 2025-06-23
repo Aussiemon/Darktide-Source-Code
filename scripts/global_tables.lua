@@ -50,5 +50,5 @@ GLOBAL_RESOURCES = {
 	"content/liquid_area/liquid_area_assets",
 	"content/smoke_fog/smoke_fog_assets",
 	"content/pickups/pickup_assets",
-	"content/weapons/weapon_assets",
+	"content/weapons/weapon_assets"
 }

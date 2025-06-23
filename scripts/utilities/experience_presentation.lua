@@ -124,10 +124,10 @@ ExperiencePresentation.setup_presentation_data = function (experience_settings, 
 	local spare_time = presentation_duration - total_level_up_delay - duration_per_level * total_bar_progress
 
 	return {
-		presentation_completed = false,
-		presentation_started = false,
 		time = 0,
 		time_progress = 0,
+		presentation_completed = false,
+		presentation_started = false,
 		experience_settings = experience_settings,
 		start_level = start_level,
 		end_level = end_level,
@@ -139,7 +139,7 @@ ExperiencePresentation.setup_presentation_data = function (experience_settings, 
 		starting_experience = starting_experience,
 		duration = presentation_duration,
 		spare_time = spare_time,
-		level_up_delay = level_up_delay,
+		level_up_delay = level_up_delay
 	}
 end
 

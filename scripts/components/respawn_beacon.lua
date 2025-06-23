@@ -298,26 +298,26 @@ end
 
 RespawnBeacon.component_data = {
 	side = {
-		ui_name = "Side",
-		ui_type = "combo_box",
 		value = "heroes",
+		ui_type = "combo_box",
+		ui_name = "Side",
 		options_keys = {
 			"Heroes",
-			"Villains",
+			"Villains"
 		},
 		options_values = {
 			"heroes",
-			"villains",
-		},
+			"villains"
+		}
 	},
 	debug_ignore_check_distances = {
-		ui_name = "Ignore Debug Check Distances",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Ignore Debug Check Distances"
 	},
 	extensions = {
-		"RespawnBeaconExtension",
-	},
+		"RespawnBeaconExtension"
+	}
 }
 
 return RespawnBeacon

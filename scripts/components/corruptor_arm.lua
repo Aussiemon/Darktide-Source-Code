@@ -277,13 +277,13 @@ CorruptorArm._editor_debug_draw = function (self, unit)
 			arm_start_position,
 			first_control_position,
 			second_control_position,
-			arm_end_position,
+			arm_end_position
 		}
 		local text = {
 			"Start Node",
 			"First Control",
 			"Second Control",
-			"End Node",
+			"End Node"
 		}
 
 		for i = 1, 4 do
@@ -324,100 +324,100 @@ end
 
 CorruptorArm.component_data = {
 	activation_delay = {
-		category = "Setup",
-		ui_name = "Activation Delay (sec.)",
 		ui_type = "number",
 		value = 0,
+		ui_name = "Activation Delay (sec.)",
+		category = "Setup"
 	},
 	main_unit_root_name = {
-		category = "Curve",
-		ui_name = "Main Unit Root Name",
 		ui_type = "text_box",
 		value = "rp_corruptor_arm_mid",
+		ui_name = "Main Unit Root Name",
+		category = "Curve"
 	},
 	attach_unit_root_name = {
-		category = "Curve",
-		ui_name = "Attach Unit Base Name",
 		ui_type = "text_box",
 		value = "rp_corruptor_arm_mid_attach",
+		ui_name = "Attach Unit Base Name",
+		category = "Curve"
 	},
 	joint_base_name = {
-		category = "Curve",
-		ui_name = "Joint Base Name",
 		ui_type = "text_box",
 		value = "j_arm_0",
+		ui_name = "Joint Base Name",
+		category = "Curve"
 	},
 	mesh_amount = {
-		category = "Curve",
-		decimals = 0,
-		max = 9,
+		ui_type = "slider",
 		min = 1,
 		step = 1,
-		ui_name = "Mesh Amount",
-		ui_type = "slider",
+		category = "Curve",
 		value = 1,
+		decimals = 0,
+		ui_name = "Mesh Amount",
+		max = 9
 	},
 	tiling_mesh_name = {
-		category = "Curve",
-		filter = "unit",
-		preview = true,
-		ui_name = "Tiling Mesh",
 		ui_type = "resource",
+		preview = true,
+		category = "Curve",
 		value = "content/environment/gameplay/corruptor/corruptor_arm_mid_attach",
+		ui_name = "Tiling Mesh",
+		filter = "unit"
 	},
 	joint_amount = {
-		category = "Curve",
-		decimals = 0,
-		max = 9,
+		ui_type = "slider",
 		min = 1,
 		step = 1,
-		ui_name = "Joint Amount (per mesh)",
-		ui_type = "slider",
+		category = "Curve",
 		value = 6,
+		decimals = 0,
+		ui_name = "Joint Amount (per mesh)",
+		max = 9
 	},
 	first_control = {
-		category = "Curve",
-		ui_name = "First Ctrl",
 		ui_type = "text_box",
 		value = "curve_start",
+		ui_name = "First Ctrl",
+		category = "Curve"
 	},
 	second_control = {
-		category = "Curve",
-		ui_name = "Second Ctrl",
 		ui_type = "text_box",
 		value = "curve_end",
+		ui_name = "Second Ctrl",
+		category = "Curve"
 	},
 	arm_start = {
-		category = "Curve",
-		ui_name = "Arm Start",
 		ui_type = "text_box",
 		value = "arm_start",
+		ui_name = "Arm Start",
+		category = "Curve"
 	},
 	arm_end = {
-		category = "Curve",
-		ui_name = "Arm End",
 		ui_type = "text_box",
 		value = "arm_end",
+		ui_name = "Arm End",
+		category = "Curve"
 	},
 	auto_current_end = {
-		category = "Curve",
-		ui_name = "Auto Animator",
 		ui_type = "text_box",
 		value = "auto_current_end",
+		ui_name = "Auto Animator",
+		category = "Curve"
 	},
 	current_spline_distance = {
-		category = "Curve",
-		decimals = 3,
-		max = 1,
+		ui_type = "slider",
 		min = 0,
 		step = 0.001,
-		ui_name = "Current Spline Distance",
-		ui_type = "slider",
+		category = "Curve",
 		value = 0,
+		decimals = 3,
+		ui_name = "Current Spline Distance",
+		max = 1
 	},
 	extensions = {
-		"CorruptorArmExtension",
-	},
+		"CorruptorArmExtension"
+	}
 }
 
 return CorruptorArm

@@ -12,7 +12,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 local SplashView = class("SplashView", "BaseView")
 
@@ -51,7 +51,7 @@ SplashView._setup_input_legend = function (self)
 		if key then
 			input_legends_by_key[key] = {
 				id = id,
-				settings = legend_input,
+				settings = legend_input
 			}
 		end
 	end
@@ -64,22 +64,22 @@ SplashView._setup_input_legend = function (self)
 		local entry_widget = entry.widget
 		local widget_definition = UIWidget.create_definition({
 			{
-				pass_type = "rect",
 				style_id = "background",
+				pass_type = "rect",
 				style = {
-					color = Color.ui_grey_medium(255, true),
-				},
+					color = Color.ui_grey_medium(255, true)
+				}
 			},
 			{
-				pass_type = "rect",
 				style_id = "fill",
+				pass_type = "rect",
 				style = {
 					color = Color.ui_terminal(255, true),
 					size = {
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		}, entry_widget.scenegraph_id)
 
 		self._skip_bar_widget = self:_create_widget("skip", widget_definition)
@@ -116,7 +116,7 @@ local temp_color = {
 	255,
 	255,
 	255,
-	255,
+	255
 }
 
 local function _get_entry_color(entry, alpha_multiplier)
@@ -157,11 +157,11 @@ SplashView.draw = function (self, dt, t, input_service, layer)
 		self._skip_bar_widget.offset = {
 			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
 			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
-			z_offset,
+			z_offset
 		}
 		self._skip_bar_widget.content.size = {
 			width,
-			5,
+			5
 		}
 
 		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1
@@ -181,7 +181,7 @@ end
 local temp_position = {
 	0,
 	0,
-	0,
+	0
 }
 
 SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
@@ -272,15 +272,15 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 						UIRenderer.draw_texture(ui_renderer, value, temp_position, size, color)
 					elseif entry_type == "video" and not self._splash_video_view_opened and not Managers.ui:is_view_closing("splash_video_view") then
 						local context = {
-							can_exit = false,
-							debug_preview = true,
 							pass_draw = true,
 							pass_input = true,
+							debug_preview = true,
+							can_exit = false,
 							video_name = entry.video_name,
 							sound_name = entry.sound_name,
 							exit_sound_name = entry.exit_sound_name,
 							size = entry.size,
-							position = entry.position,
+							position = entry.position
 						}
 						local view_name = "splash_video_view"
 

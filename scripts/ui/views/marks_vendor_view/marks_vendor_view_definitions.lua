@@ -10,14 +10,14 @@ local widget_definitions = {
 		original_text = Utf8.upper(Localize("loc_vendor_purchase_button")),
 		purchase_sound = UISoundEvents.credits_vendor_on_purchase,
 		hotspot = {
-			on_pressed_sound = UISoundEvents.default_click,
-		},
-	}),
+			on_pressed_sound = UISoundEvents.default_click
+		}
+	})
 }
 local animations = {}
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

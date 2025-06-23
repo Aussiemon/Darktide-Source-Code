@@ -79,8 +79,8 @@ MechanismOnboarding.wanted_transition = function (self)
 			side_mission = side_mission,
 			next_state = StateGameplay,
 			next_state_params = {
-				mechanism_data = mechanism_data,
-			},
+				mechanism_data = mechanism_data
+			}
 		}
 	elseif state == "gameplay" then
 		if self._init_scenario and Managers.state.game_mode then
@@ -163,29 +163,29 @@ end
 
 MechanismOnboarding._show_retry_popup = function (self)
 	local context = {
-		description_text = "loc_popup_description_reconnect_to_session",
 		title_text = "loc_popup_header_reconnect_to_session",
+		description_text = "loc_popup_description_reconnect_to_session",
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_reconnect_to_session_reconnect_button",
+				close_on_pressed = true,
 				callback = function ()
 					self._retry_popup_id = nil
 
 					self:_retry_join()
-				end,
+				end
 			},
 			{
+				text = "loc_popup_reconnect_to_session_leave_button",
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_popup_reconnect_to_session_leave_button",
 				callback = function ()
 					self._retry_popup_id = nil
 
 					Managers.party_immaterium:leave_party()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

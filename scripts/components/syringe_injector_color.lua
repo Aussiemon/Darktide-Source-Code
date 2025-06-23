@@ -53,62 +53,62 @@ end
 
 SyringeInjectorColor.component_data = {
 	glass_material_slot_name = {
-		category = "Glass",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "pup_syringe_glass",
+		ui_name = "Material Slot Name",
+		category = "Glass"
 	},
 	glass_color_variable_name = {
-		category = "Glass",
-		ui_name = "Color Variable Name",
 		ui_type = "text_box",
 		value = "color",
+		ui_name = "Color Variable Name",
+		category = "Glass"
 	},
 	glass_color = {
-		category = "Glass",
-		step = 0.001,
-		ui_name = "Color",
 		ui_type = "vector",
-		value = Vector3Box(0.3, 0.6, 0.4),
+		category = "Glass",
+		ui_name = "Color",
+		step = 0.001,
+		value = Vector3Box(0.3, 0.6, 0.4)
 	},
 	liquid_material_slot_name = {
-		category = "Liquid",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "pup_syringe_liquid",
+		ui_name = "Material Slot Name",
+		category = "Liquid"
 	},
 	liquid_color_variable_name = {
-		category = "Liquid",
-		ui_name = "Color Variable Name",
 		ui_type = "text_box",
 		value = "emissive_color",
+		ui_name = "Color Variable Name",
+		category = "Liquid"
 	},
 	liquid_color = {
-		category = "Liquid",
-		step = 0.001,
-		ui_name = "Color",
 		ui_type = "vector",
-		value = Vector3Box(0.117, 0.6, 0.197),
+		category = "Liquid",
+		ui_name = "Color",
+		step = 0.001,
+		value = Vector3Box(0.117, 0.6, 0.197)
 	},
 	decal_material_slot_name = {
-		category = "Decal",
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "pup_syringe_decal",
+		ui_name = "Material Slot Name",
+		category = "Decal"
 	},
 	decal_index_variable_name = {
-		category = "Decal",
-		ui_name = "Index Variable Name",
 		ui_type = "text_box",
 		value = "wpn_decal_index",
+		ui_name = "Index Variable Name",
+		category = "Decal"
 	},
 	decal_index = {
-		category = "Decal",
-		step = 1,
-		ui_name = "Index",
 		ui_type = "number",
+		category = "Decal",
 		value = 1,
-	},
+		ui_name = "Index",
+		step = 1
+	}
 }
 
 return SyringeInjectorColor

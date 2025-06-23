@@ -16,7 +16,7 @@ XAsyncManager.wrap = function (self, async_block, debug_name)
 
 	self._async_blocks[async_block] = {
 		promise = p,
-		debug_name = debug_name,
+		debug_name = debug_name
 	}
 
 	return p
@@ -32,7 +32,7 @@ XAsyncManager.release = function (self, async_block)
 		end
 
 		promise:reject({
-			HRESULT.E_ABORT,
+			HRESULT.E_ABORT
 		})
 	end
 
@@ -65,7 +65,7 @@ XAsyncManager.update = function (self, dt)
 			end
 
 			data.promise:reject({
-				hr,
+				hr
 			})
 		end
 	end
@@ -79,7 +79,7 @@ XAsyncManager.destroy = function (self)
 			end
 
 			data.promise:reject({
-				HRESULT.E_ABORT,
+				HRESULT.E_ABORT
 			})
 		end
 

@@ -54,14 +54,14 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 			local reward_item_widget_name = "reward_item_widget_" .. index
 			local required_points = reward.points_required
 			local mastery_item_widget_element = {
-				hide_tooltip = false,
 				show_icon = true,
+				hide_tooltip = false,
 				item = first_item,
 				items = filtered_items,
 				required_points = required_points,
 				size = {
 					reward_item_width,
-					reward_item_height,
+					reward_item_height
 				},
 				icon = first_item.icon,
 				display_name = first_item.display_name,
@@ -69,7 +69,7 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 				icon_size = first_item.icon_size,
 				icon_color = first_item.icon_color,
 				icon_material_values = first_item.icon_material_values,
-				type = reward.type,
+				type = reward.type
 			}
 			local template = MasteryContentBlueprints[first_item.widget_type]
 			local mastery_item_pass_template = template and template.pass_template
@@ -128,7 +128,7 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 		local title = ""
 		local icon_size = {
 			0,
-			0,
+			0
 		}
 
 		if item.type == "perk_unlock" then
@@ -140,7 +140,7 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 			title = item.display_name or ""
 			icon_size = item.icon_size and table.clone(item.icon_size) or {
 				0,
-				0,
+				0
 			}
 		elseif item.type == "mastery_points" then
 			title = item.display_name or ""
@@ -167,11 +167,11 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 		local tooltip_size = self._ui_scenegraph.tooltip.size
 		local _, title_height = UIRenderer.text_size(self._ui_resource_renderer, title, title_font_style.font_type, title_font_style.font_size, {
 			tooltip_size[1] - 40,
-			0,
+			0
 		}, title_font_style_options)
 		local _, description_height = UIRenderer.text_size(self._ui_resource_renderer, description, description_font_style.font_type, description_font_style.font_size, {
 			tooltip_size[1] - 40,
-			0,
+			0
 		}, description_font_style_options)
 		local added_margin = 40
 

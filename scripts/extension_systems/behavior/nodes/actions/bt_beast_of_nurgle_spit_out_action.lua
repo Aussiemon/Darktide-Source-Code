@@ -280,11 +280,11 @@ local LATERAL = 2
 local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
 	human = 1.5,
-	ogryn = 1.5,
+	ogryn = 1.5
 }
 local THROW_TELEPORT_FWD_OFFSET = {
 	human = 3.2,
-	ogryn = 3.2,
+	ogryn = 3.2
 }
 
 BtBeastOfNurgleSpitOutAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)

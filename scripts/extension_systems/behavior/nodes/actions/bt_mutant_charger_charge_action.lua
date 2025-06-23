@@ -804,7 +804,7 @@ end
 
 local THROW_TELEPORT_UP_OFFSET = {
 	human = 0.75,
-	ogryn = 0,
+	ogryn = 0
 }
 
 BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad, action_data, breed, t)

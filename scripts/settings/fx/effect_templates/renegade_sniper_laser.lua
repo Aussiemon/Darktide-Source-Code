@@ -13,7 +13,7 @@ local resources = {
 	laser_particle_name = LASER_PARTICLE_NAME,
 	laser_particle_name_outdoors = LASER_PARTICLE_NAME_OUTDOORS,
 	laser_sound_event = LASER_SOUND_EVENT,
-	laser_stop_sound_event = LASER_STOP_SOUND_EVENT,
+	laser_stop_sound_event = LASER_STOP_SOUND_EVENT
 }
 
 local function _get_positions(local_player_unit, template_data, game_session, game_object_id)
@@ -115,7 +115,7 @@ local effect_template = {
 
 			World.destroy_particles(world, particle_id)
 		end
-	end,
+	end
 }
 
 return effect_template

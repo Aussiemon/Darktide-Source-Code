@@ -68,96 +68,96 @@ end
 
 HeresyFinaleMaterialVariables.component_data = {
 	start_effect_time_variable_name = {
-		ui_name = "Start Effect Start Time Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Start Effect Start Time Variable"
 	},
 	material_slot_name = {
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Material Slot Name"
 	},
 	start_effect_variable_name = {
-		ui_name = "Start Effect Duration Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Start Effect Duration Variable"
 	},
 	start_effect_duration = {
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Start Effect Duration",
 		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Start Effect Duration",
+		step = 0.01
 	},
 	stage2_time_variable_name = {
-		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 2 Effect Start Time Variable"
 	},
 	stage2_effect_variable_name = {
-		ui_name = "Stage 2 Effect Duration Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 2 Effect Duration Variable"
 	},
 	stage2_effect_duration = {
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Stage 2 Effect Duration",
 		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Stage 2 Effect Duration",
+		step = 0.01
 	},
 	stage3_time_variable_name = {
-		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 2 Effect Start Time Variable"
 	},
 	stage3_effect_variable_name = {
-		ui_name = "Stage 3 Effect Duration Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 3 Effect Duration Variable"
 	},
 	stage3_effect_duration = {
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Stage 3 Effect Duration",
 		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Stage 3 Effect Duration",
+		step = 0.01
 	},
 	stage4_time_variable_name = {
-		ui_name = "Stage 2 Effect Start Time Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 2 Effect Start Time Variable"
 	},
 	stage4_effect_variable_name = {
-		ui_name = "Stage 4 Effect Duration Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Stage 4 Effect Duration Variable"
 	},
 	stage4_effect_duration = {
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Stage 4 Effect Duration",
 		ui_type = "number",
+		decimals = 2,
 		value = 1,
+		ui_name = "Stage 4 Effect Duration",
+		step = 0.01
 	},
 	inputs = {
 		start_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage2_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage3_effect = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stage4_effect = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return HeresyFinaleMaterialVariables

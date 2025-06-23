@@ -6,15 +6,15 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local template = {}
 local size = {
 	100,
-	100,
+	100
 }
 local arrow_size = {
 	100,
-	100,
+	100
 }
 local icon_size = {
 	64,
-	64,
+	64
 }
 
 template.default_visual_type = "default"
@@ -25,22 +25,22 @@ template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.8,
+	0.8
 }
 template.check_line_of_sight = false
 template.max_distance = 200
 template.screen_clamp = true
 template.screen_margins = {
 	down = 0.23148148148148148,
-	left = 0.234375,
-	right = 0.234375,
 	up = 0.23148148148148148,
+	left = 0.234375,
+	right = 0.234375
 }
 template.scale_settings = {
-	distance_max = 50,
-	distance_min = 5,
-	scale_from = 0.5,
 	scale_to = 1,
+	scale_from = 0.5,
+	distance_max = 50,
+	distance_min = 5
 }
 
 template.get_smart_tag_id = function (marker)
@@ -56,12 +56,12 @@ local template_visual_definitions = {
 			icon = Color.ui_hud_red_light(255, true),
 			text = Color.ui_hud_red_light(255, true),
 			entry_icon_1 = Color.ui_hud_red_light(255, true),
-			entry_icon_2 = Color.ui_hud_red_light(255, true),
+			entry_icon_2 = Color.ui_hud_red_light(255, true)
 		},
 		textures = {
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
-			icon = "content/ui/materials/hud/interactions/icons/enemy",
-		},
+			icon = "content/ui/materials/hud/interactions/icons/enemy"
+		}
 	},
 	passive = {
 		colors = {
@@ -69,38 +69,38 @@ local template_visual_definitions = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			icon = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			text = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			entry_icon_1 = {
 				255,
 				236,
 				165,
-				50,
+				50
 			},
 			entry_icon_2 = {
 				255,
 				236,
 				165,
-				50,
-			},
+				50
+			}
 		},
 		textures = {
 			arrow = "content/ui/materials/hud/interactions/frames/direction",
-			icon = "content/ui/materials/hud/interactions/icons/attention",
-		},
-	},
+			icon = "content/ui/materials/hud/interactions/icons/attention"
+		}
+	}
 }
 
 local function setup_marker_by_visual_type(widget, marker, visual_type)
@@ -139,121 +139,121 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			style_id = "icon",
-			value = "content/ui/materials/hud/interactions/icons/enemy",
 			value_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/hud/interactions/icons/enemy",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = icon_size,
 				default_size = icon_size,
 				offset = {
 					0,
 					-10,
-					1,
+					1
 				},
-				color = Color.ui_hud_red_light(255, true),
+				color = Color.ui_hud_red_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			style_id = "entry_icon_1",
+			pass_type = "texture",
 			value_id = "icon",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				default_size = {
 					icon_size[1] * 1.25,
-					icon_size[2] * 1.25,
+					icon_size[2] * 1.25
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				offset = {
 					0,
 					-10,
-					0,
+					0
 				},
-				color = Color.ui_hud_red_medium(255, true),
+				color = Color.ui_hud_red_medium(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
 			style_id = "entry_icon_2",
-			value = "content/ui/materials/hud/interactions/frames/pulse_effect",
 			value_id = "2",
+			pass_type = "texture",
+			value = "content/ui/materials/hud/interactions/frames/pulse_effect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				default_size = {
 					icon_size[1] * 1,
-					icon_size[2] * 1,
+					icon_size[2] * 1
 				},
 				size = {
 					icon_size[1],
-					icon_size[2],
+					icon_size[2]
 				},
 				offset = {
 					0,
 					-10,
-					0,
+					0
 				},
-				color = Color.ui_hud_red_light(255, true),
+				color = Color.ui_hud_red_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.icon ~= nil
-			end,
+			end
 		},
 		{
-			pass_type = "rotated_texture",
-			style_id = "arrow",
-			value = "content/ui/materials/hud/interactions/frames/direction",
 			value_id = "arrow",
+			pass_type = "rotated_texture",
+			value = "content/ui/materials/hud/interactions/frames/direction",
+			style_id = "arrow",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.ui_hud_red_light(255, true),
+				color = Color.ui_hud_red_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "text",
-			value = "-",
+			pass_type = "text",
 			value_id = "text",
+			value = "-",
 			style = {
 				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
 				text_vertical_alignment = "top",
+				text_horizontal_alignment = "center",
 				vertical_alignment = "center",
 				offset = {
 					0,
 					20,
-					2,
+					2
 				},
 				default_offset = {
 					0,
 					20,
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -261,16 +261,16 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					200,
-					20,
-				},
+					20
+				}
 			},
 			visibility_function = function (content, style)
 				return content.distance >= 5 and (content.is_hovered or content.is_clamped)
 			end,
 			change_function = function (content, style)
 				return
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

@@ -37,7 +37,7 @@ XboxLiveUtils.available = function ()
 	else
 		return Promise.rejected({
 			header = "XboxLiveUtils.available()",
-			message = Localize(NO_XBOX_LIVE),
+			message = Localize(NO_XBOX_LIVE)
 		})
 	end
 end
@@ -51,7 +51,7 @@ XboxLiveUtils.user_id = function ()
 		else
 			return Promise.rejected({
 				header = "XboxLiveUtils.user_id()",
-				message = Localize(MISSING_XUSER),
+				message = Localize(MISSING_XUSER)
 			})
 		end
 	end):catch(_handle_error)
@@ -79,12 +79,12 @@ XboxLiveUtils.create_user_context = function ()
 			if error_code then
 				return Promise.rejected({
 					header = "XboxLive.create_user_context",
-					error_code = error_code,
+					error_code = error_code
 				})
 			elseif error_message then
 				return Promise.rejected({
 					header = "XboxLive.create_user_context",
-					message = error_message,
+					message = error_message
 				})
 			else
 				return Managers.xasync:wrap(async_result):next(function ()
@@ -108,12 +108,12 @@ XboxLiveUtils.get_user_profiles = function (xuids)
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveProfile.get_user_profiles",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveProfile.get_user_profiles",
-				message = error_message,
+				message = error_message
 			})
 		end
 
@@ -124,7 +124,7 @@ XboxLiveUtils.get_user_profiles = function (xuids)
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveProfile.get_user_profiles_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		end
 
@@ -139,12 +139,12 @@ XboxLiveUtils.get_user_presence_data = function (xuids)
 		if error_code then
 			return Promise.rejected({
 				header = "XSocial.get_user_presence_data",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XSocial.get_user_presence_data",
-				message = error_message,
+				message = error_message
 			})
 		end
 
@@ -155,7 +155,7 @@ XboxLiveUtils.get_user_presence_data = function (xuids)
 		if error_code then
 			return Promise.rejected({
 				header = "XSocial.get_user_presence_data_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		end
 
@@ -170,12 +170,12 @@ XboxLiveUtils.get_block_list = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_avoid_list",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_avoid_list",
-				message = error_message,
+				message = error_message
 			})
 		end
 
@@ -186,7 +186,7 @@ XboxLiveUtils.get_block_list = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_avoid_list_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		end
 
@@ -201,12 +201,12 @@ XboxLiveUtils.get_mute_list = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_mute_list",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_mute_list",
-				message = error_message,
+				message = error_message
 			})
 		end
 
@@ -217,12 +217,18 @@ XboxLiveUtils.get_mute_list = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.get_mute_list_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		end
 
 		return mute_list
 	end):catch(_handle_error)
+end
+
+XboxLiveUtils.get_my_activity = function ()
+	XboxLiveUtils.get_activity({
+		Managers.account:xuid()
+	})
 end
 
 XboxLiveUtils.get_activity = function (xuid_string_array)
@@ -232,12 +238,12 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveMPA.get_activity",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveMPA.get_activity",
-				message = error_message,
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block)
@@ -248,7 +254,7 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveMPA.get_activity_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		else
 			table.dump(result, "RESULT", 2)
@@ -257,27 +263,33 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 end
 
 XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_members, join_restriction)
-	local num_members = num_other_members + 1
+	join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
 
-	Log.info("XboxLive", "Setting activity... connection_string: %s, party_id %s, num_members %s", connection_string, party_id, num_members)
+	local num_members = num_other_members + 1
+	local max_num_members = 4
+
+	Log.info("XboxLive", "Requesting activity... connection_string: %s, party_id %s, num_members %s / %s, join_restriction %s", connection_string, party_id, num_members, max_num_members, join_restriction)
+
+	if max_num_members <= num_members then
+		XboxLiveUtils.delete_activity()
+
+		return
+	end
+
 	XboxLiveUtils.user_id():next(function (user_id)
 		local group_id = party_id
-
-		join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
-
-		local max_num_members = 4
 		local allow_cross_platform_join = true
 		local async_block, error_code, error_message = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restriction, num_members, max_num_members, allow_cross_platform_join)
 
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveMPA.set_activity",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveMPA.set_activity",
-				message = error_message,
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block)
@@ -295,12 +307,12 @@ XboxLiveUtils.delete_activity = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveMPA.delete_activity",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveMPA.delete_activity",
-				message = error_message,
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block)
@@ -317,12 +329,12 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.batch_check_permission",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLivePrivacy.batch_check_permission",
-				message = error_message,
+				message = error_message
 			})
 		end
 
@@ -332,7 +344,7 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 			if error_code then
 				return Promise.rejected({
 					header = "XboxLivePrivacy.batch_check_permission_result",
-					error_code = error_code,
+					error_code = error_code
 				})
 			end
 
@@ -348,7 +360,7 @@ XboxLiveUtils.update_recent_player_teammate = function (xuid)
 		if error_message then
 			return Promise.rejected({
 				header = "XboxLiveMPA.update_recent_players",
-				message = error_message,
+				message = error_message
 			})
 		end
 	end):catch(function (error_data)
@@ -379,12 +391,12 @@ XboxLiveUtils.update_achievement = function (achievement_id, progress)
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveAchievement.update_achievement",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveAchievement.update_achievement",
-				message = error_message,
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(async_block)
@@ -401,12 +413,12 @@ XboxLiveUtils.get_all_achievements = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveAchievement.get_achievement_async",
-				error_code = error_code,
+				error_code = error_code
 			})
 		elseif error_message then
 			return Promise.rejected({
 				header = "XboxLiveAchievement.get_achievement_async",
-				message = error_message,
+				message = error_message
 			})
 		else
 			return Managers.xasync:wrap(achievements_async)
@@ -417,7 +429,7 @@ XboxLiveUtils.get_all_achievements = function ()
 		if error_code then
 			return Promise.rejected({
 				header = "XboxLiveAchievement.get_achievement_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		else
 			local achievement_count, achievements, error_code = XboxLiveAchievement.result_get_achievements(achievement_result)
@@ -425,7 +437,7 @@ XboxLiveUtils.get_all_achievements = function ()
 			if error_code then
 				return Promise.rejected({
 					header = "XboxLiveAchievement.result_get_achievements",
-					error_code = error_code,
+					error_code = error_code
 				})
 			else
 				achievements = achievements or {}
@@ -445,7 +457,7 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 		if error_code then
 			return Promise.rejected({
 				header = "TitleStorage.blob_download_async",
-				error_code = error_code,
+				error_code = error_code
 			})
 		else
 			return Managers.xasync:wrap(async_result)
@@ -456,7 +468,7 @@ XboxLiveUtils.title_storage_download = function (blob_path, blob_type, storage_t
 		if error_code then
 			return Promise.rejected({
 				header = "TitleStorage.get_blob_download_result",
-				error_code = error_code,
+				error_code = error_code
 			})
 		else
 			return download_result
@@ -471,19 +483,19 @@ XboxLiveUtils.get_entitlements = function ()
 
 		async_job, error_code, error_message = XStore.query_entitlements_async({
 			"consumable",
-			"unmanaged",
+			"unmanaged"
 		})
 
 		if not async_job then
 			if error_message then
 				return Promise.rejected({
 					header = "XStore.query_entitlements_async",
-					message = error_message,
+					message = error_message
 				})
 			else
 				return Promise.rejected({
 					header = "XStore.query_entitlements_async",
-					message = string.format("query_entitlements_async returned error_code=0x%x", error_code),
+					message = string.format("query_entitlements_async returned error_code=0x%x", error_code)
 				})
 			end
 		end
@@ -510,7 +522,7 @@ XboxLiveUtils.get_entitlements = function ()
 
 				return {
 					success = false,
-					code = error_code,
+					code = error_code
 				}
 			end
 
@@ -525,7 +537,7 @@ XboxLiveUtils.get_entitlements = function ()
 
 				return {
 					success = true,
-					data = result_by_id,
+					data = result_by_id
 				}
 			end
 
@@ -541,19 +553,19 @@ XboxLiveUtils.get_associated_products = function ()
 
 		async_job, error_code, error_message = XStore.query_associated_products_async({
 			"consumable",
-			"unmanaged",
+			"unmanaged"
 		})
 
 		if not async_job then
 			if error_message then
 				return Promise.rejected({
 					header = "XStore.query_associated_products_async",
-					message = error_message,
+					message = error_message
 				})
 			else
 				return Promise.rejected({
 					header = "XStore.query_associated_products_async",
-					message = string.format("query_associated_products_async returned error_code=0x%x", error_code),
+					message = string.format("query_associated_products_async returned error_code=0x%x", error_code)
 				})
 			end
 		end
@@ -580,7 +592,7 @@ XboxLiveUtils.get_associated_products = function ()
 
 				return {
 					success = false,
-					code = error_code,
+					code = error_code
 				}
 			end
 
@@ -595,7 +607,7 @@ XboxLiveUtils.get_associated_products = function ()
 
 				return {
 					success = true,
-					data = result_by_id,
+					data = result_by_id
 				}
 			end
 

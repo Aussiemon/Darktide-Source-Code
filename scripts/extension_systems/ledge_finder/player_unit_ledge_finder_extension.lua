@@ -51,7 +51,7 @@ PlayerUnitLedgeFinderExtension.init = function (self, extension_init_context, un
 
 		local ledges = {
 			num_ledges = 0,
-			ledge_data = ledge_data,
+			ledge_data = ledge_data
 		}
 
 		ledge_ring_buffer[ii] = ledges
@@ -75,7 +75,7 @@ PlayerUnitLedgeFinderExtension._new_ledge_data = function (self)
 		forward = Vector3Box(),
 		distance_sq_from_player_unit = math.huge,
 		distance_flat_sq_from_player_unit = math.huge,
-		height_distance_from_player_unit = math.huge,
+		height_distance_from_player_unit = math.huge
 	}
 
 	return ledge_data
@@ -141,10 +141,10 @@ PlayerUnitLedgeFinderExtension.calculate_ledges = function (self, fixed_frame, p
 end
 
 local RAYCAST_RESULTS_LEFT = {
-	[0] = 0,
+	[0] = 0
 }
 local RAYCAST_RESULTS_RIGHT = {
-	[0] = 0,
+	[0] = 0
 }
 
 PlayerUnitLedgeFinderExtension._try_find_ledges = function (self, ledges, base_position, player_position, forward, right)

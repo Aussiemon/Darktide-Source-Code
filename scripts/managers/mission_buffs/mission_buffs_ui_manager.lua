@@ -147,7 +147,7 @@ MissionBuffsUIManager.queue_choice_selection_ui = function (self, is_buff_family
 		state = wave_num > 0 and "completed" or nil,
 		is_buff_family = is_buff_family_choice,
 		buffs = options,
-		wave_num = wave_num > 0 and wave_num or nil,
+		wave_num = wave_num > 0 and wave_num or nil
 	}
 
 	if not self:_check_if_notification_already_exists(ui_context_data) then
@@ -167,10 +167,10 @@ MissionBuffsUIManager.queue_buff_received_notification_ui = function (self, buff
 		timer = wave_num > 0 and timer or 5,
 		state = wave_num > 0 and "completed" or nil,
 		buffs = {
-			buff_name,
+			buff_name
 		},
 		buff_family_source_id = buff_family_source_id,
-		wave_num = wave_num > 0 and wave_num or nil,
+		wave_num = wave_num > 0 and wave_num or nil
 	}
 
 	if self:_check_if_notification_already_exists(ui_context_data) then
@@ -198,7 +198,7 @@ MissionBuffsUIManager.queue_wave_end_notification_ui = function (self, wave_num)
 		is_choice_notification = false,
 		state = "completed",
 		timer = timer,
-		wave_num = wave_num,
+		wave_num = wave_num
 	}
 
 	if self:_check_if_notification_already_exists(ui_context_data) then

@@ -1,20 +1,17 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view.lua
 
 local Definitions = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_definitions")
-local InventoryWeaponDetailsViewSettings = require("scripts/ui/views/inventory_weapon_details_view/inventory_weapon_details_view_settings")
-local ItemUtils = require("scripts/utilities/items")
+local InputDevice = require("scripts/managers/input/input_device")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
+local ViewElementWeaponActionsExtended = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_extended")
+local ViewElementWeaponInfo = require("scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info")
+local ViewElementWeaponPatterns = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns")
 local WeaponStats = require("scripts/utilities/weapon_stats")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local InputDevice = require("scripts/managers/input/input_device")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local ViewElementWeaponInfo = require("scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info")
-local ViewElementWeaponActionsExtended = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_extended")
-local ViewElementWeaponPatterns = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns")
 local InventoryWeaponDetailsView = class("InventoryWeaponDetailsView", "BaseView")
 
 InventoryWeaponDetailsView.init = function (self, settings, context)
@@ -125,24 +122,24 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 		local grid_height = 1000
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width,
-			grid_height,
+			grid_height
 		}
 		local context = {
-			ignore_blur = true,
 			scrollbar_width = 7,
+			ignore_blur = true,
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 
 		self._weapon_info = self:_add_element(ViewElementWeaponInfo, reference_name, layer, context)
@@ -171,24 +168,24 @@ InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
 		local grid_height = 1000
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height,
+			grid_height
 		}
 		local context = {
-			ignore_blur = true,
 			scrollbar_width = 7,
+			ignore_blur = true,
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 
 		self._weapon_actions_extended = self:_add_element(ViewElementWeaponActionsExtended, reference_name, layer, context)
@@ -199,7 +196,7 @@ InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
 			allow_weapon_preview_rotation = true,
 			legend = "loc_menu_show_weapon_actions_extended",
 			class = self._weapon_actions_extended,
-			on_activate = callback(self, "cb_activate_weapon_info", true),
+			on_activate = callback(self, "cb_activate_weapon_info", true)
 		}
 	end
 end
@@ -224,24 +221,24 @@ InventoryWeaponDetailsView._setup_attack_patterns = function (self)
 		local grid_height = 1000
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height,
+			grid_height
 		}
 		local context = {
-			ignore_blur = true,
 			scrollbar_width = 7,
+			ignore_blur = true,
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 
 		self._attack_patterns = self:_add_element(ViewElementWeaponPatterns, reference_name, layer, context)
@@ -251,7 +248,7 @@ InventoryWeaponDetailsView._setup_attack_patterns = function (self)
 		self._togglable_views[#self._togglable_views + 1] = {
 			legend = "loc_menu_show_attack_patterns",
 			class = self._attack_patterns,
-			on_activate = callback(self, "cb_activate_weapon_info", false),
+			on_activate = callback(self, "cb_activate_weapon_info", false)
 		}
 	end
 end
@@ -298,7 +295,7 @@ InventoryWeaponDetailsView._preview_item = function (self, item)
 	self._weapon_preview:center_align(0, {
 		-0.1,
 		0.3,
-		-0.2,
+		-0.2
 	})
 
 	self._previewed_item = item
@@ -338,8 +335,8 @@ InventoryWeaponDetailsView._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 1
 		local context = {
-			draw_background = true,
 			ignore_blur = true,
+			draw_background = true
 		}
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
@@ -648,19 +645,19 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 		255,
 		255,
 		255,
-		255,
+		255
 	}
 	local font_size = 18
 	local font_type = "proxima_nova_bold"
 	local text_options = {
-		horizontal_alignment = 1,
 		line_spacing = 1.2,
-		shaodw = true,
 		vertical_alignemnt = 1,
+		horizontal_alignment = 1,
+		shaodw = true
 	}
 	local box_size = {
 		900,
-		100,
+		100
 	}
 	local position = Vector3(100, 100, 100)
 	local row_height = 25

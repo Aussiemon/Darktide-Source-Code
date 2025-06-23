@@ -22,7 +22,7 @@ local BotManagerTestify = {
 		if not MasterItems.has_data() then
 			return Testify.RETRY
 		end
-	end,
+	end
 }
 
 return BotManagerTestify

@@ -64,7 +64,7 @@ local itypename = {
 	"cdata",
 	"tab",
 	"udata",
-	"numx",
+	"numx"
 }
 
 LuaJIT.itype = function (o)

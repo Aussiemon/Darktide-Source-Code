@@ -6,28 +6,28 @@ local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
-		action_data = action_data.death,
+		condition = "is_dead",
+		action_data = action_data.death
 	},
 	{
 		"BtDisableAction",
-		condition = "is_minion_disabled",
 		name = "disable",
-		action_data = action_data.disable,
+		condition = "is_minion_disabled",
+		action_data = action_data.disable
 	},
 	{
 		"BtStaggerAction",
-		condition = "is_staggered",
 		name = "stagger",
-		action_data = action_data.stagger,
+		condition = "is_staggered",
+		action_data = action_data.stagger
 	},
 	{
 		"BtChaosMutatorRitualistChantingAction",
 		name = "chanting",
-		action_data = action_data.chanting,
+		action_data = action_data.chanting
 	},
-	name = "chaos_mutator_ritualist",
+	name = "chaos_mutator_ritualist"
 }
 
 return behavior_tree

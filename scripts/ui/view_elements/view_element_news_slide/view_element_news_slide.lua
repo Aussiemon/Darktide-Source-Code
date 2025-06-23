@@ -98,7 +98,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				body_number = body_number or "",
 				image_url = image_url,
 				backend_index = i,
-				sort_index = raw_data.displayPriority and tonumber(raw_data.displayPriority) or 0,
+				sort_index = raw_data.displayPriority and tonumber(raw_data.displayPriority) or 0
 			}
 		end
 	end
@@ -390,9 +390,9 @@ ViewElementNewsSlide.view_requested = function (self)
 			slide_data = {
 				starting_slide_index = 1,
 				slides = {
-					backend_data,
-				},
-			},
+					backend_data
+				}
+			}
 		})
 	end
 end

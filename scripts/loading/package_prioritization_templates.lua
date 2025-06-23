@@ -22,9 +22,14 @@ package_prioritization_templates.default = {
 		"slot_gear_upperbody",
 		"slot_gear_lowerbody",
 		"slot_gear_extra_cosmetic",
+		"slot_gear_material_override_decal",
 		"slot_attachment_1",
 		"slot_attachment_2",
 		"slot_attachment_3",
+		"slot_companion_body_skin_color",
+		"slot_companion_body_fur_color",
+		"slot_companion_body_coat_pattern",
+		"slot_companion_gear_full",
 		"slot_body_hair_color",
 		"slot_body_skin_color",
 		"slot_body_eye_color",
@@ -37,8 +42,8 @@ package_prioritization_templates.default = {
 		"slot_unarmed",
 		"slot_combat_ability",
 		"slot_grenade_ability",
-		"slot_net",
-	},
+		"slot_net"
+	}
 }
 package_prioritization_templates.hub = {
 	required_package_aliases = {
@@ -47,8 +52,8 @@ package_prioritization_templates.hub = {
 		"sound_dependencies",
 		"particle_dependencies",
 		"slot_grenade_ability",
-		"slot_combat_ability",
-	},
+		"slot_combat_ability"
+	}
 }
 
 local template_names = table.keys(package_prioritization_templates)

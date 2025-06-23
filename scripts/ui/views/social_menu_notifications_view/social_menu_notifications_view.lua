@@ -129,19 +129,19 @@ SocialMenuNotificationsView._update_notification_widgets = function (self, dt, i
 			local days = math.floor(age / seconds_in_a_day)
 
 			age_formatted = self:_localize("loc_social_menu_notifications_age_days", true, {
-				days = days,
+				days = days
 			})
 		elseif seconds_in_an_hour < age then
 			local hours = math.floor(age / seconds_in_an_hour)
 
 			age_formatted = self:_localize("loc_social_menu_notifications_age_hours", true, {
-				hours = hours,
+				hours = hours
 			})
 		elseif seconds_in_a_minute < age then
 			local minutes = math.floor(age / seconds_in_a_minute)
 
 			age_formatted = self:_localize("loc_social_menu_notifications_age_minutes", true, {
-				minutes = minutes,
+				minutes = minutes
 			})
 		else
 			age_formatted = self:_localize("loc_social_menu_notifications_age_seconds")
@@ -184,7 +184,7 @@ local FirstNameParts = {
 	"Milk",
 	"Digital",
 	"Dog",
-	"SWAT",
+	"SWAT"
 }
 local SecondNameParts = {
 	"Killer",
@@ -202,7 +202,7 @@ local SecondNameParts = {
 	"Swatter",
 	"Driver",
 	"Postman",
-	"Magic",
+	"Magic"
 }
 local GuildNames = {
 	"A Clan",
@@ -210,7 +210,7 @@ local GuildNames = {
 	"Lead And Guild",
 	"The misfits",
 	"Kindergarden",
-	"Nobles and Pirates",
+	"Nobles and Pirates"
 }
 
 SocialMenuNotificationsView._generate_random_notification = function (self, order, last_used_time_stamp)
@@ -233,7 +233,7 @@ SocialMenuNotificationsView._generate_random_notification = function (self, orde
 		notification_type = notification_type,
 		requesting_player = FirstNameParts[math.random(#FirstNameParts)] .. SecondNameParts[math.random(#SecondNameParts)],
 		clan = GuildNames[math.random(#GuildNames)],
-		time = last_used_time_stamp - time_since_last_message,
+		time = last_used_time_stamp - time_since_last_message
 	}
 end
 
@@ -242,7 +242,7 @@ SocialMenuNotificationsView._set_dummy_data = function (self, num_items)
 
 	if not dummy_data then
 		dummy_data = {
-			notifications = {},
+			notifications = {}
 		}
 		self._notification_data = dummy_data
 	end

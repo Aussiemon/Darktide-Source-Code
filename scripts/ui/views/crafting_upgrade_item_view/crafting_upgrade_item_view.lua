@@ -18,7 +18,7 @@ CraftingUpgradeItemView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._recipe = CraftingSettings.recipes.upgrade_item
 	self._ingredients = {
-		item = self._item,
+		item = self._item
 	}
 end
 
@@ -55,7 +55,7 @@ end
 CraftingUpgradeItemView._present_upgrade_result = function (self, item)
 	local result_data = {
 		type = "item",
-		item = item,
+		item = item
 	}
 
 	self:_setup_result_overlay(result_data)
@@ -136,7 +136,7 @@ end
 local _device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 
 CraftingUpgradeItemView._handle_input = function (self, input_service)

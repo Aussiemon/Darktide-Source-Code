@@ -20,7 +20,7 @@ PocketableInteraction.stop = function (self, world, interactor_unit, interaction
 		end
 
 		if pickup_data.on_pickup_func then
-			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data, t)
+			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data, t, interactor_is_server)
 		end
 
 		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)

@@ -2,7 +2,7 @@
 
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local RPCS = {
-	"rpc_request_spawn_group_reply",
+	"rpc_request_spawn_group_reply"
 }
 local LocalDetermineSpawnGroupState = class("LocalDetermineSpawnGroupState")
 

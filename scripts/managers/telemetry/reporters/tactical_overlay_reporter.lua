@@ -5,7 +5,7 @@ local TacticalOverlayReporter = class("TacticalOverlayReporter")
 
 TacticalOverlayReporter.init = function (self)
 	self._report = {
-		times_opened = 0,
+		times_opened = 0
 	}
 end
 

@@ -25,12 +25,12 @@ SmartObject.init = function (self)
 	self._entrance_position = Vector3Box()
 	self._exit_position = Vector3Box()
 	self._data = {
-		is_bidirectional = true,
-		jump_flat_distance = 0,
 		ledge_type = "",
+		jump_flat_distance = 0,
+		is_bidirectional = true,
 		ledge_position = Vector3Box(),
 		ledge_position1 = Vector3Box(),
-		ledge_position2 = Vector3Box(),
+		ledge_position2 = Vector3Box()
 	}
 
 	return smart_object_id
@@ -53,8 +53,8 @@ SmartObject.to_simple = function (self)
 			ledge_type = data.ledge_type,
 			ledge_position = Vector3.to_array(ledge_position),
 			ledge_position1 = Vector3.to_array(ledge_position1),
-			ledge_position2 = Vector3.to_array(ledge_position2),
-		},
+			ledge_position2 = Vector3.to_array(ledge_position2)
+		}
 	}
 
 	return smart_object

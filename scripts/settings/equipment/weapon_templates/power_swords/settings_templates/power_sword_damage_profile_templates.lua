@@ -34,7 +34,7 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_075,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -44,8 +44,8 @@ local cutting_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 local power_am = {
 	attack = {
@@ -56,7 +56,7 @@ local power_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -66,8 +66,8 @@ local power_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.light_sword = {
@@ -86,60 +86,60 @@ damage_templates.light_sword = {
 			armor_damage_modifier = cutting_am,
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					80,
-					160,
+					160
 				},
 				impact = {
 					5,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = cutting_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					4,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = cutting_am,
 			power_distribution = {
 				attack = {
 					30,
-					60,
+					60
 				},
 				impact = {
 					3,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = cutting_am,
 			power_distribution = {
 				attack = {
 					10,
-					30,
+					30
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.light_sword_smiter = {
 	finesse_ability_damage_multiplier = 2,
@@ -163,7 +163,7 @@ damage_templates.light_sword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
 				},
 				impact = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -173,39 +173,39 @@ damage_templates.light_sword_smiter = {
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-					[armor_types.void_shield] = damage_lerp_values.lerp_1,
-				},
+					[armor_types.void_shield] = damage_lerp_values.lerp_1
+				}
 			},
 			boost_curve_multiplier_finesse = {
 				0.5,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					125,
-					250,
+					250
 				},
 				impact = {
 					5,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = cutting_am,
 			power_distribution = {
 				attack = {
 					10,
-					30,
+					30
 				},
 				impact = {
 					2,
-					5,
-				},
+					5
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.light_sword_stab = {
 	parent_template_name = "light_sword_smiter",
@@ -216,8 +216,8 @@ overrides.light_sword_stab = {
 			"boost_curve_multiplier_finesse",
 			{
 				1,
-				2,
-			},
+				2
+			}
 		},
 		{
 			"targets",
@@ -226,19 +226,19 @@ overrides.light_sword_stab = {
 			"attack",
 			{
 				100,
-				200,
-			},
+				200
+			}
 		},
 		{
 			"gibbing_power",
-			0,
-		},
-	},
+			0
+		}
+	}
 }
 damage_templates.light_powersword = {
 	finesse_ability_damage_multiplier = 2,
-	stagger_category = "melee",
 	weapon_special = true,
+	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_power = gibbing_power.heavy,
@@ -252,138 +252,138 @@ damage_templates.light_powersword = {
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.8,
-				1.6,
+				1.6
 			},
 			power_distribution = {
 				attack = {
 					200,
-					400,
+					400
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.6,
-				1.2,
+				1.2
 			},
 			power_distribution = {
 				attack = {
 					120,
-					240,
+					240
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					80,
-					160,
+					160
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					25,
-					65,
+					65
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					20,
-					60,
+					60
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					10,
-					50,
+					50
 				},
 				impact = {
 					4,
-					6,
-				},
+					6
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.light_powersword_active = {
 	parent_template_name = "light_powersword",
 	overrides = {
 		{
 			"wounds_template",
-			WoundsTemplates.power_sword_active,
+			WoundsTemplates.power_sword_active
 		},
 		{
 			"ignore_stagger_reduction",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 damage_templates.light_powersword_smiter = {
 	finesse_ability_damage_multiplier = 2,
-	stagger_category = "melee",
 	weapon_special = true,
+	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_power = gibbing_power.heavy,
@@ -397,120 +397,120 @@ damage_templates.light_powersword_smiter = {
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					150,
-					250,
+					250
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					20,
-					60,
+					60
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					10,
-					50,
+					50
 				},
 				impact = {
 					4,
-					6,
-				},
+					6
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 
 local push_followup_adm = {
@@ -522,7 +522,7 @@ local push_followup_adm = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -532,14 +532,14 @@ local push_followup_adm = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.light_powersword_smiter_push_follow_up_active = {
 	finesse_ability_damage_multiplier = 2,
-	stagger_category = "melee",
 	weapon_special = true,
+	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_power = gibbing_power.heavy,
@@ -553,129 +553,129 @@ damage_templates.light_powersword_smiter_push_follow_up_active = {
 			armor_damage_modifier = push_followup_adm,
 			boost_curve_multiplier_finesse = {
 				0.8,
-				1.6,
+				1.6
 			},
 			power_distribution = {
 				attack = {
 					250,
-					500,
+					500
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			boost_curve_multiplier_finesse = {
 				0.6,
-				1.2,
+				1.2
 			},
 			power_distribution = {
 				attack = {
 					120,
-					240,
+					240
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					80,
-					160,
+					160
 				},
 				impact = {
 					7,
-					9,
-				},
-			},
+					9
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			power_distribution = {
 				attack = {
 					40,
-					80,
+					80
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			power_distribution = {
 				attack = {
 					25,
-					65,
+					65
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		{
 			armor_damage_modifier = push_followup_adm,
 			power_distribution = {
 				attack = {
 					20,
-					60,
+					60
 				},
 				impact = {
 					5,
-					7,
-				},
-			},
+					7
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = push_followup_adm,
 			power_distribution = {
 				attack = {
 					10,
-					50,
+					50
 				},
 				impact = {
 					4,
-					6,
-				},
+					6
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.light_powersword_active_smiter = {
 	parent_template_name = "light_powersword_smiter_push_follow_up_active",
 	overrides = {
 		{
 			"wounds_template",
-			WoundsTemplates.power_sword_active,
-		},
-	},
+			WoundsTemplates.power_sword_active
+		}
+	}
 }
 overrides.light_powersword_stab_active = {
 	parent_template_name = "light_powersword_smiter_push_follow_up_active",
@@ -686,22 +686,22 @@ overrides.light_powersword_stab_active = {
 			"boost_curve_multiplier_finesse",
 			{
 				1,
-				2,
-			},
+				2
+			}
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.power_sword_active,
-		},
-	},
+			WoundsTemplates.power_sword_active
+		}
+	}
 }
 damage_templates.heavy_powersword = {
 	finesse_ability_damage_multiplier = 2,
-	gibbing_power = 10,
 	ragdoll_only = true,
-	ragdoll_push_force = 400,
-	stagger_category = "melee",
 	weapon_special = true,
+	ragdoll_push_force = 400,
+	gibbing_power = 10,
+	stagger_category = "melee",
 	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_type = gibbing_types.default,
@@ -714,131 +714,131 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.8,
-				1.6,
+				1.6
 			},
 			power_distribution = {
 				attack = {
 					270,
-					540,
+					540
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.6,
-				1.2,
+				1.2
 			},
 			power_distribution = {
 				attack = {
 					180,
-					360,
+					360
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1,
+				1
 			},
 			power_distribution = {
 				attack = {
 					150,
-					300,
+					300
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					90,
-					180,
+					180
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					85,
-					170,
+					170
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					75,
-					150,
+					150
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		{
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					70,
-					140,
+					140
 				},
 				impact = {
 					6,
-					8,
-				},
-			},
+					8
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
 					50,
-					100,
+					100
 				},
 				impact = {
 					6,
-					8,
-				},
+					8
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 overrides.heavy_powersword_active = {
 	parent_template_name = "heavy_powersword",
 	overrides = {
 		{
 			"ignore_stagger_reduction",
-			true,
+			true
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.power_sword_active,
+			WoundsTemplates.power_sword_active
 		},
 		{
 			"targets",
@@ -846,7 +846,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -854,7 +854,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -862,7 +862,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -870,7 +870,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -878,7 +878,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -886,7 +886,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -894,7 +894,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -902,7 +902,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -910,7 +910,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -918,7 +918,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -926,7 +926,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -934,7 +934,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
+			damage_lerp_values.lerp_1_5
 		},
 		{
 			"targets",
@@ -942,7 +942,7 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_65
 		},
 		{
 			"targets",
@@ -950,9 +950,9 @@ overrides.heavy_powersword_active = {
 			"armor_damage_modifier",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_1_5,
-		},
-	},
+			damage_lerp_values.lerp_1_5
+		}
+	}
 }
 
 local heavy_sword_am = {
@@ -964,7 +964,7 @@ local heavy_sword_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -974,8 +974,8 @@ local heavy_sword_am = {
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-		[armor_types.void_shield] = damage_lerp_values.lerp_1,
-	},
+		[armor_types.void_shield] = damage_lerp_values.lerp_1
+	}
 }
 
 damage_templates.heavy_sword = {
@@ -995,63 +995,63 @@ damage_templates.heavy_sword = {
 			armor_damage_modifier = heavy_sword_am,
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1.2,
+				1.2
 			},
 			power_distribution = {
 				attack = {
 					120,
-					240,
+					240
 				},
 				impact = {
 					8,
-					16,
-				},
-			},
+					16
+				}
+			}
 		},
 		{
 			armor_damage_modifier = heavy_sword_am,
 			power_distribution = {
 				attack = {
 					60,
-					120,
+					120
 				},
 				impact = {
 					6,
-					12,
-				},
-			},
+					12
+				}
+			}
 		},
 		{
 			armor_damage_modifier = heavy_sword_am,
 			power_distribution = {
 				attack = {
 					20,
-					60,
+					60
 				},
 				impact = {
 					5,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		default_target = {
 			armor_damage_modifier = heavy_sword_am,
 			power_distribution = {
 				attack = {
 					10,
-					50,
+					50
 				},
 				impact = {
 					4,
-					8,
-				},
+					8
+				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

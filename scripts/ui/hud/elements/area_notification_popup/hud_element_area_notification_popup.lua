@@ -43,7 +43,7 @@ HudElementAreaNotificationPopup.event_player_set_new_location = function (self, 
 	if self._popup_animation_id then
 		table.insert(self._area_notificactions_queue, 1, {
 			full_text = full_text,
-			short_text = short_text,
+			short_text = short_text
 		})
 	else
 		self:_present_new_area(full_text, short_text)

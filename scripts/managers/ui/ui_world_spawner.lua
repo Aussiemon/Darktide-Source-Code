@@ -194,8 +194,8 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			true,
 			false,
 			{
-				"ComponentExtension",
-			},
+				"ComponentExtension"
+			}
 		},
 		{
 			"dialogue_system",
@@ -206,8 +206,8 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			true,
 			false,
 			{
-				"DialogueExtension",
-			},
+				"DialogueExtension"
+			}
 		},
 		{
 			"dialogue_context_system",
@@ -216,7 +216,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			false,
 			false,
 			true,
-			false,
+			false
 		},
 		{
 			"cutscene_character_system",
@@ -227,8 +227,8 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			false,
 			false,
 			{
-				"CutsceneCharacterExtension",
-			},
+				"CutsceneCharacterExtension"
+			}
 		},
 		{
 			"cinematic_scene_system",
@@ -239,8 +239,8 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			true,
 			false,
 			{
-				"CinematicSceneExtension",
-			},
+				"CinematicSceneExtension"
+			}
 		},
 		{
 			"light_controller_system",
@@ -251,29 +251,29 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			true,
 			false,
 			{
-				"LightControllerExtension",
-			},
-		},
+				"LightControllerExtension"
+			}
+		}
 	}
 	local vo_sources_cache = VOSourcesCache:new()
 	local system_init_data = {
 		dialogue_context_system = {},
 		dialogue_system = {
 			is_rule_db_enabled = false,
-			vo_sources_cache = vo_sources_cache,
+			vo_sources_cache = vo_sources_cache
 		},
 		cinematic_scene_system = {
-			mission = {},
+			mission = {}
 		},
 		light_controller_system = {
-			mission = {},
+			mission = {}
 		},
-		component_system = {},
+		component_system = {}
 	}
 	local unit_categories = {
 		"flow_spawned",
 		"level_spawned",
-		"cinematic",
+		"cinematic"
 	}
 	local circumstance_name = "default"
 	local use_time_slice = false
@@ -286,7 +286,7 @@ end
 UIWorldSpawner._create_world = function (self, world_name, layer, timer_name, optional_view_name, optional_flags)
 	local flags = optional_flags or {
 		Application.ENABLE_VOLUMETRICS,
-		Application.ENABLE_RAY_TRACING,
+		Application.ENABLE_RAY_TRACING
 	}
 	local ui_manager = Managers.ui
 	local world = ui_manager:create_world(world_name, layer, timer_name, optional_view_name, flags)
@@ -315,7 +315,7 @@ local function quaternion_animation_data(default)
 		to = QuaternionBox(default),
 		apply = quaternion_apply,
 		lerp = quaternion_lerp,
-		get = quaternion_get,
+		get = quaternion_get
 	}
 end
 
@@ -334,7 +334,7 @@ local function numeric_animation_data(default)
 		to = default,
 		apply = direct_apply,
 		lerp = math.lerp,
-		get = direct_get,
+		get = direct_get
 	}
 end
 
@@ -379,8 +379,8 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 		position = {
 			dx = numeric_animation_data(0),
 			dy = numeric_animation_data(0),
-			dz = numeric_animation_data(0),
-		},
+			dz = numeric_animation_data(0)
+		}
 	}
 
 	ScriptWorld.activate_viewport(world, viewport)
@@ -673,7 +673,7 @@ UIWorldSpawner.set_camera_blur = function (self, blur_amount, duration, anim_fun
 		end_value = blur_amount,
 		value_difference = blur_difference,
 		anim_func = anim_func,
-		duration = math.abs(blur_difference) * (duration or 1),
+		duration = math.abs(blur_difference) * (duration or 1)
 	}
 end
 

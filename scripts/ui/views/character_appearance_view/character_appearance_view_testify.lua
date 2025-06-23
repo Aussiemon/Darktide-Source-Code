@@ -49,7 +49,7 @@ local CharacterAppearanceViewTestify = {
 	end,
 	create_new_character = function (character_appearance_view)
 		Managers.event:trigger("event_create_new_character_continue")
-	end,
+	end
 }
 
 return CharacterAppearanceViewTestify

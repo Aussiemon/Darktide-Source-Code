@@ -12,7 +12,7 @@ local FLOW_STOP_EVENT = "charge_foley_stop"
 local resources = {
 	start_charge_sound_event = START_CHARGE_SOUND_EVENT,
 	stop_charge_sound_event = STOP_CHARGE_SOUND_EVENT,
-	vfx_foley_name = VFX_FOLEY_NAME,
+	vfx_foley_name = VFX_FOLEY_NAME
 }
 local _trigger_sound
 local TRIGGER_DISTANCE = 20
@@ -91,7 +91,7 @@ local effect_template = {
 		local world, particle_id = template_context.world, template_data.particle_id
 
 		World.stop_spawning_particles(world, particle_id)
-	end,
+	end
 }
 
 function _trigger_sound(unit, wwise_world, game_session, game_object_id, is_server)

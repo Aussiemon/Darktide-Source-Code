@@ -39,35 +39,35 @@ Main.init = function (self)
 	local package_manager = LEVEL_EDITOR_TEST and PackageManagerEditor:new() or PackageManager:new()
 	local localization_manager = LocalizationManager:new()
 	local params = {
-		index_offset = 1,
 		next_state = "StateGame",
+		index_offset = 1,
 		states = {
 			{
 				StateLoadBootAssets,
 				{
 					package_manager = package_manager,
-					localization_manager = localization_manager,
-				},
+					localization_manager = localization_manager
+				}
 			},
 			{
 				StateRequireScripts,
 				{
-					package_manager = package_manager,
-				},
+					package_manager = package_manager
+				}
 			},
 			{
 				StateLoadAudioSettings,
-				{},
-			},
+				{}
+			}
 		},
 		package_manager = package_manager,
-		localization_manager = localization_manager,
+		localization_manager = localization_manager
 	}
 
 	if PLATFORM == "win32" and not LEVEL_EDITOR_TEST then
 		table.insert(params.states, 1, {
 			StateLoadRenderSettings,
-			{},
+			{}
 		})
 	end
 
@@ -109,7 +109,7 @@ Main.shutdown = function (self)
 	end
 
 	local exit_param = {
-		on_shutdown = true,
+		on_shutdown = true
 	}
 
 	self._sm:destroy(exit_param)
@@ -161,6 +161,12 @@ function on_close()
 	end
 
 	return should_close
+end
+
+function on_constrained(is_constrained)
+	if rawget(_G, "Managers") and Managers.event then
+		Managers.event:trigger("on_constrained", is_constrained)
+	end
 end
 
 function on_suspend()

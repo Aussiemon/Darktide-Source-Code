@@ -30,11 +30,11 @@ end
 
 OnboardingObjectiveTarget.component_data = {
 	primary_marker = {
-		ui_name = "Primary Marker",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Primary Marker"
 	},
-	extensions = {},
+	extensions = {}
 }
 
 return OnboardingObjectiveTarget

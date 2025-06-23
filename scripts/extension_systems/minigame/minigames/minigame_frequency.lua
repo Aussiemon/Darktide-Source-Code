@@ -18,11 +18,11 @@ MinigameFrequency.init = function (self, unit, is_server, seed, context)
 	self._start_seed = seed
 	self._frequency = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._target_frequency = {
 		x = 0,
-		y = 0,
+		y = 0
 	}
 	self._last_axis_set = 0
 	self._stage_amount = MinigameSettings.frequency_search_stage_amount
@@ -73,7 +73,7 @@ MinigameFrequency._get_random_frequency = function (self, seed)
 
 	return seed, {
 		x = tx / 100,
-		y = ty / 100,
+		y = ty / 100
 	}
 end
 
@@ -293,7 +293,7 @@ end
 
 local TEMP_FREQ_PERCENT = {
 	x = 0,
-	y = 0,
+	y = 0
 }
 
 MinigameFrequency._frequency_to_percentage = function (self, frequency)

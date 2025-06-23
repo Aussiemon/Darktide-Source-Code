@@ -9,66 +9,66 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	pivot = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			10,
-		},
-	},
+			10
+		}
+	}
 }
 local widget_definitions = {
 	grid_background = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size_addition = {
 					-4,
-					0,
+					0
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/dropshadow_heavy",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
 					16,
-					20,
+					20
 				},
 				color = {
 					100,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "grid_background"),
+					0
+				}
+			}
+		}
+	}, "grid_background")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

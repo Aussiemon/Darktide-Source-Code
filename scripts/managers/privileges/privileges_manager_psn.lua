@@ -19,7 +19,7 @@ PrivilegesManagerPSN.multiplayer_privilege = function (self, resolve_privilege)
 	local p = Promise:new()
 
 	p:resolve({
-		has_privilege = true,
+		has_privilege = true
 	})
 
 	return p
@@ -30,7 +30,7 @@ PrivilegesManagerPSN.communications_privilege = function (self, resolve_privileg
 	local p = Promise:new()
 
 	p:resolve({
-		has_privilege = not restriction,
+		has_privilege = not restriction
 	})
 
 	return p
@@ -41,7 +41,7 @@ PrivilegesManagerPSN.cross_play = function (self, resolve_privilege)
 	local p = Promise:new()
 
 	p:resolve({
-		has_privilege = not restriction,
+		has_privilege = not restriction
 	})
 
 	return p

@@ -21,12 +21,12 @@ templates.weapon_trait_bespoke_boltpistol_p1_close_explosion = {
 	class_name = "buff",
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.explosion_arming_distance_multiplier] = 0,
+		[stat_buffs.explosion_arming_distance_multiplier] = 0
 	},
 	stat_buffs = {
-		[stat_buffs.explosion_radius_modifier] = 0.1,
+		[stat_buffs.explosion_radius_modifier] = 0.1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 return templates

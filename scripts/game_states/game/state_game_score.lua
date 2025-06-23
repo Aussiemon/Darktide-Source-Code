@@ -3,7 +3,7 @@
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local MAX_EOR_DURATION = EndViewSettings.max_duration
 local events = {
-	event_state_game_score_continue = "_continue",
+	event_state_game_score_continue = "_continue"
 }
 local StateGameScore = class("StateGameScore")
 
@@ -54,7 +54,7 @@ StateGameScore._present_end_of_round_view = function (self)
 		round_won = round_won,
 		played_mission = played_mission,
 		session_report = session_report,
-		end_time = game_score_end_time,
+		end_time = game_score_end_time
 	}
 
 	Managers.ui:open_view(eor_view_name, nil, nil, nil, nil, view_context)

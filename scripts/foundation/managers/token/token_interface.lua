@@ -4,7 +4,7 @@ local token_interface = {
 	"update",
 	"info",
 	"done",
-	"close",
+	"close"
 }
 
 return token_interface

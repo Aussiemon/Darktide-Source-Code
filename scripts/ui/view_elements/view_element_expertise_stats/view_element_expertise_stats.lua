@@ -177,7 +177,7 @@ ViewElementExpertiseStats._add_stats_to_layout = function (self, item, layout)
 		5,
 		3,
 		4,
-		2,
+		2
 	}
 
 	for i = 1, num_stats do
@@ -189,10 +189,10 @@ ViewElementExpertiseStats._add_stats_to_layout = function (self, item, layout)
 			widget_type = "stat",
 			item = item,
 			stat_data = stat_data,
-			max_stat = max_stat,
+			max_stat = max_stat
 		}
 		layout[#layout + 1] = {
-			widget_type = "spacing_vertical_small",
+			widget_type = "spacing_vertical_small"
 		}
 	end
 end

@@ -8,528 +8,528 @@ local default_ingame_input_settings = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
-		"ps4_controller",
+		"ps4_controller"
 	},
 	default_devices = {
 		"keyboard",
 		"mouse",
 		"xbox_controller",
-		"ps4_controller",
+		"ps4_controller"
 	},
 	aliases = {
 		action_one = {
 			"mouse_left",
 			"ps4_controller_r2",
 			"xbox_controller_right_trigger",
-			description = "loc_ingame_action_one",
 			group = "input_group_combat",
-			sort_order = 1,
+			description = "loc_ingame_action_one",
+			sort_order = 1
 		},
 		action_two = {
 			"mouse_right",
 			"ps4_controller_l2",
 			"xbox_controller_left_trigger",
-			description = "loc_ingame_action_two",
 			group = "input_group_combat",
-			sort_order = 2,
+			description = "loc_ingame_action_two",
+			sort_order = 2
 		},
 		weapon_extra = {
 			"mouse_extra_1",
 			"ps4_controller_r3",
 			"xbox_controller_right_thumb",
-			description = "loc_ingame_weapon_extra",
 			group = "input_group_combat",
-			sort_order = 3,
+			description = "loc_ingame_weapon_extra",
+			sort_order = 3
 		},
 		interact = {
 			"keyboard_e",
 			"ps4_controller_square",
 			"xbox_controller_x",
-			description = "loc_ingame_interact",
 			group = "input_group_combat",
-			sort_order = 4,
+			description = "loc_ingame_interact",
+			sort_order = 4
 		},
 		interact_inspect = {
 			"keyboard_f",
 			"ps4_controller_triangle",
 			"xbox_controller_y",
-			description = "loc_lobby_entry_inspect",
 			group = "input_group_combat",
-			sort_order = 4,
+			description = "loc_lobby_entry_inspect",
+			sort_order = 4
 		},
 		wield_1 = {
 			"keyboard_1",
-			description = "loc_ingame_wield_1",
 			group = "input_group_combat",
-			sort_order = 5,
+			description = "loc_ingame_wield_1",
+			sort_order = 5
 		},
 		wield_2 = {
 			"keyboard_2",
-			description = "loc_ingame_wield_2",
 			group = "input_group_combat",
-			sort_order = 6,
+			description = "loc_ingame_wield_2",
+			sort_order = 6
 		},
 		wield_3 = {
 			"keyboard_3",
 			"ps4_controller_d_left",
 			"xbox_controller_d_left",
-			description = "loc_ingame_wield_3_v2",
 			group = "input_group_combat",
-			sort_order = 7,
+			description = "loc_ingame_wield_3_v2",
+			sort_order = 7
 		},
 		wield_3_gamepad = {
-			description = "loc_ingame_wield_3_4_gamepad",
 			group = "input_group_combat",
-			hide_in_keybindings_menu = true,
+			description = "loc_ingame_wield_3_4_gamepad",
+			hide_in_keybindings_menu = true
 		},
 		wield_4 = {
 			"keyboard_4",
 			"ps4_controller_d_up",
 			"xbox_controller_d_up",
-			description = "loc_ingame_wield_4_v2",
 			group = "input_group_combat",
-			sort_order = 8,
+			description = "loc_ingame_wield_4_v2",
+			sort_order = 8
 		},
 		wield_5 = {
 			"keyboard_5",
 			"ps4_controller_d_right",
 			"xbox_controller_d_right",
-			description = "loc_ingame_wield_5",
 			group = "input_group_combat",
-			sort_order = 9,
+			description = "loc_ingame_wield_5",
+			sort_order = 9
 		},
 		quick_wield = {
 			"keyboard_q",
 			"ps4_controller_triangle",
 			"xbox_controller_y",
-			description = "loc_ingame_quick_wield",
 			group = "input_group_combat",
-			sort_order = 10,
+			description = "loc_ingame_quick_wield",
+			sort_order = 10
 		},
 		wield_scroll_down = {
 			"mouse_wheel_down",
-			description = "loc_ingame_wield_prev",
 			group = "input_group_combat",
-			sort_order = 11,
+			description = "loc_ingame_wield_prev",
+			sort_order = 11
 		},
 		wield_scroll_up = {
 			"mouse_wheel_up",
-			description = "loc_ingame_wield_next",
 			group = "input_group_combat",
-			sort_order = 12,
+			description = "loc_ingame_wield_next",
+			sort_order = 12
 		},
 		weapon_reload = {
 			"keyboard_r",
 			"ps4_controller_square",
 			"xbox_controller_x",
-			description = "loc_ingame_weapon_reload",
 			group = "input_group_combat",
-			sort_order = 13,
+			description = "loc_ingame_weapon_reload",
+			sort_order = 13
 		},
 		grenade_ability = {
 			"keyboard_g",
 			"ps4_controller_d_down",
 			"xbox_controller_d_down",
-			description = "loc_ingame_grenade_ability",
 			group = "input_group_combat",
-			sort_order = 14,
+			description = "loc_ingame_grenade_ability",
+			sort_order = 14
 		},
 		combat_ability = {
 			"keyboard_f",
 			"ps4_controller_r1",
 			"xbox_controller_right_shoulder",
-			description = "loc_ingame_combat_ability",
 			group = "input_group_combat",
-			sort_order = 15,
+			description = "loc_ingame_combat_ability",
+			sort_order = 15
 		},
 		smart_tag = {
 			"mouse_middle",
 			"ps4_controller_l1",
 			"xbox_controller_left_shoulder",
-			description = "loc_ingame_smart_tag",
 			group = "input_group_combat",
-			sort_order = 16,
+			description = "loc_ingame_smart_tag",
+			sort_order = 16
 		},
 		com_wheel = {
 			"mouse_middle",
 			"ps4_controller_l1",
 			"xbox_controller_left_shoulder",
-			description = "loc_ingame_com_wheel",
 			group = "input_group_combat",
-			sort_order = 17,
+			description = "loc_ingame_com_wheel",
+			sort_order = 17
 		},
 		tactical_overlay = {
 			"keyboard_tab",
 			"ps4_controller_touch",
 			"xbox_controller_back",
-			description = "loc_ingame_tactical_overlay",
 			group = "input_group_combat",
-			sort_order = 18,
+			description = "loc_ingame_tactical_overlay",
+			sort_order = 18
 		},
 		tactical_overlay_swap = {
 			"keyboard_e",
 			"ps4_controller_square",
 			"xbox_controller_x",
-			description = "loc_ingame_tactical_overlay_swap",
 			group = "input_group_combat",
-			sort_order = 19,
+			description = "loc_ingame_tactical_overlay_swap",
+			sort_order = 19
 		},
 		tactical_overlay_scroll_down = {
 			"mouse_wheel_down",
 			"ps4_controller_d_down",
 			"xbox_controller_d_down",
-			bindable = false,
 			description = "loc_ingame_tactical_overlay_scroll_down",
-			group = "input_group_combat",
 			hide_in_controller_layout = true,
-			hide_in_keybindings_menu = true,
+			group = "input_group_combat",
+			bindable = false,
+			hide_in_keybindings_menu = true
 		},
 		tactical_overlay_scroll_up = {
 			"mouse_wheel_up",
 			"ps4_controller_d_up",
 			"xbox_controller_d_up",
-			bindable = false,
 			description = "loc_ingame_tactical_overlay_scroll_up",
-			group = "input_group_combat",
 			hide_in_controller_layout = true,
-			hide_in_keybindings_menu = true,
+			group = "input_group_combat",
+			bindable = false,
+			hide_in_keybindings_menu = true
 		},
 		menu = {
 			"ps4_controller_options",
 			"xbox_controller_start",
-			bindable = false,
-			description = "loc_alias_view_hotkey_system",
 			group = "input_group_hotkeys",
+			bindable = false,
+			description = "loc_alias_view_hotkey_system"
 		},
 		weapon_inspect = {
 			"keyboard_x",
 			"ps4_controller_d_right",
 			"xbox_controller_d_right",
-			description = "loc_ingame_weapon_inspect",
 			group = "input_group_combat",
-			sort_order = 20,
+			description = "loc_ingame_weapon_inspect",
+			sort_order = 20
 		},
 		spectate_next = {
 			"mouse_left",
 			"ps4_controller_cross",
 			"xbox_controller_a",
-			description = "loc_ingame_spectate_next",
 			group = "input_group_combat",
-			hide_in_controller_layout = true,
+			description = "loc_ingame_spectate_next",
 			sort_order = 21,
+			hide_in_controller_layout = true
 		},
 		voip_push_to_talk = {
 			"keyboard_v",
-			description = "loc_ingame_voip_push_to_talk",
 			group = "input_group_combat",
-			sort_order = 22,
+			description = "loc_ingame_voip_push_to_talk",
+			sort_order = 22
 		},
 		keyboard_move_forward = {
 			"keyboard_w",
-			description = "loc_ingame_keyboard_move_forward",
 			group = "input_group_movement",
-			sort_order = 1,
+			description = "loc_ingame_keyboard_move_forward",
+			sort_order = 1
 		},
 		keyboard_move_backward = {
 			"keyboard_s",
-			description = "loc_ingame_keyboard_move_backward",
 			group = "input_group_movement",
-			sort_order = 2,
+			description = "loc_ingame_keyboard_move_backward",
+			sort_order = 2
 		},
 		keyboard_move_left = {
 			"keyboard_a",
-			description = "loc_ingame_keyboard_move_left",
 			group = "input_group_movement",
-			sort_order = 3,
+			description = "loc_ingame_keyboard_move_left",
+			sort_order = 3
 		},
 		keyboard_move_right = {
 			"keyboard_d",
-			description = "loc_ingame_keyboard_move_right",
 			group = "input_group_movement",
-			sort_order = 4,
+			description = "loc_ingame_keyboard_move_right",
+			sort_order = 4
 		},
 		dodge = {
 			"keyboard_space",
 			"ps4_controller_cross",
 			"xbox_controller_a",
-			description = "loc_ingame_dodge",
 			group = "input_group_movement",
-			sort_order = 5,
+			description = "loc_ingame_dodge",
+			sort_order = 5
 		},
 		jump = {
 			"keyboard_space",
 			"ps4_controller_cross",
 			"xbox_controller_a",
-			description = "loc_ingame_jump",
 			group = "input_group_movement",
-			sort_order = 6,
+			description = "loc_ingame_jump",
+			sort_order = 6
 		},
 		crouch = {
 			"keyboard_left ctrl",
 			"ps4_controller_circle",
 			"xbox_controller_b",
-			description = "loc_ingame_crouch",
 			group = "input_group_movement",
-			sort_order = 7,
+			description = "loc_ingame_crouch",
+			sort_order = 7
 		},
 		slide = {
 			"ps4_controller_circle",
 			"xbox_controller_b",
-			bindable = false,
-			description = "loc_ingame_slide",
 			group = "input_group_movement",
+			bindable = false,
 			sort_order = 8,
+			description = "loc_ingame_slide"
 		},
 		sprint = {
 			"keyboard_left shift",
 			"ps4_controller_l3",
 			"xbox_controller_left_thumb",
-			description = "loc_ingame_sprint",
 			group = "input_group_movement",
-			sort_order = 9,
+			description = "loc_ingame_sprint",
+			sort_order = 9
 		},
 		look_raw = {
 			"mouse_mouse",
-			bindable = false,
-			description = "loc_ingame_look_raw",
 			group = "input_group_movement",
+			bindable = false,
 			sort_order = 10,
+			description = "loc_ingame_look_raw"
 		},
 		look_raw_controller = {
 			"ps4_controller_right",
 			"xbox_controller_right",
-			bindable = false,
-			description = "loc_ingame_look_raw_controller",
 			group = "input_group_movement",
+			bindable = false,
 			sort_order = 11,
+			description = "loc_ingame_look_raw_controller"
 		},
 		move_controller = {
 			"ps4_controller_left",
 			"xbox_controller_left",
-			bindable = false,
-			description = "loc_ingame_move_controller",
 			group = "input_group_movement",
+			bindable = false,
 			sort_order = 12,
-		},
+			description = "loc_ingame_move_controller"
+		}
 	},
 	settings = {
 		action_one_pressed = {
 			key_alias = "action_one",
-			type = "pressed",
+			type = "pressed"
 		},
 		action_one_release = {
 			key_alias = "action_one",
-			type = "released",
+			type = "released"
 		},
 		action_one_hold = {
 			key_alias = "action_one",
-			type = "held",
+			type = "held"
 		},
 		action_two_pressed = {
 			key_alias = "action_two",
-			type = "pressed",
+			type = "pressed"
 		},
 		action_two_release = {
 			key_alias = "action_two",
-			type = "released",
+			type = "released"
 		},
 		action_two_hold = {
 			key_alias = "action_two",
-			type = "held",
+			type = "held"
 		},
 		combat_ability_pressed = {
 			key_alias = "combat_ability",
-			type = "pressed",
+			type = "pressed"
 		},
 		combat_ability_release = {
 			key_alias = "combat_ability",
-			type = "released",
+			type = "released"
 		},
 		combat_ability_hold = {
 			key_alias = "combat_ability",
-			type = "held",
+			type = "held"
 		},
 		grenade_ability_pressed = {
 			key_alias = "grenade_ability",
-			type = "pressed",
+			type = "pressed"
 		},
 		grenade_ability_release = {
 			key_alias = "grenade_ability",
-			type = "released",
+			type = "released"
 		},
 		grenade_ability_hold = {
 			key_alias = "grenade_ability",
-			type = "held",
+			type = "held"
 		},
 		interact_pressed = {
 			key_alias = "interact",
-			type = "pressed",
+			type = "pressed"
 		},
 		interact_hold = {
 			key_alias = "interact",
-			type = "held",
+			type = "held"
 		},
 		interact_inspect_pressed = {
 			key_alias = "interact_inspect",
-			type = "pressed",
+			type = "pressed"
 		},
 		interact_inspect_hold = {
 			key_alias = "interact_inspect",
-			type = "held",
+			type = "held"
 		},
 		tactical_overlay_pressed = {
 			key_alias = "tactical_overlay",
-			type = "pressed",
+			type = "pressed"
 		},
 		tactical_overlay_hold = {
 			key_alias = "tactical_overlay",
-			type = "held",
+			type = "held"
 		},
 		tactical_overlay_swap = {
 			key_alias = "tactical_overlay_swap",
-			type = "pressed",
+			type = "pressed"
 		},
 		tactical_overlay_scroll_down = {
 			key_alias = "tactical_overlay_scroll_down",
-			type = "held",
+			type = "held"
 		},
 		tactical_overlay_scroll_up = {
 			key_alias = "tactical_overlay_scroll_up",
-			type = "held",
+			type = "held"
 		},
 		weapon_reload = {
 			key_alias = "weapon_reload",
-			type = "pressed",
+			type = "pressed"
 		},
 		weapon_reload_hold = {
 			key_alias = "weapon_reload",
-			type = "held",
+			type = "held"
 		},
 		weapon_extra_pressed = {
 			key_alias = "weapon_extra",
-			type = "pressed",
+			type = "pressed"
 		},
 		weapon_extra_release = {
 			key_alias = "weapon_extra",
-			type = "released",
+			type = "released"
 		},
 		weapon_extra_hold = {
 			key_alias = "weapon_extra",
-			type = "held",
+			type = "held"
 		},
 		weapon_inspect_hold = {
 			key_alias = "weapon_inspect",
-			type = "held",
+			type = "held"
 		},
 		jump = {
 			key_alias = "jump",
-			type = "pressed",
+			type = "pressed"
 		},
 		jump_held = {
 			key_alias = "jump",
-			type = "held",
+			type = "held"
 		},
 		dodge = {
 			key_alias = "dodge",
-			type = "pressed",
+			type = "pressed"
 		},
 		crouch = {
 			key_alias = "crouch",
-			type = "pressed",
+			type = "pressed"
 		},
 		crouching = {
 			key_alias = "crouch",
-			type = "held",
+			type = "held"
 		},
 		sprint = {
 			key_alias = "sprint",
-			type = "pressed",
+			type = "pressed"
 		},
 		sprinting = {
 			key_alias = "sprint",
-			type = "held",
+			type = "held"
 		},
 		quick_wield = {
 			key_alias = "quick_wield",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_scroll_down = {
 			key_alias = "wield_scroll_down",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_scroll_up = {
 			key_alias = "wield_scroll_up",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_1 = {
 			key_alias = "wield_1",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_2 = {
 			key_alias = "wield_2",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_3 = {
 			key_alias = "wield_3",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_3_gamepad = {
 			key_alias = "wield_3_gamepad",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_4 = {
 			key_alias = "wield_4",
-			type = "pressed",
+			type = "pressed"
 		},
 		wield_5 = {
 			key_alias = "wield_5",
-			type = "pressed",
+			type = "pressed"
 		},
 		keyboard_move_left = {
 			key_alias = "keyboard_move_left",
-			type = "button",
+			type = "button"
 		},
 		keyboard_move_right = {
 			key_alias = "keyboard_move_right",
-			type = "button",
+			type = "button"
 		},
 		keyboard_move_forward = {
 			key_alias = "keyboard_move_forward",
-			type = "button",
+			type = "button"
 		},
 		keyboard_move_backward = {
 			key_alias = "keyboard_move_backward",
-			type = "button",
+			type = "button"
 		},
 		spectate_next = {
 			key_alias = "spectate_next",
-			type = "pressed",
+			type = "pressed"
 		},
 		smart_tag = {
 			key_alias = "smart_tag",
-			type = "pressed",
+			type = "pressed"
 		},
 		com_wheel = {
 			key_alias = "com_wheel",
-			type = "held",
+			type = "held"
 		},
 		voip_push_to_talk = {
 			key_alias = "voip_push_to_talk",
-			type = "held",
+			type = "held"
 		},
 		look_raw = {
 			key_alias = "look_raw",
-			type = "axis",
+			type = "axis"
 		},
 		look_raw_controller = {
 			key_alias = "look_raw_controller",
-			type = "axis",
+			type = "axis"
 		},
 		move_controller = {
 			key_alias = "move_controller",
-			type = "axis",
-		},
-	},
+			type = "axis"
+		}
+	}
 }
 
 if IS_XBS or IS_PLAYSTATION then

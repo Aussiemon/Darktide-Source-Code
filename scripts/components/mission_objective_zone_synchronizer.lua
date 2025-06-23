@@ -42,29 +42,29 @@ end
 
 MissionObjectiveZoneSynchronizer.component_data = {
 	num_zones_in_mission_objective = {
-		ui_name = "Number of zones in mission objective",
 		ui_type = "number",
 		value = 1,
+		ui_name = "Number of zones in mission objective"
 	},
 	objective_name = {
-		ui_name = "Objective name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Objective name"
 	},
 	automatic_start = {
-		ui_name = "Auto start on mission start",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Auto start on mission start"
 	},
 	inputs = {
 		start_mission_objective_zone_event = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"MissionObjectiveZoneSynchronizerExtension",
-	},
+		"MissionObjectiveZoneSynchronizerExtension"
+	}
 }
 
 return MissionObjectiveZoneSynchronizer

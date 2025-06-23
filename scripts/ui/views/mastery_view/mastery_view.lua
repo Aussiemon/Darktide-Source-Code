@@ -22,10 +22,10 @@ local TWO_PI = PI * 2
 local MAX_RARITY_LEVEL = 4
 local TIME_PER_BAR = 2
 local DIRECTION = {
-	DOWN = "down",
-	LEFT = "left",
 	RIGHT = "right",
 	UP = "up",
+	LEFT = "left",
+	DOWN = "down"
 }
 local MasteryView = class("MasteryView", "BaseView")
 
@@ -79,55 +79,55 @@ MasteryView.cb_on_help_pressed = function (self)
 	local tutorial_overlay_data = {}
 
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
-		grow_from_center = true,
 		window_width = 800,
+		grow_from_center = true,
 		widgets_name = {
-			"mastery_level",
+			"mastery_level"
 		},
 		elements = {
-			self._wintrack_element,
+			self._wintrack_element
 		},
 		position_data = {
-			horizontal_alignment = "left",
 			vertical_alignment = "top",
-			x = 140,
-			y = 550,
 			z = 0,
+			horizontal_alignment = "left",
+			y = 550,
+			x = 140
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_mastery_blessings_tutorial_left_p1_header"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_mastery_blessings_tutorial_left_p1_text"),
+				text = Localize("loc_mastery_blessings_tutorial_left_p1_text")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 
 	local trait_index = 1
@@ -136,101 +136,101 @@ MasteryView.cb_on_help_pressed = function (self)
 	local traits_grid_position = traits_grid_pivot_scenegraph.position
 
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
-		grow_from_center = true,
 		window_width = 800,
+		grow_from_center = true,
 		widgets_name = {
-			"trait_" .. trait_index,
+			"trait_" .. trait_index
 		},
 		position_data = {
-			horizontal_alignment = "left",
 			vertical_alignment = "top",
 			z = 0,
+			horizontal_alignment = "left",
 			x = traits_grid_position[1] + available_traits_position[trait_index][1] + 250,
-			y = traits_grid_position[2] + available_traits_position[trait_index][2] + 80,
+			y = traits_grid_position[2] + available_traits_position[trait_index][2] + 80
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_mastery_blessings_tutorial_left_p2_header"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_mastery_blessings_tutorial_left_p2_text"),
+				text = Localize("loc_mastery_blessings_tutorial_left_p2_text")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					225,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
-		grow_from_center = true,
 		window_width = 800,
+		grow_from_center = true,
 		widgets_name = {
 			"mastery_unlock_bar",
-			"mastery_points",
+			"mastery_points"
 		},
 		position_data = {
-			horizontal_alignment = "left",
 			vertical_alignment = "top",
-			x = 680,
-			y = 350,
 			z = 0,
+			horizontal_alignment = "left",
+			y = 350,
+			x = 680
 		},
 		layout = {
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
+					25
+				}
 			},
 			{
 				widget_type = "text",
 				text = Localize("loc_mastery_blessings_tutorial_left_p3_header"),
 				style = {
-					font_size = 30,
-				},
+					font_size = 30
+				}
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					20,
-				},
+					20
+				}
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_mastery_blessings_tutorial_left_p3_text"),
+				text = Localize("loc_mastery_blessings_tutorial_left_p3_text")
 			},
 			{
 				widget_type = "dynamic_spacing",
 				size = {
 					800,
-					25,
-				},
-			},
-		},
+					25
+				}
+			}
+		}
 	}
 
 	local tutorial_start_delay = 0.5
@@ -474,14 +474,14 @@ MasteryView._setup_node_widgets = function (self)
 			local position_angle = -(portion_angle * i) + PI
 			local offset = {
 				math.sin(position_angle) * circ_radius,
-				math.cos(position_angle) * circ_radius,
+				math.cos(position_angle) * circ_radius
 			}
 			local widget = self:_create_widget("node_" .. i, MasteryViewDefinitions.node_widgets_definitions)
 
 			widget.style.mastery_unlock_node.offset = {
 				offset[1] - 13,
 				offset[2] - 13,
-				50,
+				50
 			}
 			widgets[#widgets + 1] = widget
 
@@ -593,7 +593,7 @@ MasteryView._unlock_progress_animation_update = function (self, dt, t)
 				self._threshold_animation_id = self:_start_animation("on_threshold_reached", self._widgets_by_name, {
 					traits = self._trait_widgets,
 					nodes = self._node_widgets,
-					next_rarity = unlocked_rarity_level,
+					next_rarity = unlocked_rarity_level
 				})
 			end
 		else
@@ -687,11 +687,11 @@ MasteryView._tooltip_update = function (self)
 			local rarity_description_font_style_options = UIFonts.get_font_options_by_style(rarity_description_style)
 			local title_text_size = {
 				rarity_title_style.size[1],
-				5000,
+				5000
 			}
 			local description_text_size = {
 				rarity_description_style.size[1],
-				5000,
+				5000
 			}
 			local rarity_title = Localize(item.display_name)
 			local rarity_description = Items.trait_description(item, rarity, math.lerp(1, 4, rarity - 1))
@@ -724,11 +724,11 @@ MasteryView._tooltip_update = function (self)
 			local next_rarity_description_font_style_options = UIFonts.get_font_options_by_style(next_rarity_description_style)
 			local next_title_text_size = {
 				next_rarity_title_style.size[1],
-				5000,
+				5000
 			}
 			local next_description_text_size = {
 				next_rarity_description_style.size[1],
-				5000,
+				5000
 			}
 			local next_rarity_title = Localize(item.display_name)
 			local next_rarity_description = Items.trait_description(item, next_rarity, math.lerp(1, 4, next_rarity))
@@ -771,11 +771,11 @@ MasteryView._tooltip_update = function (self)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
 
 				tooltip_widget.content.mastery_cost = element.cost and string.format("{#color(226,199,126)}%s{#reset()} %s", input_text, Localize("loc_mastery_trait_cost", true, {
-					cost = element.cost,
+					cost = element.cost
 				})) or ""
 			else
 				tooltip_widget.content.mastery_cost = element.cost and Localize("loc_mastery_trait_cost", true, {
-					cost = element.cost,
+					cost = element.cost
 				}) or ""
 			end
 
@@ -895,7 +895,7 @@ MasteryView._setup_traits = function (self)
 					max_unlocked_rarity_index = unlocked and max_unlocked_rarity_index < index and index or max_unlocked_rarity_index
 					valid_traits[index] = {
 						rarity = rarity,
-						unlocked = unlocked,
+						unlocked = unlocked
 					}
 				end
 
@@ -921,7 +921,7 @@ MasteryView._setup_traits = function (self)
 					cost = cost or nil,
 					item = item,
 					name = name,
-					index = ii,
+					index = ii
 				}
 			end
 		end
@@ -930,13 +930,13 @@ MasteryView._setup_traits = function (self)
 	for ii = #traits_layout, max_traits - 1 do
 		traits_layout[#traits_layout + 1] = {
 			widget_type = "trait_new_empty",
-			index = ii,
+			index = ii
 		}
 	end
 
 	local scenegraph_size = {
 		0,
-		0,
+		0
 	}
 	local trait_widgets = {}
 	local available_traits_position = MasteryViewSettings.trait_positions
@@ -994,7 +994,7 @@ MasteryView._setup_traits = function (self)
 			local offset = {
 				trait_width_offset,
 				trait_height_offset,
-				1,
+				1
 			}
 			local config = table.clone(trait_layout)
 
@@ -1028,7 +1028,7 @@ MasteryView._setup_traits = function (self)
 			widget.content.size = trait_size
 			scenegraph_size = {
 				math.max(scenegraph_size[1], offset[1] + trait_size[1]),
-				math.max(scenegraph_size[2], offset[2] + trait_size[2]),
+				math.max(scenegraph_size[2], offset[2] + trait_size[2])
 			}
 			trait_widgets[#trait_widgets + 1] = widget
 		end
@@ -1104,7 +1104,7 @@ MasteryView._setup_milestones = function (self)
 			icon_size = milestone.icon_size,
 			icon_color = milestone.icon_color,
 			icon_material_values = milestone.icon_material_values,
-			type = milestone.type,
+			type = milestone.type
 		}
 
 		milestone_rewards_by_level[milestone.level] = milestone_rewards_by_level[milestone.level] or {}
@@ -1119,13 +1119,13 @@ MasteryView._setup_milestones = function (self)
 	for level, rewards in ipairs(milestone_rewards_by_level) do
 		wintrack_rewards[#wintrack_rewards + 1] = {
 			points_required = level,
-			items = rewards,
+			items = rewards
 		}
 	end
 
 	self._wintrack_rewards = wintrack_rewards
 	self._wintrack_element = self:_add_element(ViewElementWintrackMastery, "wintrack", 1, {
-		read_only = true,
+		read_only = true
 	}, "milestones_grid_pivot")
 
 	self._wintrack_element:assign_rewards(wintrack_rewards, 1)
@@ -1149,7 +1149,7 @@ MasteryView._can_trait_be_acquired = function (self, trait_item_element)
 	local cost = trait_item_element.cost
 	local can_be_acquired = not not cost and cost <= points_available and next_rarity <= unlocked_rarity_level and not reached_max_rarity
 	local reason = not can_be_acquired and (not not cost and points_available < cost and Localize("loc_mastery_trait_no_points") or unlocked_rarity_level < next_rarity and Localize("loc_mastery_trait_level_locked", true, {
-		rarity_level = next_rarity,
+		rarity_level = next_rarity
 	}) or "") or ""
 
 	return can_be_acquired, reason
@@ -1215,7 +1215,7 @@ MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
 	self._purchased_traits[#self._purchased_traits + 1] = {
 		trait_name = trait_name,
 		rarity = rarity,
-		index = self._selected_trait.index,
+		index = self._selected_trait.index
 	}
 
 	local costs = Mastery.get_trait_costs()
@@ -1240,7 +1240,7 @@ MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
 	self:_update_traits(trait_widget)
 	Managers.event:trigger("event_mastery_traits_update", self._mastery_id, {
 		trait_name = trait_name,
-		rarity = rarity,
+		rarity = rarity
 	})
 end
 

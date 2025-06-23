@@ -40,15 +40,15 @@ end
 
 PlasmaCoil.component_data = {
 	coil_material_slot_name = {
-		ui_name = "Material Slot Name",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Material Slot Name"
 	},
 	coil_variable_name = {
-		ui_name = "Material Variable Name",
 		ui_type = "text_box",
 		value = "external_overheat_glow",
-	},
+		ui_name = "Material Variable Name"
+	}
 }
 
 return PlasmaCoil

@@ -55,65 +55,65 @@ end
 
 DecoderSynchronizer.component_data = {
 	objective_name = {
-		ui_name = "Objective Name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Objective Name"
 	},
 	automatic_start = {
-		ui_name = "Auto Start On Mission Start",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Auto Start On Mission Start"
 	},
 	min_time_until_stalling = {
-		ui_name = "Min time until stalling (in sec.)",
 		ui_type = "number",
 		value = 20,
+		ui_name = "Min time until stalling (in sec.)"
 	},
 	max_time_until_stalling = {
-		ui_name = "Max time until stalling (in sec.)",
 		ui_type = "number",
 		value = 30,
+		ui_name = "Max time until stalling (in sec.)"
 	},
 	num_active_units = {
-		ui_name = "Num. of Active Units",
 		ui_type = "number",
 		value = 1,
+		ui_name = "Num. of Active Units"
 	},
 	stall_once_per_device = {
-		ui_name = "Stall only once per device",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Stall only once per device"
 	},
 	setup_only = {
-		ui_name = "Setup Only",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Setup Only"
 	},
 	progress_in_minigame = {
-		ui_name = "Progress In Minigame",
-		ui_type = "combo_box",
 		value = false,
+		ui_type = "combo_box",
+		ui_name = "Progress In Minigame",
 		options_keys = {
 			"true",
 			"On Stall",
-			"false",
+			"false"
 		},
 		options_values = {
 			true,
 			"On Stall",
-			false,
-		},
+			false
+		}
 	},
 	inputs = {
 		start_decoding_event = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
 		"DecoderSynchronizerExtension",
-		"NetworkedTimerExtension",
-	},
+		"NetworkedTimerExtension"
+	}
 }
 
 return DecoderSynchronizer

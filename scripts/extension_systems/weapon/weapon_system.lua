@@ -14,7 +14,7 @@ local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/wea
 local attack_results = AttackSettings.attack_results
 local WeaponSystem = class("WeaponSystem", "ExtensionSystemBase")
 local RPCS = {
-	"rpc_player_blocked_attack",
+	"rpc_player_blocked_attack"
 }
 
 WeaponSystem.init = function (self, ...)
@@ -31,7 +31,7 @@ WeaponSystem.init = function (self, ...)
 	if self._is_server then
 		self._queued_explosion_request_index = 1
 		self._queued_explosions = {
-			[0] = 1,
+			[0] = 1
 		}
 
 		self:_preallocate_queued_explosions(1, 1028)
@@ -420,7 +420,7 @@ WeaponSystem.queue_perils_of_the_warp_elite_kills_achievement = function (self, 
 		account_id = account_id,
 		character_id = player:character_id(),
 		player = player,
-		explosion_queue_index = explosion_queue_index,
+		explosion_queue_index = explosion_queue_index
 	}
 end
 

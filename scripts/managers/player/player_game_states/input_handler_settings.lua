@@ -18,7 +18,7 @@ local input_handler_settings = {
 		"grenade_ability_hold",
 		"weapon_inspect_hold",
 		"weapon_extra_hold",
-		"jump_held",
+		"jump_held"
 	},
 	ephemeral_actions = {
 		"jump",
@@ -46,7 +46,7 @@ local input_handler_settings = {
 		"grenade_ability_pressed",
 		"grenade_ability_release",
 		"weapon_extra_pressed",
-		"weapon_extra_release",
+		"weapon_extra_release"
 	},
 	ui_interaction_actions = {
 		"finished_interaction",
@@ -54,7 +54,7 @@ local input_handler_settings = {
 		"emote_2",
 		"emote_3",
 		"emote_4",
-		"emote_5",
+		"emote_5"
 	},
 	input_settings = {
 		"weapon_switch_scroll_wrap",
@@ -63,20 +63,20 @@ local input_handler_settings = {
 		"stationary_dodge",
 		"diagonal_forward_dodge",
 		"always_dodge",
-		"toggle_ads",
+		"toggle_ads"
 	},
 	action_network_type = {
-		move_backward = "float_input",
-		move_forward = "float_input",
 		move_left = "float_input",
-		move_right = "float_input",
+		move_forward = "float_input",
+		move_backward = "float_input",
+		move_right = "float_input"
 	},
 	pack_unpack_actions = {
 		"move_forward",
 		"move_left",
 		"move_backward",
-		"move_right",
-	},
+		"move_right"
+	}
 }
 
 return settings("InputHandlerSettings", input_handler_settings)

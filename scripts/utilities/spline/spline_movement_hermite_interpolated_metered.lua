@@ -63,7 +63,7 @@ SplineMovementHermiteInterpolatedMetered._build_subdivisions = function (self, s
 				Vector3Box(p0),
 				Vector3Box(p1),
 				Vector3Box(p2),
-				Vector3Box(p3),
+				Vector3Box(p3)
 			}
 
 			local vectors, quaternions, matrices = Script.temp_count()

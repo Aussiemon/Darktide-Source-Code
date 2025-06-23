@@ -812,7 +812,7 @@ local MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION = 3
 local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
 local TRY_TO_STRAFE_SHOOT_COOLDOWN = {
 	3,
-	6,
+	6
 }
 
 BtShootLiquidBeamAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, action_data, breed)

@@ -269,8 +269,8 @@ BotPerceptionExtension._target_valid = function (self, unit, enemy_offset)
 end
 
 local PRIORITY_AID_TYPES = {
-	knocked_down = true,
 	ledge = true,
+	knocked_down = true
 }
 
 BotPerceptionExtension._update_target_ally = function (self, self_unit, self_position, perception_component, side, bot_group, t)

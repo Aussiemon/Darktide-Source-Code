@@ -62,7 +62,7 @@ DialogueSystemSubtitle.create_subtitle = function (self, currently_playing_subti
 		is_audible = true,
 		currently_playing_subtitle = currently_playing_subtitle,
 		speaker_name = speaker_name,
-		duration = duration,
+		duration = duration
 	}
 
 	if optional_delay then
@@ -79,7 +79,7 @@ DialogueSystemSubtitle.add_playing_localized_dialogue = function (self, speaker_
 	if speaker_setting then
 		local is_localized = speaker_setting.subtitles_enabled
 
-		if is_localized then
+		if is_localized and dialogue.dialogue_timer ~= 3.45678 then
 			table.insert(self._playing_localized_dialogues_array, 1, dialogue)
 		end
 	end

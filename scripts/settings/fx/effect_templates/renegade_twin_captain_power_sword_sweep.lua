@@ -5,7 +5,7 @@ local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local FX_SOURCE_NAME = "fx_shaft"
 local VFX = "content/fx/particles/enemies/twins/twins_aoe_sweep_windup"
 local resources = {
-	vfx = VFX,
+	vfx = VFX
 }
 
 local function _start_vfx(unit, position, node, template_data, template_context)
@@ -57,7 +57,7 @@ local effect_template = {
 		for _, component in pairs(unit_components) do
 			component:set_stop_time(t, attachment_unit)
 		end
-	end,
+	end
 }
 
 return effect_template

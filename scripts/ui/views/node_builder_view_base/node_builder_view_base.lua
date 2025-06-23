@@ -22,12 +22,13 @@ NodeBuilderViewBase.init = function (self, definitions, settings, context)
 	self._saved_scenegraph_settings = {}
 	self._global_node_offset = {
 		0,
-		0,
+		0
 	}
 	self._nodes_render_order_list = {}
 	self._current_zoom = 1
 	self._layouts = {}
 	self._node_widgets = {}
+	self._incompatible_talents = {}
 	self._points_spent_on_node_widgets = {}
 	self._node_points_spent = 0
 
@@ -302,7 +303,7 @@ NodeBuilderViewBase._is_node_dependent_on_parent = function (self, node, parent_
 
 	if spent_in_parents_counter > 1 then
 		local ignore_list = {
-			[parent_node.widget_name] = true,
+			[parent_node.widget_name] = true
 		}
 		local can_node_traverse_to_start = self:_can_node_traverse_to_start(node, ignore_list)
 
@@ -483,20 +484,20 @@ NodeBuilderViewBase._add_node = function (self, x, y)
 
 	local nodes = active_layout.nodes
 	local node = {
-		max_points = 1,
-		type = "default",
-		x_normalized = 0,
 		y_normalized = 0,
+		type = "default",
+		max_points = 1,
+		x_normalized = 0,
 		widget_name = "node_" .. math.uuid(),
 		x = x or 0,
 		y = y or 0,
 		parents = {},
 		children = {},
 		requirements = {
-			all_parents_chosen = false,
 			children_unlock_points = 1,
-			min_points_spent = 0,
-		},
+			all_parents_chosen = false,
+			min_points_spent = 0
+		}
 	}
 
 	nodes[#nodes + 1] = node
@@ -506,7 +507,7 @@ NodeBuilderViewBase._add_node = function (self, x, y)
 	self:_refresh_all_nodes()
 
 	for _, settings in pairs(self._saved_scenegraph_settings) do
-		self:_refresh_coordinates(settings)
+		self:_refresh_coordinates(settings, settings.is_node)
 	end
 end
 
@@ -517,7 +518,13 @@ NodeBuilderViewBase._refresh_all_nodes = function (self)
 	for i = 1, #nodes do
 		local node = nodes[i]
 
-		self:_refresh_coordinates(node)
+		self:_refresh_coordinates(node, true)
+
+		local incompatible_talent = node.requirements.incompatible_talent
+
+		if incompatible_talent and incompatible_talent ~= "" then
+			self._incompatible_talents[incompatible_talent] = true
+		end
 	end
 
 	table.sort(self._nodes_render_order_list, function (a, b)
@@ -742,6 +749,52 @@ NodeBuilderViewBase._nodes_in_exclusive_group = function (self, group_name)
 	return temp_node_table
 end
 
+local temp_incompatible_node_table = {}
+
+NodeBuilderViewBase._node_with_incompatible_talent_is_selected = function (self, incompatible_talent)
+	local layout = self:get_active_layout()
+	local points_spent_on_node_widgets = self._points_spent_on_node_widgets
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+		local node_talent = node.talent
+
+		if node_talent == incompatible_talent then
+			local node_widget_name = node.widget_name
+			local points_spent = points_spent_on_node_widgets[node_widget_name] or 0
+
+			if points_spent > 0 then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+NodeBuilderViewBase._node_incompatible_with_talent_is_selected = function (self, incompatible_talent)
+	local layout = self:get_active_layout()
+	local points_spent_on_node_widgets = self._points_spent_on_node_widgets
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+		local node_incompatible_talent = node.requirements.incompatible_talent
+
+		if node_incompatible_talent and node_incompatible_talent == incompatible_talent then
+			local node_widget_name = node.widget_name
+			local points_spent = points_spent_on_node_widgets[node_widget_name] or 0
+
+			if points_spent > 0 then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 NodeBuilderViewBase._node_by_name = function (self, name)
 	local layout = self:get_active_layout()
 	local nodes = layout.nodes
@@ -806,6 +859,16 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 		return NODE_STATUS.capped
 	end
 
+	local is_incompatible_with_other_nodes = self._incompatible_talents[node.talent]
+
+	if is_incompatible_with_other_nodes then
+		local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node.talent)
+
+		if incompatible_node_is_selected then
+			return NODE_STATUS.locked
+		end
+	end
+
 	local requirements = node.requirements
 
 	if requirements then
@@ -845,6 +908,16 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 						return NODE_STATUS.locked
 					end
 				end
+			end
+		end
+
+		local incompatible_talent = requirements.incompatible_talent
+
+		if incompatible_talent and incompatible_talent ~= "" then
+			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(incompatible_talent)
+
+			if incompatible_node_is_selected then
+				return NODE_STATUS.locked
 			end
 		end
 
@@ -1053,6 +1126,8 @@ NodeBuilderViewBase._set_zoom = function (self, zoom)
 	self._current_zoom = math.clamp(zoom, 0.25, 1)
 
 	self:_force_update_scenegraph()
+
+	return self._current_zoom
 end
 
 NodeBuilderViewBase.render_scale = function (self)
@@ -1118,11 +1193,9 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 
 	local render_settings = self._render_settings
 	local widgets_by_name = self._widgets_by_name
-	local next_input_hold = input_service:get("next_hold")
 	local select_text_input_hold = input_service:get("select_text")
 	local left_input_pressed = input_service:get("left_pressed")
 	local left_input_hold = input_service:get("left_hold")
-	local mouse_middle_hold = input_service:get("middle_hold")
 	local allowed_node_input = self:_allowed_node_input()
 	local input_handled = false
 	local dragging_background = false
@@ -1141,7 +1214,7 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 
 	self._dragging_background = dragging_background
 
-	if not input_handled and allowed_node_input then
+	if allowed_node_input then
 		local scroll
 		local scroll_axis = input_service:get("scroll_axis")
 
@@ -1158,6 +1231,11 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 			end
 
 			self._scroll_add = (self._scroll_add or 0) + scroll * 2
+
+			local cursor_name = "cursor"
+			local cursor_position = input_service:get(cursor_name)
+
+			self._scroll_position = Vector3.to_array(cursor_position)
 		end
 
 		if self._scroll_add then
@@ -1172,28 +1250,45 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 				self._scroll_add = nil
 			end
 
-			self:_on_input_scroll_axis_changed(step * scroll_direction_multiplier)
+			self:_on_input_scroll_axis_changed(step * scroll_direction_multiplier, self._scroll_position)
 		end
 	end
+
+	self:_update_scenegraph_positions()
 
 	self._input_handled_current_frame = input_handled
 end
 
-NodeBuilderViewBase._on_input_scroll_axis_changed = function (self, scroll_value)
+NodeBuilderViewBase._on_input_scroll_axis_changed = function (self, scroll_value, cursor_position)
 	local current_zoom = self._current_zoom
 	local zoom = current_zoom + scroll_value * 0.05
 
-	self:_set_zoom(zoom)
+	zoom = self:_set_zoom(zoom)
+
+	local widgets_by_name = self._widgets_by_name
+	local layout_background_widget = widgets_by_name.layout_background
+	local scenegraph_id = layout_background_widget.scenegraph_id
+	local scenegraph_position_x, scenegraph_position_y, _ = self:_scenegraph_position(scenegraph_id)
+	local scenegraph_settings = self:_get_or_create_scenegraph_settings(scenegraph_id, scenegraph_position_x, scenegraph_position_y, false)
+	local render_scale = Managers.ui:view_render_scale() * zoom
+	local x, y = scenegraph_settings.x, scenegraph_settings.y
+	local cursor_x, cursor_y = cursor_position[1] / render_scale, cursor_position[2] / render_scale
+	local zoom_ratio = zoom / current_zoom
+	local new_cursor_x, new_cursor_y = cursor_x * zoom_ratio, cursor_y * zoom_ratio
+	local diff_x, diff_y = new_cursor_x - cursor_x, new_cursor_y - cursor_y
+
+	scenegraph_settings.x = x - diff_x
+	scenegraph_settings.y = y - diff_y
 end
 
 NodeBuilderViewBase._get_location_pixel_size_by_layout_size = function (self, layout_size, location_fraction_x, location_fraction_y)
 	return layout_size[1] * location_fraction_x, layout_size[2] * location_fraction_y
 end
 
-NodeBuilderViewBase._refresh_coordinates = function (self, scenegraph_settings)
+NodeBuilderViewBase._refresh_coordinates = function (self, scenegraph_settings, is_node)
 	local global_node_offset = self._global_node_offset
-	local x = scenegraph_settings.x + global_node_offset[1]
-	local y = scenegraph_settings.y + global_node_offset[2]
+	local x = scenegraph_settings.x + (is_node and global_node_offset[1] or 0)
+	local y = scenegraph_settings.y + (is_node and global_node_offset[2] or 0)
 	local horizontal_alignment = scenegraph_settings.horizontal_alignment
 	local vertical_alignment = scenegraph_settings.vertical_alignment
 	local scenegraph_id = scenegraph_settings.scenegraph_id or scenegraph_settings.widget_name
@@ -1207,10 +1302,26 @@ NodeBuilderViewBase.safe_rect = function (self)
 	return safe_rect_default_value * 0.01
 end
 
+NodeBuilderViewBase._get_or_create_scenegraph_settings = function (self, scenegraph_id, position_x, position_y, is_node)
+	local scenegraph_settings = self._saved_scenegraph_settings[scenegraph_id]
+
+	if not scenegraph_settings then
+		scenegraph_settings = {
+			x = position_x,
+			y = position_y,
+			is_node = is_node,
+			scenegraph_id = scenegraph_id
+		}
+		self._saved_scenegraph_settings[scenegraph_id] = scenegraph_settings
+	end
+
+	return scenegraph_settings
+end
+
 local _temp_widget_size = {}
 
 NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name, scenegraph_id, input_service, move_input_prefix, render_settings, is_background, optional_scenegraph_settings, cursor_start_position, cursor_pixel_threshold)
-	if self._draging_scenegraph_widget_name and self._draging_scenegraph_widget_name ~= widget_name then
+	if self._dragging_scenegraph_widget_name and self._dragging_scenegraph_widget_name ~= widget_name then
 		return
 	end
 
@@ -1235,32 +1346,28 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 	if left_pressed then
 		local world_position = self:_scenegraph_world_position(scenegraph_id, render_scale)
 
-		if math.point_is_inside_2d_box(cursor_position, world_position, _temp_widget_size) then
-			self._draging_scenegraph_id = scenegraph_id
-			self._draging_scenegraph_widget_name = widget_name
-			self._cursor_start_coordinates = Vector3.to_array(cursor_position)
+		if math.point_is_inside_2d_box(cursor_position, world_position, _temp_widget_size) or widget_name == "layout_background" and not self._player_mode then
+			self._dragging_scenegraph_id = scenegraph_id
+			self._dragging_scenegraph_widget_name = widget_name
+			self._cursor_last_coordinates = Vector3.to_array(cursor_position)
 			self._cursor_box_offset = {
-				cursor_position[1] - world_position[1],
-				cursor_position[2] - world_position[2],
+				cursor_position[1] - world_position[1] - _temp_widget_size[1] * 0.5,
+				cursor_position[2] - world_position[2] - _temp_widget_size[2] * 0.75
 			}
 		end
 	end
 
-	if self._draging_scenegraph_id then
+	local scenegraph_settings = optional_scenegraph_settings or saved_scenegraph_settings[scenegraph_id]
+
+	if self._dragging_scenegraph_id then
 		local cursor_box_offset = self._cursor_box_offset
 		local cursor_box_offset_x = cursor_box_offset[1]
 		local cursor_box_offset_y = cursor_box_offset[2]
-		local scenegraph_settings = optional_scenegraph_settings or saved_scenegraph_settings[scenegraph_id]
 
 		if not scenegraph_settings then
 			local scenegraph_position_x, scenegraph_position_y, _ = self:_scenegraph_position(scenegraph_id)
 
-			scenegraph_settings = {
-				x = scenegraph_position_x,
-				y = scenegraph_position_y,
-				scenegraph_id = scenegraph_id,
-			}
-			saved_scenegraph_settings[scenegraph_id] = scenegraph_settings
+			scenegraph_settings = self:_get_or_create_scenegraph_settings(scenegraph_id, scenegraph_position_x, scenegraph_position_y, not is_background)
 		end
 
 		local left_hold = input_service:get(input_key_hold)
@@ -1268,40 +1375,44 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 		if left_hold then
 			local safe_rect_width = screen_width * safe_rect * 0.5
 			local safe_rect_height = screen_height * safe_rect * 0.5
-			local cursor_end_coordinates = Vector3.to_array(cursor_position)
+			local cursor_current_coordinates = Vector3.to_array(cursor_position)
 
 			if not is_background then
-				cursor_end_coordinates[1] = math.clamp(cursor_end_coordinates[1], safe_rect_width + cursor_box_offset_x, screen_width - safe_rect_width - (_temp_widget_size[1] - cursor_box_offset_x))
-				cursor_end_coordinates[2] = math.clamp(cursor_end_coordinates[2], safe_rect_height + cursor_box_offset_y, screen_height - safe_rect_height - (_temp_widget_size[2] - cursor_box_offset_y))
+				cursor_current_coordinates[1] = math.clamp(cursor_current_coordinates[1], safe_rect_width + cursor_box_offset_x, screen_width - safe_rect_width - (_temp_widget_size[1] - cursor_box_offset_x))
+				cursor_current_coordinates[2] = math.clamp(cursor_current_coordinates[2], safe_rect_height + cursor_box_offset_y, screen_height - safe_rect_height - (_temp_widget_size[2] - cursor_box_offset_y))
 			end
 
-			self._cursor_end_coordinates = cursor_end_coordinates
+			self._cursor_current_coordinates = cursor_current_coordinates
 		else
-			self._draging_scenegraph_id = nil
-			self._draging_scenegraph_widget_name = nil
+			self._dragging_scenegraph_id = nil
+			self._dragging_scenegraph_widget_name = nil
 		end
 
-		local final_x, final_y = 0, 0
-		local cursor_end_coordinates = self._cursor_end_coordinates
+		local final_x, final_y = scenegraph_settings.x, scenegraph_settings.y
+		local cursor_current_coordinates = self._cursor_current_coordinates
 
-		if cursor_end_coordinates then
-			local cursor_start_coordinates = self._cursor_start_coordinates
-			local diff_x = (cursor_end_coordinates[1] - cursor_start_coordinates[1]) * render_inverse_scale
-			local diff_y = (cursor_end_coordinates[2] - cursor_start_coordinates[2]) * render_inverse_scale
+		if cursor_current_coordinates then
+			local cursor_last_coordinates = self._cursor_last_coordinates
+			local diff_x = (cursor_current_coordinates[1] - cursor_last_coordinates[1]) * render_inverse_scale
+			local diff_y = (cursor_current_coordinates[2] - cursor_last_coordinates[2]) * render_inverse_scale
 
-			final_x = scenegraph_settings.x + diff_x
-			final_y = scenegraph_settings.y + diff_y
+			final_x = final_x + diff_x
+			final_y = final_y + diff_y
 
 			if is_background then
 				local background_width, background_height = self:_background_size()
+				local min_x = -background_width * 0.5
+				local max_x = -background_width * 0.5 + screen_width * render_inverse_scale
 
-				if self._player_mode then
-					final_x = scenegraph_settings.x
-				else
-					final_x = math.clamp(final_x, -math.max(background_width - screen_width * render_inverse_scale), 0)
+				final_x = math.clamp(final_x, min_x, max_x)
+
+				local max_scroll = math.abs(background_height - screen_height * render_inverse_scale)
+
+				if not self._player_mode then
+					max_scroll = max_scroll + screen_height * 0.5
 				end
 
-				final_y = math.clamp(final_y, -math.max(background_height - screen_height * render_inverse_scale), 0)
+				final_y = math.clamp(final_y, -max_scroll, 0)
 			end
 
 			local pixel_distance_valid = true
@@ -1315,41 +1426,60 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 			end
 
 			if pixel_distance_valid then
-				self:_set_scenegraph_position(scenegraph_id, final_x, final_y)
+				if not self._dragging_scenegraph_id and not is_background then
+					local grid_snapping_position = self._grid_snapping_position
 
-				if not self._draging_scenegraph_id then
-					if not is_background then
-						local grid_snapping_position = self._grid_snapping_position
+					if grid_snapping_position then
+						local background_x, background_y = self:_background_position()
 
-						if grid_snapping_position then
-							local background_x, background_y = self:_background_position()
+						final_x = grid_snapping_position[1] - background_x
+						final_y = grid_snapping_position[2] - background_y
 
-							final_x = grid_snapping_position[1] + math.abs(background_x)
-							final_y = grid_snapping_position[2] + math.abs(background_y)
+						local grid_size = self._grid_size
 
-							local grid_size = self._grid_size
-
-							final_x = final_x + (grid_size - scenegraph_width) * 0.5
-							final_y = final_y + (grid_size - scenegraph_height) * 0.5
-						end
+						final_x = final_x + (grid_size - scenegraph_width) * 0.5
+						final_y = final_y + (grid_size - scenegraph_height) * 0.5
 					end
-
-					scenegraph_settings.x = final_x
-					scenegraph_settings.y = final_y
-
-					self:_set_scenegraph_position(scenegraph_id, final_x, final_y)
-
-					self._cursor_end_coordinates = nil
 				end
 
+				if not self._player_mode then
+					scenegraph_settings.x = final_x
+				end
+
+				scenegraph_settings.y = final_y
+				self._cursor_last_coordinates = self._cursor_current_coordinates
 				handled = true
 			end
 		end
-
-		return handled, final_x, final_y
 	end
 
 	return handled
+end
+
+NodeBuilderViewBase._update_scenegraph_positions = function (self)
+	for scenegraph_id, settings in pairs(self._saved_scenegraph_settings) do
+		if settings.x ~= settings.rendered_x or settings.y ~= settings.rendered_y then
+			settings.rendered_x = settings.x
+			settings.rendered_y = settings.y
+
+			self:_refresh_coordinates(settings, settings.is_node)
+		end
+	end
+
+	local active_layout = self:get_active_layout()
+
+	if active_layout then
+		for i = 1, #active_layout.nodes do
+			local node = active_layout.nodes[i]
+
+			if node.x ~= node.rendered_x or node.y ~= node.rendered_y then
+				node.rendered_x = node.x
+				node.rendered_y = node.y
+
+				self:_refresh_coordinates(node, true)
+			end
+		end
+	end
 end
 
 NodeBuilderViewBase.draw = function (self, dt, t, input_service, layer)
@@ -1447,20 +1577,20 @@ local line_colors = {
 		255,
 		50,
 		50,
-		50,
+		50
 	},
 	unlocked = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	chosen = {
 		255,
 		0,
 		255,
-		0,
-	},
+		0
+	}
 }
 
 NodeBuilderViewBase._draw_layout_node_connections = function (self, dt, t, input_service, ui_renderer, render_settings, layout)

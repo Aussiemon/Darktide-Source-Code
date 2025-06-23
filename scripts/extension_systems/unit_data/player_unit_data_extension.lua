@@ -24,35 +24,35 @@ local quaternion_unbox = QuaternionBox.unbox
 local max_level_unit_id = NetworkConstants.level_unit_id.max
 local max_game_object_id = NetworkConstants.game_object_id.max
 local NUMBER_NETWORK_TYPE_TOLERANCES = {
-	action_time_scale = 0.01,
-	character_height = 0.01,
+	weapon_sway_offset = 0.01,
+	weapon_sway = 0.01,
+	weapon_view_lock = 0.01,
+	weapon_spread = 0.01,
+	warp_charge_ramping_modifier = 0.01,
 	default = 0.001,
 	projectile_speed = 0.1,
-	recoil_angle = 0.01,
 	stamina_fraction = 0.01,
-	warp_charge_ramping_modifier = 0.01,
-	weapon_spread = 0.01,
-	weapon_sway = 0.01,
-	weapon_sway_offset = 0.01,
-	weapon_view_lock = 0.01,
+	recoil_angle = 0.01,
+	character_height = 0.01,
+	action_time_scale = 0.01
 }
 local VECTOR3_NETWORK_TYPE_TOLERANCES = {
-	Vector3 = 0.001,
-	high_precision_direction = 1e-05,
 	high_precision_velocity = 1e-05,
 	locomotion_position = 0.001,
+	Vector3 = 0.001,
+	high_precision_direction = 1e-05
 }
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
-	fixed_frame_offset = true,
-	fixed_frame_offset_end_t_4bit = true,
 	fixed_frame_offset_end_t_6bit = true,
-	fixed_frame_offset_end_t_7bit = true,
-	fixed_frame_offset_end_t_9bit = true,
-	fixed_frame_offset_small = true,
-	fixed_frame_offset_start_t_5bit = true,
-	fixed_frame_offset_start_t_6bit = true,
 	fixed_frame_offset_start_t_7bit = true,
 	fixed_frame_offset_start_t_9bit = true,
+	fixed_frame_offset_start_t_6bit = true,
+	fixed_frame_offset_end_t_9bit = true,
+	fixed_frame_offset_start_t_5bit = true,
+	fixed_frame_offset = true,
+	fixed_frame_offset_end_t_7bit = true,
+	fixed_frame_offset_small = true,
+	fixed_frame_offset_end_t_4bit = true
 }
 local script_id_string_32 = Script.id_string_32
 local NETWORK_NAME_ID_TO_FIELD_ID = {}
@@ -115,7 +115,7 @@ local POST_UPDATE_FIELDS = {
 	end,
 	fixed_frame_time = function (value, fixed_time_step)
 		return math_round(value / fixed_time_step)
-	end,
+	end
 }
 local FRAME_INDEX_FIELD = "frame_index"
 local REMAINDER_TIME_FIELD = "remainder_time"
@@ -224,7 +224,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._component_config = component_config
 	self._components.movement_settings[i].player_speed_scale = 1
 	self._component_blackboard = {
-		index = i,
+		index = i
 	}
 
 	local breed = extension_init_data.breed
@@ -459,7 +459,7 @@ local READ_ONLY_META = {
 	end,
 	__newindex = function (t, field_name, value)
 		ferror("Trying to write to %q in read only component %q", field_name, rawget(t, "__name"))
-	end,
+	end
 }
 
 PlayerUnitDataExtension._create_read_component = function (self, component_name)
@@ -468,7 +468,7 @@ PlayerUnitDataExtension._create_read_component = function (self, component_name)
 		__data = self._components[component_name],
 		__blackboard = self._component_blackboard,
 		__config = config,
-		__name = component_name,
+		__name = component_name
 	}
 
 	setmetatable(component, READ_ONLY_META)
@@ -608,7 +608,7 @@ local WRITE_META = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 PlayerUnitDataExtension.write_component = function (self, component_name)
@@ -623,7 +623,7 @@ PlayerUnitDataExtension._create_write_component = function (self, component_name
 		__config = config,
 		__name = component_name,
 		__data_ext = self,
-		__is_server = self._is_server,
+		__is_server = self._is_server
 	}
 
 	setmetatable(component, WRITE_META)
@@ -672,7 +672,7 @@ PlayerUnitDataExtension._setup_component_dependency = function (self, component_
 
 		field_additional_data = {
 			parent_read_component = parent_component,
-			parent_field_name = parent_field_name,
+			parent_field_name = parent_field_name
 		}
 	else
 		ferror("Don't know how to handle additional_data for this field_network_type:%q", field_network_type)
@@ -703,6 +703,12 @@ PlayerUnitDataExtension.breed_name = function (self)
 	local breed_name = breed.name
 
 	return breed_name
+end
+
+PlayerUnitDataExtension.is_companion = function (self)
+	local is_companion = Breed.is_companion(self._breed)
+
+	return is_companion
 end
 
 PlayerUnitDataExtension.archetype = function (self)

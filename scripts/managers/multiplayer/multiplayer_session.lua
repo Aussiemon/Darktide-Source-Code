@@ -111,7 +111,7 @@ MultiplayerSession.stopped_being_host = function (self, is_error, source, reason
 		is_error = is_error,
 		source = source,
 		reason = reason,
-		error_details = optional_error_details,
+		error_details = optional_error_details
 	}
 	self._state = self.STATES.dead
 
@@ -283,7 +283,7 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 		is_error = is_error,
 		source = source,
 		reason = reason,
-		error_details = optional_error_details,
+		error_details = optional_error_details
 	}
 
 	if Managers.telemetry_events then
@@ -327,7 +327,7 @@ MultiplayerSession.failed_to_boot = function (self, is_error, source, reason, op
 		is_error = is_error,
 		source = source,
 		reason = reason,
-		error_details = optional_error_details,
+		error_details = optional_error_details
 	}
 	self._state = self.STATES.dead
 
@@ -397,7 +397,7 @@ MultiplayerSession._remove_remote_players = function (self, peer_id, optional_ou
 					character_id = character_id,
 					is_human = is_human,
 					peer_id = peer_id,
-					stat_id = stat_id,
+					stat_id = stat_id
 				}
 			end
 

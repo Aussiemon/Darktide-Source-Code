@@ -9,7 +9,7 @@ DefaultGameParameters.time_step_policy = {
 	1000,
 	"system_step_range",
 	0,
-	1000,
+	1000
 }
 DefaultGameParameters.mission = false
 DefaultGameParameters.debug_mission = false
@@ -104,6 +104,7 @@ DefaultGameParameters.wallet_cap_diamantine = 1000000
 DefaultGameParameters.wallet_cap_aquilas = false
 DefaultGameParameters.error_codes_crashifyreport = false
 DefaultGameParameters.launcher_verification_passed_crashify_property = false
+DefaultGameParameters.disable_all_dlc_checks = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 

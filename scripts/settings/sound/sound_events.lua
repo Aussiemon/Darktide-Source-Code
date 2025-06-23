@@ -101,6 +101,8 @@ local sound_events = {
 	"wwise/events/player/play_pick_up_grenade",
 	"wwise/events/player/play_pick_up_syringe",
 	"wwise/events/player/play_pick_up_tome",
+	"wwise/events/player/play_pick_up_grimoire",
+	"wwise/events/player/play_pick_up_grimoire_husk",
 	"wwise/events/player/play_pick_up_paper",
 	"wwise/events/player/play_pick_up_valuable",
 	"wwise/events/player/play_pickup_metal_object",
@@ -187,6 +189,7 @@ local sound_events = {
 	"wwise/events/minions/stop_mutator_daemonhost_cult_chant",
 	"wwise/events/player/play_player_get_hit_mutator_damage_2d_tick",
 	"wwise/events/minions/play_havoc_mutator_enraging_elites_buff_stinger",
+	"wwise/events/player/play_player_ability_adamant_dog_explosion"
 }
 
 return sound_events

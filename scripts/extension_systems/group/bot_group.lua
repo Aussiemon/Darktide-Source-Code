@@ -52,7 +52,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 5 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0 / 8)))
 	}
 	self._right_vectors_outside_volume = {
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8))),
@@ -61,7 +61,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 4 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 5 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8)))
 	}
 	self._left_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 0.5))),
@@ -70,7 +70,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 2 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, math.pi * 1 / 8)))
 	}
 	self._right_vectors = {
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 0.5))),
@@ -79,7 +79,7 @@ BotGroup.init = function (self, side, nav_world, traverse_logic, extension_manag
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 6 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 2 / 8))),
 		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 7 / 8))),
-		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8))),
+		Vector3Box(Quaternion.forward(Quaternion(up, -math.pi * 1 / 8)))
 	}
 	self._previous_available_pickups_player_unit_index = 0
 	self._update_pickups_at = -math.huge
@@ -93,7 +93,7 @@ BotGroup.add_bot_unit = function (self, unit)
 		nav_point_utility = {},
 		aoe_threat = {
 			expires = -math.huge,
-			escape_direction = Vector3Box(),
+			escape_direction = Vector3Box()
 		},
 		pickup_orders = {},
 		behavior_component = Blackboard.write_component(blackboard, "behavior"),
@@ -101,7 +101,7 @@ BotGroup.add_bot_unit = function (self, unit)
 		pickup_component = Blackboard.write_component(blackboard, "pickup"),
 		behavior_extension = ScriptUnit.extension(unit, "behavior_system"),
 		navigation_extension = ScriptUnit.extension(unit, "navigation_system"),
-		character_state_component = unit_data_extension:read_component("character_state"),
+		character_state_component = unit_data_extension:read_component("character_state")
 	}
 
 	self._bot_data[unit] = data
@@ -1044,10 +1044,10 @@ BotGroup._update_pickups = function (self, bot_data, side, dt, t)
 end
 
 local PICKUP_BROADPHASE_CATEGORY = {
-	"pickups",
+	"pickups"
 }
 local DEPLOYABLE_BROADPHASE_CATEGORY = {
-	"deployable",
+	"deployable"
 }
 local UNIT_CHECK_RANGE = 15
 local UNIT_CHECK_RESULTS = {}

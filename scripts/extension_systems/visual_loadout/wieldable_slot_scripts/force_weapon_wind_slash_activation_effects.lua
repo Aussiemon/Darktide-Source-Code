@@ -13,29 +13,29 @@ local VFX_CAGE_DURATION = 1.66
 local VFX_FINGER_DURATION = 1.6
 local CAGE_FX_SOURCE_LOOKUP = {
 	right = {
-		hand = "fx_right_hand",
 		sword = "fx_anim_01",
+		hand = "fx_right_hand"
 	},
 	left = {
-		hand = "fx_left_hand",
 		sword = "fx_anim_01",
-	},
+		hand = "fx_left_hand"
+	}
 }
 local FINGER_FX_SOURCE_LOOKUP = {
 	right = {
-		index = "fx_right_finger_tip_index",
-		middle = "fx_right_finger_tip_middle",
+		thumb = "fx_right_finger_tip_thumb",
 		pinky = "fx_right_finger_tip_pinky",
 		ring = "fx_right_finger_tip_ring",
-		thumb = "fx_right_finger_tip_thumb",
+		index = "fx_right_finger_tip_index",
+		middle = "fx_right_finger_tip_middle"
 	},
 	left = {
-		index = "fx_left_finger_tip_index",
-		middle = "fx_left_finger_tip_middle",
+		thumb = "fx_left_finger_tip_thumb",
 		pinky = "fx_left_finger_tip_pinky",
 		ring = "fx_left_finger_tip_ring",
-		thumb = "fx_left_finger_tip_thumb",
-	},
+		index = "fx_left_finger_tip_index",
+		middle = "fx_left_finger_tip_middle"
+	}
 }
 local _external_properties = {}
 
@@ -58,7 +58,7 @@ ForceWeaponWindSlashActivationEffects.init = function (self, context, slot, weap
 	self._cage_particle_ids = {}
 	self._finger_particle_ids = {
 		right = {},
-		left = {},
+		left = {}
 	}
 
 	local owner_unit = context.owner_unit

@@ -10,13 +10,13 @@ local locomotion_states = ProjectileLocomotionSettings.states
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local WWISE_PARAMETER_NAME_SPEED = "projectile_speed"
 local SYNC_EFFECT = {
-	build_up_start = true,
-	build_up_stop = true,
-	fuse = true,
 	impact = true,
-	spawn = false,
-	stick = true,
+	build_up_start = true,
 	target_aquired = true,
+	build_up_stop = true,
+	stick = true,
+	fuse = true,
+	spawn = false
 }
 local ProjectileFxExtension = class("ProjectileFxExtension")
 
@@ -105,6 +105,10 @@ ProjectileFxExtension.destroy = function (self)
 
 		self._source_id = nil
 	end
+end
+
+ProjectileFxExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	return
 end
 
 ProjectileFxExtension.update = function (self, unit, dt, t)

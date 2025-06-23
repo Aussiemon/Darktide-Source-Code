@@ -7,26 +7,26 @@ local RegionRestrictionsPSN = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	de = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = false,
 		[restrictions.gibbing] = false,
-		[restrictions.blood_decals] = false,
+		[restrictions.blood_decals] = false
 	},
 	jp = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = true,
 		[restrictions.gibbing] = true,
-		[restrictions.blood_decals] = true,
+		[restrictions.blood_decals] = true
 	},
 	unknown = {
 		[restrictions.ragdoll_interaction] = true,
 		[restrictions.visible_minion_wounds] = true,
 		[restrictions.gibbing] = true,
-		[restrictions.blood_decals] = true,
-	},
+		[restrictions.blood_decals] = true
+	}
 }
 
 return settings("RegionRestrictionsPSN", RegionRestrictionsPSN)

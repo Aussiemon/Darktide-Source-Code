@@ -14,7 +14,7 @@ local EVENT_NAMES = {
 	"client_connected",
 	"client_disconnected",
 	"connected_to_host",
-	"disconnected_from_host",
+	"disconnected_from_host"
 }
 local default_game_udp_key, default_game_udp_cert
 

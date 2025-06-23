@@ -38,7 +38,7 @@ local FORMATTING_FUNCTIONS = {
 	end,
 	default = function (value, config)
 		return tostring(value)
-	end,
+	end
 }
 local FIND_VALUE_FUNCTIONS = {
 	buff_template = function (trait_definition, config, trait_level)
@@ -59,7 +59,7 @@ local FIND_VALUE_FUNCTIONS = {
 	end,
 	default = function (trait_definition, config, trait_level)
 		return config.value
-	end,
+	end
 }
 
 TraitValueParser.trait_description = function (item, trait_level, lerp_value)

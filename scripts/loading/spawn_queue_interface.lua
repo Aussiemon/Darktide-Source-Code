@@ -7,7 +7,7 @@ local SpawnQueueInterface = {
 	"ready_group",
 	"trigger_group",
 	"retire_group",
-	"set_delay_time",
+	"set_delay_time"
 }
 
 return SpawnQueueInterface

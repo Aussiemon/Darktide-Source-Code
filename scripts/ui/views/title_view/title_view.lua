@@ -9,7 +9,7 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 local TitleView = class("TitleView", "BaseView")
 
@@ -82,7 +82,7 @@ TitleView._apply_title_text = function (self)
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, input_alias_name, color_tint_text)
 	local context = {
-		input = input_key,
+		input = input_key
 	}
 	local text = Localize("loc_title_view_input_description", true, context)
 
@@ -172,7 +172,7 @@ TitleView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	self.super.on_exit(self)
+	TitleView.super.on_exit(self)
 end
 
 TitleView.on_resolution_modified = function (self)

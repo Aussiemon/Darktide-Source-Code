@@ -518,25 +518,25 @@ function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys)
 			return _table_tostring_array(v, depth + 1, max_depth, skip_private, sort_keys)
 		else
 			return {
-				"(rec-limit)",
+				"(rec-limit)"
 			}
 		end
 	elseif type(v) == "string" then
 		return {
 			"\"",
 			v,
-			"\"",
+			"\""
 		}
 	else
 		return {
-			tostring(v),
+			tostring(v)
 		}
 	end
 end
 
 function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 	local str = {
-		"{\n",
+		"{\n"
 	}
 	local last_tabs = string.rep("\t", depth - 1)
 	local tabs = last_tabs .. "\t"
@@ -800,7 +800,7 @@ end
 
 table.merge_varargs = function (args, num_args, ...)
 	local merged = {
-		unpack(args, 1, num_args),
+		unpack(args, 1, num_args)
 	}
 	local num_varargs = select("#", ...)
 
@@ -813,7 +813,7 @@ end
 
 table.pack = function (...)
 	return {
-		...,
+		...
 	}, select("#", ...)
 end
 
@@ -902,7 +902,7 @@ table.set_readonly = function (t)
 		__index = t,
 		__newindex = function (_, key, value)
 			error("Attempt to modify read-only table")
-		end,
+		end
 	})
 end
 
@@ -922,7 +922,7 @@ end
 local _enum_index_metatable = {
 	__index = function (_, k)
 		return error("Don't know `" .. tostring(k) .. "` for enum.")
-	end,
+	end
 }
 
 table.enum = function (...)
@@ -942,7 +942,7 @@ end
 local _lookup_index_metatable = {
 	__index = function (_, k)
 		return error("Don't know `" .. tostring(k) .. "` for lookup.")
-	end,
+	end
 }
 
 table.index_lookup_table = function (...)
@@ -971,7 +971,7 @@ table.make_unique = function (t)
 			local data = rawget(t, "__data")
 
 			data[k] = v
-		end,
+		end
 	}
 
 	setmetatable(t, metatable)
@@ -990,7 +990,7 @@ table.make_strict = function (t, name, optional_error_message__index, optional_e
 		end,
 		__newindex = function ()
 			ferror("Table %q is strict. Not allowed to add new fields. %s", name, __newindex_err_msg)
-		end,
+		end
 	}
 
 	setmetatable(t, metatable)
@@ -1016,7 +1016,7 @@ table.make_strict_with_interface = function (t, name, interface, optional_contex
 		end,
 		__newindex = function (t, key, val)
 			rawset(t, key, val)
-		end,
+		end
 	})
 end
 
@@ -1047,7 +1047,7 @@ end
 table.make_locked = function (original_t, optional_error_message)
 	local locked_table = {
 		__locked = true,
-		__data = original_t,
+		__data = original_t
 	}
 	local error_msg = optional_error_message or "Table is locked."
 
@@ -1063,7 +1063,7 @@ table.make_locked = function (original_t, optional_error_message)
 			local data = rawget(t, "__data")
 
 			data[key] = val
-		end,
+		end
 	})
 end
 
@@ -1081,7 +1081,7 @@ table.make_strict_nil_exceptions = function (t)
 	end
 
 	local meta = {
-		__declared = declared_args,
+		__declared = declared_args
 	}
 
 	meta.__newindex = function (t, k, v)
@@ -1124,7 +1124,7 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 
 	local strict_readonly_t = {
 		__data = data,
-		__interface = interface,
+		__interface = interface
 	}
 	local __index_error_msg = optional_error_message__index or ""
 	local __newindex_error_msg = optional_error_message__newindex or ""
@@ -1144,7 +1144,7 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 		end,
 		__newindex = function (t, field_name, value)
 			ferror("Table %q is readonly.%s", name, __newindex_error_msg)
-		end,
+		end
 	}
 
 	setmetatable(strict_readonly_t, metatable)
@@ -1176,7 +1176,7 @@ end
 local random_indexed_meta = {
 	__index = function (_, i)
 		return i
-	end,
+	end
 }
 
 table.generate_random_table = function (from, to, seed)
@@ -1319,7 +1319,7 @@ table.concat_arrays = function (...)
 	local append, t = table.append, {}
 
 	for i = 1, select("#", ...) do
-		append(t, select(i, ...))
+		append(t, select(i, ...), nil)
 	end
 
 	return t

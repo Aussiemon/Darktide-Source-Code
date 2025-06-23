@@ -108,7 +108,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 			breed_list[#breed_list + 1] = breed_name
 		else
 			breed_lists[spawner_index] = {
-				breed_name,
+				breed_name
 			}
 		end
 
@@ -141,7 +141,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 			queue_ids[#queue_ids + 1] = queue_id
 		else
 			spawner_queue_id[spawner] = {
-				queue_id,
+				queue_id
 			}
 		end
 	end

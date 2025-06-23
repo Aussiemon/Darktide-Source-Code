@@ -26,7 +26,7 @@ UITestCases.change_render_settings = function ()
 						local option_data = {
 							setting = setting,
 							old_value = old_value,
-							new_value = new_value,
+							new_value = new_value
 						}
 
 						Testify:make_request("setting_on_activated", option_data)
@@ -38,7 +38,7 @@ UITestCases.change_render_settings = function ()
 				local option_data = {
 					setting = setting,
 					old_value = old_value,
-					new_value = new_value,
+					new_value = new_value
 				}
 
 				Testify:make_request("setting_on_activated", option_data)

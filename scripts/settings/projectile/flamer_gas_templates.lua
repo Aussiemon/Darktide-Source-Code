@@ -4,44 +4,44 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local flamer_gas_templates = {}
 
 flamer_gas_templates.burst = {
+	suppression_radius = 5,
 	dot_buff_name = "flamer_assault",
 	suppression_cone_dot = 0.75,
-	suppression_radius = 5,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_flamer_assault_burst,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_flamer_assault_burst
+		}
+	}
 }
 flamer_gas_templates.auto = {
+	suppression_radius = 6,
 	dot_buff_name = "flamer_assault",
 	suppression_cone_dot = 0.75,
-	suppression_radius = 6,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_flamer_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_flamer_assault
+		}
+	}
 }
 flamer_gas_templates.warp_fire_burst = {
+	suppression_radius = 5,
 	dot_buff_name = "warp_fire",
 	suppression_cone_dot = 0.75,
-	suppression_radius = 5,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_warpfire_assault_burst,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_warpfire_assault_burst
+		}
+	}
 }
 flamer_gas_templates.warp_fire_auto = {
+	suppression_radius = 6,
 	dot_buff_name = "warp_fire",
 	suppression_cone_dot = 0.75,
-	suppression_radius = 6,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_warpfire_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_warpfire_assault
+		}
+	}
 }
 
 for name, template in pairs(flamer_gas_templates) do

@@ -5,7 +5,7 @@ local Interface = {
 	"pre_get_region_latencies",
 	"get_region_latencies",
 	"get_preferred_reef",
-	"get_reef_info_based_on_region_latencies",
+	"get_reef_info_based_on_region_latencies"
 }
 local RegionLatency = class("RegionLatency")
 
@@ -93,7 +93,7 @@ end
 
 RegionLatency._do_refresh = function (self)
 	return Managers.backend:title_request("/matchmaker/regions", {
-		method = "GET",
+		method = "GET"
 	}):next(function (data)
 		local regions = data.body.regions
 		local expanded_regions = {}
@@ -104,7 +104,7 @@ RegionLatency._do_refresh = function (self)
 					fast = true,
 					region = region.region,
 					reefs = region.reefs,
-					pingTarget = region.fastPingTarget,
+					pingTarget = region.fastPingTarget
 				}
 
 				table.insert(expanded_regions, fast_region)
@@ -183,7 +183,7 @@ RegionLatency._do_refresh = function (self)
 				median = latency,
 				diff_min_max = diff_min_max,
 				sent = sent,
-				lost = lost,
+				lost = lost
 			}
 			local region_latency_entry
 
@@ -199,7 +199,7 @@ RegionLatency._do_refresh = function (self)
 				region_latency_entry = {
 					region = region.region,
 					reefs = region.reefs,
-					latency = latency,
+					latency = latency
 				}
 
 				table.insert(region_latencies, region_latency_entry)
@@ -219,14 +219,14 @@ RegionLatency._do_refresh = function (self)
 		return Managers.backend:title_request("/matchmaker/preferredreef", {
 			method = "POST",
 			body = {
-				latencyList = region_latencies,
-			},
+				latencyList = region_latencies
+			}
 		}):next(function (data)
 			return data.body.reefName
 		end):next(function (reef_name)
 			return {
 				region_latencies = region_latencies,
-				preferred_reef = reef_name,
+				preferred_reef = reef_name
 			}
 		end)
 	end):next(function (result)

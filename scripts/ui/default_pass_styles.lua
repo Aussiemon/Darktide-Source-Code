@@ -8,36 +8,36 @@ DefaultPassStyles.texture = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.texture_uv = {
 	uvs = {
 		{
 			0,
-			0,
+			0
 		},
 		{
 			1,
-			1,
-		},
+			1
+		}
 	},
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.rotated_texture = {
 	angle = 0,
@@ -45,41 +45,41 @@ DefaultPassStyles.rotated_texture = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	uvs = {
 		{
 			0,
-			0,
+			0
 		},
 		{
 			1,
-			1,
-		},
+			1
+		}
 	},
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	pivot = {},
+	pivot = {}
 }
 DefaultPassStyles.multi_texture = {
-	amount = 1,
-	axis = 1,
-	direction = 1,
 	spacing = 0,
+	direction = 1,
+	axis = 1,
+	amount = 1,
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.rotated_rect = {
 	angle = 0,
@@ -87,65 +87,65 @@ DefaultPassStyles.rotated_rect = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	pivot = {},
+	pivot = {}
 }
 DefaultPassStyles.rect = {
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.triangle = {
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.circle = {
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.logic = {}
 DefaultPassStyles.hotspot = {
-	anim_focus_speed = 8,
-	anim_hover_speed = 8,
-	anim_input_speed = 8,
 	anim_select_speed = 8,
+	anim_input_speed = 8,
+	anim_hover_speed = 8,
+	anim_focus_speed = 8,
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.slug_icon = {
 	draw_index = 1,
@@ -153,13 +153,13 @@ DefaultPassStyles.slug_icon = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.rotated_slug_icon = {
 	angle = 0,
@@ -168,14 +168,14 @@ DefaultPassStyles.rotated_slug_icon = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	pivot = {},
+	pivot = {}
 }
 DefaultPassStyles.rotated_slug_picture = {
 	angle = 0,
@@ -184,45 +184,45 @@ DefaultPassStyles.rotated_slug_picture = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
-	pivot = {},
+	pivot = {}
 }
 DefaultPassStyles.slug_picture = {
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.multi_slug_icon = {
 	amount = 1,
-	axis = 1,
-	direction = 1,
-	draw_index = 1,
 	spacing = 0,
+	direction = 1,
+	axis = 1,
+	draw_index = 1,
 	color = {
 		255,
 		255,
 		255,
-		255,
+		255
 	},
 	offset = {
 		0,
 		0,
-		0,
-	},
+		0
+	}
 }
 DefaultPassStyles.video = {
 	uv_slot_name = "normal_map",
@@ -231,8 +231,8 @@ DefaultPassStyles.video = {
 		255,
 		255,
 		255,
-		255,
-	},
+		255
+	}
 }
 DefaultPassStyles.text = table.clone(UIFontSettings.body)
 
@@ -245,19 +245,19 @@ text_style.text_color = {
 	255,
 	255,
 	0,
-	255,
+	255
 }
 text_style.default_text_color = {
 	255,
 	255,
 	0,
-	255,
+	255
 }
 text_style.debug_draw_box = false
 text_style.offset = {
 	0,
 	0,
-	0,
+	0
 }
 
 return DefaultPassStyles

@@ -8,92 +8,92 @@ ability_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
+				input = "combat_ability_pressed"
+			}
+		}
 	},
 	shout_released = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "combat_ability_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
-	},
+				hold_input = "combat_ability_hold",
+				input = "action_two_pressed"
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "shout_pressed",
 		transition = {
 			{
-				input = "shout_released",
 				transition = "base",
+				input = "shout_released"
 			},
 			{
-				input = "block_cancel",
 				transition = "base",
-			},
-		},
-	},
+				input = "block_cancel"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "combat_ability",
+		start_input = "shout_pressed",
+		kind = "shout_aim",
+		sprint_ready_up_time = 0,
+		shout_ready_up_time = 0,
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
-		kind = "shout_aim",
-		minimum_hold_time = 0.075,
-		shout_ready_up_time = 0,
-		sprint_ready_up_time = 0,
-		start_input = "shout_pressed",
+		ability_type = "combat_ability",
 		stop_input = "block_cancel",
+		minimum_hold_time = 0.075,
 		total_time = math.huge,
 		radius = RADIUS,
 		allowed_chain_actions = {
 			shout_released = {
-				action_name = "action_shout",
-			},
-		},
+				action_name = "action_shout"
+			}
+		}
 	},
 	action_shout = {
-		ability_type = "combat_ability",
-		allowed_during_sprint = true,
-		anim = "ability_shout",
-		has_husk_sound = true,
-		kind = "ogryn_shout",
-		recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
-		refill_toughness = false,
 		shout_target_template = "ogryn_shout",
-		sprint_ready_up_time = 0,
-		total_time = 0.75,
-		toughness_replenish_percent = 1,
-		uninterruptible = true,
-		use_ability_charge = true,
 		use_charge_at_start = true,
+		toughness_replenish_percent = 1,
+		kind = "ogryn_shout",
+		sprint_ready_up_time = 0,
 		vo_tag = "ability_bullgryn",
-		radius = RADIUS,
-	},
+		refill_toughness = false,
+		uninterruptible = true,
+		has_husk_sound = true,
+		recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
+		allowed_during_sprint = true,
+		ability_type = "combat_ability",
+		anim = "ability_shout",
+		use_ability_charge = true,
+		total_time = 0.75,
+		radius = RADIUS
+	}
 }
 ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
-	"ShoutEffects",
+	"ShoutEffects"
 }
 ability_template.vfx = {
 	delay = 0.2,
-	name = "content/fx/particles/abilities/ogryn_ability_shout_activate",
+	name = "content/fx/particles/abilities/ogryn_ability_shout_activate"
 }
 
 return ability_template

@@ -55,7 +55,7 @@ local function calculate_costs(start_costs, item, item_crafting_costs, cost_mult
 
 		final_costs[i] = {
 			type = cost.type,
-			amount = amount,
+			amount = amount
 		}
 	end
 
@@ -64,13 +64,13 @@ end
 
 CraftingSettings.recipes = {}
 CraftingSettings.recipes.upgrade_item = {
-	button_text = "loc_crafting_upgrade_button",
-	description_text = "loc_crafting_upgrade_description",
-	display_name = "loc_crafting_upgrade_option",
-	icon = "content/ui/materials/icons/crafting/upgrade_item",
-	name = "upgrade_item",
-	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_04",
 	view_name = "crafting_upgrade_item_view",
+	display_name = "loc_crafting_upgrade_option",
+	name = "upgrade_item",
+	button_text = "loc_crafting_upgrade_button",
+	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_04",
+	icon = "content/ui/materials/icons/crafting/upgrade_item",
+	description_text = "loc_crafting_upgrade_description",
 	sound_event = UISoundEvents.crafting_view_on_upgrade_item,
 	is_valid_item = function (item)
 		if is_valid_crafting_item(item) and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED" or item.item_type == "GADGET") then
@@ -145,9 +145,9 @@ CraftingSettings.recipes.upgrade_item = {
 		if num_traits < new_num_traits then
 			for i = num_traits + 1, new_num_traits do
 				item.traits[i] = {
-					id = "content/items/traits/unknown_trait",
-					is_fake = true,
 					value = 1,
+					is_fake = true,
+					id = "content/items/traits/unknown_trait"
 				}
 			end
 
@@ -171,8 +171,8 @@ CraftingSettings.recipes.upgrade_item = {
 			for i = num_perks + 1, new_num_perks do
 				item.perks[i] = {
 					id = "content/items/perks/unknown_perk",
-					is_fake = true,
 					rarity = 1,
+					is_fake = true
 				}
 			end
 
@@ -193,21 +193,21 @@ CraftingSettings.recipes.upgrade_item = {
 		item.itemLevel = min_new_item_level
 
 		return item
-	end,
+	end
 }
 CraftingSettings.recipes.extract_trait = {
-	button_text = "loc_crafting_extract_button",
-	description_text = "loc_crafting_extract_description",
-	display_name = "loc_crafting_extract_option",
-	icon = "content/ui/materials/icons/crafting/extract_trait",
 	name = "extract_trait",
-	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_01",
+	display_name = "loc_crafting_extract_option",
+	view_name = "crafting_extract_trait_view",
 	requires_trait_selection = "all",
 	show_item_granted_toast = true,
+	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_01",
+	icon = "content/ui/materials/icons/crafting/extract_trait",
+	description_text = "loc_crafting_extract_description",
 	success_text = "loc_crafting_extract_success",
-	ui_disabled = false,
 	ui_hidden = false,
-	view_name = "crafting_extract_trait_view",
+	button_text = "loc_crafting_extract_button",
+	ui_disabled = false,
 	sound_event = UISoundEvents.crafting_view_on_extract_trait,
 	is_valid_item = function (item)
 		return is_valid_crafting_item(item) and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED") and item.traits and #item.traits > 0
@@ -288,21 +288,21 @@ CraftingSettings.recipes.extract_trait = {
 		local promise = Managers.data_service.crafting:extract_trait_from_weapon(item.gear_id, ingredients.existing_trait_index, costs)
 
 		return promise
-	end,
+	end
 }
 CraftingSettings.recipes.replace_trait = {
-	button_text = "loc_crafting_replace_option",
-	description_text = "loc_crafting_replace_description",
-	display_name = "loc_crafting_replace_option",
-	icon = "content/ui/materials/icons/crafting/replace_trait",
-	modification_warning = "loc_crafting_warning_replace",
 	name = "replace_trait",
-	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_02",
-	requires_trait_selection = true,
-	success_text = "loc_crafting_replace_success",
-	ui_disabled = false,
-	ui_hidden = false,
+	display_name = "loc_crafting_replace_option",
 	view_name = "crafting_replace_trait_view",
+	requires_trait_selection = true,
+	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_02",
+	icon = "content/ui/materials/icons/crafting/replace_trait",
+	description_text = "loc_crafting_replace_description",
+	success_text = "loc_crafting_replace_success",
+	ui_hidden = false,
+	button_text = "loc_crafting_replace_option",
+	modification_warning = "loc_crafting_warning_replace",
+	ui_disabled = false,
 	sound_event = UISoundEvents.crafting_view_on_replace_trait,
 	is_valid_item = function (item)
 		return is_valid_crafting_item(item) and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED") and item.traits and #item.traits > 0
@@ -373,39 +373,39 @@ CraftingSettings.recipes.replace_trait = {
 		local promise = Managers.data_service.crafting:replace_trait_in_weapon(item.gear_id, ingredients.existing_trait_index, ingredients.trait_master_ids[1], ingredients.tiers[1], costs)
 
 		return promise
-	end,
+	end
 }
 
 local dummy_fuse_costs = {
 	{
-		amount = 0,
 		can_afford = true,
 		type = "credits",
+		amount = 0
 	},
 	{
-		amount = 0,
 		can_afford = true,
 		type = "plasteel",
+		amount = 0
 	},
 	{
-		amount = 0,
 		can_afford = true,
 		type = "diamantine",
-	},
+		amount = 0
+	}
 }
 
 CraftingSettings.recipes.replace_perk = {
-	button_text = "loc_crafting_reroll_perk_button",
-	description_text = "loc_crafting_replace_perk_description",
-	display_name = "loc_crafting_reroll_perk_option",
-	icon = "content/ui/materials/icons/crafting/reroll_perk",
-	name = "replace_perk",
-	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_03",
-	requires_perk_selection = true,
-	success_text = "loc_crafting_reroll_success",
-	ui_disabled = false,
-	ui_hidden = false,
 	view_name = "crafting_replace_perk_view",
+	display_name = "loc_crafting_reroll_perk_option",
+	ui_hidden = false,
+	name = "replace_perk",
+	success_text = "loc_crafting_reroll_success",
+	requires_perk_selection = true,
+	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_03",
+	button_text = "loc_crafting_reroll_perk_button",
+	icon = "content/ui/materials/icons/crafting/reroll_perk",
+	description_text = "loc_crafting_replace_perk_description",
+	ui_disabled = false,
 	sound_event = UISoundEvents.crafting_view_on_reroll_perk,
 	is_valid_item = function (item)
 		return is_valid_crafting_item(item) and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED" or item.item_type == "GADGET") and item.perks and #item.perks > 0
@@ -473,14 +473,14 @@ CraftingSettings.recipes.replace_perk = {
 		local promise = Managers.data_service.crafting:replace_perk_in_weapon(item.gear_id, ingredients.existing_perk_index, ingredients.perk_master_ids[1], costs, ingredients.tiers[1])
 
 		return promise
-	end,
+	end
 }
 CraftingSettings.recipes_ui_order = {
 	CraftingSettings.recipes.upgrade_item,
 	CraftingSettings.recipes.replace_perk,
 	CraftingSettings.recipes.replace_trait,
 	CraftingSettings.recipes.extract_trait,
-	CraftingSettings.recipes.fuse_traits,
+	CraftingSettings.recipes.fuse_traits
 }
 CraftingSettings.trait_sticker_book_enum = table.enum("invalid", "unseen", "seen")
 
@@ -491,15 +491,15 @@ do
 	local grid_height = 920
 	local grid_size = {
 		grid_width - edge_padding,
-		grid_height,
+		grid_height
 	}
 	local grid_spacing = {
 		0,
-		0,
+		0
 	}
 	local mask_size = {
 		grid_width + 40,
-		grid_height,
+		grid_height
 	}
 
 	CraftingSettings.weapon_stats_context = {
@@ -508,7 +508,7 @@ do
 		grid_size = grid_size,
 		mask_size = mask_size,
 		title_height = title_height,
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 end
 
@@ -518,24 +518,24 @@ do
 	local grid_height = 900
 
 	CraftingSettings.crafting_recipe_context = {
-		refresh_on_grid_pressed = true,
-		reset_selection_on_navigation_change = false,
 		scrollbar_width = 7,
-		title_height = 0,
 		use_select_on_focused = true,
+		reset_selection_on_navigation_change = false,
+		refresh_on_grid_pressed = true,
+		title_height = 0,
 		grid_spacing = {
 			0,
-			10,
+			10
 		},
 		grid_size = {
 			grid_width,
-			grid_height,
+			grid_height
 		},
 		mask_size = {
 			grid_width + edge_padding,
-			grid_height,
+			grid_height
 		},
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 end
 

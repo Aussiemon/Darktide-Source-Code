@@ -11,8 +11,8 @@ local default_surface_decal = {
 	{
 		"content/fx/units/weapons/small_caliber_concrete_small_01",
 		"content/fx/units/weapons/small_caliber_concrete_medium_01",
-		"content/fx/units/weapons/small_caliber_concrete_large_01",
-	},
+		"content/fx/units/weapons/small_caliber_concrete_large_01"
+	}
 }
 
 local function _create_surface_decal(destination, ignore_decals, surface_material, hit_type, min_extents, max_extents, decal_units)
@@ -25,14 +25,14 @@ local function _create_surface_decal(destination, ignore_decals, surface_materia
 			extents = {
 				min = {
 					x = min_extents.x,
-					y = min_extents.y,
+					y = min_extents.y
 				},
 				max = {
 					x = max_extents.x,
-					y = max_extents.y,
-				},
+					y = max_extents.y
+				}
 			},
-			units = {},
+			units = {}
 		}
 
 		if not ignore_decals then

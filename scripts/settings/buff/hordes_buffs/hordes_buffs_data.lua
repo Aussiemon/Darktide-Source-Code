@@ -16,15 +16,15 @@ end
 
 hordes_buffs_data.hordes_buff_damage_immunity_after_game_end = {
 	description = "",
-	icon = "",
-	is_family_buff = false,
 	title = "",
+	icon = "",
+	is_family_buff = false
 }
 hordes_buffs_data.hordes_buff_ogryn_basic_box_spawns_cluster = {
 	description = "",
-	icon = "",
-	is_family_buff = false,
 	title = "",
+	icon = "",
+	is_family_buff = false
 }
 
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_family_buffs_data", true)
@@ -33,5 +33,6 @@ _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_legen
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_legendary_psyker_buffs_data", false)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_legendary_veteran_buffs_data", false)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_legendary_zealot_buffs_data", false)
+_create_entry("scripts/settings/buff/hordes_buffs/hordes_buffs_data/hordes_legendary_adamant_buffs_data", false)
 
 return settings("HordesBuffsData", hordes_buffs_data)

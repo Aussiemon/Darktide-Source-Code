@@ -10,7 +10,7 @@ local UIPasses = {}
 local NilCursor = {
 	0,
 	0,
-	0,
+	0
 }
 
 local function use_retained_mode(pass, render_settings)
@@ -78,12 +78,12 @@ UIPasses.logic = {
 		local value = ui_content[value_id]
 
 		value(pass, ui_renderer, ui_style, ui_content, position, size)
-	end,
+	end
 }
 UIPasses.texture = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -139,12 +139,12 @@ UIPasses.texture = {
 		else
 			UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color)
 		end
-	end,
+	end
 }
 UIPasses.texture_uv = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -200,12 +200,12 @@ UIPasses.texture_uv = {
 		else
 			UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, uvs, color)
 		end
-	end,
+	end
 }
 UIPasses.multi_texture = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -254,12 +254,12 @@ UIPasses.multi_texture = {
 		else
 			UIRenderer.draw_multi_texture(ui_renderer, value, position, size, color, axis, spacing, direction, amount)
 		end
-	end,
+	end
 }
 UIPasses.slug_icon = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -288,12 +288,12 @@ UIPasses.slug_icon = {
 		else
 			UIRenderer.draw_slug_icon(ui_renderer, value, draw_index, position, size, color, material)
 		end
-	end,
+	end
 }
 UIPasses.slug_picture = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -321,12 +321,12 @@ UIPasses.slug_picture = {
 		else
 			UIRenderer.draw_slug_picture(ui_renderer, value, position, size, color, material)
 		end
-	end,
+	end
 }
 UIPasses.multi_slug_icon = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -359,12 +359,12 @@ UIPasses.multi_slug_icon = {
 		else
 			UIRenderer.draw_slug_multi_icon(ui_renderer, value, draw_index, position, size, color, axis, spacing, direction, amount, material)
 		end
-	end,
+	end
 }
 UIPasses.shader_tiled_texture = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -419,12 +419,12 @@ UIPasses.shader_tiled_texture = {
 		else
 			UIRenderer.draw_texture(ui_renderer, value, position, size, color)
 		end
-	end,
+	end
 }
 UIPasses.rotated_slug_icon = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -464,12 +464,12 @@ UIPasses.rotated_slug_icon = {
 		else
 			UIRenderer.draw_slug_icon_rotated(ui_renderer, value, draw_index, size, position, angle, pivot, color, material)
 		end
-	end,
+	end
 }
 UIPasses.rotated_texture = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -534,12 +534,12 @@ UIPasses.rotated_texture = {
 		else
 			UIRenderer.draw_texture_rotated(ui_renderer, value, size, position, angle, pivot, color, uvs)
 		end
-	end,
+	end
 }
 UIPasses.rect = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -564,7 +564,7 @@ UIPasses.rect = {
 		else
 			UIRenderer.draw_rect(ui_renderer, position, size, color)
 		end
-	end,
+	end
 }
 UIPasses.rotated_rect = {
 	init = function (pass)
@@ -584,12 +584,12 @@ UIPasses.rotated_rect = {
 		end
 
 		return UIRenderer.draw_rect_rotated(ui_renderer, size, position, angle, pivot, color)
-	end,
+	end
 }
 UIPasses.triangle = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -613,12 +613,12 @@ UIPasses.triangle = {
 		else
 			UIRenderer.draw_triangle(ui_renderer, position, size, ui_style)
 		end
-	end,
+	end
 }
 UIPasses.circle = {
 	init = function (pass)
 		return {
-			dirty = true,
+			dirty = true
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -662,7 +662,7 @@ UIPasses.circle = {
 		else
 			UIRenderer.draw_circle(ui_renderer, pos_center, radius, size, color)
 		end
-	end,
+	end
 }
 UIPasses.video = {
 	init = function (pass)
@@ -682,7 +682,7 @@ UIPasses.video = {
 		end
 
 		ui_content.video_completed = is_complete
-	end,
+	end
 }
 
 local temp_text_options = Script.new_map(32)
@@ -691,7 +691,7 @@ UIPasses.text = {
 	init = function (pass)
 		return {
 			dirty = true,
-			value_id = pass.value_id,
+			value_id = pass.value_id
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -787,7 +787,7 @@ UIPasses.text = {
 
 			UIRenderer.draw_rect(ui_renderer, gui_position, gui_size, text_box_color)
 		end
-	end,
+	end
 }
 UIPasses.hover = {
 	init = function (pass)
@@ -833,7 +833,7 @@ UIPasses.hover = {
 		if not is_hover and ui_content.internal_is_hover then
 			ui_content.internal_is_hover = false
 		end
-	end,
+	end
 }
 
 local function calculate_outer_box(anchor_position, vertices)
@@ -863,12 +863,12 @@ local function calculate_outer_box(anchor_position, vertices)
 	return {
 		position = {
 			anchor_position[1] + smallest_x,
-			anchor_position[2] + smallest_y,
+			anchor_position[2] + smallest_y
 		},
 		size = {
 			largest_x - smallest_x,
-			largest_y - smallest_y,
-		},
+			largest_y - smallest_y
+		}
 	}
 end
 
@@ -889,7 +889,7 @@ UIPasses.hotspot = {
 				widget_name = pass_data._parent_name,
 				ui_content = ui_content,
 				position = position,
-				size = size,
+				size = size
 			}
 
 			Testify:poll_requests_through_handler(UIPassesTestify, pass_testify_data)
@@ -1200,7 +1200,7 @@ UIPasses.hotspot = {
 
 			ui_content.anim_select_progress = anim_select_progress
 		end
-	end,
+	end
 }
 UIPasses.debug_cursor = {
 	init = function (pass)
@@ -1214,7 +1214,7 @@ UIPasses.debug_cursor = {
 		end
 
 		UIRenderer.draw_rect(ui_renderer, position, size, color)
-	end,
+	end
 }
 
 return UIPasses

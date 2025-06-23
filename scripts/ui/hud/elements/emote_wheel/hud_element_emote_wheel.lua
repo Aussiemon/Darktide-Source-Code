@@ -9,25 +9,25 @@ local INSTANT_WHEEL_THRESHOLD = 8
 local HOVER_GRACE_PERIOD = 0.4
 local default_slot_data = {
 	[5] = {
-		event_id = "emote_1",
 		slot_id = "slot_animation_emote_1",
+		event_id = "emote_1"
 	},
 	[4] = {
-		event_id = "emote_2",
 		slot_id = "slot_animation_emote_2",
+		event_id = "emote_2"
 	},
 	[3] = {
-		event_id = "emote_3",
 		slot_id = "slot_animation_emote_3",
+		event_id = "emote_3"
 	},
 	[2] = {
-		event_id = "emote_4",
 		slot_id = "slot_animation_emote_4",
+		event_id = "emote_4"
 	},
 	{
-		event_id = "emote_5",
 		slot_id = "slot_animation_emote_5",
-	},
+		event_id = "emote_5"
+	}
 }
 local HudElementEmoteWheel = class("HudElementEmoteWheel", "HudElementBase")
 
@@ -58,7 +58,7 @@ HudElementEmoteWheel.init = function (self, parent, draw_layer, start_scale)
 			default_display_name = "loc_item_slot_empty",
 			slot_id = slot_id,
 			event_id = event_id,
-			default_icon = slot_data.icon,
+			default_icon = slot_data.icon
 		}
 	end
 
@@ -103,7 +103,7 @@ HudElementEmoteWheel._setup_entries = function (self, num_entries)
 		local widget = self:_create_widget(name, definition)
 
 		entries[i] = {
-			widget = widget,
+			widget = widget
 		}
 	end
 

@@ -25,19 +25,19 @@ templates.weapon_trait_bespoke_chainsword_p1_guaranteed_melee_crit_on_activated_
 templates.weapon_trait_bespoke_chainsword_p1_bleed_on_activated_hit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_activated_hit)
 templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activation = table.clone(BaseWeaponTraitBuffTemplates.movement_speed_on_activation)
 templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activated_hit = {
-	active_duration = 4,
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	force_predicted_proc = true,
 	predicted = false,
+	allow_proc_while_active = true,
+	force_predicted_proc = true,
+	class_name = "proc_buff",
+	active_duration = 4,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = 0.5,
+		[stat_buffs.movement_speed] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit)
 }
 
 return templates

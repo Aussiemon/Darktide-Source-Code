@@ -387,7 +387,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 				local marker_type = "player_assistance"
 
 				Managers.event:trigger("add_world_marker_unit", marker_type, player_unit, marker_callback, {
-					player = player,
+					player = player
 				})
 			end
 		end
@@ -1058,7 +1058,7 @@ HudElementPlayerPanelBase._load_portrait_frame = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._frame_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -1123,7 +1123,7 @@ HudElementPlayerPanelBase._load_portrait_insignia = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._insignia_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -1205,7 +1205,7 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
 
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id,
-		character_id = profile.character_id,
+		character_id = profile.character_id
 	}
 end
 
@@ -1295,7 +1295,7 @@ HudElementPlayerPanelBase._set_rich_presence = function (self, text, visible, ui
 end
 
 local temp_timer_text_context = {
-	time = 0,
+	time = 0
 }
 
 HudElementPlayerPanelBase._set_player_respawn_timer = function (self, t, timer, is_dead)

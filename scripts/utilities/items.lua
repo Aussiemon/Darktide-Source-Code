@@ -120,7 +120,7 @@ Items.mark_item_id_as_new = function (item, skip_notification)
 	local show_notification = skip_notification and skip_notification ~= true or not skip_notification
 
 	new_item_notifications[gear_id] = {
-		show_notification = show_notification,
+		show_notification = show_notification
 	}
 
 	Managers.save:queue_save()
@@ -335,7 +335,7 @@ Items.sub_display_name = function (item, required_level, include_item_type)
 		local no_cache = true
 
 		text = text .. " · {#color(120,120,120)}" .. Localize("loc_requires_level", no_cache, {
-			level = required_level,
+			level = required_level
 		})
 	end
 
@@ -469,7 +469,7 @@ end
 
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2",
+	"slot_trinket_2"
 }
 
 Items.get_current_equipped_trinket = function (item)
@@ -622,7 +622,7 @@ end
 Items.level_display_name = function (item)
 	local item_level = Items.expertise_level(item)
 	local item_level_display_name_localized = Localize("loc_item_display_level_format_key", true, {
-		level = item_level,
+		level = item_level
 	})
 
 	return item_level_display_name_localized
@@ -645,24 +645,24 @@ end
 
 local _item_property_definitions = {
 	{
-		icon = "",
 		loc_key = "loc_item_property_change_voice",
+		icon = "",
 		condition = function (item)
 			local item_voice_modulator = item.voice_fx_preset
 
 			return item_voice_modulator and item_voice_modulator ~= "voice_fx_rtpc_none"
-		end,
+		end
 	},
 	{
-		icon = "",
 		loc_key = "loc_item_property_change_walk",
+		icon = "",
 		condition = function (item)
 			local left_value = table.nested_get(item, "profile_properties", "footstep_type_left")
 			local right_value = table.nested_get(item, "profile_properties", "footstep_type_right")
 
 			return left_value and left_value ~= "default" or right_value and right_value ~= "default"
-		end,
-	},
+		end
+	}
 }
 
 local function _item_property_list(item)
@@ -718,7 +718,7 @@ local _key_value_color = Color.terminal_text_body(255, true)
 local _obtained_source_color_context = {
 	r = _key_value_color[2],
 	g = _key_value_color[3],
-	b = _key_value_color[4],
+	b = _key_value_color[4]
 }
 
 Items.obtained_display_name = function (item)
@@ -746,7 +746,7 @@ Items.obtained_display_name = function (item)
 							local sub_penances_count = table.size(achievement.achievements)
 
 							optional_description = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-								penance_amount = sub_penances_count,
+								penance_amount = sub_penances_count
 							})
 						else
 							optional_description = AchievementUIHelper.localized_description(achievement)
@@ -760,7 +760,7 @@ Items.obtained_display_name = function (item)
 					local achievement_label_colored = Localize("loc_color_value_fomat_key", true, _obtained_source_color_context)
 
 					display_name = Localize(display_name_localization_key, true, {
-						achievement_label = achievement_label_colored,
+						achievement_label = achievement_label_colored
 					})
 				end
 			end
@@ -776,8 +776,10 @@ Items.obtained_display_name = function (item)
 			end
 
 			display_name = Localize(display_name_localization_key, true, {
-				live_event_label = live_event_label_colored,
+				live_event_label = live_event_label_colored
 			})
+		elseif source_settings.is_dlc then
+			optional_description = Localize("loc_term_glossary_dlc")
 		end
 	end
 
@@ -911,6 +913,55 @@ Items.set_item_class_requirement_text = function (item)
 	return text, true
 end
 
+Items.item_num_classes_not_available_by_total = function (item)
+	local archetype_restrictions = item and item.archetypes
+
+	if not archetype_restrictions or table.is_empty(archetype_restrictions) then
+		return 0, 0
+	else
+		local not_available_count = 0
+		local total_archetypes = #archetype_restrictions
+
+		for i = 1, total_archetypes do
+			local archetype_name = archetype_restrictions[i]
+			local archetype = Archetypes[archetype_name]
+			local is_archetype_available_func = archetype and archetype.is_available
+			local is_archetype_available = true
+
+			if is_archetype_available_func then
+				is_archetype_available = is_archetype_available_func()
+			end
+
+			if not is_archetype_available then
+				not_available_count = not_available_count + 1
+			end
+		end
+
+		return not_available_count, total_archetypes
+	end
+end
+
+Items.check_archetype_restrictions = function (item)
+	local restriction_type
+	local archetypes_not_available, total_archetypes = Items.item_num_classes_not_available_by_total(item)
+
+	if archetypes_not_available > 0 then
+		if archetypes_not_available == 1 and archetypes_not_available == total_archetypes then
+			local archetype = item.archetypes[1]
+
+			if restriction_type and archetype ~= restriction_type then
+				restriction_type = "generic"
+			elseif not restriction_type then
+				restriction_type = archetype
+			end
+		elseif archetypes_not_available > 1 then
+			restriction_type = "generic"
+		end
+	end
+
+	return restriction_type
+end
+
 local function _class_requirement_entries(item, available_archetypes)
 	local item_type = item.item_type
 
@@ -968,7 +1019,7 @@ Items.retrieve_items_for_archetype = function (archetype, filtered_slots, workfl
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
-		"FUNCTIONAL",
+		"FUNCTIONAL"
 	}
 
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
@@ -1032,7 +1083,7 @@ Items.perk_item_by_id = function (perk_id)
 end
 
 local temp_item_rank_localization_context = {
-	rank = 0,
+	rank = 0
 }
 
 Items.rank_display_text = function (item)
@@ -1209,7 +1260,7 @@ Items.is_item_compatible_with_profile = function (item, profile)
 	end
 
 	local item_breeds = item.breeds
-	local wanted_breed = profile.breed or profile.archetype and profile.archetype.breed
+	local wanted_breed = profile.archetype.breed
 
 	if item_breeds and not table.is_empty(item_breeds) then
 		for ii = 1, #item_breeds do
@@ -1703,7 +1754,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 		filled_stats[#filled_stats + 1] = {
 			display_name = stat.display_name,
 			name = stat.name,
-			value = fraction and fraction * 100 or 0,
+			value = fraction and fraction * 100 or 0
 		}
 	end
 
@@ -1719,7 +1770,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 
 			result[filled_stat.display_name] = {
 				fraction = math.min(value / 100, 1),
-				value = math.min(value, 100),
+				value = math.min(value, 100)
 			}
 		end
 
@@ -1833,14 +1884,14 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 
 		result[filled_stat.display_name] = {
 			fraction = math.min(value / 100, 1),
-			value = math.min(value, 100),
+			value = math.min(value, 100)
 		}
 	end
 
 	return result
 end
 
-Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype)
+Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype, preferred_breed)
 	local item_gender, item_breed, item_archetype, item_slot_name
 
 	if item.genders and not table.is_empty(item.genders) then
@@ -1871,7 +1922,11 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 	end
 
 	if item.breeds and not table.is_empty(item.breeds) then
-		item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
+		if #item.breeds > 1 and preferred_breed and table.find(item.breeds, preferred_breed) then
+			item_breed = preferred_breed
+		else
+			item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
+		end
 	end
 
 	if item.slots and not table.is_empty(item.slots) then
@@ -1880,9 +1935,9 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		item_slot_name = nil
 	end
 
-	local breed = item_breed or item.breeds and item.breeds[1] or "human"
-	local archetype = breed == "ogryn" and Archetypes.ogryn or item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
-	local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+	local breed = item_breed or "human"
+	local archetype = item_archetype or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
+	local gender = item_gender or "male"
 	local loadout = {}
 	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
@@ -1900,11 +1955,15 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		end
 	end
 
+	if archetype.companion_breed == "companion_dog" and item.companion_state_machine then
+		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_dog/gear_full/companion_dog_set_02_var_01")
+	end
+
 	return {
 		loadout = loadout,
 		archetype = archetype,
 		breed = breed,
-		gender = gender,
+		gender = gender
 	}
 end
 
@@ -1929,7 +1988,7 @@ Items.register_track_reward = function (claimed_reward)
 	rewarded_master_item.masterDataInstance = {
 		id = item_id,
 		overrides = {},
-		slots = rewarded_master_item.slots,
+		slots = rewarded_master_item.slots
 	}
 
 	local gear_id, gear = Items.track_reward_item_to_gear(rewarded_master_item)

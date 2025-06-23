@@ -155,7 +155,7 @@ SmokeFogExtension.on_unit_enter = function (self, unit, t)
 
 		buff_affected_units[unit] = {
 			local_index = local_index,
-			component_index = component_index,
+			component_index = component_index
 		}
 	end
 

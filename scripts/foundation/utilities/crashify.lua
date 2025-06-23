@@ -23,6 +23,31 @@ Crashify.print_property = function (key, value, print_func)
 	print_func(output)
 end
 
+Crashify.remove_print_property = function (key, print_func)
+	if key == nil then
+		return Application.warning("[Crashify] Property key can't be nil")
+	end
+
+	local property = string.format("%s = ", key)
+	local output = string.format("<<crashify-property>>%s<</crashify-property>>", property)
+
+	Application.remove_crash_property(tostring(key))
+
+	print_func = print_func or __raw_print
+
+	print_func(output)
+end
+
+Crashify.get_print_properties = function (key)
+	if key == nil then
+		Application.warning("[Crashify] Property key can't be nil")
+
+		return {}
+	end
+
+	return Application.get_crash_properties(tostring(key))
+end
+
 Crashify.print_breadcrumb = function (crumb, print_func)
 	if crumb == nil then
 		return Application.warning("[Crashify] Breadcrumb can't be nil")

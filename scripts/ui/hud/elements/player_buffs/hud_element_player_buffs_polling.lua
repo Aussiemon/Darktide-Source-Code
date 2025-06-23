@@ -151,7 +151,7 @@ HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 		activated_time = math.huge,
 		start_index = index,
 		buff_category = buff_category,
-		buff_name = buff_template.name,
+		buff_name = buff_template.name
 	}
 end
 
@@ -250,7 +250,7 @@ end
 local RESERVED_SPOTS = {
 	[buff_categories.generic] = 0,
 	[buff_categories.talents] = 0,
-	[buff_categories.weapon_traits] = 0,
+	[buff_categories.weapon_traits] = 0
 }
 local GAP_OFFSET_SIZE = 0.5
 local _number_of_buffs_per_category = {}
@@ -489,7 +489,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				if content.text and content.text ~= "" then
 					local buff_size = widget.size or {
 						38,
-						38,
+						38
 					}
 					local text_font_options = UIFonts.get_font_options_by_style(text_style)
 					local text_width, text_height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, buff_size, text_font_options)

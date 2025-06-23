@@ -11,9 +11,9 @@ hitscan_templates.default_autopistol_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_autopistol_assault,
-		},
-	},
+			damage_profile = DamageProfileTemplates.default_autopistol_assault
+		}
+	}
 }
 overrides.snp_autopistol_bullet = {
 	parent_template_name = "default_autopistol_bullet",
@@ -22,12 +22,12 @@ overrides.snp_autopistol_bullet = {
 			"damage",
 			"impact",
 			"damage_profile",
-			DamageProfileTemplates.default_autopistol_snp,
-		},
-	},
+			DamageProfileTemplates.default_autopistol_snp
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

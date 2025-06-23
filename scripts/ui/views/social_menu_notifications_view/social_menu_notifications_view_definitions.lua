@@ -21,108 +21,108 @@ local scenegraph = {}
 
 scenegraph.screen = UIWorkspaceSettings.screen
 scenegraph.visible_area = {
-	horizontal_alignment = "left",
-	parent = "screen",
 	vertical_alignment = "top",
+	parent = "screen",
+	horizontal_alignment = "left",
 	size = {
 		screen_size[1],
-		visible_area_height,
+		visible_area_height
 	},
 	position = {
 		0,
 		top_panel_height,
-		1,
-	},
+		1
+	}
 }
 scenegraph.button_bar = {
-	horizontal_alignment = "center",
-	parent = "visible_area",
 	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "center",
 	size = {
 		grid_width,
-		scenegraph_styles.button_bar_height,
+		scenegraph_styles.button_bar_height
 	},
-	position = scenegraph_styles.button_bar_position,
+	position = scenegraph_styles.button_bar_position
 }
 scenegraph.grid = {
-	horizontal_alignment = "center",
-	parent = "visible_area",
 	vertical_alignment = "top",
+	parent = "visible_area",
+	horizontal_alignment = "center",
 	size = {
 		grid_width,
-		grid_height,
+		grid_height
 	},
-	position = scenegraph_styles.grid_position,
+	position = scenegraph_styles.grid_position
 }
 scenegraph.grid_content = {
-	horizontal_alignment = "left",
-	parent = "grid",
 	vertical_alignment = "top",
+	parent = "grid",
+	horizontal_alignment = "left",
 	size = {
 		grid_width,
-		grid_height,
+		grid_height
 	},
 	position = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 scenegraph.grid_mask = {
-	horizontal_alignment = "left",
-	parent = "grid",
 	vertical_alignment = "top",
+	parent = "grid",
+	horizontal_alignment = "left",
 	size = {
 		grid_width + 2 * mask_expansion,
-		grid_height + 2 * mask_expansion,
+		grid_height + 2 * mask_expansion
 	},
 	position = {
 		-mask_expansion,
 		-mask_expansion,
-		2,
-	},
+		2
+	}
 }
 scenegraph.scrollbar = {
-	horizontal_alignment = "right",
-	parent = "grid",
 	vertical_alignment = "top",
+	parent = "grid",
+	horizontal_alignment = "right",
 	size = {
 		scenegraph_styles.scrollbar_width,
-		grid_height,
+		grid_height
 	},
-	position = scenegraph_styles.scrollbar_position,
+	position = scenegraph_styles.scrollbar_position
 }
 
 local widget_definitions = {
 	clear_notifications_button = UIWidget.create_definition(ButtonPassTemplates.secondary_button, "button_bar", {
-		text = Managers.localization:localize("loc_social_menu_notifications_clear_all_notifications"),
-	}, ViewStyles.button_bar.button_size),
+		text = Managers.localization:localize("loc_social_menu_notifications_clear_all_notifications")
+	}, ViewStyles.button_bar.button_size)
 }
 local notification_blueprints = {
 	invite_notification = {
 		widget_definition = UIWidget.create_definition({
 			{
-				content_id = "hotspot",
-				pass_type = "hotspot",
 				style_id = "hotspot_style",
+				pass_type = "hotspot",
+				content_id = "hotspot",
 				change_function = function (content, style)
 					local highlight_progress = content.anim_hover_progress and math.max(content.anim_select_progress, content.anim_hover_progress, content.anim_focus_progress) or 0
 
 					content.parent.highlight_progress = highlight_progress
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "background_selected",
+				pass_type = "texture",
 				value = "content/ui/materials/buttons/background_selected_faded",
 				change_function = function (content, style)
 					style.color[1] = 255 * content.highlight_progress
 				end,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
-				pass_type = "texture",
 				style_id = "frame_highlight",
+				pass_type = "texture",
 				value = "content/ui/materials/buttons/background_selected_edge",
 				change_function = function (content, style)
 					local progress = content.highlight_progress
@@ -135,19 +135,19 @@ local notification_blueprints = {
 					style.offset[2] = -size_addition
 					style.hdr = progress == 1
 				end,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
-				pass_type = "texture",
-				style_id = "new_notification_marker",
 				value = "content/ui/materials/icons/system/page_indicator_idle",
+				style_id = "new_notification_marker",
+				pass_type = "texture",
 				visibility_function = function (content)
 					return not content.data.is_read
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "new_notification_ring",
+				pass_type = "texture",
 				value = "content/ui/materials/icons/system/page_indicator_active",
 				change_function = function (content, style, animation, dt)
 					local anim_time = style.anim_time
@@ -170,7 +170,7 @@ local notification_blueprints = {
 					if not default_offset then
 						default_offset = {
 							style.offset[1],
-							style.offset[2],
+							style.offset[2]
 						}
 						style.default_offset = default_offset
 					end
@@ -183,28 +183,28 @@ local notification_blueprints = {
 				end,
 				visibility_function = function (content)
 					return not content.data.is_read
-				end,
+				end
 			},
 			{
+				value_id = "label",
 				pass_type = "text",
 				style_id = "label",
-				value_id = "label",
-				change_function = ListHeaderPassTemplates.list_highlight_color_change_function,
+				change_function = ListHeaderPassTemplates.list_highlight_color_change_function
 			},
 			{
-				pass_type = "text",
 				style_id = "text",
 				value_id = "text",
+				pass_type = "text"
 			},
 			{
-				pass_type = "text",
 				style_id = "age",
 				value_id = "age_formatted",
+				pass_type = "text"
 			},
 			{
-				content_id = "join_hotspot",
-				pass_type = "hotspot",
 				style_id = "join_hotspot",
+				pass_type = "hotspot",
+				content_id = "join_hotspot",
 				visibility_function = function (content, style)
 					local highlight_progress = content.parent.highlight_progress or 0
 
@@ -214,11 +214,11 @@ local notification_blueprints = {
 					local highlight_progress = content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress) or 0
 
 					content.parent.join_highlight_progress = highlight_progress
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "join_idle",
+				pass_type = "texture",
 				value = "content/ui/materials/buttons/background_selected",
 				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function,
 				change_function = function (content, style)
@@ -226,11 +226,11 @@ local notification_blueprints = {
 					local visibility_progress = content.highlight_progress
 
 					color[1] = 255 * visibility_progress
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "join_highlight",
+				pass_type = "texture",
 				value = "content/ui/materials/frames/hover",
 				change_function = function (content, style)
 					local progress = content.join_highlight_progress
@@ -253,11 +253,11 @@ local notification_blueprints = {
 					local hotspot = content.join_hotspot
 
 					return hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "join_text",
+				pass_type = "text",
 				value_id = "join_text",
 				change_function = function (content, style)
 					local default_color = content.hotspot.disabled and style.disabled_color or style.default_color
@@ -273,12 +273,12 @@ local notification_blueprints = {
 
 					style.material = hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr" or nil
 				end,
-				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function,
+				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function
 			},
 			{
-				content_id = "remove_hotspot",
-				pass_type = "hotspot",
 				style_id = "remove_hotspot",
+				pass_type = "hotspot",
+				content_id = "remove_hotspot",
 				visibility_function = function (content, style)
 					local highlight_progress = content.parent.highlight_progress or 0
 
@@ -288,11 +288,11 @@ local notification_blueprints = {
 					local highlight_progress = content.anim_hover_progress and math.max(content.anim_hover_progress, content.anim_select_progress) or 0
 
 					content.parent.remove_highlight_progress = highlight_progress
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "remove_highlight",
+				pass_type = "texture",
 				value = "content/ui/materials/frames/hover",
 				change_function = function (content, style)
 					local progress = content.remove_highlight_progress
@@ -315,11 +315,11 @@ local notification_blueprints = {
 					local hotspot = content.remove_hotspot
 
 					return hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
-				end,
+				end
 			},
 			{
-				pass_type = "text",
 				style_id = "remove_text",
+				pass_type = "text",
 				value_id = "remove_text",
 				change_function = function (content, style)
 					local visibility_progress = content.highlight_progress
@@ -334,8 +334,8 @@ local notification_blueprints = {
 
 					style.material = hover_progress == 1 and "content/ui/materials/base/ui_slug_hdr" or nil
 				end,
-				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function,
-			},
+				visibility_function = ListHeaderPassTemplates.list_item_focused_visibility_function
+			}
 		}, "grid_content", nil, ViewStyles.invitation_notification_size, ViewStyles.invitation_notification),
 		init = function (parent, widget, notification, type_settings, server_time)
 			local widget_content = widget.content
@@ -346,7 +346,7 @@ local notification_blueprints = {
 
 			local string_params = {
 				requesting_player = notification.requesting_player,
-				guild_name = notification.clan,
+				guild_name = notification.clan
 			}
 
 			widget_content.text = parent:_localize(type_settings.description, true, string_params)
@@ -356,28 +356,28 @@ local notification_blueprints = {
 			widget_content.join_text = parent:_localize("loc_notification_invitation_join_button")
 			widget_content.remove_hotspot.pressed_callback = callback(parent, "cb_remove_notification", notification)
 			widget_content.remove_text = parent:_localize("loc_notification_remove_button")
-		end,
-	},
+		end
+	}
 }
 local notification_types = {
 	guild_invitation = {
-		accept_function = "cb_accept_guild_invitation",
-		blueprint = "invite_notification",
 		description = "loc_notification_guild_invitation",
 		title = "loc_notification_guild_invitation_title",
+		accept_function = "cb_accept_guild_invitation",
+		blueprint = "invite_notification"
 	},
 	party_invitation = {
-		accept_function = "cb_accept_party_invitation",
-		blueprint = "invite_notification",
 		description = "loc_notification_party_invitation",
 		title = "loc_notification_party_invitation_title",
-	},
+		accept_function = "cb_accept_party_invitation",
+		blueprint = "invite_notification"
+	}
 }
 local social_menu_notification_view_definitions = {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph,
 	notification_blueprints = notification_blueprints,
-	notification_types = notification_types,
+	notification_types = notification_types
 }
 
 return settings("SocialMenuNotificationViewDefinitions", social_menu_notification_view_definitions)

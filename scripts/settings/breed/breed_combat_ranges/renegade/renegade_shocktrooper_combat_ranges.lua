@@ -1,97 +1,97 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/renegade/renegade_shocktrooper_combat_ranges.lua
 
 local combat_ranges = {
-	calculate_target_velocity_dot = true,
 	name = "renegade_shocktrooper",
-	starting_combat_range = "far",
+	calculate_target_velocity_dot = true,
 	target_velocity_dot_reset = 0.5,
+	starting_combat_range = "far",
 	config = {
 		far = {
 			{
-				activate_slot_system = true,
-				distance = 2,
-				distance_operator = "lesser",
+				switch_combat_range = "melee",
 				locked_in_melee_distance = 4,
+				distance = 2,
+				switch_weapon_slot = "slot_melee_weapon",
+				distance_operator = "lesser",
 				max_z_distance = 1.5,
 				sticky_time = 0,
-				switch_combat_range = "melee",
-				switch_weapon_slot = "slot_melee_weapon",
+				activate_slot_system = true,
 				target_weapon_type_distance = {
-					melee = 4,
 					ranged = 1,
-				},
+					melee = 4
+				}
 			},
 			{
 				distance = 22,
-				distance_operator = "lesser",
-				enter_combat_range_flag = true,
 				require_line_of_sight = true,
+				enter_combat_range_flag = true,
 				sticky_time = 0,
 				switch_anim_state = "to_ranged",
-				switch_combat_range = "close",
-			},
+				distance_operator = "lesser",
+				switch_combat_range = "close"
+			}
 		},
 		close = {
 			{
-				activate_slot_system = true,
-				distance = 2,
-				distance_operator = "lesser",
+				switch_combat_range = "melee",
 				locked_in_melee_distance = 6,
+				distance = 2,
+				switch_weapon_slot = "slot_melee_weapon",
+				distance_operator = "lesser",
 				max_z_distance = 1.5,
 				sticky_time = 2,
-				switch_combat_range = "melee",
-				switch_weapon_slot = "slot_melee_weapon",
+				activate_slot_system = true,
 				target_weapon_type_distance = {
-					melee = 6,
 					ranged = 1,
+					melee = 6
 				},
 				target_velocity_dot_duration_inverted = {
 					6,
 					4,
 					4,
 					3,
-					2,
-				},
+					2
+				}
 			},
 			{
-				distance = 28,
-				distance_operator = "greater",
-				sticky_time = 0,
 				switch_combat_range = "far",
-			},
+				distance_operator = "greater",
+				distance = 28,
+				sticky_time = 0
+			}
 		},
 		melee = {
 			{
-				distance = 28,
-				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
+				distance = 28,
 				switch_weapon_slot = "slot_ranged_weapon",
+				distance_operator = "greater",
+				switch_combat_range = "far"
 			},
 			{
-				distance = 7,
-				distance_operator = "greater",
-				locked_in_melee_distance = 7,
 				sticky_time = 2,
-				switch_anim_state = "to_ranged",
-				switch_combat_range = "close",
+				distance = 7,
 				switch_weapon_slot = "slot_ranged_weapon",
 				target_velocity_dot_distance = 6,
+				distance_operator = "greater",
+				switch_combat_range = "close",
+				locked_in_melee_distance = 7,
+				switch_anim_state = "to_ranged",
 				z_distance = 1.9,
 				target_weapon_type_distance = {
-					melee = 6,
 					ranged = 1,
+					melee = 6
 				},
 				target_velocity_dot_duration = {
 					6,
 					4,
 					4,
 					3,
-					2,
-				},
-			},
-		},
-	},
+					2
+				}
+			}
+		}
+	}
 }
 
 return combat_ranges

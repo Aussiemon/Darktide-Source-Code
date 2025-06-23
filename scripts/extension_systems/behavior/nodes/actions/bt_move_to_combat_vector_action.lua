@@ -9,11 +9,11 @@ local BtMoveToCombatVectorAction = class("BtMoveToCombatVectorAction", "BtNode")
 
 BtMoveToCombatVectorAction.TIME_TO_FIRST_EVALUATE = {
 	0.5,
-	0.75,
+	0.75
 }
 BtMoveToCombatVectorAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	0.5,
-	0.8,
+	0.8
 }
 
 BtMoveToCombatVectorAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

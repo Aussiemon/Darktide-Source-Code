@@ -82,7 +82,7 @@ local wound_param_settings = {
 	"radii",
 	SHAPE_SCALE_KEY_IDS[1],
 	2,
-	"shape_scales",
+	"shape_scales"
 }
 local WoundMaterials = {}
 
@@ -131,7 +131,7 @@ WoundMaterials.create_data = function ()
 			shape_scale_material_key_id = SHAPE_SCALE_KEY_IDS[shape_scale_key_index],
 			shape_mask_uv_offset = Vector3Box(),
 			color_brightness_value = Vector3Box(),
-			color_time_duration = Vector3Box(),
+			color_time_duration = Vector3Box()
 		}
 	end
 

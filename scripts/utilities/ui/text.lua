@@ -62,7 +62,7 @@ local function _get_time(seconds, length, multiple_format, single_format, short_
 	local value = math.floor(seconds / length)
 	local key = use_short == true and short_format or value == 1 and single_format or multiple_format
 	local text = Localize(key, true, {
-		number = value,
+		number = value
 	})
 
 	return value, text, seconds - value * length
@@ -87,21 +87,21 @@ end
 local _time_steps = {
 	{
 		value = SECONDS_IN_A_DAY,
-		get = _get_days,
+		get = _get_days
 	},
 	{
 		value = SECONDS_IN_AN_HOUR,
-		get = _get_hours,
+		get = _get_hours
 	},
 	{
 		force_break = true,
 		value = SECONDS_IN_A_MINUTE,
-		get = _get_minutes,
+		get = _get_minutes
 	},
 	{
 		value = 1,
-		get = _get_seconds,
-	},
+		get = _get_seconds
+	}
 }
 
 TextUtilities.format_time_span_localized = function (seconds, use_short, allow_skip, max_detail)
@@ -153,7 +153,7 @@ local _roman_number_array = {
 	400,
 	500,
 	900,
-	1000,
+	1000
 }
 local _roman_small_cache = {
 	"I",
@@ -165,7 +165,7 @@ local _roman_small_cache = {
 	"VII",
 	"VIII",
 	"IX",
-	"X",
+	"X"
 }
 local _roman_chars = {
 	"I",
@@ -180,7 +180,7 @@ local _roman_chars = {
 	"CD",
 	"D",
 	"CM",
-	"M",
+	"M"
 }
 
 TextUtilities.convert_to_roman_numerals = function (value)

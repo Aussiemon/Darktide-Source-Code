@@ -45,7 +45,7 @@ local function _add_game_mode_settings(file_name)
 
 		local hotkey_settings = {
 			hotkeys = hotkeys,
-			lookup = hotkey_lookup,
+			lookup = hotkey_lookup
 		}
 
 		settings.hotkeys = hotkey_settings

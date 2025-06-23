@@ -281,7 +281,7 @@ BotNavigationExtension._reevaluate_current_nav_transition = function (self, path
 			local layer_name = Managers.state.nav_mesh:nav_tag_layer_id(layer_id)
 			local new_transition = {
 				type = layer_name,
-				t = t,
+				t = t
 			}
 			local nav_graph_system = Managers.state.extension:system("nav_graph_system")
 			local smart_object_unit = nav_graph_system:unit_from_smart_object_id(smart_object_id)

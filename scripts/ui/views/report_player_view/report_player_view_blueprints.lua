@@ -105,7 +105,7 @@ local blueprints = {
 
 			local size = {
 				400,
-				50,
+				50
 			}
 			local using_gamepad = not Managers.ui:using_cursor_navigation()
 			local offset = widget.offset
@@ -281,7 +281,7 @@ local blueprints = {
 
 				return
 			end
-		end,
+		end
 	},
 	comment_input_text = {
 		size = ReportPlayerViewSettings.comment_input_size,
@@ -311,8 +311,8 @@ local blueprints = {
 				content._selection_start = nil
 				content._selection_end = nil
 			end
-		end,
-	},
+		end
+	}
 }
 
 return blueprints

@@ -13,9 +13,9 @@ local perception_aggro_states = PerceptionSettings.aggro_states
 local MutatorMonsterSpawner = class("MutatorMonsterSpawner", "MutatorBase")
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
 local AGGRO_STATES = {
-	chaos_beast_of_nurgle = "aggroed",
 	chaos_plague_ogryn = "aggroed",
 	chaos_spawn = "aggroed",
+	chaos_beast_of_nurgle = "aggroed"
 }
 local _calculate_positions
 local TARGET_SIDE_ID = 1
@@ -86,7 +86,7 @@ MutatorMonsterSpawner.on_spawn_points_generated = function (self, level, themes)
 			local spawn_point = {
 				position = Vector3Box(position),
 				spawn_travel_distance = wanted_distance,
-				spawn_point_travel_distance = travel_distance,
+				spawn_point_travel_distance = travel_distance
 			}
 			local section = dirty_spawn_data.section
 			local spawn_point_sections = self._spawn_point_sections
@@ -97,7 +97,7 @@ MutatorMonsterSpawner.on_spawn_points_generated = function (self, level, themes)
 				self._allowed_per_section[section] = self._allowed_per_section[section] + 1
 			else
 				spawn_point_sections[section] = {
-					spawn_point,
+					spawn_point
 				}
 				self._section_probabillity[section] = 0
 				self._allowed_per_section[section] = 1
@@ -179,7 +179,7 @@ MutatorMonsterSpawner._calculate_probabillity = function (self, optional_probabi
 
 		self._section_probabillity = {
 			probability = prob,
-			alias = alias,
+			alias = alias
 		}
 	else
 		local weights = self._section_probabillity
@@ -209,7 +209,7 @@ MutatorMonsterSpawner._calculate_probabillity = function (self, optional_probabi
 
 		self._section_probabillity = {
 			probability = prob,
-			alias = alias,
+			alias = alias
 		}
 	end
 end
@@ -234,7 +234,7 @@ MutatorMonsterSpawner._add_clean_spawn = function (self)
 			travel_distance = travel_distance,
 			breed_name = breed_name,
 			position = position,
-			section = section_index,
+			section = section_index
 		}
 
 		monsters[#monsters + 1] = monster

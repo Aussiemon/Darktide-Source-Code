@@ -7,16 +7,16 @@ local MATERIAL = "body"
 local EMISSIVE = {
 	scalar_values = {
 		face_intensity = 1,
-		l_hand_intensity = 1,
+		l_hand_intensity = 1
 	},
 	durations = {
 		out = 1,
 		to = 0.5,
-		total = 1.8333333333333333,
-	},
+		total = 1.8333333333333333
+	}
 }
 local resources = {
-	vfx = VFX,
+	vfx = VFX
 }
 
 local function _start_vfx(position, node, template_data, template_context)
@@ -114,7 +114,7 @@ local effect_template = {
 				Unit.set_scalar_for_material(body_slot_unit, MATERIAL, scalar_key, 0)
 			end
 		end
-	end,
+	end
 }
 
 return effect_template

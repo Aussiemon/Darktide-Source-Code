@@ -73,7 +73,7 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 		feet_source_id = feet_source_id,
 		world = self._world,
 		physics_world = physics_world,
-		wwise_world = wwise_world,
+		wwise_world = wwise_world
 	}
 	self._previous_frame_character_state_name = character_state_component.state_name
 	self._1p_peeking_animation_data = {}

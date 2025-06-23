@@ -4,11 +4,11 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local AFKChecker = class("AFKChecker")
 local SERVER_RPCS = {
-	"rpc_report_menu_activity",
+	"rpc_report_menu_activity"
 }
 local CLIENT_RPCS = {
 	"rpc_enable_inactivity_warning",
-	"rpc_disable_inactivity_warning",
+	"rpc_disable_inactivity_warning"
 }
 local MENU_ACTIVITY_REPORT_INTERVAL = 30
 
@@ -203,20 +203,20 @@ end
 
 AFKChecker._show_warning_popup = function (self, minutes_to_kick)
 	local context = {
+		title_text = "loc_popup_header_afk_kick_warning",
 		description_text = "loc_popup_description_afk_kick_warning_dynamic",
 		priority_order = 10,
-		title_text = "loc_popup_header_afk_kick_warning",
 		description_text_params = {
-			time = minutes_to_kick,
+			time = minutes_to_kick
 		},
 		options = {
 			{
 				text = "loc_popup_button_cancel",
 				callback = callback(function ()
 					Managers.state.game_session:send_rpc_server("rpc_report_menu_activity")
-				end),
-			},
-		},
+				end)
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -233,7 +233,7 @@ end
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 
 local function _any_pressed()

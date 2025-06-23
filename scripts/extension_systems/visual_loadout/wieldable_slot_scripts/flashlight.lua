@@ -235,7 +235,7 @@ function _components(components, attachments)
 		for _, flash_light_component in ipairs(flash_light_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = flash_light_component,
+				component = flash_light_component
 			}
 		end
 	end
@@ -286,7 +286,7 @@ end
 
 local FLASHLIGHT_AGGRO_MUTATORS = {
 	"mutator_darkness_los",
-	"mutator_ventilation_purge_los",
+	"mutator_ventilation_purge_los"
 }
 
 function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)

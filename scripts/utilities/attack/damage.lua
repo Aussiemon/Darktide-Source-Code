@@ -21,7 +21,7 @@ local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 	ranged = math.huge,
 	elite_ranged = math.huge,
 	elite_shotgun = math.huge,
-	ranged_close = math.huge,
+	ranged_close = math.huge
 }
 local Damage = {}
 local _trigger_player_hurt_vo

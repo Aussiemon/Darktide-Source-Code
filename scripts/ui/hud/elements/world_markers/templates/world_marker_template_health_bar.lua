@@ -6,7 +6,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local template = {}
 local size = {
 	200,
-	6,
+	6
 }
 
 template.size = size
@@ -15,28 +15,28 @@ template.unit_node = "j_head"
 template.position_offset = {
 	0,
 	0,
-	0.35,
+	0.35
 }
 template.check_line_of_sight = true
 template.max_distance = 20
 template.screen_clamp = false
 template.bar_settings = {
-	alpha_fade_delay = 2.6,
-	alpha_fade_duration = 0.6,
-	alpha_fade_min_value = 50,
 	animate_on_health_increase = true,
 	bar_spacing = 2,
-	duration_health = 1,
 	duration_health_ghost = 2.5,
 	health_animation_threshold = 0.1,
+	alpha_fade_delay = 2.6,
+	duration_health = 1,
+	alpha_fade_min_value = 50,
+	alpha_fade_duration = 0.6
 }
 template.fade_settings = {
-	default_fade = 0,
-	fade_from = 0,
 	fade_to = 1,
+	fade_from = 0,
+	default_fade = 0,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
-	easing_function = math.ease_exp,
+	easing_function = math.ease_exp
 }
 
 template.create_widget_defintion = function (template, scenegraph_id)
@@ -46,19 +46,19 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local header_font_color = header_font_settings.text_color
 	local bar_size = {
 		size[1],
-		size[2],
+		size[2]
 	}
 	local bar_offset = {
 		-size[1] * 0.5,
 		0,
-		0,
+		0
 	}
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "rect",
-			style_id = "background",
 			value = "content/ui/vector_textures/hud/hp_bar_short_fill",
+			style_id = "background",
+			pass_type = "rect",
 			style = {
 				vertical_alignment = "center",
 				offset = bar_offset,
@@ -67,85 +67,85 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					120,
 					30,
 					30,
-					30,
-				},
-			},
+					30
+				}
+			}
 		},
 		{
-			pass_type = "rect",
-			style_id = "ghost_bar",
 			value = "content/ui/vector_textures/hud/hp_bar_short_fill",
+			style_id = "ghost_bar",
+			pass_type = "rect",
 			style = {
 				vertical_alignment = "center",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					2,
+					2
 				},
 				size = bar_size,
 				color = {
 					255,
 					220,
 					100,
-					100,
-				},
-			},
+					100
+				}
+			}
 		},
 		{
-			pass_type = "rect",
-			style_id = "health_max",
 			value = "content/ui/vector_textures/hud/hp_bar_short_fill",
+			style_id = "health_max",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					1,
+					1
 				},
 				size = bar_size,
 				color = {
 					200,
 					255,
 					255,
-					255,
-				},
-			},
+					255
+				}
+			}
 		},
 		{
-			pass_type = "rect",
-			style_id = "bar",
 			value = "content/ui/vector_textures/hud/hp_bar_short_fill",
+			style_id = "bar",
+			pass_type = "rect",
 			style = {
 				vertical_alignment = "center",
 				offset = {
 					bar_offset[1],
 					bar_offset[2],
-					3,
+					3
 				},
 				size = bar_size,
 				color = {
 					255,
 					220,
 					20,
-					20,
-				},
-			},
+					20
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			style_id = "header_text",
-			value = "<header_text>",
+			pass_type = "text",
 			value_id = "header_text",
+			value = "<header_text>",
 			style = {
 				horizontal_alignment = "left",
-				text_horizontal_alignment = "left",
 				text_vertical_alignment = "bottom",
+				text_horizontal_alignment = "left",
 				vertical_alignment = "center",
 				offset = {
 					-size[1] * 0.5,
 					-size[2],
-					2,
+					2
 				},
 				font_type = header_font_settings.font_type,
 				font_size = header_font_settings.font_size,
@@ -154,10 +154,10 @@ template.create_widget_defintion = function (template, scenegraph_id)
 				default_text_color = header_font_color,
 				size = {
 					600,
-					size[2],
-				},
-			},
-		},
+					size[2]
+				}
+			}
+		}
 	}, scenegraph_id)
 end
 

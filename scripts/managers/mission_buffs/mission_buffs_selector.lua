@@ -8,7 +8,7 @@ local filtering_categories_pick_rate_per_wave = MissionBuffsSettings.filtering_c
 local MissionBuffsSelector = class("MissionBuffsSelector")
 local NUM_OPTIONS_PER_CHOICE = 3
 local SERVER_RPCS = {
-	"rpc_server_mission_buffs_player_buff_choice",
+	"rpc_server_mission_buffs_player_buff_choice"
 }
 
 MissionBuffsSelector._register_events = function (self)
@@ -189,7 +189,7 @@ MissionBuffsSelector._pop_legendary_buff_from_players_pool = function (self, pla
 
 			local category_data = {
 				name = category,
-				weight = category_weight,
+				weight = category_weight
 			}
 
 			table.insert(categories_available, category_data)

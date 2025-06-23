@@ -26,6 +26,9 @@ weapon_action_data.actions = {
 	aim = _require_weapon_action("action_aim"),
 	aim_force_field = _require_weapon_action("action_aim_force_field"),
 	aim_projectile = _require_weapon_action("action_aim_projectile"),
+	block_aiming = _require_weapon_action("action_block_aiming"),
+	block_unaim = _require_weapon_action("action_block_unaim"),
+	block_windup = _require_weapon_action("action_block_windup"),
 	block = _require_weapon_action("action_block"),
 	buff_target = _require_weapon_action("action_buff_target"),
 	chain_lightning = _require_weapon_action("action_chain_lightning"),
@@ -48,6 +51,7 @@ weapon_action_data.actions = {
 	place_deployable = _require_weapon_action("action_place_deployable"),
 	place_force_field = _require_weapon_action("action_place_force_field"),
 	place_pickup = _require_weapon_action("action_place_pickup"),
+	position_finder = _require_weapon_action("action_position_finder"),
 	push = _require_weapon_action("action_push"),
 	ranged_load_special = _require_weapon_action("action_ranged_load_special"),
 	ranged_wield = _require_weapon_action("action_ranged_wield"),
@@ -76,9 +80,10 @@ weapon_action_data.actions = {
 	use_syringe = _require_weapon_action("action_use_syringe"),
 	vent_overheat = _require_weapon_action("action_vent_overheat"),
 	vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
+	weapon_shout = _require_weapon_action("action_weapon_shout"),
 	wield = _require_weapon_action("action_wield"),
 	windup = _require_weapon_action("action_windup"),
-	zealot_channel = _require_weapon_action("action_zealot_channel"),
+	zealot_channel = _require_weapon_action("action_zealot_channel")
 }
 
 local function _ammo_check(action_settings, condition_func_params)
@@ -323,6 +328,22 @@ weapon_action_data.action_kind_condition_funcs = {
 			return false
 		end
 
+		local current_weapon_template = WeaponTemplate.current_weapon_template(condition_func_params.weapon_action_component)
+		local weapon_special_tweak_data = current_weapon_template.weapon_special_tweak_data
+		local max_num_charges = weapon_special_tweak_data.max_num_charges
+		local limited_special_ammo = max_num_charges ~= nil and max_num_charges > 0
+
+		if limited_special_ammo then
+			local inventory_slot_component = condition_func_params.inventory_slot_component
+			local num_special_charges = inventory_slot_component.num_special_charges
+
+			if num_special_charges <= 0 then
+				return false
+			end
+
+			return true
+		end
+
 		local reload_settings = action_settings.reload_settings
 		local cost = reload_settings and reload_settings.cost
 
@@ -416,7 +437,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		local can_use = not validate_target_func or validate_target_func(target_unit)
 
 		return can_use
-	end,
+	end
 }
 
 local function _get_toggle_special_total_time(action_settings, action_params)
@@ -438,7 +459,7 @@ weapon_action_data.action_kind_total_time_funcs = {
 		return total_time
 	end,
 	toggle_special = _get_toggle_special_total_time,
-	toggle_special_with_block = _get_toggle_special_total_time,
+	toggle_special_with_block = _get_toggle_special_total_time
 }
 
 local DEFAULT_NO_AMMO_DELAY_TIME = 1
@@ -526,11 +547,12 @@ weapon_action_data.conditional_state_functions = {
 		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting
 	end,
 	no_ammo_and_started_reload = function (condition_func_params, action_params, remaining_time, t)
+		local delay_from_from_last_ammunition_usage = _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
 		local started_reload = _started_reload(condition_func_params, action_params, remaining_time)
 
-		return no_ammo and no_sprinting and started_reload
+		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting and started_reload
 	end,
 	no_ammo_no_alternate_fire = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
@@ -616,75 +638,75 @@ weapon_action_data.conditional_state_functions = {
 		if HAS_STEAM and Managers.steam:is_overlay_active() then
 			return true
 		end
-	end,
+	end
 }
 weapon_action_data.action_kind_to_running_action_chain_event = {
 	aim = {
-		has_charge = true,
+		has_charge = true
 	},
 	block = {
-		has_blocked = true,
+		has_blocked = true
 	},
 	chain_lightning = {
-		charge_depleted = true,
-		force_vent = true,
 		stop_time_reached = true,
+		charge_depleted = true,
+		force_vent = true
 	},
 	charge = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	charge_ammo = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	flamer_gas = {
-		charge_depleted = true,
-		clip_empty = true,
 		reserve_empty = true,
+		charge_depleted = true,
+		clip_empty = true
 	},
 	overload_charge = {
 		fully_charged = true,
-		overheating = true,
+		overheating = true
 	},
 	overload_charge_position_finder = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	overload_charge_target_finder = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	overload_charge_weapon_special = {
 		fully_charged = true,
-		overheating = true,
+		overheating = true
 	},
 	reload_shotgun = {
-		reload_loop = true,
+		reload_loop = true
 	},
 	scan = {
-		no_mission_zone = true,
+		no_mission_zone = true
 	},
 	scan_confirm = {
-		no_mission_zone = true,
 		stop_scanning = true,
+		no_mission_zone = true
 	},
 	smite_targeting = {
-		fully_charged = true,
+		fully_charged = true
 	},
 	spawn_projectile = {
-		force_vent = true,
 		out_of_charges = true,
+		force_vent = true
 	},
 	vent_overheat = {
-		fully_vented = true,
+		fully_vented = true
 	},
 	vent_warp_charge = {
-		fully_vented = true,
-	},
+		fully_vented = true
+	}
 }
 weapon_action_data.action_kind_with_reversed_timescale = {
-	overload_charge = true,
-	overload_charge_position_finder = true,
-	overload_charge_target_finder = true,
-	overload_charge_weapon_special = true,
 	overload_target_finder = true,
+	overload_charge_position_finder = true,
+	overload_charge_weapon_special = true,
+	overload_charge_target_finder = true,
+	overload_charge = true
 }
 
 for name, _ in pairs(weapon_action_data.action_kind_condition_funcs) do

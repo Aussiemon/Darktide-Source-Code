@@ -57,7 +57,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		is_player = context.player and true or false,
 		is_server = context.is_server,
 		breed = context.breed,
-		template = template,
+		template = template
 	}
 	local additional_arguments = {}
 
@@ -492,6 +492,10 @@ Buff.set_start_time = function (self, start_time)
 	if self._player and (self._player.remote or template.predicted) then
 		self._need_to_sync_start_time = true
 	end
+end
+
+Buff.force_finish = function (self)
+	self._finished = true
 end
 
 Buff.need_to_sync_start_time = function (self)

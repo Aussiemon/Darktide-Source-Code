@@ -5,7 +5,7 @@ local TimeManager = class("TimeManager")
 
 TimeManager.init = function (self, dt)
 	self._timers = {
-		main = Timer:new("main", nil, 0, dt),
+		main = Timer:new("main", nil, 0, dt)
 	}
 	self._dt_stack = {}
 	self._dt_stack_max_size = 10

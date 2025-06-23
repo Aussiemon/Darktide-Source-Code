@@ -12,7 +12,7 @@ local Vo = require("scripts/utilities/vo")
 local BtShootAction = class("BtShootAction", "BtNode")
 local SHOOT_NOT_ALLOWED_REEVALUATE_RANGE = {
 	0.25,
-	0.75,
+	0.75
 }
 local DEFAULT_NOT_ALLOWED_COOLDOWN = 0.5
 
@@ -414,7 +414,7 @@ local MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION = 3
 local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
 local TRY_TO_STRAFE_SHOOT_COOLDOWN = {
 	3,
-	6,
+	6
 }
 
 BtShootAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, action_data, breed)

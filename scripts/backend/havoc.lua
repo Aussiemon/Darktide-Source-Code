@@ -9,7 +9,7 @@ Havoc.latest = function (self, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc"):path("/latest")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -51,7 +51,7 @@ Havoc.summary = function (self, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc"):path("/summary")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -76,14 +76,11 @@ Havoc.summary = function (self, optional_account_id)
 						id = data.body.currentOrder.id,
 						rank = tonumber(data.body.currentOrder.rank),
 						state = data.body.currentOrder.state,
-						blueprint = local_blueprint,
+						blueprint = local_blueprint
 					}
 				end
 
-				local cadence_status = {
-					active = true,
-					current_cadence = {},
-				}
+				local cadence_status = Managers.data_service.havoc:default_havoc_cadence_status()
 
 				if data.body.cadenceStatus ~= nil then
 					if not table.is_empty(data.body.cadenceStatus) then
@@ -146,7 +143,7 @@ Havoc.sync = function (self, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc"):path("/synchronize")
 		local options = {
-			method = "PUT",
+			method = "PUT"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -156,7 +153,7 @@ Havoc.sync = function (self, optional_account_id)
 
 			return {
 				highest_rank = data.body.highestRank or 1,
-				rewards = data.body.rewards,
+				rewards = data.body.rewards
 			}
 		end)
 	end):catch(function (error)
@@ -169,7 +166,7 @@ Havoc.status_by_id = function (self, week_id, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc/status/"):path(week_id)
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -180,7 +177,7 @@ Havoc.status_by_id = function (self, week_id, optional_account_id)
 			return {
 				havoc_status = data.body.havocStatus,
 				rewards = data.body.rewards,
-				havoc_stats = data.body.havocStats,
+				havoc_stats = data.body.havocStats
 			}
 		end)
 	end)
@@ -191,7 +188,7 @@ Havoc.eligible = function (self)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc"):path("/eligible")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -201,7 +198,7 @@ Havoc.eligible = function (self)
 
 			return {
 				eligible = data.body.eligible,
-				status_code = data.body.statusCode,
+				status_code = data.body.statusCode
 			}
 		end)
 	end)
@@ -210,7 +207,7 @@ end
 Havoc.refresh_settings = function (self)
 	local builder = BackendUtilities.url_builder():path("/data"):path("/havoc"):path("/settings")
 	local options = {
-		method = "GET",
+		method = "GET"
 	}
 
 	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -218,7 +215,7 @@ Havoc.refresh_settings = function (self)
 
 		if havoc_settings then
 			self._havoc_settings = {
-				min_participants = havoc_settings.minPrivateParticipants,
+				min_participants = havoc_settings.minPrivateParticipants
 			}
 
 			if havoc_settings.rankSystem then
@@ -226,7 +223,7 @@ Havoc.refresh_settings = function (self)
 				self._havoc_settings.max_charges = havoc_settings.rankSystem.charges
 				self._havoc_settings.starting_rank = {
 					normal = havoc_settings.rankSystem.startingRank,
-					auric = havoc_settings.rankSystem.startingRankAuric,
+					auric = havoc_settings.rankSystem.startingRankAuric
 				}
 
 				if havoc_settings.rankSystem.gapBasedPromotionRateMultiplier then
@@ -236,7 +233,7 @@ Havoc.refresh_settings = function (self)
 						self._havoc_settings.gap_based_promotion_rate_multiplier[i] = {
 							min_gap = element.minGap,
 							max_gap = element.maxGap,
-							rate_multiplier = element.rateMultiplier,
+							rate_multiplier = element.rateMultiplier
 						}
 					end
 				end
@@ -260,7 +257,7 @@ Havoc.personal_mission = function (self, mission_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/missions/"):path(mission_id)
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -280,7 +277,7 @@ Havoc.delete_personal_mission = function (self, mission_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/missions/"):path(mission_id)
 		local options = {
-			method = "DELETE",
+			method = "DELETE"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -300,7 +297,7 @@ Havoc.reject_order = function (self, order_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/havoc/orders/"):path(order_id)
 		local options = {
-			method = "DELETE",
+			method = "DELETE"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)

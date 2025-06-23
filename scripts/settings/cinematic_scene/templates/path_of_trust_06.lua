@@ -2,16 +2,16 @@
 
 local cinematic_scene_templates = {
 	path_of_trust_06 = {
-		hide_players = false,
-		include_bots = false,
 		is_skippable = true,
-		local_player_only = true,
-		mission_outro = false,
-		music = "cinematic_pot",
-		randomize_equipped_weapon = false,
-		set_random_weapon_event = false,
-		use_transition_ui = false,
 		wait_for_player_input = true,
+		local_player_only = true,
+		use_transition_ui = false,
+		music = "cinematic_pot",
+		hide_players = false,
+		set_random_weapon_event = false,
+		randomize_equipped_weapon = false,
+		include_bots = false,
+		mission_outro = false,
 		ignored_slots = {
 			"slot_primary",
 			"slot_secondary",
@@ -23,14 +23,14 @@ local cinematic_scene_templates = {
 			"slot_grenade_ability",
 			"slot_attachment_1",
 			"slot_attachment_2",
-			"slot_attachment_3",
+			"slot_attachment_3"
 		},
 		popup_info = {
-			button_text = "loc_popup_cutscene_strategium_accept_button",
-			description_text = "loc_popup_path_of_trust_cutscene_waiting_hangar_description",
 			header_text = "loc_popup_path_of_trust_cutscene_waiting_hangar_header",
-		},
-	},
+			button_text = "loc_popup_cutscene_strategium_accept_button",
+			description_text = "loc_popup_path_of_trust_cutscene_waiting_hangar_description"
+		}
+	}
 }
 
 return cinematic_scene_templates

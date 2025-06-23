@@ -17,7 +17,7 @@ MissionObjectiveLuggable.start_objective = function (self, mission_objective_dat
 	MissionObjectiveLuggable.super.start_objective(self, mission_objective_data, registered_units, synchronizer_unit)
 
 	local luggable_synchronizer_extension = self:synchronizer_extension()
-	local stages = luggable_synchronizer_extension:get_objective_stages()
+	local stages = luggable_synchronizer_extension:setup_stages(registered_units)
 
 	self:set_stage_count(stages)
 end

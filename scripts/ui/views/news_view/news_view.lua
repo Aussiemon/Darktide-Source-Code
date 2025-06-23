@@ -59,25 +59,25 @@ local function to_news_view(news_item)
 			elseif content_item.type == "title" then
 				table.insert(content, {
 					widget_type = "header",
-					text = content_item.data or "",
+					text = content_item.data or ""
 				})
 			elseif content_item.type == "subtitle" then
 				table.insert(content, {
 					widget_type = "sub_header",
-					text = content_item.data or "",
+					text = content_item.data or ""
 				})
 			elseif content_item.type == "body" then
 				table.insert(content, {
 					widget_type = "body",
-					text = content_item.data or "",
+					text = content_item.data or ""
 				})
 			elseif content_item.type == "br" then
 				table.insert(content, {
 					widget_type = "dynamic_spacing",
 					size = {
 						500,
-						20,
-					},
+						20
+					}
 				})
 			elseif content_item.type == "image" then
 				image_url = content_item.data
@@ -92,7 +92,7 @@ local function to_news_view(news_item)
 		backend_news = news_item,
 		local_image = news_item.local_image,
 		local_image_material = news_item.local_image_material,
-		local_slide = news_item.local_slide,
+		local_slide = news_item.local_slide
 	}
 end
 
@@ -115,7 +115,7 @@ NewsView._load_slides = function (self)
 	Managers.data_service.news:get_news():next(function (raw_news)
 		local slide_data = {
 			starting_slide_index = 1,
-			slides = raw_news,
+			slides = raw_news
 		}
 
 		self:_initialize_slides(slide_data)
@@ -224,8 +224,8 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10,
-		},
+			10
+		}
 	}
 
 	for index, entry in ipairs(slide_content) do
@@ -236,8 +236,8 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10,
-		},
+			10
+		}
 	}
 
 	if slide.local_image_material then
@@ -461,7 +461,7 @@ end
 NewsView._get_animation_widgets = function (self)
 	local window_image_widget = self._widgets_by_name.window_image
 	local widgets = {
-		[window_image_widget.name] = window_image_widget,
+		[window_image_widget.name] = window_image_widget
 	}
 
 	return widgets
@@ -569,22 +569,22 @@ NewsView._setup_grid = function (self)
 		local grid_size = grid_scenegraph.size
 		local mask_padding_size = 0
 		local grid_settings = {
-			enable_gamepad_scrolling = true,
-			hide_background = true,
-			hide_dividers = true,
-			scrollbar_horizontal_offset = 18,
 			scrollbar_width = 7,
-			title_height = 0,
+			hide_dividers = true,
 			widget_icon_load_margin = 0,
+			enable_gamepad_scrolling = true,
+			title_height = 0,
+			scrollbar_horizontal_offset = 18,
+			hide_background = true,
 			grid_spacing = {
 				0,
-				0,
+				0
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 

@@ -15,6 +15,7 @@ local LuggableSocketInteraction = require("scripts/extension_systems/interaction
 local MoveablePlatformInteraction = require("scripts/extension_systems/interaction/interactions/moveable_platform_interaction")
 local PenanceCollectibleInteraction = require("scripts/extension_systems/interaction/interactions/penance_collectible_interaction")
 local PlayerHubInspectInteraction = require("scripts/extension_systems/interaction/interactions/player_hub_inspect_interaction")
+local CompanionHubInteraction = require("scripts/extension_systems/interaction/interactions/companion_hub_interaction")
 local PocketableInteraction = require("scripts/extension_systems/interaction/interactions/pocketable_interaction")
 local PullUpInteraction = require("scripts/extension_systems/interaction/interactions/pull_up_interaction")
 local RemoveNetInteraction = require("scripts/extension_systems/interaction/interactions/remove_net_interaction")
@@ -33,6 +34,7 @@ local interactions = {
 	base = BaseInteraction,
 	body_shop = ViewInteraction,
 	chest = ChestInteraction,
+	companion_hub_interact = CompanionHubInteraction,
 	contracts = ViewInteraction,
 	cosmetics_vendor = ViewInteraction,
 	crafting = ViewInteraction,
@@ -65,7 +67,7 @@ local interactions = {
 	setup_breach_charge = SetupBreachChargeInteraction,
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
-	vendor = ViewInteraction,
+	vendor = ViewInteraction
 }
 
 return settings("Interactions", interactions)

@@ -14,24 +14,24 @@ templates.weapon_trait_bespoke_forcestaff_p4_suppression_on_close_kill = table.c
 templates.weapon_trait_bespoke_forcestaff_p4_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting)
 templates.weapon_trait_bespoke_forcestaff_p4_followup_shots_ranged_damage = table.clone(BaseWeaponTraitBuffTemplates.followup_shots_ranged_damage)
 templates.weapon_trait_bespoke_forcestaff_p4_followup_shots_ranged_damage.conditional_stat_buffs = {
-	[stat_buffs.charge_level_modifier] = 0.05,
+	[stat_buffs.charge_level_modifier] = 0.05
 }
 templates.weapon_trait_bespoke_forcestaff_p4_warp_burninating_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warp_burninating_on_crits_ranged)
 templates.weapon_trait_bespoke_forcestaff_p4_warp_burninating_on_crits.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.any(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_explosion_hit), CheckProcFunctions.on_crit)
 templates.weapon_trait_bespoke_forcestaff_p4_warp_charge_critical_strike_chance_bonus = table.merge({
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.02,
-	},
+		[stat_buffs.critical_strike_chance] = 0.02
+	}
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
 templates.weapon_trait_bespoke_forcestaff_p4_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
 templates.weapon_trait_bespoke_forcestaff_p4_uninterruptable_while_charging.uninterruptable_actions = {
 	action_charge = true,
-	action_shoot_charged = true,
+	action_shoot_charged = true
 }
 templates.weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_attacks = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks)
 templates.weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_attacks.charge_actions = {
 	action_charge = true,
-	action_shoot_charged = true,
+	action_shoot_charged = true
 }
 templates.weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_attacks_parent = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks_parent)
 templates.weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_attacks_parent.child_buff_template = "weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_attacks_child"
@@ -42,7 +42,7 @@ templates.weapon_trait_bespoke_forcestaff_p4_faster_charge_on_chained_secondary_
 		local name = action_settings.name
 
 		return name and name == "action_shoot_charged"
-	end,
+	end
 }
 templates.weapon_trait_bespoke_forcestaff_p4_double_shot_on_crit = table.clone(BaseWeaponTraitBuffTemplates.double_shot_on_crit)
 

@@ -10,7 +10,7 @@ local ExtensionManager = class("ExtensionManager")
 
 ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_world, has_navmesh, level_name, circumstance_name, havoc_data, is_server, unit_templates, system_configuration, system_init_data, unit_category_list, network_event_delegate, fixed_time_step, game_session, optional_soft_cap_out_of_bounds_units, use_time_slice)
 	self._ignore_extensions_list = {
-		[""] = true,
+		[""] = true
 	}
 	self._units = {}
 	self._unit_extensions_list = {}
@@ -32,7 +32,7 @@ ExtensionManager.init = function (self, world, physics_world, wwise_world, nav_w
 		network_event_delegate = network_event_delegate,
 		extension_manager = self,
 		game_session = game_session,
-		soft_cap_out_of_bounds_units = optional_soft_cap_out_of_bounds_units,
+		soft_cap_out_of_bounds_units = optional_soft_cap_out_of_bounds_units
 	}
 
 	self._extension_system_holder = ExtensionSystemHolder:new(extension_system_creation_context, system_configuration, system_init_data, fixed_time_step, use_time_slice)

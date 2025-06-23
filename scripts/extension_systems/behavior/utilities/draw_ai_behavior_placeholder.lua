@@ -17,7 +17,7 @@ local state_counter = 1
 local draw_timers = {}
 local nodes = {}
 local row_heights = {
-	NODE_HEIGHT,
+	NODE_HEIGHT
 }
 local ROW_SPACING = NODE_HEIGHT * 0.5
 local BORDER_SPACING = NODE_HEIGHT
@@ -465,7 +465,7 @@ DrawAiBehavior.tree_width = function (gui, node)
 	local text_width = math.max(MIN_NODE_WIDTH, id_width, name_width)
 
 	nodes[id] = {
-		w = text_width,
+		w = text_width
 	}
 
 	local node_children = node._children

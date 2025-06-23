@@ -12,7 +12,7 @@ PlayerManager.NO_ACCOUNT_ID = "no_account_id"
 
 local CLIENT_RPCS = {
 	"rpc_player_assisted",
-	"rpc_update_slot",
+	"rpc_update_slot"
 }
 local SERVER_RPCS = {}
 
@@ -25,7 +25,7 @@ PlayerManager.PLAYER_INTERFACE = {
 	"local_player_id",
 	"account_id",
 	"character_id",
-	"unique_id",
+	"unique_id"
 }
 
 PlayerManager.init = function (self)
@@ -634,7 +634,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		profile_chunks_array = profile_chunks_array,
 		slot_array = {},
 		has_last_mission = not not self._last_mission_name,
-		last_mission_id = self:_last_mission_id(),
+		last_mission_id = self:_last_mission_id()
 	}
 	local i = 1
 
@@ -700,7 +700,7 @@ PlayerManager._show_assist_notification = function (self, peer_id, assist_type)
 	Managers.event:trigger("event_add_notification_message", "player_assist", {
 		assist_type = assist_type,
 		player = player,
-		player_name = player_name,
+		player_name = player_name
 	})
 end
 

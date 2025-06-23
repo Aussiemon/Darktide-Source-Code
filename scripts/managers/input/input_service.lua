@@ -40,32 +40,32 @@ InputService.ACTION_TYPES = InputService.ACTION_TYPES or {
 		device_func = "pressed",
 		type = "boolean",
 		default_device_func = _default_boolean,
-		combine_func = _boolean_combine,
+		combine_func = _boolean_combine
 	},
 	held = {
 		device_func = "held",
 		type = "boolean",
 		default_device_func = _default_boolean,
-		combine_func = _boolean_combine,
+		combine_func = _boolean_combine
 	},
 	released = {
 		device_func = "released",
 		type = "boolean",
 		default_device_func = _default_boolean,
-		combine_func = _boolean_combine,
+		combine_func = _boolean_combine
 	},
 	axis = {
 		device_func = "axis",
 		type = "vector3",
 		default_device_func = _default_vector3,
-		combine_func = _vector3_combine,
+		combine_func = _vector3_combine
 	},
 	button = {
 		device_func = "button",
 		type = "float",
 		default_device_func = _default_float,
-		combine_func = _float_combine,
-	},
+		combine_func = _float_combine
+	}
 }
 
 InputService.init = function (self, type, mappings, filter_mappings, aliases)
@@ -182,7 +182,7 @@ InputService._corresponding_device = function (self, name)
 		if index then
 			return {
 				device = device,
-				index = index,
+				index = index
 			}
 		end
 
@@ -191,7 +191,7 @@ InputService._corresponding_device = function (self, name)
 		if index then
 			return {
 				device = device,
-				index = index,
+				index = index
 			}
 		end
 	end
@@ -358,7 +358,7 @@ InputService._rework_filter = function (self, action_name)
 			eval_obj = eval_obj,
 			eval_param = self,
 			default_value = default_value,
-			default_func = default_func,
+			default_func = default_func
 		}
 
 		self._actions[action_name] = action_rule

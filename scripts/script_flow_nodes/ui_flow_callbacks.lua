@@ -10,7 +10,7 @@ local flow_callback_white_list = {
 	"set_component_data",
 	"trigger_lua_unit_event",
 	"trigger_lua_string_event",
-	"local_player_level_larger_than",
+	"local_player_level_larger_than"
 }
 
 for function_name, func in pairs(MainFlowCallbacks) do
@@ -36,6 +36,14 @@ UIFlowCallbacks.player_fx = function (params)
 end
 
 UIFlowCallbacks.player_footstep = function (params)
+	return
+end
+
+UIFlowCallbacks.companion_footstep = function (params)
+	return
+end
+
+UIFlowCallbacks.companion_inventory_fx = function (params)
 	return
 end
 

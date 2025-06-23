@@ -33,11 +33,11 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 	end
 
 	self._last_synced_spline_values = {
-		error_compensation_speed = 0,
-		last_sync_time = 0,
-		spline_index = 0,
-		spline_t = 0,
 		subdivision_index = 0,
+		error_compensation_speed = 0,
+		spline_index = 0,
+		last_sync_time = 0,
+		spline_t = 0
 	}
 end
 

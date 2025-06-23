@@ -280,168 +280,168 @@ end
 
 Door.component_data = {
 	type = {
-		ui_name = "Type",
-		ui_type = "combo_box",
 		value = "two_states",
+		ui_type = "combo_box",
+		ui_name = "Type",
 		options_keys = {
 			"2 States ('Open, Close')",
-			"3 States (Open Forward/Backward, Close)",
+			"3 States (Open Forward/Backward, Close)"
 		},
 		options_values = {
 			"two_states",
-			"three_states",
-		},
+			"three_states"
+		}
 	},
 	open_type = {
-		ui_name = "Open Type",
-		ui_type = "combo_box",
 		value = "none",
+		ui_type = "combo_box",
+		ui_name = "Open Type",
 		options_keys = {
 			"Normal",
 			"Open Only",
-			"Close Only",
+			"Close Only"
 		},
 		options_values = {
 			"none",
 			"open_only",
-			"close_only",
-		},
+			"close_only"
+		}
 	},
 	start_state = {
-		ui_name = "Start State",
-		ui_type = "combo_box",
 		value = "closed",
+		ui_type = "combo_box",
+		ui_name = "Start State",
 		options_keys = {
 			"Open",
 			"Open Forward",
 			"Open Backwards",
-			"Closed",
+			"Closed"
 		},
 		options_values = {
 			"open",
 			"open_fwd",
 			"open_bwd",
-			"closed",
-		},
+			"closed"
+		}
 	},
 	open_time = {
-		category = "Animation",
-		decimals = 2,
-		min = 0.1,
-		step = 0.01,
-		ui_name = "Open Animation Time (in sec.)",
 		ui_type = "number",
+		min = 0.1,
+		decimals = 2,
+		category = "Animation",
 		value = 1,
+		ui_name = "Open Animation Time (in sec.)",
+		step = 0.01
 	},
 	close_time = {
-		category = "Animation",
-		decimals = 2,
-		min = 0.1,
-		step = 0.01,
-		ui_name = "Close Animation Time (in sec.)",
 		ui_type = "number",
+		min = 0.1,
+		decimals = 2,
+		category = "Animation",
 		value = 1,
+		ui_name = "Close Animation Time (in sec.)",
+		step = 0.01
 	},
 	allow_closing = {
-		ui_name = "Allow closing",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Allow closing"
 	},
 	self_closing_time = {
-		decimals = 2,
-		min = 0,
-		step = 0.01,
-		ui_name = "Time for door to self close (in sec.)",
 		ui_type = "number",
+		min = 0,
+		decimals = 2,
 		value = 0,
+		ui_name = "Time for door to self close (in sec.)",
+		step = 0.01
 	},
 	blocked_time = {
-		category = "Nav",
-		decimals = 2,
-		max = 1,
-		min = 0,
-		step = 0.01,
-		ui_name = "Blocked Time (in %)",
 		ui_type = "slider",
+		min = 0,
+		decimals = 2,
+		category = "Nav",
 		value = 0.5,
+		max = 1,
+		ui_name = "Blocked Time (in %)",
+		step = 0.01
 	},
 	control_panel_props = {
 		category = "Control Panels",
+		ui_type = "combo_box_array",
 		size = 0,
 		ui_name = "Control Panel Props (see 'settings/level_prop')",
-		ui_type = "combo_box_array",
 		values = {},
 		options_keys = {
 			"Empty",
 			"Control Panel 01",
-			"Control Panel scan airlock 01",
+			"Control Panel scan airlock 01"
 		},
 		options_values = {
 			"empty",
 			"door_controlpanel_01",
-			"control_panel_scan_airlock_01",
-		},
+			"control_panel_scan_airlock_01"
+		}
 	},
 	control_panels_active = {
-		category = "Control Panels",
-		ui_name = "Control Panels Active",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Control Panels Active",
+		category = "Control Panels"
 	},
 	ignore_broadphase = {
-		ui_name = "Ignore Broadphase System",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Ignore Broadphase System"
 	},
 	inputs = {
 		instantiate_state = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_open = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open_fwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_fwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		open_bwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		toggle_bwd = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		close = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		activate_control_panels = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		deactivate_control_panels = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		teleport_bots = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"DoorExtension",
-	},
+		"DoorExtension"
+	}
 }
 
 return Door

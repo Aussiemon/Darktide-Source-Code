@@ -8,11 +8,11 @@ local THIRD_PERSON_MODE_PARAMETER = 0
 local FOOTSTEP_EFFECTS = MaterialQuerySettings.footstep_effects
 local FOOT_TO_SOURCE_NAME_LOOKUP = {
 	right = {
-		foot = "right_foot",
+		foot = "right_foot"
 	},
 	left = {
-		foot = "left_foot",
-	},
+		foot = "left_foot"
+	}
 }
 local _external_properties = {}
 local _place_flow_3p_cb_footstep, _trigger_footstep_and_foley

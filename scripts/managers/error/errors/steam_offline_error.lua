@@ -34,8 +34,8 @@ SteamOfflineError.options = function (self)
 				text = "loc_popup_button_quit_game",
 				callback = function ()
 					Application.quit()
-				end,
-			},
+				end
+			}
 		}
 	end
 end

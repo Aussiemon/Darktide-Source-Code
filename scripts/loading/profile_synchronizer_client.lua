@@ -6,7 +6,7 @@ local RPCS = {
 	"rpc_sync_player_profile_data",
 	"rpc_profile_sync_complete",
 	"rpc_profile_synced_by_all",
-	"rpc_profile_sync_peer_disconnected",
+	"rpc_profile_sync_peer_disconnected"
 }
 local ProfileSynchronizerClient = class("ProfileSynchronizerClient")
 

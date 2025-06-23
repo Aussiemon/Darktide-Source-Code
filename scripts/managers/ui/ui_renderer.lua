@@ -77,8 +77,8 @@ end
 UIRenderer.create_ui_renderer = function (world, gui, gui_retained, name, render_target, render_target_material)
 	return table.make_strict_nil_exceptions({
 		alpha_multiplier = 1,
-		color_intensity_multiplier = 1,
 		dt = 0,
+		color_intensity_multiplier = 1,
 		gui = gui,
 		gui_retained = gui_retained,
 		ui_scenegraph = StrictNil,
@@ -98,7 +98,7 @@ UIRenderer.create_ui_renderer = function (world, gui, gui_retained, name, render
 		debug_startpoint_direction = StrictNil,
 		debug_startpoint = StrictNil,
 		render_settings = StrictNil,
-		render_passes = {},
+		render_passes = {}
 	})
 end
 
@@ -883,7 +883,7 @@ UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id
 		255,
 		255,
 		0,
-		255,
+		255
 	}
 	local color = Color(style_color[1] * alpha_multiplier, style_color[2] * color_intensity_multiplier, style_color[3] * color_intensity_multiplier, style_color[4] * color_intensity_multiplier)
 	local layer = position[3]
@@ -1326,7 +1326,7 @@ end
 local _debug_render_scenegraph_text_options = {
 	shadow = true,
 	horizontal_alignment = Gui.HorizontalAlignCenter,
-	vertical_alignment = Gui.VerticalAlignCenter,
+	vertical_alignment = Gui.VerticalAlignCenter
 }
 
 local function debug_render_scenegraph(ui_renderer, scenegraph, n_scenegraph)

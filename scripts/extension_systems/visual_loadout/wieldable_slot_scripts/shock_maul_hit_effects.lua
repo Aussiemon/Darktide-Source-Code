@@ -98,8 +98,8 @@ end
 
 local _powermaul_damage_profiles = {
 	powermaul_heavy_tank = true,
-	powermaul_light_smiter = true,
 	powermaul_weapon_special = true,
+	powermaul_light_smiter = true
 }
 
 ShockMaulHitEffects.event_on_player_hit = function (self, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)

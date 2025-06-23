@@ -278,6 +278,16 @@ EndView.update = function (self, dt, t, input_service)
 		summary_view_context.session_report = character_session_report
 
 		Managers.ui:open_view(SUMMARY_VIEW_NAME, nil, nil, nil, nil, summary_view_context)
+
+		if context.round_won then
+			local debrief_circumstance = session_report.eor.mission.appliedEvent
+			local debrief_video = EndViewSettings.debrief_videos[debrief_circumstance]
+
+			if debrief_video then
+				Managers.video:queue_video(debrief_video)
+			end
+		end
+
 		self:_register_event("event_state_game_score_continue")
 
 		self._show_player_view_time = nil
@@ -582,7 +592,7 @@ EndView.select_target_level = function (self)
 	local level = EndViewSettings.levels_by_id[level_name] or EndViewSettings.levels_by_id.default
 	local level_packages = {
 		is_level_package = true,
-		name = level.level_name,
+		name = level.level_name
 	}
 
 	return level, level_packages
@@ -687,7 +697,7 @@ EndView._setup_spawn_slots = function (self, players)
 			index = player_index,
 			profile_spawner = profile_spawner,
 			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[player_index],
-			human_spawn_point_unit = self._human_spawn_point_units[player_index],
+			human_spawn_point_unit = self._human_spawn_point_units[player_index]
 		}
 
 		spawn_slots[player_index] = spawn_slot
@@ -785,8 +795,14 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
 
 	local profile_spawner = slot.profile_spawner
+	local companion_data = {
+		state_machine = end_of_round_pose_item.companion_state_machine ~= nil and end_of_round_pose_item.companion_state_machine ~= "" and end_of_round_pose_item.companion_state_machine or nil,
+		animation_event = end_of_round_pose_item.companion_animation_event ~= nil and end_of_round_pose_item.companion_animation_event ~= "" and end_of_round_pose_item.companion_animation_event or nil
+	}
+	local companion_visible = not not companion_data.state_machine
 
-	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event)
+	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event, nil, nil, nil, nil, companion_data)
+	profile_spawner:toggle_companion(companion_visible)
 
 	if item_wield_slot then
 		profile_spawner:wield_slot(item_wield_slot)
@@ -948,7 +964,7 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 			total_deaths = team_session_report.total_deaths,
 			mission_time = Text.format_time_span_long_form_localized(game_mode_completion_time_seconds or mission_time_in_sec),
 			font_size = mission_sub_header_style.stats_font_size * render_scale,
-			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
+			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4])
 		}
 
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)

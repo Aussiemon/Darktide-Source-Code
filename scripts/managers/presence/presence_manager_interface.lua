@@ -7,7 +7,7 @@ local PresenceManagerInterface = {
 	"presence_entry_myself",
 	"update",
 	"set_party",
-	"get_requested_platform_username",
+	"get_requested_platform_username"
 }
 
 return PresenceManagerInterface

@@ -21,24 +21,35 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local Vo = require("scripts/utilities/vo")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
+local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local WIDGET_TYPE_BY_SLOT = {
-	slot_animation_emote_1 = "ui_item",
-	slot_animation_emote_2 = "ui_item",
-	slot_animation_emote_3 = "ui_item",
-	slot_animation_emote_4 = "ui_item",
-	slot_animation_emote_5 = "ui_item",
-	slot_animation_end_of_round = "gear_item",
-	slot_character_title = "character_title_item",
-	slot_gear_extra_cosmetic = "gear_item",
-	slot_gear_head = "gear_item",
-	slot_gear_lowerbody = "gear_item",
 	slot_gear_upperbody = "gear_item",
+	slot_animation_end_of_round = "gear_item",
+	slot_animation_emote_4 = "ui_item",
+	slot_gear_extra_cosmetic = "gear_item",
+	slot_animation_emote_1 = "ui_item",
+	slot_animation_emote_5 = "ui_item",
 	slot_insignia = "ui_item",
+	slot_character_title = "character_title_item",
+	slot_animation_emote_3 = "ui_item",
+	slot_gear_head = "gear_item",
+	slot_companion_gear_full = "gear_item",
+	slot_gear_lowerbody = "gear_item",
 	slot_portrait_frame = "ui_item",
+	slot_animation_emote_2 = "ui_item"
 }
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
+local ANIMATION_SLOTS_MAP = {
+	slot_animation_emote_3 = true,
+	slot_animation_end_of_round = true,
+	slot_animation_emote_4 = true,
+	slot_animation_emote_5 = true,
+	slot_animation_emote_1 = true,
+	slot_animation_emote_2 = true
+}
 local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase")
 
 InventoryCosmeticsView.init = function (self, settings, context)
@@ -61,6 +72,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._disable_rotation_input = context.disable_rotation_input
 		self._animation_event_name_suffix = context.animation_event_name_suffix
 		self._animation_event_variable_data = context.animation_event_variable_data
+		self._companion_animation_event_variable_data = context.companion_animation_event_variable_data or context.animation_event_variable_data
 		self.item_type = context.item_type
 
 		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
@@ -69,7 +81,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._initialize_zoom = is_gear
 	else
 		self._selected_slot = {
-			name = "slot_gear_upperbody",
+			name = "slot_gear_upperbody"
 		}
 		self._initial_rotation = 0
 	end
@@ -146,7 +158,7 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 		if has_rarity then
 			sort_options[#sort_options + 1] = {
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = sort_function_generator(Items.sort_comparator({
 					"<",
@@ -154,12 +166,12 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 					">",
 					Items.compare_item_rarity,
 					"<",
-					Items.compare_item_name,
-				})),
+					Items.compare_item_name
+				}))
 			}
 			sort_options[#sort_options + 1] = {
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = sort_function_generator(Items.sort_comparator({
 					"<",
@@ -167,32 +179,32 @@ InventoryCosmeticsView._load_layout = function (self, selected_slot)
 					"<",
 					Items.compare_item_rarity,
 					"<",
-					Items.compare_item_name,
-				})),
+					Items.compare_item_name
+				}))
 			}
 		end
 
 		sort_options[#sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
 				Items.compare_item_sort_order,
 				"<",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 		sort_options[#sort_options + 1] = {
 			display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+				sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 			}),
 			sort_function = sort_function_generator(Items.sort_comparator({
 				"<",
 				Items.compare_item_sort_order,
 				">",
-				Items.compare_item_name,
-			})),
+				Items.compare_item_name
+			}))
 		}
 
 		self:_setup_sort_options()
@@ -217,6 +229,13 @@ InventoryCosmeticsView.on_enter = function (self)
 
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
+
+	self._options_voice_fx = Application.user_setting("sound_settings", "voice_fx_setting") ~= false
+
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "on")
+	end
+
 	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 	self:_setup_background_world()
 end
@@ -298,17 +317,19 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
 
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot and selected_slot.name
+
+	if selected_slot_name then
+		if selected_slot_name == "slot_companion_gear_full" then
+			self._profile_spawner:toggle_character(false)
+		elseif selected_slot_name ~= "slot_animation_end_of_round" then
+			self._profile_spawner:toggle_companion(false)
+		end
+	end
+
 	self._spawned_profile = profile
 end
-
-local ANIMATION_SLOTS_MAP = {
-	slot_animation_emote_1 = true,
-	slot_animation_emote_2 = true,
-	slot_animation_emote_3 = true,
-	slot_animation_emote_4 = true,
-	slot_animation_emote_5 = true,
-	slot_animation_end_of_round = true,
-}
 
 InventoryCosmeticsView._destroy_side_panel = function (self)
 	local side_panel_widgets = self._side_panel_widgets
@@ -340,7 +361,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 	local function _add_text_widget(pass_template, text)
 		local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, {
 			max_width,
-			0,
+			0
 		})
 		local widget = self:_create_widget(string.format("side_panel_widget_%d", #widgets), widget_definition)
 
@@ -351,7 +372,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
 		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
 			max_width,
-			math.huge,
+			math.huge
 		}, text_options)
 
 		y_offset = y_offset + text_height
@@ -449,13 +470,34 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local item_animation_event = item.animation_event
 		local item_face_animation_event = item.face_animation_event
 		local animation_event_name_suffix = self._animation_event_name_suffix
+		local companion_animation_event_name_suffix = self._companion_animation_event_name_suffix
+		local companion_state_machine = item.companion_state_machine
+		local companion_item_animation_event = item.companion_animation_event
 		local animation_event = item_animation_event
 
 		if animation_event_name_suffix then
 			animation_event = animation_event .. animation_event_name_suffix
 		end
 
+		local companion_animation_event = companion_item_animation_event
+
+		if companion_animation_event_name_suffix then
+			companion_animation_event = companion_animation_event .. companion_animation_event_name_suffix
+		end
+
+		local profile = self._presentation_profile
+		local initial_rotation = self._initial_rotation
+		local disable_rotation_input = self._disable_rotation_input
+
+		self:_spawn_profile(profile, initial_rotation, disable_rotation_input)
 		self._profile_spawner:assign_state_machine(item_state_machine, animation_event, item_face_animation_event)
+
+		if companion_state_machine and companion_state_machine ~= "" then
+			self._profile_spawner:assign_companion_state_machine(companion_state_machine, companion_animation_event)
+			self._profile_spawner:toggle_companion(true)
+		else
+			self._profile_spawner:toggle_companion(false)
+		end
 
 		local animation_event_variable_data = self._animation_event_variable_data
 
@@ -486,7 +528,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 
 	local item_size = {
 		700,
-		60,
+		60
 	}
 	local ui_renderer = self._ui_default_renderer
 	local scenegraph_id = "item_name_pivot"
@@ -494,11 +536,11 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	local Blueprints = generate_blueprints_function(item_size)
 	local template = Blueprints[widget_type]
 	local config = {
-		horizontal_alignment = "right",
-		ignore_negative_rarity = true,
 		vertical_alignment = "bottom",
+		ignore_negative_rarity = true,
+		horizontal_alignment = "right",
 		size = item_size,
-		item = item,
+		item = item
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
 	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
@@ -630,6 +672,10 @@ InventoryCosmeticsView.on_exit = function (self)
 		self._world_spawner:set_camera_blur(0, 0)
 	end
 
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "off")
+	end
+
 	self._promise_container:delete()
 
 	if self._profile_spawner then
@@ -704,7 +750,7 @@ InventoryCosmeticsView._parse_store_items = function (self, selected_slot_name, 
 				if valid then
 					items[#items + 1] = {
 						item = item,
-						offer = offer,
+						offer = offer
 					}
 				end
 			end
@@ -733,7 +779,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 
 	local selected_slot_name = selected_slot.name
 	local filter = {
-		selected_slot_name,
+		selected_slot_name
 	}
 	local promises = {}
 
@@ -795,7 +841,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 								if valid then
 									penance_track_items[#penance_track_items + 1] = {
 										item = reward_item,
-										label = Localize("loc_item_source_penance_track"),
+										label = Localize("loc_item_source_penance_track")
 									}
 								end
 							end
@@ -849,7 +895,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 					local sub_penances_count = table.size(achievement.achievements)
 
 					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
-						penance_amount = sub_penances_count,
+						penance_amount = sub_penances_count
 					})
 				else
 					description_text = AchievementUIHelper.localized_description(achievement)
@@ -862,7 +908,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 					achievement_items[#achievement_items + 1] = {
 						item = reward_item,
 						label = AchievementUIHelper.localized_title(achievement),
-						description = description_text,
+						description = description_text
 					}
 				end
 			end
@@ -878,7 +924,7 @@ local function items_by_name(entry_array, is_item)
 	for i = 1, #entry_array do
 		local entry = entry_array[i]
 		local item = is_item and entry or entry.item
-		local name = item.name
+		local name = item and item.name
 
 		if name then
 			_items_by_name[name] = entry
@@ -932,7 +978,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			store = found_store,
 			new_item_marker = is_new,
 			remove_new_marker_callback = remove_new_marker_callback,
-			profile = profile,
+			profile = profile
 		}
 	end
 
@@ -944,7 +990,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 		layout_count = layout_count + 1
 		layout[layout_count] = {
 			sort_group = 4,
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -956,7 +1002,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = achievement_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			achievement = achievement_item,
+			achievement = achievement_item
 		}
 	end
 
@@ -968,7 +1014,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = penance_track_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			penance_track = penance_track_item,
+			penance_track = penance_track_item
 		}
 	end
 
@@ -980,7 +1026,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			item = store_item.item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
-			store = store_item.item,
+			store = store_item.item
 		}
 	end
 
@@ -990,7 +1036,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 		layout_count = layout_count + 1
 		layout[layout_count] = {
 			sort_group = 2,
-			widget_type = "divider",
+			widget_type = "divider"
 		}
 	end
 
@@ -1003,7 +1049,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
 			store = premium_item.item,
-			premium_offer = premium_item.offer,
+			premium_offer = premium_item.offer
 		}
 	end
 
@@ -1015,7 +1061,7 @@ InventoryCosmeticsView._calc_text_size = function (self, widget, text_and_style_
 	local text_style = widget.style[text_and_style_id]
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local size = text_style.size or widget.content.size or {
-		self:_scenegraph_size(widget.scenegraph_id),
+		self:_scenegraph_size(widget.scenegraph_id)
 	}
 
 	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
@@ -1062,7 +1108,7 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 	local archetype = profile.archetype
 	local lore = profile.lore
 	local backstory = lore.backstory
-	local crime = backstory.crime
+	local crime = CrimesCompabilityMap[backstory.crime] or backstory.crime
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed
 	local breed_valid = not item.breeds or table.contains(item.breeds, breed_name)
@@ -1097,7 +1143,7 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 
 			if item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY then
 				self:_play_sound(UISoundEvents.apparel_equip)
-			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
+			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
 				self:_play_sound(UISoundEvents.apparel_equip_small)
 			elseif item_type == ITEM_TYPES.PORTRAIT_FRAME or item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
 				self:_play_sound(UISoundEvents.apparel_equip_frame)
@@ -1534,9 +1580,9 @@ InventoryCosmeticsView.cb_on_purchase_pressed = function (self)
 
 	Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
 		store_item = {
-			offer = premium_offer,
+			offer = premium_offer
 		},
-		parent = self,
+		parent = self
 	})
 end
 
@@ -1607,7 +1653,7 @@ InventoryCosmeticsView.play_vo_events = function (self, events, voice_profile, o
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo,
+			is_opinion_vo = is_opinion_vo
 		}
 	else
 		local wwise_route_key = optional_route_key or 40

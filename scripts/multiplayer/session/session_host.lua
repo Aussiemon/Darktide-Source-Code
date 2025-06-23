@@ -2,7 +2,7 @@
 
 local SessionRemoteStateMachine = require("scripts/multiplayer/session/session_remote_state_machine")
 local EVENTS = {
-	"game_object_sync_done",
+	"game_object_sync_done"
 }
 local SessionHost = class("SessionHost")
 

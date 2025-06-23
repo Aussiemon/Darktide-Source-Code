@@ -228,7 +228,7 @@ InventoryBackgroundView._load_portrait_icon = function (self)
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 
 	self._portrait_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -282,7 +282,7 @@ InventoryBackgroundView._load_portrait_frame = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._frame_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -338,7 +338,7 @@ InventoryBackgroundView._load_insignia = function (self, item)
 	local icon_load_id = Managers.ui:load_item_icon(item, cb)
 
 	self._insignia_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -550,7 +550,7 @@ InventoryBackgroundView.event_discard_item = function (self, item)
 			Managers.event:trigger("event_force_wallet_update")
 			Managers.event:trigger("event_add_notification_message", "currency", {
 				currency = "credits",
-				amount = credits_amount,
+				amount = credits_amount
 			})
 		end
 
@@ -599,7 +599,7 @@ InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 			for reward_type, reward_amount in pairs(total_rewards) do
 				Managers.event:trigger("event_add_notification_message", "currency", {
 					currency = reward_type,
-					amount = reward_amount,
+					amount = reward_amount
 				})
 			end
 		end
@@ -798,583 +798,613 @@ InventoryBackgroundView._setup_top_panel = function (self)
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 	local is_ogryn = archetype_name == "ogryn"
+	local has_slot_companion_gear_full = profile.loadout.slot_companion_gear_full
+	local inventory_view = {
+		view_name = "inventory_view",
+		display_name = "loc_inventory_view_display_name",
+		update = function (content, style, dt)
+			content.hotspot.disabled = not self:is_inventory_synced()
+
+			if not self._is_own_player or self._is_readonly then
+				return false
+			end
+
+			local has_new_items = false
+
+			if self:has_new_items_by_type(ITEM_TYPES.WEAPON_MELEE) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.WEAPON_RANGED) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.GADGET) then
+				has_new_items = true
+			end
+
+			content.show_alert = has_new_items
+			content.show_warning = self:_has_loadout_slot(self._invalid_slots)
+			content.show_modified = self:_has_loadout_slot(self._modified_slots)
+		end,
+		view_context = {
+			tabs = {
+				{
+					ui_animation = "loadout_on_enter",
+					is_grid_layout = false,
+					allow_item_hover_information = true,
+					telemetry_name = "inventory_view_loadout",
+					draw_wallet = self._is_own_player and not self._is_readonly,
+					camera_settings = {
+						{
+							"event_inventory_set_target_camera_offset",
+							0,
+							0,
+							0
+						},
+						{
+							"event_inventory_set_target_camera_rotation",
+							false
+						},
+						{
+							"event_inventory_set_camera_default_focus"
+						}
+					},
+					layout = {
+						{
+							slot_title = "loc_inventory_title_slot_primary",
+							scenegraph_id = "slot_primary",
+							loadout_slot = true,
+							widget_type = "item_slot",
+							default_icon = "content/ui/materials/icons/items/weapons/melee/empty",
+							slot = ItemSlotSettings.slot_primary,
+							navigation_grid_indices = {
+								1,
+								1
+							},
+							item_type = ITEM_TYPES.WEAPON_MELEE,
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							slot_title = "loc_inventory_title_slot_secondary",
+							scenegraph_id = "slot_secondary",
+							loadout_slot = true,
+							widget_type = "item_slot",
+							default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
+							slot = ItemSlotSettings.slot_secondary,
+							navigation_grid_indices = {
+								2,
+								1
+							},
+							item_type = ITEM_TYPES.WEAPON_RANGED,
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_attachments_header",
+							display_name = "loc_inventory_loadout_group_attachments",
+							widget_type = "item_sub_header",
+							item_type = ITEM_TYPES.GADGET,
+							size = {
+								840,
+								50
+							},
+							new_indicator_width_offset = {
+								183,
+								-20,
+								4
+							},
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_attachment_1",
+							loadout_slot = true,
+							slot_title = "loc_inventory_title_slot_attachment_1",
+							widget_type = "gadget_item_slot",
+							default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
+							slot = ItemSlotSettings.slot_attachment_1,
+							required_level = PlayerProgressionUnlocks.gadget_slot_1,
+							navigation_grid_indices = {
+								3,
+								1
+							},
+							item_type = ITEM_TYPES.GADGET,
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_attachment_2",
+							loadout_slot = true,
+							slot_title = "loc_inventory_title_slot_attachment_2",
+							widget_type = "gadget_item_slot",
+							default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
+							slot = ItemSlotSettings.slot_attachment_2,
+							required_level = PlayerProgressionUnlocks.gadget_slot_2,
+							navigation_grid_indices = {
+								3,
+								2
+							},
+							item_type = ITEM_TYPES.GADGET,
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_attachment_3",
+							loadout_slot = true,
+							slot_title = "loc_inventory_title_slot_attachment_3",
+							widget_type = "gadget_item_slot",
+							default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
+							slot = ItemSlotSettings.slot_attachment_3,
+							required_level = PlayerProgressionUnlocks.gadget_slot_3,
+							navigation_grid_indices = {
+								3,
+								3
+							},
+							item_type = ITEM_TYPES.GADGET,
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_primary_header",
+							display_name = "loc_inventory_loadout_group_primary_weapon",
+							widget_type = "item_sub_header",
+							item_type = ITEM_TYPES.WEAPON_MELEE,
+							size = {
+								840,
+								50
+							},
+							new_indicator_width_offset = {
+								243,
+								-22,
+								4
+							},
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							scenegraph_id = "slot_secondary_header",
+							display_name = "loc_inventory_loadout_group_secondary_weapon",
+							widget_type = "item_sub_header",
+							item_type = ITEM_TYPES.WEAPON_RANGED,
+							size = {
+								840,
+								50
+							},
+							new_indicator_width_offset = {
+								211,
+								-20,
+								4
+							},
+							has_new_items_update_callback = function (item_type)
+								return self:has_new_items_by_type(item_type)
+							end
+						},
+						{
+							texture = "content/ui/materials/frames/loadout_main",
+							scenegraph_id = "loadout_frame",
+							widget_type = "texture",
+							size = {
+								840,
+								840
+							}
+						},
+						{
+							texture = "content/ui/materials/backgrounds/terminal_basic",
+							scenegraph_id = "loadout_background_1",
+							widget_type = "texture",
+							size = {
+								640,
+								380
+							},
+							color = Color.terminal_grid_background(nil, true)
+						},
+						{
+							texture = "content/ui/materials/backgrounds/terminal_basic",
+							scenegraph_id = "loadout_background_2",
+							widget_type = "texture",
+							size = {
+								700,
+								320
+							},
+							color = Color.terminal_grid_background(nil, true)
+						}
+					}
+				}
+			}
+		}
+	}
+	local cosmetic_tabs_layout = {
+		{
+			slot_title = "loc_inventory_title_slot_character_title",
+			scenegraph_id = "slot_character_title",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+			widget_type = "character_title_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/head/empty",
+			slot = ItemSlotSettings.slot_character_title,
+			navigation_grid_indices = {
+				4,
+				1
+			},
+			item_type = ITEM_TYPES.CHARACTER_TITLE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_gear_head",
+			scenegraph_id = "slot_gear_head",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+			widget_type = "gear_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/head/empty",
+			slot = ItemSlotSettings.slot_gear_head,
+			navigation_grid_indices = {
+				1,
+				1
+			},
+			item_type = ITEM_TYPES.GEAR_HEAD,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_gear_upperbody",
+			scenegraph_id = "slot_gear_upperbody",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
+			widget_type = "gear_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/arms/empty",
+			slot = ItemSlotSettings.slot_gear_upperbody,
+			navigation_grid_indices = {
+				2,
+				1
+			},
+			item_type = ITEM_TYPES.GEAR_UPPERBODY,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_gear_lowerbody",
+			scenegraph_id = "slot_gear_lowerbody",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
+			widget_type = "gear_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			slot = ItemSlotSettings.slot_gear_lowerbody,
+			navigation_grid_indices = {
+				3,
+				1
+			},
+			item_type = ITEM_TYPES.GEAR_LOWERBODY,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
+			scenegraph_id = "slot_gear_extra_cosmetic",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
+			widget_type = "gear_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			slot = ItemSlotSettings.slot_gear_extra_cosmetic,
+			navigation_grid_indices = {
+				1,
+				2
+			},
+			initial_rotation = math.pi,
+			item_type = ITEM_TYPES.GEAR_EXTRA_COSMETIC,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_portrait_frame",
+			scenegraph_id = "slot_portrait_frame",
+			loadout_slot = true,
+			widget_type = "ui_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			slot = ItemSlotSettings.slot_portrait_frame,
+			navigation_grid_indices = {
+				2,
+				2
+			},
+			item_type = ITEM_TYPES.PORTRAIT_FRAME,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		},
+		{
+			slot_title = "loc_inventory_title_slot_insignia",
+			scenegraph_id = "slot_insignia",
+			loadout_slot = true,
+			widget_type = "ui_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			slot = ItemSlotSettings.slot_insignia,
+			navigation_grid_indices = {
+				3,
+				2
+			},
+			item_type = ITEM_TYPES.CHARACTER_INSIGNIA,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+	}
+
+	if has_slot_companion_gear_full then
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			slot_title = "loc_inventory_title_slot_companion_gear_full",
+			scenegraph_id = "slot_companion_gear_full",
+			loadout_slot = true,
+			slot_icon = "content/ui/materials/icons/item_types/beveled/companion_gear_full",
+			widget_type = "gear_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			slot = ItemSlotSettings.slot_companion_gear_full,
+			navigation_grid_indices = {
+				3,
+				1
+			},
+			item_type = ITEM_TYPES.COMPANION_GEAR_FULL,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+	end
+
+	if not self._is_readonly then
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_expressions",
+			slot_title = "loc_inventory_title_slot_animation_end_of_round",
+			display_name = "loc_inventory_title_slot_animation_end_of_round",
+			loadout_slot = true,
+			widget_type = "pose_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_end_of_round,
+			navigation_grid_indices = {
+				6,
+				3
+			},
+			item_type = ITEM_TYPES.END_OF_ROUND,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_emote_1",
+			slot_title = "loc_inventory_title_slot_animation_emote_1",
+			display_name = "loc_inventory_title_slot_animation_emote_1",
+			loadout_slot = true,
+			disable_rotation_input = false,
+			widget_type = "emote_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			animation_event_name_suffix = "_instant",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_emote_1,
+			navigation_grid_indices = {
+				1,
+				3
+			},
+			animation_event_variable_data = {
+				index = "in_menu",
+				value = 1
+			},
+			item_type = ITEM_TYPES.EMOTE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_emote_2",
+			slot_title = "loc_inventory_title_slot_animation_emote_2",
+			display_name = "loc_inventory_title_slot_animation_emote_2",
+			loadout_slot = true,
+			disable_rotation_input = false,
+			widget_type = "emote_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			animation_event_name_suffix = "_instant",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_emote_2,
+			navigation_grid_indices = {
+				2,
+				3
+			},
+			animation_event_variable_data = {
+				index = "in_menu",
+				value = 1
+			},
+			item_type = ITEM_TYPES.EMOTE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_emote_3",
+			slot_title = "loc_inventory_title_slot_animation_emote_3",
+			display_name = "loc_inventory_title_slot_animation_emote_3",
+			loadout_slot = true,
+			disable_rotation_input = false,
+			widget_type = "emote_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			animation_event_name_suffix = "_instant",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_emote_3,
+			navigation_grid_indices = {
+				3,
+				3
+			},
+			animation_event_variable_data = {
+				index = "in_menu",
+				value = 1
+			},
+			item_type = ITEM_TYPES.EMOTE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_emote_4",
+			slot_title = "loc_inventory_title_slot_animation_emote_4",
+			display_name = "loc_inventory_title_slot_animation_emote_4",
+			loadout_slot = true,
+			disable_rotation_input = false,
+			widget_type = "emote_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			animation_event_name_suffix = "_instant",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_emote_4,
+			navigation_grid_indices = {
+				2,
+				3
+			},
+			animation_event_variable_data = {
+				index = "in_menu",
+				value = 1
+			},
+			item_type = ITEM_TYPES.EMOTE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+		cosmetic_tabs_layout[#cosmetic_tabs_layout + 1] = {
+			scenegraph_id = "button_emote_5",
+			slot_title = "loc_inventory_title_slot_animation_emote_5",
+			display_name = "loc_inventory_title_slot_animation_emote_5",
+			loadout_slot = true,
+			disable_rotation_input = false,
+			widget_type = "emote_item_slot",
+			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
+			animation_event_name_suffix = "_instant",
+			size = {
+				64,
+				64
+			},
+			slot = ItemSlotSettings.slot_animation_emote_5,
+			navigation_grid_indices = {
+				5,
+				3
+			},
+			animation_event_variable_data = {
+				index = "in_menu",
+				value = 1
+			},
+			item_type = ITEM_TYPES.EMOTE,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end
+		}
+	end
+
+	local inventory_cosmetics_view = {
+		view_name = "inventory_view",
+		display_name = "loc_cosmetics_view_display_name",
+		update = function (content, style, dt)
+			content.hotspot.disabled = not self:is_inventory_synced()
+
+			if not self._is_own_player or self._is_readonly then
+				return false
+			end
+
+			local has_new_items = false
+
+			if self:has_new_items_by_type(ITEM_TYPES.GEAR_HEAD) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_UPPERBODY) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_LOWERBODY) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_EXTRA_COSMETIC) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.COMPANION_GEAR_FULL) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.PORTRAIT_FRAME) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_INSIGNIA) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_TITLE) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.EMOTE) then
+				has_new_items = true
+			elseif self:has_new_items_by_type(ITEM_TYPES.END_OF_ROUND) then
+				has_new_items = true
+			end
+
+			content.show_alert = has_new_items
+			content.show_warning = self:_has_cosmetic_slot(self._invalid_slots)
+			content.show_modified = self:_has_cosmetic_slot(self._modified_slots)
+		end,
+		view_context = {
+			tabs = {
+				{
+					ui_animation = "cosmetics_on_enter",
+					display_name = "tab1",
+					telemetry_name = "inventory_view_cosmetics",
+					draw_wallet = false,
+					allow_item_hover_information = true,
+					icon = "content/ui/materials/icons/item_types/outfits",
+					is_grid_layout = false,
+					camera_settings = {
+						{
+							"event_inventory_set_target_camera_offset",
+							is_ogryn and 1.2 or 0.85,
+							0,
+							0
+						},
+						{
+							"event_inventory_set_target_camera_rotation",
+							false
+						},
+						{
+							"event_inventory_set_camera_default_focus"
+						}
+					},
+					item_hover_information_offset = {
+						0
+					},
+					layout = cosmetic_tabs_layout
+				}
+			}
+		}
+	}
 
 	self._views_settings = {
-		{
-			display_name = "loc_inventory_view_display_name",
-			view_name = "inventory_view",
-			update = function (content, style, dt)
-				content.hotspot.disabled = not self:is_inventory_synced()
-
-				if not self._is_own_player or self._is_readonly then
-					return false
-				end
-
-				local has_new_items = false
-
-				if self:has_new_items_by_type(ITEM_TYPES.WEAPON_MELEE) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.WEAPON_RANGED) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.GADGET) then
-					has_new_items = true
-				end
-
-				content.show_alert = has_new_items
-				content.show_warning = self:_has_loadout_slot(self._invalid_slots)
-				content.show_modified = self:_has_loadout_slot(self._modified_slots)
-			end,
-			view_context = {
-				tabs = {
-					{
-						allow_item_hover_information = true,
-						is_grid_layout = false,
-						telemetry_name = "inventory_view_loadout",
-						ui_animation = "loadout_on_enter",
-						draw_wallet = self._is_own_player and not self._is_readonly,
-						camera_settings = {
-							{
-								"event_inventory_set_target_camera_offset",
-								0,
-								0,
-								0,
-							},
-							{
-								"event_inventory_set_target_camera_rotation",
-								false,
-							},
-							{
-								"event_inventory_set_camera_default_focus",
-							},
-						},
-						layout = {
-							{
-								default_icon = "content/ui/materials/icons/items/weapons/melee/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_primary",
-								slot_title = "loc_inventory_title_slot_primary",
-								widget_type = "item_slot",
-								slot = ItemSlotSettings.slot_primary,
-								navigation_grid_indices = {
-									1,
-									1,
-								},
-								item_type = ITEM_TYPES.WEAPON_MELEE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_secondary",
-								slot_title = "loc_inventory_title_slot_secondary",
-								widget_type = "item_slot",
-								slot = ItemSlotSettings.slot_secondary,
-								navigation_grid_indices = {
-									2,
-									1,
-								},
-								item_type = ITEM_TYPES.WEAPON_RANGED,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								display_name = "loc_inventory_loadout_group_attachments",
-								scenegraph_id = "slot_attachments_header",
-								widget_type = "item_sub_header",
-								item_type = ITEM_TYPES.GADGET,
-								size = {
-									840,
-									50,
-								},
-								new_indicator_width_offset = {
-									183,
-									-20,
-									4,
-								},
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_attachment_1",
-								slot_title = "loc_inventory_title_slot_attachment_1",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_1,
-								required_level = PlayerProgressionUnlocks.gadget_slot_1,
-								navigation_grid_indices = {
-									3,
-									1,
-								},
-								item_type = ITEM_TYPES.GADGET,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_attachment_2",
-								slot_title = "loc_inventory_title_slot_attachment_2",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_2,
-								required_level = PlayerProgressionUnlocks.gadget_slot_2,
-								navigation_grid_indices = {
-									3,
-									2,
-								},
-								item_type = ITEM_TYPES.GADGET,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_attachment_3",
-								slot_title = "loc_inventory_title_slot_attachment_3",
-								widget_type = "gadget_item_slot",
-								slot = ItemSlotSettings.slot_attachment_3,
-								required_level = PlayerProgressionUnlocks.gadget_slot_3,
-								navigation_grid_indices = {
-									3,
-									3,
-								},
-								item_type = ITEM_TYPES.GADGET,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								display_name = "loc_inventory_loadout_group_primary_weapon",
-								scenegraph_id = "slot_primary_header",
-								widget_type = "item_sub_header",
-								item_type = ITEM_TYPES.WEAPON_MELEE,
-								size = {
-									840,
-									50,
-								},
-								new_indicator_width_offset = {
-									243,
-									-22,
-									4,
-								},
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								display_name = "loc_inventory_loadout_group_secondary_weapon",
-								scenegraph_id = "slot_secondary_header",
-								widget_type = "item_sub_header",
-								item_type = ITEM_TYPES.WEAPON_RANGED,
-								size = {
-									840,
-									50,
-								},
-								new_indicator_width_offset = {
-									211,
-									-20,
-									4,
-								},
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								scenegraph_id = "loadout_frame",
-								texture = "content/ui/materials/frames/loadout_main",
-								widget_type = "texture",
-								size = {
-									840,
-									840,
-								},
-							},
-							{
-								scenegraph_id = "loadout_background_1",
-								texture = "content/ui/materials/backgrounds/terminal_basic",
-								widget_type = "texture",
-								size = {
-									640,
-									380,
-								},
-								color = Color.terminal_grid_background(nil, true),
-							},
-							{
-								scenegraph_id = "loadout_background_2",
-								texture = "content/ui/materials/backgrounds/terminal_basic",
-								widget_type = "texture",
-								size = {
-									700,
-									320,
-								},
-								color = Color.terminal_grid_background(nil, true),
-							},
-						},
-					},
-				},
-			},
-		},
-		{
-			display_name = "loc_cosmetics_view_display_name",
-			view_name = "inventory_view",
-			update = function (content, style, dt)
-				content.hotspot.disabled = not self:is_inventory_synced()
-
-				if not self._is_own_player or self._is_readonly then
-					return false
-				end
-
-				local has_new_items = false
-
-				if self:has_new_items_by_type(ITEM_TYPES.GEAR_HEAD) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_UPPERBODY) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_LOWERBODY) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.GEAR_EXTRA_COSMETIC) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.PORTRAIT_FRAME) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_INSIGNIA) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.CHARACTER_TITLE) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.EMOTE) then
-					has_new_items = true
-				elseif self:has_new_items_by_type(ITEM_TYPES.END_OF_ROUND) then
-					has_new_items = true
-				end
-
-				content.show_alert = has_new_items
-				content.show_warning = self:_has_cosmetic_slot(self._invalid_slots)
-				content.show_modified = self:_has_cosmetic_slot(self._modified_slots)
-			end,
-			view_context = {
-				tabs = {
-					{
-						allow_item_hover_information = true,
-						display_name = "tab1",
-						draw_wallet = false,
-						icon = "content/ui/materials/icons/item_types/outfits",
-						is_grid_layout = false,
-						telemetry_name = "inventory_view_cosmetics",
-						ui_animation = "cosmetics_on_enter",
-						camera_settings = {
-							{
-								"event_inventory_set_target_camera_offset",
-								is_ogryn and 1.2 or 0.85,
-								0,
-								0,
-							},
-							{
-								"event_inventory_set_target_camera_rotation",
-								false,
-							},
-							{
-								"event_inventory_set_camera_default_focus",
-							},
-						},
-						item_hover_information_offset = {
-							0,
-						},
-						layout = {
-							{
-								default_icon = "content/ui/materials/icons/items/gears/head/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_character_title",
-								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
-								slot_title = "loc_inventory_title_slot_character_title",
-								widget_type = "character_title_item_slot",
-								slot = ItemSlotSettings.slot_character_title,
-								navigation_grid_indices = {
-									4,
-									1,
-								},
-								item_type = ITEM_TYPES.CHARACTER_TITLE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/head/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_head",
-								slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
-								slot_title = "loc_inventory_title_slot_gear_head",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_head,
-								navigation_grid_indices = {
-									1,
-									1,
-								},
-								item_type = ITEM_TYPES.GEAR_HEAD,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/arms/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_upperbody",
-								slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
-								slot_title = "loc_inventory_title_slot_gear_upperbody",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_upperbody,
-								navigation_grid_indices = {
-									2,
-									1,
-								},
-								item_type = ITEM_TYPES.GEAR_UPPERBODY,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_lowerbody",
-								slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
-								slot_title = "loc_inventory_title_slot_gear_lowerbody",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_lowerbody,
-								navigation_grid_indices = {
-									3,
-									1,
-								},
-								item_type = ITEM_TYPES.GEAR_LOWERBODY,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_gear_extra_cosmetic",
-								slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
-								slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
-								widget_type = "gear_item_slot",
-								slot = ItemSlotSettings.slot_gear_extra_cosmetic,
-								navigation_grid_indices = {
-									1,
-									2,
-								},
-								initial_rotation = math.pi,
-								item_type = ITEM_TYPES.GEAR_EXTRA_COSMETIC,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_portrait_frame",
-								slot_title = "loc_inventory_title_slot_portrait_frame",
-								widget_type = "ui_item_slot",
-								slot = ItemSlotSettings.slot_portrait_frame,
-								navigation_grid_indices = {
-									2,
-									2,
-								},
-								item_type = ITEM_TYPES.PORTRAIT_FRAME,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							{
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								loadout_slot = true,
-								scenegraph_id = "slot_insignia",
-								slot_title = "loc_inventory_title_slot_insignia",
-								widget_type = "ui_item_slot",
-								slot = ItemSlotSettings.slot_insignia,
-								navigation_grid_indices = {
-									3,
-									2,
-								},
-								item_type = ITEM_TYPES.CHARACTER_INSIGNIA,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							},
-							not self._is_readonly and {
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								display_name = "loc_inventory_title_slot_animation_end_of_round",
-								loadout_slot = true,
-								scenegraph_id = "button_expressions",
-								slot_title = "loc_inventory_title_slot_animation_end_of_round",
-								widget_type = "pose_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_end_of_round,
-								navigation_grid_indices = {
-									6,
-									3,
-								},
-								item_type = ITEM_TYPES.END_OF_ROUND,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-							not self._is_readonly and {
-								animation_event_name_suffix = "_instant",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								disable_rotation_input = false,
-								display_name = "loc_inventory_title_slot_animation_emote_1",
-								loadout_slot = true,
-								scenegraph_id = "button_emote_1",
-								slot_title = "loc_inventory_title_slot_animation_emote_1",
-								widget_type = "emote_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_emote_1,
-								navigation_grid_indices = {
-									1,
-									3,
-								},
-								animation_event_variable_data = {
-									index = "in_menu",
-									value = 1,
-								},
-								item_type = ITEM_TYPES.EMOTE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-							not self._is_readonly and {
-								animation_event_name_suffix = "_instant",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								disable_rotation_input = false,
-								display_name = "loc_inventory_title_slot_animation_emote_2",
-								loadout_slot = true,
-								scenegraph_id = "button_emote_2",
-								slot_title = "loc_inventory_title_slot_animation_emote_2",
-								widget_type = "emote_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_emote_2,
-								navigation_grid_indices = {
-									2,
-									3,
-								},
-								animation_event_variable_data = {
-									index = "in_menu",
-									value = 1,
-								},
-								item_type = ITEM_TYPES.EMOTE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-							not self._is_readonly and {
-								animation_event_name_suffix = "_instant",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								disable_rotation_input = false,
-								display_name = "loc_inventory_title_slot_animation_emote_3",
-								loadout_slot = true,
-								scenegraph_id = "button_emote_3",
-								slot_title = "loc_inventory_title_slot_animation_emote_3",
-								widget_type = "emote_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_emote_3,
-								navigation_grid_indices = {
-									3,
-									3,
-								},
-								animation_event_variable_data = {
-									index = "in_menu",
-									value = 1,
-								},
-								item_type = ITEM_TYPES.EMOTE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-							not self._is_readonly and {
-								animation_event_name_suffix = "_instant",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								disable_rotation_input = false,
-								display_name = "loc_inventory_title_slot_animation_emote_4",
-								loadout_slot = true,
-								scenegraph_id = "button_emote_4",
-								slot_title = "loc_inventory_title_slot_animation_emote_4",
-								widget_type = "emote_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_emote_4,
-								navigation_grid_indices = {
-									4,
-									3,
-								},
-								animation_event_variable_data = {
-									index = "in_menu",
-									value = 1,
-								},
-								item_type = ITEM_TYPES.EMOTE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-							not self._is_readonly and {
-								animation_event_name_suffix = "_instant",
-								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
-								disable_rotation_input = false,
-								display_name = "loc_inventory_title_slot_animation_emote_5",
-								loadout_slot = true,
-								scenegraph_id = "button_emote_5",
-								slot_title = "loc_inventory_title_slot_animation_emote_5",
-								widget_type = "emote_item_slot",
-								size = {
-									64,
-									64,
-								},
-								slot = ItemSlotSettings.slot_animation_emote_5,
-								navigation_grid_indices = {
-									5,
-									3,
-								},
-								animation_event_variable_data = {
-									index = "in_menu",
-									value = 1,
-								},
-								item_type = ITEM_TYPES.EMOTE,
-								has_new_items_update_callback = function (item_type)
-									return self:has_new_items_by_type(item_type)
-								end,
-							} or nil,
-						},
-					},
-				},
-			},
-		},
+		inventory_view,
+		inventory_cosmetics_view
 	}
 
 	if self._is_own_player and not self._is_readonly then
 		self._views_settings[#self._views_settings + 1] = {
-			display_name = "loc_masteries_view_display_name",
 			view_name = "masteries_overview_view",
+			display_name = "loc_masteries_view_display_name",
 			update = function (content, style, dt)
 				content.show_alert = self._has_mastery_points_available
 			end,
 			context = {
 				can_exit = true,
-				player_mode = true,
+				player_mode = true
 			},
 			enter = function ()
 				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
@@ -1395,29 +1425,29 @@ InventoryBackgroundView._setup_top_panel = function (self)
 				self:_setup_profile_presets()
 
 				return {
-					force_instant_camera = true,
+					force_instant_camera = true
 				}
 			end,
 			view_context = {
-				can_exit = true,
 				draw_wallet = false,
+				can_exit = true,
 				player_mode = true,
 				mastery_traits = self._mastery_traits,
 				camera_settings = {
 					{
 						"event_mastery_set_camera",
-						true,
-					},
-				},
-			},
+						true
+					}
+				}
+			}
 		}
 	end
 
 	self:_update_has_empty_talent_nodes()
 
 	self._views_settings[#self._views_settings + 1] = {
-		display_name = "loc_talent_view_display_name",
 		view_name = "talent_builder_view",
+		display_name = "loc_talent_view_display_name",
 		update = function (content, style, dt)
 			content.hotspot.disabled = not self:is_inventory_synced()
 
@@ -1430,7 +1460,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		end,
 		context = {
 			can_exit = true,
-			player_mode = true,
+			player_mode = true
 		},
 		enter = function ()
 			if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
@@ -1447,7 +1477,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
 
 			return {
-				force_instant_camera = true,
+				force_instant_camera = true
 			}
 		end,
 		view_context = {
@@ -1458,17 +1488,17 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					"event_inventory_set_target_camera_offset",
 					is_ogryn and 5.2 or 3.5,
 					0,
-					0,
+					0
 				},
 				{
 					"event_inventory_set_target_camera_rotation",
-					false,
+					false
 				},
 				{
-					"event_inventory_set_camera_default_focus",
-				},
-			},
-		},
+					"event_inventory_set_camera_default_focus"
+				}
+			}
+		}
 	}
 
 	local views_settings = self._views_settings
@@ -1573,6 +1603,10 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 
 	if active_view and Managers.ui:view_active(active_view) then
 		Managers.ui:close_view(active_view)
+
+		if active_view == "talent_builder_view" then
+			self:_check_toggle_companion()
+		end
 	end
 
 	local context = {
@@ -1583,7 +1617,7 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 		current_profile_equipped_items = self._current_profile_equipped_items,
 		current_profile_equipped_talents = self._current_profile_equipped_talents,
 		changeable_context = additional_context_data,
-		is_readonly = self._is_readonly,
+		is_readonly = self._is_readonly
 	}
 
 	self._active_view = view_name
@@ -1732,10 +1766,11 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 
 	self:_update_loadout_validation()
 	self:_update_presentation_wield_item()
+	self:_check_toggle_companion()
 
 	if not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or not table.is_empty(self._modified_slots) then
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_inventory_error_loadout_items"),
+			text = Localize("loc_inventory_error_loadout_items")
 		})
 	end
 end
@@ -1862,7 +1897,7 @@ end
 
 local BREED_TO_EVENT_SUFFIX = {
 	human = "human",
-	ogryn = "ogryn",
+	ogryn = "ogryn"
 }
 
 InventoryBackgroundView._setup_background_world = function (self)
@@ -1917,6 +1952,7 @@ InventoryBackgroundView._setup_background_world = function (self)
 		end
 	end
 
+	self:_register_event("event_register_companion_spawn_point")
 	self:_register_event("event_register_character_spawn_point")
 
 	local world_name = InventoryBackgroundViewSettings.world_name
@@ -1944,6 +1980,10 @@ InventoryBackgroundView.spawn_point_unit = function (self)
 	return self._spawn_point_unit
 end
 
+InventoryBackgroundView.companion_spawn_point_unit = function (self)
+	return self._companion_spawn_point_unit
+end
+
 InventoryBackgroundView.on_resolution_modified = function (self)
 	InventoryBackgroundView.super.on_resolution_modified(self)
 
@@ -1962,6 +2002,16 @@ InventoryBackgroundView._update_viewport_resolution = function (self)
 
 	self._world_spawner:set_viewport_size(w_scale, h_scale)
 	self._world_spawner:set_viewport_position(x_scale, y_scale)
+end
+
+InventoryBackgroundView.event_register_companion_spawn_point = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_companion_spawn_point")
+
+	self._companion_spawn_point_unit = spawn_point_unit
+
+	if self._context then
+		self._context.companion_spawn_point_unit = spawn_point_unit
+	end
 end
 
 InventoryBackgroundView.event_register_character_spawn_point = function (self, spawn_point_unit)
@@ -2055,6 +2105,35 @@ InventoryBackgroundView._save_current_talents_to_profile_preset = function (self
 		local current_profile_equipped_talents = self._current_profile_equipped_talents
 
 		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, current_profile_equipped_talents, active_layout_version)
+	end
+end
+
+InventoryBackgroundView._check_toggle_companion = function (self)
+	if self._profile_spawner then
+		local talent_nodes = self._active_talent_loadout
+		local nodes = talent_nodes.nodes
+		local talents_by_talent_name = {}
+
+		for node_id, node in pairs(nodes) do
+			local widget_name = node.widget_name
+			local talent_name = node.talent
+
+			if self._current_profile_equipped_talents and self._current_profile_equipped_talents[widget_name] and self._current_profile_equipped_talents[widget_name] > 0 then
+				talents_by_talent_name[talent_name] = self._current_profile_equipped_talents[widget_name]
+			end
+		end
+
+		local talent_profile = {
+			archetype = self._presentation_profile.archetype,
+			talents = talents_by_talent_name
+		}
+		local is_companion_visible = self:_is_companion_visible(talent_profile)
+
+		if is_companion_visible ~= self._profile_spawner:is_companion_showing() then
+			local profile = self._presentation_profile
+
+			self:_spawn_profile(profile, is_companion_visible)
+		end
 	end
 end
 
@@ -2340,7 +2419,7 @@ InventoryBackgroundView._setup_inventory = function (self)
 	self:_update_equipped_items()
 end
 
-InventoryBackgroundView._spawn_profile = function (self, profile)
+InventoryBackgroundView._spawn_profile = function (self, profile, is_companion_visible)
 	local profile_spawner = self._profile_spawner
 
 	if profile_spawner then
@@ -2363,24 +2442,41 @@ InventoryBackgroundView._spawn_profile = function (self, profile)
 		profile_spawner:ignore_slot(slot_name)
 	end
 
+	local CharacterSheet = require("scripts/utilities/character_sheet")
 	local camera_position = ScriptCamera.position(camera)
 	local spawn_point_unit = self._spawn_point_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local companion_spawn_position = self._companion_spawn_point_unit and Unit.world_position(self._companion_spawn_point_unit, 1)
+	local companion_spawn_rotation = self._companion_spawn_point_unit and Unit.world_rotation(self._companion_spawn_point_unit, 1)
 
 	camera_position.z = 0
 
 	local selected_archetype = profile.archetype
-	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
+	local breed_name = selected_archetype.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
+	local companion_data = {
+		position = companion_spawn_position,
+		rotation = companion_spawn_rotation
+	}
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, inventory_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, inventory_state_machine, nil, nil, nil, nil, nil, nil, nil, companion_data)
+
+	if is_companion_visible == nil then
+		is_companion_visible = self:_is_companion_visible(profile)
+	end
+
+	profile_spawner:toggle_companion(is_companion_visible)
 
 	self._profile_spawner = profile_spawner
 	self._spawned_profile = profile
 
 	self:_update_presentation_wield_item()
+end
+
+InventoryBackgroundView._is_companion_visible = function (self, profile)
+	return ProfileUtils.has_companion(profile)
 end
 
 InventoryBackgroundView._set_preview_wield_slot_id = function (self, slot_id)
@@ -2509,7 +2605,7 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 		self:_check_mastery_sync_status()
 	end):catch(function ()
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
+			text = Localize("loc_popup_description_backend_error")
 		})
 		self:cb_on_close_pressed()
 	end)
@@ -2558,11 +2654,11 @@ InventoryBackgroundView._check_mastery_sync_status = function (self)
 end
 
 local ALLOWED_DUPLICATE_SLOTS = {
-	slot_animation_emote_1 = true,
-	slot_animation_emote_2 = true,
 	slot_animation_emote_3 = true,
-	slot_animation_emote_4 = true,
 	slot_animation_emote_5 = true,
+	slot_animation_emote_4 = true,
+	slot_animation_emote_1 = true,
+	slot_animation_emote_2 = true
 }
 
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
@@ -2597,7 +2693,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 					if checked_gear_id == item_gear_id and checked_slot_name ~= slot_name and not invalid_slots[slot_name] and (not ALLOWED_DUPLICATE_SLOTS[checked_slot_name] or not ALLOWED_DUPLICATE_SLOTS[slot_name]) then
 						duplicated_slots[checked_slot_name] = true
 
-						goto label_1_0
+						goto label_150_0
 					end
 				end
 
@@ -2616,7 +2712,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			end
 		end
 
-		::label_1_0::
+		::label_150_0::
 	end
 
 	for removed_slot_id, _ in pairs(invalid_slots) do
@@ -2693,11 +2789,11 @@ InventoryBackgroundView._get_valid_new_items = function (self, inventory_items)
 	local new_item_lists = {
 		{
 			is_character_data = true,
-			data = character_data.new_items,
+			data = character_data.new_items
 		},
 		{
-			data = account_new_items_data,
-		},
+			data = account_new_items_data
+		}
 	}
 
 	for i = 1, #new_item_lists do

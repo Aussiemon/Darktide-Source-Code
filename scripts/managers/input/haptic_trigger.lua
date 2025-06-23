@@ -35,11 +35,11 @@ HapticTrigger.init = function (self, trigger_side)
 	self._vibration_frequency = 0
 	self._resistance_multiplier = {
 		[WIELD_STATE.melee] = DEFAULT_RESISTANCE_MULTIPLIER,
-		[WIELD_STATE.ranged] = DEFAULT_RESISTANCE_MULTIPLIER,
+		[WIELD_STATE.ranged] = DEFAULT_RESISTANCE_MULTIPLIER
 	}
 	self._vibration_multiplier = {
 		[WIELD_STATE.melee] = DEFAULT_VIBRATION_MULTIPLIER,
-		[WIELD_STATE.ranged] = DEFAULT_VIBRATION_MULTIPLIER,
+		[WIELD_STATE.ranged] = DEFAULT_VIBRATION_MULTIPLIER
 	}
 	self._trigger_side = trigger_side
 	self._trigger_index = trigger_side == "left" and TRIGGER_INDEX.l2 or TRIGGER_INDEX.r2
@@ -322,7 +322,7 @@ HapticTrigger._set_vibration_effect = function (self, settings_type, position, f
 end
 
 local _multi_position_vibration_params = {
-	[2] = {},
+	[2] = {}
 }
 
 HapticTrigger._set_multi_position_vibration_effect = function (self, settings_type, frequency, amplitude)

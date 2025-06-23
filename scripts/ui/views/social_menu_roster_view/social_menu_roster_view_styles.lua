@@ -7,33 +7,33 @@ local PerlinNoise = require("scripts/utilities/perlin_noise")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local social_menu_roster_view_styles = {
 	default_frame_material = "content/ui/textures/nameplates/portrait_frames/default",
+	roster_grid_mask_expansion = 20,
 	default_insignia_material = "content/ui/textures/nameplates/insignias/default",
 	panel_header_height = 58,
-	roster_grid_mask_expansion = 20,
 	roster_panel_size = {
 		1030,
-		680,
+		680
 	},
 	grid_margin = {
 		20,
-		20,
+		20
 	},
 	grid_spacing = {
 		30,
-		20,
+		20
 	},
 	player_panel_size = {
 		480,
-		80,
+		80
 	},
 	portrait_size = {
 		72,
-		80,
+		80
 	},
 	insignia_size = {
 		32,
-		80,
-	},
+		80
+	}
 }
 local flicker_min_time_between = 1.5
 local flicker_max_time_between = 5
@@ -49,20 +49,20 @@ party_panel_style.background = {
 	color = Color.terminal_grid_background(255, true),
 	size_addition = {
 		18,
-		26,
+		26
 	},
 	offset = {
 		-9,
 		-13,
-		0,
-	},
+		0
+	}
 }
 party_panel_style.header = table.clone(UIFontSettings.header_3)
 party_panel_header_style = party_panel_style.header
 party_panel_header_style.offset = {
 	0,
 	-40,
-	0,
+	0
 }
 party_panel_header_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 party_panel_header_style.text_color = Color.white(255, true)
@@ -76,19 +76,19 @@ for i = 1, SocialMenuSettings.max_num_party_members do
 	local party_panel_vertical_offset = (i - 1) * (grid_spacing[2] + player_panel_size[2])
 
 	party_panel_style[key] = {
-		text_horizontal_alignment = "center",
 		text_vertical_alignment = "center",
+		text_horizontal_alignment = "center",
 		offset = {
 			0,
 			party_panel_vertical_offset,
-			10,
+			10
 		},
 		size = player_panel_size,
 		color = Color.black(255, true),
 		text_color = Color.ui_grey_medium(255, true),
 		font_type = UIFontSettings.body.font_type,
 		font_size = UIFontSettings.body.font_size,
-		content_key = i,
+		content_key = i
 	}
 end
 
@@ -98,12 +98,12 @@ local party_window_1 = party_panel_style.window_1
 
 party_window_1.size = {
 	78,
-	122,
+	122
 }
 party_window_1.offset = {
 	111,
 	20,
-	1,
+	1
 }
 party_window_1.content_key = 1
 party_panel_style.window_2 = table.clone(party_window_1)
@@ -133,19 +133,19 @@ roster_panel_style.background = {
 	offset = {
 		-9,
 		-13,
-		0,
+		0
 	},
 	color = Color.terminal_grid_background(255, true),
 	size_addition = {
 		18,
-		26,
-	},
+		26
+	}
 }
 social_menu_roster_view_styles.roster_grid = {
 	mask_expansion = {
 		18,
-		18,
-	},
+		18
+	}
 }
 social_menu_roster_view_styles.blueprints = {}
 
@@ -161,7 +161,7 @@ show_hint_text_style.text_vertical_alignment = "center"
 show_hint_text_style.offset = {
 	0,
 	0,
-	10,
+	10
 }
 show_hint_style.text = show_hint_text_style
 blueprint_styles.player_plaque = {}
@@ -174,34 +174,34 @@ player_plaque_style.background = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	color = Color.terminal_corner_hover(120, true),
 	default_color = Color.terminal_corner_hover(120, true),
-	hover_color = Color.terminal_corner_hover(255, true),
+	hover_color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.portrait = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
 	material_values = {
-		columns = 1,
-		grid_index = 1,
-		rows = 1,
 		use_placeholder_texture = 1,
-	},
+		rows = 1,
+		columns = 1,
+		grid_index = 1
+	}
 }
 player_plaque_style.portrait_overlay = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
 		0,
 		0,
-		5,
+		5
 	},
-	color = Color.terminal_corner_hover(255, true),
+	color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.character_insignia = {
 	horizontal_alignment = "left",
@@ -209,9 +209,9 @@ player_plaque_style.character_insignia = {
 	offset = {
 		-40,
 		0,
-		1,
+		1
 	},
-	material_values = {},
+	material_values = {}
 }
 player_plaque_style.name_or_activity = table.clone(UIFontSettings.body)
 
@@ -228,7 +228,7 @@ player_name_style.font_size_small = UIFontSettings.body_small.font_size
 player_name_style.offset = {
 	85,
 	14,
-	1,
+	1
 }
 player_plaque_style.account_name = table.clone(UIFontSettings.body_small)
 
@@ -242,7 +242,7 @@ account_name_style.font_size_large = UIFontSettings.body.font_size
 account_name_style.offset = {
 	85,
 	48,
-	1,
+	1
 }
 account_name_style.vertical_offset_default = 47
 account_name_style.vertical_offset_large = 40
@@ -256,20 +256,20 @@ party_membership_style.text_horizontal_alignment = "right"
 party_membership_style.offset = {
 	-16,
 	14,
-	1,
+	1
 }
 player_plaque_style.highlight = {
 	highlight_size_addition = 10,
 	color = Color.terminal_corner_hover(0, true),
 	size_addition = {
 		0,
-		0,
+		0
 	},
 	offset = {
 		0,
 		0,
-		3,
-	},
+		3
+	}
 }
 blueprint_styles.player_plaque_platform_online = {}
 
@@ -279,27 +279,27 @@ player_plaque_platform_online_style.background = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	color = Color.black(255, true),
 	default_color = Color.black(255, true),
-	hover_color = Color.terminal_frame_hover(255, true),
+	hover_color = Color.terminal_frame_hover(255, true)
 }
 player_plaque_platform_online_style.portrait = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
 		0,
 		0,
-		1,
-	},
+		1
+	}
 }
 player_plaque_platform_online_style.portrait_overlay = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
 		0,
 		0,
-		5,
-	},
+		5
+	}
 }
 player_plaque_platform_online_style.account_name = table.clone(UIFontSettings.body)
 
@@ -310,7 +310,7 @@ platform_online_account_name_style.hover_color = Color.terminal_text_header_sele
 platform_online_account_name_style.offset = {
 	85,
 	40,
-	2,
+	2
 }
 player_plaque_platform_online_style.status = table.clone(UIFontSettings.body_small)
 
@@ -321,7 +321,7 @@ platform_online_status_style.hover_color = Color.terminal_text_body(255, true)
 platform_online_status_style.offset = {
 	85,
 	14,
-	2,
+	2
 }
 player_plaque_platform_online_style.highlight = table.clone(player_plaque_style.highlight)
 blueprint_styles.player_plaque_offline = {}
@@ -332,20 +332,20 @@ player_plaque_offline_style.background = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	color = Color.black(255, true),
 	default_color = Color.black(255, true),
-	hover_color = Color.terminal_corner_hover(255, true),
+	hover_color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_offline_style.icon_background = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
 		0,
 		0,
-		1,
+		1
 	},
-	color = Color.black(255, true),
+	color = Color.black(255, true)
 }
 player_plaque_offline_style.account_name = table.clone(UIFontSettings.body)
 
@@ -356,7 +356,7 @@ offline_account_name_style.hover_color = Color.ui_brown_super_light(255, true)
 offline_account_name_style.offset = {
 	85,
 	40,
-	2,
+	2
 }
 player_plaque_offline_style.status = table.clone(UIFontSettings.body_small)
 
@@ -367,7 +367,7 @@ offline_status_style.hover_color = Color.ui_brown_super_light(255, true)
 offline_status_style.offset = {
 	85,
 	14,
-	2,
+	2
 }
 player_plaque_offline_style.highlight = table.clone(player_plaque_style.highlight)
 blueprint_styles.player_plaque_blocked = table.clone(blueprint_styles.player_plaque_offline)
@@ -375,7 +375,7 @@ blueprint_styles.player_plaque_blocked = table.clone(blueprint_styles.player_pla
 local player_plaque_blocked_style = blueprint_styles.player_plaque_blocked
 
 player_plaque_blocked_style.icon_blocked = {
-	size = social_menu_roster_view_styles.portrait_size,
+	size = social_menu_roster_view_styles.portrait_size
 }
 blueprint_styles.group_header = {}
 
@@ -383,7 +383,7 @@ local group_header_style = blueprint_styles.group_header
 
 group_header_style.size = {
 	social_menu_roster_view_styles.roster_panel_size[1],
-	12,
+	12
 }
 group_header_style.text = table.clone(UIFontSettings.body_small)
 
@@ -393,7 +393,7 @@ group_header_text_style.text_color = Color.terminal_text_header(255, true)
 group_header_text_style.offset = {
 	0,
 	-5,
-	1,
+	1
 }
 blueprint_styles.list_divider = {}
 
@@ -403,18 +403,18 @@ list_divider_style.width_without_scrollbar = social_menu_roster_view_styles.rost
 list_divider_style.width_with_scrollbar = social_menu_roster_view_styles.roster_panel_size[1] - 11
 list_divider_style.size = {
 	social_menu_roster_view_styles.roster_panel_size[1],
-	2,
+	2
 }
 list_divider_style.divider = {
 	offset = {
 		-17,
 		-21,
-		1,
+		1
 	},
 	size = {
 		list_divider_style.width_without_scrollbar,
-		44,
-	},
+		44
+	}
 }
 social_menu_roster_view_styles.change_functions = {}
 

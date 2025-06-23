@@ -15,7 +15,7 @@ StateMachine.init = function (self, name, parent, ...)
 
 	self._name = name
 	self._global_args = {
-		...,
+		...
 	}
 	self._events = {}
 	self._pending_event = nil
@@ -34,7 +34,7 @@ StateMachine.init = function (self, name, parent, ...)
 		parent_stack[#parent_stack + 1] = self
 	else
 		self._state_machine_stack = {
-			self,
+			self
 		}
 	end
 
@@ -95,14 +95,14 @@ end
 
 StateMachine.set_initial_state = function (self, state_class, ...)
 	self._current_state = self:_enter_state(state_class, {
-		...,
+		...
 	})
 end
 
 local function pop_first(first, ...)
 	if first ~= nil then
 		return first, {
-			...,
+			...
 		}
 	end
 end
@@ -157,7 +157,7 @@ StateMachine.event = function (self, event_name, ...)
 
 	root._pending_event = event_name
 	root._pending_args = {
-		...,
+		...
 	}
 end
 

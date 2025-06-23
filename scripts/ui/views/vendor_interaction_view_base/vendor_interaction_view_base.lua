@@ -21,7 +21,7 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 
 	if type(self._wallet_type) == "string" then
 		self._wallet_type = {
-			self._wallet_type,
+			self._wallet_type
 		}
 	end
 
@@ -32,13 +32,13 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 	end
 
 	self._option_button_settings = definitions.option_button_settings or {
-		grow_vertically = true,
 		spacing = 10,
-		button_template = ButtonPassTemplates.list_button_with_background,
+		grow_vertically = true,
+		button_template = ButtonPassTemplates.list_button_with_background
 	}
 	self._button_input_actions = {
 		"navigate_down_continuous",
-		"navigate_up_continuous",
+		"navigate_up_continuous"
 	}
 
 	local parent = context and context.parent
@@ -67,10 +67,14 @@ VendorInteractionViewBase.on_enter = function (self)
 	end
 
 	self:_setup_tab_bar({
-		tabs_params = {},
+		tabs_params = {}
 	})
 
 	local button_options_definitions = self._base_definitions.button_options_definitions
+
+	if type(button_options_definitions) == "function" then
+		button_options_definitions = button_options_definitions()
+	end
 
 	self:_setup_option_buttons(button_options_definitions)
 
@@ -104,7 +108,7 @@ end
 
 VendorInteractionViewBase._switch_tab = function (self, index)
 	local additional_context = {
-		wallet_type = self._wallet_type,
+		wallet_type = self._wallet_type
 	}
 
 	VendorInteractionViewBase.super._switch_tab(self, index, additional_context)
@@ -247,7 +251,7 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 		else
 			self:_close_active_view()
 			self:_setup_tab_bar({
-				tabs_params = {},
+				tabs_params = {}
 			})
 
 			self._next_view = nil
@@ -264,7 +268,7 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 					widgets_by_name.title_text,
 					widgets_by_name.description_text,
 					widgets_by_name.button_divider,
-					widgets_by_name.title_text,
+					widgets_by_name.title_text
 				}
 				local button_widgets = self._button_widgets
 
@@ -295,7 +299,7 @@ VendorInteractionViewBase._present_options = function (self)
 			widgets_by_name.title_text,
 			widgets_by_name.description_text,
 			widgets_by_name.button_divider,
-			widgets_by_name.title_text,
+			widgets_by_name.title_text
 		}
 		local button_widgets = self._button_widgets
 
@@ -337,7 +341,7 @@ VendorInteractionViewBase._setup_option_buttons = function (self, options)
 		local grow_vertically = option_button_settings.grow_vertically
 		local size = {
 			button_scenegraph_definition.size[1],
-			button_scenegraph_definition.size[2],
+			button_scenegraph_definition.size[2]
 		}
 
 		if template then
@@ -430,7 +434,7 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 			widgets_by_name.title_text,
 			widgets_by_name.description_text,
 			widgets_by_name.button_divider,
-			widgets_by_name.title_text,
+			widgets_by_name.title_text
 		}
 		local button_widgets = self._button_widgets
 
@@ -616,7 +620,7 @@ VendorInteractionViewBase._set_wallet_background_width = function (self, total_w
 
 		corner_right.content.original_size = {
 			corner_width,
-			corner_height,
+			corner_height
 		}
 	end
 
@@ -727,7 +731,7 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
-			is_opinion_vo = is_opinion_vo,
+			is_opinion_vo = is_opinion_vo
 		}
 		local queued_vo_event_request = self._queued_vo_event_request
 

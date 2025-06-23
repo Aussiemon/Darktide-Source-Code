@@ -67,20 +67,20 @@ EnemyEventSpawner.component_data = {
 	inputs = {
 		spawn_event_enemies = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	compositions = {
-		ui_name = "Compositions",
-		ui_type = "combo_box",
 		value = "nurgle_totem",
+		ui_type = "combo_box",
+		ui_name = "Compositions",
 		options_keys = {
-			"nurgle_totem",
+			"nurgle_totem"
 		},
 		options_values = {
-			"nurgle_totem",
-		},
-	},
+			"nurgle_totem"
+		}
+	}
 }
 
 return EnemyEventSpawner

@@ -12,16 +12,16 @@ local resources = {
 	beam_particle_name = beam_particle_name,
 	beam_sound_event = beam_sound_event,
 	beam_stop_sound_event = beam_stop_sound_event,
-	recharge_particle_name = recharge_particle_name,
+	recharge_particle_name = recharge_particle_name
 }
 local vfx = {
-	flamer_particle = "content/fx/particles/enemies/linked_beam",
 	flamer_velocity_variable_name = "velocity",
-	num_parabola_control_points = 4,
+	flamer_particle = "content/fx/particles/enemies/linked_beam",
+	num_parabola_control_points = 4
 }
 local sfx = {
 	looping_sfx_start_event = "wwise/events/minions/play_minion_twins_void_shield_link",
-	looping_sfx_stop_event = "wwise/events/minions/stop_minion_twins_void_shield_link",
+	looping_sfx_stop_event = "wwise/events/minions/stop_minion_twins_void_shield_link"
 }
 
 local function _get_positions(unit, local_player_unit, template_data, game_session, game_object_id)
@@ -76,7 +76,7 @@ local effect_template = {
 			from_unit = linked_unit,
 			from_node = from_node,
 			radius = RADIUS,
-			range = RANGE,
+			range = RANGE
 		}
 
 		local t = Managers.time:time("gameplay")
@@ -114,7 +114,7 @@ local effect_template = {
 				from_unit = linked_unit,
 				from_node = from_node,
 				radius = RADIUS,
-				range = RANGE,
+				range = RANGE
 			}
 			template_data.data = data
 
@@ -151,7 +151,7 @@ local effect_template = {
 		if template_data.recharge_particle_id then
 			World.stop_spawning_particles(world, template_data.recharge_particle_id)
 		end
-	end,
+	end
 }
 
 return effect_template

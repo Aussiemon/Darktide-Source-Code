@@ -139,7 +139,7 @@ PlayerUnitLocomotionExtension.game_object_initialized = function (self, session,
 		is_local_unit = self._is_local_unit,
 		is_server = self._is_server,
 		game_session = session,
-		game_object_id = object_id,
+		game_object_id = object_id
 	}
 
 	self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(self._unit, init_context)
@@ -932,7 +932,7 @@ PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
 			is_husk = false,
 			player_character_constants = self._constants,
 			is_local_unit = self._is_local_unit,
-			is_server = self._is_server,
+			is_server = self._is_server
 		}
 
 		self._movement_direction_animation_control = ThirdPersonHubMovementDirectionAnimationControl:new(unit, init_context)

@@ -33,7 +33,7 @@ Options.create_percent_slider_template = function (params)
 		apply_on_drag = params.apply_on_drag,
 		tooltip_text = params.tooltip_text,
 		id = params.id,
-		is_sub_setting = params.is_sub_setting,
+		is_sub_setting = params.is_sub_setting
 	}
 
 	return slider_template
@@ -87,7 +87,7 @@ Options.create_value_slider_template = function (params)
 		apply_on_drag = params.apply_on_drag,
 		tooltip_text = params.tooltip_text,
 		id = params.id,
-		is_sub_setting = params.is_sub_setting,
+		is_sub_setting = params.is_sub_setting
 	}
 
 	return slider_template

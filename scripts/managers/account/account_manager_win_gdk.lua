@@ -10,7 +10,7 @@ local SIGNIN_STATES = {
 	fetching_privileges = "loc_signin_fetch_privileges",
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
 	idle = "",
-	signin_profile = "loc_signin_acquiring_user_profile",
+	signin_profile = "loc_signin_acquiring_user_profile"
 }
 
 AccountManagerWinGDK.init = function (self)
@@ -422,11 +422,11 @@ AccountManagerWinGDK._show_fatal_error = function (self, title_text, description
 		description_text = description_text,
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "_return_to_title_screen"),
-			},
-		},
+				close_on_pressed = true,
+				callback = callback(self, "_return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -440,13 +440,13 @@ AccountManagerWinGDK._show_store_account_error = function (self, title_text, des
 		description_text = description_text,
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_button_close",
+				close_on_pressed = true,
 				callback = optional_callback or function ()
 					return
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -471,6 +471,78 @@ AccountManagerWinGDK._setup_region = function (self)
 	self._region_restrictions = RegionRestrictionsXboxLive[country_code] or {}
 
 	Log.info("AccountManagerWinGDK", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
+end
+
+AccountManagerWinGDK.open_to_store = function (self, product_id)
+	local async_job, error_code = XboxLive.show_product_page_ui_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code)
+		})
+	end
+
+	local was_focus_lost = false
+
+	return Promise.until_value_is_true(function ()
+		local has_focus = Window.has_focus()
+
+		if not has_focus then
+			was_focus_lost = true
+		end
+
+		if not was_focus_lost then
+			return false
+		end
+
+		if not has_focus then
+			return false
+		end
+
+		local result = XboxLive.show_product_page_ui_async_result(async_job)
+
+		if result == nil then
+			return false
+		end
+
+		if result == 0 then
+			return {
+				success = true
+			}
+		else
+			return {
+				success = false
+			}
+		end
+	end)
+end
+
+AccountManagerWinGDK.is_owner_of = function (self, product_id)
+	local async_job, error_code = XboxLive.acquire_license_for_durables_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code)
+		})
+	end
+
+	return Promise.until_value_is_true(function ()
+		local result, error_code = XboxLive.acquire_license_for_durables_async_result(async_job)
+
+		if result == nil and error_code == nil then
+			return false
+		end
+
+		if result ~= nil then
+			return {
+				is_owner = result
+			}
+		end
+
+		return {
+			is_owner = false
+		}
+	end)
 end
 
 return AccountManagerWinGDK

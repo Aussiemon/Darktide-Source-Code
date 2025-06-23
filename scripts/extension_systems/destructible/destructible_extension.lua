@@ -23,7 +23,7 @@ DestructibleExtension.init = function (self, extension_init_context, unit, exten
 	self._visibility_info = {
 		fake_light = false,
 		lights_enabled = true,
-		visible = true,
+		visible = true
 	}
 	self._owner_system = extension_init_context.owner_system
 end
@@ -103,7 +103,7 @@ DestructibleExtension.setup_from_component = function (self, despawn_timer_durat
 		force_direction = direction,
 		force_direction_type = force_direction_type,
 		start_visible = start_visible,
-		collision_actors = {},
+		collision_actors = {}
 	}
 
 	if #collision_actor_names > 0 then

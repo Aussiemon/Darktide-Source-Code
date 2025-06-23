@@ -14,37 +14,37 @@ local PlayerCharacterStateCatapulted = class("PlayerCharacterStateCatapulted", "
 local CATAPULTED_ANIMS = {
 	forward = {
 		enter = {
-			anim_1p = "airtime_fwd",
 			anim_3p = "airtime_bwd",
+			anim_1p = "airtime_fwd"
 		},
 		exit = {
-			anim_1p = "airtime_fwd",
 			anim_3p = "airtime_bwd",
+			anim_1p = "airtime_fwd"
 		},
 		collide = {
-			anim_1p = "airtime_fwd",
 			anim_3p = "airtime_bwd",
-		},
+			anim_1p = "airtime_fwd"
+		}
 	},
 	backward = {
 		enter = {
-			anim_1p = "airtime_bwd",
 			anim_3p = "airtime_fwd",
+			anim_1p = "airtime_bwd"
 		},
 		exit = {
-			anim_1p = "airtime_bwd",
 			anim_3p = "airtime_fwd",
+			anim_1p = "airtime_bwd"
 		},
 		collide = {
-			anim_1p = "airtime_bwd",
 			anim_3p = "airtime_fwd",
-		},
-	},
+			anim_1p = "airtime_bwd"
+		}
+	}
 }
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_PROPERTIES = {
-	stinger_type = "catapulted",
+	stinger_type = "catapulted"
 }
 
 PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -83,7 +83,6 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 	end
 
 	self:_trigger_anim_event(catapulted_direction, "enter")
-	self._fx_extension:trigger_looping_wwise_event("catapulted", "head")
 
 	local is_server = self._is_server
 
@@ -130,7 +129,6 @@ PlayerCharacterStateCatapulted.on_exit = function (self, unit, t, next_state)
 		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
 	end
 
-	fx_extension:stop_looping_wwise_event("catapulted")
 	Fall.trigger_impact_sound(unit, fx_extension, constants, locomotion_component, inair_state_component)
 	Fall.set_fall_height(self._locomotion_component, self._inair_state_component)
 
@@ -138,6 +136,8 @@ PlayerCharacterStateCatapulted.on_exit = function (self, unit, t, next_state)
 end
 
 PlayerCharacterStateCatapulted.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
+	self._fx_extension:run_looping_sound("catapulted", "head", nil, fixed_frame)
+
 	if self._skip_next_frame then
 		self._skip_next_frame = false
 

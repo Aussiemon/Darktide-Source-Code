@@ -13,26 +13,26 @@ local UNFILLED_OUTLINE_COLOR = {
 	255,
 	166,
 	192,
-	147,
+	147
 }
 local FILLED_OUTLINE_COLOR = {
 	255,
 	241,
 	255,
-	230,
+	230
 }
 local weapon_counter_template_kill_charges = {
-	data = {},
+	data = {}
 }
 local length = 240
 local thickness = 240
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 
 weapon_counter_template_kill_charges.name = "kill_charges"
@@ -225,7 +225,7 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 	local charge_bar_offset_right = {
 		60,
 		41,
-		1,
+		1
 	}
 
 	local function create_passes(num_bars)
@@ -235,72 +235,72 @@ weapon_counter_template_kill_charges.create_widget_defintion = function (scenegr
 			local offset = {
 				charge_bar_offset_right[1],
 				charge_bar_offset_right[2],
-				ii + 1,
+				ii + 1
 			}
 
 			passes[ii] = {
-				pass_type = "texture",
 				value = "content/ui/materials/effects/forcesword_bar",
+				pass_type = "texture",
 				style_id = string.format("charge_bar_%d", ii),
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					offset = offset,
 					size = {
 						size[1],
-						size[2],
+						size[2]
 					},
 					color = UIHudSettings.color_tint_main_1,
 					material_values = {
-						amount = 0.5,
 						glow_on_off = 0,
 						lightning_opacity = 0,
+						amount = 0.5,
 						arc_top_bottom = {
 							1,
-							0,
+							0
 						},
 						fill_outline_opacity = {
 							FILLED_FILL_OPACITY,
-							1,
+							1
 						},
-						outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
-					},
-				},
+						outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR)
+					}
+				}
 			}
 		end
 
 		passes[#passes + 1] = {
-			pass_type = "texture",
-			style_id = "lightning_and_glow",
 			value = "content/ui/materials/effects/forcesword_bar",
+			style_id = "lightning_and_glow",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					charge_bar_offset_right[1],
 					charge_bar_offset_right[2],
-					1,
+					1
 				},
 				size = {
 					size[1],
-					size[2],
+					size[2]
 				},
 				color = UIHudSettings.color_tint_main_1,
 				material_values = {
-					amount = 0,
 					glow_on_off = 0,
 					lightning_opacity = 0,
+					amount = 0,
 					arc_top_bottom = {
 						0,
-						1,
+						1
 					},
 					fill_outline_opacity = {
 						FILLED_FILL_OPACITY,
-						1,
+						1
 					},
-					outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR),
-				},
-			},
+					outline_color = Colors.format_color_to_material(UNFILLED_OUTLINE_COLOR)
+				}
+			}
 		}
 
 		return passes

@@ -21,7 +21,7 @@ local CLIENT_RPCS = {
 	"rpc_mission_objective_zone_set_waiting_for_confirmation",
 	"rpc_event_mission_objective_zone_activate_zone",
 	"rpc_event_mission_objective_zone_follow_spline",
-	"rpc_mission_objective_zone_finished",
+	"rpc_mission_objective_zone_finished"
 }
 
 MissionObjectiveZoneSystem.init = function (self, context, system_init_data, ...)
@@ -56,13 +56,7 @@ MissionObjectiveZoneSystem.on_gameplay_post_init = function (self, level)
 		self:_select_units_for_event()
 	end
 
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		if extension.on_gameplay_post_init then
-			extension:on_gameplay_post_init(level)
-		end
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)

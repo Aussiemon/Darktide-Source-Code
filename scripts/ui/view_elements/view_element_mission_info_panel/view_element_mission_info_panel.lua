@@ -42,7 +42,7 @@ ViewElementMissionInfoPanel.init = function (self, parent, draw_layer, start_sca
 	old_mission_header.offset = {
 		0,
 		0,
-		2,
+		2
 	}
 	widgets[#widgets + 1] = old_mission_header
 	self._new_mission_data = nil
@@ -63,10 +63,10 @@ ViewElementMissionInfoPanel.init = function (self, parent, draw_layer, start_sca
 	self._handled_mouse_input = false
 	self._old_details_list_widgets = {}
 	self._mission_info_animation_params = {
-		target_heights = {},
+		target_heights = {}
 	}
 	self._status_report_animation_params = {
-		target_heights = {},
+		target_heights = {}
 	}
 
 	self:_create_offscreen_renderer()
@@ -184,7 +184,7 @@ ViewElementMissionInfoPanel._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -259,8 +259,8 @@ ViewElementMissionInfoPanel._create_list_widgets = function (self, content, num_
 			alignment_widget = {
 				size = {
 					template.size[1],
-					template.size[2],
-				},
+					template.size[2]
+				}
 			}
 		end
 

@@ -12,49 +12,49 @@ local widget_blueprints_by_type = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	image = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "texture",
 				style_id = "texture",
-				value = "content/ui/materials/backgrounds/default_square",
 				value_id = "texture",
+				pass_type = "texture",
+				value = "content/ui/materials/backgrounds/default_square",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					color = Color.white(255, true),
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
 		end,
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
@@ -69,40 +69,40 @@ local widget_blueprints_by_type = {
 			if color then
 				style.texture.color = color
 			end
-		end,
+		end
 	},
 	header = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
 					font_size = 28,
+					text_vertical_alignment = "top",
 					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
-					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_header(255, true),
 					size = {
 						grid_size[1],
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -131,40 +131,40 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	sub_header = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
 					font_size = 20,
+					text_vertical_alignment = "top",
 					font_type = "proxima_nova_bold",
 					text_horizontal_alignment = "left",
-					text_vertical_alignment = "top",
 					text_color = Color.terminal_text_body_sub_header(255, true),
 					size = {
 						grid_size[1],
-						0,
+						0
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
-			},
+						0
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -193,32 +193,32 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	body = {
 		size = {
 			grid_size[1],
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
-					font_size = 20,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "left",
+					font_size = 20,
 					text_vertical_alignment = "top",
+					text_horizontal_alignment = "left",
 					text_color = Color.text_default(255, true),
 					offset = {
 						0,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -247,8 +247,8 @@ local widget_blueprints_by_type = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
-	},
+		end
+	}
 }
 
 return widget_blueprints_by_type

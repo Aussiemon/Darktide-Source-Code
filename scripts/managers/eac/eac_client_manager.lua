@@ -66,7 +66,7 @@ EACClientManager.authenticate = function (self)
 			_info("recieved user id from xbox live,  trying to authenticate with eos")
 		end):catch(function (error)
 			Managers.error:report_error(EACError:new("Error fetching xbox live user_id: %s", {
-				error_code = error,
+				error_code = error
 			}))
 		end)
 	else

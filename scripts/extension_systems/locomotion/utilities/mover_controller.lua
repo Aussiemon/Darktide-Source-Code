@@ -10,7 +10,7 @@ end
 
 MoverController.create_mover_state = function ()
 	return {
-		disable_reasons = {},
+		disable_reasons = {}
 	}
 end
 

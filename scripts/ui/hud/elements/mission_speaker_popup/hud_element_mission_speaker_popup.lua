@@ -22,7 +22,7 @@ HudElementMissionSpeakerPopup.init = function (self, parent, draw_layer, start_s
 		widget.offset = {
 			bar_offset[1] - (bar_size[1] + bar_spacing) * (i - 1),
 			bar_offset[2],
-			bar_offset[3],
+			bar_offset[3]
 		}
 		bar_widgets[i] = widget
 	end

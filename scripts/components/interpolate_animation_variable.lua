@@ -133,63 +133,63 @@ end
 
 InterpolateAnimationVariable.component_data = {
 	variable_name = {
-		category = "Transition",
-		ui_name = "Variable Name",
 		ui_type = "text_box",
 		value = "speed",
+		ui_name = "Variable Name",
+		category = "Transition"
 	},
 	val_from = {
-		category = "Transition",
-		decimals = 100,
-		step = 0.1,
-		ui_name = "Value From",
 		ui_type = "number",
+		decimals = 100,
+		category = "Transition",
 		value = 0,
+		ui_name = "Value From",
+		step = 0.1
 	},
 	val_to = {
-		category = "Transition",
-		decimals = 100,
-		step = 0.1,
-		ui_name = "Value To",
 		ui_type = "number",
+		decimals = 100,
+		category = "Transition",
 		value = 1,
+		ui_name = "Value To",
+		step = 0.1
 	},
 	method = {
+		value = "linear",
+		ui_type = "combo_box",
 		category = "Transition",
 		ui_name = "Interpolation Method",
-		ui_type = "combo_box",
-		value = "linear",
 		options_keys = {
 			"Linear",
-			"Easing",
+			"Easing"
 		},
 		options_values = {
 			"linear",
-			"easing",
-		},
+			"easing"
+		}
 	},
 	transition_time = {
-		category = "Transition",
-		decimals = 100,
-		step = 0.1,
-		ui_name = "Transition time",
 		ui_type = "number",
+		decimals = 100,
+		category = "Transition",
 		value = 1,
+		ui_name = "Transition time",
+		step = 0.1
 	},
 	inputs = {
 		function_advance = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		function_revert = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		function_stop = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return InterpolateAnimationVariable

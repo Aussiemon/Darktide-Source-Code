@@ -7,43 +7,43 @@ local custom_settings_view_settings = require("scripts/ui/views/custom_settings_
 local settings_grid_width = custom_settings_view_settings.settings_grid_width
 local gamma_settings = {
 	{
-		default_value = 1,
 		id = "checker",
+		default_value = 1,
 		widget_type = "gamma_texture",
 		update = function (template)
 			return (Application.user_setting("gamma") or 0) + 1 or template.default_value
-		end,
+		end
 	},
 	{
-		widget_type = "extra_large_spacing",
+		widget_type = "extra_large_spacing"
 	},
 	{
-		display_name = "loc_setting_brightness_gamma_description",
 		shrink_to_fit = true,
+		display_name = "loc_setting_brightness_gamma_description",
 		widget_type = "description",
 		size = {
-			settings_grid_width,
+			settings_grid_width
 		},
 		style = {
 			text_horizontal_alignment = "center",
 			offset = {
 				0,
 				0,
-				3,
-			},
-		},
+				3
+			}
+		}
 	},
 	{
-		apply_on_drag = true,
-		default_value = 0,
-		focusable = true,
 		id = "brightness_value",
-		max_value = 1,
-		min_value = -1,
-		num_decimals = 2,
-		step_size_value = 0.01,
-		value_width = 200,
 		widget_type = "large_value_slider",
+		num_decimals = 2,
+		focusable = true,
+		min_value = -1,
+		max_value = 1,
+		default_value = 0,
+		step_size_value = 0.01,
+		apply_on_drag = true,
+		value_width = 200,
 		get_function = function (template)
 			return Application.user_setting("gamma") or template.default_value
 		end,
@@ -84,25 +84,25 @@ local gamma_settings = {
 			return true
 		end,
 		size = {
-			settings_grid_width - 200,
+			settings_grid_width - 200
 		},
 		alignment = {
 			horizontal_alignment = "left",
 			size = {
-				400,
-			},
+				400
+			}
 		},
 		dependent_focus_ids = {
-			"checker",
-		},
-	},
+			"checker"
+		}
+	}
 }
 local page_templates = {}
 
 page_templates.first_run_page_settings = {
 	{
-		grid_alignment = "center",
 		next_button_alignment = "right",
+		grid_alignment = "center",
 		widgets = gamma_settings,
 		on_enter = function (parent)
 			parent._widgets_by_name.background.content.visible = false
@@ -111,24 +111,24 @@ page_templates.first_run_page_settings = {
 		on_leave = function (parent)
 			parent._widgets_by_name.background.content.visible = true
 			parent._widgets_by_name.gamma_background.content.visible = false
-		end,
+		end
 	},
 	{
-		grid_alignment = "left",
 		next_button_alignment = "right",
+		grid_alignment = "left",
 		widgets = {
 			interface_settings.settings_by_id.subtitle_enabled,
 			interface_settings.settings_by_id.subtitle_speaker_enabled,
 			sound_settings.settings_by_id.option_master_slider,
 			sound_settings.settings_by_id.sound_device,
-			sound_settings.settings_by_id.speaker_settings,
-		},
-	},
+			sound_settings.settings_by_id.speaker_settings
+		}
+	}
 }
 page_templates.brightness_render_option_settings = {
 	{
-		grid_alignment = "center",
 		next_button_alignment = "right",
+		grid_alignment = "center",
 		widgets = gamma_settings,
 		on_enter = function (parent)
 			parent._widgets_by_name.background.content.visible = false
@@ -137,8 +137,8 @@ page_templates.brightness_render_option_settings = {
 		on_leave = function (parent)
 			parent._widgets_by_name.background.content.visible = true
 			parent._widgets_by_name.gamma_background.content.visible = false
-		end,
-	},
+		end
+	}
 }
 
 return page_templates

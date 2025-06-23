@@ -12,11 +12,11 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 
 BtRunAwayAction.TIME_TO_FIRST_EVALUATE = {
 	2,
-	2.75,
+	2.75
 }
 BtRunAwayAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	1,
-	1.5,
+	1.5
 }
 
 BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

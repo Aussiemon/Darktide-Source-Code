@@ -13,8 +13,8 @@ LocalConnectedState.init = function (self, state_machine, shared_state)
 			name = "connected",
 			parameters = {
 				peer_id = Network.peer_id(channel_id),
-				channel_id = channel_id,
-			},
+				channel_id = channel_id
+			}
 		}
 	end
 	self._host_peer = Network.peer_id(shared_state.channel_id)
@@ -28,7 +28,7 @@ LocalConnectedState.update = function (self, dt)
 		Log.info("LocalConnectedState", "Connection channel disconnected")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 end

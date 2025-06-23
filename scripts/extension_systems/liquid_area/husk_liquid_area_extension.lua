@@ -6,7 +6,7 @@ local CLIENT_RPCS = {
 	"rpc_add_liquid_multiple",
 	"rpc_set_liquid_filled",
 	"rpc_set_liquid_filled_multiple",
-	"rpc_remove_liquid_multiple",
+	"rpc_remove_liquid_multiple"
 }
 local HuskLiquidAreaExtension = class("HuskLiquidAreaExtension")
 
@@ -200,7 +200,7 @@ HuskLiquidAreaExtension._add_liquid = function (self, unit_position, real_index,
 		full = is_filled,
 		position = Vector3Box(position),
 		rotation = QuaternionBox(rotation),
-		rim_particle_id = rim_particle_id,
+		rim_particle_id = rim_particle_id
 	}
 
 	if is_filled then

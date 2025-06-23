@@ -33,7 +33,7 @@ local button_template = {
 		hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 		hotspot.disabled = not element.callback
 		widget.update = element.update
-	end,
+	end
 }
 
 ViewElementMenuPanel.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -139,7 +139,7 @@ ViewElementMenuPanel.add_entry = function (self, text, onclick_callback, update_
 	self._content[#self._content + 1] = {
 		text = Utf8.upper(text),
 		callback = onclick_callback,
-		update = update_function,
+		update = update_function
 	}
 
 	local scenegraph_id = "grid_content_pivot"
@@ -181,7 +181,7 @@ ViewElementMenuPanel._setup_content_widgets = function (self, content, scenegrap
 		end
 
 		alignment_list[#alignment_list + 1] = widget or {
-			size = size,
+			size = size
 		}
 	end
 

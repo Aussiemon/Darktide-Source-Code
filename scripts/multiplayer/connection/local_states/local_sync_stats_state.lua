@@ -3,7 +3,7 @@
 local LocalSyncStatsState = class("LocalSyncStatsState")
 local RPCS = {
 	"rpc_stat_version_mismatch",
-	"rpc_stat_version_matched",
+	"rpc_stat_version_matched"
 }
 
 LocalSyncStatsState._is_ready = function (self, local_player_id)
@@ -56,7 +56,7 @@ LocalSyncStatsState.update = function (self, dt)
 		Log.info("LocalSyncStatsState", "Timeout waiting for stats to sync.")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -66,7 +66,7 @@ LocalSyncStatsState.update = function (self, dt)
 		Log.info("LocalSyncStatsState", "Connection channel disconnected.")
 
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 

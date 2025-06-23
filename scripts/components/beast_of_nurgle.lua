@@ -10,7 +10,7 @@ local SPLINE_JOINT_NAMES = {
 	"j_tail_spline_05",
 	"j_tail_spline_06",
 	"j_tail_spline_07",
-	"j_tail_spline_08",
+	"j_tail_spline_08"
 }
 local ANIM_JOINT_NAMES = {
 	"j_tail_anim_01",
@@ -20,7 +20,7 @@ local ANIM_JOINT_NAMES = {
 	"j_tail_anim_05",
 	"j_tail_anim_06",
 	"j_tail_anim_07",
-	"j_tail_anim_08",
+	"j_tail_anim_08"
 }
 local BIND_JOINT_NAMES = {
 	"j_tail_bind_01",
@@ -30,7 +30,7 @@ local BIND_JOINT_NAMES = {
 	"j_tail_bind_05",
 	"j_tail_bind_06",
 	"j_tail_bind_07",
-	"j_tail_bind_08",
+	"j_tail_bind_08"
 }
 
 BeastOfNurgle.init = function (self, unit, is_server)
@@ -544,77 +544,77 @@ end
 
 BeastOfNurgle.component_data = {
 	control_weight = {
-		decimals = 3,
-		max = 1,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Spline Tangent Weight",
-		ui_type = "slider",
+		decimals = 3,
 		value = 0.5,
+		ui_name = "Spline Tangent Weight",
+		max = 1
 	},
 	spline_segments = {
-		decimals = 0,
-		max = 10,
+		ui_type = "slider",
 		min = 0,
 		step = 1,
-		ui_name = "Spline Segments",
-		ui_type = "slider",
+		decimals = 0,
 		value = 6,
+		ui_name = "Spline Segments",
+		max = 10
 	},
 	tail_offset = {
-		decimals = 3,
-		max = 10,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Tail Offset",
-		ui_type = "slider",
+		decimals = 3,
 		value = 1.2,
+		ui_name = "Tail Offset",
+		max = 10
 	},
 	spline_blend = {
-		decimals = 3,
-		max = 1,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Spline Blend",
-		ui_type = "slider",
+		decimals = 3,
 		value = 1,
+		ui_name = "Spline Blend",
+		max = 1
 	},
 	anim_offset = {
-		decimals = 3,
-		max = 10,
+		ui_type = "slider",
 		min = -10,
 		step = 0.1,
-		ui_name = "Animated Offset",
-		ui_type = "slider",
+		decimals = 3,
 		value = 0,
+		ui_name = "Animated Offset",
+		max = 10
 	},
 	spline_length = {
-		decimals = 3,
-		max = 15,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Spline Length",
-		ui_type = "slider",
+		decimals = 3,
 		value = 7,
+		ui_name = "Spline Length",
+		max = 15
 	},
 	spline_blend_node = {
-		category = "Node Names",
-		ui_name = "Spline Blend Node",
 		ui_type = "text_box",
 		value = "ap_spline_blend",
+		ui_name = "Spline Blend Node",
+		category = "Node Names"
 	},
 	spline_joints = {
-		category = "Node Names",
+		ui_type = "text_box_array",
 		size = 2,
 		ui_name = "Spline Joints",
-		ui_type = "text_box_array",
+		category = "Node Names"
 	},
 	anim_joints = {
-		category = "Node Names",
+		ui_type = "text_box_array",
 		size = 2,
 		ui_name = "Animated Joints",
-		ui_type = "text_box_array",
-	},
+		category = "Node Names"
+	}
 }
 
 return BeastOfNurgle

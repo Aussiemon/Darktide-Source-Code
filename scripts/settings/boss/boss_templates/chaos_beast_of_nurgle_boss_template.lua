@@ -20,13 +20,13 @@ local WEAKSPOT_COLOR = {
 	0.104,
 	0.036,
 	0,
-	0.2,
+	0.2
 }
 local _num_nearby_enemies
 local FORCE, Z_FORCE, MAX_STEPS, MAX_TIME = 12, 4, 20, 1.75
 local THROW_TELEPORT_UP_OFFSET = {
 	human = 1.5,
-	ogryn = 1.5,
+	ogryn = 1.5
 }
 local THROW_TEST_DISTANCE = 8
 local template = {
@@ -181,7 +181,7 @@ local template = {
 
 			Unit.set_scalar_for_material(body_slot_unit, weakspot_material_name, material_variable_name, 0)
 		end
-	end,
+	end
 }
 local BROADPHASE_RESULTS = {}
 

@@ -12,12 +12,12 @@ WwiseStateGroupGame.init = function (self, wwise_world, wwise_state_group_name)
 	WwiseStateGroupGame.super.init(self, wwise_world, wwise_state_group_name)
 
 	self._wwise_state = {
+		StateLoading = "loading",
+		StateVictoryDefeat = "None",
+		StateTitle = "title",
 		StateGameScore = "game_score",
 		StateGameplay = "mission",
-		StateLoading = "loading",
-		StateMainMenu = "main_menu",
-		StateTitle = "title",
-		StateVictoryDefeat = "None",
+		StateMainMenu = "main_menu"
 	}
 end
 

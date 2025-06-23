@@ -9,24 +9,24 @@ local button_size_large = ButtonPassTemplates.terminal_button.size
 local blueprints = {
 	vertical_spacing = {
 		0,
-		10,
+		10
 	},
 	spacing_vertical = {
 		size = {
 			grid_width,
-			10,
-		},
+			10
+		}
 	},
 	spacing_group_divder = {
 		size = {
 			grid_width,
-			20,
-		},
+			20
+		}
 	},
 	button = {
 		size = {
 			grid_width,
-			50,
+			50
 		},
 		pass_template = ButtonPassTemplates.terminal_list_button_with_background_and_icon,
 		init = function (parent, widget, element, callback_name, disabled)
@@ -50,12 +50,12 @@ local blueprints = {
 
 			hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			hotspot.disabled = disabled or nil
-		end,
+		end
 	},
 	large_button = {
 		size = {
 			grid_width,
-			button_size_large[2] + 10,
+			button_size_large[2] + 10
 		},
 		pass_template = ButtonPassTemplates.terminal_list_button_with_background_and_icon,
 		init = function (parent, widget, element, callback_name, disabled)
@@ -78,8 +78,8 @@ local blueprints = {
 			local has_highlight = entry and entry.has_highlight
 
 			content.has_notification = has_highlight and has_highlight()
-		end,
-	},
+		end
+	}
 }
 
 return settings("SystemViewBlueprints", blueprints)

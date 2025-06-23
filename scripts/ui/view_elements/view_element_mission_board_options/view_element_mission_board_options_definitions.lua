@@ -8,193 +8,193 @@ local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	options_area = {
-		horizontal_alignment = "center",
-		parent = "canvas",
 		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
 		size = {
 			1400,
-			600,
+			600
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	options_title = {
-		horizontal_alignment = "center",
-		parent = "options_area",
 		vertical_alignment = "top",
+		parent = "options_area",
+		horizontal_alignment = "center",
 		size = {
 			1400,
-			50,
+			50
 		},
 		position = {
 			0,
 			-70,
-			5,
-		},
+			5
+		}
 	},
 	options_grid = {
-		horizontal_alignment = "left",
-		parent = "options_area",
 		vertical_alignment = "center",
+		parent = "options_area",
+		horizontal_alignment = "left",
 		size = {
 			850,
-			550,
+			550
 		},
 		position = {
 			0,
 			0,
-			5,
-		},
+			5
+		}
 	},
 	options_grid_content_pivot = {
-		horizontal_alignment = "left",
-		parent = "options_grid",
 		vertical_alignment = "top",
+		parent = "options_grid",
+		horizontal_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	options_grid_scrollbar = {
-		horizontal_alignment = "right",
-		parent = "options_grid",
 		vertical_alignment = "top",
+		parent = "options_grid",
+		horizontal_alignment = "right",
 		size = {
 			8,
-			550,
+			550
 		},
 		position = {
 			30,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	options_grid_interaction = {
-		horizontal_alignment = "left",
-		parent = "options_grid",
 		vertical_alignment = "top",
+		parent = "options_grid",
+		horizontal_alignment = "left",
 		size = {
 			850,
-			550,
+			550
 		},
 		position = {
 			0,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	options_grid_mask = {
-		horizontal_alignment = "center",
-		parent = "options_grid",
 		vertical_alignment = "center",
+		parent = "options_grid",
+		horizontal_alignment = "center",
 		size = {
 			870,
-			570,
+			570
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	tooltip = {
-		horizontal_alignment = "right",
-		parent = "options_area",
 		vertical_alignment = "top",
+		parent = "options_area",
+		horizontal_alignment = "right",
 		size = {
 			400,
-			520,
+			520
 		},
 		position = {
 			0,
 			40,
-			200,
-		},
+			200
+		}
 	},
 	button_pivot = {
-		horizontal_alignment = "center",
-		parent = "canvas",
 		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
 		size = ButtonPassTemplates.terminal_button.size,
 		position = {
 			0,
 			330,
-			5,
-		},
-	},
+			5
+		}
+	}
 }
 local popup_type_style = {
 	warning = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			92,
-			72,
+			72
 		},
 		icon_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		background_color = {
 			50,
 			100,
 			0,
-			0,
+			0
 		},
 		terminal_background_color = {
 			255,
 			100,
 			6,
-			6,
+			6
 		},
 		title_text_color = {
 			255,
 			162,
 			6,
-			6,
+			6
 		},
 		description_text_color = {
 			255,
 			212,
 			194,
-			194,
-		},
+			194
+		}
 	},
 	default = {
 		icon = "content/ui/materials/symbols/warning",
 		icon_size = {
 			0,
-			0,
+			0
 		},
 		icon_color = Color.blue(127.5, true),
 		background_color = Color.terminal_grid_background(50, true),
 		terminal_background_color = Color.terminal_grid_background(255, true),
 		title_text_color = Color.terminal_text_header(255, true),
-		description_text_color = Color.terminal_text_body(255, true),
-	},
+		description_text_color = Color.terminal_text_body(255, true)
+	}
 }
 local title_style = table.clone(UIFontSettings.header_1)
 
@@ -210,7 +210,7 @@ tooltip_text_style.color = Color.white(255, true)
 tooltip_text_style.offset = {
 	0,
 	0,
-	2,
+	2
 }
 
 local widget_definitions = {
@@ -218,257 +218,257 @@ local widget_definitions = {
 		{
 			pass_type = "rect",
 			style = {
-				color = Color.black(76.5, true),
-			},
-		},
+				color = Color.black(76.5, true)
+			}
+		}
 	}, "screen"),
 	options_grid_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "options_grid_scrollbar"),
 	options_grid_interaction = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
-		},
+			content_id = "hotspot"
+		}
 	}, "options_grid_interaction"),
 	options_grid_mask = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_3",
+			pass_type = "texture",
 			style = {
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
+					255
+				}
+			}
+		}
 	}, "options_grid_mask"),
 	popup_background = UIWidget.create_definition({
 		{
-			pass_type = "rect",
 			style_id = "background",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size = {
 					nil,
-					0,
+					0
 				},
 				size_addition = {
 					0,
-					-26,
+					-26
 				},
-				color = Color.black(178.5, true),
-			},
+				color = Color.black(178.5, true)
+			}
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "terminal",
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "terminal",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				size = {
 					nil,
-					0,
+					0
 				},
 				size_addition = {
 					40,
-					150,
+					150
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
+						1
+					}
 				},
-				color = Color.terminal_grid_background(255, true),
-			},
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/backgrounds/popups/screen_takeover_01",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_background(255, true),
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
 					1822,
-					430,
+					430
 				},
 				uvs = {
 					{
 						0,
-						0,
+						0
 					},
 					{
 						1,
-						1,
-					},
-				},
-			},
-		},
+						1
+					}
+				}
+			}
+		}
 	}, "screen"),
 	title_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "text",
 			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
 			value = Managers.localization:localize("loc_settings_menu_header"),
-			style = title_style,
-		},
+			style = title_style
+		}
 	}, "options_title"),
 	edge_top = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "texture_center",
 			value = "content/ui/materials/dividers/skull_rendered_center_01",
+			style_id = "texture_center",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					3,
+					3
 				},
 				size = {
 					140,
-					18,
-				},
-			},
-		},
+					18
+				}
+			}
+		}
 	}, "screen"),
 	edge_bottom = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					50,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					2,
+					2
 				},
 				size = {
 					252,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "texture_center",
 			value = "content/ui/materials/dividers/skull_rendered_center_02",
+			style_id = "texture_center",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					10,
-					3,
+					3
 				},
 				size = {
 					306,
-					48,
-				},
-			},
-		},
+					48
+				}
+			}
+		}
 	}, "screen"),
 	button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_pivot", {
 		alpha_multiplier = 0,
 		gamepad_action = "back",
 		original_text = Localize("loc_popup_button_close"),
 		hotspot = {
-			use_is_focused = true,
-		},
+			use_is_focused = true
+		}
 	}),
 	tooltip = UIWidget.create_definition({
 		{
 			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				color = Color.black(120, true),
 				size_addition = {
 					50,
-					50,
-				},
-			},
+					50
+				}
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
 			value_id = "text",
-			style = tooltip_text_style,
-		},
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = tooltip_text_style
+		}
 	}, "tooltip", {
-		visible = false,
+		visible = false
 	}),
 	settings_overlay = UIWidget.create_definition({
 		{
@@ -477,24 +477,24 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					20,
+					20
 				},
 				color = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "screen"),
+					0
+				}
+			}
+		}
+	}, "screen")
 }
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
 		{
-			end_time = 0,
 			name = "init",
+			end_time = 0,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local alpha_multiplier = 0
@@ -527,7 +527,7 @@ local animations = {
 				widgets.popup_background.style.texture.color = popup_type_style[popup_type].background_color
 				widgets.popup_background.style.terminal.color = popup_type_style[popup_type].terminal_background_color
 				widgets.button.alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "open",
@@ -552,7 +552,7 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -570,8 +570,8 @@ local animations = {
 				end
 
 				widgets.button.alpha_multiplier = anim_progress
-			end,
-		},
+			end
+		}
 	},
 	on_exit = {
 		{
@@ -590,7 +590,7 @@ local animations = {
 				end
 
 				widgets.button.alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			name = "close",
@@ -615,13 +615,13 @@ local animations = {
 				widgets.popup_background.style.terminal.size_addition[2] = window_height + anim_progress * 26
 				widgets.edge_bottom.offset[2] = window_height * 0.5
 				widgets.edge_top.offset[2] = -window_height * 0.5
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

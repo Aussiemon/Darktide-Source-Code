@@ -11,7 +11,7 @@ local Mastery = require("scripts/utilities/mastery")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 
 local function _info(...)
 	Log.info("ProgressionManager", ...)
@@ -22,7 +22,7 @@ local ProgressionManager = class("ProgressionManager")
 local FETCH_DUMMY_SESSION_REPORT = false
 local FETCH_DUMMY_SESSION_REPORT_DELAY = {
 	max = 5,
-	min = 0,
+	min = 0
 }
 local SESSION_REPORT_STATES = table.enum("none", "fetching", "success", "fail")
 local SET_TRAITS_STATES = table.enum("none", "updating", "success", "fail")
@@ -194,7 +194,7 @@ ProgressionManager._parse_experience_settings = function (self, unparsed_xp_sett
 	local experience_settings = {
 		experience_table = unparsed_xp_settings,
 		max_level_experience = unparsed_xp_settings[max_level],
-		max_level = max_level,
+		max_level = max_level
 	}
 
 	return experience_settings
@@ -309,7 +309,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 		if havoc_data and havoc_data.items then
 			local promises = {
-				Managers.data_service.havoc:order_by_id(havoc_data.items[1].orderId),
+				Managers.data_service.havoc:order_by_id(havoc_data.items[1].orderId)
 			}
 
 			if havoc_data.items[2] then
@@ -319,10 +319,10 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			return Promise.all(unpack(promises)):next(function (orders)
 				local cached_havoc_settings = Managers.data_service.havoc:get_settings()
 				local havoc_settings = {
-					min_charges = 1,
 					min_rank = 1,
+					min_charges = 1,
 					max_rank = cached_havoc_settings.max_rank or 40,
-					max_charges = cached_havoc_settings.max_charges or 3,
+					max_charges = cached_havoc_settings.max_charges or 3
 				}
 				local havoc_order_reward, havoc_session = self:_get_havoc_order_rewards(account_data, havoc_data, orders, havoc_settings, is_owner, rank_played)
 				local rank_changed = havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or false
@@ -472,7 +472,7 @@ ProgressionManager._get_mastery_rewards = function (self, account_data)
 						gainedXp = reward.reward.xp or 0,
 						startXp = reward.current.xp or 0,
 						trackId = trackId,
-						masteryId = masteryId,
+						masteryId = masteryId
 					}
 				end
 			end
@@ -526,12 +526,12 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 	local havoc_session = {
 		current = {
 			rank = havoc_data.items[1].rank,
-			charges = orders[1].charges,
+			charges = orders[1].charges
 		},
 		previous = {
 			rank = havoc_data.items[2] and havoc_data.items[2].rank or havoc_settings.min_rank,
-			charges = orders[2] and orders[2].charges or havoc_settings.max_charges,
-		},
+			charges = orders[2] and orders[2].charges or havoc_settings.max_charges
+		}
 	}
 	local round_won = self:_has_won_mission(account_data)
 	local reward_cards = account_data.rewardCards
@@ -589,7 +589,7 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 		current_rank = current_rank,
 		min_rank = min_rank,
 		max_rank = max_rank,
-		max_charges = max_charges,
+		max_charges = max_charges
 	}
 
 	return havoc_order_reward, havoc_session
@@ -610,7 +610,7 @@ ProgressionManager._get_havoc_highest_rank = function (self, account_data)
 
 				if reward and reward.statType == "all-time" and reward.rewardType == "havocHighestRank" then
 					return {
-						rank = reward.rank,
+						rank = reward.rank
 					}
 				end
 			end
@@ -633,7 +633,7 @@ ProgressionManager._get_havoc_week_rank = function (self, account_data)
 
 				if reward and reward.statType == "week" and reward.rewardType == "havocHighestRank" then
 					return {
-						rank = reward.rank,
+						rank = reward.rank
 					}
 				end
 			end
@@ -839,7 +839,7 @@ ProgressionManager._parse_reward_cards = function (self, account_data, item_rewa
 				reward.gearId = nil
 				item_rewards[#item_rewards + 1] = {
 					gear_id = gear_id,
-					item_type = reward_type,
+					item_type = reward_type
 				}
 			end
 
@@ -902,7 +902,7 @@ ProgressionManager._add_unlocked_weapons_to_card = function (self, reward_card, 
 		for i = 1, #weapons_unlocks_at_level do
 			self:_append_reward_to_card(reward_card, {
 				reward_type = "weapon_unlock",
-				master_id = weapons_unlocks_at_level[i],
+				master_id = weapons_unlocks_at_level[i]
 			})
 		end
 	end
@@ -955,7 +955,7 @@ ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, 
 					text = "testing testing",
 					type = reward_type,
 					reward_item_id = reward_item_id,
-					level = reward_info.level,
+					level = reward_info.level
 				}
 
 				table.insert(rewards, reward_data)
@@ -970,7 +970,7 @@ ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, 
 
 						item_rewards[#item_rewards + 1] = {
 							gear_id = gear_id,
-							item_type = item_type,
+							item_type = item_type
 						}
 					end
 				end
@@ -1134,7 +1134,7 @@ local _card_animations = {
 	xp = EndPlayerViewAnimations.experience_card_show_content,
 	levelUp = EndPlayerViewAnimations.level_up_show_content,
 	salary = EndPlayerViewAnimations.salary_card_show_content,
-	weaponDrop = EndPlayerViewAnimations.item_reward_show_content,
+	weaponDrop = EndPlayerViewAnimations.item_reward_show_content
 }
 
 ProgressionManager._calculate_report_time = function (self, profile, participant_report)
@@ -1246,21 +1246,21 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 			{
 				balance = {
 					amount = 12345,
-					type = "credits",
-				},
+					type = "credits"
+				}
 			},
 			{
 				balance = {
 					amount = 2345,
-					type = "plasteel",
-				},
+					type = "plasteel"
+				}
 			},
 			{
 				balance = {
 					amount = 25,
-					type = "diamantine",
-				},
-			},
+					type = "diamantine"
+				}
+			}
 		},
 		by_type = function (self, wallet_type)
 			if wallet_type == "credits" then
@@ -1270,23 +1270,23 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 			elseif wallet_type == "diamantine" then
 				return self.wallets[3]
 			end
-		end,
+		end
 	}
 
 	self._session_report.character.havoc_order_reward = {
-		current_charges = 3,
 		current_rank = 13,
-		max_charges = 3,
 		max_rank = 40,
-		min_rank = 1,
+		current_charges = 3,
 		previous_charges = 1,
 		previous_rank = 12,
+		min_rank = 1,
+		max_charges = 3
 	}
 	self._session_report.character.havoc_week_rank = {
-		rank = 13,
+		rank = 13
 	}
 	self._session_report.character.havoc_highest_rank = {
-		rank = 13,
+		rank = 13
 	}
 
 	self:_parse_report(session_report, dummy_wallet)

@@ -23,16 +23,16 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	rpc_settings = rpc_settings or {
 		{
 			required_buffer = 25000,
-			rpc_per_frame = 3,
+			rpc_per_frame = 3
 		},
 		{
 			required_buffer = 15000,
-			rpc_per_frame = 2,
+			rpc_per_frame = 2
 		},
 		{
 			required_buffer = 5000,
-			rpc_per_frame = 1,
-		},
+			rpc_per_frame = 1
+		}
 	}
 	self._rpc_settings = rpc_settings
 	self._stat_lookup = {}
@@ -77,7 +77,7 @@ StatsManager._default_team = function (self)
 		triggers = {},
 		rpc_queue = GrowQueue:new(),
 		rpc_dirty = {},
-		trigger_queue = PriorityQueue:new(),
+		trigger_queue = PriorityQueue:new()
 	}
 end
 
@@ -215,9 +215,9 @@ StatsManager._empty_user = function (self, key, account_id, rpc_channel, local_p
 		local_player_id = local_player_id,
 		state = UserStates.idle,
 		data = setmetatable({}, {
-			__index = team_data,
+			__index = team_data
 		}),
-		listeners = {},
+		listeners = {}
 	}
 
 	if rpc_channel then
@@ -292,7 +292,7 @@ StatsManager._initialize_rpcs = function (self)
 		rpc_calls[#rpc_calls + 1] = {
 			rpc = RPC["rpc_stat_update_" .. name],
 			min = min_value,
-			max = max_value,
+			max = max_value
 		}
 	end
 
@@ -415,7 +415,7 @@ StatsManager.reload = function (self, key)
 	local team_data = self._team.data
 
 	user.data = setmetatable({}, {
-		__index = team_data,
+		__index = team_data
 	})
 
 	if not self:_valid_account_id(user.account_id) then
@@ -460,7 +460,7 @@ StatsManager.start_session = function (self, session_config)
 						stat = to_stat,
 						func = trigger.trigger,
 						delay = trigger.delay,
-						user = team,
+						user = team
 					}
 					team_triggers[from_stat_name] = triggers
 				end
@@ -559,7 +559,7 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 	local team = self._team
 	local user_triggers = {}
 	local config = setmetatable(parsed_user_config, {
-		__index = self._session_config,
+		__index = self._session_config
 	})
 
 	for _, stat in pairs(definitions) do
@@ -586,7 +586,7 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 						stat = stat,
 						func = stat_trigger.trigger,
 						delay = stat_trigger.delay,
-						user = to_user,
+						user = to_user
 					}
 					from_triggers[from_stat_id] = triggers
 				end
@@ -631,7 +631,7 @@ StatsManager.hot_join_sync = function (self, sender, channel)
 			local player_stats_config = {
 				archetype_name = player:archetype_name(),
 				character_id = player:character_id(),
-				joined_at = joined_at,
+				joined_at = joined_at
 			}
 
 			self:start_tracking_user(player.stat_id, player_stats_config)
@@ -694,7 +694,7 @@ StatsManager.stop_tracking_user = function (self, key)
 	if session_stash and account_id then
 		session_stash[account_id] = {
 			data = user.data,
-			config = user.config,
+			config = user.config
 		}
 	end
 
@@ -712,7 +712,7 @@ StatsManager.stop_tracking_user = function (self, key)
 			changes[change_count] = {
 				isPlatformStat = false,
 				stat = id,
-				value = current_value,
+				value = current_value
 			}
 		end
 	end
@@ -727,8 +727,8 @@ StatsManager.stop_tracking_user = function (self, key)
 		{
 			accountId = account_id,
 			stats = changes,
-			completed = {},
-		},
+			completed = {}
+		}
 	})
 
 	user.state = UserStates.pushing
@@ -815,7 +815,7 @@ StatsManager.add_listener = function (self, key, stat_names, callback_fn)
 	self._listeners[listener_id] = {
 		key = key,
 		stat_names = stat_names,
-		callback_fn = callback_fn,
+		callback_fn = callback_fn
 	}
 
 	local user = key == "TEAM" and self._team or self._users[key]
@@ -881,7 +881,7 @@ StatsManager._trigger = function (self, user, stat_name, ...)
 			next_user.trigger_queue:push(last_t + trigger_delay, {
 				trigger_func,
 				trigger_stat,
-				...,
+				...
 			})
 		else
 			self._next_user = next_user

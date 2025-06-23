@@ -11,7 +11,7 @@ AnimDrivenShader.init = function (self, unit)
 		animated_node = Unit.has_node(unit, self.animated_node_name),
 		parent_node = Unit.has_node(unit, self.parent_node_name),
 		material = self.material ~= "",
-		material_variable = self.material_variable ~= "",
+		material_variable = self.material_variable ~= ""
 	}
 
 	self:enable(unit)
@@ -62,25 +62,25 @@ end
 
 AnimDrivenShader.component_data = {
 	parent_node_name = {
-		ui_name = "Parent Node",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Parent Node"
 	},
 	animated_node_name = {
-		ui_name = "Animated Node",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Animated Node"
 	},
 	material_variable = {
-		ui_name = "Material Variable",
 		ui_type = "text_box",
 		value = "",
+		ui_name = "Material Variable"
 	},
 	include_children = {
-		ui_name = "Unclude Children",
 		ui_type = "check_box",
 		value = false,
-	},
+		ui_name = "Unclude Children"
+	}
 }
 
 return AnimDrivenShader

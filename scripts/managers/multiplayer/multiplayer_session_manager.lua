@@ -169,7 +169,7 @@ MultiplayerSessionManager.start_singleplayer_session = function (self, mission_n
 
 	mechanism_manager:change_mechanism(mechanism_name, {
 		mission_name = mission_name,
-		singleplay_type = singeplay_type,
+		singleplay_type = singeplay_type
 	})
 
 	return mechanism_manager:wanted_transition()
@@ -209,7 +209,7 @@ MultiplayerSessionManager._handle_session_error = function (self, session)
 
 	local params = {
 		left_session_reason = disconnection_info.reason,
-		session_was_booting = disconnection_info.session_was_booting,
+		session_was_booting = disconnection_info.session_was_booting
 	}
 	local session_errors = (self._session_errors or 0) + 1
 
@@ -225,7 +225,7 @@ MultiplayerSessionManager._get_loaders = function (self)
 	local loader_paths = {
 		"scripts/loading/loaders/hud_loader",
 		"scripts/loading/loaders/level_loader",
-		"scripts/loading/loaders/view_loader",
+		"scripts/loading/loaders/view_loader"
 	}
 
 	for i = 1, #loader_paths do

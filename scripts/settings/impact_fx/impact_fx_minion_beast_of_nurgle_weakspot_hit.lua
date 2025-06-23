@@ -7,17 +7,17 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/minions/play_beast_of_nurgle_weakspot_hit",
-			},
+				append_husk_to_event_name = true
+			}
 		},
 		weakspot_damage = {
 			{
-				append_husk_to_event_name = true,
 				event = "wwise/events/minions/play_beast_of_nurgle_weakspot_hit",
-			},
-		},
-	},
+				append_husk_to_event_name = true
+			}
+		}
+	}
 }
 local armored = table.clone(unarmored)
 local super_armor = table.clone(unarmored)
@@ -34,6 +34,6 @@ return {
 		[armor_types.player] = player,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored,
-	},
+		[armor_types.unarmored] = unarmored
+	}
 }

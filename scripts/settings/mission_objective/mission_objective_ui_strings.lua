@@ -24,7 +24,7 @@ local mission_objective_ui_strings = {
 	"loc_objective_lm_rails_carry_luggable_header",
 	"loc_objective_lm_rails_carry_luggable_desc",
 	"loc_objective_lm_cooling_carry_luggable_header",
-	"loc_objective_lm_cooling_carry_luggable_desc",
+	"loc_objective_lm_cooling_carry_luggable_desc"
 }
 
 return mission_objective_ui_strings

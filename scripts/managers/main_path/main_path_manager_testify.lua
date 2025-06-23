@@ -18,7 +18,7 @@ local MainPathManagerTestify = {
 		end
 
 		return MainPathQueries.total_path_distance()
-	end,
+	end
 }
 
 return MainPathManagerTestify

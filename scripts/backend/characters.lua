@@ -7,7 +7,7 @@ local Interface = {
 	"fetch",
 	"create",
 	"delete",
-	"equip_items_in_slots",
+	"equip_items_in_slots"
 }
 local Characters = class("Characters")
 
@@ -19,8 +19,8 @@ Characters.equip_item_slot = function (self, character_id, slot_name, gear_id)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"):path(slot_name), {
 		method = "PUT",
 		body = {
-			instanceId = gear_id,
-		},
+			instanceId = gear_id
+		}
 	}):next(function (data)
 		return data.body
 	end)
@@ -32,20 +32,20 @@ Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by
 	for slot_id, gear_id in pairs(item_gear_ids_by_slots) do
 		body[#body + 1] = {
 			instanceId = gear_id,
-			slotId = slot_id,
+			slotId = slot_id
 		}
 	end
 
 	for slot_id, name in pairs(item_gear_names_by_slots) do
 		body[#body + 1] = {
 			masterId = name,
-			slotId = slot_id,
+			slotId = slot_id
 		}
 	end
 
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"), {
 		method = "PUT",
-		body = body,
+		body = body
 	}):next(function (data)
 		return data.body
 	end)
@@ -56,7 +56,7 @@ Characters.unequip_slots = function (self, character_id, slots)
 
 	for slot_name, _ in pairs(slots) do
 		promises[#promises + 1] = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"):path(slot_name), {
-			method = "DELETE",
+			method = "DELETE"
 		})
 	end
 
@@ -69,13 +69,13 @@ Characters.equip_master_items_in_slots = function (self, character_id, item_mast
 	for slot_id, master_id in pairs(item_master_ids_by_slots) do
 		body[#body + 1] = {
 			masterId = master_id,
-			slotId = slot_id,
+			slotId = slot_id
 		}
 	end
 
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"), {
 		method = "PUT",
-		body = body,
+		body = body
 	}):next(function (data)
 		return data.body
 	end)
@@ -85,8 +85,8 @@ Characters.create = function (self, new_character)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(), {
 		method = "POST",
 		body = {
-			newCharacter = new_character,
-		},
+			newCharacter = new_character
+		}
 	}):next(function (data)
 		return data.body
 	end):next(function (result)
@@ -107,7 +107,7 @@ end
 Characters.transform = function (self, character_id, transformed_character, operation_cost)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/operations"):path("/transform"), {
 		method = "PUT",
-		body = transformed_character,
+		body = transformed_character
 	}):next(function (result)
 		return Managers.data_service.store:on_character_operation(operation_cost):next(function ()
 			return result
@@ -117,7 +117,7 @@ end
 
 Characters.fetch_operations = function (self)
 	return Managers.backend:title_request("/data/characters/operations", {
-		method = "GET",
+		method = "GET"
 	}):next(function (data)
 		return data.body
 	end)
@@ -159,7 +159,7 @@ end
 
 Characters.delete_character = function (self, character_id)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id), {
-		method = "DELETE",
+		method = "DELETE"
 	}):next(function (data)
 		return data.body
 	end)
@@ -167,13 +167,13 @@ end
 
 Characters.set_specialization = function (self, character_id, specialization)
 	return self:set_data(character_id, "career", {
-		specialization = specialization,
+		specialization = specialization
 	})
 end
 
 Characters.set_talents_v2 = function (self, character_id, talents)
 	return self:set_data(character_id, "vocation", {
-		talents = talents,
+		talents = talents
 	})
 end
 
@@ -183,7 +183,7 @@ end
 
 Characters.set_character_height = function (self, character_id, value)
 	return self:set_data(character_id, "personal", {
-		character_height = value,
+		character_height = value
 	})
 end
 
@@ -209,15 +209,29 @@ Characters.get_narrative = function (self, character_id)
 	end)
 end
 
+Characters.get_missions = function (self, character_id)
+	return self:get_data(character_id, "narrative|missions"):next(function (response)
+		local data = _process_narrative(response.body.data)
+
+		return data and data.missions or {}
+	end)
+end
+
+Characters.set_mission = function (self, character_id, event_name, is_completed)
+	return self:set_data(character_id, "narrative|missions", {
+		[event_name] = is_completed ~= false and "true" or "false"
+	})
+end
+
 Characters.set_narrative_story_chapter = function (self, character_id, story_name, chapter_id)
 	return self:set_data(character_id, "narrative|stories", {
-		[story_name] = chapter_id,
+		[story_name] = chapter_id
 	})
 end
 
 Characters.set_narrative_event_completed = function (self, character_id, event_name, is_completed)
 	return self:set_data(character_id, "narrative|events", {
-		[event_name] = is_completed ~= false and "true" or "false",
+		[event_name] = is_completed ~= false and "true" or "false"
 	})
 end
 
@@ -231,8 +245,8 @@ Characters.set_data = function (self, character_id, section, data)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
 		method = "PUT",
 		body = {
-			data = data,
-		},
+			data = data
+		}
 	}):next(function (data)
 		return nil
 	end)
@@ -252,16 +266,18 @@ Characters.get_data = function (self, character_id, section, part, optional_acco
 	end)
 end
 
-Characters.check_name = function (self, name)
-	return Managers.backend:title_request("/data/characters/names/check", {
-		method = "POST",
-		body = {
-			names = {
-				name,
-			},
-		},
+Characters.check_name = function (self, name, name_type)
+	local sanitized_name = Http.url_encode(name)
+	local url = BackendUtilities.url_builder("/data/characters/name/" .. sanitized_name .. "/check")
+
+	if name_type then
+		url:query("nameType", name_type)
+	end
+
+	return Managers.backend:title_request(url:to_string(), {
+		method = "GET"
 	}):next(function (data)
-		return data.body.results[1]
+		return data.body
 	end)
 end
 

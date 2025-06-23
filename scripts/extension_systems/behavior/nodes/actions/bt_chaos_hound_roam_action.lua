@@ -166,8 +166,8 @@ BtChaosHoundRoamAction._start_move_anim = function (self, unit, scratchpad, acti
 end
 
 local DEFAULT_RADIUS = {
-	-30,
-	30,
+	-15,
+	15
 }
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
 local DEFAULT_TRIES = 6

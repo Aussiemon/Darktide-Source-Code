@@ -1,21 +1,21 @@
 ﻿-- chunkname: @scripts/settings/damage/impact_fx_templates_tests.lua
 
 local IMPACT_FX_INTERFACE = {
-	blood_ball = true,
-	decal = true,
-	linked_decal = true,
-	material_switch_sfx = true,
-	material_switch_sfx_husk = true,
-	name = true,
-	sfx = true,
-	sfx_1p = true,
 	sfx_1p_direction_interface = true,
-	sfx_3p = true,
+	name = true,
 	sfx_husk = true,
-	unit = true,
 	vfx = true,
 	vfx_1p = true,
 	vfx_3p = true,
+	sfx_1p = true,
+	sfx_3p = true,
+	sfx = true,
+	linked_decal = true,
+	material_switch_sfx_husk = true,
+	decal = true,
+	material_switch_sfx = true,
+	unit = true,
+	blood_ball = true
 }
 local success
 

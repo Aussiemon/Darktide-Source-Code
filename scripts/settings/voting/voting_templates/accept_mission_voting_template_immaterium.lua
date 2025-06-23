@@ -5,30 +5,30 @@ local _voting_popup_ids = {}
 
 local function _open_voting_view(voting_id)
 	local context = {
-		description_text = "loc_accept_mission_voting_title_description",
 		title_text = "loc_accept_mission_voting_title_header",
+		description_text = "loc_accept_mission_voting_title_description",
 		description_text_params = {},
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_accept_mission_voting_title_accept_button",
+				close_on_pressed = true,
 				callback = function ()
 					Managers.voting:cast_vote(voting_id, "yes")
 
 					_voting_popup_ids[voting_id] = nil
-				end,
+				end
 			},
 			{
+				text = "loc_accept_mission_voting_title_decline_button",
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_accept_mission_voting_title_decline_button",
 				callback = function ()
 					Managers.voting:cast_vote(voting_id, "no")
 
 					_voting_popup_ids[voting_id] = nil
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -47,10 +47,10 @@ local function _close_voting_view(voting_id)
 end
 
 local accept_mission_voting_template_immaterium = {
-	immaterium_party_vote_type = "accept_matchmaking",
-	initiated_by_server = true,
 	name = "accept_mission_immaterium",
+	immaterium_party_vote_type = "accept_matchmaking",
 	voting_impl = "party_immaterium",
+	initiated_by_server = true,
 	on_started = function (voting_id, template, params)
 		if Managers.ui:view_active("system_view") then
 			Managers.ui:close_view("system_view")
@@ -83,7 +83,7 @@ local accept_mission_voting_template_immaterium = {
 
 				promise:next(function (presence)
 					local message = Localize("loc_party_notification_accept_mission_voting_decline", true, {
-						member_character_name = presence:character_name(),
+						member_character_name = presence:character_name()
 					})
 					local sound_event = UISoundEvents.mission_vote_player_declined
 
@@ -91,7 +91,7 @@ local accept_mission_voting_template_immaterium = {
 				end)
 			end
 		end
-	end,
+	end
 }
 
 return accept_mission_voting_template_immaterium

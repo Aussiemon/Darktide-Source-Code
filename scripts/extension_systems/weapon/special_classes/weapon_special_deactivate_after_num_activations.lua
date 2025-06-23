@@ -18,6 +18,10 @@ WeaponSpecialDeactivateAfterNumActivations.init = function (self, context, init_
 	self._warp_charge_component = context.warp_charge_component
 end
 
+WeaponSpecialDeactivateAfterNumActivations.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialDeactivateAfterNumActivations.fixed_update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension, self._weapon_extension)
 end
@@ -46,6 +50,10 @@ WeaponSpecialDeactivateAfterNumActivations.process_hit = function (self, t, weap
 	if target_is_alive then
 		self._inventory_slot_component.special_active_start_t = t
 	end
+end
+
+WeaponSpecialDeactivateAfterNumActivations.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialDeactivateAfterNumActivations.on_exit_damage_window = function (self, t, num_hit_enemies, aborted)

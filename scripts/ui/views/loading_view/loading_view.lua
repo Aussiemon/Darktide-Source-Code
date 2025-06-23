@@ -32,9 +32,9 @@ LoadingView.init = function (self, settings, context)
 			value = "content/ui/materials/loading/" .. background,
 			style = {
 				horizontal_alignment = "center",
-				vertical_alignment = "center",
-			},
-		},
+				vertical_alignment = "center"
+			}
+		}
 	}, "loading_image")
 
 	LoadingView.super.init(self, definitions, settings, context, background_package)
@@ -96,7 +96,7 @@ LoadingView._widget_text_length = function (self, widget_id)
 	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local text_length, _ = UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, {
 		widget_width,
-		widget_height,
+		widget_height
 	}, text_options)
 
 	return text_length

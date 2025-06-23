@@ -6,7 +6,7 @@ local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/uni
 local DELETION_STATES = UnitSpawnerManager.DELETION_STATES
 local PlayerUnitSpawnManager = class("PlayerUnitSpawnManager")
 local CLIENT_RPCS = {
-	"rpc_register_player_unit_ragdoll",
+	"rpc_register_player_unit_ragdoll"
 }
 
 PlayerUnitSpawnManager.init = function (self, is_server, level_seed, has_navmesh, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
@@ -439,7 +439,7 @@ PlayerUnitSpawnManager._handle_initial_bot_spawning = function (self)
 		3,
 		4,
 		5,
-		6,
+		6
 	}
 
 	table.shuffle(initial_bot_id_table)

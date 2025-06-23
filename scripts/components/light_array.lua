@@ -76,7 +76,7 @@ LightArray.init = function (self, unit)
 	local effects = {
 		cycle = self._effect_cycle,
 		cycle_inverse = self._effect_cycle_inverse,
-		ping_pong = self._effect_ping_pong,
+		ping_pong = self._effect_ping_pong
 	}
 
 	self._effect = effects[effect]
@@ -301,244 +301,244 @@ end
 
 LightArray.component_data = {
 	resource = {
-		filter = "unit",
-		preview = false,
-		ui_name = "Resource",
 		ui_type = "resource",
+		preview = false,
 		value = "",
+		ui_name = "Resource",
+		filter = "unit"
 	},
 	size = {
-		decimals = 0,
-		max = 20,
+		ui_type = "slider",
 		min = 2,
 		step = 1,
-		ui_name = "Size",
-		ui_type = "slider",
+		decimals = 0,
 		value = 3,
+		ui_name = "Size",
+		max = 20
 	},
 	spacing = {
-		decimals = 2,
-		max = 20,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Spacing (Meters)",
-		ui_type = "slider",
+		decimals = 2,
 		value = 1,
+		ui_name = "Spacing (Meters)",
+		max = 20
 	},
 	rotation_offset = {
-		ui_name = "Rotation offset",
 		ui_type = "vector",
-		value = Vector3Box(0, 0, 0),
+		ui_name = "Rotation offset",
+		value = Vector3Box(0, 0, 0)
 	},
 	start_enabled = {
-		ui_name = "Start Enabled",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Start Enabled"
 	},
 	fake_light = {
-		ui_name = "Fake Light",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Fake Light"
 	},
 	light_groups = {
 		category = "Light Groups",
+		ui_type = "text_box_array",
 		size = 0,
 		ui_name = "Light Groups",
-		ui_type = "text_box_array",
-		values = {},
+		values = {}
 	},
 	effect = {
-		category = "Effect",
-		ui_name = "Effect",
 		ui_type = "combo_box",
+		category = "Effect",
 		value = "none",
+		ui_name = "Effect",
 		options_keys = {
 			"None",
 			"Cycle",
 			"Cycle Inverse",
-			"Ping Pong",
+			"Ping Pong"
 		},
 		options_values = {
 			"none",
 			"cycle",
 			"cycle_inverse",
-			"ping_pong",
-		},
+			"ping_pong"
+		}
 	},
 	effect_time_on = {
-		category = "Effect",
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Time on (Seconds)",
 		ui_type = "number",
+		decimals = 2,
+		category = "Effect",
 		value = 1,
+		ui_name = "Time on (Seconds)",
+		step = 0.01
 	},
 	effect_time_off = {
-		category = "Effect",
-		decimals = 2,
-		step = 0.01,
-		ui_name = "Time off (Seconds)",
 		ui_type = "number",
+		decimals = 2,
+		category = "Effect",
 		value = 0,
+		ui_name = "Time off (Seconds)",
+		step = 0.01
 	},
 	light_type = {
-		category = "Lights",
-		ui_name = "Type",
 		ui_type = "combo_box",
+		category = "Lights",
 		value = "omni",
+		ui_name = "Type",
 		options_keys = {
 			"Omni",
-			"Spot",
+			"Spot"
 		},
 		options_values = {
 			"omni",
-			"spot",
-		},
+			"spot"
+		}
 	},
 	light_ies = {
-		category = "Lights",
-		filter = "ies",
-		preview = false,
-		ui_name = "IES Profile",
 		ui_type = "resource",
+		preview = false,
+		category = "Lights",
 		value = "",
+		ui_name = "IES Profile",
+		filter = "ies"
 	},
 	light_color_filter = {
-		category = "Lights",
-		ui_name = "Color Filter",
 		ui_type = "color",
-		value = QuaternionBox(Color(1, 1, 1, 1)),
+		ui_name = "Color Filter",
+		category = "Lights",
+		value = QuaternionBox(Color(1, 1, 1, 1))
 	},
 	light_intensity = {
-		category = "Lights",
-		decimals = 0,
-		max = 10000,
+		ui_type = "slider",
 		min = 0,
 		step = 1,
-		ui_name = "Intensity",
-		ui_type = "slider",
+		category = "Lights",
 		value = 600,
+		decimals = 0,
+		ui_name = "Intensity",
+		max = 10000
 	},
 	light_temperature = {
-		category = "Lights",
-		decimals = 0,
-		max = 20000,
+		ui_type = "slider",
 		min = 0,
 		step = 1,
-		ui_name = "Temperature",
-		ui_type = "slider",
+		category = "Lights",
 		value = 6570,
+		decimals = 0,
+		ui_name = "Temperature",
+		max = 20000
 	},
 	light_volumetric_intensity = {
-		category = "Lights",
-		decimals = 2,
-		max = 2,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Volumetric Intensity",
-		ui_type = "slider",
+		category = "Lights",
 		value = 1,
+		decimals = 2,
+		ui_name = "Volumetric Intensity",
+		max = 2
 	},
 	light_particle_intensity = {
-		category = "Lights",
-		decimals = 2,
-		max = 2,
+		ui_type = "slider",
 		min = 0,
 		step = 0.1,
-		ui_name = "Particle Intensity",
-		ui_type = "slider",
+		category = "Lights",
 		value = 1,
+		decimals = 2,
+		ui_name = "Particle Intensity",
+		max = 2
 	},
 	light_cast_shadows = {
-		category = "Lights",
-		ui_name = "Cast Shadows",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Cast Shadows",
+		category = "Lights"
 	},
 	light_dynamic = {
-		category = "Lights",
-		ui_name = "Dynamic Light",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Dynamic Light",
+		category = "Lights"
 	},
 	light_force_static = {
-		category = "Lights",
-		ui_name = "Force Static Light",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Force Static Light",
+		category = "Lights"
 	},
 	light_max_shadow_resolution = {
-		category = "Lights",
-		decimals = 0,
-		max = 1024,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Max Shadow Resolution",
-		ui_type = "number",
+		category = "Lights",
 		value = 128,
+		decimals = 0,
+		ui_name = "Max Shadow Resolution",
+		max = 1024
 	},
 	light_lens_flare = {
-		category = "Lights",
-		ui_name = "Lens Flare Enabled",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Lens Flare Enabled",
+		category = "Lights"
 	},
 	light_reflector = {
-		category = "Lights",
-		ui_name = "Reflector",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Reflector",
+		category = "Lights"
 	},
 	light_falloff_start = {
-		category = "Lights",
-		decimals = 1,
-		max = 1000,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Falloff Start",
-		ui_type = "number",
+		category = "Lights",
 		value = 0,
+		decimals = 1,
+		ui_name = "Falloff Start",
+		max = 1000
 	},
 	light_falloff_end = {
-		category = "Lights",
-		decimals = 1,
-		max = 1000,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Falloff End",
-		ui_type = "number",
+		category = "Lights",
 		value = 5,
+		decimals = 1,
+		ui_name = "Falloff End",
+		max = 1000
 	},
 	light_angle_start = {
-		category = "Lights",
-		decimals = 2,
-		max = 1000,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Angle Start",
-		ui_type = "number",
+		category = "Lights",
 		value = 0,
+		decimals = 2,
+		ui_name = "Angle Start",
+		max = 1000
 	},
 	light_angle_end = {
-		category = "Lights",
-		decimals = 2,
-		max = 1000,
+		ui_type = "number",
 		min = 0,
 		step = 1,
-		ui_name = "Angle End",
-		ui_type = "number",
+		category = "Lights",
 		value = 45,
+		decimals = 2,
+		ui_name = "Angle End",
+		max = 1000
 	},
 	inputs = {
 		start = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		stop = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return LightArray

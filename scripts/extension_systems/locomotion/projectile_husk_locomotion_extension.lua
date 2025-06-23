@@ -291,14 +291,14 @@ ProjectileHuskLocomotionExtension._initialize_interpolation_data = function (sel
 	local snapshot_game_object_return_data = {
 		projectile_locomotion_state_id = 1,
 		position = {},
-		rotation = {},
+		rotation = {}
 	}
 	local interpolation_data = {
-		is_interpolating = false,
 		time_scale = 1,
+		is_interpolating = false,
 		start_snapshot_id = math.huge,
 		target_snapshot_id = math.huge,
-		t = math.huge,
+		t = math.huge
 	}
 
 	return snapshot_ring_buffer, snapshot_game_object_return_data, interpolation_data
@@ -310,7 +310,7 @@ ProjectileHuskLocomotionExtension._new_snapshot = function (self)
 		read_time = 0,
 		position = Vector3Box(Vector3.zero()),
 		rotation = QuaternionBox(Quaternion.identity()),
-		locomotion_state = locomotion_states.none,
+		locomotion_state = locomotion_states.none
 	}
 
 	return snapshot

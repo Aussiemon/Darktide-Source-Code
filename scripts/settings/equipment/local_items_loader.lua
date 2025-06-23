@@ -61,9 +61,9 @@ LocalLoader.get_items_from_metadata_db = function ()
 	Log.debug("LocalLoader", "Reading items from RMD")
 
 	local query_handle = Metadata.execute_query_deferred({
-		type = "item",
+		type = "item"
 	}, {
-		include_properties = true,
+		include_properties = true
 	})
 
 	return Promise.delay(0):next(function ()
@@ -74,7 +74,7 @@ LocalLoader.get_items_from_metadata_db = function ()
 		for k, v in pairs(resources) do
 			table.insert(sorted_items, {
 				k,
-				v,
+				v
 			})
 		end
 

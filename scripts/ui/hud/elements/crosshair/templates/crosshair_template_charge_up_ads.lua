@@ -8,21 +8,21 @@ local length = 24
 local thickness = 56
 local size = {
 	length,
-	thickness,
+	thickness
 }
 local mask_size = {
 	length,
-	thickness - 4,
+	thickness - 4
 }
 local center_size = {
 	4,
-	4,
+	4
 }
 local spread_distance = 10
 local hit_default_distance = 10
 local hit_size = {
 	14,
-	4,
+	4
 }
 
 template.name = "charge_up_ads"
@@ -38,22 +38,22 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local offset_charge_right = {
 		offset_charge + center_half_width,
 		0,
-		1,
+		1
 	}
 	local offset_charge_mask_right = {
 		offset_charge + center_half_width,
 		0,
-		2,
+		2
 	}
 	local offset_charge_left = {
 		-(offset_charge + center_half_width),
 		0,
-		1,
+		1
 	}
 	local offset_charge_mask_left = {
 		-(offset_charge + center_half_width),
 		0,
-		2,
+		2
 	}
 
 	return UIWidget.create_definition({
@@ -66,83 +66,83 @@ template.create_widget_defintion = function (template, scenegraph_id)
 		Crosshair.weakspot_hit_indicator_segment("top_right"),
 		Crosshair.weakspot_hit_indicator_segment("bottom_right"),
 		{
-			pass_type = "texture_uv",
-			style_id = "charge_left",
 			value = "content/ui/materials/hud/crosshairs/charge_up",
+			style_id = "charge_left",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = offset_charge_left,
 				size = size,
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "charge_right",
 			value = "content/ui/materials/hud/crosshairs/charge_up",
+			style_id = "charge_right",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = offset_charge_right,
 				size = size,
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "charge_mask_left",
 			value = "content/ui/materials/hud/crosshairs/charge_up_mask",
+			style_id = "charge_mask_left",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
+						1
+					}
 				},
 				offset = offset_charge_mask_left,
 				size = mask_size,
-				color = UIHudSettings.color_tint_main_1,
-			},
+				color = UIHudSettings.color_tint_main_1
+			}
 		},
 		{
-			pass_type = "texture_uv",
-			style_id = "charge_mask_right",
 			value = "content/ui/materials/hud/crosshairs/charge_up_mask",
+			style_id = "charge_mask_right",
+			pass_type = "texture_uv",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				uvs = {
 					{
 						0,
-						1,
+						1
 					},
 					{
 						1,
-						0,
-					},
+						0
+					}
 				},
 				offset = offset_charge_mask_right,
 				size = mask_size,
-				color = UIHudSettings.color_tint_main_1,
-			},
-		},
+				color = UIHudSettings.color_tint_main_1
+			}
+		}
 	}, scenegraph_id)
 end
 

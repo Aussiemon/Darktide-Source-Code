@@ -16,12 +16,12 @@ item_display_name_text_style.vertical_alignment = "top"
 item_display_name_text_style.offset = {
 	-20,
 	10,
-	5,
+	5
 }
 item_display_name_text_style.font_size = 24
 item_display_name_text_style.size = {
 	weapon_item_size[1] - 40,
-	40,
+	40
 }
 item_display_name_text_style.text_color = Color.terminal_text_header(255, true)
 item_display_name_text_style.completed_color = Color.terminal_completed(255, true)
@@ -37,15 +37,15 @@ mark_display_name_text_style.horizontal_alignment = "center"
 mark_display_name_text_style.text_horizontal_alignment = "center"
 mark_display_name_text_style.size = {
 	nil,
-	40,
+	40
 }
 mark_display_name_text_style.size_addition = {
-	-20,
+	-20
 }
 mark_display_name_text_style.offset = {
 	10,
 	0,
-	6,
+	6
 }
 
 local text_icon_style = table.clone(UIFontSettings.header_2)
@@ -66,24 +66,24 @@ unlocked_level_text_style.vertical_alignment = "bottom"
 blueprints.milestone = {
 	size = {
 		300,
-		200,
+		200
 	},
 	pass_template = {
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
+			value_id = "icon",
 			pass_type = "texture",
 			style_id = "icon",
-			value_id = "icon",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				unlock_color = Color.terminal_text_key_value(255, true),
 				locked_color = Color.white(100, true),
 				default_color = Color.white(255, true),
@@ -91,16 +91,16 @@ blueprints.milestone = {
 				offset = {
 					0,
 					0,
-					5,
-				},
+					5
+				}
 			},
 			visibility_function = function (content, style)
 				return not not content.icon
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "text_icon",
+			pass_type = "text",
 			value = "",
 			value_id = "text_icon",
 			style = text_icon_style,
@@ -110,18 +110,18 @@ blueprints.milestone = {
 				else
 					style.text_color = table.clone(style.default_color)
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "text",
-			style_id = "display_name",
-			value = "",
 			value_id = "display_name",
-			style = mark_display_name_text_style,
+			style_id = "display_name",
+			pass_type = "text",
+			value = "",
+			style = mark_display_name_text_style
 		},
 		{
-			pass_type = "text",
 			style_id = "unlock_level",
+			pass_type = "text",
 			value = "",
 			value_id = "unlock_level",
 			style = unlocked_level_text_style,
@@ -131,8 +131,8 @@ blueprints.milestone = {
 				else
 					style.text_color = table.clone(style.default_color)
 				end
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element)
 		local content = widget.content
@@ -141,7 +141,7 @@ blueprints.milestone = {
 		content.element = element
 		content.display_name = element.display_name
 		content.unlock_level = Localize("loc_mastery_unlocked_level", true, {
-			level = element.unlock_level or 0,
+			level = element.unlock_level or 0
 		})
 
 		if element.icon then
@@ -178,7 +178,7 @@ blueprints.milestone = {
 		style.icon.color = can_unlock and not unlocked and style.icon.unlock_color or not unlocked and style.icon.locked_color or style.icon.default_color
 		style.text_icon.text_color = can_unlock and not unlocked and style.text_icon.unlock_color or not unlocked and style.text_icon.locked_color or style.text_icon.default_color
 		style.display_name.text_color = can_unlock and not unlocked and style.display_name.unlock_color or not unlocked and style.display_name.locked_color or style.display_name.default_color
-	end,
+	end
 }
 blueprints.wintrack = {
 	size_function = function (parent, config)
@@ -186,20 +186,20 @@ blueprints.wintrack = {
 	end,
 	pass_template = {
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			style = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
+				on_pressed_sound = UISoundEvents.default_click
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
 			value_id = "icon",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				unlock_color = Color.terminal_completed(255, true),
 				locked_color = Color.terminal_text_header(255, true),
 				default_color = Color.terminal_text_header(255, true),
@@ -207,8 +207,8 @@ blueprints.wintrack = {
 				offset = {
 					0,
 					0,
-					5,
-				},
+					5
+				}
 			},
 			visibility_function = function (content, style)
 				return not not content.icon
@@ -219,15 +219,15 @@ blueprints.wintrack = {
 				else
 					style.color = table.clone(style.locked_color)
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "text_icon",
+			pass_type = "text",
 			value = "",
 			value_id = "text_icon",
 			style = table.merge_recursive(table.clone(text_icon_style), {
-				font_size = 30,
+				font_size = 30
 			}),
 			change_function = function (content, style)
 				if content.claimed then
@@ -235,11 +235,11 @@ blueprints.wintrack = {
 				else
 					style.text_color = table.clone(style.default_color)
 				end
-			end,
+			end
 		},
 		{
-			pass_type = "text",
 			style_id = "display_name",
+			pass_type = "text",
 			value = "",
 			value_id = "display_name",
 			style = table.merge_recursive(table.clone(mark_display_name_text_style), {
@@ -247,8 +247,8 @@ blueprints.wintrack = {
 				offset = {
 					0,
 					10,
-					6,
-				},
+					6
+				}
 			}),
 			change_function = function (content, style)
 				if content.claimed then
@@ -256,8 +256,8 @@ blueprints.wintrack = {
 				else
 					style.text_color = table.clone(style.default_color)
 				end
-			end,
-		},
+			end
+		}
 	},
 	init = function (parent, widget, element)
 		local content = widget.content
@@ -287,7 +287,7 @@ blueprints.wintrack = {
 					local adjusted_size_ratio = widget_icon_max_size / icon_size
 					local adjusted_size = {
 						original_size[1] * adjusted_size_ratio,
-						original_size[2] * adjusted_size_ratio,
+						original_size[2] * adjusted_size_ratio
 					}
 
 					style.icon.size = adjusted_size
@@ -302,7 +302,7 @@ blueprints.wintrack = {
 		if element.text then
 			content.text_icon = element.text
 		end
-	end,
+	end
 }
 blueprints.overlay = {
 	size_function = function (parent, config)
@@ -310,52 +310,52 @@ blueprints.overlay = {
 	end,
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "background",
+			style_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
-				color = Color.terminal_grid_background(255, true),
-			},
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_grid_background(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "frame_top",
-			value = "content/ui/materials/frames/item_info_upper",
 			value_id = "frame_top",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "top",
-				size = {
-					nil,
-					36,
-				},
-			},
-		},
-		{
+			style_id = "frame_top",
 			pass_type = "texture",
-			style_id = "frame_bottom",
-			value = "content/ui/materials/frames/item_info_lower",
-			value_id = "frame_bottom",
+			value = "content/ui/materials/frames/item_info_upper",
 			style = {
+				vertical_alignment = "top",
 				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
 				size = {
 					nil,
-					36,
-				},
-			},
+					36
+				}
+			}
 		},
 		{
+			value_id = "frame_bottom",
+			style_id = "frame_bottom",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/item_info_lower",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					nil,
+					36
+				}
+			}
+		},
+		{
+			value_id = "icon",
 			pass_type = "texture",
 			style_id = "icon",
-			value_id = "icon",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				unlock_color = Color.terminal_text_key_value(255, true),
 				locked_color = Color.white(255, true),
 				default_color = Color.white(255, true),
@@ -363,36 +363,36 @@ blueprints.overlay = {
 				offset = {
 					0,
 					0,
-					5,
-				},
+					5
+				}
 			},
 			visibility_function = function (content, style)
 				return not not content.icon
-			end,
+			end
 		},
 		{
-			pass_type = "text",
-			style_id = "text_icon",
-			value = "",
 			value_id = "text_icon",
+			style_id = "text_icon",
+			pass_type = "text",
+			value = "",
 			style = table.merge_recursive(table.clone(text_icon_style), {
-				font_size = 60,
-			}),
+				font_size = 60
+			})
 		},
 		{
-			pass_type = "text",
-			style_id = "display_name",
-			value = "",
 			value_id = "display_name",
+			style_id = "display_name",
+			pass_type = "text",
+			value = "",
 			style = table.merge_recursive(table.clone(mark_display_name_text_style), {
 				font_size = 40,
 				offset = {
 					0,
 					50,
-					6,
-				},
-			}),
-		},
+					6
+				}
+			})
+		}
 	},
 	init = function (parent, widget, element)
 		local content = widget.content
@@ -435,61 +435,61 @@ blueprints.overlay = {
 
 			local adjusted_size = {
 				original_size[1] * adjusted_size_ratio,
-				original_size[2] * adjusted_size_ratio,
+				original_size[2] * adjusted_size_ratio
 			}
 
 			style.icon.size = adjusted_size
 		end
-	end,
+	end
 }
 blueprints.trait_new_empty = {
 	size = {
 		184,
-		230,
+		230
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/buttons/mastery_tree/pattern_trait_node_container_v2",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/mastery_tree/pattern_trait_node_container_v2",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				material_values = {
-					frame_tier = "content/ui/textures/buttons/mastery_tree/trait_node_empty",
-				},
-			},
-		},
-	},
+					frame_tier = "content/ui/textures/buttons/mastery_tree/trait_node_empty"
+				}
+			}
+		}
+	}
 }
 blueprints.trait_new = {
 	size = {
 		184,
-		230,
+		230
 	},
 	pass_template_function = function (parent, element)
 		local passes = {
 			{
-				content_id = "hotspot",
-				pass_type = "hotspot",
 				style_id = "hotspot",
+				pass_type = "hotspot",
+				content_id = "hotspot",
 				style = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
 					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.mastery_trait_unlocked,
-				},
+					on_pressed_sound = UISoundEvents.mastery_trait_unlocked
+				}
 			},
 			{
-				pass_type = "texture",
 				style_id = "icon",
+				pass_type = "texture",
 				value = "content/ui/materials/buttons/mastery_tree/pattern_trait_node_container_v2",
 				value_id = "icon",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
-					material_values = {},
+					horizontal_alignment = "center",
+					material_values = {}
 				},
 				change_function = function (content, style)
 					local next_rarity = content.next_rarity
@@ -529,57 +529,57 @@ blueprints.trait_new = {
 
 					style.material_values.frame_intensity = available and not is_selected and current_pulse_value or reached_max_rarity and 1 or style.material_values.frame_intensity + progress
 					style.material_values.bg_intensity = available and not is_selected and current_pulse_value or reached_max_rarity and 1 or style.material_values.bg_intensity + progress * 0.2
-				end,
+				end
 			},
 			{
-				pass_type = "texture",
 				style_id = "pattern_trait_glow",
+				pass_type = "texture",
 				value = "content/ui/materials/base/ui_default_base",
 				value_id = "pattern_trait_glow",
 				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "center",
+					horizontal_alignment = "center",
 					material_values = {
-						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_glow",
+						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_glow"
 					},
 					default_color = Color.terminal_corner_selected(0, true),
 					hover_color = Color.terminal_corner_selected(255, true),
 					color = Color.terminal_corner_selected(0, true),
 					size_addition = {
 						5,
-						5,
-					},
+						5
+					}
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
 					local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
 
 					ColorUtilities.color_lerp(style.default_color, style.hover_color, progress, style.color)
-				end,
-			},
+				end
+			}
 		}
 		local traits = element.traits
 		local position_by_rarity = {
 			{
 				19,
 				-12,
-				1,
+				1
 			},
 			{
 				54,
 				-12,
-				1,
+				1
 			},
 			{
 				89,
 				-12,
-				1,
+				1
 			},
 			{
 				124,
 				-12,
-				1,
-			},
+				1
+			}
 		}
 
 		for i = 1, #traits do
@@ -592,21 +592,21 @@ blueprints.trait_new = {
 				value_id = "tier_locked_" .. rarity,
 				style_id = "tier_locked_" .. rarity,
 				style = {
-					horizontal_alignment = "left",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "left",
 					size = {
 						42,
-						68,
+						68
 					},
 					material_values = {
-						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_tier_glow",
+						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_tier_glow"
 					},
 					offset = table.merge(table.clone(position_by_rarity[rarity]), {
-						[3] = position_by_rarity[rarity][3] + 1,
+						[3] = position_by_rarity[rarity][3] + 1
 					}),
 					default_color = Color.white(0, true),
 					hover_color = Color.white(255, true),
-					color = Color.white(0, true),
+					color = Color.white(0, true)
 				},
 				change_function = function (content, style)
 					local available_glow = "content/ui/textures/buttons/mastery_tree/trait_node_tier_glow"
@@ -632,7 +632,7 @@ blueprints.trait_new = {
 					local unlocked = content["rarity_" .. i .. "_unlocked"]
 
 					return content.next_rarity == i and not unlocked
-				end,
+				end
 			}
 			passes[#passes + 1] = {
 				pass_type = "texture",
@@ -640,20 +640,20 @@ blueprints.trait_new = {
 				value_id = "tier_animation_" .. rarity,
 				style_id = "tier_animation_" .. rarity,
 				style = {
-					horizontal_alignment = "left",
 					vertical_alignment = "bottom",
+					horizontal_alignment = "left",
 					size = {
 						42,
-						68,
+						68
 					},
 					material_values = {
-						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_tier_highlight",
+						texture_map = "content/ui/textures/buttons/mastery_tree/trait_node_tier_highlight"
 					},
 					offset = table.merge(table.clone(position_by_rarity[rarity]), {
-						[3] = position_by_rarity[rarity][3] + 1,
+						[3] = position_by_rarity[rarity][3] + 1
 					}),
-					color = Color.terminal_corner_selected(0, true),
-				},
+					color = Color.terminal_corner_selected(0, true)
+				}
 			}
 		end
 
@@ -702,7 +702,7 @@ blueprints.trait_new = {
 
 		content.rarity = element.rarity
 		content.next_rarity = element.next_rarity
-	end,
+	end
 }
 
 return blueprints

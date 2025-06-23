@@ -2,7 +2,7 @@
 
 local ability_size = {
 	92,
-	80,
+	80
 }
 local hud_element_player_ability_handler_settings = {
 	scan_delay = 0.25,
@@ -12,18 +12,18 @@ local hud_element_player_ability_handler_settings = {
 		slot_combat_ability = {
 			definition_path = "scripts/ui/hud/elements/player_ability/hud_element_player_ability_vertical_definitions",
 			scenegraph_definition = {
-				horizontal_alignment = "right",
-				parent = "screen",
 				vertical_alignment = "bottom",
+				parent = "screen",
+				horizontal_alignment = "right",
 				size = ability_size,
 				position = {
 					-450,
 					-40,
-					1,
-				},
-			},
-		},
-	},
+					1
+				}
+			}
+		}
+	}
 }
 
 return settings("HudElementPlayerAbilityHandlerSettings", hud_element_player_ability_handler_settings)

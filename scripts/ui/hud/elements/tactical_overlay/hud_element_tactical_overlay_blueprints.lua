@@ -47,199 +47,199 @@ local _achievement_completed_color = Color.termianl_icon_dark(255, true)
 local content_width = ElementSettings.right_grid_width - 2 * buffer
 local text_width = content_width - icon_size - buffer
 local base_text_style = {
-	font_size = 19,
-	horizontal_alignment = "right",
-	text_horizontal_alignment = "left",
-	text_vertical_alignment = "top",
 	vertical_alignment = "top",
+	horizontal_alignment = "right",
+	text_vertical_alignment = "top",
+	font_size = 19,
+	text_horizontal_alignment = "left",
 	offset = {
 		-buffer,
 		buffer,
-		1,
+		1
 	},
 	size = {
 		text_width,
-		100,
+		100
 	},
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }
 local right_content_description_style = table.add_missing({
 	font_size = 19,
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
 local right_content_header_style = table.add_missing({
 	font_size = 16,
-	text_color = Color.terminal_text_body_sub_header(255, true),
+	text_color = Color.terminal_text_body_sub_header(255, true)
 }, base_text_style)
 local right_content_title_style = table.add_missing({
 	font_size = 21,
-	text_color = Color.terminal_text_header(255, true),
+	text_color = Color.terminal_text_header(255, true)
 }, base_text_style)
 local right_content_progression_style = table.add_missing({
 	font_size = 21,
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
 local right_content_reward_style = table.add_missing({
 	font_size = 22,
 	text_horizontal_alignment = "right",
-	text_color = Color.terminal_text_body(255, true),
+	text_color = Color.terminal_text_body(255, true)
 }, base_text_style)
 local base_bar_style = {
-	horizontal_alignment = "left",
 	vertical_alignment = "top",
+	horizontal_alignment = "left",
 	size = {
 		text_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }
 local reward_texture_icon = {
-	horizontal_alignment = "right",
 	visible = false,
+	horizontal_alignment = "right",
 	size = {
 		24,
-		24,
+		24
 	},
 	color = Color.terminal_text_body(255, true),
 	offset = {
 		-buffer,
-		buffer,
-	},
+		buffer
+	}
 }
 local right_content_progress_border = table.add_missing({
 	offset = {
 		2 * buffer + icon_size,
 		buffer,
-		1,
+		1
 	},
-	color = Color.terminal_frame(255, true),
+	color = Color.terminal_frame(255, true)
 }, base_bar_style)
 local right_content_progress_background = table.add_missing({
 	offset = {
 		2 * buffer + icon_size + 1,
 		buffer + 1,
-		2,
+		2
 	},
 	size = {
 		text_width - 2,
 		line_width - 2,
-		1,
+		1
 	},
-	color = Color.ui_hud_green_dark(255, true),
+	color = Color.ui_hud_green_dark(255, true)
 }, base_bar_style)
 local right_content_progress_bar = table.add_missing({
 	offset = {
 		2 * buffer + icon_size,
 		buffer,
-		3,
+		3
 	},
-	color = Color.terminal_text_body(255, true),
+	color = Color.terminal_text_body(255, true)
 }, base_bar_style)
 local right_full_progress_border = table.add_missing({
 	offset = {
 		buffer,
 		buffer,
-		1,
+		1
 	},
 	size = {
 		content_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }, right_content_progress_border)
 local right_full_progress_background = table.add_missing({
 	offset = {
 		buffer + 1,
 		buffer,
-		2,
+		2
 	},
 	size = {
 		content_width - 2,
 		line_width - 2,
-		1,
-	},
+		1
+	}
 }, right_content_progress_background)
 local right_full_progress_bar = table.add_missing({
 	offset = {
 		buffer,
 		buffer,
-		3,
+		3
 	},
 	size = {
 		content_width,
 		line_width,
-		1,
-	},
+		1
+	}
 }, right_content_progress_bar)
 
 Blueprints.achievement = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
-			style = right_content_title_style,
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = right_content_title_style
 		},
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "progress_border",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_border,
+			pass_type = "rect",
+			style = right_content_progress_border
 		},
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "progress_background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_background,
-		},
-		{
 			pass_type = "rect",
-			style_id = "progress_bar",
+			style = right_content_progress_background
+		},
+		{
 			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_bar,
+			style_id = "progress_bar",
+			pass_type = "rect",
+			style = right_content_progress_bar
 		},
 		{
-			pass_type = "text",
-			style_id = "description",
-			value = "<UNDEFINED>",
 			value_id = "description",
-			style = right_content_description_style,
-		},
-		{
+			style_id = "description",
 			pass_type = "text",
-			style_id = "progress",
 			value = "<UNDEFINED>",
-			value_id = "progress",
-			style = right_content_progression_style,
+			style = right_content_description_style
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/icons/achievements/achievement_icon_container",
+			value_id = "progress",
+			style_id = "progress",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = right_content_progression_style
+		},
+		{
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/achievements/achievement_icon_container",
 			style = {
 				size = {
 					icon_size,
-					icon_size,
+					icon_size
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					buffer,
 					buffer,
-					1,
+					1
 				},
 				material_values = {
 					frame = "content/ui/textures/icons/achievements/frames/default_frame",
 					icon_color = Color.white(255, true),
-					background_color = Color.white(0, true),
-				},
-			},
-		},
+					background_color = Color.white(0, true)
+				}
+			}
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -344,74 +344,74 @@ Blueprints.achievement = {
 		if is_complete and not was_complete then
 			Blueprints.achievement.complete(widget)
 		end
-	end,
+	end
 }
 Blueprints.contract = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
-			style = right_content_description_style,
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = right_content_description_style
 		},
 		{
-			pass_type = "text",
-			style_id = "progress",
-			value = "<UNDEFINED>",
 			value_id = "progress",
-			style = right_content_progression_style,
-		},
-		{
-			pass_type = "rect",
-			style_id = "progress_border",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_border,
-		},
-		{
-			pass_type = "rect",
-			style_id = "progress_background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_background,
-		},
-		{
-			pass_type = "rect",
-			style_id = "progress_bar",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_content_progress_bar,
-		},
-		{
+			style_id = "progress",
 			pass_type = "text",
-			style_id = "reward",
 			value = "<UNDEFINED>",
-			value_id = "reward",
-			style = right_content_reward_style,
+			style = right_content_progression_style
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/icons/contracts/contract_task",
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "progress_border",
+			pass_type = "rect",
+			style = right_content_progress_border
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "progress_background",
+			pass_type = "rect",
+			style = right_content_progress_background
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "progress_bar",
+			pass_type = "rect",
+			style = right_content_progress_bar
+		},
+		{
+			value_id = "reward",
+			style_id = "reward",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = right_content_reward_style
+		},
+		{
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/contracts/contract_task",
 			style = {
 				size = {
 					icon_size,
-					icon_size,
+					icon_size
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					buffer,
 					buffer,
-					1,
+					1
 				},
 				material_values = {
-					checkmark_color = Color.terminal_text_body_sub_header(255, true),
-				},
-			},
-		},
+					checkmark_color = Color.terminal_text_body_sub_header(255, true)
+				}
+			}
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -489,70 +489,70 @@ Blueprints.contract = {
 		if is_complete and not widget.is_complete then
 			Blueprints.contract.complete(widget)
 		end
-	end,
+	end
 }
 Blueprints.event_tier = {
 	size = {
 		ElementSettings.right_grid_width,
-		0,
+		0
 	},
 	pass_template = {
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "progress_border",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_border,
+			pass_type = "rect",
+			style = right_full_progress_border
 		},
 		{
-			pass_type = "rect",
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "progress_background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_background,
-		},
-		{
 			pass_type = "rect",
+			style = right_full_progress_background
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
 			style_id = "progress_bar",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = right_full_progress_bar,
+			pass_type = "rect",
+			style = right_full_progress_bar
 		},
 		{
-			pass_type = "texture",
-			style_id = "reward_icon",
-			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "reward_icon",
-			style = reward_texture_icon,
+			style_id = "reward_icon",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = reward_texture_icon
 		},
 		{
-			pass_type = "text",
-			style_id = "reward",
-			value = "<UNDEFINED>",
 			value_id = "reward",
-			style = right_content_reward_style,
+			style_id = "reward",
+			pass_type = "text",
+			value = "<UNDEFINED>",
+			style = right_content_reward_style
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = table.add_missing({
 				size = {
 					content_width,
-					100,
-				},
-			}, right_content_description_style),
+					100
+				}
+			}, right_content_description_style)
 		},
 		{
-			pass_type = "text",
-			style_id = "progress",
-			value = "<UNDEFINED>",
 			value_id = "progress",
+			style_id = "progress",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = table.add_missing({
 				size = {
 					content_width,
-					100,
-				},
-			}, right_content_progression_style),
-		},
+					100
+				}
+			}, right_content_progression_style)
+		}
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -572,7 +572,7 @@ Blueprints.event_tier = {
 		local content, style = widget.content, widget.style
 		local size = widget.content.size[2]
 		local title = Localize(template.condition, true, {
-			target = target,
+			target = target
 		})
 
 		content.title = title
@@ -637,34 +637,34 @@ Blueprints.event_tier = {
 		if is_complete and not widget.is_complete then
 			Blueprints.event_tier.complete(widget)
 		end
-	end,
+	end
 }
 Blueprints.divider = {
 	size = {
 		ElementSettings.right_grid_width,
-		buffer,
+		buffer
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "divider",
 			value = "content/ui/materials/dividers/faded_line_01",
+			style_id = "divider",
+			pass_type = "texture",
 			style = {
 				color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					content_width,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
-			pass_type = "text",
 			style_id = "text",
 			value_id = "text",
+			pass_type = "text",
 			style = table.add_missing({
-				text_horizontal_alignment = "center",
-			}, right_content_description_style),
-		},
+				text_horizontal_alignment = "center"
+			}, right_content_description_style)
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local text = config.text
@@ -683,7 +683,7 @@ Blueprints.divider = {
 		end
 
 		content.size[2] = size
-	end,
+	end
 }
 
 do
@@ -703,101 +703,101 @@ do
 	Blueprints.body = {
 		size = {
 			ElementSettings.right_grid_width,
-			0,
+			0
 		},
 		pass_template = {
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_description_style,
-			},
+				style_id = "text",
+				pass_type = "text",
+				value = "<UNDEFINED>",
+				style = right_content_description_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 	Blueprints.header = {
 		size = {
 			ElementSettings.right_grid_width,
-			ElementSettings.section_buffer,
+			ElementSettings.section_buffer
 		},
 		pass_template = {
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_header_style,
-			},
+				style_id = "text",
+				pass_type = "text",
+				value = "<UNDEFINED>",
+				style = right_content_header_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 	Blueprints.title = {
 		size = {
 			ElementSettings.right_grid_width,
-			ElementSettings.internal_buffer,
+			ElementSettings.internal_buffer
 		},
 		pass_template = {
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "<UNDEFINED>",
 				value_id = "text",
-				style = right_content_title_style,
-			},
+				style_id = "text",
+				pass_type = "text",
+				value = "<UNDEFINED>",
+				style = right_content_title_style
+			}
 		},
-		init = init_text,
+		init = init_text
 	}
 end
 
 Blueprints.text_icon = {
 	size = {
 		icon_size,
-		icon_size,
+		icon_size
 	},
 	pass_template = {
 		{
-			pass_type = "text",
-			style_id = "icon",
-			value = "<UNDEFINED>",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = {
-				horizontal_alignment = "center",
-				text_horizontal_alignment = "center",
-				text_vertical_alignment = "top",
 				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				text_vertical_alignment = "top",
+				text_horizontal_alignment = "center",
 				offset = {
 					0,
 					-1,
-					1,
+					1
 				},
 				size = {
 					icon_size,
-					icon_size - (3 + internal_buffer),
+					icon_size - (3 + internal_buffer)
 				},
 				text_color = Color.terminal_text_header(255, true),
-				font_size = icon_size - 8,
-			},
+				font_size = icon_size - 8
+			}
 		},
 		{
-			pass_type = "rect",
-			style_id = "rect",
 			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "rect",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = {
 					icon_size - 2 * internal_buffer,
-					3,
+					3
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_text_header(255, true),
-			},
-		},
+				color = Color.terminal_text_header(255, true)
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
@@ -816,53 +816,53 @@ Blueprints.text_icon = {
 			style.rect.size[1] = 0
 			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
 		end
-	end,
+	end
 }
 Blueprints.texture_icon = {
 	size = {
 		icon_size,
-		icon_size,
+		icon_size
 	},
 	pass_template = {
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "top",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					1,
-					1,
+					1
 				},
 				size = {
 					icon_size - (3 + internal_buffer),
-					icon_size - (3 + internal_buffer),
+					icon_size - (3 + internal_buffer)
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
-			pass_type = "rect",
-			style_id = "rect",
 			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "rect",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = {
 					icon_size - 2 * internal_buffer,
-					3,
+					3
 				},
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = Color.terminal_text_header(255, true),
-			},
-		},
+				color = Color.terminal_text_header(255, true)
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
@@ -881,52 +881,52 @@ Blueprints.texture_icon = {
 			style.rect.size[1] = 0
 			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
 		end
-	end,
+	end
 }
 Blueprints.buff_title = {
 	size = {
 		300,
-		50,
+		50
 	},
 	pass_template = {
 		{
-			pass_type = "rect",
 			style_id = "rect",
+			pass_type = "rect",
 			style = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = {
+				vertical_alignment = "top",
 				font_size = 24,
+				text_vertical_alignment = "top",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					250,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -940,82 +940,82 @@ Blueprints.buff_title = {
 		style.title.size[2] = title_height
 		style.title.offset[2] = big_margin
 		content.size[2] = title_height + big_margin * 2
-	end,
+	end
 }
 Blueprints.buff_sub_title = {
 	size = {
 		300,
-		60,
+		60
 	},
 	pass_template = {
 		{
-			pass_type = "rect",
 			style_id = "rect",
+			pass_type = "rect",
 			style = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
-			pass_type = "texture_uv",
 			style_id = "line",
-			value = "content/ui/materials/gradients/gradient_horizontal",
 			value_id = "line",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/gradients/gradient_horizontal",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "top",
+				horizontal_alignment = "left",
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				size = {
 					150,
-					2,
+					2
 				},
 				color = Color.terminal_text_header(255, true),
 				uvs = {
 					{
 						1,
-						0,
+						0
 					},
 					{
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = {
+				vertical_alignment = "top",
 				font_size = 16,
+				text_vertical_alignment = "top",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					250,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -1034,101 +1034,101 @@ Blueprints.buff_sub_title = {
 		local bottom_margin = math.min(0, big_margin - small_margin - style.line.size[2])
 
 		content.size[2] = style.line.offset[2] + style.line.size[2] + big_margin + bottom_margin
-	end,
+	end
 }
 
 local buff_icon_size = {
 	50,
-	50,
+	50
 }
 
 Blueprints.buff = {
 	size = {
 		400,
-		60,
+		60
 	},
 	pass_template = {
 		{
-			pass_type = "rect",
 			style_id = "rect",
+			pass_type = "rect",
 			style = {
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
 				size = {
-					5,
+					5
 				},
-				color = Color.terminal_text_header(255, true),
-			},
+				color = Color.terminal_text_header(255, true)
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/base/ui_default_base",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
 			style = {
-				horizontal_alignment = "left",
-				scale_to_material = true,
 				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "left",
 				offset = {
 					25,
 					0,
-					1,
+					1
 				},
 				size = buff_icon_size,
 				material_values = {
-					texture_map = "content/ui/textures/placeholder_texture",
-				},
-			},
+					texture_map = "content/ui/textures/placeholder_texture"
+				}
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value = "<UNDEFINED>",
 			value_id = "title",
+			style_id = "title",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = {
+				vertical_alignment = "top",
 				font_size = 18,
+				text_vertical_alignment = "top",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
 				offset = {
 					85,
 					0,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					265,
-					2000,
-				},
-			},
+					2000
+				}
+			}
 		},
 		{
-			pass_type = "text",
-			style_id = "description",
-			value = "<UNDEFINED>",
 			value_id = "description",
+			style_id = "description",
+			pass_type = "text",
+			value = "<UNDEFINED>",
 			style = {
+				vertical_alignment = "top",
 				font_size = 20,
+				text_vertical_alignment = "top",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
 				offset = {
 					85,
 					24,
-					1,
+					1
 				},
 				text_color = Color.terminal_text_body(255, true),
 				size = {
 					265,
-					2000,
-				},
-			},
-		},
+					2000
+				}
+			}
+		}
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local content = widget.content
@@ -1191,13 +1191,13 @@ Blueprints.buff = {
 		style.icon.offset[2] = big_margin
 		style.description.offset[2] = style.title.offset[2] + style.title.size[2] + small_margin
 		content.size[2] = math.max(style.description.offset[2] + description_height + big_margin * 2, buff_icon_size[2] + big_margin * 2)
-	end,
+	end
 }
 Blueprints.buff_spacing = {
 	size = {
 		400,
-		5,
-	},
+		5
+	}
 }
 
 return Blueprints

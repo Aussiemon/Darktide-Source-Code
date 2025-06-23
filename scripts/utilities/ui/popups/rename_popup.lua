@@ -3,28 +3,28 @@
 local _rename_states = {
 	initial = {
 		text = "loc_rename_account_state_initial_label",
-		color = Color.text_default(255, true),
+		color = Color.text_default(255, true)
 	},
 	pending = {
 		text = "loc_rename_account_state_pending_label",
-		color = Color.text_default(255, true),
+		color = Color.text_default(255, true)
 	},
 	error = {
 		text = "loc_rename_account_state_error_label",
-		color = Color.ui_red_medium(255, true),
-	},
+		color = Color.ui_red_medium(255, true)
+	}
 }
 
 local function show_failure()
 	local context = {
-		description_text = "loc_rename_failure_description",
 		title_text = "loc_rename_failure_title",
+		description_text = "loc_rename_failure_description",
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_rename_account_cancel_label",
-			},
-		},
+				close_on_pressed = true
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)
@@ -39,16 +39,16 @@ local function show_popup(on_success, is_forced)
 	local popup_id
 	local options = {
 		{
-			keyboard_title = "loc_rename_account_virtual_keyboard_label",
 			margin_bottom = -4,
-			max_length = 18,
 			template_type = "terminal_input_field",
-			width = 512,
+			keyboard_title = "loc_rename_account_virtual_keyboard_label",
+			max_length = 18,
+			width = 512
 		},
 		{
-			font_name = "body_small",
-			margin_bottom = 20,
 			template_type = "text",
+			margin_bottom = 20,
+			font_name = "body_small",
 			update = function ()
 				if next_state ~= nil then
 					local _next = _rename_states[next_state]
@@ -56,11 +56,11 @@ local function show_popup(on_success, is_forced)
 
 					return _text, _color
 				end
-			end,
+			end
 		},
 		{
-			template_type = "terminal_button_hold_small",
 			text = "loc_popup_button_confirm",
+			template_type = "terminal_button_hold_small",
 			callback = function (text_input)
 				if not local_check(text_input) then
 					next_state = "error"
@@ -83,21 +83,21 @@ local function show_popup(on_success, is_forced)
 
 					next_state = "error"
 				end)
-			end,
-		},
+			end
+		}
 	}
 
 	if not is_forced then
 		options[#options + 1] = {
-			close_on_pressed = true,
-			force_same_row = true,
 			text = "loc_rename_account_cancel_label",
+			close_on_pressed = true,
+			force_same_row = true
 		}
 	else
 		options[#options + 1] = {
-			margin_bottom = 20,
-			template_type = "text",
 			text = "loc_forced_rename_note",
+			template_type = "text",
+			margin_bottom = 20
 		}
 	end
 
@@ -114,7 +114,7 @@ local function show_popup(on_success, is_forced)
 	local context = {
 		title_text = title_text,
 		description_text = description_text,
-		options = options,
+		options = options
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (_popup_id)

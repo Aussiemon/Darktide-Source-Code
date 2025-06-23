@@ -36,8 +36,8 @@ end
 
 ServoSkullActivator.component_data = {
 	extensions = {
-		"ServoSkullActivatorExtension",
-	},
+		"ServoSkullActivatorExtension"
+	}
 }
 
 return ServoSkullActivator

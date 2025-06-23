@@ -8,14 +8,14 @@ local CLIENT_RPCS = {
 	"rpc_health_station_hot_join",
 	"rpc_health_station_on_socket_spawned",
 	"rpc_health_station_on_battery_spawned",
-	"rpc_health_station_sync_charges",
+	"rpc_health_station_sync_charges"
 }
 local DISTRIBUTION_CHARGES_PER_STATION = {
 	2.5,
 	2.5,
 	2.25,
 	2,
-	1.75,
+	1.75
 }
 
 HealthStationSystem.init = function (self, context, system_init_data, ...)
@@ -93,7 +93,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 			if extension:use_distribution_pool() and has_battery_on_start then
 				stations[#stations + 1] = {
 					charges = 0,
-					extension = extension,
+					extension = extension
 				}
 			else
 				local charges = extension:charge_amount()

@@ -5,10 +5,10 @@ local SessionStats = require("scripts/settings/stats/session_stats")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local SessionStatEvents = {}
 local collectible_missions = {
+	side_mission_tome = "tome",
 	side_mission_consumable = "relic",
 	side_mission_grimoire = "grimoire",
-	side_mission_hack_communications = "communications_hack_device",
-	side_mission_tome = "tome",
+	side_mission_hack_communications = "communications_hack_device"
 }
 
 SessionStatEvents.create_mission_events = function (mission_data, mission_result, account_id, character_id)
@@ -34,8 +34,8 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 			characterId = character_id,
 			dataType = BackendStatTypes.statistic_by,
 			value = {
-				[specifier] = 1,
-			},
+				[specifier] = 1
+			}
 		}
 	end
 
@@ -46,8 +46,8 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 			characterId = character_id,
 			dataType = BackendStatTypes.ephemeral,
 			value = {
-				none = 1,
-			},
+				none = 1
+			}
 		}
 	end
 
@@ -62,8 +62,8 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 			characterId = character_id,
 			dataType = BackendStatTypes.ephemeral,
 			value = {
-				[specifier] = side_mission_progress,
-			},
+				[specifier] = side_mission_progress
+			}
 		}
 	end
 
@@ -112,7 +112,7 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 				characterId = character_id,
 				dataType = session_stat_config.type,
 				type = backend_id,
-				value = values,
+				value = values
 			}
 		end
 	end

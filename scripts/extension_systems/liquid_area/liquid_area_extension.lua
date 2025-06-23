@@ -137,7 +137,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	add_liquid_buffer[0] = 0
 	self._add_liquid_buffer = add_liquid_buffer
 	self._set_filled_buffer = {
-		size = 0,
+		size = 0
 	}
 	self._set_filled_send_array = Script.new_array(real_index_max_size)
 	self._use_liquid_drawer = template.use_liquid_drawer
@@ -258,7 +258,7 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 		rotation = QuaternionBox(rotation),
 		particle_id = particle_id,
 		angle = angle,
-		real_index = real_index,
+		real_index = real_index
 	}
 
 	self._flow[real_index] = liquid
@@ -646,41 +646,41 @@ end
 local add_list, remove_list = {}, {}
 local fill_list = {
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		angle = 0,
+		weight = 0
 	},
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		angle = 0,
+		weight = 0
 	},
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		angle = 0,
+		weight = 0
 	},
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		angle = 0,
+		weight = 0
 	},
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
+		angle = 0,
+		weight = 0
 	},
 	{
-		angle = 0,
 		index = 0,
 		relative_angle = 0,
-		weight = 0,
-	},
+		angle = 0,
+		weight = 0
+	}
 }
 
 LiquidAreaExtension._update_flow = function (self, dt)
@@ -890,14 +890,16 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 
 	for i = 1, num_results do
 		local unit = BROADPHASE_RESULTS[i]
+		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+		local is_companion_unit = unit_data_extension and unit_data_extension:is_companion()
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) then
+		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) and not is_companion_unit then
 			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(in_liquid_buff_template_name, t, "owner_unit", self._source_unit, "source_item", self._optional_source_item)
 
 			buff_affected_units[unit] = {
 				local_index = local_index,
-				component_index = component_index,
+				component_index = component_index
 			}
 		end
 	end

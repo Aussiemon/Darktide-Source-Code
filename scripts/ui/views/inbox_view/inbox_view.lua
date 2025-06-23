@@ -87,7 +87,7 @@ InboxView._load_portrait_icon = function (self)
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 
 	self._portrait_loaded_info = {
-		icon_load_id = icon_load_id,
+		icon_load_id = icon_load_id
 	}
 end
 
@@ -196,7 +196,7 @@ InboxView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -208,7 +208,7 @@ InboxView._create_grid = function (self, entries)
 	local pass_template = ItemPassTemplates.item
 	local grid_spacing = {
 		15,
-		15,
+		15
 	}
 	local scenegraph_width = size[1] * 4 + grid_spacing[1] * 3
 	local scenegraph_height
@@ -264,7 +264,7 @@ InboxView._create_grid = function (self, entries)
 
 	self._inbox_grid = {
 		widgets = widgets,
-		grid = grid,
+		grid = grid
 	}
 end
 
@@ -476,7 +476,7 @@ InboxView._create_grid_layout = function (self, item_offers)
 			if item then
 				layout[#layout + 1] = {
 					item = item,
-					slot = ItemSlotSettings.slot_secondary,
+					slot = ItemSlotSettings.slot_secondary
 				}
 			end
 		end
@@ -574,7 +574,7 @@ InboxView._setup_stats_preview_widgets = function (self)
 	local max_rows = 2
 	local stats_size = {
 		216.66666666666666,
-		40,
+		40
 	}
 	local weapon_bar_text_style = table.clone(UIFontSettings.body_small)
 
@@ -583,91 +583,91 @@ InboxView._setup_stats_preview_widgets = function (self)
 	weapon_bar_text_style.offset = {
 		-4,
 		0,
-		0,
+		0
 	}
 
 	local weapon_stats_bar_background_margin = 2
 	local weapon_stat_bar = {
 		{
-			pass_type = "text",
 			value = "text",
 			value_id = "text",
-			style = weapon_bar_text_style,
+			pass_type = "text",
+			style = weapon_bar_text_style
 		},
 		{
-			pass_type = "rect",
 			style_id = "background",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
 				size = {
 					nil,
-					6,
+					6
 				},
 				size_addition = {
 					weapon_stats_bar_background_margin * 2,
-					weapon_stats_bar_background_margin * 2,
+					weapon_stats_bar_background_margin * 2
 				},
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
 			pass_type = "texture",
 			style_id = "bar",
 			value = "content/ui/materials/bars/simple/fill",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
 				size = {
 					nil,
-					6,
+					6
 				},
 				offset = {
 					-weapon_stats_bar_background_margin,
 					0,
-					1,
+					1
 				},
-				color = Color.white(255, true),
+				color = Color.white(255, true)
 			},
 			change_function = function (content, style)
 				local progress = content.progress or 0
 				local new_bar_length = stats_size[1] * progress
 
 				style.size[1] = new_bar_length
-			end,
+			end
 		},
 		{
 			pass_type = "texture",
 			style_id = "end",
 			value = "content/ui/materials/bars/simple/end",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
 				size = {
 					12,
-					16,
+					16
 				},
 				offset = {
 					0,
 					5,
-					2,
+					2
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
-				},
+					255
+				}
 			},
 			change_function = function (content, style)
 				local progress = content.progress or 0
@@ -677,8 +677,8 @@ InboxView._setup_stats_preview_widgets = function (self)
 				local alpha_multiplier = math.clamp(progress / 0.2, 0, 1)
 
 				style.color[1] = 255 * alpha_multiplier
-			end,
-		},
+			end
+		}
 	}
 	local widget_definition = UIWidget.create_definition(weapon_stat_bar, "stat_pivot", nil, stats_size)
 	local widgets = {}
@@ -733,7 +733,7 @@ InboxView._set_stat_bar_value = function (self, stat_index, value, duration, sho
 		start_value = should_reset and 0 or current_progress,
 		end_value = value,
 		duration = duration,
-		widget = widget,
+		widget = widget
 	}
 
 	stats_animation_progress[#stats_animation_progress + 1] = anim_data

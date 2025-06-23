@@ -84,7 +84,7 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 		widget = widget,
 		widget_name = widget_name,
 		icon = icon,
-		extra_height = icon and icon_height + 10 or 0,
+		extra_height = icon and icon_height + 10 or 0
 	}
 	local style = widget.style
 	local content = widget.content

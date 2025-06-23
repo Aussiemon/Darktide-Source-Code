@@ -2,7 +2,7 @@
 
 local RemoteWaitForJoinState = class("RemoteWaitForJoinState")
 local RPCS = {
-	"rpc_request_join_game_session",
+	"rpc_request_join_game_session"
 }
 
 RemoteWaitForJoinState.init = function (self, state_machine, shared_state)
@@ -37,7 +37,7 @@ RemoteWaitForJoinState.update = function (self, dt)
 		Log.info("RemoteWaitForJoinState", "Timeout waiting for rpc_request_join_game_session %s", shared_state.peer_id)
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -47,7 +47,7 @@ RemoteWaitForJoinState.update = function (self, dt)
 		Log.info("RemoteWaitForJoinState", "Session channel disconnected %s", shared_state.peer_id)
 
 		return "disconnect", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 end

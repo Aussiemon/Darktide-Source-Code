@@ -52,7 +52,7 @@ GameplayInitStepExtensions.update = function (self, main_dt, main_t)
 	self._shared_state.initialized_steps.GameplayInitStepExtensions = true
 
 	local next_step_params = {
-		shared_state = self._shared_state,
+		shared_state = self._shared_state
 	}
 
 	return GameplayInitStepManagers, next_step_params
@@ -77,62 +77,62 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local mission = MissionTemplates[mission_name]
 	local system_init_data = {
 		broadphase_system = {
-			side_names = side_names,
+			side_names = side_names
 		},
 		cinematic_scene_system = {
-			mission = mission,
+			mission = mission
 		},
 		critter_spawner_system = {
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		cutscene_character_system = {
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		darkness_system = {
-			mission = mission,
+			mission = mission
 		},
 		dialogue_context_system = {
-			mission = mission,
+			mission = mission
 		},
 		dialogue_system = {
 			is_rule_db_enabled = true,
 			mission = mission,
-			vo_sources_cache = vo_sources_cache,
+			vo_sources_cache = vo_sources_cache
 		},
 		hazard_prop_system = {
 			mission = mission,
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		health_station_system = {
-			mission = mission,
+			mission = mission
 		},
 		light_controller_system = {
-			themes = self._shared_state.themes,
+			themes = self._shared_state.themes
 		},
 		mission_objective_system = {
-			mission = mission,
+			mission = mission
 		},
 		mission_objective_zone_system = {
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		pickup_system = {
 			mission = mission,
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		side_system = {
 			side_compositions = side_compositions,
-			default_player_side_name = default_player_side_name,
+			default_player_side_name = default_player_side_name
 		},
 		spline_follower_system = {
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		minigame_system = {
 			mission = mission,
-			level_seed = level_seed,
+			level_seed = level_seed
 		},
 		component_system = {
-			level_seed = level_seed,
-		},
+			level_seed = level_seed
+		}
 	}
 
 	Managers.state.level_props_broadphase = LevelPropsBroadphaseManager:new()
@@ -140,7 +140,7 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local unit_categories = {
 		"flow_spawned",
 		"level_spawned",
-		"cinematic",
+		"cinematic"
 	}
 	local UnitTemplates = require("scripts/extension_systems/unit_templates")
 	local ExtensionSystemConfiguration = require("scripts/extension_systems/extension_system_configuration")

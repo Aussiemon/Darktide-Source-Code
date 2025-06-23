@@ -47,7 +47,7 @@ RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types
 
 		roamer_pack_probabilities[name] = {
 			prob = prob,
-			alias = alias,
+			alias = alias
 		}
 	end
 
@@ -76,23 +76,23 @@ RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types
 end
 
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
-	"content/volume_types/nav_tag_volumes/no_spawn",
+	"content/volume_types/nav_tag_volumes/no_spawn"
 }
 local NAV_TAG_LAYER_COSTS = {}
 local PATROL_NAV_TAG_LAYER_COSTS = {
-	bot_damage_drops = 0,
-	bot_drops = 0,
-	bot_jumps = 0,
-	bot_ladders = 0,
-	bot_leap_of_faith = 0,
-	cover_ledges = 0,
-	cover_vaults = 0,
-	doors = 1,
 	jumps = 0,
-	ledges = 0,
-	ledges_with_fence = 0,
+	cover_vaults = 0,
+	bot_damage_drops = 0,
 	monster_walls = 0,
+	bot_ladders = 0,
+	bot_jumps = 0,
+	bot_leap_of_faith = 0,
+	ledges_with_fence = 0,
+	doors = 1,
 	teleporters = 0,
+	ledges = 0,
+	cover_ledges = 0,
+	bot_drops = 0
 }
 
 RoamerPacing.on_gameplay_post_init = function (self, level)
@@ -135,7 +135,7 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		local patrol_data = {
 			patrols = {},
 			active_patrols = {},
-			claimed_patrol_zone_indexes = {},
+			claimed_patrol_zone_indexes = {}
 		}
 
 		self._patrol_data = patrol_data
@@ -282,7 +282,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 				pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
 				roamer_packs = chosen_packs,
 				sub_zones = sub_zones,
-				spawn_point_index = i,
+				spawn_point_index = i
 			}
 
 			zones[#zones + 1] = zone
@@ -408,7 +408,7 @@ RoamerPacing._create_sub_zone_location = function (self, spawn_position, density
 		roamer_slots = roamer_slots,
 		group_id = group_id,
 		shared_aggro_trigger = density_setting.shared_aggro_trigger,
-		spawn_point_group_index = spawn_point_group_index,
+		spawn_point_group_index = spawn_point_group_index
 	}
 	local num_roamer_slots = #roamer_slots
 
@@ -635,7 +635,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 								sub_zone_id = sub_zone_index,
 								travel_distance = travel_distance,
 								density_type = density_type,
-								side_id = side_id,
+								side_id = side_id
 							}
 
 							roamers[roamer_id] = roamer
@@ -660,7 +660,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 						self._faction_travel_distances[#self._faction_travel_distances + 1] = {
 							travel_distance = travel_distance,
 							faction = faction,
-							density_type = density_type,
+							density_type = density_type
 						}
 						current_faction = faction
 					end
@@ -668,7 +668,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 					if density_type ~= current_density_type then
 						self._density_type_travel_distances[#self._density_type_travel_distances + 1] = {
 							travel_distance = travel_distance,
-							density_type = density_type,
+							density_type = density_type
 						}
 						current_density_type = density_type
 					end
@@ -1123,12 +1123,6 @@ RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 		local position_on_main_path = MainPathQueries.closest_position(from_position)
 
 		group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_main_path)
-	end
-
-	if not group_index then
-		Log.info("RoamerPacing", "Failed to aggro roamer zones at position from_position, found no group near player.")
-
-		return
 	end
 
 	local zones = self._zones

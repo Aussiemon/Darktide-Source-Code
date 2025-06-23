@@ -2,12 +2,12 @@
 
 local DefaultPacingTemplate = require("scripts/managers/pacing/templates/default_pacing_template")
 local ALLOWED_SPAWN_TYPES = {
-	hordes = false,
 	monsters = false,
-	roamers = false,
-	specials = false,
 	terror_events = true,
-	trickle_hordes = false,
+	specials = false,
+	roamers = false,
+	hordes = false,
+	trickle_hordes = false
 }
 local pacing_template = table.clone_instance(DefaultPacingTemplate)
 

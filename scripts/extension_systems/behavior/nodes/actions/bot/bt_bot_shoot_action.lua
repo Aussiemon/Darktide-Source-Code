@@ -13,10 +13,10 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local Trajectory = require("scripts/utilities/trajectory")
 local BtBotShootAction = class("BtBotShootAction", "BtNode")
 local DEFAULT_AIM_DATA = {
-	max_radius_pseudo_random_c = 0.01475,
 	min_radius_pseudo_random_c = 0.0557,
+	max_radius_pseudo_random_c = 0.01475,
 	min_radius = math.pi / 72,
-	max_radius = math.pi / 16,
+	max_radius = math.pi / 16
 }
 local AIM_TIME = 0.2
 local EMPTY_TABLE = {}

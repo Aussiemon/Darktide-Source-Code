@@ -25,12 +25,12 @@ local trigger_condition_classes = {
 	at_least_one_boss_inside = TriggerConditionAtLeastOneBossInside,
 	at_least_one_player_inside = TriggerConditionAtLeastOnePlayerInside,
 	luggable_inside = TriggerConditionLuggableInside,
-	only_enter = TriggerConditionOnlyEnter,
+	only_enter = TriggerConditionOnlyEnter
 }
 local trigger_action_classes = {
 	send_flow = TriggerActionSendFlow,
 	set_location = TriggerActionSetLocation,
-	safe_volume = TriggerActionSafeVolume,
+	safe_volume = TriggerActionSafeVolume
 }
 
 TriggerExtension.init = function (self, extension_init_context, unit, ...)

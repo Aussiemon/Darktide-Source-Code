@@ -38,7 +38,7 @@ FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sourc
 	for i = 1, 50 do
 		self._impact_data[i] = {
 			position = Vector3Box(),
-			normal = Vector3Box(),
+			normal = Vector3Box()
 		}
 	end
 end

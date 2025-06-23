@@ -8,7 +8,7 @@ local TRIGGER_DISTANCE = 20
 local RESTART_TRIGGER_DISTANCE = 25
 local TIME_BETWEEN_TRIGGERS = 10
 local resources = {
-	approach_sound_event = APPROACH_SOUND_EVENT,
+	approach_sound_event = APPROACH_SOUND_EVENT
 }
 local _trigger_sound
 local effect_template = {
@@ -42,7 +42,7 @@ local effect_template = {
 	end,
 	stop = function (template_data, template_context)
 		return
-	end,
+	end
 }
 
 function _trigger_sound(unit, target_unit, template_data, template_context, t)

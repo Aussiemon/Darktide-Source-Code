@@ -22,10 +22,10 @@ CraftingReplaceTraitView.init = function (self, settings, context)
 		item = self._item,
 		trait_ids = {},
 		trait_master_ids = {},
-		tiers = {},
+		tiers = {}
 	}
 	self._can_craft_context = {
-		trait_items = {},
+		trait_items = {}
 	}
 end
 
@@ -227,7 +227,7 @@ CraftingReplaceTraitView.cb_on_trait_selected = function (self, widget, config)
 		self._perform_trait_selection_data = {
 			widget = widget,
 			config = config,
-			remove_inventory_focus = remove_inventory_focus,
+			remove_inventory_focus = remove_inventory_focus
 		}
 	end
 end

@@ -27,7 +27,7 @@ VoiceOverEventTriggeredReporter.register_event = function (self, rule_name)
 		index = #self._report + 1
 		self._report[index] = {
 			observations = 1,
-			vo_name = rule_name,
+			vo_name = rule_name
 		}
 		self._vo_name_to_index[rule_name] = index
 	else

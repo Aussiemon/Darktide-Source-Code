@@ -10,7 +10,7 @@ WorldTestCases.load_mission = function (case_settings)
 		local settings = cjson.decode(case_settings or "{}")
 		local check_theme_loaded = settings.check_theme_loaded or false
 		local flags = settings.flags or {
-			"load_mission",
+			"load_mission"
 		}
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
@@ -55,7 +55,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 		local check_theme_loaded = true
 		local flags = settings.flags or {
 			"load_mission",
-			"circumstances",
+			"circumstances"
 		}
 		local mission_name = settings.mission_name
 		local num_peers = settings.num_peers or 0
@@ -101,7 +101,7 @@ WorldTestCases.load_mission_side_missions = function (case_settings)
 		local check_theme_loaded = settings.check_theme_loaded or true
 		local flags = settings.flags or {
 			"load_mission",
-			"side_missions",
+			"side_missions"
 		}
 		local mission_name = settings.mission_name
 		local num_peers = settings.num_peers or 0
@@ -174,12 +174,12 @@ WorldTestCases.screenshots_for_timelapse_videos = function (case_settings)
 		local settings = cjson.decode(case_settings or "{}")
 		local missions = settings.missions
 		local flags = {
-			"screenshot",
+			"screenshot"
 		}
 		local wait_time = 5
 		local screenshot_settings = settings.screenshot_settings or {
-			filetype = "png",
 			output_dir = "//filegw01.i.fatshark.se/tools/testify/screenshot_timelapse",
+			filetype = "png"
 		}
 		local output_dir = screenshot_settings.output_dir
 

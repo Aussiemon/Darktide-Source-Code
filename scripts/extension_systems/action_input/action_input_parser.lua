@@ -26,7 +26,7 @@ local raw_inputs = {
 	"weapon_extra_pressed",
 	"weapon_extra_hold",
 	"weapon_extra_release",
-	"toggle_ads",
+	"toggle_ads"
 }
 
 for i = 1, #wield_inputs do
@@ -122,7 +122,7 @@ ActionInputParser._format_and_initialize_action_inputs = function (self, action_
 			sequences[j] = {
 				[IS_RUNNING] = false,
 				[CURRENT_ELEMENT_INDEX] = 1,
-				[ELEMENT_START_T] = 0,
+				[ELEMENT_START_T] = 0
 			}
 		end
 
@@ -138,8 +138,8 @@ ActionInputParser._format_and_initialize_action_inputs = function (self, action_
 					NO_ACTION_INPUT,
 					NO_ACTION_INPUT,
 					NO_ACTION_INPUT,
-					NO_ACTION_INPUT,
-				},
+					NO_ACTION_INPUT
+				}
 			}
 		end
 

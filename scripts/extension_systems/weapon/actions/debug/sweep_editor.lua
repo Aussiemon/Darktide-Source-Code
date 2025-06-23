@@ -11,7 +11,7 @@ SweepEditor.LOG_TAG = "SweepEditor"
 
 local POINT_MODIFICATION_TYPES = {
 	"up",
-	"depth",
+	"depth"
 }
 
 for i = 1, #POINT_MODIFICATION_TYPES do
@@ -23,7 +23,7 @@ end
 SweepEditor.init = function (self)
 	self._drawer = Debug:drawer({
 		mode = "immediate",
-		name = "SweepEditor",
+		name = "SweepEditor"
 	})
 	self._input_service = nil
 end
@@ -62,11 +62,11 @@ SweepEditor._init_splines = function (self, action_settings)
 		return sweep_splines, "exported"
 	elseif spline_settings.matrices_data_location then
 		return {
-			SweepSplineExported:new(action_settings, spline_settings.matrices_data_location, spline_settings.anchor_point_offset),
+			SweepSplineExported:new(action_settings, spline_settings.matrices_data_location, spline_settings.anchor_point_offset)
 		}, "exported"
 	else
 		return {
-			SweepSpline:new(action_settings.spline_settings),
+			SweepSpline:new(action_settings.spline_settings)
 		}, "hermite"
 	end
 end

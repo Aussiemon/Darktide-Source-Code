@@ -14,8 +14,9 @@ local BASE_LAYER_EMPTY_EVENT = "base_layer_to_empty"
 local IMPACT_HIT_MASS_MODIFIERS = {
 	0.9,
 	0.75,
-	0.5,
+	0.5
 }
+local _disable_anim_driven_locomotion
 
 BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -100,6 +101,15 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 
 	local stagger_anim_duration, stagger_duration = breed.stagger_durations[stagger_type], stagger_component.duration
 	local anim_duration_mod = action_data.stagger_duration_mods and action_data.stagger_duration_mods[stagger_anim] or 1
+	local exit_stagger_anim_early = action_data.exit_stagger_anim_early and action_data.exit_stagger_anim_early[stagger_anim]
+
+	if exit_stagger_anim_early then
+		scratchpad.exit_stagger_anim_early = true
+
+		local exit_early_modifer = exit_stagger_anim_early
+
+		stagger_anim_duration = stagger_anim_duration * exit_early_modifer
+	end
 
 	if action_data.ignore_extra_stagger_duration then
 		stagger_duration = stagger_anim_duration
@@ -117,6 +127,8 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	scratchpad.stagger_hit_wall = nil
 
 	MinionShield.init_block_timings(scratchpad, action_data, stagger_anim, t)
+
+	scratchpad.anim_driven_locomotion_disabled = false
 end
 
 BtStaggerAction.init_values = function (self, blackboard)
@@ -187,16 +199,11 @@ BtStaggerAction._select_stagger_anim_and_rotation = function (self, unit, impact
 end
 
 BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	local original_rotation_speed = scratchpad.original_rotation_speed
-	local locomotion_extension = scratchpad.locomotion_extension
+	local anim_driven_locomotion_disabled = scratchpad.anim_driven_locomotion_disabled
 
-	locomotion_extension:set_anim_driven(false)
-	locomotion_extension:set_rotation_speed(original_rotation_speed)
-	locomotion_extension:set_wanted_rotation(nil)
-	locomotion_extension:set_movement_type("snap_to_navmesh")
-	locomotion_extension:set_affected_by_gravity(false)
-	locomotion_extension:use_lerp_rotation(true)
-	locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
+	if not anim_driven_locomotion_disabled then
+		_disable_anim_driven_locomotion(scratchpad)
+	end
 
 	local death_component = blackboard.death
 	local has_force_instant_ragdoll = death_component.force_instant_ragdoll
@@ -284,9 +291,30 @@ BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 
 		scratchpad.behavior_component.move_state = "idle"
 		scratchpad.stagger_anim_duration = nil
+
+		local exit_stagger_anim_early = scratchpad.exit_stagger_anim_early
+
+		if exit_stagger_anim_early then
+			scratchpad.anim_driven_locomotion_disabled = _disable_anim_driven_locomotion(scratchpad)
+		end
 	end
 
 	return "running"
+end
+
+function _disable_anim_driven_locomotion(scratchpad)
+	local locomotion_extension = scratchpad.locomotion_extension
+	local original_rotation_speed = scratchpad.original_rotation_speed
+
+	locomotion_extension:set_anim_driven(false)
+	locomotion_extension:set_rotation_speed(original_rotation_speed)
+	locomotion_extension:set_wanted_rotation(nil)
+	locomotion_extension:set_movement_type("snap_to_navmesh")
+	locomotion_extension:set_affected_by_gravity(false)
+	locomotion_extension:use_lerp_rotation(true)
+	locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
+
+	return true
 end
 
 return BtStaggerAction

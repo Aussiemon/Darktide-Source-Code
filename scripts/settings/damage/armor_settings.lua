@@ -9,13 +9,13 @@ local overdamage_rending_multiplier = {
 	[armor_types.armored] = 0.25,
 	[armor_types.super_armor] = 0.25,
 	[armor_types.resistant] = 0.25,
-	[armor_types.berserker] = 0.25,
+	[armor_types.berserker] = 0.25
 }
 local rending_armor_type_multiplier = {
 	[armor_types.armored] = 1,
 	[armor_types.super_armor] = 1,
 	[armor_types.resistant] = 1,
-	[armor_types.berserker] = 1,
+	[armor_types.berserker] = 1
 }
 
 armor_settings.types = armor_types
@@ -25,7 +25,7 @@ armor_settings.rending_armor_type_multiplier = rending_armor_type_multiplier
 armor_settings.minion_armor_types = minion_armor_types
 armor_settings.hit_types = armor_hit_types
 armor_settings.aborts_attack = {
-	[armor_types.super_armor] = true,
+	[armor_types.super_armor] = true
 }
 
 return settings("ArmorSettings", armor_settings)

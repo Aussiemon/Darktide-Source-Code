@@ -7,7 +7,7 @@ local CLIENT_RPCS = {
 	"rpc_destructible_damage_taken",
 	"rpc_destructible_last_destruction",
 	"rpc_sync_destructible",
-	"rpc_destructible_mark_for_deletion",
+	"rpc_destructible_mark_for_deletion"
 }
 
 DestructibleSystem.init = function (self, extension_system_creation_context, ...)

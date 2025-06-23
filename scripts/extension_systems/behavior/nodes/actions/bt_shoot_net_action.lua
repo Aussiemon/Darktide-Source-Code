@@ -202,7 +202,7 @@ BtShootNetAction._start_shooting = function (self, unit, scratchpad, action_data
 	scratchpad.shoot_data = {
 		direction = Vector3Box(direction),
 		sweep_position = Vector3Box(from_position),
-		available_travel_distance = max_net_distance,
+		available_travel_distance = max_net_distance
 	}
 
 	local spawn_component = scratchpad.spawn_component

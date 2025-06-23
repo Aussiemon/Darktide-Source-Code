@@ -121,7 +121,7 @@ HudElementCharacterNewsFeed._fetch_new_items = function (self)
 
 				new_items_by_inventory[#new_items_by_inventory + 1] = {
 					item = item,
-					show_notification = show_notification,
+					show_notification = show_notification
 				}
 			else
 				ItemUtils.unmark_item_notification_id_as_new(gear_id)

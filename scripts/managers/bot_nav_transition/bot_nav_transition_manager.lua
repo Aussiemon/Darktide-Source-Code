@@ -9,7 +9,7 @@ local BotNavTransitionManager = class("BotNavTransitionManager")
 local BROADPHASE_CELL_RADIUS = 0.7
 local BROADPHASE_MAX_NUM_ENTITIES = 256
 local BROADPHASE_CATEGORIES = {
-	"bot_nav_transition",
+	"bot_nav_transition"
 }
 
 BotNavTransitionManager.init = function (self, world, physics_world, nav_world, is_server)
@@ -116,7 +116,7 @@ BotNavTransitionManager.create_transition = function (self, wanted_from, via, wa
 	local waypoint = BotNavTransition.resolve_waypoint_position(from, via, player_jumped, physics_world)
 	local created, graph = GwNavGraph.create(nav_world, IS_BIDIRECTIONAL, {
 		from,
-		to,
+		to
 	}, Color.blue(), layer_id, index)
 
 	GwNavGraph.add_to_database(graph)
@@ -130,7 +130,7 @@ BotNavTransitionManager.create_transition = function (self, wanted_from, via, wa
 		to = Vector3Box(to),
 		broadphase_id = broadphase_id,
 		type = layer_name,
-		permanent = make_permanent or false,
+		permanent = make_permanent or false
 	}
 
 	local next_index, index_offset, max_bot_nav_transitions = index, self._index_offset, self._max_bot_nav_transitions
@@ -218,7 +218,7 @@ BotNavTransitionManager.register_ladder = function (self, unit)
 	local index = self._ladder_smart_object_index + 1
 	local created, graph = GwNavGraph.create(nav_world, ladder_is_bidirectional, {
 		top_on_nav_mesh_position,
-		ground_on_nav_mesh_position,
+		ground_on_nav_mesh_position
 	}, Color.blue(), layer_id, index)
 
 	GwNavGraph.add_to_database(graph)

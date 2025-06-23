@@ -5,155 +5,155 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	page_header = {
-		horizontal_alignment = "left",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
 		size = {
 			194,
-			194,
+			194
 		},
 		position = {
 			60,
 			60,
-			0,
-		},
+			0
+		}
 	},
 	corner_bottom_left = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			208,
-			222,
+			222
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_bottom_right = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			200,
-			268,
+			268
 		},
 		position = {
 			0,
 			0,
-			62,
-		},
+			62
+		}
 	},
 	corner_top_right = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			540,
-			224,
+			224
 		},
 		position = {
 			0,
 			-650,
-			55,
-		},
+			55
+		}
 	},
 	wallet_pivot = {
-		horizontal_alignment = "right",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			-20,
 			-800,
-			56,
-		},
-	},
+			56
+		}
+	}
 }
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/effects/screen/havoc_01_lower_left",
-		},
+			value = "content/ui/materials/effects/screen/havoc_01_lower_left"
+		}
 	}, "corner_bottom_left"),
 	corner_bottom_right = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/effects/screen/havoc_01_lower_right",
-		},
+			value = "content/ui/materials/effects/screen/havoc_01_lower_right"
+		}
 	}, "corner_bottom_right"),
 	corner_top_right = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
 			value = "content/ui/materials/frames/screen/story_mission_lower_left",
+			style_id = "texture",
+			pass_type = "texture_uv",
 			style = {
 				offset = {
 					0,
 					-2,
-					1,
-				},
-			},
-		},
+					1
+				}
+			}
+		}
 	}, "corner_top_right"),
 	background = UIWidget.create_definition({
 		{
-			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/panel_horizontal_half",
+			pass_type = "texture",
 			style = {
 				offset = {
 					0,
 					0,
-					0,
+					0
 				},
 				color = {
 					160,
 					0,
 					0,
-					0,
-				},
-			},
-		},
-	}, "screen"),
+					0
+				}
+			}
+		}
+	}, "screen")
 }
 local input_legend_params = {}
 local intro_texts = {
 	off_cadence = {
 		description_text = "loc_havoc_off_season_description",
-		title_text = "loc_havoc_off_season_title",
+		title_text = "loc_havoc_off_season_title"
 	},
 	rewarding = {
 		unlocalized_description_text = "",
-		unlocalized_title_text = "",
+		unlocalized_title_text = ""
 	},
 	no_key = {
 		description_text = "loc_havoc_pre_description",
-		title_text = "loc_havoc_pre_title",
+		title_text = "loc_havoc_pre_title"
 	},
 	key = {
 		unlocalized_description_text = "",
-		unlocalized_title_text = "",
-	},
+		unlocalized_title_text = ""
+	}
 }
 local button_options_definitions = {
 	off_cadence = {
@@ -162,8 +162,8 @@ local button_options_definitions = {
 			display_name = "loc_havoc_off_season_button_leave",
 			callback = function (self)
 				Managers.ui:close_view(self.view_name)
-			end,
-		},
+			end
+		}
 	},
 	rewarding = {
 		{
@@ -174,25 +174,25 @@ local button_options_definitions = {
 					layer = 10,
 					tabs_params = {
 						{
-							blur_background = false,
 							display_name = "",
+							blur_background = false,
 							view = "havoc_reward_presentation_view",
 							context = {},
 							input_legend_buttons = {
 								{
-									alignment = "right_alignment",
-									display_name = "loc_continue",
-									input_action = "next",
 									on_pressed_callback = "cb_on_continue_pressed",
-								},
-							},
-						},
-					},
+									input_action = "next",
+									display_name = "loc_continue",
+									alignment = "right_alignment"
+								}
+							}
+						}
+					}
 				}
 
 				self:_setup_tab_bar(tab_bar_params, {})
-			end,
-		},
+			end
+		}
 	},
 	no_key = {
 		{
@@ -200,8 +200,8 @@ local button_options_definitions = {
 			display_name = "loc_havoc_pre_button_leave",
 			callback = function (self)
 				Managers.ui:close_view(self.view_name)
-			end,
-		},
+			end
+		}
 	},
 	key = {
 		{
@@ -212,29 +212,29 @@ local button_options_definitions = {
 					layer = 10,
 					tabs_params = {
 						{
-							blur_background = false,
 							display_name = "",
+							blur_background = false,
 							view = "havoc_play_view",
 							context = {
-								play_fast_enter_animation = true,
+								play_fast_enter_animation = true
 							},
 							input_legend_buttons = {
 								{
-									alignment = "right_alignment",
-									display_name = "loc_action_interaction_help",
 									input_action = "hotkey_help",
+									display_name = "loc_action_interaction_help",
+									alignment = "right_alignment",
 									on_pressed_callback = "cb_on_help_pressed",
 									visibility_function = function (parent)
 										local active_view = parent._active_view_instance
 										local tutorial_overlay = active_view and active_view._tutorial_overlay
 
 										return tutorial_overlay and not tutorial_overlay:is_active()
-									end,
+									end
 								},
 								{
-									alignment = "right_alignment",
-									display_name = "",
 									input_action = "group_finder_refresh_groups",
+									display_name = "",
+									alignment = "right_alignment",
 									on_pressed_callback = "_cb_on_mission_revoke_pressed",
 									visibility_function = function (parent, id)
 										local active_view = parent._active_view_instance
@@ -247,15 +247,15 @@ local button_options_definitions = {
 										local show = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and active_view._can_cancel_mission or active_view and (not active_view._ongoing_mission_id or active_view._ongoing_mission_id and not active_view:_ongoing_mission_id())
 
 										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active and show
-									end,
-								},
-							},
-						},
-					},
+									end
+								}
+							}
+						}
+					}
 				}
 
 				self:_setup_tab_bar(tab_bar_params, {})
-			end,
+			end
 		},
 		{
 			unlocalized_name = "",
@@ -265,30 +265,30 @@ local button_options_definitions = {
 					layer = 10,
 					tabs_params = {
 						{
-							blur_background = false,
-							display_name = "",
 							view = "havoc_lore_view",
-							context = {},
-						},
-					},
+							display_name = "",
+							blur_background = false,
+							context = {}
+						}
+					}
 				}
 
 				self:_setup_tab_bar(tab_bar_params, {})
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 local background_world_params = {
-	level_name = "content/levels/ui/havoc/havoc",
-	register_camera_event = "event_register_camera",
 	shading_environment = "content/shading_environments/ui/havoc",
-	timer_name = "ui",
-	total_blur_duration = 0.5,
-	viewport_layer = 1,
-	viewport_name = "ui_story_mission_background_world_viewport",
-	viewport_type = "default",
 	world_layer = 1,
-	world_name = "ui_story_mission_background_world",
+	total_blur_duration = 0.5,
+	timer_name = "ui",
+	viewport_type = "default",
+	register_camera_event = "event_register_camera",
+	viewport_name = "ui_story_mission_background_world_viewport",
+	viewport_layer = 1,
+	level_name = "content/levels/ui/havoc/havoc",
+	world_name = "ui_story_mission_background_world"
 }
 
 return {
@@ -299,5 +299,5 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	button_options_definitions = button_options_definitions,
 	input_legend_params = input_legend_params,
-	background_world_params = background_world_params,
+	background_world_params = background_world_params
 }

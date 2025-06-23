@@ -232,11 +232,11 @@ StateMainMenu._create_new_character_start = function (self)
 	if not self._character_create then
 		self._character_create_state_views = {
 			{
-				"class_selection_view",
+				"class_selection_view"
 			},
 			{
-				"character_appearance_view",
-			},
+				"character_appearance_view"
+			}
 		}
 		self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
 	end
@@ -387,7 +387,7 @@ StateMainMenu._open_character_create_state_views = function (self, index)
 			character_create = self._character_create,
 			parent = self,
 			force_character_creation = self._force_create_first_character,
-			migration_data = self._migration_data,
+			migration_data = self._migration_data
 		}
 
 		for i = 1, #next_views do
@@ -407,8 +407,8 @@ end
 
 local state_views = {
 	main_menu = {
-		"main_menu_background_view",
-	},
+		"main_menu_background_view"
+	}
 }
 
 StateMainMenu._close_current_state_views = function (self)
@@ -458,7 +458,7 @@ StateMainMenu._set_view_state_cb = function (self, state)
 		local view_context = {
 			parent = self,
 			migration_data = self._migration_data,
-			show_news_popup = show_news_popup,
+			show_news_popup = show_news_popup
 		}
 
 		for i = 1, #new_state_views do
@@ -636,24 +636,24 @@ StateMainMenu._show_reconnect_popup = function (self)
 		description_text = description_text,
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_reconnect_to_session_reconnect_button",
+				close_on_pressed = true,
 				callback = function ()
 					self._reconnect_popup_id = nil
 					self._reconnect_pressed = true
 
 					self:_rejoin_game()
-				end,
+				end
 			},
 			{
+				text = "loc_popup_reconnect_to_session_leave_button",
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_popup_reconnect_to_session_leave_button",
 				callback = function ()
 					Managers.party_immaterium:leave_party()
-				end,
-			},
-		},
+				end
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)

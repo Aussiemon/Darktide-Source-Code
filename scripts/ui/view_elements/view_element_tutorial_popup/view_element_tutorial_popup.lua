@@ -56,22 +56,22 @@ ViewElementTutorialPopup._setup_tutorial_grid = function (self)
 		local grid_size = grid_scenegraph.size
 		local mask_padding_size = 0
 		local grid_settings = {
-			enable_gamepad_scrolling = true,
-			hide_background = true,
-			hide_dividers = true,
-			scrollbar_horizontal_offset = 18,
 			scrollbar_width = 7,
-			title_height = 0,
+			hide_dividers = true,
 			widget_icon_load_margin = 0,
+			enable_gamepad_scrolling = true,
+			title_height = 0,
+			scrollbar_horizontal_offset = 18,
+			hide_background = true,
 			grid_spacing = {
 				0,
-				0,
+				0
 			},
 			grid_size = grid_size,
 			mask_size = {
 				grid_size[1] + 20,
-				grid_size[2] + mask_padding_size,
-			},
+				grid_size[2] + mask_padding_size
+			}
 		}
 		local layer = (self._draw_layer or 0) + 10
 
@@ -115,19 +115,19 @@ ViewElementTutorialPopup._present_tutorial_popup_page = function (self, page_ind
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			10,
-		},
+			10
+		}
 	}
 	layout[#layout + 1] = {
 		widget_type = "text",
-		text = Localize(page_content.text),
+		text = Localize(page_content.text)
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
 		size = {
 			500,
-			25,
-		},
+			25
+		}
 	}
 
 	local grid = self._tutorial_grid

@@ -20,7 +20,7 @@ AudioTestCases.play_all_vo_lines = function ()
 		for _, voice in pairs(voices) do
 			local vo_settings = {
 				dialogue_extension = dialogue_extension,
-				voice = voice,
+				voice = voice
 			}
 
 			Testify:make_request("set_vo_profile", vo_settings)
@@ -36,8 +36,8 @@ AudioTestCases.play_all_vo_lines = function ()
 				event = {
 					type = event_type,
 					wwise_route = wwise_route,
-					sound_event = sound_event,
-				},
+					sound_event = sound_event
+				}
 			}
 
 			Testify:make_request("play_dialogue_event", vo_settings)

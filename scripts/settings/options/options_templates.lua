@@ -2,33 +2,33 @@
 
 local category_settings = {
 	{
-		path = "scripts/settings/options/interface_settings",
+		path = "scripts/settings/options/interface_settings"
 	},
 	{
 		dofile = true,
-		path = "scripts/settings/options/sound_settings",
+		path = "scripts/settings/options/sound_settings"
 	},
 	{
 		path = "scripts/settings/options/render_settings",
 		validation_function = function ()
 			return IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION
-		end,
+		end
 	},
 	{
 		path = "scripts/settings/options/keybind_settings",
 		validation_function = function ()
 			return (IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION) and Managers.ui:using_cursor_navigation()
-		end,
+		end
 	},
 	{
 		path = "scripts/settings/options/controller_settings",
 		validation_function = function ()
 			return IS_GDK or IS_XBS or IS_WINDOWS or IS_PLAYSTATION
-		end,
+		end
 	},
 	{
-		path = "scripts/settings/options/input_settings",
-	},
+		path = "scripts/settings/options/input_settings"
+	}
 }
 
 local function generate_settings(entries)
@@ -60,7 +60,7 @@ local function generate_settings(entries)
 			icon = category_icon,
 			reset_function = reset_function,
 			validation_function = entry.validation_function,
-			can_be_reset = can_be_reset,
+			can_be_reset = can_be_reset
 		}
 
 		local latest_group_name
@@ -75,7 +75,7 @@ local function generate_settings(entries)
 
 	return {
 		settings = all_settings,
-		categories = categories,
+		categories = categories
 	}
 end
 

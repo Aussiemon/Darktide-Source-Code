@@ -179,7 +179,7 @@ ReportPlayerView._setup_buttons_interactions = function (self)
 		complete_function = callback(self, "_on_submit_pressed"),
 		on_complete_sound = UISoundEvents.weapons_discard_complete,
 		hold_sound = UISoundEvents.weapons_discard_hold,
-		hold_release = UISoundEvents.weapons_discard_release,
+		hold_release = UISoundEvents.weapons_discard_release
 	})
 
 	widgets_by_name.close_button.content.hotspot.pressed_callback = callback(self, "_on_close_pressed")
@@ -187,7 +187,7 @@ ReportPlayerView._setup_buttons_interactions = function (self)
 		widgets_by_name.option_dropdown_report_type,
 		widgets_by_name.input_text_report_details,
 		widgets_by_name.report_button,
-		widgets_by_name.close_button,
+		widgets_by_name.close_button
 	}
 end
 
@@ -199,8 +199,8 @@ ReportPlayerView._initialize_description_text = function (self)
 			value = "",
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
-		}),
+			b = key_value_color[4]
+		})
 	})
 
 	widgets_by_name.description.content.text = text
@@ -210,24 +210,24 @@ ReportPlayerView._initialize_report_options = function (self)
 	local report_options = {
 		{
 			display_name = "loc_player_report_bad_username",
-			value = "bad-username",
+			value = "bad-username"
 		},
 		{
 			display_name = "loc_player_report_abuse",
-			value = "abuse",
+			value = "abuse"
 		},
 		{
 			display_name = "loc_player_report_griefing",
-			value = "griefing",
+			value = "griefing"
 		},
 		{
 			display_name = "loc_player_report_cheating",
-			value = "cheating",
+			value = "cheating"
 		},
 		{
 			display_name = "loc_player_report_afk",
-			value = "afk",
-		},
+			value = "afk"
+		}
 	}
 	local blueprint_name = "dropdown"
 	local blueprint = ReportPlayerViewBlueprints[blueprint_name]
@@ -237,8 +237,8 @@ ReportPlayerView._initialize_report_options = function (self)
 	local widget_definition = UIWidget.create_definition(pass_template, "option_dropdown_report_type", nil, dropdown_size)
 	local new_widget = self:_create_widget("option_dropdown_report_type", widget_definition)
 	local element = {
-		display_name = "loc_player_report_reason_title",
 		id = "report_player",
+		display_name = "loc_player_report_reason_title",
 		widget_type = "dropdown",
 		on_activated = function (value, template)
 			self._selected_category = report_options[value].value
@@ -273,7 +273,7 @@ ReportPlayerView._initialize_report_options = function (self)
 		end,
 		on_changed = function (value)
 			self._selected_category = report_options[value].value
-		end,
+		end
 	}
 
 	blueprint.init(self, new_widget, element)
@@ -289,7 +289,7 @@ ReportPlayerView._initialize_report_details = function (self)
 	local widget_definition = UIWidget.create_definition(pass_template, "input_text_report_details", nil, blueprint.size)
 	local new_widget = self:_create_widget("input_text_report_details", widget_definition)
 	local element = {
-		widget_type = "comment_input_text",
+		widget_type = "comment_input_text"
 	}
 
 	blueprint.init(self, new_widget, initial_text, element)
@@ -371,12 +371,12 @@ ReportPlayerView._send_report = function (self)
 			category = category,
 			message = message,
 			partyMemberIds = {},
-			serverType = server_type,
+			serverType = server_type
 		}
 		local builder = BackendUtilities.url_builder():path("/playerreports")
 		local options = {
 			method = "POST",
-			body = request_body,
+			body = request_body
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

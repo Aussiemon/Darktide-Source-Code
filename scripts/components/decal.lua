@@ -28,13 +28,13 @@ end
 
 Decal.component_data = {
 	sort_order = {
-		decimals = 0,
-		max = 2900000,
-		min = 0,
-		ui_name = "Sort Order",
-		ui_type = "number",
 		value = 0,
-	},
+		min = 0,
+		ui_type = "number",
+		decimals = 0,
+		ui_name = "Sort Order",
+		max = 2900000
+	}
 }
 
 return Decal

@@ -76,7 +76,7 @@ MasteryService._convert_mastery_data = function (self, mastery_data)
 			end_xp = end_exp and math.floor(end_exp),
 			mastery_id = pattern_name,
 			id = mastery_progress.id,
-			claimed_level = claimed_level,
+			claimed_level = claimed_level
 		}
 	end
 
@@ -96,7 +96,7 @@ MasteryService._get_mastery_track_and_state = function (self, id, mastery_overvi
 	local mastery_data = {
 		id = self._mastery_track_ids_inverted[id],
 		mastery = mastery,
-		mastery_overview = mastery_overview or {},
+		mastery_overview = mastery_overview or {}
 	}
 	local converted_mastery_data = self:_convert_mastery_data(mastery_data)
 
@@ -331,8 +331,8 @@ MasteryService.claim_levels_by_new_exp = function (self, mastery_data, new_exp)
 				chain_data[#chain_data + 1] = {
 					arguments = {
 						mastery_data,
-						f,
-					},
+						f
+					}
 				}
 			end
 		end
@@ -473,7 +473,7 @@ MasteryService.get_traits_data_by_mastery_id = function (self, mastery_id)
 						if MasterItems.get_item(name) then
 							valid_traits[#valid_traits + 1] = {
 								trait_status = trait_data,
-								trait_name = name,
+								trait_name = name
 							}
 						end
 					end

@@ -8,8 +8,8 @@ local hit_effect_armor_type = ArmorSettings.hit_effect_types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local prop_data = {
-	hit_mass = 0,
 	name = "icicle",
+	hit_mass = 0,
 	breed_type = breed_types.prop,
 	armor_type = armor_types.disgustingly_resilient,
 	hit_effect_armor_override = hit_effect_armor_type.prop_ice_chunk,
@@ -17,16 +17,16 @@ local prop_data = {
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
-				"c_destructible",
-			},
-		},
+				"c_destructible"
+			}
+		}
 	},
 	hitzone_damage_multiplier = {
 		ranged = {
-			[hit_zone_names.center_mass] = 0.5,
-		},
+			[hit_zone_names.center_mass] = 0.5
+		}
 	},
-	tags = {},
+	tags = {}
 }
 
 return prop_data

@@ -8,7 +8,7 @@ local LightControllerSystem = class("LightControllerSystem", "ExtensionSystemBas
 local CLIENT_RPCS = {
 	"rpc_light_controller_hot_join",
 	"rpc_light_controller_set_enabled",
-	"rpc_light_controller_set_flicker_state",
+	"rpc_light_controller_set_flicker_state"
 }
 
 LightControllerSystem.init = function (self, extension_init_context, system_init_data, ...)

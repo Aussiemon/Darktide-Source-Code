@@ -15,17 +15,17 @@ interaction_settings.ongoing_interaction_leeway = 1.2
 interaction_settings.states = table.enum("none", "is_interacting", "waiting_to_interact")
 interaction_settings.results = table.enum("success", "stopped_holding", "interaction_cancelled", "ongoing")
 interaction_settings.duration_buffs = {
-	revive = stat_buffs.revive_duration_multiplier,
+	revive = stat_buffs.revive_duration_multiplier
 }
 interaction_settings.speed_buffs = {
 	revive = stat_buffs.revive_speed_modifier,
 	pull_up = stat_buffs.assist_speed_modifier,
-	remove_net = stat_buffs.assist_speed_modifier,
+	remove_net = stat_buffs.assist_speed_modifier
 }
 interaction_settings.emissive_colors = {
 	used = Vector3Box(Vector3(0, 0, 0)),
 	active = Vector3Box(Vector3(0, 0.5, 1)),
-	inactive = Vector3Box(Vector3(1, 0.01, 0)),
+	inactive = Vector3Box(Vector3(1, 0.01, 0))
 }
 
 return settings("InteractionSettings", interaction_settings)

@@ -12,19 +12,19 @@ local GRACE_TIME = 1.8
 local BARREL_THRESHOLD = 0
 local CHARGE_INCREASE_RATE = 0.05
 local SHOOTING_ACTIONS = {
-	flamer_gas = true,
-	flamer_gas_burst = true,
-	shoot_hit_scan = true,
 	shoot_pellets = true,
+	shoot_hit_scan = true,
 	shoot_projectile = true,
+	flamer_gas = true,
+	flamer_gas_burst = true
 }
 local CHARGE_ACTIONS = {
+	charge_ammo = true,
 	chain_lightning = true,
 	charge = true,
-	charge_ammo = true,
-	overload_charge = true,
-	overload_charge_position_finder = true,
 	overload_charge_target_finder = true,
+	overload_charge_position_finder = true,
+	overload_charge = true
 }
 local _external_properties = {}
 

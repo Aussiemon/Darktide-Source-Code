@@ -10,19 +10,19 @@ table.make_unique(explosion_templates)
 table.make_unique(overrides)
 
 explosion_templates.default_gauntlet_grenade = {
-	collision_filter = "filter_player_character_explosion",
 	damage_falloff = true,
-	min_close_radius = 1,
 	min_radius = 3,
 	scalable_radius = true,
+	collision_filter = "filter_player_character_explosion",
 	static_power_level = 500,
+	min_close_radius = 1,
 	radius = {
 		3,
-		6,
+		6
 	},
 	close_radius = {
 		0.5,
-		1.75,
+		1.75
 	},
 	close_damage_profile = DamageProfileTemplates.close_gauntlet_demolitions,
 	close_damage_type = damage_types.grenade_frag,
@@ -31,43 +31,43 @@ explosion_templates.default_gauntlet_grenade = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
-		distance = 15,
-		instant_aggro = true,
 		suppression_falloff = true,
-		suppression_value = 20,
+		instant_aggro = true,
+		distance = 15,
+		suppression_value = 20
 	},
 	scalable_vfx = {
 		{
-			min_radius = 2.5,
 			radius_variable_name = "radius",
+			min_radius = 2.5,
 			effects = {
-				"content/fx/particles/weapons/rifles/ogryn_gauntlet/ogryn_gauntlet_projectile_explosion_5m",
-			},
-		},
+				"content/fx/particles/weapons/rifles/ogryn_gauntlet/ogryn_gauntlet_projectile_explosion_5m"
+			}
+		}
 	},
 	sfx = {
 		"wwise/events/weapon/play_explosion_grenade_frag",
-		"wwise/events/weapon/play_explosion_refl_gen",
-	},
+		"wwise/events/weapon/play_explosion_refl_gen"
+	}
 }
 explosion_templates.special_gauntlet_grenade = {
-	collision_filter = "filter_player_character_explosion",
 	damage_falloff = true,
-	min_close_radius = 1,
 	min_radius = 3,
 	scalable_radius = true,
-	static_power_level = 500,
+	collision_filter = "filter_player_character_explosion",
 	weapon_special = true,
+	min_close_radius = 1,
+	static_power_level = 500,
 	radius = {
 		2.5,
-		5,
+		5
 	},
 	close_radius = {
 		1.5,
-		2,
+		2
 	},
 	close_damage_profile = DamageProfileTemplates.close_special_gauntlet_demolitions,
 	close_damage_type = damage_types.grenade_frag,
@@ -76,30 +76,30 @@ explosion_templates.special_gauntlet_grenade = {
 	broadphase_explosion_filter = {
 		"heroes",
 		"villains",
-		"destructibles",
+		"destructibles"
 	},
 	explosion_area_suppression = {
-		distance = 15,
-		instant_aggro = true,
 		suppression_falloff = true,
-		suppression_value = 20,
+		instant_aggro = true,
+		distance = 15,
+		suppression_value = 20
 	},
 	scalable_vfx = {
 		{
-			min_radius = 2.4,
 			radius_variable_name = "radius",
+			min_radius = 2.4,
 			effects = {
-				"content/fx/particles/weapons/rifles/ogryn_gauntlet/ogryn_gauntlet_projectile_explosion_5m",
-			},
-		},
+				"content/fx/particles/weapons/rifles/ogryn_gauntlet/ogryn_gauntlet_projectile_explosion_5m"
+			}
+		}
 	},
 	sfx = {
 		"wwise/events/weapon/play_explosion_grenade_frag",
-		"wwise/events/weapon/play_explosion_refl_gen",
-	},
+		"wwise/events/weapon/play_explosion_refl_gen"
+	}
 }
 
 return {
 	base_templates = explosion_templates,
-	overrides = overrides,
+	overrides = overrides
 }

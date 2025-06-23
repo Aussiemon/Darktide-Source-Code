@@ -49,7 +49,7 @@ SpawnQueueHub.trigger_group = function (self, group_id)
 	callback(group_id)
 
 	return {
-		peer_id,
+		peer_id
 	}
 end
 

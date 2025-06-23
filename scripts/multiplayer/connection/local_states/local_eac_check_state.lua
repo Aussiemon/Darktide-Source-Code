@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/connection/local_states/local_eac_check_state.lua
 
 local RPCS = {
-	"rpc_request_eac_approval_reply",
+	"rpc_request_eac_approval_reply"
 }
 local LocalEacCheckState = class("LocalEacCheckState")
 local STATES = table.enum("start_eac_session", "wait_for_server_reply")
@@ -44,7 +44,7 @@ LocalEacCheckState.update = function (self, dt)
 		end
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 
@@ -52,7 +52,7 @@ LocalEacCheckState.update = function (self, dt)
 
 	if channel_state == "disconnected" then
 		return "disconnected", {
-			engine_reason = reason,
+			engine_reason = reason
 		}
 	end
 

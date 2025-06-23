@@ -10,119 +10,119 @@ ability_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
+				input = "combat_ability_pressed"
+			}
+		}
 	},
 	combat_ability_released = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "combat_ability_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
-	},
+				hold_input = "combat_ability_hold",
+				input = "action_two_pressed"
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "combat_ability_pressed",
 		transition = {
 			{
-				input = "combat_ability_released",
 				transition = "base",
+				input = "combat_ability_released"
 			},
 			{
-				input = "block_cancel",
 				transition = "base",
-			},
-		},
-	},
+				input = "block_cancel"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "combat_ability",
+		start_input = "combat_ability_pressed",
+		kind = "veteran_shout_aim",
+		sprint_ready_up_time = 0,
+		shout_ready_up_time = 0,
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
-		kind = "veteran_shout_aim",
-		minimum_hold_time = 0.075,
-		shout_ready_up_time = 0,
-		sprint_ready_up_time = 0,
-		start_input = "combat_ability_pressed",
+		ability_type = "combat_ability",
 		stop_input = "block_cancel",
+		minimum_hold_time = 0.075,
 		total_time = math.huge,
 		radius = RADIUS,
 		allowed_chain_actions = {
 			combat_ability_released = {
-				action_name = "action_veteran_combat_ability",
-			},
-		},
+				action_name = "action_veteran_combat_ability"
+			}
+		}
 	},
 	action_immediate_use = {
-		ability_type = "combat_ability",
+		total_time = 0,
+		start_input = "combat_ability_pressed",
+		kind = "veteran_immediate_use",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
-		kind = "veteran_immediate_use",
+		ability_type = "combat_ability",
 		minimum_hold_time = 0,
-		start_input = "combat_ability_pressed",
-		total_time = 0,
 		conditional_state_to_action_input = {
 			auto_chain = {
-				input_name = "combat_ability_released",
-			},
+				input_name = "combat_ability_released"
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability_released = {
-				action_name = "action_veteran_combat_ability",
-			},
-		},
+				action_name = "action_veteran_combat_ability"
+			}
+		}
 	},
 	action_veteran_combat_ability = {
-		ability_type = "combat_ability",
+		shout_target_template = "veteran_shout",
+		use_charge_at_start = true,
+		uninterruptible = true,
+		kind = "veteran_combat_ability",
+		use_ability_charge = true,
 		abort_sprint = false,
 		allowed_during_sprint = true,
+		ability_type = "combat_ability",
 		has_husk_sound = true,
-		kind = "veteran_combat_ability",
 		prevent_sprint = false,
-		shout_target_template = "veteran_shout",
 		total_time = 1,
-		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		radius = RADIUS,
 		vo_tags = {
-			base = "ability_ranger",
-			ranger = "ability_ranger",
 			shock_trooper = "ability_shock_trooper",
 			squad_leader = "ability_squad_leader",
-		},
-	},
+			ranger = "ability_ranger",
+			base = "ability_ranger"
+		}
+	}
 }
 ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
 	"ShoutEffects",
-	"StealthEffects",
+	"StealthEffects"
 }
 ability_template.vfx = {
 	delay = 0.2,
-	name = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
+	name = "content/fx/particles/abilities/squad_leader_ability_shout_activate"
 }
 ability_template.ability_meta_data = {
 	activation = {
-		action_input = "stance_pressed",
-	},
+		action_input = "stance_pressed"
+	}
 }
 
 return ability_template

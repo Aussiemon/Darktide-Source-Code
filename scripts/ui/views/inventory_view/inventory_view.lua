@@ -18,30 +18,31 @@ local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_we
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local VIEW_BY_SLOT = {
-	slot_animation_emote_1 = "inventory_cosmetics_view",
-	slot_animation_emote_2 = "inventory_cosmetics_view",
-	slot_animation_emote_3 = "inventory_cosmetics_view",
-	slot_animation_emote_4 = "inventory_cosmetics_view",
-	slot_animation_emote_5 = "inventory_cosmetics_view",
-	slot_animation_end_of_round = "inventory_cosmetics_view",
-	slot_attachment_1 = "inventory_weapons_view",
-	slot_attachment_2 = "inventory_weapons_view",
-	slot_attachment_3 = "inventory_weapons_view",
-	slot_character_title = "inventory_cosmetics_view",
-	slot_gear_extra_cosmetic = "inventory_cosmetics_view",
-	slot_gear_head = "inventory_cosmetics_view",
 	slot_gear_lowerbody = "inventory_cosmetics_view",
-	slot_gear_upperbody = "inventory_cosmetics_view",
-	slot_insignia = "inventory_cosmetics_view",
-	slot_portrait_frame = "inventory_cosmetics_view",
 	slot_primary = "inventory_weapons_view",
 	slot_secondary = "inventory_weapons_view",
+	slot_gear_extra_cosmetic = "inventory_cosmetics_view",
+	slot_animation_end_of_round = "inventory_cosmetics_view",
+	slot_character_title = "inventory_cosmetics_view",
+	slot_insignia = "inventory_cosmetics_view",
+	slot_attachment_1 = "inventory_weapons_view",
+	slot_animation_emote_3 = "inventory_cosmetics_view",
+	slot_companion_gear_full = "inventory_cosmetics_view",
+	slot_attachment_3 = "inventory_weapons_view",
+	slot_gear_upperbody = "inventory_cosmetics_view",
+	slot_attachment_2 = "inventory_weapons_view",
+	slot_animation_emote_4 = "inventory_cosmetics_view",
+	slot_animation_emote_1 = "inventory_cosmetics_view",
+	slot_gear_head = "inventory_cosmetics_view",
+	slot_animation_emote_5 = "inventory_cosmetics_view",
+	slot_portrait_frame = "inventory_cosmetics_view",
+	slot_animation_emote_2 = "inventory_cosmetics_view"
 }
 local DIRECTION = {
-	DOWN = "down",
-	LEFT = "left",
 	RIGHT = "right",
 	UP = "up",
+	LEFT = "left",
+	DOWN = "down"
 }
 local InventoryView = class("InventoryView", "BaseView")
 
@@ -158,7 +159,7 @@ InventoryView._on_item_hover_start = function (self, item)
 		local profile = self._preview_player:profile()
 		local context = {
 			inventory_items = self._inventory_items,
-			profile = profile,
+			profile = profile
 		}
 
 		self._item_stats:present_item(item, context)
@@ -422,7 +423,7 @@ InventoryView._get_items_layout_by_slot = function (self, slot)
 							item = item,
 							slot = slot,
 							player = self._preview_player,
-							widget_type = widget_type,
+							widget_type = widget_type
 						}
 					end
 				end
@@ -517,7 +518,7 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 					animation_event_variable_data = animation_event_variable_data,
 					item_type = item_type,
 					parent = self._parent,
-					new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
+					new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 				}
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -535,7 +536,7 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 				selected_slot = slot,
 				initial_rotation = initial_rotation,
 				parent = self._parent,
-				new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
+				new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 			}
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -557,7 +558,7 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			preview_profile_equipped_items = self._preview_profile_equipped_items,
 			selected_slots = slots,
 			parent = self._parent,
-			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
+			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 		}
 
 		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -745,13 +746,13 @@ InventoryView._setup_menu_tabs = function (self, content)
 	local id = "tab_menu"
 	local layer = 10
 	local tab_menu_settings = {
-		button_spacing = 20,
 		fixed_button_size = true,
 		horizontal_alignment = "center",
+		button_spacing = 20,
 		button_size = {
 			200,
-			50,
-		},
+			50
+		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 
@@ -761,7 +762,7 @@ InventoryView._setup_menu_tabs = function (self, content)
 
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	local tab_ids = {}
@@ -824,7 +825,7 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 		return widget, widget
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end
@@ -1136,7 +1137,7 @@ InventoryView._get_coordinates_from_widget = function (self, widget)
 		end_y = end_y,
 		center_y = center_y,
 		size_x = end_x - start_x,
-		size_y = end_y - start_y,
+		size_y = end_y - start_y
 	}
 end
 

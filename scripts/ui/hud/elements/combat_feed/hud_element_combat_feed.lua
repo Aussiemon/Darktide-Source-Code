@@ -42,10 +42,10 @@ HudElementCombatFeed.init = function (self, parent, draw_layer, start_scale)
 	self._crafting_messages_enabled = crafting_messages_enabled
 	self._notification_templates = {
 		default = {
-			fade_in = 0.5,
 			fade_out = 1,
-			widget_definition = Definitions.notification_message_default,
-		},
+			fade_in = 0.5,
+			widget_definition = Definitions.notification_message_default
+		}
 	}
 
 	local event_manager = Managers.event
@@ -63,7 +63,7 @@ end
 local kill_message_localization_key = "loc_hud_combat_feed_kill_message"
 local temp_kill_message_localization_params = {
 	killer = "n/a",
-	victim = "n/a",
+	victim = "n/a"
 }
 local player_default_color = Color.ui_hud_green_light(255, true)
 local enemy_default_color = Color.red(255, true)
@@ -156,7 +156,7 @@ HudElementCombatFeed.event_add_notification_message = function (self, message_ty
 
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
-				player_name = player_name,
+				player_name = player_name
 			})
 
 			self:_add_combat_feed_message(text)

@@ -43,7 +43,7 @@ DebugPacingGraph.update = function (self, t, x_value, y_value, optional_annotati
 	local origin_position = self._position:unbox()
 	local new_graph_entry = {
 		point = Vector3Box(origin_position + Vector3(x, y, 0)),
-		annotation = optional_annotation,
+		annotation = optional_annotation
 	}
 	local graph_entries = self._graph_entries
 

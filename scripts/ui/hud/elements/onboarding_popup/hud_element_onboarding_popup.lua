@@ -77,7 +77,7 @@ HudElementOnboardingPopup.event_player_display_onboarding_message = function (se
 		table.insert(self._popup_queue, 1, {
 			text = text,
 			duration = optional_duration,
-			on_close_callback = on_close_callback,
+			on_close_callback = on_close_callback
 		})
 	else
 		self:_present_new_message(text, optional_duration, on_close_callback)
@@ -176,7 +176,7 @@ HudElementOnboardingPopup._set_widget_size_from_content = function (self, title)
 		widget.style.background.size[2] = total_height
 		widget.content.resize_size = {
 			size[1],
-			math.floor(total_height),
+			math.floor(total_height)
 		}
 
 		self:_set_scenegraph_size(scenegraph_id, nil, total_height)

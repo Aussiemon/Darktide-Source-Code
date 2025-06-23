@@ -22,18 +22,18 @@ CreditsVendorView.on_enter = function (self)
 	CreditsVendorView.super.on_enter(self)
 	self._item_grid:update_dividers("content/ui/materials/frames/item_list_top_hollow", {
 		652,
-		118,
+		118
 	}, {
 		0,
 		-18,
-		20,
+		20
 	}, "content/ui/materials/frames/details_lower_armoury", {
 		674,
-		80,
+		80
 	}, {
 		0,
 		0,
-		20,
+		20
 	})
 	self._item_grid:set_sort_button_offset(0, 45)
 	self._item_grid:set_timer_text_offset(0, 45)
@@ -105,7 +105,7 @@ CreditsVendorView._purchase_item = function (self, offer)
 		self._purchase_promise = nil
 
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_notification_acqusition_failed"),
+			text = Localize("loc_notification_acqusition_failed")
 		}, nil, UISoundEvents.notification_join_party_failed)
 	end)
 
@@ -136,7 +136,7 @@ CreditsVendorView._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -147,12 +147,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_name,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
+					ItemUtils.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_power")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -163,12 +163,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_name,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
+					ItemUtils.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -179,12 +179,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -195,12 +195,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_name,
-				}),
+					ItemUtils.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -217,12 +217,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_name,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
+					ItemUtils.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_item_price")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"false",
@@ -239,12 +239,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_name,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
+					ItemUtils.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					"<",
@@ -255,12 +255,12 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
+					ItemUtils.compare_item_rarity
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
 				sort_function = ItemUtils.sort_element_key_comparator({
 					">",
@@ -271,9 +271,9 @@ CreditsVendorView._setup_sort_options = function (self)
 					ItemUtils.compare_item_level,
 					"<",
 					"item",
-					ItemUtils.compare_item_rarity,
-				}),
-			},
+					ItemUtils.compare_item_rarity
+				})
+			}
 		}
 	end
 

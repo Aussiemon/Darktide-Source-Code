@@ -9,45 +9,45 @@ ability_template.action_inputs = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
-	},
+				input = "combat_ability_pressed"
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
-		input = "stance_pressed",
 		transition = "stay",
-	},
+		input = "stance_pressed"
+	}
 }
 ability_template.actions = {
 	action_stance_change = {
-		ability_type = "combat_ability",
-		abort_sprint = true,
-		allowed_during_explode = true,
-		allowed_during_sprint = true,
-		anim = "ability_overcharge",
 		anim_3p = "ability_buff",
-		block_weapon_actions = false,
-		kind = "stance_change",
-		prevent_sprint = true,
-		refill_toughness = false,
-		sprint_ready_up_time = 0,
+		anim = "ability_overcharge",
 		start_input = "stance_pressed",
-		total_time = 1,
+		allowed_during_explode = true,
+		kind = "stance_change",
+		sprint_ready_up_time = 0,
+		refill_toughness = false,
 		uninterruptible = true,
-		use_ability_charge = true,
+		allowed_during_sprint = true,
+		ability_type = "combat_ability",
+		block_weapon_actions = false,
 		use_charge_at_start = true,
 		vo_tag = "ability_buff_stance",
-		vent_warp_charge = talent_settings.venting,
-	},
+		abort_sprint = true,
+		use_ability_charge = true,
+		prevent_sprint = true,
+		total_time = 1,
+		vent_warp_charge = talent_settings.venting
+	}
 }
 ability_template.fx_sources = {}
 ability_template.ability_meta_data = {
 	activation = {
-		action_input = "stance_pressed",
-	},
+		action_input = "stance_pressed"
+	}
 }
 
 return ability_template

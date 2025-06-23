@@ -64,7 +64,7 @@ ActionFlamerGas._setup_flame_data = function (self, action_settings)
 	local weapon_handling_template = weapon_extension:weapon_handling_template()
 
 	self._damage_times = weapon_handling_template.flamer_ramp_up_times or {
-		weapon_handling_template.fire_rate.fire_time,
+		weapon_handling_template.fire_rate.fire_time
 	}
 
 	local damage_config = flamer_gas_template.damage
@@ -101,8 +101,8 @@ local INDEX_POSITION = 1
 local INDEX_NORMAL = 3
 local INDEX_ACTOR = 4
 
-ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action)
-	ActionFlamerGas.super.fixed_update(self, dt, t, time_in_action)
+ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionFlamerGas.super.fixed_update(self, dt, t, time_in_action, frame)
 
 	if not self._flamer_gas_template then
 		self:_setup_flame_data(self._action_settings)

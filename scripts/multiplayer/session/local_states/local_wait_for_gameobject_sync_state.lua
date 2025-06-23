@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/multiplayer/session/local_states/local_wait_for_gameobject_sync_state.lua
 
 local RPCS = {
-	"rpc_gameobject_sync_reply",
+	"rpc_gameobject_sync_reply"
 }
 local LocalWaitForGameObjectSyncState = class("LocalWaitForGameObjectSyncState")
 
@@ -34,7 +34,7 @@ LocalWaitForGameObjectSyncState.update = function (self, dt)
 		Log.info("LocalWaitForGameObjectSyncState", "Lost game session")
 
 		return "lost_session", {
-			game_reason = "lost_session",
+			game_reason = "lost_session"
 		}
 	end
 
@@ -42,7 +42,7 @@ LocalWaitForGameObjectSyncState.update = function (self, dt)
 		Log.info("LocalWaitForGameObjectSyncState", "Lost game session")
 
 		return "lost_session", {
-			game_reason = "lost_session",
+			game_reason = "lost_session"
 		}
 	end
 
@@ -54,7 +54,7 @@ LocalWaitForGameObjectSyncState.update = function (self, dt)
 		Log.info("LocalWaitForGameObjectSyncState", "Timeout waiting for game object sync")
 
 		return "timeout", {
-			game_reason = "timeout",
+			game_reason = "timeout"
 		}
 	end
 end

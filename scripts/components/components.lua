@@ -9,13 +9,13 @@ destroyed_mt.__index = function (t, k)
 end
 
 local special_functions = {
-	__component_name = true,
 	__index = true,
-	__interfaces = true,
-	delete = true,
 	name = true,
-	new = true,
 	super = true,
+	__component_name = true,
+	new = true,
+	__interfaces = true,
+	delete = true
 }
 
 local function _component_data_default_value(component_data, unit, guid, ...)
@@ -251,7 +251,7 @@ local function _component_data_get_color(self, unit, guid, ...)
 		255,
 		255,
 		255,
-		255,
+		255
 	}
 	local default_boxed_color = _component_data_default_value(self.component_data, unit, guid, ...)
 
@@ -262,7 +262,7 @@ local function _component_data_get_color(self, unit, guid, ...)
 			255,
 			r * 255,
 			g * 255,
-			b * 255,
+			b * 255
 		}
 	end
 
@@ -322,7 +322,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 					255,
 					255,
 					255,
-					255,
+					255
 				}
 				local default_boxed_color = member_data.value
 
@@ -333,7 +333,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 						x * 255,
 						y * 255,
 						z * 255,
-						255,
+						255
 					}
 				end
 
@@ -377,7 +377,7 @@ function component(component_name, super_name, ...)
 	if not component_table then
 		component_table = {
 			super = super,
-			__component_name = component_name,
+			__component_name = component_name
 		}
 		component_table.__index = component_table
 		component_table.__interfaces = {}
@@ -499,6 +499,7 @@ _require_component("scripts/components/airlock")
 _require_component("scripts/components/ammo_belt")
 _require_component("scripts/components/ammo_display")
 _require_component("scripts/components/annotation")
+_require_component("scripts/components/area_buff_drone")
 _require_component("scripts/components/baked_physics")
 _require_component("scripts/components/barrel_overheat")
 _require_component("scripts/components/beast_of_nurgle")
@@ -509,12 +510,14 @@ _require_component("scripts/components/chain_sword_blur")
 _require_component("scripts/components/chain_sword_spin")
 _require_component("scripts/components/chest")
 _require_component("scripts/components/cinematic_scene")
+_require_component("scripts/components/companion_customization")
 _require_component("scripts/components/corruptor_arm")
 _require_component("scripts/components/corruptor")
 _require_component("scripts/components/count_player_hits")
 _require_component("scripts/components/cover")
 _require_component("scripts/components/cutscene_camera")
 _require_component("scripts/components/cutscene_character")
+_require_component("scripts/components/cutscene_companion")
 _require_component("scripts/components/decal")
 _require_component("scripts/components/decoder_device")
 _require_component("scripts/components/decoder_synchronizer")
@@ -555,6 +558,7 @@ _require_component("scripts/components/minion_customization")
 _require_component("scripts/components/minion_multi_teleporter")
 _require_component("scripts/components/minion_roamer_group")
 _require_component("scripts/components/minion_spawner")
+_require_component("scripts/components/mission_board_outline")
 _require_component("scripts/components/mission_luggable_spawner")
 _require_component("scripts/components/mission_objective_target")
 _require_component("scripts/components/mission_objective_zone_scannable")
@@ -595,6 +599,7 @@ _require_component("scripts/components/scanner_light")
 _require_component("scripts/components/servo_skull_activator")
 _require_component("scripts/components/servo_skull")
 _require_component("scripts/components/shading_environment_volume")
+_require_component("scripts/components/shock_mine")
 _require_component("scripts/components/side_mission_pickup_synchronizer")
 _require_component("scripts/components/smart_tag_target")
 _require_component("scripts/components/smoke_fog_area_spawner")

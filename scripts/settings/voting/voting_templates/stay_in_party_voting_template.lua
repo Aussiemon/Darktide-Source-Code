@@ -3,23 +3,23 @@
 local OPTIONS = table.enum("yes", "no")
 local RESULTS = table.enum("approved", "rejected")
 local stay_in_party_voting_template = {
-	abort_on_member_joined = false,
-	abort_on_member_left = false,
+	name = "stay_in_party",
 	can_change_vote = true,
 	duration = 600,
-	name = "stay_in_party",
 	rpc_start_voting = "rpc_start_voting_stay_in_party",
+	abort_on_member_left = false,
 	voting_impl = "network",
+	abort_on_member_joined = false,
 	options = {
 		OPTIONS.yes,
-		OPTIONS.no,
+		OPTIONS.no
 	},
 	results = {
-		RESULTS.approved,
+		RESULTS.approved
 	},
 	timeout_option = OPTIONS.no,
 	required_params = {
-		"new_party_id",
+		"new_party_id"
 	},
 	pack_params = function (params)
 		return params.new_party_id, params.new_party_invite_token
@@ -27,7 +27,7 @@ local stay_in_party_voting_template = {
 	unpack_params = function (new_party_id, new_party_invite_token)
 		return {
 			new_party_id = new_party_id,
-			new_party_invite_token = new_party_invite_token,
+			new_party_invite_token = new_party_invite_token
 		}
 	end,
 	evaluate = function (votes)
@@ -91,7 +91,7 @@ local stay_in_party_voting_template = {
 
 		Log.info("STAY_IN_PARTY_VOTING", "vote_casted %s voter_peer_id:%s voter_peer_id:%s", voting_id, voter_peer_id, voter_peer_id)
 		Managers.event:trigger("event_stay_in_party_vote_casted", voter_peer_id, vote_option)
-	end,
+	end
 }
 
 return stay_in_party_voting_template

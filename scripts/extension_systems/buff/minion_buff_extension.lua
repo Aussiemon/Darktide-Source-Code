@@ -288,7 +288,7 @@ MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 			from_talent = false,
 			buff_template_id = buff_template_id,
 			index = index,
-			optional_lerp_value = optional_lerp_value,
+			optional_lerp_value = optional_lerp_value
 		}
 		local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 

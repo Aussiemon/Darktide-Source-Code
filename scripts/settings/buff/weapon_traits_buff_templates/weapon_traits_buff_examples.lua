@@ -19,23 +19,23 @@ local example_weapon_trait_ranged_buff_stat = {
 	name = "example_weapon_trait_ranged_buff_stat",
 	predicted = false,
 	conditional_keywords = {
-		buff_keywords.knock_down_on_slide,
+		buff_keywords.knock_down_on_slide
 	},
 	conditional_stat_buffs = {
 		[buff_stat_buffs.weakspot_damage_taken] = function (i)
 			return -0.03 * i
-		end,
+		end
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_stat, 3)
 
 local example_weapon_trait_ranged_buff_lerp = {
-	class_name = "buff",
 	name = "example_weapon_trait_ranged_buff_lerp",
 	predicted = false,
+	class_name = "buff",
 	conditional_lerped_stat_buffs = {
 		[buff_stat_buffs.damage_vs_elites] = function (i)
 			local min = 0.05 * i
@@ -43,9 +43,9 @@ local example_weapon_trait_ranged_buff_lerp = {
 
 			return {
 				min = min,
-				max = max,
+				max = max
 			}
-		end,
+		end
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -61,24 +61,24 @@ local example_weapon_trait_ranged_buff_lerp = {
 		local lerp_value = (max_wounds - num_wounds) / (max_wounds - 1)
 
 		return lerp_value
-	end,
+	end
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_lerp, 3)
 
 local example_weapon_trait_ranged_buff_proc = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	cooldown_duration = 5,
 	name = "example_weapon_trait_ranged_buff_proc",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
 		[buff_stat_buffs.damage_vs_elites] = function (i)
 			return 0.1 + 0.1 * i
-		end,
+		end
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -87,46 +87,46 @@ local example_weapon_trait_ranged_buff_proc = {
 		local is_weakspot = params.hit_weakspot
 
 		return is_kill and is_weakspot
-	end),
+	end)
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc, 3)
 
 local example_weapon_trait_ranged_buff_proc_chance = {
-	active_duration = 5,
-	class_name = "proc_buff",
 	name = "example_weapon_trait_ranged_buff_proc_chance",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
 		[buff_proc_events.on_hit] = function (i)
 			return 0.25 * i
-		end,
+		end
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.damage_vs_specials] = 0.25,
+		[buff_stat_buffs.damage_vs_specials] = 0.25
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_crit,
+	check_proc_func = CheckProcFunctions.on_crit
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc_chance, 3)
 
 local example_weapon_trait_ranged_buff_proc_duration = {
-	class_name = "proc_buff",
 	name = "example_weapon_trait_ranged_buff_proc_duration",
 	predicted = false,
+	class_name = "proc_buff",
 	active_duration = function (i)
 		return 5 * i
 	end,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[buff_stat_buffs.damage_vs_specials] = 0.25,
+		[buff_stat_buffs.damage_vs_specials] = 0.25
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 BuffTemplate.generate_weapon_trait_buff_templates(templates, example_weapon_trait_ranged_buff_proc_duration, 3)
@@ -135,7 +135,7 @@ templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_buff = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_stagger_hit,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
@@ -148,17 +148,17 @@ templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_buff = {
 
 			buff_extension:add_internally_controlled_buff("example_weapon_trait_ranged_wield_on_hit_increase_impact_result_buff", t, "item_slot_name", template_context.item_slot_name)
 		end
-	end,
+	end
 }
 templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_result_buff = {
-	class_name = "proc_buff",
-	predicted = false,
 	unique_buff_id = "weapon_trait_ranged_common_wield_on_hit_guaranteed_instakill_result_buff",
+	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_hit] = 1
 	},
 	conditional_stat_buffs = {
-		[buff_stat_buffs.ranged_impact_modifier] = 0.5,
+		[buff_stat_buffs.ranged_impact_modifier] = 0.5
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_and_check_item_slot,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -171,7 +171,7 @@ templates.example_weapon_trait_ranged_wield_on_hit_increase_impact_result_buff =
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.used
-	end,
+	end
 }
 
 return templates

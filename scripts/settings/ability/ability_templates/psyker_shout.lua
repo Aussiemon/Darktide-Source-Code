@@ -14,86 +14,86 @@ ability_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
+				input = "combat_ability_pressed"
+			}
+		}
 	},
 	shout_released = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "combat_ability_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	block_cancel = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
-				input = "action_two_pressed",
 				value = true,
-			},
-		},
-	},
+				hold_input = "combat_ability_hold",
+				input = "action_two_pressed"
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
 		input = "shout_pressed",
 		transition = {
 			{
-				input = "shout_released",
 				transition = "base",
+				input = "shout_released"
 			},
 			{
-				input = "block_cancel",
 				transition = "base",
-			},
-		},
-	},
+				input = "block_cancel"
+			}
+		}
+	}
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "combat_ability",
+		shout_ready_up_time = 0,
+		start_input = "shout_pressed",
+		kind = "shout_aim",
+		sprint_ready_up_time = 0,
 		allowed_during_explode = true,
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
-		kind = "shout_aim",
-		minimum_hold_time = 0.075,
-		shout_ready_up_time = 0,
-		sprint_ready_up_time = 0,
-		start_input = "shout_pressed",
+		ability_type = "combat_ability",
 		stop_input = "block_cancel",
+		minimum_hold_time = 0.075,
 		total_time = math.huge,
 		allowed_chain_actions = {
 			shout_released = {
-				action_name = "action_shout",
-			},
-		},
+				action_name = "action_shout"
+			}
+		}
 	},
 	action_shout = {
-		ability_type = "combat_ability",
-		allowed_during_explode = true,
-		allowed_during_sprint = true,
-		anim = "ability_shout",
 		has_husk_sound = true,
 		kind = "psyker_shout",
-		shout_shape = "cone",
-		sound_source = "head",
 		sprint_ready_up_time = 0,
-		target_allies = true,
 		target_enemies = true,
-		total_time = 0.75,
-		uninterruptible = true,
-		use_ability_charge = true,
+		allowed_during_sprint = true,
+		ability_type = "combat_ability",
+		anim = "ability_shout",
+		target_allies = true,
+		shout_shape = "cone",
 		use_charge_at_start = true,
 		vfx = "content/fx/particles/abilities/psyker_warp_charge_shout",
+		allowed_during_explode = true,
+		sound_source = "head",
+		uninterruptible = true,
+		use_ability_charge = true,
+		total_time = 0.75,
 		vo_tag = {
-			high = "ability_biomancer_high",
 			low = "ability_biomancer_low",
+			high = "ability_biomancer_high"
 		},
 		radius = talent_settings.combat_ability.radius,
 		min_radius = talent_settings.combat_ability.min_radius,
@@ -108,8 +108,8 @@ ability_template.actions = {
 		attack_type = attack_types.shout,
 		power_level = talent_settings.combat_ability.power_level,
 		shout_range = talent_settings.combat_ability.shout_range,
-		shout_dot = talent_settings.combat_ability.shout_dot,
-	},
+		shout_dot = talent_settings.combat_ability.shout_dot
+	}
 }
 ability_template.fx_sources = {}
 

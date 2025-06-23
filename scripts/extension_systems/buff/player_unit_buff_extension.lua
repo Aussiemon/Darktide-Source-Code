@@ -324,6 +324,14 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 	end
 end
 
+PlayerUnitBuffExtension.mark_buff_finished = function (self, local_index)
+	local buff_instance = self._buffs_by_index[local_index]
+
+	if buff_instance then
+		buff_instance:force_finish()
+	end
+end
+
 PlayerUnitBuffExtension.remove_internally_controlled_buff_stack = function (self, template_name)
 	local buff_instance = self._stacking_buffs[template_name]
 
@@ -526,7 +534,7 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
 				optional_parent_buff_template_id = optional_parent_buff_template_id,
-				from_talent = from_talent,
+				from_talent = from_talent
 			}
 			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
@@ -664,7 +672,7 @@ PlayerUnitBuffExtension.start_on_screen_effect = function (self, index, on_scree
 
 	on_screen_effects[#on_screen_effects + 1] = {
 		particle_id = on_screen_effect_id,
-		stop_type = stop_type,
+		stop_type = stop_type
 	}
 end
 

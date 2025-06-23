@@ -136,10 +136,10 @@ local STAMINA_STATE_COLORS = {
 		100,
 		UIHudSettings.color_tint_secondary_3[2],
 		UIHudSettings.color_tint_secondary_3[3],
-		UIHudSettings.color_tint_secondary_3[4],
+		UIHudSettings.color_tint_secondary_3[4]
 	},
 	half = UIHudSettings.color_tint_main_3,
-	full = UIHudSettings.color_tint_main_1,
+	full = UIHudSettings.color_tint_main_1
 }
 
 HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)

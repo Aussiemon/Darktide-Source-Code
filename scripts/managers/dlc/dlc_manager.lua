@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/managers/dlc/dlc_manager.lua
 
-local DLCDurable = require("scripts/managers/dlc/dlc_durable")
 local DLCSettings = require("scripts/managers/dlc/dlc_settings")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local DLCManager = class("DLCManager")
 local EVALUATE_CONSUMABLES_TIMER = 30
@@ -66,6 +66,47 @@ end
 
 DLCManager.evaluate_consumables = function (self)
 	self._evaluate_consumables = true
+end
+
+DLCManager.is_owner_of = function (self, product_ids)
+	local result_promises = {}
+
+	for k, v in pairs(product_ids) do
+		table.insert(result_promises, Managers.account:is_owner_of(v))
+	end
+
+	return Promise.all(unpack(result_promises)):next(function (results)
+		for _, result in ipairs(results) do
+			if result.is_owner then
+				return true
+			end
+		end
+
+		return false
+	end, function (errors)
+		return false
+	end)
+end
+
+DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callback)
+	if Backend.get_auth_method() ~= Backend.AUTH_METHOD_STEAM then
+		Managers.ui:open_view("dlc_purchase_view", nil, false, false, nil, {
+			dlc_settings = dlc_settings,
+			on_flow_finished_callback = on_flow_finished_callback
+		})
+
+		return
+	end
+
+	return self:open_to_store(dlc_settings.steam_dlc_target, on_flow_finished_callback)
+end
+
+DLCManager.open_to_store = function (self, product_id, on_flow_finished_callback)
+	Managers.account:open_to_store(product_id):next(function (result)
+		if on_flow_finished_callback then
+			on_flow_finished_callback(result.success)
+		end
+	end)
 end
 
 DLCManager._ui_in_blocked_state = function (self)
@@ -206,19 +247,19 @@ DLCManager.cb_get_entitlements = function (self, data)
 
 		for _, data in pairs(TEMP_STORE_DATA) do
 			local context = {
-				description_text = "loc_dlc_installed",
 				title_text = "loc_popup_header_new_dlc_installed",
+				description_text = "loc_dlc_installed",
 				description_text_params = {
 					dlc_name = data.title,
-					dlc_description = data.description,
+					dlc_description = data.description
 				},
 				options = {
 					{
-						close_on_pressed = true,
 						text = "loc_popup_unavailable_view_button_confirm",
-						callback = callback(self, "_cb_popup_closed"),
-					},
-				},
+						close_on_pressed = true,
+						callback = callback(self, "_cb_popup_closed")
+					}
+				}
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -272,19 +313,19 @@ end
 
 DLCManager.trigger_new_durable_dlc_popup = function (self, dlc_details)
 	local context = {
-		description_text = "loc_dlc_installed",
 		title_text = "loc_popup_header_new_dlc_installed",
+		description_text = "loc_dlc_installed",
 		description_text_params = {
 			dlc_name = dlc_details.display_name,
-			dlc_description = dlc_details.description,
+			dlc_description = dlc_details.description
 		},
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_unavailable_view_button_confirm",
-				callback = callback(self, "_cb_popup_closed"),
-			},
-		},
+				close_on_pressed = true,
+				callback = callback(self, "_cb_popup_closed")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -316,8 +357,8 @@ DLCManager._handle_dangling_pending_dlcs = function (self)
 		for i = 1, instances do
 			Managers.event:trigger("event_add_notification_message", "alert", {
 				text = Localize("loc_failed_to_redeem_dlc", true, {
-					dlc_name = self._pending_dlc_lookup[store_id],
-				}),
+					dlc_name = self._pending_dlc_lookup[store_id]
+				})
 			})
 		end
 	end
@@ -425,7 +466,7 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 			if reward.rewardType == "currency" then
 				Managers.event:trigger("event_add_notification_message", "currency", {
 					currency = reward.currencyType,
-					amount = reward.amount,
+					amount = reward.amount
 				})
 
 				currency_rewarded = true
@@ -441,7 +482,7 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 						item_rewards[#item_rewards + 1] = {
 							gear_id = gear_id,
-							item_type = item_type,
+							item_type = item_type
 						}
 					end
 				end

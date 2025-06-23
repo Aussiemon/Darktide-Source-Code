@@ -65,7 +65,7 @@ end
 
 local MIN_TIMER_DIFF_RANGE = {
 	3,
-	5,
+	5
 }
 local USED_BREEDS = {}
 
@@ -374,7 +374,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				specials_slot.spawn_timer = spawn_timer
 
 				Managers.server_metrics:add_annotation("special_failed_to_spawn", {
-					travel_distance = furthest_travel_distance,
+					travel_distance = furthest_travel_distance
 				})
 			end
 		else
@@ -678,7 +678,7 @@ local function _find_travel_distance(nav_world, target_unit, nav_spawn_points)
 	end
 
 	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
-	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
 	local end_index = start_index + 1
 	local _, target_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(target_navmesh_position, start_index, end_index)
 
@@ -874,7 +874,7 @@ SpecialsPacing._add_spawner_special = function (self, spawner, breed_name, side_
 	param_table.max_health_modifier = optional_health_modifier
 
 	local spawner_queue_id = spawner:add_spawns({
-		breed_name,
+		breed_name
 	}, side_id, param_table)
 
 	return spawner_queue_id, spawner
@@ -910,7 +910,7 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 		end
 
 		local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, navmesh_position)
-		local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+		local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
 		local end_index = start_index + 1
 		local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
 
@@ -1103,7 +1103,7 @@ end
 local MIN_COORDINATED_TIMER = 20
 local COORDINATED_STRIKE_TIMER_OFFSET_RANGE = {
 	3,
-	6,
+	6
 }
 
 SpecialsPacing._check_and_activate_coordinated_strike = function (self, template, current_special_slot)
@@ -1268,7 +1268,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 
 				if navmesh_position then
 					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, navmesh_position)
-					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
 					local end_index = start_index + 1
 					local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
 

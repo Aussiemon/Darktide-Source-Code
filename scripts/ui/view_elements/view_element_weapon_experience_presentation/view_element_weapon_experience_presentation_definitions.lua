@@ -6,107 +6,107 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local viewport_size = {
 	600,
-	540,
+	540
 }
 local canvas_size = {
 	viewport_size[1],
-	viewport_size[2] + 80,
+	viewport_size[2] + 80
 }
 local bar_size = {
 	canvas_size[1] - 200,
-	18,
+	18
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = canvas_size,
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	viewport = {
-		horizontal_alignment = "center",
-		parent = "canvas",
 		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "center",
 		size = viewport_size,
 		position = {
 			0,
 			0,
-			3,
-		},
+			3
+		}
 	},
 	progress_bar = {
-		horizontal_alignment = "center",
-		parent = "canvas",
 		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "center",
 		size = bar_size,
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	experience_text = {
-		horizontal_alignment = "right",
-		parent = "progress_bar",
 		vertical_alignment = "top",
+		parent = "progress_bar",
+		horizontal_alignment = "right",
 		size = {
 			800,
-			bar_size[2],
+			bar_size[2]
 		},
 		position = {
 			0,
 			bar_size[2] - 50,
-			1,
-		},
+			1
+		}
 	},
 	name_text = {
-		horizontal_alignment = "left",
-		parent = "progress_bar",
 		vertical_alignment = "top",
+		parent = "progress_bar",
+		horizontal_alignment = "left",
 		size = {
 			800,
-			bar_size[2],
+			bar_size[2]
 		},
 		position = {
 			0,
 			bar_size[2] - 50,
-			1,
-		},
+			1
+		}
 	},
 	current_level_text = {
-		horizontal_alignment = "left",
-		parent = "progress_bar",
 		vertical_alignment = "center",
+		parent = "progress_bar",
+		horizontal_alignment = "left",
 		size = {
 			200,
-			40,
+			40
 		},
 		position = {
 			-140,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	next_level_text = {
-		horizontal_alignment = "right",
-		parent = "progress_bar",
 		vertical_alignment = "center",
+		parent = "progress_bar",
+		horizontal_alignment = "right",
 		size = {
 			200,
-			40,
+			40
 		},
 		position = {
 			140,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local name_text_style = table.clone(UIFontSettings.header_3)
 
@@ -128,47 +128,47 @@ local widget_definitions = {
 	progress_bar = UIWidget.create_definition(BarPassTemplates.experience_bar, "progress_bar"),
 	experience_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "",
 			value_id = "text",
-			style = experience_text_style,
-		},
+			pass_type = "text",
+			style = experience_text_style
+		}
 	}, "experience_text"),
 	name_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "weapon_name",
 			value_id = "text",
-			style = name_text_style,
-		},
+			pass_type = "text",
+			style = name_text_style
+		}
 	}, "name_text"),
 	current_level_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "0",
 			value_id = "text",
-			style = level_text_style,
-		},
+			pass_type = "text",
+			style = level_text_style
+		}
 	}, "current_level_text"),
 	next_level_text = UIWidget.create_definition({
 		{
-			pass_type = "text",
 			value = "0",
 			value_id = "text",
-			style = level_text_style,
-		},
-	}, "next_level_text"),
+			pass_type = "text",
+			style = level_text_style
+		}
+	}, "next_level_text")
 }
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
 		{
-			end_time = 0,
 			name = "init",
+			end_time = 0,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				parent._alpha_multiplier = 0
-			end,
+			end
 		},
 		{
 			name = "fade_in",
@@ -178,7 +178,7 @@ local animations = {
 				local anim_progress = math.easeOutCubic(progress)
 
 				parent._alpha_multiplier = anim_progress
-			end,
+			end
 		},
 		{
 			name = "experience_bar",
@@ -188,13 +188,13 @@ local animations = {
 				local anim_progress = math.easeCubic(progress)
 
 				widgets.progress_bar.alpha_multiplier = anim_progress
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

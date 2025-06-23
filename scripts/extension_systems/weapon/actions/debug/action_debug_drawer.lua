@@ -54,14 +54,14 @@ ActionDebugDrawer.add_variable = function (self, name, source, id)
 	self._variables[#self._variables + 1] = {
 		name = name,
 		source = source,
-		id = id,
+		id = id
 	}
 end
 
 ActionDebugDrawer.add_timeline_bar = function (self, name, indicators)
 	self._timeline_bars[#self._timeline_bars + 1] = {
 		name = name,
-		indicators = indicators,
+		indicators = indicators
 	}
 end
 

@@ -11,13 +11,13 @@ local REQUIRED_EVENTS = {
 	"dodge_bwd",
 	"dodge_right",
 	"dodge_left",
-	"dodge_end",
+	"dodge_end"
 }
 local VARIABLE_BOUNDS = {
 	attack_speed = {
 		min = NetworkConstants.action_time_scale.min,
-		max = NetworkConstants.action_time_scale.max,
-	},
+		max = NetworkConstants.action_time_scale.max
+	}
 }
 
 local function _init_and_run_tests(unit_1p, breed_name, world)

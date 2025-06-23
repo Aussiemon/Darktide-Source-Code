@@ -401,7 +401,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 		if view then
 			local context = {
 				parent = self,
-				hub_interaction = self._hub_interaction,
+				hub_interaction = self._hub_interaction
 			}
 			local additional_context = tab_params.context
 			local context_function = tab_params.context_function

@@ -95,10 +95,10 @@ MinigameDecodeSymbolsView._create_symbol_widgets = function (self)
 								255,
 								0,
 								255,
-								0,
-							},
-						},
-					},
+								0
+							}
+						}
+					}
 				}, scenegraph_id, nil, widget_size)
 				local widget = UIWidget.init(widget_name, widget_definition)
 
@@ -135,14 +135,14 @@ MinigameDecodeSymbolsView._draw_cursor = function (self, widgets_by_name, decode
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	else
 		widget_target.style.frame.color = {
 			255,
 			255,
 			165,
-			0,
+			0
 		}
 	end
 end
@@ -166,14 +166,14 @@ MinigameDecodeSymbolsView._draw_targets = function (self, widgets_by_name, decod
 			255,
 			255,
 			255,
-			150,
+			150
 		}
 	else
 		widget_target.style.highlight.color = {
 			255,
 			255,
 			165,
-			0,
+			0
 		}
 	end
 end

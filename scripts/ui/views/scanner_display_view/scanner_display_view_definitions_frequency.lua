@@ -14,30 +14,30 @@ local widget_definitions = {
 	decoration_skull = ScannerDisplayViewDefinitionsBase.widget_definitions.decoration_skull,
 	edge_fade = UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			style_id = "highlight",
 			value = "content/ui/materials/backgrounds/scanner/scanner_left_to_right_fade_01",
+			style_id = "highlight",
+			pass_type = "texture",
 			style = {
 				hdr = true,
 				color = {
 					255,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					-edge_fade_widget_size[1] * 0.5,
 					-edge_fade_widget_size[2] * 0.5,
-					2,
-				},
-			},
-		},
-	}, "center_pivot", nil, edge_fade_widget_size),
+					2
+				}
+			}
+		}
+	}, "center_pivot", nil, edge_fade_widget_size)
 }
 
 return {
 	frequency = {
 		widget_definitions = widget_definitions,
-		scenegraph_definition = scenegraph_definition,
-	},
+		scenegraph_definition = scenegraph_definition
+	}
 }

@@ -22,15 +22,15 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_infinite_melee_clea
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_pass_past_armor_on_crit = table.clone(BaseWeaponTraitBuffTemplates.pass_past_armor_on_crit)
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_parent = {
-	allow_proc_while_active = true,
 	child_buff_template = "weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_child",
 	child_duration = 3.5,
-	class_name = "weapon_trait_target_number_parent_proc_buff",
 	predicted = false,
+	allow_proc_while_active = true,
 	stacks_to_remove = 0,
+	class_name = "weapon_trait_target_number_parent_proc_buff",
 	proc_events = {
 		[proc_events.on_block] = 1,
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -59,19 +59,19 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_
 			local t = FixedFrame.approximate_latest_fixed_time()
 
 			template_data.last_hit_time = t
-		end,
-	},
+		end
+	}
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_grants_power_bonus_child = {
-	class_name = "buff",
 	hide_icon_in_hud = true,
+	stack_offset = -1,
 	max_stacks = 5,
 	predicted = false,
-	stack_offset = -1,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.melee_power_level_modifier] = 0.1,
+		[stat_buffs.melee_power_level_modifier] = 0.1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 
 local _push_settings = {
@@ -80,22 +80,22 @@ local _push_settings = {
 	inner_damage_profile = DamageProfileTemplates.ogryn_shield_push,
 	inner_damage_type = damage_types.physical,
 	outer_damage_profile = DamageProfileTemplates.default_shield_push,
-	outer_damage_type = damage_types.physical,
+	outer_damage_type = damage_types.physical
 }
 
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes = {
-	class_name = "proc_buff",
 	cooldown_duration = 18,
+	class_name = "proc_buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.block_cost_multiplier] = 0.85,
+		[stat_buffs.block_cost_multiplier] = 0.85
 	},
 	proc_events = {
-		[proc_events.on_block] = 1,
+		[proc_events.on_block] = 1
 	},
 	push_settings = {
 		push_radius = 5,
-		power_level = DEFAULT_POWER_LEVEL * 2,
+		power_level = DEFAULT_POWER_LEVEL * 2
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -146,7 +146,7 @@ templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_block_break_pushes 
 		local scale = Vector3.one()
 
 		fx_extension:spawn_particles(effect_name, player_position, fx_rotation, scale, nil, nil)
-	end,
+	end
 }
 templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_rending_vs_staggered = table.clone(BaseWeaponTraitBuffTemplates.rending_vs_staggered)
 

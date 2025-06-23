@@ -38,7 +38,7 @@ GameStateDebug.on_state_machine_created = function (self, parent_sm_name, sm_nam
 		parent_name = parent_sm_name,
 		name = sm_name,
 		state_name = initial_state,
-		children = {},
+		children = {}
 	}
 
 	if sm then
@@ -108,7 +108,7 @@ end
 GameStateDebug._create_descriptions = function (self, sm)
 	if table.is_empty(sm.children) then
 		return {
-			(string.format("%s(%s)", sm.name, sm.state_name)),
+			(string.format("%s(%s)", sm.name, sm.state_name))
 		}
 	else
 		local descs_out = {}

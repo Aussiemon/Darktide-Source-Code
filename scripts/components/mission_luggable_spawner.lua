@@ -57,13 +57,13 @@ MissionLuggableSpawner.component_data = {
 	inputs = {
 		spawn_mission_luggable = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		activate_objective_target_on_luggable = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return MissionLuggableSpawner

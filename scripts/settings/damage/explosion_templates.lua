@@ -13,6 +13,7 @@ local function _add_template_entries(path)
 	end
 end
 
+_add_template_entries("scripts/settings/damage/explosion_templates/companion_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/minion_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/player_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/player_grenade_explosion_templates")

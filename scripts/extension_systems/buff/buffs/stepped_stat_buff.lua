@@ -30,7 +30,7 @@ SteppedStatBuff.update_stat_buffs = function (self, current_stat_buffs, t)
 end
 
 SteppedStatBuff.stat_buff_stacking_count = function (self)
-	local stack_count = self.super.stat_buff_stacking_count(self)
+	local stack_count = SteppedStatBuff.super.stat_buff_stacking_count(self)
 	local template_data = self._template_data
 	local template_context = self._template_context
 	local template = self._template

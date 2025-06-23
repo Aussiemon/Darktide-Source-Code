@@ -18,7 +18,7 @@ WeaponIconUI.init = function (self, render_settings)
 		viewport_type = render_settings and render_settings.viewport_type or "default_with_alpha",
 		viewport_name = render_settings and render_settings.viewport_name or "weapon_viewport",
 		level_name = render_settings and render_settings.level_name or "content/levels/ui/weapon_icon/weapon_icon",
-		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons",
+		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons"
 	}
 
 	WeaponIconUI.super.init(self, new_render_settings)
@@ -159,7 +159,7 @@ WeaponIconUI.event_register_portrait_camera_human = function (self, camera_unit)
 	self._breed_camera_settings.human = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
 	}
 end
 
@@ -172,7 +172,7 @@ WeaponIconUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
 	self._breed_camera_settings.ogryn = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
+		boxed_camera_start_rotation = QuaternionBox(camera_rotation)
 	}
 end
 
@@ -246,12 +246,14 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 	end
 
 	local item_base_unit_name = item.base_unit
+	local ui_alignment_tag = item.ui_alignment_tag
+	local alignment_key_value = ui_alignment_tag or item_base_unit_name
 
 	if render_context and render_context.alignment_key_value then
-		item_base_unit_name = render_context.alignment_key_value
+		alignment_key_value = render_context.alignment_key_value
 	end
 
-	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, item_base_unit_name)
+	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, alignment_key_value)
 	local spawn_point_unit = item_level_link_unit or self._spawn_point_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
@@ -274,7 +276,7 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 		spawn_rotation = Quaternion.multiply(spawn_rotation, Quaternion.from_euler_angles_xyz(unit_rotation_offset[1] or 0, unit_rotation_offset[2] or 0, unit_rotation_offset[3] or 0))
 	end
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, nil, force_highest_mip)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, nil, force_highest_mip)
 
 	local breed = "human"
 	local camera_settings = self._breed_camera_settings[breed]

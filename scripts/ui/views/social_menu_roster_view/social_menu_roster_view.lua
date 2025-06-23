@@ -37,7 +37,7 @@ local last_tab_index = -1
 local current_time = 0
 local _SCENEGRAPH_IDS = {
 	[PARTY_GRID_ID] = PARTY_GRID_SCENEGRAPH_ID,
-	[ROSTER_GRID_ID] = ROSTER_GRID_SCENEGRAPH_ID,
+	[ROSTER_GRID_ID] = ROSTER_GRID_SCENEGRAPH_ID
 }
 
 local function _debug_warning(function_name, format, ...)
@@ -138,25 +138,25 @@ local _sort_by_invite = _sort_by_grouping_function(_group_by_invite)
 local _groups_by_online_status = {
 	{
 		blueprint = "group_header",
-		group_name = "in_game",
 		header = "loc_social_menu_friend_list_group_header_in_game",
+		group_name = "in_game",
 		item_blueprint = "player_plaque",
-		members = {},
+		members = {}
 	},
 	{
 		blueprint = "group_header",
-		group_name = "platform_online",
 		header = "loc_social_menu_friend_list_group_header_online",
+		group_name = "platform_online",
 		item_blueprint = "player_plaque_platform_online",
-		members = {},
+		members = {}
 	},
 	{
 		blueprint = "group_header",
-		group_name = "offline",
 		header = "loc_social_menu_friend_list_group_header_offline",
+		group_name = "offline",
 		item_blueprint = "player_plaque_offline",
-		members = {},
-	},
+		members = {}
+	}
 }
 
 SocialMenuRosterView.init = function (self, settings, context)
@@ -171,49 +171,49 @@ SocialMenuRosterView.init = function (self, settings, context)
 		groups = {
 			{
 				blueprint = "group_header",
-				group_name = "in_game - same platform",
 				header = "loc_social_menu_list_group_header_in_game_platform",
+				group_name = "in_game - same platform",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "in_game - different platform",
 				header = "loc_social_menu_friend_list_group_header_in_game",
+				group_name = "in_game - different platform",
+				no_divider = true,
 				item_blueprint = "player_plaque",
-				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "platform_online",
 				header = "loc_social_menu_list_header_online",
+				group_name = "platform_online",
 				item_blueprint = "player_plaque_platform_online",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "offline - same platform",
 				header = "loc_social_menu_list_header_offline_platform",
+				group_name = "offline - same platform",
 				item_blueprint = "player_plaque_offline",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "offline - different platform",
 				header = "loc_social_menu_friend_list_group_header_offline",
-				item_blueprint = "player_plaque_offline",
+				group_name = "offline - different platform",
 				no_divider = true,
-				members = {},
-			},
+				item_blueprint = "player_plaque_offline",
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[PREVIOUS_MISSION_COMPANIONS_LIST] = {
 		group_select_function = _default_group_selection_function,
 		primary_sort_function = _sort_by_recency,
 		groups = _groups_by_online_status,
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[HUB_PLAYERS_LIST] = {
 		group_select_function = _mono_group,
@@ -221,20 +221,20 @@ SocialMenuRosterView.init = function (self, settings, context)
 		groups = {
 			{
 				blueprint = "group_header",
-				group_name = "in_hub",
 				header = "loc_social_menu_friend_list_group_header_in_game",
+				group_name = "in_hub",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "not_in_hub",
 				header = "loc_social_menu_friend_list_group_header_not_in_hub",
+				group_name = "not_in_hub",
 				item_blueprint = "player_plaque_offline",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[FRIEND_INVITES_LIST] = {
 		group_select_function = _group_by_invite,
@@ -242,51 +242,51 @@ SocialMenuRosterView.init = function (self, settings, context)
 		groups = {
 			{
 				blueprint = "group_header",
-				group_name = "received_invites",
 				header = "loc_social_menu_friend_list_group_header_received_invites",
+				group_name = "received_invites",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
+				no_divider = true,
+				item_blueprint = "player_plaque_platform_online",
 				group_name = "received_invites_platform_online",
-				item_blueprint = "player_plaque_platform_online",
-				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
+				no_divider = true,
+				item_blueprint = "player_plaque_offline",
 				group_name = "received_invites_offline",
-				item_blueprint = "player_plaque_offline",
-				no_divider = true,
-				members = {},
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "sent_invites",
 				header = "loc_social_menu_friend_list_group_header_sent_invites",
+				group_name = "sent_invites",
 				item_blueprint = "player_plaque",
-				members = {},
+				members = {}
 			},
 			{
-				group_name = "sent_invites_platform_online",
+				no_divider = true,
 				item_blueprint = "player_plaque_platform_online",
-				no_divider = true,
-				members = {},
+				group_name = "sent_invites_platform_online",
+				members = {}
 			},
 			{
-				group_name = "sent_invites_offline",
-				item_blueprint = "player_plaque_offline",
 				no_divider = true,
-				members = {},
+				item_blueprint = "player_plaque_offline",
+				group_name = "sent_invites_offline",
+				members = {}
 			},
 			{
 				blueprint = "group_header",
-				group_name = "no_invites",
 				header = "loc_social_menu_friend_list_group_header_no_invites",
+				group_name = "no_invites",
 				item_blueprint = "player_plaque_offline",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	roster_lists[BLOCKED_PLAYERS_LIST] = {
 		group_select_function = function (player_info)
@@ -296,13 +296,13 @@ SocialMenuRosterView.init = function (self, settings, context)
 		groups = {
 			{
 				blueprint = "group_header",
-				group_name = "blocked",
 				header = "loc_social_menu_friend_list_group_header_blocked",
+				group_name = "blocked",
 				item_blueprint = "player_plaque_blocked",
-				members = {},
-			},
+				members = {}
+			}
 		},
-		sorted_list = {},
+		sorted_list = {}
 	}
 	self._party_promise = Promise.resolved()
 	self._roster_lists_promise = Promise.resolved()
@@ -310,11 +310,11 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._tab_ids = {}
 	self._grids = {
 		[PARTY_GRID_ID] = nil,
-		[ROSTER_GRID_ID] = nil,
+		[ROSTER_GRID_ID] = nil
 	}
 	self._grid_widget_definitions = {
 		[PARTY_GRID_ID] = {},
-		[ROSTER_GRID_ID] = {},
+		[ROSTER_GRID_ID] = {}
 	}
 	self._focused_grid_id = nil
 	self._new_party_members = nil
@@ -776,7 +776,7 @@ SocialMenuRosterView.cb_report_player = function (self, player_info)
 	local account_id = player_info:account_id()
 	local context = {
 		reportee_display_name = user_display_name,
-		reportee_account_id = account_id,
+		reportee_account_id = account_id
 	}
 
 	Managers.ui:open_view("report_player_view", nil, nil, nil, nil, context)
@@ -1129,7 +1129,7 @@ SocialMenuRosterView._create_offscreen_renderer = function (self)
 		world = world,
 		viewport = viewport,
 		viewport_name = viewport_name,
-		renderer_name = renderer_name,
+		renderer_name = renderer_name
 	}
 end
 
@@ -1310,7 +1310,7 @@ SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
 		icon_unload_queue[#icon_unload_queue + 1] = {
 			delay = ViewSettings.icon_unload_frame_delay,
 			load_id = widget_content.frame_load_id,
-			widget = widget,
+			widget = widget
 		}
 		widget_content.frame_load_id = nil
 	end
@@ -1322,7 +1322,7 @@ SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
 		icon_unload_queue[#icon_unload_queue + 1] = {
 			delay = ViewSettings.icon_unload_frame_delay,
 			load_id = widget_content.insignia_load_id,
-			widget = widget,
+			widget = widget
 		}
 		widget_content.insignia_load_id = nil
 	end
@@ -1413,8 +1413,8 @@ SocialMenuRosterView._create_roster_widgets = function (self, widget_data)
 	widget_alignments[#widget_alignments + 1] = {
 		size = {
 			RosterViewStyles.player_panel_size[1] * 2,
-			0,
-		},
+			0
+		}
 	}
 
 	return widgets, widget_alignments
@@ -1456,7 +1456,7 @@ SocialMenuRosterView._get_roster_widget = function (self, context, blueprint_nam
 
 	if not widget_definition then
 		widget_definition = UIWidget.create_definition(widget_blueprint.pass_template, scenegraph_id, {
-			blueprint_name = blueprint_name,
+			blueprint_name = blueprint_name
 		}, widget_blueprint.size, widget_blueprint.style)
 		grid_widget_definitions[blueprint_name] = widget_definition
 	end
@@ -1663,7 +1663,7 @@ SocialMenuRosterView._prepare_list = function (self, roster_list_data, roster_li
 				if not divider then
 					divider = {
 						blueprint = "list_divider",
-						name = group_id,
+						name = group_id
 					}
 					_list_dividers[divider] = divider
 				end
@@ -1951,15 +1951,15 @@ SocialMenuRosterView._show_confirmation_popup = function (self, player_info, com
 			options = {
 				{
 					close_on_pressed = true,
-					text = "loc_social_menu_confirmation_popup_confirm_button",
+					text = "loc_social_menu_confirmation_popup_confirm_button"
 				},
 				{
-					close_on_pressed = true,
-					hotkey = "back",
-					template_type = "terminal_button_small",
 					text = "loc_social_menu_confirmation_popup_decline_button",
-				},
-			},
+					template_type = "terminal_button_small",
+					close_on_pressed = true,
+					hotkey = "back"
+				}
+			}
 		}
 		context.title_text_params = context.description_text_params
 		_show_confirmation_popup_context = context

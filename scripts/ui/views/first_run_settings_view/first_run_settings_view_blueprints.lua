@@ -12,7 +12,7 @@ local blueprints = {}
 blueprints.button = {
 	size = {
 		140,
-		80,
+		80
 	},
 	pass_template = ButtonPassTemplates.list_button_with_icon,
 	init = function (parent, widget, entry, callback_name)
@@ -26,12 +26,12 @@ blueprints.button = {
 		content.text = Managers.localization:localize(display_name)
 		content.icon = entry.icon
 		content.entry = entry
-	end,
+	end
 }
 blueprints.checkbox = {
 	size = {
 		settings_grid_width,
-		settings_value_height,
+		settings_value_height
 	},
 	pass_template = CheckboxPassTemplates.settings_checkbox(settings_grid_width, settings_value_height, settings_value_width, 2, true),
 	init = function (parent, widget, entry, callback_name)
@@ -70,7 +70,7 @@ blueprints.checkbox = {
 		if new_value ~= nil and new_value ~= value then
 			on_activated(new_value, value)
 		end
-	end,
+	end
 }
 
 local function slider_init_function(parent, widget, entry, callback_name)
@@ -94,7 +94,7 @@ end
 blueprints.percent_slider = {
 	size = {
 		settings_grid_width,
-		settings_value_height,
+		settings_value_height
 	},
 	pass_template = SliderPassTemplates.settings_percent_slider(settings_grid_width, settings_value_height, settings_value_width, true),
 	init = slider_init_function,
@@ -170,12 +170,12 @@ blueprints.percent_slider = {
 		local pass_input = true
 
 		return pass_input
-	end,
+	end
 }
 blueprints.value_slider = {
 	size = {
 		settings_grid_width,
-		settings_value_height,
+		settings_value_height
 	},
 	pass_template = SliderPassTemplates.settings_value_slider(settings_grid_width, settings_value_height, settings_value_width, true),
 	init = slider_init_function,
@@ -258,7 +258,7 @@ blueprints.value_slider = {
 		local pass_input = true
 
 		return pass_input
-	end,
+	end
 }
 
 local max_visible_options = 5
@@ -266,7 +266,7 @@ local max_visible_options = 5
 blueprints.dropdown = {
 	size = {
 		settings_grid_width,
-		settings_value_height,
+		settings_value_height
 	},
 	pass_template_function = function (parent, entry)
 		local has_options_function = entry.options_function ~= nil
@@ -505,7 +505,7 @@ blueprints.dropdown = {
 		local pass_input = using_gamepad or value_changed or not option_hovered and not scrollbar_hovered
 
 		return pass_input
-	end,
+	end
 }
 
 return settings("OptionsViewContentBlueprints", blueprints)

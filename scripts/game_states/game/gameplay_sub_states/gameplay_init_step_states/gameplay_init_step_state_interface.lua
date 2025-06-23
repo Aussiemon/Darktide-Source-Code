@@ -2,7 +2,7 @@
 
 local GameplayInitStepInterface = {
 	"on_enter",
-	"update",
+	"update"
 }
 
 return GameplayInitStepInterface

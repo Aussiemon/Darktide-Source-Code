@@ -83,7 +83,7 @@ local FORMATTING_FUNCTIONS = {
 	end,
 	default = function (value, config)
 		return tostring(value)
-	end,
+	end
 }
 local FORMAT_VALUES_TEMP = {}
 

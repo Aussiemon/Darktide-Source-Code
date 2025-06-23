@@ -14,7 +14,7 @@ CosmeticsVendorBackgroundView.init = function (self, settings, context)
 
 	self._button_input_actions = {
 		"navigate_right_continuous",
-		"navigate_left_continuous",
+		"navigate_left_continuous"
 	}
 end
 

@@ -56,18 +56,18 @@ end
 
 SplineGroup.component_data = {
 	objective_name = {
-		ui_name = "Objective Name",
 		ui_type = "text_box",
 		value = "None",
+		ui_name = "Objective Name"
 	},
 	spline_names = {
-		ui_name = "Spline Name",
 		ui_type = "text_box_array",
-		values = {},
+		ui_name = "Spline Name",
+		values = {}
 	},
 	extensions = {
-		"SplineGroupExtension",
-	},
+		"SplineGroupExtension"
+	}
 }
 
 return SplineGroup

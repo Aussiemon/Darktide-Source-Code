@@ -16,31 +16,31 @@ hitscan_templates.default_bolter_boltshell = {
 			damage_profile = DamageProfileTemplates.default_bolter_killshot,
 			hitmass_consumed_explosion = {
 				kill_explosion_template = ExplosionTemplates.bolt_shell_kill,
-				stop_explosion_template = ExplosionTemplates.bolt_shell_stop,
-			},
+				stop_explosion_template = ExplosionTemplates.bolt_shell_stop
+			}
 		},
 		penetration = {
 			depth = 0.75,
 			target_index_increase = 2,
-			stop_explosion_template = ExplosionTemplates.bolt_shell_stop,
-		},
+			stop_explosion_template = ExplosionTemplates.bolt_shell_stop
+		}
 	},
 	collision_tests = {
 		{
 			against = "statics",
-			collision_filter = "filter_player_character_shooting_raycast_statics",
 			test = "ray",
+			collision_filter = "filter_player_character_shooting_raycast_statics"
 		},
 		{
 			against = "dynamics",
-			collision_filter = "filter_player_character_shooting_raycast_dynamics",
-			radius = 0.1,
 			test = "sphere",
-		},
-	},
+			radius = 0.1,
+			collision_filter = "filter_player_character_shooting_raycast_dynamics"
+		}
+	}
 }
 
 return {
 	base_templates = hitscan_templates,
-	overrides = overrides,
+	overrides = overrides
 }

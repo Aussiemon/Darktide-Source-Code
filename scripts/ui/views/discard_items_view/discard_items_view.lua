@@ -200,7 +200,7 @@ DiscardItemsView._setup_buttons_interactions = function (self)
 		complete_function = callback(self, "_on_discard_pressed"),
 		on_complete_sound = UISoundEvents.weapons_discard_complete,
 		hold_sound = UISoundEvents.weapons_discard_hold,
-		hold_release = UISoundEvents.weapons_discard_release,
+		hold_release = UISoundEvents.weapons_discard_release
 	})
 
 	widgets_by_name.rating_stepper.content.left_pressed_callback = callback(self, "_on_rating_stepper_left_pressed")
@@ -214,7 +214,7 @@ DiscardItemsView._setup_buttons_interactions = function (self)
 		widgets_by_name.rarity_checkbox_button_5,
 		widgets_by_name.rating_stepper,
 		widgets_by_name.discard_button,
-		widgets_by_name.close_button,
+		widgets_by_name.close_button
 	}
 end
 
@@ -226,8 +226,8 @@ DiscardItemsView._initialize_description_text = function (self)
 			value = "",
 			r = key_value_color[2],
 			g = key_value_color[3],
-			b = key_value_color[4],
-		}),
+			b = key_value_color[4]
+		})
 	})
 
 	widgets_by_name.description.content.text = text
@@ -296,7 +296,7 @@ DiscardItemsView._update_items_to_discard = function (self)
 	local item_amount_text = self._items_to_discard and tostring(#self._items_to_discard) or "0"
 
 	self._widgets_by_name.discard_button.content.original_text = Localize("loc_discard_items_view_discard_button", true, {
-		item_amount = item_amount_text,
+		item_amount = item_amount_text
 	})
 	self._widgets_by_name.discard_button.content.hotspot.disabled = not self._items_to_discard
 end

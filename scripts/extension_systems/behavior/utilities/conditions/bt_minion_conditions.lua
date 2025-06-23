@@ -2,6 +2,7 @@
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local NavQueries = require("scripts/utilities/nav_queries")
+local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 local conditions = {}
 
 conditions.has_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -618,7 +619,7 @@ local MUTATOR_DAEMONHOST_NUM_FOR_DESPAWN = {
 	1,
 	1,
 	2,
-	3,
+	3
 }
 
 conditions.mutator_daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -1484,6 +1485,215 @@ conditions.is_minion_disabled = function (unit, blackboard, scratchpad, conditio
 	local disable_component = blackboard.disable
 
 	return disable_component.is_disabled
+end
+
+conditions.has_manual_teleport = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local teleport_component = blackboard.teleport
+
+	return teleport_component.has_teleport_position
+end
+
+conditions.owner_is_moving = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local owner_locomotion_extension = ScriptUnit.extension(owner_unit, "locomotion_system")
+	local owner_speed = Vector3.length(Vector3.flat(owner_locomotion_extension:current_velocity()))
+
+	return owner_speed > 0.05
+end
+
+conditions.should_companion_moving = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local owner_position = POSITION_LOOKUP[owner_unit]
+	local current_state = behavior_component.current_state
+	local outer_circle_distance = action_data.idle_circle_distances.outer_circle_distance
+	local inner_circle_distance = action_data.idle_circle_distances.inner_circle_distance
+	local companion_position = POSITION_LOOKUP[unit]
+	local companion_owner_vector = Vector3.flat(companion_position - owner_position)
+	local distance_from_owner = Vector3.length(companion_owner_vector)
+	local is_owner_moving = conditions.owner_is_moving(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local owner_locomotion_extension = ScriptUnit.extension(owner_unit, "locomotion_system")
+	local owner_speed_normalized = Vector3.normalize(Vector3.flat(owner_locomotion_extension:current_velocity()))
+	local companion_owner_vector_normalized = Vector3.normalize(companion_owner_vector)
+	local cos = Vector3.dot(companion_owner_vector_normalized, owner_speed_normalized)
+	local far_distance = action_data.far_distance
+	local cone_cos = action_data.cone_angle and math.cos(action_data.cone_angle * 0.5) or math.huge
+	local far_distance_check = not far_distance or far_distance < distance_from_owner or cos < cone_cos
+
+	return is_owner_moving and (current_state == "follow" or outer_circle_distance < distance_from_owner and far_distance_check)
+end
+
+conditions.should_companion_idle = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local owner_position = POSITION_LOOKUP[owner_unit]
+	local inner_circle_distance = action_data.inner_circle_distance
+	local outer_circle_distance = action_data.outer_circle_distance
+	local companion_position = POSITION_LOOKUP[unit]
+	local companion_owner_vector = Vector3.flat(companion_position - owner_position)
+	local distance_from_owner = Vector3.length(companion_owner_vector)
+
+	return inner_circle_distance <= distance_from_owner and distance_from_owner <= outer_circle_distance
+end
+
+conditions.should_move_close_to_owner = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local owner_position = POSITION_LOOKUP[owner_unit]
+	local far_distance = action_data.far_distance
+	local close_distance = action_data.close_distance
+	local companion_position = POSITION_LOOKUP[unit]
+	local companion_owner_vector = Vector3.flat(companion_position - owner_position)
+	local distance_from_owner = Vector3.length(companion_owner_vector)
+
+	if not behavior_component.has_move_to_position and (distance_from_owner < close_distance or far_distance < distance_from_owner) then
+		local companion_cone_check = action_data.companion_cone_check
+		local is_inside_cone = true
+
+		if companion_cone_check then
+			local owner_locomotion_extension = ScriptUnit.extension(owner_unit, "locomotion_system")
+			local owner_velocity = Vector3.normalize(Vector3.flat(owner_locomotion_extension:current_velocity()))
+
+			companion_owner_vector = Vector3.normalize(companion_owner_vector)
+
+			local dot_product = Vector3.dot(owner_velocity, companion_owner_vector)
+			local cone_cos = math.cos(math.degrees_to_radians(companion_cone_check.angle * 0.5))
+
+			is_inside_cone = cone_cos <= dot_product
+		end
+
+		local companion_has_position_around_owner = false
+
+		if is_inside_cone then
+			local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
+
+			companion_has_position_around_owner = CompanionFollowUtility.companion_has_position_around_owner(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+		end
+
+		return companion_has_position_around_owner
+	end
+
+	return behavior_component.has_move_to_position
+end
+
+conditions.companion_has_move_position = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
+	local companion_has_found_follow_position = CompanionFollowUtility.companion_has_follow_position(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not companion_has_found_follow_position and is_running then
+		local behavior_component = blackboard.behavior
+		local has_move_to_position = behavior_component.has_move_to_position
+
+		return has_move_to_position
+	end
+
+	return companion_has_found_follow_position
+end
+
+conditions.should_reposition_for_hub_interaction = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local hub_interaction_component = blackboard.hub_interaction_with_player
+
+	return hub_interaction_component.has_owner_started_interaction
+end
+
+conditions.is_correct_pounce_action = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local pounce_target = pounce_component.pounce_target
+
+	if not pounce_target or not HEALTH_ALIVE[pounce_target] then
+		return false
+	end
+
+	local target_unit_data_extension = ScriptUnit.extension(pounce_target, "unit_data_system")
+	local target_unit_breed = target_unit_data_extension:breed()
+	local companion_pounce_setting = target_unit_breed.companion_pounce_setting
+
+	return companion_pounce_setting.companion_pounce_action == condition_args.pounce_action
+end
+
+conditions.companion_has_pounce_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+
+	return pounce_component.has_pounce_target
+end
+
+conditions.companion_can_pounce = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local pounce_cooldown = pounce_component.pounce_cooldown
+	local t = Managers.time:time("gameplay")
+
+	return pounce_cooldown <= t
+end
+
+conditions.companion_has_jump_off_direction = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+
+	return pounce_component.has_jump_off_direction
+end
+
+conditions.companion_has_pounce_target_and_alive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local pounce_component = blackboard.pounce
+	local is_pounce_target_alive = HEALTH_ALIVE[pounce_component.pounce_target]
+	local has_blackboard_target = true
+
+	if is_pounce_target_alive then
+		local target_blackboard = BLACKBOARDS[pounce_component.pounce_target]
+
+		has_blackboard_target = target_blackboard ~= nil
+	end
+
+	local companion_has_jump_off_direction = conditions.companion_has_jump_off_direction(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	return companion_has_jump_off_direction and (is_pounce_target_alive and has_blackboard_target or pounce_component.has_pounce_started)
+end
+
+conditions.companion_is_aggroed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
+	local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+	local companion_whistle_target
+	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+	local tag_target, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)
+	local tag_template = tag and tag:template()
+	local tag_type = tag_template and tag_template.marker_type
+
+	if tag_target and tag_type == "unit_threat_adamant" then
+		local unit_data_extension = ScriptUnit.has_extension(tag_target, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
+		local daemonhost = breed and breed.tags.witch
+
+		if daemonhost then
+			local daemonhost_blackboard = BLACKBOARDS[tag_target]
+			local daemonhost_perception_component = daemonhost_blackboard.perception
+			local host_is_aggroed = daemonhost_perception_component.aggro_state == "aggroed"
+
+			if host_is_aggroed then
+				companion_whistle_target = tag_target
+			end
+		else
+			companion_whistle_target = tag_target
+		end
+	end
+
+	local force_combat = HEALTH_ALIVE[companion_whistle_target]
+	local pounce_component = blackboard.pounce
+
+	return is_aggroed and (in_combat or force_combat) or pounce_component.started_leap or pounce_component.has_pounce_target
+end
+
+conditions.companion_is_on_platform = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return blackboard.movable_platform.unit_reference ~= nil
+end
+
+conditions.companion_is_out_of_bound = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return blackboard.behavior.is_out_of_bound
+end
+
+conditions.companion_has_owner_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return blackboard.behavior.is_owner_despawned
 end
 
 return conditions

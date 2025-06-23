@@ -7,34 +7,34 @@ local canvas_size = ViewElementAccoladeSettings.canvas_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	pivot = {
-		horizontal_alignment = "left",
-		parent = "screen",
 		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
 		size = {
 			0,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "pivot",
 		vertical_alignment = "center",
+		parent = "pivot",
+		horizontal_alignment = "center",
 		size = canvas_size,
 		position = {
 			-150,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local widget_definitions = {}
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

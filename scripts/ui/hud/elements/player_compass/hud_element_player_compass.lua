@@ -70,7 +70,7 @@ local temp_team_player_color = {
 	50,
 	0,
 	255,
-	0,
+	0
 }
 
 HudElementPlayerCompass._draw_party_icon = function (self, dt, t, ui_renderer, marker, x, y, alpha)
@@ -120,7 +120,7 @@ HudElementPlayerCompass._get_party_icons_render_buffer = function (self, dt, t, 
 
 				temp_team_player_render_data[#temp_team_player_render_data + 1] = {
 					angle = angle,
-					marker = marker,
+					marker = marker
 				}
 			end
 		end

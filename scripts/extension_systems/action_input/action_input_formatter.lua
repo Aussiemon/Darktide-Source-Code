@@ -94,7 +94,7 @@ function _read_action_inputs(name, action_inputs, sequences, network_lookup, tot
 			reevaluation_time = data.reevaluation_time or nil,
 			clear_input_queue = data.clear_input_queue or false,
 			max_queue = data.max_queue or false,
-			dont_queue = data.dont_queue,
+			dont_queue = data.dont_queue
 		}
 
 		for ii = 1, num_elements do
@@ -137,7 +137,7 @@ function _read_hierarchy(hierarchy_data, sequences, hierarchy_depth)
 			local base = transition == "base"
 
 			if transition ~= "previous" then
-				local var_1_0 = false
+				local var_3_0 = false
 			else
 				local previous = true
 			end

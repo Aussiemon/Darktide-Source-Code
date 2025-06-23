@@ -18,8 +18,8 @@ ActionOverloadCharge.start = function (self, action_settings, t, time_scale, act
 	self._overload_module:start(t)
 end
 
-ActionOverloadCharge.fixed_update = function (self, dt, t, time_in_action)
-	ActionOverloadCharge.super.fixed_update(self, dt, t, time_in_action)
+ActionOverloadCharge.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionOverloadCharge.super.fixed_update(self, dt, t, time_in_action, frame)
 	self._overload_module:fixed_update(dt, t)
 end
 

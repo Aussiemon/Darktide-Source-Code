@@ -8,105 +8,105 @@ table.make_unique(overrides)
 
 recoil_templates.default_plasma_rifle_bfg = {
 	still = {
-		camera_recoil_percentage = 0.5,
 		new_influence_percent = 0.25,
+		camera_recoil_percentage = 0.5,
 		rise_duration = 0.05,
 		rise = {
-			1,
+			1
 		},
 		decay = {
-			idle = 1.5,
 			shooting = 0.1,
+			idle = 1.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.025,
-					0.025,
-				},
-			},
+					0.025
+				}
+			}
 		},
 		offset_limit = {
-			pitch = 0.175,
 			yaw = 0.175,
+			pitch = 0.175
 		},
 		visual_recoil_settings = {
 			intensity = 5,
-			lerp_scalar = 0.2,
-		},
+			lerp_scalar = 0.2
+		}
 	},
 	moving = {
 		inherits = {
 			"default_plasma_rifle_bfg",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_plasma_rifle_bfg",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_plasma_rifle_bfg",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 recoil_templates.default_plasma_rifle_demolitions = {
 	still = {
 		new_influence_percent = 0.75,
 		rise_duration = 0.15,
 		rise = {
-			0.75,
+			0.75
 		},
 		decay = {
-			idle = 1.5,
 			shooting = 0.5,
+			idle = 1.5
 		},
 		offset_range = {
 			{
 				pitch = {
 					0.25,
-					0.3,
+					0.3
 				},
 				yaw = {
 					-0.1,
-					0.1,
-				},
-			},
+					0.1
+				}
+			}
 		},
 		offset_limit = {
-			pitch = 3,
 			yaw = 3,
-		},
+			pitch = 3
+		}
 	},
 	moving = {
 		inherits = {
 			"default_plasma_rifle_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_plasma_rifle_demolitions",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_plasma_rifle_demolitions",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = recoil_templates,
-	overrides = overrides,
+	overrides = overrides
 }

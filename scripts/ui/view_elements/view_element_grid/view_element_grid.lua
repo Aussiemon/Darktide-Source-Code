@@ -29,7 +29,7 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._loaded_item_icons_info = {}
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 	self._loaded_icon_id_cache = {}
 	self._cache_loaded_icons = self._menu_settings.cache_loaded_icons or false
@@ -148,7 +148,7 @@ ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 		sort_color_r = sort_color[2],
 		sort_color_g = sort_color[3],
 		sort_color_b = sort_color[4],
-		name = sort_display_name,
+		name = sort_display_name
 	})
 
 	self._sort_button_text = text
@@ -677,7 +677,7 @@ ViewElementGrid._create_entry_widget_from_config = function (self, config, suffi
 		return widget, widget
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end
@@ -713,17 +713,17 @@ ViewElementGrid._update_window_size = function (self)
 	local top_padding = menu_settings.top_padding or 0
 	local active_grid_size = using_title and {
 		grid_size[1],
-		grid_size[2] - title_height - grid_height_divider_deduction,
+		grid_size[2] - title_height - grid_height_divider_deduction
 	} or {
 		grid_size[1],
-		grid_size[2] - grid_height_divider_deduction,
+		grid_size[2] - grid_height_divider_deduction
 	}
 	local active_mask_size = using_title and {
 		mask_size[1],
-		mask_size[2] - title_height - grid_height_divider_deduction,
+		mask_size[2] - title_height - grid_height_divider_deduction
 	} or {
 		mask_size[1],
-		mask_size[2] - grid_height_divider_deduction,
+		mask_size[2] - grid_height_divider_deduction
 	}
 
 	self:_set_scenegraph_size("grid_title_background", active_grid_size[1] + edge_padding, using_title and title_height or 0)
@@ -901,7 +901,7 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 
 			widgets_by_entry_id[entry_id] = {
 				widget = widget,
-				alignment_widget = alignment_widget,
+				alignment_widget = alignment_widget
 			}
 		end
 

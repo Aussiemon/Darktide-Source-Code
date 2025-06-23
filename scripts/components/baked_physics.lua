@@ -46,7 +46,7 @@ end
 BakedPhysics.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 
 return BakedPhysics

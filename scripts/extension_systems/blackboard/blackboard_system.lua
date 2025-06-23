@@ -10,16 +10,16 @@ local BLACKBOARD_COMPONENT_UPDATE_FUNCTION_INDEX = 2
 local BLACKBOARD_COMPONENT_UPDATE = {
 	weapon_switch = {
 		"behavior_system",
-		"update_combat_range",
+		"update_combat_range"
 	},
 	nearby_units_broadphase = {
 		"behavior_system",
-		"update_nearby_units_broadphase",
+		"update_nearby_units_broadphase"
 	},
 	phase = {
 		"behavior_system",
-		"update_minion_phase",
-	},
+		"update_minion_phase"
+	}
 }
 
 BlackboardSystem.init = function (self, ...)

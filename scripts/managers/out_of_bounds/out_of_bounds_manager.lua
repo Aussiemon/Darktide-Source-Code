@@ -8,31 +8,15 @@ local Unit_has_node = Unit.has_node
 local Unit_node = Unit.node
 local RAGDOLL_POSITION_NODE_NAME = "j_hips"
 
-local function lua_within_extents(unit, extents)
-	local position = Unit.world_position(unit, 0)
-
-	if math.abs(position[1]) > extents[1] or math.abs(position[2]) > extents[2] or math.abs(position[3]) > extents[3] then
-		return false
-	end
-
-	return true
-end
-
-local function update_hard_oob(current_hard_oob, num_hard_cap_units, hard_extents, previous_hard_oob)
-	if num_hard_cap_units > 0 then
-		for unit in pairs(previous_hard_oob) do
-			if current_hard_oob[unit] == nil then
-				previous_hard_oob[unit] = nil
-			end
+local function update_hard_oob(current_hard_oob, previous_hard_oob)
+	for unit in pairs(previous_hard_oob) do
+		if current_hard_oob[unit] == nil then
+			previous_hard_oob[unit] = nil
 		end
-	else
-		table.clear(previous_hard_oob)
 	end
-
-	return num_hard_cap_units
 end
 
-local function out_of_bounds_error(current_hard_oob, registered_units)
+local function out_of_bounds_error(current_hard_oob)
 	local units_text = ""
 
 	for unit in pairs(current_hard_oob) do
@@ -53,22 +37,20 @@ local function out_of_bounds_error(current_hard_oob, registered_units)
 			is_owned_by_death_manager = true
 		end
 
-		local is_soft_oob_tracked = not not registered_units[unit]
-
-		units_text = string.format("%s\n\t%s (%s%s) is_soft_oob_tracked: %s; is_owned_by_death_manager: %s; level(%s)", units_text, tostring(unit), tostring(position), ragdoll_position_text, is_soft_oob_tracked, is_owned_by_death_manager, tostring(Unit.level(unit)))
+		units_text = string.format("%s\n\t%s (%s%s) is_owned_by_death_manager: %s; level(%s)", units_text, tostring(unit), tostring(position), ragdoll_position_text, tostring(is_owned_by_death_manager), tostring(Unit.level(unit)))
 	end
 
 	ferror("[OutOfBoundsManager] Following units were out-of-bounds: %s\n", units_text)
 end
 
-local function register_new_hard_oob_units(current_hard_oob, previous_hard_oob, registered_units)
+local function register_new_hard_oob_units(current_hard_oob, previous_hard_oob)
 	local unit_spawner_manager = Managers.state.unit_spawner
 
 	for unit in pairs(current_hard_oob) do
 		local game_object_id_or_nil = unit_spawner_manager:game_object_id(unit)
 
 		if game_object_id_or_nil or previous_hard_oob[unit] then
-			out_of_bounds_error(current_hard_oob, registered_units)
+			out_of_bounds_error(current_hard_oob)
 
 			return
 		else
@@ -95,10 +77,10 @@ OutOfBoundsManager.pre_update = function (self, shared_state)
 	local num_hard_cap_units, _ = World_update_out_of_bounds_checker(world, hard_cap_out_of_bounds_units, soft_cap_out_of_bounds_units)
 	local local_hard_cap_out_of_bounds_units = self._local_hard_cap_out_of_bounds_units
 
-	update_hard_oob(hard_cap_out_of_bounds_units, num_hard_cap_units, self._hard_cap_extents, local_hard_cap_out_of_bounds_units)
+	update_hard_oob(hard_cap_out_of_bounds_units, local_hard_cap_out_of_bounds_units)
 
 	if num_hard_cap_units > 0 then
-		register_new_hard_oob_units(hard_cap_out_of_bounds_units, local_hard_cap_out_of_bounds_units, self._registered_units)
+		register_new_hard_oob_units(hard_cap_out_of_bounds_units, local_hard_cap_out_of_bounds_units)
 	end
 end
 
@@ -124,9 +106,9 @@ OutOfBoundsManager.register_soft_oob_unit = function (self, unit, object, callba
 		registered_units[unit][object] = callback_name
 	else
 		registered_units[unit] = registered_units[unit] or setmetatable({
-			[object] = callback_name,
+			[object] = callback_name
 		}, {
-			__mode = "v",
+			__mode = "v"
 		})
 	end
 end

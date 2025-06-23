@@ -170,10 +170,10 @@ end
 
 local RUNNING_STAGGER_DEFAULT_MIN_DISTANCE = 5
 local CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES = {
+	explosion = true,
 	blinding = true,
 	electrocuted = true,
-	explosion = true,
-	sticky = true,
+	sticky = true
 }
 
 function _get_action_data_overrides(unit, blackboard, breed, damage_profile, attacking_unit)

@@ -14,40 +14,50 @@ RoomsAndPortalsManager.init = function (self, world)
 	self._portal_toggle_queue = {}
 end
 
+RoomsAndPortalsManager.reset = function (self)
+	self._is_connected = false
+
+	table.clear(self._portal_toggle_queue)
+end
+
 RoomsAndPortalsManager.update = function (self, dt, t)
 	if not self._is_connected then
 		local any_room_added = false
 
-		for room, _ in pairs(self._rooms) do
-			local unit = room.unit
-			local priority = room:get_data(unit, "priority")
-			local wall_occlusion = room:get_data(unit, "wall_occlusion")
-			local aux_send_to_self = 0
-			local reverb_aux_bus = room:get_data(unit, "reverb_aux_bus")
-			local environment_state = room:get_data(unit, "environment_state")
-			local room_id = WwiseWorld.add_room_unit(self._wwise_world, unit, priority, wall_occlusion, aux_send_to_self, reverb_aux_bus, environment_state)
+		for room, id in pairs(self._rooms) do
+			if id == -1 then
+				local unit = room.unit
+				local priority = room:get_data(unit, "priority")
+				local wall_occlusion = room:get_data(unit, "wall_occlusion")
+				local aux_send_to_self = 0
+				local reverb_aux_bus = room:get_data(unit, "reverb_aux_bus")
+				local environment_state = room:get_data(unit, "environment_state")
+				local room_id = WwiseWorld.add_room_unit(self._wwise_world, unit, priority, wall_occlusion, aux_send_to_self, reverb_aux_bus, environment_state)
 
-			self._rooms[room] = room_id
+				self._rooms[room] = room_id
 
-			local ambient_event = room:get_data(unit, "ambient_event")
+				local ambient_event = room:get_data(unit, "ambient_event")
 
-			if ambient_event ~= "" then
-				WwiseWorld.trigger_room_resource_event(self._wwise_world, ambient_event, room_id)
+				if ambient_event ~= "" then
+					WwiseWorld.trigger_room_resource_event(self._wwise_world, ambient_event, room_id)
+				end
+
+				any_room_added = true
 			end
-
-			any_room_added = true
 		end
 
-		for portal, _ in pairs(self._portals) do
-			local portal_unit = portal:get_unit()
-			local portal_id = WwiseWorld.add_portal_unit(self._wwise_world, portal_unit)
+		for portal, id in pairs(self._portals) do
+			if id == -1 then
+				local portal_unit = portal:get_unit()
+				local portal_id = WwiseWorld.add_portal_unit(self._wwise_world, portal_unit)
 
-			if self:_check_portal_id(portal_id) then
-				self._portals[portal] = portal_id
+				if self:_check_portal_id(portal_id) then
+					self._portals[portal] = portal_id
 
-				Component.event(portal_unit, "portal_added")
-			else
-				self._portals[portal] = nil
+					Component.event(portal_unit, "portal_added")
+				else
+					self._portals[portal] = nil
+				end
 			end
 		end
 
@@ -102,7 +112,7 @@ RoomsAndPortalsManager.toggle_portal = function (self, portal, enabled)
 	else
 		self._portal_toggle_queue[#self._portal_toggle_queue + 1] = {
 			wwise_portal_component = portal,
-			enabled = enabled,
+			enabled = enabled
 		}
 	end
 end
@@ -118,10 +128,6 @@ RoomsAndPortalsManager.set_portal_obstruction_and_occlusion = function (self, po
 end
 
 RoomsAndPortalsManager.destroy = function (self)
-	self:_cleanup()
-end
-
-RoomsAndPortalsManager._cleanup = function (self)
 	return
 end
 

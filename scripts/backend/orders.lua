@@ -9,7 +9,7 @@ Orders.order_by_id = function (self, order_id, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/orders/"):path(order_id)
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)
@@ -23,7 +23,7 @@ Orders.orders_by_order_type = function (self, order_type, optional_account_id)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/orders/"):path("type/"):path(order_type)
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -45,8 +45,8 @@ Orders.join_personal_mission = function (self, owner_id, mission_id, joiner_id)
 			method = "POST",
 			body = {
 				type = "playerJoin",
-				accountId = joiner_id,
-			},
+				accountId = joiner_id
+			}
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -72,8 +72,8 @@ Orders.activate_order_by_id = function (self, order_id, participants, optional_a
 		local options = {
 			method = "POST",
 			body = {
-				participants = participants,
-			},
+				participants = participants
+			}
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
@@ -93,7 +93,7 @@ Orders.check_ongoing_missions = function (self)
 		local account_id = account.sub
 		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account"):path("/missions")
 		local options = {
-			method = "GET",
+			method = "GET"
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options):next(function (data)

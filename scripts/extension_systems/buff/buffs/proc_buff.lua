@@ -405,7 +405,7 @@ ProcBuff._start_proc_active_fx = function (self)
 
 				table.insert(active_vfx, {
 					particle_id = on_screen_effect_id,
-					stop_type = stop_type,
+					stop_type = stop_type
 				})
 			end
 

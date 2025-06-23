@@ -7,10 +7,10 @@ local bot_gestalt_target_selection_weights = {
 	DEFAULT_BREED_WEIGHT = DEFAULT_BREED_WEIGHT,
 	[behavior_gestalts.none] = {},
 	[behavior_gestalts.killshot] = {
-		chaos_ogryn_bulwark = -5,
 		chaos_ogryn_executor = -5,
 		renegade_executor = -5,
-	},
+		chaos_ogryn_bulwark = -5
+	}
 }
 
 return settings("BotGestaltTargetSelectionWeights", bot_gestalt_target_selection_weights)

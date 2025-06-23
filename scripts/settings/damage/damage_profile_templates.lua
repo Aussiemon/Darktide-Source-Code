@@ -4,6 +4,7 @@ local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
 local templates = {}
 local loaded_files = {}
 
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/archetypes/adamant_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/archetypes/ogryn_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/archetypes/psyker_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/archetypes/veteran_damage_profile_templates", templates, loaded_files)
@@ -47,11 +48,13 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_pickaxes_2h/settings_templates/ogryn_pickaxe_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_power_mauls/settings_templates/ogryn_power_maul_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_maul_shields/settings_templates/power_maul_shield_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_mauls/settings_templates/power_maul_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_swords_2h/settings_templates/power_sword_2h_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/power_swords/settings_templates/power_sword_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotpistol_shield/settings_templates/shotpistol_shield_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thunder_hammers_2h/settings_templates/thunder_hammer_damage_profile_templates", templates, loaded_files)

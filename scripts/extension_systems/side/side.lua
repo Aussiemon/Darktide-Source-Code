@@ -6,7 +6,7 @@ local Side = class("Side")
 Side.SIDE_RELATION_TYPES = table.mirror_array_inplace({
 	"enemy",
 	"allied",
-	"neutral",
+	"neutral"
 })
 
 Side.init = function (self, definition, side_id)
@@ -18,12 +18,12 @@ Side.init = function (self, definition, side_id)
 	self.units_by_relation_tag = {
 		enemy = {},
 		allied = {},
-		neutral = {},
+		neutral = {}
 	}
 	self.units_by_relation_tag_lookup = {
 		enemy = {},
 		allied = {},
-		neutral = {},
+		neutral = {}
 	}
 	self.aggroed_minion_units = {}
 	self.num_aggroed_minion_units = 0
@@ -55,7 +55,7 @@ Side._create_tag_tables = function (self)
 		if breed.tags then
 			for tag_name, _ in pairs(breed.tags) do
 				list[tag_name] = {
-					size = 0,
+					size = 0
 				}
 				list_lookup[tag_name] = {}
 			end

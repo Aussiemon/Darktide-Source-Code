@@ -147,7 +147,7 @@ GRPCManager._convert_presence_key_values = function (self, keyValues)
 	for key, value in pairs(keyValues) do
 		table.insert(result, {
 			key,
-			value,
+			value
 		})
 	end
 
@@ -345,7 +345,7 @@ GRPCManager.start_stay_in_party_vote = function (self)
 		Log.info("Allocated new party_id %s", response.allocated_party_id)
 
 		return Managers.voting:start_voting("stay_in_party", {
-			allocated_party_id = response.allocated_party_id,
+			allocated_party_id = response.allocated_party_id
 		})
 	end)
 end

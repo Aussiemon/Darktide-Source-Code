@@ -24,46 +24,47 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_spawn"
 local breed_data = {
-	activate_slot_system_on_spawn = true,
-	base_height = 3.6,
-	base_unit = "content/characters/enemy/chaos_spawn/third_person/base",
-	bone_lod_radius = 3,
-	broadphase_radius = 2,
-	challenge_rating = 30,
-	count_num_grabs_done = true,
-	display_name = "loc_breed_display_name_chaos_spawn",
-	explosion_power_multiplier = 2,
-	explosion_radius = 1,
-	faction_name = "chaos",
+	detection_radius = 20,
+	walk_speed = 6,
+	use_navigation_path_splines = true,
+	use_bone_lod = false,
+	look_at_distance = 20,
+	ignore_stagger_accumulation = true,
 	fx_proximity_culling_weight = 10,
-	game_object_type = "minion_monster",
+	activate_slot_system_on_spawn = true,
+	unit_template_name = "minion",
+	sub_faction_name = "chaos",
+	power_level_type = "chaos_spawn_melee",
+	slot_template = "chaos_spawn",
+	broadphase_radius = 2,
+	navigation_propagation_box_extent = 200,
+	count_num_grabs_done = true,
+	stagger_resistance = 1,
 	half_extent_forward = 0.6,
 	half_extent_right = 0.7,
 	hit_reacts_min_damage = 100,
-	ignore_stagger_accumulation = true,
-	is_boss = true,
-	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	look_at_distance = 20,
-	navigation_propagation_box_extent = 200,
-	player_locomotion_constrain_radius = 1.5,
-	power_level_type = "chaos_spawn_melee",
-	run_speed = 6,
-	slot_template = "chaos_spawn",
-	smart_tag_target_type = "breed",
-	spawn_aggro_state = "aggroed",
-	stagger_reduction = 50,
-	stagger_resistance = 1,
-	sub_faction_name = "chaos",
+	game_object_type = "minion_monster",
+	challenge_rating = 30,
+	bone_lod_radius = 3,
 	trigger_boss_health_bar_on_damaged = true,
-	unit_template_name = "minion",
-	use_bone_lod = false,
-	use_navigation_path_splines = true,
-	walk_speed = 6,
+	explosion_radius = 1,
+	display_name = "loc_breed_display_name_chaos_spawn",
+	run_speed = 6,
+	is_boss = true,
+	faction_name = "chaos",
+	base_height = 3.6,
+	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	stagger_reduction = 50,
+	player_locomotion_constrain_radius = 1.5,
+	can_patrol = true,
+	smart_tag_target_type = "breed",
+	explosion_power_multiplier = 2,
+	base_unit = "content/characters/enemy/chaos_spawn/third_person/base",
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
-		minion = true,
 		monster = true,
+		minion = true
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,
@@ -79,14 +80,14 @@ local breed_data = {
 		[stagger_types.explosion] = 1.5,
 		[stagger_types.killshot] = 1.5,
 		[stagger_types.sticky] = 1.5,
-		[stagger_types.wall_collision] = 2,
+		[stagger_types.wall_collision] = 2
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 1.5,
 		[stagger_types.medium] = 1.5,
 		[stagger_types.heavy] = 1.5,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.explosion] = 1.5,
+		[stagger_types.explosion] = 1.5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = -1,
@@ -95,17 +96,20 @@ local breed_data = {
 		[stagger_types.explosion] = 100,
 		[stagger_types.light_ranged] = -1,
 		[stagger_types.killshot] = -1,
-		[stagger_types.sticky] = -1,
+		[stagger_types.sticky] = -1
 	},
 	impact_anim_override = {
 		damaged = {
-			bwd = "hit_reaction_bwd",
 			fwd = "hit_reaction_fwd",
+			bwd = "hit_reaction_bwd",
 			left = "hit_reaction_left",
-			right = "hit_reaction_right",
-		},
+			right = "hit_reaction_right"
+		}
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_spawn,
+	animation_variables = {
+		"anim_move_speed"
+	},
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_spawn_sounds"),
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_spawn_vfx"),
 	look_at_tag = breed_name,
@@ -113,118 +117,117 @@ local breed_data = {
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
-			0,
+			0
 		},
 		moving_melee = {
 			0,
-			0,
-		},
+			0
+		}
 	},
-	detection_radius = math.huge,
 	target_changed_attack_intensities = {
-		disabling = 5,
+		disabling = 5
 	},
 	line_of_sight_data = {
 		{
-			from_node = "j_head",
 			id = "eyes",
 			to_node = "enemy_aim_target_03",
-			offsets = PerceptionSettings.default_minion_line_of_sight_offsets,
-		},
+			from_node = "j_head",
+			offsets = PerceptionSettings.default_minion_line_of_sight_offsets
+		}
 	},
 	target_selection_template = TargetSelectionTemplates.chaos_spawn,
 	target_selection_weights = TargetSelectionWeights.chaos_spawn,
 	threat_config = {
-		max_threat = 1000,
-		threat_decay_per_second = 100,
 		threat_multiplier = 1,
+		max_threat = 1000,
+		threat_decay_per_second = 100
 	},
 	nav_tag_allowed_layers = {
-		monster_walls = 1.5,
+		monster_walls = 1.5
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_spawn,
 	size_variation_range = {
 		1.04,
-		1.04,
+		1.04
 	},
 	fade = {
 		max_distance = 1.2,
 		max_height_difference = 2,
-		min_distance = 0.8,
+		min_distance = 0.8
 	},
 	hit_zones = {
 		{
 			name = hit_zone_names.head,
 			actors = {
 				"c_head",
-				"c_neck1",
-			},
+				"c_neck1"
+			}
 		},
 		{
 			name = hit_zone_names.torso,
 			actors = {
 				"c_hips",
 				"c_spine",
-				"c_spine1",
-			},
+				"c_spine1"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_arm,
 			actors = {
-				"c_leftarm",
-			},
+				"c_leftarm"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_arm,
 			actors = {
 				"c_leftforearm",
-				"c_lefthand",
-			},
+				"c_lefthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_arm,
 			actors = {
-				"c_rightarm",
-			},
+				"c_rightarm"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_arm,
 			actors = {
 				"c_rightforearm",
-				"c_righthand",
-			},
+				"c_righthand"
+			}
 		},
 		{
 			name = hit_zone_names.upper_left_leg,
 			actors = {
-				"c_leftupleg",
-			},
+				"c_leftupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_left_leg,
 			actors = {
 				"c_leftleg",
-				"c_leftfoot",
-			},
+				"c_leftfoot"
+			}
 		},
 		{
 			name = hit_zone_names.upper_right_leg,
 			actors = {
-				"c_rightupleg",
-			},
+				"c_rightupleg"
+			}
 		},
 		{
 			name = hit_zone_names.lower_right_leg,
 			actors = {
 				"c_rightleg",
-				"c_rightfoot",
-			},
+				"c_rightfoot"
+			}
 		},
 		{
 			name = hit_zone_names.afro,
 			actors = {
-				"r_afro",
-			},
+				"r_afro"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
@@ -268,14 +271,14 @@ local breed_data = {
 				"c_tentacleD2",
 				"c_tentacleD3",
 				"c_smallTentacleC1",
-				"c_smallTentacleC2",
-			},
-		},
+				"c_smallTentacleC2"
+			}
+		}
 	},
 	hit_zone_ragdoll_actors = {
 		[hit_zone_names.head] = {
 			"j_head",
-			"j_neck1",
+			"j_neck1"
 		},
 		[hit_zone_names.torso] = {
 			"j_head",
@@ -287,12 +290,12 @@ local breed_data = {
 			"j_lefthand",
 			"j_rightarm",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_arm] = {
 			"j_leftarm",
 			"j_leftforearm",
-			"j_lefthand",
+			"j_lefthand"
 		},
 		[hit_zone_names.lower_left_arm] = {
 			"j_leftforearm",
@@ -301,112 +304,112 @@ local breed_data = {
 			"j_leftfinger2_jnt",
 			"j_leftfinger3_jnt",
 			"j_leftfinger4_jnt",
-			"j_leftfinger5_jnt",
+			"j_leftfinger5_jnt"
 		},
 		[hit_zone_names.upper_right_arm] = {
 			"j_rightarm",
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.lower_right_arm] = {
 			"j_rightforearm",
-			"j_righthand",
+			"j_righthand"
 		},
 		[hit_zone_names.upper_left_leg] = {
 			"j_leftupleg",
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.lower_left_leg] = {
 			"j_leftleg",
-			"j_leftfoot",
+			"j_leftfoot"
 		},
 		[hit_zone_names.upper_right_leg] = {
 			"j_rightupleg",
 			"j_rightleg",
-			"j_rightfoot",
+			"j_rightfoot"
 		},
 		[hit_zone_names.lower_right_leg] = {
 			"j_rightleg",
-			"j_rightfoot",
-		},
+			"j_rightfoot"
+		}
 	},
 	hit_zone_ragdoll_pushes = {
 		[hit_zone_names.head] = {
-			j_head = 10.15,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.15,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.torso] = {
-			j_head = 10.1,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.1,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.upper_left_arm] = {
-			j_head = 10.1,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.1,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.upper_right_arm] = {
-			j_head = 10.1,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.1,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.upper_left_leg] = {
-			j_hips = 10.25,
-			j_leftfoot = 0.2,
 			j_leftleg = 0.4,
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_leftfoot = 0.2,
+			j_hips = 10.25,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.upper_right_leg] = {
-			j_hips = 10.25,
 			j_rightfoot = 0.2,
-			j_rightleg = 0.4,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_hips = 10.25,
+			j_rightleg = 0.4,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_left_arm] = {
-			j_head = 10.1,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.1,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.lower_right_arm] = {
-			j_head = 10.1,
-			j_neck = 0.1,
-			j_spine = 0.4,
 			j_spine1 = 0.4,
+			j_head = 10.1,
+			j_spine = 0.4,
+			j_neck = 0.1
 		},
 		[hit_zone_names.lower_left_leg] = {
-			j_hips = 10.25,
-			j_leftfoot = 0.2,
 			j_leftleg = 0.4,
 			j_leftupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_leftfoot = 0.2,
+			j_hips = 10.25,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.lower_right_leg] = {
-			j_hips = 10.25,
 			j_rightfoot = 0.2,
-			j_rightleg = 0.4,
 			j_rightupleg = 0.25,
 			j_spine = 0.3,
-			j_spine1 = 0.3,
+			j_hips = 10.25,
+			j_rightleg = 0.4,
+			j_spine1 = 0.3
 		},
 		[hit_zone_names.center_mass] = {
 			j_hips = 10.5,
-			j_spine = 0.5,
-		},
+			j_spine = 0.5
+		}
 	},
 	hit_zone_weakspot_types = {
-		[hit_zone_names.head] = weakspot_types.headshot,
+		[hit_zone_names.head] = weakspot_types.headshot
 	},
 	hitzone_damage_multiplier = {
 		melee = {
@@ -420,7 +423,7 @@ local breed_data = {
 			[hit_zone_names.upper_right_arm] = 0.65,
 			[hit_zone_names.upper_left_leg] = 0.65,
 			[hit_zone_names.upper_right_leg] = 0.65,
-			[hit_zone_names.center_mass] = 0.65,
+			[hit_zone_names.center_mass] = 0.65
 		},
 		ranged = {
 			[hit_zone_names.head] = 1,
@@ -433,11 +436,35 @@ local breed_data = {
 			[hit_zone_names.upper_right_arm] = 0.5,
 			[hit_zone_names.upper_left_leg] = 0.5,
 			[hit_zone_names.upper_right_leg] = 0.5,
-			[hit_zone_names.center_mass] = 0.5,
-		},
+			[hit_zone_names.center_mass] = 0.5
+		}
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_spawn,
+	companion_pounce_setting = {
+		companion_pounce_action = "stagger_and_leap_away",
+		on_target_hit = {
+			linking_time = 1.55,
+			anim_event_on_stick = "attack_leap_nonhuman_stick",
+			anim_event = "attack_leap_nonhuman_start",
+			animation_driven_duration = 0.5333333333333333,
+			dog_target_nodes = {
+				"dog_target_position_right_01",
+				"dog_target_position_right_02",
+				"dog_target_position_back_01",
+				"dog_target_position_back_02",
+				"dog_target_position_front_01",
+				"dog_target_position_front_02"
+			}
+		},
+		land_anim_events = {
+			{
+				duration = 0.8333333333333334,
+				name = "attack_leap_nonhuman_land_02"
+			}
+		},
+		damage_profile = DamageProfileTemplates.adamant_companion_monster_pounce
+	}
 }
 
 return breed_data

@@ -60,57 +60,57 @@ end
 
 MissionObjectiveZone.component_data = {
 	zone_type = {
-		ui_name = "Zone type",
-		ui_type = "combo_box",
 		value = "default",
+		ui_type = "combo_box",
+		ui_name = "Zone type",
 		options_keys = {
 			"Default",
 			"Capture",
-			"Scan",
+			"Scan"
 		},
 		options_values = {
 			"default",
 			"capture",
-			"scan",
-		},
+			"scan"
+		}
 	},
 	num_player_in_zone = {
-		category = "Capture",
-		ui_name = "Players in zone",
 		ui_type = "number",
 		value = 1,
+		ui_name = "Players in zone",
+		category = "Capture"
 	},
 	time_in_zone = {
-		category = "Capture",
-		ui_name = "Time in zone",
 		ui_type = "number",
 		value = 5,
+		ui_name = "Time in zone",
+		category = "Capture"
 	},
 	num_scannable_objects = {
+		value = 3,
+		ui_type = "number",
 		category = "Scan",
 		decimals = 0,
-		ui_name = "Amount of scannable objects",
-		ui_type = "number",
-		value = 3,
+		ui_name = "Amount of scannable objects"
 	},
 	max_scannable_objects_per_player = {
-		category = "Scan",
-		decimals = 0,
-		max = 5,
-		min = 2,
-		ui_name = "Max amount scannable objects per player",
 		ui_type = "number",
+		min = 2,
+		decimals = 0,
+		category = "Scan",
 		value = 5,
+		ui_name = "Max amount scannable objects per player",
+		max = 5
 	},
 	item_to_equip = {
-		filter = "item",
-		ui_name = "Item to Equip (scanner, decoder...)",
 		ui_type = "resource",
 		value = "",
+		ui_name = "Item to Equip (scanner, decoder...)",
+		filter = "item"
 	},
 	extensions = {
-		"MissionObjectiveZoneBaseExtension",
-	},
+		"MissionObjectiveZoneBaseExtension"
+	}
 }
 
 return MissionObjectiveZone

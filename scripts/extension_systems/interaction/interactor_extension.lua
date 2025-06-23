@@ -67,7 +67,7 @@ InteractorExtension._init_action_components = function (self, unit_data_extensio
 	self:reset_interaction()
 end
 
-InteractorExtension.reset_interaction = function (self)
+InteractorExtension.reset_interaction = function (self, reset_focus_unit)
 	local interaction_component = self._interaction_component
 
 	interaction_component.target_unit = nil
@@ -77,8 +77,11 @@ InteractorExtension.reset_interaction = function (self)
 	interaction_component.duration = 0
 	interaction_component.start_time = 0
 	interaction_component.done_time = 0
-	self._focus_unit = nil
-	self._focus_actor_node_index = 0
+
+	if reset_focus_unit ~= false then
+		self._focus_unit = nil
+		self._focus_actor_node_index = 0
+	end
 end
 
 InteractorExtension.extensions_ready = function (self, world, unit)
@@ -194,13 +197,14 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	end
 
 	local current_target = interaction_component.target_unit
+	local is_resimulating = self._unit_data_extension.is_resimulating
 
 	if chosen_target and chosen_target ~= current_target then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_type = interactee_extension:interaction_type()
 		local interaction_duration = self:calculate_duration(interactee_extension)
 
-		self:reset_interaction()
+		self:reset_interaction(not is_resimulating)
 
 		interaction_component.type = interaction_type
 		interaction_component.target_unit = chosen_target
@@ -209,7 +213,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	elseif chosen_target and chosen_target_actor_node_index ~= interaction_component.target_actor_node_index then
 		interaction_component.target_actor_node_index = chosen_target_actor_node_index
 	elseif not chosen_target and chosen_target ~= current_target and state == interaction_states.waiting_to_interact then
-		self:reset_interaction()
+		self:reset_interaction(not is_resimulating)
 	elseif chosen_target and chosen_target == current_target then
 		local interactee_extension = ScriptUnit.extension(chosen_target, "interactee_system")
 		local interaction_duration = self:calculate_duration(interactee_extension)
@@ -217,7 +221,7 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 		interaction_component.duration = interaction_duration
 	end
 
-	if not self._unit_data_extension.is_resimulating then
+	if not is_resimulating then
 		if focus_target and ScriptUnit.has_extension(focus_target, "interactee_system") then
 			self._focus_unit = focus_target
 			self._focus_actor_node_index = focus_target_actor_node_index
@@ -239,7 +243,7 @@ end
 
 local ACTION_KINDS_TO_CONSUME = {
 	reload_shotgun = true,
-	reload_state = true,
+	reload_state = true
 }
 
 InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)

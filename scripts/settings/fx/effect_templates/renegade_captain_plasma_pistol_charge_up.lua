@@ -10,7 +10,7 @@ local FX_SOURCE_NAME = "muzzle"
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
 	stop_sound_event = STOP_SOUND_EVENT,
-	muzzle_vfx = MUZZLE_VFX,
+	muzzle_vfx = MUZZLE_VFX
 }
 local effect_template = {
 	name = "renegade_captain_plasma_pistol_charge_up",
@@ -62,7 +62,7 @@ local effect_template = {
 		local vfx_particle_id = template_data.vfx_particle_id
 
 		World.stop_spawning_particles(world, vfx_particle_id)
-	end,
+	end
 }
 
 return effect_template

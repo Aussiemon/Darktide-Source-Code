@@ -15,17 +15,17 @@ local ConstantElementChat = class("ConstantElementChat", "ConstantElementBase")
 local States = table.enum("hidden", "idle", "active")
 local StateSettings = {
 	[States.hidden] = {
-		target_alpha = 0,
 		target_background_alpha = 0,
+		target_alpha = 0
 	},
 	[States.idle] = {
 		target_alpha = ChatSettings.idle_text_alpha / 255,
-		target_background_alpha = ChatSettings.idle_background_alpha,
+		target_background_alpha = ChatSettings.idle_background_alpha
 	},
 	[States.active] = {
 		target_alpha = 1,
-		target_background_alpha = ChatSettings.background_color[1],
-	},
+		target_background_alpha = ChatSettings.background_color[1]
+	}
 }
 
 ConstantElementChat.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -146,7 +146,7 @@ ConstantElementChat._change_state = function (self, target_state)
 		target_state = target_state,
 		target_alpha = StateSettings[target_state].target_alpha,
 		target_background_alpha = StateSettings[target_state].target_background_alpha,
-		message_widgets = self._message_widgets,
+		message_widgets = self._message_widgets
 	}
 	local is_visible = self._is_visible
 	local speed = target_state == States.hidden and is_visible and ChatSettings.inactive_fade_speed or 1
@@ -176,16 +176,16 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 
 	if need_to_update_scenegraph and active_state ~= States.hidden then
 		local fade_out_params = {
-			target_alpha = 0,
 			target_background_alpha = 0,
+			target_alpha = 0,
 			target_state = active_state,
-			message_widgets = self._message_widgets,
+			message_widgets = self._message_widgets
 		}
 		local fade_in_params = {
 			target_state = active_state,
 			target_alpha = active_state == States.idle and ChatSettings.idle_text_alpha / 255 or 1,
 			target_background_alpha = active_state == States.idle and ChatSettings.idle_background_alpha or ChatSettings.background_color[1],
-			message_widgets = self._message_widgets,
+			message_widgets = self._message_widgets
 		}
 
 		local function on_complete_callback()
@@ -239,7 +239,7 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
 
 			sender = Managers.localization:localize("loc_chat_own_player", true, {
-				channel_name = channel_name,
+				channel_name = channel_name
 			})
 		else
 			sender = self:_participant_displayname(participant)
@@ -287,7 +287,7 @@ ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_joined_channel", true, {
 				channel_name = channel_name,
-				display_name = displayname,
+				display_name = displayname
 			})
 
 			self:_add_notification(message)
@@ -331,7 +331,7 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
 				channel_name = channel_name,
-				display_name = displayname,
+				display_name = displayname
 			})
 
 			self:_add_notification(message)
@@ -429,7 +429,7 @@ ConstantElementChat._setup_input_labels = function (self)
 		local open_chat_input = self:_get_localized_input_text("show_chat")
 
 		active_placeholder_text = self:_localize("loc_chat_idle_placeholder_text", true, {
-			input = open_chat_input,
+			input = open_chat_input
 		})
 	elseif has_virtual_keyboard and is_writing and has_session and not present_tab_to_cycle then
 		local confirm_input = self:_get_localized_input_text("confirm")
@@ -437,19 +437,19 @@ ConstantElementChat._setup_input_labels = function (self)
 
 		active_placeholder_text = self:_localize("loc_chat_instruction_placeholder_text", true, {
 			continue_input = confirm_input,
-			cancel_input = back_input,
+			cancel_input = back_input
 		})
 	elseif has_virtual_keyboard and not has_session or not has_virtual_keyboard and InputDevice.gamepad_active and is_writing then
 		local back_input = self:_get_localized_input_text("back")
 
 		active_placeholder_text = self:_localize("loc_chat_empty_placeholder_text", true, {
-			input = back_input,
+			input = back_input
 		})
 	elseif present_tab_to_cycle then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
 
 		active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
-			input = change_channel_input,
+			input = change_channel_input
 		})
 	end
 
@@ -464,11 +464,11 @@ ConstantElementChat._get_localized_input_text = function (self, action)
 
 	if IS_PLAYSTATION then
 		device_types = {
-			show_controller and "ps4_controller" or "keyboard",
+			show_controller and "ps4_controller" or "keyboard"
 		}
 	else
 		device_types = {
-			show_controller and "xbox_controller" or "keyboard",
+			show_controller and "xbox_controller" or "keyboard"
 		}
 	end
 
@@ -603,7 +603,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 			local keyboard_options = {
 				title = title,
 				placeholder = input_text,
-				max_length = max_length,
+				max_length = max_length
 			}
 
 			PS5ImeDialog.show(keyboard_options)
@@ -754,7 +754,7 @@ ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
 
 			to_channel_text = Managers.localization:localize("loc_chat_to_channel", true, {
-				channel_name = channel_name,
+				channel_name = channel_name
 			})
 			to_channel_style.text_color = self:_channel_color(channel.tag)
 		end
@@ -891,7 +891,7 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 
 	local messsage_parameters = {
 		message_text = message,
-		channel_tag = channel_tag,
+		channel_tag = channel_tag
 	}
 	local always_notify = channel_meta_data and channel_meta_data.always_notify
 	local uses_controller = (IS_XBS or IS_PLAYSTATION) and InputDevice.gamepad_active
@@ -915,7 +915,7 @@ ConstantElementChat._add_message = function (self, message, sender, channel)
 		channel_color = slug_formatted_color,
 		channel_tag = channel_tag,
 		author_name = sender,
-		message_text = message,
+		message_text = message
 	}
 	local message_format = self:_format_chat_message(message_parameters)
 	local widget_content = new_message_widget.content
@@ -993,12 +993,12 @@ ConstantElementChat._calculate_widget_size = function (self, widget, ui_renderer
 	message_style.offset = {
 		-min.x,
 		-min.y,
-		0,
+		0
 	}
 
 	local widget_size = {
 		widget_max_size[1],
-		message_height,
+		message_height
 	}
 
 	widget_content.size = widget_size
@@ -1083,7 +1083,7 @@ ConstantElementChat._on_connect_to_channel = function (self, channel_handle)
 	if show_notification and channel.tag then
 		local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 		local add_channel_message = Managers.localization:localize("loc_chat_joined_channel", true, {
-			channel_name = channel_name,
+			channel_name = channel_name
 		})
 
 		self:_add_notification(add_channel_message)
@@ -1126,7 +1126,7 @@ ConstantElementChat._on_disconnect_from_channel = function (self, channel_handle
 		if show_notification and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local remove_channel_message = Managers.localization:localize("loc_chat_left_channel", true, {
-				channel_name = channel_name,
+				channel_name = channel_name
 			})
 
 			self:_add_notification(remove_channel_message)
@@ -1172,7 +1172,7 @@ ConstantElementChat._channel_color = function (self, channel_tag)
 			255,
 			255,
 			0,
-			255,
+			255
 		}
 	end
 

@@ -8,10 +8,10 @@ dialogue_context_settings.construct = function (self, key)
 		return table.clone(dialogue_context_settings[key])
 	else
 		return {
-			count = 0,
-			delta = 0,
 			time_lived = 0,
-			time_to_live = 30,
+			delta = 0,
+			count = 0,
+			time_to_live = 30
 		}
 	end
 end
@@ -49,14 +49,14 @@ end
 
 dialogue_context_settings.number_of_kills = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 15,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 15,
 	trigger_when_higher = 14,
-	trigger_function = dialogue_context_settings.number_of_kills_callback,
+	trigger_function = dialogue_context_settings.number_of_kills_callback
 }
 
 dialogue_context_settings.number_of_knocked_down_callback = function (dialogue_context_extension, timed_counter, t)
@@ -81,14 +81,14 @@ end
 
 dialogue_context_settings.number_of_knocked_downs = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 300,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 300,
 	trigger_when_higher = 1,
-	trigger_function = dialogue_context_settings.number_of_knocked_down_callback,
+	trigger_function = dialogue_context_settings.number_of_knocked_down_callback
 }
 
 dialogue_context_settings.number_of_head_pops_callback = function (dialogue_context_extension, timed_counter, t)
@@ -118,14 +118,14 @@ end
 
 dialogue_context_settings.number_of_head_pops = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 25,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 25,
 	trigger_when_higher = 2,
-	trigger_function = dialogue_context_settings.number_of_head_pops_callback,
+	trigger_function = dialogue_context_settings.number_of_head_pops_callback
 }
 
 local suppression_query = {}
@@ -158,14 +158,14 @@ end
 
 dialogue_context_settings.number_of_player_suppressions = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 15,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 15,
 	trigger_when_higher = 25,
-	trigger_function = dialogue_context_settings.number_of_player_suppressions_callback,
+	trigger_function = dialogue_context_settings.number_of_player_suppressions_callback
 }
 
 dialogue_context_settings.number_of_armor_hits_callback = function (dialogue_context_extension, timed_counter, t)
@@ -195,14 +195,14 @@ end
 
 dialogue_context_settings.number_of_armor_hits = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 5,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 5,
 	trigger_when_higher = 4,
-	trigger_function = dialogue_context_settings.number_of_armor_hits_callback,
+	trigger_function = dialogue_context_settings.number_of_armor_hits_callback
 }
 
 dialogue_context_settings.friendly_fire_hits_callback = function (dialogue_context_extension, timed_counter, t)
@@ -217,14 +217,14 @@ end
 
 dialogue_context_settings.friendly_fire_hits = {
 	count = 0,
-	delta = 0,
 	has_triggered = false,
-	last_triggered_time = 0,
 	time_lived = 0,
-	time_to_live = 10,
+	delta = 0,
+	last_triggered_time = 0,
 	trigger_period = 2,
+	time_to_live = 10,
 	trigger_when_higher = 999,
-	trigger_function = dialogue_context_settings.friendly_fire_hits_callback,
+	trigger_function = dialogue_context_settings.friendly_fire_hits_callback
 }
 
 return settings("dialogue_context_settings", dialogue_context_settings)

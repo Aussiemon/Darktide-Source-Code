@@ -14,9 +14,9 @@ attack_settings.is_damaging_result = {
 	[attack_settings.attack_results.toughness_broken] = true,
 	[attack_settings.attack_results.shield_blocked] = false,
 	[attack_settings.attack_results.knock_down] = true,
-	[attack_settings.attack_results.friendly_fire] = false,
+	[attack_settings.attack_results.friendly_fire] = false
 }
-attack_settings.attack_types = table.enum("melee", "ranged", "explosion", "shout", "buff", "push", "door_smash")
+attack_settings.attack_types = table.enum("melee", "ranged", "explosion", "shout", "buff", "push", "door_smash", "companion_dog")
 attack_settings.melee_attack_strength = table.enum("heavy", "light")
 
 local damage_efficiencies = table.enum("full", "reduced", "negated", "push")

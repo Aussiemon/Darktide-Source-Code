@@ -3,7 +3,7 @@
 local Promise = require("scripts/foundation/utilities/promise")
 local forbidden_words = require("scripts/managers/localization/forbidden_words")
 local Interface = {
-	"verify",
+	"verify"
 }
 local WORD_CHARACTERS = "[^ %p]+"
 local StringVerification = class("StringVerification")

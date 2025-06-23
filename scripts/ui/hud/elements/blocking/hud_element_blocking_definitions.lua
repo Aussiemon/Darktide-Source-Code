@@ -12,52 +12,52 @@ local center_offset = HudElementBlockingSettings.center_offset
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	area = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = area_size,
 		position = {
 			0,
 			center_offset,
-			0,
-		},
+			0
+		}
 	},
 	gauge = {
-		horizontal_alignment = "center",
-		parent = "area",
 		vertical_alignment = "top",
+		parent = "area",
+		horizontal_alignment = "center",
 		size = {
 			212,
-			10,
+			10
 		},
 		position = {
 			0,
 			6,
-			1,
-		},
+			1
+		}
 	},
 	shield = {
-		horizontal_alignment = "center",
-		parent = "area",
 		vertical_alignment = "top",
+		parent = "area",
+		horizontal_alignment = "center",
 		size = bar_size,
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
+			1
+		}
+	}
 }
 local value_text_style = table.clone(UIFontSettings.body_small)
 
 value_text_style.offset = {
 	0,
 	10,
-	3,
+	3
 }
 value_text_style.size = {
 	500,
-	30,
+	30
 }
 value_text_style.vertical_alignment = "top"
 value_text_style.horizontal_alignment = "left"
@@ -70,7 +70,7 @@ local name_text_style = table.clone(value_text_style)
 name_text_style.offset = {
 	0,
 	10,
-	3,
+	3
 }
 name_text_style.horizontal_alignment = "right"
 name_text_style.text_horizontal_alignment = "right"
@@ -80,54 +80,54 @@ name_text_style.drop_shadow = false
 local widget_definitions = {
 	gauge = UIWidget.create_definition({
 		{
-			pass_type = "text",
-			style_id = "value_text",
 			value_id = "value_text",
-			value = Utf8.upper(Localize("loc_hud_display_overheat_death_danger")),
-			style = value_text_style,
-		},
-		{
+			style_id = "value_text",
 			pass_type = "text",
-			style_id = "name_text",
-			value_id = "name_text",
-			value = Utf8.upper(Localize("loc_hud_display_name_stamina")),
-			style = name_text_style,
+			value = Utf8.upper(Localize("loc_hud_display_overheat_death_danger")),
+			style = value_text_style
 		},
 		{
-			pass_type = "texture",
-			style_id = "warning",
+			value_id = "name_text",
+			style_id = "name_text",
+			pass_type = "text",
+			value = Utf8.upper(Localize("loc_hud_display_name_stamina")),
+			style = name_text_style
+		},
+		{
 			value = "content/ui/materials/hud/stamina_gauge",
+			style_id = "warning",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				offset = {
 					0,
 					0,
-					1,
+					1
 				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-		},
-	}, "gauge"),
+				color = UIHudSettings.color_tint_main_2
+			}
+		}
+	}, "gauge")
 }
 local shield = UIWidget.create_definition({
 	{
-		pass_type = "rect",
-		style_id = "full",
 		value = "content/ui/materials/hud/stamina_full",
+		style_id = "full",
+		pass_type = "rect",
 		style = {
 			offset = {
 				0,
 				0,
-				3,
+				3
 			},
-			color = UIHudSettings.color_tint_main_1,
-		},
-	},
+			color = UIHudSettings.color_tint_main_1
+		}
+	}
 }, "shield")
 
 return {
 	shield_definition = shield,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

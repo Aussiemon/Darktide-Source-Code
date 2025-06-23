@@ -6,23 +6,23 @@ local combat_ranges = {
 	config = {
 		far = {
 			{
-				activate_slot_system = true,
 				distance = 10,
-				distance_operator = "lesser",
 				sticky_time = 0.2,
-				switch_combat_range = "melee",
-			},
+				activate_slot_system = true,
+				distance_operator = "lesser",
+				switch_combat_range = "melee"
+			}
 		},
 		melee = {
 			{
-				activate_slot_system = true,
 				distance = 12,
-				distance_operator = "greater",
 				sticky_time = 0,
-				switch_combat_range = "far",
-			},
-		},
-	},
+				activate_slot_system = true,
+				distance_operator = "greater",
+				switch_combat_range = "far"
+			}
+		}
+	}
 }
 
 return combat_ranges

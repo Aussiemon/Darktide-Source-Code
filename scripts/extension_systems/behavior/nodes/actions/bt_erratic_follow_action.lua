@@ -48,7 +48,7 @@ BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpa
 	scratchpad.random_dirs = {
 		action_data.move_jump_fwd_anims,
 		action_data.move_jump_right_anims,
-		action_data.move_jump_fwd_anims,
+		action_data.move_jump_fwd_anims
 	}
 end
 
@@ -281,7 +281,7 @@ end
 
 local RANDOM_JUMP_COOLDOWN = {
 	1,
-	4,
+	4
 }
 local JUMP_COOLDOWN_CHANCE = 0.5
 local MAX_DISTANCE_TO_TARGET_FOR_JUMP = 10

@@ -688,15 +688,15 @@ local LATERAL = 2
 local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
 	human = 2.7,
-	ogryn = 2.15,
+	ogryn = 2.15
 }
 local THROW_LEFT_OFFSET = {
 	human = 1.65,
-	ogryn = 2,
+	ogryn = 2
 }
 local THROW_FWD_OFFSET = {
 	human = 2,
-	ogryn = 2,
+	ogryn = 2
 }
 
 BtChaosSpawnGrabAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)

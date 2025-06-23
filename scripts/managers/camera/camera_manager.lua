@@ -46,7 +46,7 @@ CameraManager.NODE_PROPERTY_MAP = {
 	"far_range",
 	"shading_environment",
 	"fade_to_black",
-	"exposure_snap",
+	"exposure_snap"
 }
 
 CameraManager.init = function (self, world)
@@ -67,9 +67,9 @@ CameraManager.init = function (self, world)
 	self._listener_elevation_min = -math.huge
 	self._listener_elevation_max = math.huge
 	self._sequence_event_settings = {
-		end_time = 0,
-		start_time = 0,
 		time_to_recover = 0,
+		end_time = 0,
+		start_time = 0
 	}
 	self._shake_event_settings = {}
 	self._active_events = {}
@@ -165,7 +165,7 @@ CameraManager.load_node_tree = function (self, viewport_name, tree_id, tree_name
 	local root_node = self:_setup_child_nodes(node_table, viewport_name, tree_id, nil, tree_settings)
 	local tree_table = {
 		root_node = root_node,
-		nodes = node_table,
+		nodes = node_table
 	}
 
 	self._node_trees[viewport_name][tree_id] = tree_table
@@ -348,7 +348,7 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 	local current_node = camera_nodes[#camera_nodes]
 	local tree = self._node_trees[viewport_name][tree_id]
 	local next_node = {
-		node = tree.nodes[node_name],
+		node = tree.nodes[node_name]
 	}
 
 	if current_node then
@@ -775,12 +775,12 @@ end
 
 CameraManager._calculate_sequence_event_values_recovery = function (self, t)
 	local new_values = {
-		pitch = 0,
-		roll = 0,
-		x = 0,
-		y = 0,
 		yaw = 0,
 		z = 0,
+		roll = 0,
+		y = 0,
+		pitch = 0,
+		x = 0
 	}
 	local sequence_event_settings = self._sequence_event_settings
 	local time_to_recover = sequence_event_settings.time_to_recover
@@ -803,12 +803,12 @@ end
 
 CameraManager._calculate_sequence_event_values_normal = function (self, event_values, total_progress)
 	local new_values = {
-		pitch = 0,
-		roll = 0,
-		x = 0,
-		y = 0,
 		yaw = 0,
 		z = 0,
+		roll = 0,
+		y = 0,
+		pitch = 0,
+		x = 0
 	}
 
 	for modifier_type, modifiers in pairs(event_values) do

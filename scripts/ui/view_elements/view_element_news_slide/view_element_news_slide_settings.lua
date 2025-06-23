@@ -5,15 +5,15 @@ local ElementSettings = {}
 ElementSettings.buffer = 6
 ElementSettings.size = {
 	420,
-	210,
+	210
 }
 ElementSettings.image_size = {
 	410,
-	210,
+	210
 }
 ElementSettings.bar_size = {
 	320,
-	8,
+	8
 }
 ElementSettings.selected_factor = 6
 ElementSettings.transition_time = 0.4

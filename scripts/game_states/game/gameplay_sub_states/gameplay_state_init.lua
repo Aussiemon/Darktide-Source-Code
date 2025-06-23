@@ -16,7 +16,7 @@ GameplayStateInit.on_enter = function (self, parent, params)
 
 	local shared_state = params.shared_state
 	local start_params = {
-		shared_state = shared_state,
+		shared_state = shared_state
 	}
 	local state_machine = GameStateMachine:new(self, GameplayInitStepFrameRate, start_params, nil, nil, "GamePlay", "GamePlayInit")
 
@@ -50,11 +50,7 @@ GameplayStateInit.on_exit = function (self, exit_params)
 end
 
 GameplayStateInit.update = function (self, main_dt, main_t)
-	local before_last_step = self._state_machine:current_state_name() ~= "GameplayInitStepStateLast"
-
-	if before_last_step then
-		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
-	end
+	Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.dedicated_server)
 
 	local shared_state = self._shared_state
 
@@ -62,16 +58,14 @@ GameplayStateInit.update = function (self, main_dt, main_t)
 	Managers.state.position_lookup:pre_update()
 	self._state_machine:update(main_dt, main_t)
 
-	local view = "video_view"
-	local ui_manager = Managers.ui
-	local video_view_active_not_closing = ui_manager and ui_manager:view_active(view) and not ui_manager:is_view_closing(view)
+	local before_last_step = self._state_machine:current_state_name() ~= "GameplayInitStepStateLast"
 
-	if before_last_step or video_view_active_not_closing then
+	if before_last_step then
 		return nil, nil
 	end
 
 	local state_run_params = {
-		shared_state = shared_state,
+		shared_state = shared_state
 	}
 
 	return GameplayStateRun, state_run_params

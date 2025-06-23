@@ -14,12 +14,12 @@ local chaos_ogryn_gunner = {
 	line_effect = LineEffects.renegade_heavy_stubber_bullet,
 	damage_falloff = {
 		falloff_range = 30,
-		max_power_reduction = 0.2,
 		max_range = 30,
-	},
+		max_power_reduction = 0.2
+	}
 }
 local shoot_templates = {
-	chaos_ogryn_gunner = chaos_ogryn_gunner,
+	chaos_ogryn_gunner = chaos_ogryn_gunner
 }
 
 return shoot_templates

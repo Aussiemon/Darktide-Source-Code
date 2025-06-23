@@ -164,10 +164,10 @@ BossExtension._start_boss_template = function (self, boss_template)
 		physics_world = self._physics_world,
 		nav_world = self._nav_world,
 		world = self._world,
-		wwise_world = self._wwise_world,
+		wwise_world = self._wwise_world
 	}
 	self._template_data = {
-		unit = self._unit,
+		unit = self._unit
 	}
 
 	boss_template.start(self._template_data, self._template_context)
@@ -177,7 +177,7 @@ end
 
 local ALLOWED_BREEDS = {
 	renegade_twin_captain = true,
-	renegade_twin_captain_two = true,
+	renegade_twin_captain_two = true
 }
 
 function _setup_twins_special_names(display_name, breed)

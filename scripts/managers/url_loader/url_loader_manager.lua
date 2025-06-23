@@ -14,7 +14,7 @@ UrlLoaderManager._on_load_texture_ok = function (self, url, backend_data)
 		url = url,
 		texture = backend_data.texture,
 		width = backend_data.texture_width,
-		height = backend_data.texture_height,
+		height = backend_data.texture_height
 	}
 
 	self._cached_promises[url] = nil
@@ -29,7 +29,7 @@ UrlLoaderManager._on_load_texture_error = function (self, url, backend_error)
 	Log.warning("UrlLoaderManager", "Failed to load texture data for url '%s' with error: %s", url, error_string)
 
 	local texture_data = {
-		url = url,
+		url = url
 	}
 
 	self._cached_promises[url] = nil
@@ -54,7 +54,7 @@ UrlLoaderManager.load_texture = function (self, url, require_auth)
 	end
 
 	local promise = Managers.backend:url_request(url, {
-		require_auth = require_auth ~= false,
+		require_auth = require_auth ~= false
 	}):next(callback(self, "_on_load_texture_ok", url), callback(self, "_on_load_texture_error", url))
 
 	self._cached_promises[url] = promise

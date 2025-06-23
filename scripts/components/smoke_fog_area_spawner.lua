@@ -44,12 +44,12 @@ SmokeFogAreaSpawner.spawn_smoke_fog = function (self)
 	local rotation = Quaternion.identity()
 	local material, placed_on_unit, owner_unit
 	local unit_template_parameters = {
-		block_line_of_sight = true,
 		in_fog_buff_template_name = "in_smoke_fog",
 		leaving_fog_buff_template_name = "left_smoke_fog",
+		block_line_of_sight = true,
 		duration = math.huge,
 		inner_radius = self._inner_radius,
-		outer_radius = self._outer_radius,
+		outer_radius = self._outer_radius
 	}
 	local smoke_fog_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
 
@@ -173,41 +173,41 @@ end
 
 SmokeFogAreaSpawner.component_data = {
 	inner_radius = {
-		category = "Radius",
-		decimals = 1,
-		max = 100,
+		ui_type = "number",
 		min = 0,
 		step = 0.1,
-		ui_name = "Inner",
-		ui_type = "number",
+		category = "Radius",
 		value = 4.5,
+		decimals = 1,
+		ui_name = "Inner",
+		max = 100
 	},
 	outer_radius = {
-		category = "Radius",
-		decimals = 1,
-		max = 100,
+		ui_type = "number",
 		min = 0,
 		step = 0.1,
-		ui_name = "Outer",
-		ui_type = "number",
+		category = "Radius",
 		value = 5.5,
+		decimals = 1,
+		ui_name = "Outer",
+		max = 100
 	},
 	draw_smoke_fog = {
-		category = "Debug",
-		ui_name = "Draw Smoke (Approx)",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Draw Smoke (Approx)",
+		category = "Debug"
 	},
 	inputs = {
 		spawn_smoke_fog = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		despawn_smoke_fog = {
 			accessibility = "public",
-			type = "event",
-		},
-	},
+			type = "event"
+		}
+	}
 }
 
 return SmokeFogAreaSpawner

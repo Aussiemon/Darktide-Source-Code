@@ -10,7 +10,7 @@ local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
 local ActionShootHitScan = class("ActionShootHitScan", "ActionShoot")
 local IMPACT_FX_DATA = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local ALL_HITS = {}
 local INDEX_DISTANCE = 2

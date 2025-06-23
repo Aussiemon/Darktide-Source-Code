@@ -8,6 +8,7 @@ local PlayerCharacterStateExploding = require("scripts/extension_systems/charact
 local PlayerCharacterStateFalling = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_falling")
 local PlayerCharacterStateGrabbed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_grabbed")
 local PlayerCharacterStateHogtied = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_hogtied")
+local PlayerCharacterStateHubCompanionInteraction = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_hub_companion_interaction")
 local PlayerCharacterStateHubEmote = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_hub_emote")
 local PlayerCharacterStateHubJog = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_hub_jog")
 local PlayerCharacterStateInteracting = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_interacting")
@@ -39,6 +40,7 @@ local class_list = {
 	falling = PlayerCharacterStateFalling,
 	grabbed = PlayerCharacterStateGrabbed,
 	hogtied = PlayerCharacterStateHogtied,
+	hub_companion_interaction = PlayerCharacterStateHubCompanionInteraction,
 	hub_emote = PlayerCharacterStateHubEmote,
 	hub_jog = PlayerCharacterStateHubJog,
 	interacting = PlayerCharacterStateInteracting,
@@ -60,7 +62,7 @@ local class_list = {
 	sprinting = PlayerCharacterStateSprinting,
 	stunned = PlayerCharacterStateStunned,
 	walking = PlayerCharacterStateWalking,
-	warp_grabbed = PlayerCharacterStateWarpGrabbed,
+	warp_grabbed = PlayerCharacterStateWarpGrabbed
 }
 
 return settings("PlayerCharacterStates", class_list)

@@ -59,7 +59,7 @@ InputManager.init = function (self)
 	if not DEDICATED_SERVER and (IS_WINDOWS or IS_XBS) then
 		self._cursor_stack_data = {
 			stack_depth = 0,
-			stack_references = {},
+			stack_references = {}
 		}
 
 		local allow_cursor_rendering = true
@@ -278,7 +278,7 @@ end
 
 local STICK_AXES = {
 	"left",
-	"right",
+	"right"
 }
 
 InputManager.set_dead_zones = function (self, raw_device)
@@ -290,11 +290,9 @@ InputManager.set_dead_zones = function (self, raw_device)
 		local stick_axis = STICK_AXES[i]
 		local axis_id = raw_device.axis_index(stick_axis)
 
-		if raw_device._name == "Pad1" then
+		if axis_id then
 			axis_id = axis_id + 1
-		end
 
-		if axis_id and axis_id ~= 0 then
 			raw_device.set_dead_zone(axis_id, raw_device.CIRCULAR, dead_zone)
 		end
 	end
@@ -352,7 +350,7 @@ InputManager.add_setting = function (self, service_type, aliases, raw_key_table,
 		raw = raw_key_table,
 		aliases = aliases,
 		filters = filter_table,
-		default_devices = default_devices,
+		default_devices = default_devices
 	}
 
 	if aliases then
@@ -476,7 +474,7 @@ InputManager._update_key_watch = function (self)
 			self._key_watch_result = {
 				enablers = held,
 				main = released[1],
-				disablers = {},
+				disablers = {}
 			}
 
 			local bound = "[" .. released[1] .. "]"
@@ -571,7 +569,7 @@ InputManager.set_cursor_position = function (self, reference, position)
 
 		self._new_cursor_position_array = {
 			position[1],
-			position[2],
+			position[2]
 		}
 	end
 end
@@ -658,11 +656,11 @@ end
 InputManager.load_input_layout = function (self, layout_name)
 	local devices = {
 		{
-			"ps4_controller",
+			"ps4_controller"
 		},
 		{
-			"xbox_controller",
-		},
+			"xbox_controller"
+		}
 	}
 	local gamepad_input_layout = GamepadInputLayouts[layout_name]
 	local input_settings = gamepad_input_layout.input_settings

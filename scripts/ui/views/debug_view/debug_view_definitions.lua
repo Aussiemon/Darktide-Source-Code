@@ -7,82 +7,82 @@ local scenegraph_definition = {
 		scale = "fit",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	background_left = {
-		horizontal_alignment = "left",
 		scale = "fit_height",
+		horizontal_alignment = "left",
 		size = {
 			960,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	background_right = {
-		horizontal_alignment = "right",
 		scale = "fit_height",
+		horizontal_alignment = "right",
 		size = {
 			960,
-			0,
+			0
 		},
 		position = {
 			0,
 			0,
-			1,
-		},
+			1
+		}
 	},
 	texture_center = {
-		horizontal_alignment = "right",
-		parent = "background_left",
 		vertical_alignment = "center",
+		parent = "background_left",
+		horizontal_alignment = "right",
 		size = {
 			400,
-			400,
+			400
 		},
 		position = {
 			200,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	texture_left = {
-		horizontal_alignment = "left",
-		parent = "background_left",
 		vertical_alignment = "center",
+		parent = "background_left",
+		horizontal_alignment = "left",
 		size = {
 			400,
-			400,
+			400
 		},
 		position = {
 			100,
 			0,
-			2,
-		},
+			2
+		}
 	},
 	texture_right = {
-		horizontal_alignment = "right",
-		parent = "background_right",
 		vertical_alignment = "center",
+		parent = "background_right",
+		horizontal_alignment = "right",
 		size = {
 			400,
-			400,
+			400
 		},
 		position = {
 			-100,
 			0,
-			2,
-		},
-	},
+			2
+		}
+	}
 }
 local widget_definitions = {
 	background_left = UIWidget.create_definition({
@@ -93,10 +93,10 @@ local widget_definitions = {
 					255,
 					0,
 					0,
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, "background_left"),
 	background_right = UIWidget.create_definition({
 		{
@@ -106,14 +106,14 @@ local widget_definitions = {
 					255,
 					255,
 					255,
-					255,
-				},
-			},
-		},
-	}, "background_right"),
+					255
+				}
+			}
+		}
+	}, "background_right")
 }
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

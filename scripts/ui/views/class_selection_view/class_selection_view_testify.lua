@@ -7,7 +7,7 @@ local ClassSelectionViewTestify = {
 		class_selection_view:on_archetype_pressed(wanted_archetype)
 		class_selection_view:on_continue_pressed(wanted_archetype)
 		class_selection_view:on_continue_pressed(wanted_archetype)
-	end,
+	end
 }
 
 return ClassSelectionViewTestify

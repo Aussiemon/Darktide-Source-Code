@@ -20,7 +20,7 @@ local ViewElementWintrack = class("ViewElementWintrack", "ViewElementBase")
 ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, optional_menu_settings, optional_definitions)
 	self._pivot_offset = {
 		0,
-		0,
+		0
 	}
 
 	local view_definitions = optional_definitions or Definitions
@@ -197,7 +197,7 @@ ViewElementWintrack._replace_border = function (self)
 	local scale = self._default_grid_size[1] / 1060
 
 	style.size = {
-		[2] = 116 * scale,
+		[2] = 116 * scale
 	}
 end
 
@@ -982,7 +982,7 @@ ViewElementWintrack.add_points = function (self, points_to_add, animate, force_r
 		self._play_progress_sounds = true
 
 		self:_start_animation("on_points_added", self._widgets_by_name, {
-			anim_only_experience_bar = (self._reward_bar_progress or 0) < (self._experience_bar_progress or 0),
+			anim_only_experience_bar = (self._reward_bar_progress or 0) < (self._experience_bar_progress or 0)
 		})
 	else
 		self._anim_start_points = nil
@@ -1046,8 +1046,8 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 				required_points = required_points,
 				size = {
 					reward_item_width,
-					reward_item_height,
-				},
+					reward_item_height
+				}
 			}
 
 			item_widget.content.element = item_widget_element
@@ -1394,24 +1394,24 @@ ViewElementWintrack._setup_item_stats = function (self, reference_name, scenegra
 	local grid_height = 840
 	local grid_size = {
 		grid_width - edge_padding,
-		grid_height,
+		grid_height
 	}
 	local grid_spacing = {
 		0,
-		0,
+		0
 	}
 	local mask_size = {
 		grid_width + 40,
-		grid_height,
+		grid_height
 	}
 	local context = {
-		ignore_blur = true,
 		scrollbar_width = 7,
+		ignore_blur = true,
 		grid_spacing = grid_spacing,
 		grid_size = grid_size,
 		mask_size = mask_size,
 		title_height = title_height,
-		edge_padding = edge_padding,
+		edge_padding = edge_padding
 	}
 	local scale = self:render_scale()
 	local item_stats = ViewElementWeaponStats:new(self, layer, scale, context)
@@ -1457,7 +1457,7 @@ ViewElementWintrack._on_reward_items_hover_start = function (self, items, index,
 		local context = {
 			hide_source = true,
 			show_requirement = true,
-			hide_description = item.item_type == "WEAPON_SKIN",
+			hide_description = item.item_type == "WEAPON_SKIN"
 		}
 
 		self._item_stats:present_item(item, context)

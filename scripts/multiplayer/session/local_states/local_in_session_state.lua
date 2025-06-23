@@ -16,8 +16,8 @@ LocalInSessionState.enter = function (self)
 		name = "session_joined",
 		parameters = {
 			peer_id = shared_state.peer_id,
-			channel_id = shared_state.channel_id,
-		},
+			channel_id = shared_state.channel_id
+		}
 	}
 end
 
@@ -30,7 +30,7 @@ LocalInSessionState.update = function (self, dt)
 		Log.info("LocalInSessionState", "Lost game session")
 
 		return "lost_session", {
-			game_reason = "lost_session",
+			game_reason = "lost_session"
 		}
 	end
 
@@ -48,7 +48,7 @@ LocalInSessionState.update = function (self, dt)
 			Crashify.print_exception("ApativeClockHandler", error_text)
 
 			return "lost_session", {
-				game_reason = "lost_session",
+				game_reason = "lost_session"
 			}
 		end
 	elseif self._clock_handler_client_panic_timer > 0 then

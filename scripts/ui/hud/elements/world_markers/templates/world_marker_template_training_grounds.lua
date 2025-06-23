@@ -7,11 +7,11 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local template = {}
 local size = {
 	50,
-	50,
+	50
 }
 local arrow_size = {
 	70,
-	70,
+	70
 }
 
 template.size = size
@@ -21,15 +21,15 @@ template.max_distance = math.huge
 template.screen_clamp = true
 template.screen_margins = {
 	down = 250,
-	left = 450,
-	right = 450,
 	up = 250,
+	left = 450,
+	right = 450
 }
 
 local template_visual_definitions = {
 	default = {
 		template_settings_overrides = {
-			screen_clamp = true,
+			screen_clamp = true
 		},
 		colors = {
 			frame = UIHudSettings.color_tint_main_1,
@@ -37,9 +37,9 @@ local template_visual_definitions = {
 			icon = UIHudSettings.color_tint_main_1,
 			text = UIHudSettings.color_tint_main_1,
 			indicator = Color.ui_hud_green_super_light(255, true),
-			background = Color.terminal_background(200, true),
+			background = Color.terminal_background(200, true)
 		},
-		textures = {},
+		textures = {}
 	},
 	interact = {
 		template_settings_overrides = {
@@ -47,19 +47,19 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			fade_settings = {
+				fade_to = 0,
+				fade_from = 1,
 				default_fade = 1,
 				distance_max = 4.5,
 				distance_min = 3,
-				fade_from = 1,
-				fade_to = 0,
-				easing_function = math.easeCubic,
-			},
+				easing_function = math.easeCubic
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	servitor = {
 		template_settings_overrides = {
@@ -67,19 +67,19 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0,
+				0
 			},
 			fade_settings = {
+				fade_to = 0,
+				fade_from = 1,
 				default_fade = 1,
 				distance_max = 17,
 				distance_min = 15,
-				fade_from = 1,
-				fade_to = 0,
-				easing_function = math.easeCubic,
-			},
+				easing_function = math.easeCubic
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	enemy = {
 		template_settings_overrides = {
@@ -87,23 +87,23 @@ local template_visual_definitions = {
 			position_offset = {
 				0,
 				0,
-				0.3,
-			},
+				0.3
+			}
 		},
 		colors = {},
-		textures = {},
+		textures = {}
 	},
 	portal = {
 		template_settings_overrides = {
 			position_offset = {
 				0,
 				0,
-				1.8,
-			},
+				1.8
+			}
 		},
 		colors = {},
-		textures = {},
-	},
+		textures = {}
+	}
 }
 
 local function setup_marker_by_visual_type(widget, marker, visual_type)
@@ -143,101 +143,101 @@ template.create_widget_defintion = function (template, scenegraph_id)
 
 	return UIWidget.create_definition({
 		{
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/hud/interactions/icons/objective_main",
 			value_id = "icon",
+			style_id = "icon",
+			pass_type = "texture",
+			value = "content/ui/materials/hud/interactions/icons/objective_main",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = size,
 				offset = {
 					0,
 					30,
-					2,
+					2
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/hud/interactions/frames/point_of_interest_top",
 			value_id = "frame",
+			style_id = "frame",
+			pass_type = "texture",
+			value = "content/ui/materials/hud/interactions/frames/point_of_interest_top",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = size,
 				offset = {
 					0,
 					35,
-					1,
+					1
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
-				color = UIHudSettings.color_tint_main_1,
+				color = UIHudSettings.color_tint_main_1
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/hud/interactions/frames/point_of_interest_back",
 			value_id = "background",
+			style_id = "background",
+			pass_type = "texture",
+			value = "content/ui/materials/hud/interactions/frames/point_of_interest_back",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = size,
 				offset = {
 					0,
 					35,
-					0,
+					0
 				},
 				size_addition = {
 					10,
-					10,
+					10
 				},
 				color = {
 					200,
 					0,
 					0,
-					0,
-				},
+					0
+				}
 			},
 			visibility_function = function (content, style)
 				return style.color[1] > 0
-			end,
+			end
 		},
 		{
-			pass_type = "rotated_texture",
-			style_id = "arrow",
-			value = "content/ui/materials/hud/interactions/frames/direction",
 			value_id = "arrow",
+			pass_type = "rotated_texture",
+			value = "content/ui/materials/hud/interactions/frames/direction",
+			style_id = "arrow",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = arrow_size,
 				offset = {
 					0,
 					40,
-					1,
+					1
 				},
-				color = Color.ui_hud_green_super_light(255, true),
+				color = Color.ui_hud_green_super_light(255, true)
 			},
 			visibility_function = function (content, style)
 				return content.is_clamped
 			end,
 			change_function = function (content, style)
 				style.angle = content.angle
-			end,
-		},
+			end
+		}
 	}, scenegraph_id)
 end
 

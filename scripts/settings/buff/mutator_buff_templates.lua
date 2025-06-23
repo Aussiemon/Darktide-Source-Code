@@ -22,9 +22,9 @@ local nurgle_parasite_settings = {
 	specific_head_gib_settings = {
 		random_radius = 2,
 		hit_zones = {
-			"head",
+			"head"
 		},
-		damage_profile = DamageProfileTemplates.havoc_self_gib,
+		damage_profile = DamageProfileTemplates.havoc_self_gib
 	},
 	head_parasite_item_overrides = {
 		human = {
@@ -32,54 +32,54 @@ local nurgle_parasite_settings = {
 				items = {
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02",
-				},
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02"
+				}
 			},
 			{
 				items = {
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
-				},
-			},
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03"
+				}
+			}
 		},
 		ogryn = {
 			{
 				items = {
 					[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_a",
-					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
-				},
+					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_b"
+				}
 			},
 			{
 				items = {
 					[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_01",
-					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02",
-				},
-			},
+					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02"
+				}
+			}
 		},
 		poxwalker = {
 			{
 				items = {
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
-				},
-			},
-		},
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03"
+				}
+			}
+		}
 	},
 	override_slots = {
 		human = {
 			[1] = "slot_head",
-			[2] = "slot_face",
+			[2] = "slot_face"
 		},
 		ogryn = {
 			[1] = "slot_head_attachment",
-			[2] = "slot_head",
+			[2] = "slot_head"
 		},
 		poxwalker = {
-			[1] = "slot_head",
-		},
-	},
+			[1] = "slot_head"
+		}
+	}
 }
 
 local function _parasite_head_stop_function(template_data, template_context)
@@ -117,14 +117,14 @@ local function _parasite_head_stop_function(template_data, template_context)
 end
 
 templates.headshot_parasite_enemies = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[buff_proc_events.on_minion_damage_taken] = 1,
+		[buff_proc_events.on_minion_damage_taken] = 1
 	},
 	keywords = {
 		buff_keywords.infested_head_armor_override,
-		buff_keywords.has_nurgle_parasite,
+		buff_keywords.has_nurgle_parasite
 	},
 	start_func = function (template_data, template_context)
 		local buff_settings = nurgle_parasite_settings
@@ -233,14 +233,14 @@ templates.headshot_parasite_enemies = {
 				_parasite_head_stop_function(template_data, template_context)
 			end
 		end
-	end,
+	end
 }
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.minion_only,
 	keywords = {
-		buff_keywords.empowered,
+		buff_keywords.empowered
 	},
 	stat_buffs = {
 		[buff_stat_buffs.unarmored_damage] = -0.35,
@@ -253,7 +253,7 @@ templates.mutator_minion_nurgle_blessing_tougher = {
 		[buff_stat_buffs.impact_modifier] = -1,
 		[buff_stat_buffs.ranged_attack_speed] = 0.2,
 		[buff_stat_buffs.minion_num_shots_modifier] = 2,
-		[buff_stat_buffs.movement_speed] = 0.25,
+		[buff_stat_buffs.movement_speed] = 0.25
 	},
 	minion_effects = {
 		node_effects = {
@@ -262,19 +262,19 @@ templates.mutator_minion_nurgle_blessing_tougher = {
 				vfx = {
 					orphaned_policy = "destroy",
 					particle_effect = "content/fx/particles/enemies/buff_nurgle_blessing",
-					stop_type = "stop",
-				},
-			},
+					stop_type = "stop"
+				}
+			}
 		},
 		material_vector = {
 			name = "stimmed_color",
 			value = {
 				0.358,
 				0.786,
-				0.22,
-			},
-		},
-	},
+				0.22
+			}
+		}
+	}
 }
 
 local CORRUPTION_DAMAGE_TYPE = "corruption"
@@ -283,13 +283,13 @@ local CORRUPTION_PERMANENT_POWER_LEVEL = {
 	2,
 	2,
 	2,
-	2,
+	2
 }
 
 templates.mutator_corruption_over_time = {
-	class_name = "interval_buff",
 	interval = 7,
 	predicted = false,
+	class_name = "interval_buff",
 	target = buff_targets.player_only,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -300,7 +300,7 @@ templates.mutator_corruption_over_time = {
 
 			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
 		end
-	end,
+	end
 }
 
 local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
@@ -308,13 +308,13 @@ local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
 	8,
 	10,
 	12,
-	15,
+	15
 }
 
 templates.mutator_corruption_over_time_2 = {
-	class_name = "interval_buff",
 	interval = 7,
 	predicted = false,
+	class_name = "interval_buff",
 	target = buff_targets.player_only,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -325,30 +325,30 @@ templates.mutator_corruption_over_time_2 = {
 
 			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
 		end
-	end,
+	end
 }
 templates.mutator_player_cooldown_reduction = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = -0.2,
-	},
+		[buff_stat_buffs.ability_cooldown_modifier] = -0.2
+	}
 }
 templates.mutator_movement_speed_on_spawn = {
 	class_name = "buff",
-	duration = 30,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
 	predicted = false,
+	duration = 30,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 1,
+		[buff_stat_buffs.movement_speed] = 1
 	},
-	hud_priority = math.huge,
+	hud_priority = math.huge
 }
 templates.mutator_player_enhanced_grenade_abilities = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	target = buff_targets.player_only,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -371,19 +371,19 @@ templates.mutator_player_enhanced_grenade_abilities = {
 	end,
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
-	},
+		[buff_stat_buffs.warp_charge_amount_smite] = 0.5
+	}
 }
 
 local YELLOW_STIM_COLOR = {
 	0.358,
 	0.786,
-	0.22,
+	0.22
 }
 local RED_STIM_COLOR = {
 	0.9,
 	0,
-	0.005,
+	0.005
 }
 
 templates.empowered_poxwalker = {
@@ -392,7 +392,7 @@ templates.empowered_poxwalker = {
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -402,7 +402,7 @@ templates.empowered_poxwalker = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -468,22 +468,22 @@ templates.empowered_poxwalker = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -493,22 +493,22 @@ templates.empowered_poxwalker = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -518,34 +518,34 @@ templates.empowered_poxwalker = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_poxwalker_with_duration = {
-	class_name = "buff",
 	duration = 6,
 	predicted = false,
+	class_name = "buff",
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -555,7 +555,7 @@ templates.empowered_poxwalker_with_duration = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -621,17 +621,17 @@ templates.empowered_poxwalker_with_duration = {
 					stop_type = "destroy",
 					material_variables = {
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -641,17 +641,17 @@ templates.empowered_poxwalker_with_duration = {
 					stop_type = "destroy",
 					material_variables = {
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -661,20 +661,20 @@ templates.empowered_poxwalker_with_duration = {
 					stop_type = "destroy",
 					material_variables = {
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_by_pox_gas = {
 	class_name = "buff",
@@ -682,7 +682,7 @@ templates.empowered_by_pox_gas = {
 	keywords = {
 		buff_keywords.stimmed,
 		buff_keywords.empowered,
-		buff_keywords.in_toxic_gas,
+		buff_keywords.in_toxic_gas
 	},
 	stat_buffs = {
 		[buff_stat_buffs.disgustingly_resilient_damage] = -0.2,
@@ -692,7 +692,7 @@ templates.empowered_by_pox_gas = {
 		[buff_stat_buffs.berserker_damage] = -0.2,
 		[buff_stat_buffs.armored_damage] = -0.2,
 		[buff_stat_buffs.super_armor_damage] = -0.2,
-		[buff_stat_buffs.movement_speed] = 0.30000000000000004,
+		[buff_stat_buffs.movement_speed] = 0.30000000000000004
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -766,22 +766,22 @@ templates.empowered_by_pox_gas = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_lefteyesocket",
@@ -791,22 +791,22 @@ templates.empowered_by_pox_gas = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -816,25 +816,25 @@ templates.empowered_by_pox_gas = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.empowered_twin = {
 	class_name = "buff",
@@ -842,7 +842,7 @@ templates.empowered_twin = {
 	target = buff_targets.minion_only,
 	keywords = {
 		buff_keywords.stimmed,
-		buff_keywords.empowered,
+		buff_keywords.empowered
 	},
 	stat_buffs = {
 		[buff_stat_buffs.weakspot_damage_taken] = 1,
@@ -854,7 +854,7 @@ templates.empowered_twin = {
 		[buff_stat_buffs.super_armor_damage] = -0.5,
 		[buff_stat_buffs.impact_modifier] = -3,
 		[buff_stat_buffs.ranged_attack_speed] = 0.5,
-		[buff_stat_buffs.melee_attack_speed] = 0.5,
+		[buff_stat_buffs.melee_attack_speed] = 0.5
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -899,17 +899,17 @@ templates.empowered_twin = {
 				vfx = {
 					orphaned_policy = "stop",
 					particle_effect = "content/fx/particles/enemies/enrage_head_outline",
-					stop_type = "destroy",
-				},
-			},
-		},
-	},
+					stop_type = "destroy"
+				}
+			}
+		}
+	}
 }
 templates.mutant_mutator = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.10000000000000009,
+		[buff_stat_buffs.movement_speed] = 0.10000000000000009
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -958,22 +958,22 @@ templates.mutant_mutator = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
 			},
 			{
 				node_name = "j_righteye",
@@ -983,29 +983,29 @@ templates.mutant_mutator = {
 					stop_type = "destroy",
 					material_variables = {
 						{
+							variable_name = "material_variable_21872256",
 							material_name = "eye_flash_init",
-							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = YELLOW_STIM_COLOR,
+							material_name = "eye_glow",
+							value = YELLOW_STIM_COLOR
 						},
 						{
-							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = YELLOW_STIM_COLOR,
-						},
-					},
-				},
-			},
-		},
-	},
+							material_name = "eye_socket",
+							value = YELLOW_STIM_COLOR
+						}
+					}
+				}
+			}
+		}
+	}
 }
 templates.drop_pickup_on_death = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then
 			return
@@ -1024,7 +1024,7 @@ templates.drop_pickup_on_death = {
 		if not HEALTH_ALIVE[unit] then
 			return true
 		end
-	end,
+	end
 }
 
 return templates

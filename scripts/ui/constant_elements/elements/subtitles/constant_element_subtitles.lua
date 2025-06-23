@@ -9,21 +9,21 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Views = require("scripts/ui/views/views")
 local debug_subtitles = {
 	{
-		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 1 This is a placeholder subtitle line 1",
+		duration = 2
 	},
 	{
-		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 2 This is a placeholder subtitle line 2",
+		duration = 2
 	},
 	{
-		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 3 This is a placeholder subtitle line 3",
+		duration = 2
 	},
 	{
-		duration = 2,
 		text = "{#color(255,0,0)}Sgt.Morrow:{#color(255,242,230)} This is a placeholder subtitle line 4 This is a placeholder subtitle line 4",
-	},
+		duration = 2
+	}
 }
 local DUMMY_MEASURE_TEXT_LINE = "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
 local ConstantElementSubtitles = class("ConstantElementSubtitles", "ConstantElementBase")
@@ -224,7 +224,7 @@ end
 
 local subtitle_format_context = {
 	speaker = "n/a",
-	subtitle = "n/a",
+	subtitle = "n/a"
 }
 
 ConstantElementSubtitles._get_active_dialogue_system = function (self)
@@ -233,7 +233,7 @@ ConstantElementSubtitles._get_active_dialogue_system = function (self)
 	local num_views = #active_views
 
 	if num_views > 0 then
-		for i = num_views, 1, -1 do
+		for i = 1, num_views do
 			local view_name = active_views[i]
 			local view = ui_manager:view_instance(view_name)
 
@@ -373,10 +373,15 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 			speaker_display_name = player:name()
 		else
 			local speaker_name = currently_playing.speaker_name
-			local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
-			local character_short_name = speaker_voice_settings.short_name
 
-			speaker_display_name = self:_localize(character_short_name)
+			if speaker_name then
+				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
+				local character_short_name = speaker_voice_settings.short_name
+
+				speaker_display_name = self:_localize(character_short_name)
+			else
+				subtitle_format = "loc_subtitle_speaker_format_speakerless"
+			end
 		end
 
 		local no_cache = true
@@ -422,7 +427,7 @@ ConstantElementSubtitles._debug_trigger_subtitle = function (self, text, duratio
 	if self._line_duration then
 		table.insert(self._line_queue, 1, {
 			text = text,
-			duration = duration,
+			duration = duration
 		})
 	else
 		self:_display_text_line(text, duration)
@@ -432,7 +437,7 @@ end
 
 local dummy_text_size = {
 	2000,
-	20,
+	20
 }
 
 ConstantElementSubtitles._set_font_size = function (self, new_size)

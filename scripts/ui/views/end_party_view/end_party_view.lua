@@ -42,14 +42,14 @@ EndPartyView._present_game_data_fields = function (self)
 	local total_time_seconds = math.floor(play_time_seconds % 60)
 	local no_cache = true
 	local text_1 = self:_localize("loc_end_view_stat_title_total_kills", no_cache, {
-		kills = total_kills,
+		kills = total_kills
 	})
 	local text_2 = self:_localize("loc_end_view_stat_title_total_deaths", no_cache, {
-		deaths = total_deaths,
+		deaths = total_deaths
 	})
 	local text_3 = self:_localize("loc_end_view_stat_title_total_time", no_cache, {
 		minutes = total_time_minutes,
-		seconds = total_time_seconds,
+		seconds = total_time_seconds
 	})
 
 	self:_set_game_data_fields(text_1, text_2, text_3)
@@ -83,7 +83,7 @@ end
 EndPartyView._get_text_widget_length = function (self, widget)
 	local scenegraph_size = {
 		RESOLUTION_LOOKUP.width,
-		RESOLUTION_LOOKUP.height,
+		RESOLUTION_LOOKUP.height
 	}
 	local text_style = widget.style.text
 	local text_options = UIFonts.get_font_options_by_style(text_style)
@@ -202,7 +202,7 @@ EndPartyView._spawn_player_accolade = function (self, player, spawn_position, sp
 	local view_element = self:_add_element(ViewElementAccolade, "player_accolade_" .. index, draw_layer)
 	local spawn_offset = {
 		0,
-		150,
+		150
 	}
 	local camera = self._camera
 	local inverse_scale = self._ui_renderer.inverse_scale or RESOLUTION_LOOKUP.inverse_scale
@@ -216,7 +216,7 @@ EndPartyView._spawn_player_accolade = function (self, player, spawn_position, sp
 		player = player,
 		view_element = view_element,
 		spawn_offset = spawn_offset,
-		boxed_position = Vector3.to_array(spawn_position),
+		boxed_position = Vector3.to_array(spawn_position)
 	}
 
 	self._spawned_accolades_array[index] = entry
@@ -232,7 +232,7 @@ EndPartyView._spawn_player_panel = function (self, player, spawn_position)
 	local panel = {
 		player = player,
 		boxed_position = Vector3.to_array(spawn_position),
-		widget = widget,
+		widget = widget
 	}
 
 	widget.content.hotspot.pressed_callback = callback(self, "_on_panel_pressed", panel, self._num_player_panels)

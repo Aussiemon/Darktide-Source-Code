@@ -8,7 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_volume_trigger_activate_on_client",
 	"rpc_volume_trigger_deactivate_on_client",
 	"rpc_volume_trigger_unit_enter_on_client",
-	"rpc_volume_trigger_unit_exit_on_client",
+	"rpc_volume_trigger_unit_exit_on_client"
 }
 
 TriggerSystem.init = function (self, ...)

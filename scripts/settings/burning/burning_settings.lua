@@ -13,15 +13,15 @@ burning_settings.buff_effects = {
 					node_name = "j_spine",
 					vfx = {
 						material_emission = true,
-						orphaned_policy = "destroy",
 						particle_effect = "content/fx/particles/enemies/buff_burning",
-						stop_type = "stop",
+						orphaned_policy = "destroy",
+						stop_type = "stop"
 					},
 					sfx = {
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire",
 						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-					},
-				},
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
+					}
+				}
 			},
 			stack_node_effects = {
 				[6] = {
@@ -30,9 +30,9 @@ burning_settings.buff_effects = {
 						vfx = {
 							orphaned_policy = "destroy",
 							particle_effect = "content/fx/particles/enemies/buff_burning_stack_lvl02",
-							stop_type = "stop",
-						},
-					},
+							stop_type = "stop"
+						}
+					}
 				},
 				[12] = {
 					{
@@ -40,22 +40,22 @@ burning_settings.buff_effects = {
 						vfx = {
 							orphaned_policy = "destroy",
 							particle_effect = "content/fx/particles/enemies/buff_burning_stack_lvl03",
-							stop_type = "stop",
-						},
-					},
+							stop_type = "stop"
+						}
+					}
 				},
 				[18] = {
 					{
 						node_name = "j_spine",
 						vfx = {
 							material_emission = true,
-							orphaned_policy = "destroy",
 							particle_effect = "content/fx/particles/enemies/buff_burning_stack_lvl04",
-							stop_type = "stop",
-						},
-					},
-				},
-			},
+							orphaned_policy = "destroy",
+							stop_type = "stop"
+						}
+					}
+				}
+			}
 		},
 		chemfire = {
 			ailment_effect = ailment_effects.chem_burning,
@@ -64,16 +64,16 @@ burning_settings.buff_effects = {
 					node_name = "j_spine",
 					vfx = {
 						material_emission = true,
-						orphaned_policy = "destroy",
 						particle_effect = "content/fx/particles/enemies/buff_burning_green",
-						stop_type = "stop",
+						orphaned_policy = "destroy",
+						stop_type = "stop"
 					},
 					sfx = {
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire",
 						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-					},
-				},
-			},
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
+					}
+				}
+			}
 		},
 		warpfire = {
 			ailment_effect = ailment_effects.warpfire,
@@ -82,18 +82,18 @@ burning_settings.buff_effects = {
 					node_name = "j_spine",
 					vfx = {
 						material_emission = true,
-						orphaned_policy = "destroy",
 						particle_effect = "content/fx/particles/enemies/buff_warpfire",
-						stop_type = "stop",
+						orphaned_policy = "destroy",
+						stop_type = "stop"
 					},
 					sfx = {
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire",
 						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-					},
-				},
-			},
-		},
-	},
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
+					}
+				}
+			}
+		}
+	}
 }
 
 return settings("BurningSettings", burning_settings)

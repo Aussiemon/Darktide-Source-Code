@@ -67,46 +67,46 @@ end
 
 TimedSynchronizer.component_data = {
 	objective_name = {
-		ui_name = "Objective name",
 		ui_type = "text_box",
 		value = "default",
+		ui_name = "Objective name"
 	},
 	automatic_start = {
-		ui_name = "Automatic Start On Mission Start",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Automatic Start On Mission Start"
 	},
 	time_to_add = {
-		ui_name = "Time To Add",
 		ui_type = "number",
 		value = 0,
+		ui_name = "Time To Add"
 	},
 	curve_power = {
-		ui_name = "Curve Power",
 		ui_type = "number",
 		value = 1,
+		ui_name = "Curve Power"
 	},
 	inputs = {
 		start_timed_event = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		add_time = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		pause = {
 			accessibility = "public",
-			type = "event",
+			type = "event"
 		},
 		resume = {
 			accessibility = "public",
-			type = "event",
-		},
+			type = "event"
+		}
 	},
 	extensions = {
-		"TimedSynchronizerExtension",
-	},
+		"TimedSynchronizerExtension"
+	}
 }
 
 return TimedSynchronizer

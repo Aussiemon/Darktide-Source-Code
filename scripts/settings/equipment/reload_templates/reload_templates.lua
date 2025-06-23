@@ -27,6 +27,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/plasm
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/rippergun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_twin_linked_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/shotpistol_shield_reload_template")
 
 local sorted_reload_template_names = table.keys(reload_templates)
 

@@ -18,7 +18,7 @@ GameplayInitStepDebug.update = function (self, main_dt, main_t)
 	self._shared_state.initialized_steps.GameplayInitStepDebug = true
 
 	local next_step_params = {
-		shared_state = self._shared_state,
+		shared_state = self._shared_state
 	}
 
 	return GameplayInitStepFreeFlight, next_step_params

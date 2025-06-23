@@ -27,16 +27,16 @@ local ATTACK_RESULT_PRIORITY = {
 	[attack_results.toughness_absorbed_melee] = 7,
 	[attack_results.toughness_broken] = 7,
 	[attack_results.knock_down] = 7,
-	[attack_results.friendly_fire] = 7,
+	[attack_results.friendly_fire] = 7
 }
 local OVERRIDABLE_CROSSHAIRS = {
-	assault = true,
 	bfg = true,
-	cross = true,
-	flamer = true,
+	assault = true,
 	projectile_drop = true,
-	shotgun = true,
+	flamer = true,
 	spray_n_pray = true,
+	shotgun = true,
+	cross = true
 }
 
 HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, definitions)

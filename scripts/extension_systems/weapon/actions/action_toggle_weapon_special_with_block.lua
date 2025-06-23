@@ -21,7 +21,7 @@ ActionToggleWeaponSpecialWithBlock.start = function (self, action_settings, t, .
 	ActionToggleWeaponSpecialWithBlock.super.start(self, action_settings, t, ...)
 end
 
-ActionToggleWeaponSpecialWithBlock.fixed_update = function (self, dt, t, time_in_action)
+ActionToggleWeaponSpecialWithBlock.fixed_update = function (self, dt, t, time_in_action, frame)
 	local action_settings = self._action_settings
 	local block_component = self._block_component
 
@@ -37,7 +37,7 @@ ActionToggleWeaponSpecialWithBlock.fixed_update = function (self, dt, t, time_in
 		end
 	end
 
-	ActionToggleWeaponSpecialWithBlock.super.fixed_update(self, dt, t, time_in_action)
+	ActionToggleWeaponSpecialWithBlock.super.fixed_update(self, dt, t, time_in_action, frame)
 end
 
 ActionToggleWeaponSpecialWithBlock.finish = function (self, reason, data, t, time_in_action)

@@ -32,7 +32,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 
 	self._unique_id = self.__class_name .. "_" .. uniq_id:gsub("[%p%c%s]", "") .. "_"
 	self._render_settings = {
-		force_retained_mode = false,
+		force_retained_mode = false
 	}
 	self._ui_renderer_name = self._unique_id .. (params.renderer_name or self.__class_name .. "_ui_renderer")
 	self._ui_renderer = Managers.ui:create_renderer(self._ui_renderer_name, world)

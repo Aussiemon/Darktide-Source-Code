@@ -19,13 +19,13 @@ local visibility_groups = {
 		name = "disabled",
 		validation_function = function (hud)
 			return false
-		end,
+		end
 	},
 	{
 		name = "popup",
 		validation_function = function (hud)
 			return Managers.ui:handling_popups()
-		end,
+		end
 	},
 	{
 		name = "prologue_cutscene",
@@ -35,7 +35,7 @@ local visibility_groups = {
 			end
 
 			return Managers.state.cinematic:is_playing() and Managers.state.game_mode:is_prologue()
-		end,
+		end
 	},
 	{
 		name = "cutscene",
@@ -45,7 +45,7 @@ local visibility_groups = {
 			end
 
 			return Managers.state.cinematic:is_playing()
-		end,
+		end
 	},
 	{
 		name = "in_hub_view",
@@ -55,37 +55,37 @@ local visibility_groups = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "in_view",
 		validation_function = function (hud)
 			return not Managers.ui:allow_hud()
-		end,
+		end
 	},
 	{
 		name = "communication_wheel",
 		validation_function = function (hud)
 			return hud:communication_wheel_active()
-		end,
+		end
 	},
 	{
 		name = "emote_wheel",
 		validation_function = function (hud)
 			return hud:emote_wheel_active()
-		end,
+		end
 	},
 	{
 		name = "tactical_overlay",
 		validation_function = function (hud)
 			return hud:tactical_overlay_active()
-		end,
+		end
 	},
 	{
 		name = "testify",
 		validation_function = function (hud)
 			return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil
-		end,
+		end
 	},
 	{
 		name = "dead",
@@ -93,7 +93,7 @@ local visibility_groups = {
 			local player = hud:player()
 
 			return not player:unit_is_alive()
-		end,
+		end
 	},
 	{
 		name = "alive",
@@ -107,14 +107,14 @@ local visibility_groups = {
 			end
 
 			return false
-		end,
+		end
 	},
 	{
 		name = "onboarding",
 		validation_function = function (hud)
 			return hud:is_onboarding()
-		end,
-	},
+		end
+	}
 }
 
 return visibility_groups

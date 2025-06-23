@@ -11,7 +11,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local device_list = {
 	Keyboard,
 	Mouse,
-	Pad1,
+	Pad1
 }
 local DUMMY_VIDEO_TIME = 5
 local VideoView = class("VideoView", "BaseView")
@@ -62,7 +62,6 @@ VideoView._load_template = function (self, template)
 
 	local sound_name = template.start_sound_name
 	local subtitles = template.subtitles
-	local post_video_action = template.post_video_action
 	local wwise_music_state = template.music
 
 	if sound_name then
@@ -70,7 +69,8 @@ VideoView._load_template = function (self, template)
 	end
 
 	self._subtitles = subtitles
-	self._post_video_action = post_video_action
+	self._pre_video_action = template.pre_video_action
+	self._post_video_action = template.post_video_action
 	self._wwise_music_state = wwise_music_state
 	self._current_subtitle_index = 1
 end
@@ -184,25 +184,57 @@ VideoView.on_exit = function (self)
 	end
 
 	if self._post_video_action and (self._widgets_by_name.video.content.video_completed or self._player_skipped) then
-		local action = self._post_video_action
+		self:_trigger_action(self._post_video_action)
+	end
+end
 
-		if action.action_type == "open_hub_view" then
-			local hub_view_context = {
-				hub_interaction = true,
-			}
+VideoView._trigger_action = function (self, action)
+	local action_type = action.action_type
 
-			Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
-		elseif action.action_type == "set_narrative_stat" then
-			Managers.narrative:complete_event(action.event_name)
-		else
-			ferror("Unsupported action type %q", action.action_type)
-		end
+	if action_type == "open_hub_view" then
+		local hub_view_context = {
+			hub_interaction = true
+		}
+
+		Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
+	elseif action_type == "set_narrative_stat" then
+		Managers.narrative:complete_event(action.event_name)
+	else
+		ferror("Unsupported action type %q", action_type)
 	end
 end
 
 VideoView._on_skip_pressed = function (self)
+	self:_record_telemetry()
+
 	self._player_skipped = true
 	self._widgets_by_name.video.content.video_completed = true
+end
+
+VideoView._record_telemetry = function (self)
+	local cinematics_name = self._context.template
+	local cinematic_scene_name = "video"
+	local percent_viewed = 0
+
+	if self._widgets_by_name.video.content.video_completed then
+		percent_viewed = 1
+	else
+		local video_player_reference = self._widgets_by_name.video.content.video_player_reference
+
+		if video_player_reference then
+			local video_player = UIRenderer.video_player(self._ui_renderer, video_player_reference)
+			local current_frame = VideoPlayer.current_frame(video_player)
+			local number_of_frames = VideoPlayer.number_of_frames(video_player)
+
+			percent_viewed = current_frame / number_of_frames
+		end
+	end
+
+	local player = Managers.player:local_player(1)
+	local profile = player and player:profile()
+	local character_level = profile and profile.current_level or 1
+
+	Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
 end
 
 VideoView._update_package_loading = function (self)
@@ -290,6 +322,10 @@ VideoView.update = function (self, dt, t, input_service)
 	local pass_input, pass_draw = VideoView.super.update(self, dt, t, input_service)
 
 	if self._widgets_by_name.video.content.video_completed and not Managers.ui:is_view_closing("video_view") then
+		if not self._player_skipped then
+			self:_record_telemetry()
+		end
+
 		Managers.ui:close_view("video_view")
 	end
 
@@ -336,6 +372,12 @@ VideoView._setup_video = function (self, video_name, loop_video)
 
 	widget_content.video_path = video_name
 	widget_content.video_player_reference = video_player_reference
+
+	local pre_video_action = self._pre_video_action
+
+	if pre_video_action then
+		self:_trigger_action(pre_video_action)
+	end
 
 	self:_set_background_visibility(true)
 end
@@ -454,7 +496,7 @@ VideoView._setup_input_legend = function (self)
 		if key then
 			input_legends_by_key[key] = {
 				id = id,
-				settings = legend_input,
+				settings = legend_input
 			}
 		end
 	end
@@ -466,22 +508,22 @@ VideoView._setup_input_legend = function (self)
 	local entry_widget = entry.widget
 	local widget_definition = UIWidget.create_definition({
 		{
-			pass_type = "rect",
 			style_id = "background",
+			pass_type = "rect",
 			style = {
-				color = Color.ui_grey_medium(255, true),
-			},
+				color = Color.ui_grey_medium(255, true)
+			}
 		},
 		{
-			pass_type = "rect",
 			style_id = "fill",
+			pass_type = "rect",
 			style = {
 				color = Color.ui_terminal(255, true),
 				size = {
-					0,
-				},
-			},
-		},
+					0
+				}
+			}
+		}
 	}, entry_widget.scenegraph_id)
 
 	self._skip_bar_widget = self:_create_widget("skip", widget_definition)
@@ -521,11 +563,11 @@ VideoView.draw = function (self, dt, t, input_service, layer)
 		self._skip_bar_widget.offset = {
 			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
 			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
-			z_offset,
+			z_offset
 		}
 		self._skip_bar_widget.content.size = {
 			width,
-			5,
+			5
 		}
 
 		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1

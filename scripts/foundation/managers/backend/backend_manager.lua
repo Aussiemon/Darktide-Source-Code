@@ -15,7 +15,7 @@ local Interface = {
 	"title_request",
 	"send_telemetry_events",
 	"url_request",
-	"get_server_time",
+	"get_server_time"
 }
 local SLOW_INTERNET_DELAY_NOTIFICATION_S = 300
 local SLOW_INTERNET_SPAN_S = 90
@@ -195,7 +195,7 @@ BackendManager.update = function (self, dt, t)
 
 		if slow_internet_ticks:size() > SLOW_INTERNET_COUNT then
 			Managers.event:trigger("event_add_notification_message", "alert", {
-				text = Localize("loc_popup_description_slow_internet"),
+				text = Localize("loc_popup_description_slow_internet")
 			})
 
 			self._slow_internet_notification_delay = SLOW_INTERNET_DELAY_NOTIFICATION_S
@@ -238,7 +238,7 @@ BackendManager.authenticate = function (self)
 			local default_result = {
 				authentication_service_url = DEFAULT_AUTHENTICATION_SERIVCE_URL,
 				title_service_url = DEFAULT_TITLE_SERIVCE_URL,
-				telemetry_service_url = DEFAULT_TELEMERTY_SERVICE_URL,
+				telemetry_service_url = DEFAULT_TELEMERTY_SERVICE_URL
 			}
 
 			XboxLiveUtils.title_storage_download("backend_config.json", "binary", "global_storage", 10000):next(function (file_content)
@@ -420,7 +420,7 @@ BackendManager.title_request = function (self, path, options)
 			options = options,
 			should_cache = should_cache,
 			operation_identifier = operation_identifier,
-			start_time = Managers.time:time("main"),
+			start_time = Managers.time:time("main")
 		}
 
 		promise:next(function (v)
@@ -450,7 +450,7 @@ BackendManager.send_telemetry_events = function (self, data, headers, compress_b
 
 	local promise = Promise:new()
 	local operation_identifier, error = Backend.send_telemetry_events({
-		events = data,
+		events = data
 	}, headers, compress_body, shutdown)
 
 	if operation_identifier then

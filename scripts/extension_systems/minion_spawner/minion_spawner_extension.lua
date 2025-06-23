@@ -86,7 +86,7 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 					rotation = QuaternionBox(Quaternion.look(wanted_direction)),
 					position = Vector3Box(spawn_pos),
 					height = spawn_height,
-					horizontal_length = spawn_horizontal_length,
+					horizontal_length = spawn_horizontal_length
 				}
 
 				randomized_spawn_data[#randomized_spawn_data + 1] = spawn_data
@@ -202,7 +202,7 @@ MinionSpawnerExtension.update = function (self, unit, dt, t)
 				spawned_minions[#spawned_minions + 1] = spawned_minion
 			else
 				spawned_minions_by_queue_id[queue_id] = {
-					spawned_minion,
+					spawned_minion
 				}
 			end
 

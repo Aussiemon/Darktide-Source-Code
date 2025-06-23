@@ -5,111 +5,111 @@ local SUSTAIN_TIME = 300
 
 FGRLLimits = FGRLLimits or {
 	tracked_interfaces = {},
-	stats = {},
+	stats = {}
 }
 
 local TRACKING_DATA = {
 	XUser = {
 		functions = {
 			add_user_async = true,
-			from_device_async = true,
 			get_xbs_token_async = true,
 			resolve_privilege_async = true,
+			from_device_async = true
 		},
 		limits = {
 			burst_limit = 10,
-			sustain_limit = 30,
-		},
+			sustain_limit = 30
+		}
 	},
 	XboxLivePrivacy = {
 		functions = {
-			batch_check_permission = true,
-			check_user_permission = true,
-			get_avoid_list = true,
 			get_mute_list = true,
+			get_avoid_list = true,
+			check_user_permission = true,
+			batch_check_permission = true
 		},
 		limits = {
 			burst_limit = 10,
-			sustain_limit = 30,
-		},
+			sustain_limit = 30
+		}
 	},
 	XboxLiveAchievement = {
 		functions = {
-			get_achievement_async = true,
 			result_get_next_async = true,
-			update_achievement = true,
+			get_achievement_async = true,
+			update_achievement = true
 		},
 		limits = {
 			burst_limit = 100,
-			sustain_limit = 300,
-		},
+			sustain_limit = 300
+		}
 	},
 	XSocialManager = {
 		functions = {
 			add_local_user = true,
-			create_social_group = true,
+			create_social_group = true
 		},
 		limits = {
 			burst_limit = 10,
-			sustain_limit = 30,
-		},
+			sustain_limit = 30
+		}
 	},
 	XSocial = {
 		functions = {
-			get_relationships = true,
 			get_user_presence_data = true,
+			get_relationships = true
 		},
 		limits = {
 			burst_limit = 10,
 			sustain_limit = 100,
 			get_relationships = {
 				burst_limit = 10,
-				sustain_limit = 30,
-			},
-		},
+				sustain_limit = 30
+			}
+		}
 	},
 	XboxLiveProfile = {
 		functions = {
-			get_user_profiles = true,
+			get_user_profiles = true
 		},
 		limits = {
 			burst_limit = 10,
-			sustain_limit = 30,
-		},
+			sustain_limit = 30
+		}
 	},
 	XboxLiveMPA = {
 		functions = {
-			delete_activity = true,
 			get_activity = true,
-			send_invites = true,
-			set_activity = true,
+			delete_activity = true,
 			update_recent_players = true,
+			set_activity = true,
+			send_invites = true
 		},
 		limit_groups = {
 			activity = {
 				burst_limit = 10,
-				sustain_limit = 100,
-			},
+				sustain_limit = 100
+			}
 		},
 		limits = {
 			burst_limit = 20,
 			sustain_limit = 200,
 			send_invites = {
 				burst_limit = 7,
-				sustain_limit = 50,
+				sustain_limit = 50
 			},
 			delete_activity = {
-				limit_group = "activity",
+				limit_group = "activity"
 			},
 			set_activity = {
-				limit_group = "activity",
+				limit_group = "activity"
 			},
 			update_recent_players = {
 				burst_limit = 3,
-				sustain_limit = 50,
-			},
-		},
-	},
+				sustain_limit = 50
+			}
+		}
+	}
 }
 
 local function interface_limit_reached(fgrl_stats, limits, interface_name, function_name)
@@ -147,7 +147,7 @@ local function track_fgrl(interface_name, function_name)
 		sustain_calls = {},
 		burst_time = time + BURST_TIME,
 		sustain_time = time + SUSTAIN_TIME,
-		function_stats = {},
+		function_stats = {}
 	}
 
 	local fgrl_stats
@@ -161,7 +161,7 @@ local function track_fgrl(interface_name, function_name)
 			burst_calls = {},
 			sustain_calls = {},
 			burst_time = time + BURST_TIME,
-			sustain_time = time + SUSTAIN_TIME,
+			sustain_time = time + SUSTAIN_TIME
 		}
 		fgrl_stats = function_stats[tracking_name]
 	else
@@ -233,7 +233,7 @@ if IS_XBS or IS_GDK then
 					end
 
 					return interface[k]
-				end,
+				end
 			}
 
 			setmetatable(new_interface, metatable)

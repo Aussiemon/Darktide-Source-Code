@@ -14,13 +14,13 @@ utils.extract_changed_values = function (template, new_value)
 					values[#values + 1] = {
 						save_location = value_save_location,
 						id = location_value_id,
-						value = location_value,
+						value = location_value
 					}
 				end
 			else
 				values[#values + 1] = {
 					id = value_save_location,
-					value = location_values,
+					value = location_values
 				}
 			end
 		end
@@ -28,7 +28,7 @@ utils.extract_changed_values = function (template, new_value)
 		values[#values + 1] = {
 			save_location = template.save_location,
 			id = template.id,
-			value = new_value,
+			value = new_value
 		}
 	end
 

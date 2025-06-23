@@ -101,7 +101,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 			list_verification[#list_verification + 1] = {
 				verified = verified,
 				disabled = disabled,
-				validation_function = validation_function,
+				validation_function = validation_function
 			}
 		end
 
@@ -141,7 +141,7 @@ SystemView._setup_content_widgets = function (self, content, scenegraph_id, call
 			end
 
 			alignment_list[#alignment_list + 1] = widget or {
-				size = size,
+				size = size
 			}
 		end
 	end

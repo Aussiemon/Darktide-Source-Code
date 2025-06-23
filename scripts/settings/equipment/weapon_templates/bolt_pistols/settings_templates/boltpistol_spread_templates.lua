@@ -10,484 +10,484 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 	still = {
 		randomized_spread = {
 			first_shot_min_ratio = 0.45,
-			first_shot_random_ratio = 0.6,
-			max_pitch_delta = 1,
 			max_yaw_delta = 1,
-			min_ratio = 0.1,
+			first_shot_random_ratio = 0.6,
 			random_ratio = 0.65,
+			max_pitch_delta = 1,
+			min_ratio = 0.1
 		},
 		max_spread = {
 			pitch = {
-				lerp_basic = 4,
 				lerp_perfect = 2,
+				lerp_basic = 4
 			},
 			yaw = {
-				lerp_basic = 4,
 				lerp_perfect = 2,
-			},
+				lerp_basic = 4
+			}
 		},
 		decay = {
 			from_shooting_grace_time = 0.1,
 			shooting = {
-				pitch = 0.01,
 				yaw = 0.01,
+				pitch = 0.01
 			},
 			idle = {
-				pitch = 1.1,
 				yaw = 1.1,
-			},
+				pitch = 1.1
+			}
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 0.9,
 				lerp_perfect = 0.65,
+				lerp_basic = 0.9
 			},
 			min_yaw = {
-				lerp_basic = 0.9,
 				lerp_perfect = 0.65,
-			},
+				lerp_basic = 0.9
+			}
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
 			suppression_hit = {
 				{
 					pitch = {
-						lerp_basic = 0.25,
 						lerp_perfect = 0.1,
+						lerp_basic = 0.25
 					},
 					yaw = {
-						lerp_basic = 0.25,
 						lerp_perfect = 0.1,
-					},
-				},
+						lerp_basic = 0.25
+					}
+				}
 			},
 			damage_hit = {
 				{
 					pitch = {
-						lerp_basic = 0.4,
 						lerp_perfect = 0.1,
+						lerp_basic = 0.4
 					},
 					yaw = {
-						lerp_basic = 0.4,
 						lerp_perfect = 0.1,
-					},
-				},
+						lerp_basic = 0.4
+					}
+				}
 			},
 			shooting = {
 				{
 					pitch = {
-						lerp_basic = 5.5,
 						lerp_perfect = 1.15,
+						lerp_basic = 5.5
 					},
 					yaw = {
-						lerp_basic = 5.5,
 						lerp_perfect = 1.15,
-					},
-				},
-			},
-		},
+						lerp_basic = 5.5
+					}
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"boltpistol_p1m1_spread_hip",
-			"still",
+			"still"
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.1,
 				lerp_perfect = 1,
+				lerp_basic = 1.1
 			},
 			min_yaw = {
-				lerp_basic = 1.1,
 				lerp_perfect = 1,
-			},
-		},
+				lerp_basic = 1.1
+			}
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"boltpistol_p1m1_spread_hip",
-			"still",
+			"still"
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.1,
 				lerp_perfect = 0.1,
+				lerp_basic = 1.1
 			},
 			min_yaw = {
-				lerp_basic = 1.1,
 				lerp_perfect = 0.1,
-			},
-		},
+				lerp_basic = 1.1
+			}
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"boltpistol_p1m1_spread_hip",
-			"still",
+			"still"
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 2,
 				lerp_perfect = 1.5,
+				lerp_basic = 2
 			},
 			min_yaw = {
-				lerp_basic = 2,
 				lerp_perfect = 1.5,
-			},
-		},
-	},
+				lerp_basic = 2
+			}
+		}
+	}
 }
 spread_templates.default_boltpistol_killshot = {
 	still = {
 		max_spread = {
-			pitch = 2.5,
 			yaw = 2.5,
+			pitch = 2.5
 		},
 		decay = {
-			crouch_transition_grace_time = 0.5,
-			enter_alternate_fire_grace_time = 0.5,
 			from_shooting_grace_time = 0.15,
+			enter_alternate_fire_grace_time = 0.5,
+			crouch_transition_grace_time = 0.5,
 			shooting = {
-				pitch = 0.5,
 				yaw = 0.5,
+				pitch = 0.5
 			},
 			idle = {
-				pitch = 1.5,
 				yaw = 1.5,
+				pitch = 1.5
 			},
 			player_event = {
-				pitch = 4,
 				yaw = 4,
-			},
+				pitch = 4
+			}
 		},
 		continuous_spread = {
-			min_pitch = 0,
 			min_yaw = 0,
+			min_pitch = 0
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.6,
 			alternate_fire_start = {
 				{
-					pitch = 0,
 					yaw = 0,
-				},
+					pitch = 0
+				}
 			},
 			crouching_transition = {
 				{
-					pitch = 0,
 					yaw = 0,
-				},
+					pitch = 0
+				}
 			},
 			suppression_hit = {
 				{
-					pitch = 0,
 					yaw = 0,
-				},
+					pitch = 0
+				}
 			},
 			damage_hit = {
 				{
-					pitch = 0,
 					yaw = 0,
-				},
+					pitch = 0
+				}
 			},
 			shooting = {
 				{
-					pitch = 0,
 					yaw = 0,
-				},
-			},
+					pitch = 0
+				}
+			}
 		},
 		visual_spread_settings = {
-			horizontal_speed = 1,
 			intensity = 0.4,
-			rotation_speed = 0.5,
-			speed_change_frequency = 1,
 			speed_variance_max = 1.25,
-			speed_variance_min = 0.75,
-		},
+			rotation_speed = 0.5,
+			horizontal_speed = 1,
+			speed_change_frequency = 1,
+			speed_variance_min = 0.75
+		}
 	},
 	moving = {
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
+			"still"
 		},
 		continuous_spread = {
-			min_pitch = 0,
 			min_yaw = 0,
+			min_pitch = 0
 		},
 		decay = {
-			crouch_transition_grace_time = 0.5,
-			enter_alternate_fire_grace_time = 0.5,
 			from_shooting_grace_time = 0.15,
+			enter_alternate_fire_grace_time = 0.5,
+			crouch_transition_grace_time = 0.5,
 			shooting = {
-				pitch = 0.5,
 				yaw = 0.5,
+				pitch = 0.5
 			},
 			idle = {
-				pitch = 1.5,
 				yaw = 1.5,
+				pitch = 1.5
 			},
 			player_event = {
-				pitch = 3,
 				yaw = 3,
-			},
+				pitch = 3
+			}
 		},
 		visual_spread_settings = {
-			horizontal_speed = 2,
 			intensity = 0.5,
-			rotation_speed = 0.5,
-			speed_change_frequency = 1,
 			speed_variance_max = 1.25,
-			speed_variance_min = 0.75,
-		},
+			rotation_speed = 0.5,
+			horizontal_speed = 2,
+			speed_change_frequency = 1,
+			speed_variance_min = 0.75
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
+			"still"
 		},
 		continuous_spread = {
-			min_pitch = 0,
 			min_yaw = 0,
+			min_pitch = 0
 		},
 		decay = {
 			from_shooting_grace_time = 0.15,
 			shooting = {
-				pitch = 0.5,
 				yaw = 0.5,
+				pitch = 0.5
 			},
 			idle = {
-				pitch = 1.75,
 				yaw = 1.75,
-			},
-		},
+				pitch = 1.75
+			}
+		}
 	},
 	crouch_moving = {
 		continuous_spread = {
-			min_pitch = 0,
 			min_yaw = 0,
+			min_pitch = 0
 		},
 		inherits = {
 			"default_boltpistol_killshot",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 spread_templates.default_boltpistol_spraynpray = {
 	still = {
 		randomized_spread = {
 			first_shot_min_ratio = 0.3,
-			first_shot_random_ratio = 0.5,
-			max_pitch_delta = 1,
 			max_yaw_delta = 1,
-			min_ratio = 0.25,
+			first_shot_random_ratio = 0.5,
 			random_ratio = 1,
+			max_pitch_delta = 1,
+			min_ratio = 0.25
 		},
 		max_spread = {
 			pitch = {
-				lerp_basic = 4,
 				lerp_perfect = 2,
+				lerp_basic = 4
 			},
 			yaw = {
-				lerp_basic = 4,
 				lerp_perfect = 2,
-			},
+				lerp_basic = 4
+			}
 		},
 		decay = {
 			from_shooting_grace_time = 0.2,
 			shooting = {
-				pitch = 0.05,
 				yaw = 0.05,
+				pitch = 0.05
 			},
 			idle = {
-				pitch = 1.5,
 				yaw = 2,
-			},
+				pitch = 1.5
+			}
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 3.5,
 				lerp_perfect = 0.45,
+				lerp_basic = 3.5
 			},
 			min_yaw = {
-				lerp_basic = 3.5,
 				lerp_perfect = 0.35,
-			},
+				lerp_basic = 3.5
+			}
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
 			suppression_hit = {
 				{
 					pitch = {
-						lerp_basic = 0.35,
 						lerp_perfect = 0.15,
+						lerp_basic = 0.35
 					},
 					yaw = {
-						lerp_basic = 0.35,
 						lerp_perfect = 0.15,
-					},
-				},
+						lerp_basic = 0.35
+					}
+				}
 			},
 			damage_hit = {
 				{
 					pitch = {
-						lerp_basic = 0.5,
 						lerp_perfect = 0.3,
+						lerp_basic = 0.5
 					},
 					yaw = {
-						lerp_basic = 0.5,
 						lerp_perfect = 0.3,
-					},
-				},
+						lerp_basic = 0.5
+					}
+				}
 			},
 			shooting = {
 				{
 					pitch = {
-						lerp_basic = 2.3,
 						lerp_perfect = 0.15,
+						lerp_basic = 2.3
 					},
 					yaw = {
-						lerp_basic = 3,
 						lerp_perfect = 0.5,
-					},
+						lerp_basic = 3
+					}
 				},
 				{
 					pitch = {
-						lerp_basic = 0.22499999999999998,
 						lerp_perfect = 0.11249999999999999,
+						lerp_basic = 0.22499999999999998
 					},
 					yaw = {
-						lerp_basic = 0.75,
 						lerp_perfect = 0.1875,
-					},
+						lerp_basic = 0.75
+					}
 				},
 				{
 					pitch = {
-						lerp_basic = 0.15,
 						lerp_perfect = 0.075,
+						lerp_basic = 0.15
 					},
 					yaw = {
-						lerp_basic = 0.5,
 						lerp_perfect = 0.125,
-					},
-				},
-			},
-		},
+						lerp_basic = 0.5
+					}
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
+			"still"
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 46,
 				lerp_perfect = 1,
+				lerp_basic = 46
 			},
 			min_yaw = {
-				lerp_basic = 6,
 				lerp_perfect = 1,
-			},
-		},
+				lerp_basic = 6
+			}
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
+			"still"
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 2,
 				lerp_perfect = 0.5,
+				lerp_basic = 2
 			},
 			min_yaw = {
-				lerp_basic = 1.5,
 				lerp_perfect = 0.4,
-			},
-		},
+				lerp_basic = 1.5
+			}
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 spread_templates.boltpistol_p1_m2_spraynpray = {
 	still = {
 		randomized_spread = {
 			first_shot_min_ratio = 0.75,
-			first_shot_random_ratio = 0.25,
-			max_pitch_delta = 0.7,
 			max_yaw_delta = 0.7,
-			min_ratio = 0.2,
+			first_shot_random_ratio = 0.25,
 			random_ratio = 0.75,
+			max_pitch_delta = 0.7,
+			min_ratio = 0.2
 		},
 		max_spread = {
-			pitch = 3,
 			yaw = 4,
+			pitch = 3
 		},
 		decay = {
 			from_shooting_grace_time = 0.2,
 			shooting = {
-				pitch = 0.05,
 				yaw = 0.05,
+				pitch = 0.05
 			},
 			idle = {
-				pitch = 1.5,
 				yaw = 2,
-			},
+				pitch = 1.5
+			}
 		},
 		continuous_spread = {
-			min_pitch = 0.5,
 			min_yaw = 0.5,
+			min_pitch = 0.5
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
 			suppression_hit = {
 				{
-					pitch = 0.2,
 					yaw = 0.2,
-				},
+					pitch = 0.2
+				}
 			},
 			damage_hit = {
 				{
-					pitch = 0.4,
 					yaw = 0.4,
-				},
+					pitch = 0.4
+				}
 			},
 			shooting = {
 				{
-					pitch = 0.3,
 					yaw = 0.4,
-				},
-			},
-		},
+					pitch = 0.3
+				}
+			}
+		}
 	},
 	moving = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
+			"still"
 		},
 		continuous_spread = {
-			min_pitch = 1,
 			min_yaw = 1,
-		},
+			min_pitch = 1
+		}
 	},
 	crouch_still = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
-		},
+			"still"
+		}
 	},
 	crouch_moving = {
 		inherits = {
 			"default_boltpistol_spraynpray",
-			"still",
-		},
-	},
+			"still"
+		}
+	}
 }
 
 return {
 	base_templates = spread_templates,
-	overrides = overrides,
+	overrides = overrides
 }

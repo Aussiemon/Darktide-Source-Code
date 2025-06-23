@@ -43,14 +43,14 @@ MinionCustomization._construct_attach_settings = function (self, unit, world, in
 	local is_first_person = self:get_data(unit, "is_first_person")
 	local attach_settings = {
 		from_script_component = true,
-		from_ui_profile_spawner = false,
 		is_minion = true,
+		from_ui_profile_spawner = false,
 		world = world,
 		character_unit = unit,
 		in_editor = in_editor,
 		is_first_person = is_first_person,
 		lod_group = Unit.has_lod_group(unit, "lod") and Unit.lod_group(unit, "lod"),
-		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow"),
+		lod_shadow_group = Unit.has_lod_group(unit, "lod_shadow") and Unit.lod_group(unit, "lod_shadow")
 	}
 
 	if not in_editor then
@@ -194,62 +194,62 @@ end
 MinionCustomization.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,
-	starts_enabled_default = true,
+	starts_enabled_default = true
 }
 MinionCustomization.component_data = {
 	editor_only = {
-		category = "Settings",
-		ui_name = "Editor Only",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Editor Only",
+		category = "Settings"
 	},
 	is_first_person = {
-		category = "Settings",
-		ui_name = "Is First Person",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Is First Person",
+		category = "Settings"
 	},
 	is_corpse = {
-		category = "Settings",
-		ui_name = "Is Corpse",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Is Corpse",
+		category = "Settings"
 	},
 	attachment_items = {
 		category = "Attachments",
-		filter = "item",
+		ui_type = "resource_array",
 		size = 3,
 		ui_name = "Item",
-		ui_type = "resource_array",
+		filter = "item"
 	},
 	attachment_material_override_1 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 1 for Item",
-		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+		category = "Attachments",
+		ui_type = "text_box_array",
+		size = 1,
+		ui_name = "Material Override 1 for Item"
 	},
 	attachment_material_override_2 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 2 for Item",
-		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+		category = "Attachments",
+		ui_type = "text_box_array",
+		size = 1,
+		ui_name = "Material Override 2 for Item"
 	},
 	attachment_material_override_3 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 3 for Item",
-		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+		category = "Attachments",
+		ui_type = "text_box_array",
+		size = 1,
+		ui_name = "Material Override 3 for Item"
 	},
 	global_material_override = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Global Material Override",
-		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
-	},
+		category = "Attachments",
+		ui_type = "text_box_array",
+		size = 1,
+		ui_name = "Global Material Override"
+	}
 }
 
 return MinionCustomization

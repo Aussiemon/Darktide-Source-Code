@@ -25,7 +25,7 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local proc_events = BuffSettings.proc_events
 local ActionShootPellets = class("ActionShootPellets", "ActionShoot")
 local IMPACT_FX_DATA = {
-	will_be_predicted = true,
+	will_be_predicted = true
 }
 local NUM_PELLETS = 32
 local MAX_NUM_HITS_UNITS = 128
@@ -46,7 +46,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 			power_level = 0,
 			fire_position = Vector3Box(),
 			direction = Vector3Box(),
-			hit_results = {},
+			hit_results = {}
 		}
 
 		for j = 1, MAX_NUM_SAVED_PELLET_HITS do
@@ -54,7 +54,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 				distance = 0,
 				position = Vector3Box(),
 				normal = Vector3Box(),
-				actor = ActorBox(),
+				actor = ActorBox()
 			}
 		end
 	end
@@ -92,7 +92,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 			end
 
 			surface_impact_data[hit_type][ii] = {
-				hits = hits,
+				hits = hits
 			}
 		end
 	end
@@ -101,12 +101,12 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._surface_impact_num_hits_per_unit = {
 		penetration_entry = {},
 		penetration_exit = {},
-		stop = {},
+		stop = {}
 	}
 	self._surface_impact_num_hits = {
-		penetration_entry = 0,
 		penetration_exit = 0,
-		stop = 0,
+		penetration_entry = 0,
+		stop = 0
 	}
 	self._num_saved_pellets = 0
 
@@ -331,7 +331,7 @@ end
 local unit_to_index_lookup = {
 	penetration_entry = {},
 	penetration_exit = {},
-	stop = {},
+	stop = {}
 }
 local triggered_proc_events = {}
 

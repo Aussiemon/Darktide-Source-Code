@@ -10,13 +10,13 @@ PresenceEntryImmaterium.init = function (self, my_own_platform, platform, platfo
 	self._my_own_platform = my_own_platform
 
 	local immaterium_entry = {
-		account_id = "",
 		account_name = "",
-		last_update = -1,
 		platform = "",
 		platform_user_id = "",
 		status = "OFFLINE",
-		key_values = {},
+		last_update = -1,
+		account_id = "",
+		key_values = {}
 	}
 
 	if platform == "" then
@@ -44,7 +44,7 @@ PresenceEntryImmaterium.destroy = function (self)
 
 	if self._stream_first_update_promises then
 		local error = {
-			aborted = true,
+			aborted = true
 		}
 
 		for _, promise in ipairs(self._stream_first_update_promises) do

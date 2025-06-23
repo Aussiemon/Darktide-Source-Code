@@ -296,7 +296,7 @@ function _slot_components(attachments)
 
 			component_list[#component_list + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

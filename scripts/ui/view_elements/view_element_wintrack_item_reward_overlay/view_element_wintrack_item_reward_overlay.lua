@@ -308,8 +308,8 @@ ViewElementWintrackItemRewardOverlay._load_item_icon = function (self, item)
 			animation_event = item_animation_event,
 			size = {
 				1024,
-				1024,
-			},
+				1024
+			}
 		}
 		local cb, unload_cb
 
@@ -488,24 +488,24 @@ ViewElementWintrackItemRewardOverlay._setup_weapon_stats = function (self)
 		local grid_height = 840
 		local grid_size = {
 			grid_width - edge_padding,
-			grid_height,
+			grid_height
 		}
 		local grid_spacing = {
 			0,
-			0,
+			0
 		}
 		local mask_size = {
 			grid_width + 40,
-			grid_height,
+			grid_height
 		}
 		local context = {
-			ignore_blur = true,
 			scrollbar_width = 7,
+			ignore_blur = true,
 			grid_spacing = grid_spacing,
 			grid_size = grid_size,
 			mask_size = mask_size,
 			title_height = title_height,
-			edge_padding = edge_padding,
+			edge_padding = edge_padding
 		}
 		local scale = self:render_scale()
 

@@ -142,77 +142,77 @@ end
 
 MagazineAmmo.component_data = {
 	top_bullet_visibility_group_name = {
-		ui_name = "Top Bullet Visibility Group Name",
 		ui_type = "text_box",
 		value = "bullet",
+		ui_name = "Top Bullet Visibility Group Name"
 	},
 	ammo_in_unit = {
-		decimals = 0,
-		max = 40,
-		min = 1,
-		step = 1,
-		ui_name = "Ammo in Unit",
 		ui_type = "slider",
+		min = 1,
+		max = 40,
+		decimals = 0,
 		value = 30,
+		ui_name = "Ammo in Unit",
+		step = 1
 	},
 	max_ammo = {
-		decimals = 0,
-		max = 40,
-		min = 1,
-		step = 1,
-		ui_name = "Max Ammo",
 		ui_type = "slider",
+		min = 1,
+		max = 40,
+		decimals = 0,
 		value = 30,
+		ui_name = "Max Ammo",
+		step = 1
 	},
 	ammo = {
-		decimals = 0,
-		max = 40,
-		min = 0,
-		step = 1,
-		ui_name = "Ammo",
 		ui_type = "slider",
+		min = 0,
+		max = 40,
+		decimals = 0,
 		value = 30,
+		ui_name = "Ammo",
+		step = 1
 	},
 	ammo_offset = {
-		decimals = 0,
-		step = 1,
-		ui_name = "Ammo Offset",
 		ui_type = "slider",
+		decimals = 0,
 		value = 2,
+		ui_name = "Ammo Offset",
+		step = 1
 	},
 	anim_speed = {
-		decimals = 1,
-		max = 10,
+		ui_type = "slider",
 		min = 0.1,
 		step = 0.1,
-		ui_name = "Animation Speed",
-		ui_type = "slider",
+		decimals = 1,
 		value = 1,
+		ui_name = "Animation Speed",
+		max = 10
 	},
 	use_simple_animation_length = {
-		ui_name = "Use Anim Length",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Use Anim Length"
 	},
 	is_animated = {
-		ui_name = "Is Animatable",
 		ui_type = "check_box",
 		value = true,
+		ui_name = "Is Animatable"
 	},
 	dismantled = {
-		ui_name = "Dismantled",
 		ui_type = "check_box",
 		value = false,
+		ui_name = "Dismantled"
 	},
 	dismantled_ammo_mask = {
-		decimals = 3,
-		max = 1,
+		ui_type = "slider",
 		min = 0,
 		step = 0.001,
-		ui_name = "Dismantled Mask",
-		ui_type = "slider",
+		decimals = 3,
 		value = 1,
-	},
+		ui_name = "Dismantled Mask",
+		max = 1
+	}
 }
 
 return MagazineAmmo

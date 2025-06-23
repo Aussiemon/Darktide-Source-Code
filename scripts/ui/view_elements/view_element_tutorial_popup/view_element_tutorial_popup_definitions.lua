@@ -11,385 +11,385 @@ local tutorial_grid_size = Settings.tutorial_grid_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
-		horizontal_alignment = "center",
-		parent = "screen",
 		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
 		size = {
 			1920,
-			1080,
+			1080
 		},
 		position = {
 			0,
 			0,
-			0,
-		},
+			0
+		}
 	},
 	tutorial_window = {
-		horizontal_alignment = "center",
-		parent = "canvas",
 		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
 		size = tutorial_window_size,
 		position = {
 			0,
 			30,
-			170,
-		},
+			170
+		}
 	},
 	tutorial_grid = {
-		horizontal_alignment = "right",
-		parent = "tutorial_window",
 		vertical_alignment = "bottom",
+		parent = "tutorial_window",
+		horizontal_alignment = "right",
 		size = tutorial_grid_size,
 		position = {
 			-60,
 			-120,
-			2,
-		},
+			2
+		}
 	},
 	tutorial_button_1 = {
-		horizontal_alignment = "center",
-		parent = "tutorial_window",
 		vertical_alignment = "bottom",
+		parent = "tutorial_window",
+		horizontal_alignment = "center",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			-170,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	tutorial_button_2 = {
-		horizontal_alignment = "center",
-		parent = "tutorial_window",
 		vertical_alignment = "bottom",
+		parent = "tutorial_window",
+		horizontal_alignment = "center",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			170,
 			-40,
-			3,
-		},
+			3
+		}
 	},
 	tutorial_button_center = {
-		horizontal_alignment = "center",
-		parent = "tutorial_window",
 		vertical_alignment = "bottom",
+		parent = "tutorial_window",
+		horizontal_alignment = "center",
 		size = {
 			300,
-			40,
+			40
 		},
 		position = {
 			0,
 			-40,
-			3,
-		},
-	},
+			3
+		}
+	}
 }
 local widget_definitions = {
 	tutorial_window = UIWidget.create_definition({
 		{
-			content_id = "hotspot",
 			pass_type = "hotspot",
+			content_id = "hotspot",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size_addition = {
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					10,
-				},
-			},
+					10
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "image",
-			value = "content/ui/materials/backgrounds/default_square",
 			value_id = "image",
+			style_id = "image",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/default_square",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "top",
+				horizontal_alignment = "left",
 				size = {
 					tutorial_window_size[1] - (tutorial_grid_size[1] + 60),
-					tutorial_window_size[2],
+					tutorial_window_size[2]
 				},
 				color = {
 					255,
 					255,
 					255,
-					255,
+					255
 				},
 				offset = {
 					0,
 					0,
-					2,
-				},
-			},
+					2
+				}
+			}
 		},
 		{
-			pass_type = "rect",
 			style_id = "screen_background",
-			style = {
-				horizontal_alignment = "center",
-				scenegraph_id = "screen",
-				vertical_alignment = "center",
-				color = {
-					100,
-					0,
-					0,
-					0,
-				},
-				offset = {
-					0,
-					0,
-					169,
-				},
-				size_addition = {
-					0,
-					0,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "screen_background_vignette",
-			value = "content/ui/materials/masks/gradient_vignette",
-			style = {
-				scenegraph_id = "screen",
-				color = {
-					100,
-					0,
-					0,
-					0,
-				},
-				offset = {
-					0,
-					0,
-					168,
-				},
-			},
-		},
-		{
 			pass_type = "rect",
-			style_id = "window_background",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				scenegraph_id = "screen",
+				horizontal_alignment = "center",
 				color = {
 					100,
 					0,
 					0,
-					0,
+					0
 				},
 				offset = {
 					0,
 					0,
-					-1,
+					169
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
+			value = "content/ui/materials/masks/gradient_vignette",
+			style_id = "screen_background_vignette",
 			pass_type = "texture",
-			style_id = "background",
+			style = {
+				scenegraph_id = "screen",
+				color = {
+					100,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					168
+				}
+			}
+		},
+		{
+			style_id = "window_background",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = {
+					100,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					-1
+				},
+				size_addition = {
+					0,
+					0
+				}
+			}
+		},
+		{
 			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "background",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
 				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
 					24,
-					24,
+					24
 				},
-				color = Color.terminal_grid_background(nil, true),
-			},
+				color = Color.terminal_grid_background(nil, true)
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
+			style_id = "background_gradient",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.black(200, true),
 				offset = {
 					0,
 					0,
-					3,
-				},
-			},
+					3
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
 			value = "content/ui/materials/frames/dropshadow_large",
+			style_id = "outer_shadow",
+			pass_type = "texture",
 			style = {
+				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				vertical_alignment = "center",
 				color = Color.black(200, true),
 				size_addition = {
 					96,
-					96,
+					96
 				},
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
+			style_id = "frame",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_frame(nil, true),
 				offset = {
 					0,
 					0,
-					4,
-				},
-			},
+					4
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "corner",
 			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "corner",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				color = Color.terminal_corner(nil, true),
 				offset = {
 					0,
 					0,
-					5,
-				},
-			},
+					5
+				}
+			}
 		},
 		{
+			value_id = "title",
 			pass_type = "text",
 			style_id = "title",
-			value_id = "title",
 			style = {
 				font_size = 28,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "right",
-				text_horizontal_alignment = "left",
 				text_vertical_alignment = "top",
+				text_horizontal_alignment = "left",
 				vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
 				text_color = Color.terminal_text_header(255, true),
 				size = {
 					tutorial_grid_size[1],
-					0,
+					0
 				},
 				offset = {
 					-60,
 					35,
-					7,
+					7
 				},
 				size_addition = {
 					0,
-					0,
-				},
+					0
+				}
 			},
-			value = Localize("loc_alias_talent_builder_view_popup_title_summary"),
+			value = Localize("loc_alias_talent_builder_view_popup_title_summary")
 		},
 		{
+			value_id = "page_counter",
 			pass_type = "text",
 			style_id = "page_counter",
 			value = "0/0",
-			value_id = "page_counter",
 			style = {
 				font_size = 20,
-				font_type = "proxima_nova_bold",
 				horizontal_alignment = "right",
-				text_horizontal_alignment = "left",
 				text_vertical_alignment = "top",
+				text_horizontal_alignment = "left",
 				vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
 				text_color = Color.terminal_text_body_sub_header(255, true),
 				size = {
 					tutorial_grid_size[1],
-					0,
+					0
 				},
 				offset = {
 					-60,
 					70,
-					7,
+					7
 				},
 				size_addition = {
 					0,
-					0,
-				},
-			},
+					0
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "edge_top",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
+			style_id = "edge_top",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "top",
+				horizontal_alignment = "center",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					-4,
-					14,
-				},
-			},
+					14
+				}
+			}
 		},
 		{
-			pass_type = "texture",
-			style_id = "edge_bottom",
 			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
+			style_id = "edge_bottom",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
 				size = {
 					nil,
-					10,
+					10
 				},
 				size_addition = {
 					10,
-					0,
+					0
 				},
 				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					4,
-					14,
-				},
-			},
-		},
+					14
+				}
+			}
+		}
 	}, "tutorial_window"),
 	tutorial_button_1 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_1", {
 		text = "tutorial_button_1",
-		visible = true,
+		visible = true
 	}),
 	tutorial_button_2 = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "tutorial_button_2", {
 		text = "tutorial_button_2",
-		visible = true,
-	}),
+		visible = true
+	})
 }
 local tutorial_window_open_delay = 0.5
 local animations = {
@@ -420,11 +420,11 @@ local animations = {
 						grid_widgets[i].alpha_multiplier = 0
 					end
 				end
-			end,
+			end
 		},
 		{
-			end_time = 1.2,
 			name = "fade_in_background",
+			end_time = 1.2,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				local anim_progress = math.easeCubic(progress)
@@ -433,7 +433,7 @@ local animations = {
 
 				tutorial_window.style.screen_background.color[1] = alpha
 				tutorial_window.style.screen_background_vignette.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_window",
@@ -453,7 +453,7 @@ local animations = {
 				window_style.edge_top.color[1] = alpha
 				window_style.edge_bottom.color[1] = alpha
 				window_style.window_background.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "fade_in_content",
@@ -479,7 +479,7 @@ local animations = {
 				tutorial_window.style.title.text_color[1] = alpha
 				tutorial_window.style.page_counter.text_color[1] = alpha
 				tutorial_window.style.image.color[1] = alpha
-			end,
+			end
 		},
 		{
 			name = "move",
@@ -494,13 +494,13 @@ local animations = {
 				local y_anim_distance = y_anim_distance_max - y_anim_distance_max * anim_progress
 
 				parent:_set_scenegraph_size("tutorial_window", nil, 100 + (scenegraph_definition.tutorial_window.size[2] - 100) * anim_progress)
-			end,
-		},
-	},
+			end
+		}
+	}
 }
 
 return {
 	animations = animations,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
+	scenegraph_definition = scenegraph_definition
 }

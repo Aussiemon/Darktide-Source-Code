@@ -8,6 +8,7 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
+local MissionBuffsAllowedBuffs = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
@@ -16,17 +17,18 @@ local level_trigger_event = Level.trigger_event
 local ui_manager
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
 local WEAPON_CATEGORY_DESCRIPTIONS = {
-	blockout = "BLOCKOUT (weapon art and combat teams only)",
-	functional = "FUNCTIONAL (ready for testing)",
 	prototype = "PROTOTYPE (free to test, but don't report issues)",
+	blockout = "BLOCKOUT (weapon art and combat teams only)",
 	releasable = "RELEASABLE (ready for public release)",
-	shippable = "SHIPPABLE (ready for testing)",
+	functional = "FUNCTIONAL (ready for testing)",
+	shippable = "SHIPPABLE (ready for testing)"
 }
 local categories = {
 	"Achievements",
 	"Ailments",
 	"Bot Character",
 	"Buffs",
+	"Companion",
 	"Cinematics",
 	"Coherency Buffs",
 	"Crafting",
@@ -70,7 +72,7 @@ local categories = {
 	"Unit",
 	"VO",
 	"Weapon Mastery",
-	"Weapon Traits",
+	"Weapon Traits"
 }
 local EMPTY_TABLE = {}
 local functions = {}
@@ -108,105 +110,17 @@ local function apply_ailment_to_selected_unit(new_value)
 end
 
 functions.apply_ailment_to_selected_unit = {
-	category = "Ailments",
 	name = "Play Ailment Effect On Selected Unit",
+	category = "Ailments",
 	options_function = ailment_options,
-	on_activated = apply_ailment_to_selected_unit,
+	on_activated = apply_ailment_to_selected_unit
 }
 
-local hordes_mode_buff_options = {
-	"hordes_buff_rending_increase",
-	"hordes_buff_damage_increase",
-	"hordes_buff_suppression_immunity",
-	"hordes_buff_increased_damage_after_reload",
-	"hordes_buff_reduce_damage_taken_on_disabled_allies",
-	"hordes_buff_improved_weapon_reload_on_melee_kill",
-	"hordes_buff_burning_on_melee_hit",
-	"hordes_buff_burning_on_ranged_hit",
-	"hordes_buff_heavy_attacks_gain_damage_and_stagger",
-	"hordes_buff_toughness_on_ranged_kill",
-	"hordes_buff_toughness_regen_in_melee_range",
-	"hordes_buff_grenade_replenishment_over_time",
-	"hordes_buff_combat_ability_cooldown_on_damage_taken",
-	"hordes_buff_coherency_corruption_healing",
-	"hordes_buff_grenade_duplication_on_explosion",
-	"hordes_buff_extra_grenade_throw_chance",
-	"hordes_buff_ogryn_box_of_surprises",
-	"hordes_buff_ogryn_taunt_on_lunge",
-	"hordes_buff_ogryn_apply_fire_on_shout",
-	"hordes_buff_veteran_infinite_ammo_during_stance",
-	"hordes_buff_veteran_increased_damage_after_stealth",
-	"hordes_buff_ogryn_omega_lucky_rock",
-	"hordes_buff_combat_ability_cooldown_on_kills",
-	"hordes_buff_burning_on_melee_hit_taken",
-	"hordes_buff_auto_clip_fill_while_melee",
-	"hordes_buff_grenade_heals_on_explosion",
-	"hordes_buff_damage_vs_burning",
-	"hordes_buff_toughness_on_fire_damage_dealt",
-	"hordes_buff_burning_damage_per_burning_enemy",
-	"hordes_buff_damage_taken_by_flamers_and_grenadier_reduced",
-	"hordes_buff_coherency_burning_duration",
-	"hordes_buff_coherency_damage_vs_burning",
-	"hordes_buff_fire_pulse",
-	"hordes_buff_shock_pulse_on_toughness_broken",
-	"hordes_buff_health_regen",
-	"hordes_buff_toughness_damage_taken_above_threshold",
-	"hordes_buff_reduce_swap_time",
-	"hordes_buff_bonus_crit_chance_on_ammo",
-	"hordes_buff_no_ammo_consumption_on_crits",
-	"hordes_buff_other_slot_damage_increase_on_kill",
-	"hordes_buff_damage_vs_electrocuted",
-	"hordes_buff_two_extra_wounds",
-	"hordes_buff_instakill_melee_hit_on_electrocuted_enemy",
-	"hordes_buff_improved_dodge_speed_and_distance",
-	"hordes_buff_shock_on_hit_after_dodge",
-	"hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy",
-	"hordes_buff_damage_taken_close_to_electrocuted_enemy",
-	"hordes_buff_shock_on_melee_hit",
-	"hordes_buff_shock_on_ranged_hit",
-	"hordes_buff_weakspot_ranged_hit_always_stagger",
-	"hordes_buff_spawn_dome_shield_on_grenade_explosion",
-	"hordes_buff_grenade_explosion_applies_elemental_weakness",
-	"hordes_buff_psyker_shock_on_touch_force_field",
-	"hordes_buff_psyker_smite_always_max_damage",
-	"hordes_buff_psyker_shout_always_stagger",
-	"hordes_buff_psyker_shout_boosts_allies",
-	"hordes_buff_psyker_overcharge_reduced_damage_taken",
-	"hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit",
-	"hordes_buff_psyker_brain_burst_spreads_fire_on_hit",
-	"hordes_buff_psyker_burning_on_throwing_knife_hit",
-	"hordes_buff_psyker_recover_knife_on_knife_kill",
-	"hordes_buff_explode_enemies_on_ranged_kill",
-	"hordes_buff_grenade_explosion_applies_rending_debuff",
-	"hordes_buff_grenade_explosion_kill_replenish_grenades",
-	"hordes_buff_psyker_brain_burst_hits_nearby_enemies",
-	"hordes_buff_zealot_channel_heals_corruption",
-	"hordes_buff_zealot_shock_grenade_increase_next_hit_damage",
-	"hordes_buff_zealot_fire_pulse_while_aiming_lunge",
-	"hordes_buff_zealot_lunge_hit_triggers_shout",
-	"hordes_buff_zealot_regen_toughness_inside_fire_grenade",
-	"hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill",
-	"hordes_buff_shock_on_grenade_impact",
-	"hordes_buff_shock_closest_enemy_on_interval",
-	"hordes_buff_damage_increase_on_toughness_broken",
-	"hordes_buff_ranged_attacks_hit_mass_penetration_increased",
-	"hordes_buff_weakspot_ranged_hit_gives_infinite_ammo",
-	"hordes_buff_melee_damage_missing_ammo_in_clip",
-	"hordes_buff_veteran_shock_units_in_smoke_grenade",
-	"hordes_buff_veteran_grouped_upgraded_stealth",
-	"hordes_buff_veteran_apply_infinite_bleed_on_shout",
-	"hordes_buff_extra_ability_charge",
-	"hordes_buff_ogryn_fire_trail_on_lunge",
-	"hordes_buff_zealot_fire_trail_on_lunge",
-	"hordes_buff_aoe_shock_closest_enemy_on_interval",
-	"hordes_buff_veteran_sticky_grenade_pulls_enemies",
-	"hordes_buff_ogryn_rock_charge_while_wield",
-	"hordes_buff_ogryn_biggest_boom_grenade",
-	"hordes_buff_staggering_pulse",
-	"hordes_buff_ogryn_increase_penetration_during_stance",
-	"hordes_buff_extra_toughness_near_burning_shocked_enemies",
-	"hordes_buff_shock_on_blocking_melee_attack",
-}
+local hordes_mode_buff_options = {}
+
+for buff_name, _ in pairs(MissionBuffsAllowedBuffs.debug_only_list_used_buffs) do
+	table.insert(hordes_mode_buff_options, buff_name)
+end
 
 table.sort(hordes_mode_buff_options)
 
@@ -239,10 +153,10 @@ local function apply_buff_to_self(new_value)
 end
 
 functions.apply_buff_to_self = {
-	category = "Buffs",
 	name = "Apply Buff To Self",
+	category = "Buffs",
 	options_function = buff_options,
-	on_activated = apply_buff_to_self,
+	on_activated = apply_buff_to_self
 }
 
 local function apply_buff_to_selected_unit(new_value)
@@ -256,10 +170,10 @@ local function apply_buff_to_selected_unit(new_value)
 end
 
 functions.apply_buff_to_selected_unit = {
-	category = "Buffs",
 	name = "Apply Buff To Selected Unit",
+	category = "Buffs",
 	options_function = buff_options,
-	on_activated = apply_buff_to_selected_unit,
+	on_activated = apply_buff_to_selected_unit
 }
 
 local function _remove_all_buffs(unit)
@@ -280,9 +194,9 @@ local function remove_buffs_from_self()
 end
 
 functions.remove_buffs_from_self = {
-	category = "Buffs",
 	name = "Remove Buffs From Self",
-	on_activated = remove_buffs_from_self,
+	category = "Buffs",
+	on_activated = remove_buffs_from_self
 }
 
 local function remove_buffs_from_selected_unit(new_value, old_value)
@@ -296,9 +210,9 @@ local function remove_buffs_from_selected_unit(new_value, old_value)
 end
 
 functions.remove_buffs_from_selected_unit = {
-	category = "Buffs",
 	name = "Remove Buffs From Selected Unit",
-	on_activated = remove_buffs_from_selected_unit,
+	category = "Buffs",
+	on_activated = remove_buffs_from_selected_unit
 }
 
 local function buff_index_options()
@@ -329,10 +243,10 @@ local function remove_specific_buff_from_self(new_value)
 end
 
 functions.remove_specific_buff_from_self = {
-	category = "Buffs",
 	name = "Remove Specific Buff From Self",
+	category = "Buffs",
 	options_function = buff_index_options,
-	on_activated = remove_specific_buff_from_self,
+	on_activated = remove_specific_buff_from_self
 }
 
 local function remove_specific_buff_from_selected_unit(new_value)
@@ -346,10 +260,10 @@ local function remove_specific_buff_from_selected_unit(new_value)
 end
 
 functions.remove_specific_buff_from_selected_unit = {
-	category = "Buffs",
 	name = "Remove Specific Buff From Selected Unit",
+	category = "Buffs",
 	options_function = buff_index_options,
-	on_activated = remove_specific_buff_from_selected_unit,
+	on_activated = remove_specific_buff_from_selected_unit
 }
 
 local function horde_mode_request_buff(buff_name, give_buff_to_self)
@@ -363,32 +277,32 @@ local function horde_mode_request_buff(buff_name, give_buff_to_self)
 end
 
 functions.horde_mode_apply_buff_to_all_players = {
-	category = "Buffs",
+	name = "Horde Mode Request Buff",
 	debug_mission_buffs_request_buff = true,
+	category = "Buffs",
 	dropdown_width = 250,
 	filter_input_width = 100,
-	name = "Horde Mode Request Buff",
 	on_activated = horde_mode_request_buff,
-	buff_options = hordes_mode_buff_options,
+	buff_options = hordes_mode_buff_options
 }
 functions.debug_memory_snapshot = {
-	category = "Memory",
 	debug_memory_snapshot = true,
 	name = "Take Memory Snapshot",
+	category = "Memory"
 }
 functions.horde_mode_tag_all_enemies_local = {
-	category = "Horde Mode",
 	name = "Tag All Enemies (Local Client)",
+	category = "Horde Mode",
 	on_activated = function ()
 		Managers.event:trigger("event_surival_mode_tag_remaining_enemies")
-	end,
+	end
 }
 
 local horde_mode_island_names = HordesModeSettings.island_names
 
 functions.horde_mode_select_island_to_play = {
-	category = "Horde Mode",
 	name = "Select Island To Play",
+	category = "Horde Mode",
 	options_function = function ()
 		return horde_mode_island_names
 	end,
@@ -409,7 +323,7 @@ functions.horde_mode_select_island_to_play = {
 
 			Managers.connection:send_rpc_server("rpc_server_hordes_debug_select_island", island_name_id)
 		end
-	end,
+	end
 }
 
 local function _mission_name()
@@ -457,20 +371,20 @@ local function _mission_outro_win()
 end
 
 local CINEMATICS_TO_SKIP = {
-	path_of_trust_10 = true,
-	path_of_trust_11 = true,
 	path_of_trust_12 = true,
+	path_of_trust_11 = true,
 	path_of_trust_13 = true,
+	path_of_trust_10 = true
 }
 local USE_EVENTS = {
 	om_hub_01 = true,
-	prologue = true,
+	prologue = true
 }
 
 functions.play_cutscene = {
+	name = "Play Cutscene",
 	category = "Cinematics",
 	dynamic_contents = true,
-	name = "Play Cutscene",
 	options_function = function ()
 		if not Managers.state or not Managers.state.mission then
 			return EMPTY_TABLE
@@ -508,42 +422,42 @@ functions.play_cutscene = {
 		else
 			_play_cutscene(cutscene_name)
 		end
-	end,
+	end
 }
 functions.apply_coherency_buff_to_self = {
-	category = "Coherency Buffs",
 	name = "Apply Coherency Buff To Self",
+	category = "Coherency Buffs",
 	options_function = buff_options,
 	on_activated = function (new_value)
 		local local_player = Managers.player:local_player(1)
 		local local_player_unit = local_player.player_unit
 
 		Debug:add_coherency_buff_to_unit(local_player_unit, new_value)
-	end,
+	end
 }
 functions.apply_coherency_buff_to_selected_unit = {
-	category = "Coherency Buffs",
 	name = "Apply Coherency Buff To Selected Unit",
+	category = "Coherency Buffs",
 	options_function = buff_options,
 	on_activated = function (new_value)
 		local selected_unit = Debug.selected_unit
 
 		Debug:add_coherency_buff_to_unit(selected_unit, new_value)
-	end,
+	end
 }
 functions.remove_coherency_buffs_from_self = {
-	category = "Coherency Buffs",
 	name = "Remove Coherency Buffs From Self",
+	category = "Coherency Buffs",
 	on_activated = function ()
 		local local_player = Managers.player:local_player(1)
 		local local_player_unit = local_player.player_unit
 
 		Debug:remove_coherency_buffs_from_unit(local_player_unit)
-	end,
+	end
 }
 functions.remove_coherency_buffs_from_selected_unit = {
-	category = "Coherency Buffs",
 	name = "Remove Coherency Buffs From Selected Unit",
+	category = "Coherency Buffs",
 	on_activated = function (new_value, old_value)
 		local selected_unit = Debug.selected_unit
 
@@ -552,29 +466,29 @@ functions.remove_coherency_buffs_from_selected_unit = {
 		end
 
 		Debug:remove_coherency_buffs_from_unit(selected_unit)
-	end,
+	end
 }
 functions.remove_all_traits = {
-	category = "Crafting",
 	name = "Remove All Traits",
+	category = "Crafting",
 	on_activated = function ()
 		Managers.backend.interfaces.crafting:debug_remove_all_traits():next(function ()
 			Log.info("DebugFunctions", "All unlocked traits have been removed")
 		end)
-	end,
+	end
 }
 functions.unlock_all_traits = {
-	category = "Crafting",
 	name = "Unlock All Traits",
+	category = "Crafting",
 	on_activated = function ()
 		Managers.backend.interfaces.crafting:debug_unlock_all_traits():next(function ()
 			Log.info("DebugFunctions", "All traits have been unlocked")
 		end)
-	end,
+	end
 }
 functions.prepare_ui_for_marketing = {
-	category = "Marketing",
 	name = "Prepare UI for marketing",
+	category = "Marketing",
 	on_activated = function ()
 		if not Managers.state or not Managers.state.game_session or Managers.state.game_session:is_server() or not Managers.connection then
 			return
@@ -590,11 +504,11 @@ functions.prepare_ui_for_marketing = {
 		ParameterResolver.set_dev_parameter("enemy_outlines", "off")
 		ParameterResolver.set_dev_parameter("player_outlines_mode", "off")
 		ParameterResolver.set_dev_parameter("disable_outlines", true)
-	end,
+	end
 }
 functions.prepare_gameplay_for_marketing = {
-	category = "Marketing",
 	name = "Prepare gameplay for marketing",
+	category = "Marketing",
 	on_activated = function ()
 		if not Managers.state or not Managers.state.game_session or Managers.state.game_session:is_server() or not Managers.connection then
 			return
@@ -612,11 +526,11 @@ functions.prepare_gameplay_for_marketing = {
 		RPC.rpc_debug_client_request_infinite_ammo_reserve(channel, true)
 		RPC.rpc_debug_client_request_set_players_invulnerable(channel, true)
 		RPC.rpc_debug_client_request_disable_pacing(channel, true)
-	end,
+	end
 }
 functions.reload_current_level = {
-	category = "Level & Mission",
 	name = "Reload Current Level",
+	category = "Level & Mission",
 	on_activated = function ()
 		local is_server = Managers.state.game_session:is_server()
 
@@ -627,7 +541,7 @@ functions.reload_current_level = {
 
 			RPC.rpc_debug_client_request_reload_level(channel)
 		end
-	end,
+	end
 }
 
 local function list_mission_options(dev)
@@ -699,7 +613,7 @@ end
 
 local function start_mission_level(new_value, old_value)
 	local mechanism_context = {
-		mission_name = new_value,
+		mission_name = new_value
 	}
 	local Missions = require("scripts/settings/mission/mission_templates")
 	local mission_settings = Missions[new_value]
@@ -730,35 +644,35 @@ local function start_free_flight_follow_main_path(new_value, old_value)
 end
 
 functions.free_flight_follow_main_path = {
-	category = "Free Flight Camera",
 	name = "Follow Main Path",
-	on_activated = start_free_flight_follow_main_path,
+	category = "Free Flight Camera",
+	on_activated = start_free_flight_follow_main_path
 }
 functions.start__mission = {
-	category = "Level & Mission",
 	name = "Start Missions",
+	category = "Level & Mission",
 	options_function = mission_options,
-	on_activated = start_mission_level,
+	on_activated = start_mission_level
 }
 functions.start_dev_mission = {
-	category = "Level & Mission",
 	name = "Start Missions (DEV)",
+	category = "Level & Mission",
 	options_function = mission_options_dev,
-	on_activated = start_mission_level,
+	on_activated = start_mission_level
 }
 functions.teleport_to_portal = {
+	name = "Teleport To Portal",
 	category = "Level & Mission",
 	dynamic_contents = true,
-	name = "Teleport To Portal",
 	options_function = DebugSingleton.teleport_to_portal_list,
-	on_activated = DebugSingleton.teleport_to_portal,
+	on_activated = DebugSingleton.teleport_to_portal
 }
 functions.teleport_to_player = {
+	name = "Teleport To Player",
 	category = "Level & Mission",
 	dynamic_contents = true,
-	name = "Teleport To Player",
 	options_function = DebugSingleton.teleport_to_player_list,
-	on_activated = DebugSingleton.teleport_to_player,
+	on_activated = DebugSingleton.teleport_to_player
 }
 
 local function _print_camera_teleport_cmd()
@@ -798,22 +712,22 @@ local function _print_camera_teleport_cmd()
 end
 
 functions.print_location_info = {
-	category = "Level & Mission",
 	name = "Print Camera Teleport Command",
-	on_activated = _print_camera_teleport_cmd,
+	category = "Level & Mission",
+	on_activated = _print_camera_teleport_cmd
 }
 functions.teleport_to_coordinates = {
-	button_text = "Teleport",
-	category = "Level & Mission",
-	name = "Teleport to Coordinates",
-	vector3_input = true,
 	width = 270,
-	on_activated = DebugSingleton.teleport_to_coordinates,
+	name = "Teleport to Coordinates",
+	category = "Level & Mission",
+	button_text = "Teleport",
+	vector3_input = true,
+	on_activated = DebugSingleton.teleport_to_coordinates
 }
 functions.teleport_all_luggables_to_me = {
+	name = "Teleport all event luggables to me",
 	button_text = "Gimme!",
 	category = "Level & Mission",
-	name = "Teleport all event luggables to me",
 	on_activated = function (new_value, old_value)
 		local event_synchronizer_system = Managers.state.extension:system("event_synchronizer_system")
 
@@ -829,7 +743,7 @@ functions.teleport_all_luggables_to_me = {
 				Managers.connection:send_rpc_server("rpc_debug_client_request_teleport_mission_luggables_to_unit", target_unit_id)
 			end
 		end
-	end,
+	end
 }
 
 local mission_board_error_text = "Failed fetching missions"
@@ -866,9 +780,9 @@ local function _fetch_mission_board()
 end
 
 functions.mission_board_start_debug_mission = {
+	name = "Start Debug Mission Board",
 	category = "Level & Mission",
 	debug_mission_input = true,
-	name = "Start Debug Mission Board",
 	on_activated = function (debug_mission)
 		Managers.data_service.mission_board:create_debug_mission(debug_mission.map, debug_mission.challenge, debug_mission.resistance, debug_mission.circumstance_name, debug_mission.side_mission):next(function (mission)
 			local mission_id = mission.id
@@ -882,17 +796,17 @@ functions.mission_board_start_debug_mission = {
 	circumstances = circumstance_options(),
 	side_missions = side_mission_options(),
 	default_value = {
-		challenge = 3,
-		circumstance_name = "default",
 		map = "combat",
 		resistance = 3,
 		side_mission = "default",
-	},
+		challenge = 3,
+		circumstance_name = "default"
+	}
 }
 functions.mission_board_start_mission = {
+	name = "Mission Board",
 	category = "Level & Mission",
 	dynamic_contents = true,
-	name = "Mission Board",
 	options_function = function ()
 		return mission_board_options
 	end,
@@ -903,7 +817,7 @@ functions.mission_board_start_mission = {
 
 			Managers.party_immaterium:wanted_mission_selected(backend_mission_id)
 		end
-	end,
+	end
 }
 
 local function _havoc_options()
@@ -917,9 +831,9 @@ local function _havoc_options()
 end
 
 functions.start_havoc_session = {
-	category = "Level & Mission",
-	debug_havoc_mission_input = true,
 	name = "Start Havoc Session",
+	debug_havoc_mission_input = true,
+	category = "Level & Mission",
 	on_activated = function (debug_mission)
 		local map = debug_mission.map
 		local havoc_rank = debug_mission.havoc_rank
@@ -936,20 +850,20 @@ functions.start_havoc_session = {
 	maps = array_concat(mission_options(), mission_options_dev()),
 	havoc_options = _havoc_options(),
 	default_value = {
-		havoc_rank = 5,
 		map = "dm_forge",
-	},
+		havoc_rank = 5
+	}
 }
 functions.set_havoc_unlock_status = {
-	category = "Progression",
 	name = "Reset havoc_unlock_status",
+	category = "Progression",
 	on_activated = function ()
 		Managers.data_service.havoc:set_havoc_unlock_status("locked")
-	end,
+	end
 }
 functions.start_havoc_test_session_voting = {
-	category = "Level & Mission",
 	name = "Start Havoc Mission Vote",
+	category = "Level & Mission",
 	on_activated = function (debug_mission)
 		local transition_time
 		local close_previous = false
@@ -959,22 +873,22 @@ functions.start_havoc_test_session_voting = {
 			backend_mission_id = "eac4d0dc-5ab1-41ed-87e9-85bedac46ad6",
 			voting_id = "immaterium_party:bcd93b02-c635-4aba-89ef-ed786217f2a6",
 			mission_data = {
-				category = "havoc",
-				challenge = 5,
-				circumstance = "default",
-				credits = 24500,
-				depleted = false,
-				displayIndex = 0,
-				expiry = "2082758399000",
-				id = "eac4d0dc-5ab1-41ed-87e9-85bedac46ad6",
 				map = "cm_raid",
-				minPrivateParticipants = 3,
-				missionGiver = "explicator_a",
 				missionSize = 1,
-				requiredLevel = 1,
+				displayIndex = 0,
+				missionGiver = "explicator_a",
 				resistance = 5,
-				start = "1730109745545",
 				xp = 5550,
+				minPrivateParticipants = 3,
+				credits = 24500,
+				challenge = 5,
+				start = "1730109745545",
+				expiry = "2082758399000",
+				requiredLevel = 1,
+				circumstance = "default",
+				depleted = false,
+				category = "havoc",
+				id = "eac4d0dc-5ab1-41ed-87e9-85bedac46ad6",
 				eligibleParticipants = {},
 				extraRewards = {},
 				flags = {
@@ -1003,29 +917,29 @@ functions.start_havoc_test_session_voting = {
 					["havoc-rank-35"] = {},
 					["havoc-theme-darkness"] = {},
 					["order-id-642629d7-7c88-464a-b710-d1d2d79c71bb"] = {},
-					["order-owner-aaebd154-43dc-4c9c-9d6b-7b48605a4b4a"] = {},
-				},
-			},
+					["order-owner-aaebd154-43dc-4c9c-9d6b-7b48605a4b4a"] = {}
+				}
+			}
 		}
 		local settings_override = {
-			class = "MissionVotingView",
-			close_on_hotkey_gamepad = false,
-			close_on_hotkey_pressed = true,
-			disable_game_world = false,
-			display_name = "loc_mission_voting_view",
 			game_world_blur = 1,
-			load_always = true,
-			load_in_hub = true,
 			name = "mission_voting_view",
-			package = "packages/ui/views/mission_voting_view/mission_voting_view",
-			path = "scripts/ui/views/mission_voting_view/mission_voting_view",
+			display_name = "loc_mission_voting_view",
 			state_bound = true,
+			close_on_hotkey_gamepad = false,
+			path = "scripts/ui/views/mission_voting_view/mission_voting_view",
+			package = "packages/ui/views/mission_voting_view/mission_voting_view",
+			load_always = true,
+			class = "MissionVotingView",
+			disable_game_world = false,
+			load_in_hub = true,
+			close_on_hotkey_pressed = true,
 			enter_sound_events = {
-				"wwise/events/ui/play_ui_mission_request",
+				"wwise/events/ui/play_ui_mission_request"
 			},
 			testify_flags = {
-				ui_views = false,
-			},
+				ui_views = false
+			}
 		}
 
 		if not table.is_empty(Managers.ui:active_views()) then
@@ -1033,12 +947,12 @@ functions.start_havoc_test_session_voting = {
 		end
 
 		Managers.ui:open_view("mission_voting_view", transition_time, close_previous, close_all, close_transition_time, context, settings_override)
-	end,
+	end
 }
 functions.mission_board_update_missions = {
-	category = "Level & Mission",
 	name = "Mission Board Update",
-	on_activated = _fetch_mission_board,
+	category = "Level & Mission",
+	on_activated = _fetch_mission_board
 }
 
 local function _init_spawn_bot_character(item_definitions)
@@ -1063,10 +977,10 @@ local function _init_spawn_bot_character(item_definitions)
 	end
 
 	functions.spawn_bot_character = {
-		category = "Bot Character",
 		name = "Spawns a bot character.",
+		category = "Bot Character",
 		options_function = options_function,
-		on_activated = spawn_bot_character,
+		on_activated = spawn_bot_character
 	}
 end
 
@@ -1081,9 +995,9 @@ local function remove_bot_character()
 end
 
 functions.remove_bot_character = {
-	category = "Bot Character",
 	name = "Remove a bot character.",
-	on_activated = remove_bot_character,
+	category = "Bot Character",
+	on_activated = remove_bot_character
 }
 
 local function _init_scripted_scenarios(scenario_templates)
@@ -1122,10 +1036,10 @@ local function _init_scripted_scenarios(scenario_templates)
 	end
 
 	functions.start_scripted_scenario = {
-		category = "Scripted Scenarios",
 		name = "Start scripted scenario",
+		category = "Scripted Scenarios",
 		options_function = options_function,
-		on_activated = start_scenario,
+		on_activated = start_scenario
 	}
 end
 
@@ -1137,9 +1051,9 @@ local function stop_current_scripted_scenario()
 end
 
 functions.stop_scripted_scenario = {
-	category = "Scripted Scenarios",
 	name = "Stop current scripted scenario",
-	on_activated = stop_current_scripted_scenario,
+	category = "Scripted Scenarios",
+	on_activated = stop_current_scripted_scenario
 }
 
 local function complete_current_step()
@@ -1149,9 +1063,9 @@ local function complete_current_step()
 end
 
 functions.complete_current_scripted_step = {
-	category = "Scripted Scenarios",
 	name = "Complete current scripted step",
-	on_activated = complete_current_step,
+	category = "Scripted Scenarios",
+	on_activated = complete_current_step
 }
 
 local function init_nav_visual_server()
@@ -1163,9 +1077,9 @@ local function init_nav_visual_server()
 end
 
 functions.initialize_navigation_visual_debug_server = {
-	category = "Navigation",
 	name = "Initialize Visual Debug Server.",
-	on_activated = init_nav_visual_server,
+	category = "Navigation",
+	on_activated = init_nav_visual_server
 }
 
 local function _crash_server()
@@ -1190,18 +1104,18 @@ local function _crash_client()
 end
 
 functions.crash_server = {
-	category = "Network",
 	name = "Crash Server",
+	category = "Network",
 	on_activated = function ()
 		_crash_server()
-	end,
+	end
 }
 functions.crash_client = {
-	category = "Network",
 	name = "Crash Client",
+	category = "Network",
 	on_activated = function ()
 		_crash_client()
-	end,
+	end
 }
 
 local _is_disconnected = false
@@ -1231,13 +1145,13 @@ local function _disconnect(seconds)
 end
 
 functions.disconnect = {
-	button_text = "Disconnect",
-	category = "Network",
+	width = 60,
 	name = "Disconnect for x seconds.",
 	num_decimals = 2,
+	category = "Network",
+	button_text = "Disconnect",
 	number_button = true,
-	width = 60,
-	on_activated = _disconnect,
+	on_activated = _disconnect
 }
 
 local function _special_breed_options()
@@ -1264,10 +1178,10 @@ local function _try_spawn_special_minion(new_value, old_value)
 end
 
 functions.try_spawn_special_minion = {
-	category = "Pacing",
 	name = "Try Spawn Special Minion",
+	category = "Pacing",
 	options_function = _special_breed_options,
-	on_activated = _try_spawn_special_minion,
+	on_activated = _try_spawn_special_minion
 }
 
 local function _make_player_untargetable()
@@ -1309,14 +1223,14 @@ local function _make_player_targetable()
 end
 
 functions.make_player_untargetable = {
-	category = "Perception",
 	name = "Make Player Untargetable",
-	on_activated = _make_player_untargetable,
+	category = "Perception",
+	on_activated = _make_player_untargetable
 }
 functions.make_player_targetable = {
-	category = "Perception",
 	name = "Make Player Targetable",
-	on_activated = _make_player_targetable,
+	category = "Perception",
+	on_activated = _make_player_targetable
 }
 
 local function hide_selected_unit()
@@ -1330,9 +1244,9 @@ local function hide_selected_unit()
 end
 
 functions.hide_selected_unit = {
-	category = "Unit",
 	name = "Hide Selected Unit",
-	on_activated = hide_selected_unit,
+	category = "Unit",
+	on_activated = hide_selected_unit
 }
 
 local function _current_equipment(slot_name)
@@ -1387,17 +1301,17 @@ end
 
 if GameParameters.prod_like_backend then
 	functions.immaterium_part_id = {
-		category = "Immaterium (Party)",
-		name = "Party Id",
 		readonly = true,
+		name = "Party Id",
+		category = "Immaterium (Party)",
 		get_function = function ()
 			return Managers.party_immaterium:party_id()
-		end,
+		end
 	}
 	functions.immaterium_debug_party_joiner = {
+		name = "Party Joiner",
 		category = "Immaterium (Party)",
 		dynamic_contents = true,
-		name = "Party Joiner",
 		options_function = function ()
 			return _format_party_entries(Managers.party_immaterium:cached_debug_get_parties())
 		end,
@@ -1411,14 +1325,14 @@ if GameParameters.prod_like_backend then
 					return
 				end
 			end
-		end,
+		end
 	}
 	functions.immaterium_leave_party = {
-		category = "Immaterium (Party)",
 		name = "Leave Party",
+		category = "Immaterium (Party)",
 		on_activated = function ()
 			Managers.party_immaterium:leave_party()
-		end,
+		end
 	}
 end
 
@@ -1566,7 +1480,7 @@ local function _add_weapon_category(slot_name, breed_name, workflow_state, defin
 			local archetype_breed_name = archetype.breed
 
 			return archetype_breed_name == breed_name
-		end,
+		end
 	}
 end
 
@@ -1574,24 +1488,24 @@ local function _create_weapon_categories(item_definitions, data, slot_name)
 	local definitions = {
 		releasable = {
 			human = {},
-			ogryn = {},
+			ogryn = {}
 		},
 		shippable = {
 			human = {},
-			ogryn = {},
+			ogryn = {}
 		},
 		functional = {
 			human = {},
-			ogryn = {},
+			ogryn = {}
 		},
 		blockout = {
 			human = {},
-			ogryn = {},
+			ogryn = {}
 		},
 		prototype = {
 			human = {},
-			ogryn = {},
-		},
+			ogryn = {}
+		}
 	}
 
 	for name, item in pairs(item_definitions) do
@@ -1676,14 +1590,14 @@ local function _create_weapon_categories(item_definitions, data, slot_name)
 
 	local breeds = {
 		"human",
-		"ogryn",
+		"ogryn"
 	}
 	local workflow_states = {
 		"releasable",
 		"shippable",
 		"functional",
 		"prototype",
-		"blockout",
+		"blockout"
 	}
 
 	for breed_i = 1, #breeds do
@@ -1763,16 +1677,16 @@ local function _init_weapons(player_items)
 					end,
 					on_activated = function (new_value, old_value)
 						_equip_gear_on_value_set_function(new_value, old_value, slot_name, item_definitions)
-					end,
+					end
 				}
 			end
 		end
 	end
 
 	functions.equip_emote = {
+		name = "Equip Emote",
 		category = "Player Equipment - Emotes",
 		dynamic_contents = true,
-		name = "Equip Emote",
 		options_function = function ()
 			local options = {}
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -1859,7 +1773,7 @@ local function _init_weapons(player_items)
 			local emote_item_name = emote_item.name
 
 			return emote_item_name
-		end,
+		end
 	}
 end
 
@@ -1937,14 +1851,14 @@ local function _init_equipment(player_items)
 	end
 
 	functions.load_equipment = {
-		category = "Player Equipment",
 		name = "Load Equipment",
-		on_activated = _load_equipment,
+		category = "Player Equipment",
+		on_activated = _load_equipment
 	}
 	functions.save_equipment = {
-		category = "Player Equipment",
 		name = "Save Equipment",
-		on_activated = _save_equipment,
+		category = "Player Equipment",
+		on_activated = _save_equipment
 	}
 end
 
@@ -1988,14 +1902,14 @@ local function _clear_inventory(wrapped)
 end
 
 functions.clear_inventory = {
-	category = "Player Inventory",
 	name = "Clear Inventory",
-	on_activated = _clear_inventory,
+	category = "Player Inventory",
+	on_activated = _clear_inventory
 }
 functions.gift_equipped = {
-	category = "Player Inventory",
 	name = "Gift all equipped items",
-	on_activated = _gift_equipped,
+	category = "Player Inventory",
+	on_activated = _gift_equipped
 }
 
 local function _dump_selected_loadout_on_activated(new_value, old_value)
@@ -2030,9 +1944,9 @@ local function _dump_selected_loadout_on_activated(new_value, old_value)
 end
 
 functions.dump_selected_loudout = {
-	category = "Player Equipment",
 	name = "Dump Selected Loudout",
-	on_activated = _dump_selected_loadout_on_activated,
+	category = "Player Equipment",
+	on_activated = _dump_selected_loadout_on_activated
 }
 
 local function _modify_ammo(amount)
@@ -2056,16 +1970,16 @@ local function _modify_ammo(amount)
 end
 
 functions.modify_ammo = {
-	category = "Player Equipment",
 	name = "Modify Ammo",
-	number_button = true,
+	category = "Player Equipment",
 	width = 40,
-	on_activated = _modify_ammo,
+	number_button = true,
+	on_activated = _modify_ammo
 }
 functions.weapons = {
-	category = "Player Equipment",
-	name = "Clear ammo reserve",
 	num_decimals = 0,
+	name = "Clear ammo reserve",
+	category = "Player Equipment",
 	number_button = false,
 	on_activated = function (value)
 		local local_player = Managers.player:local_player(1)
@@ -2083,7 +1997,7 @@ functions.weapons = {
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_set_ammo_reserve(0)
-	end,
+	end
 }
 
 local function _delete_characters(character_profiles)
@@ -2132,7 +2046,7 @@ local function _delete_selected_character()
 	local selected_character_profile = selected_character_slot_widget.content.profile
 
 	_delete_characters({
-		selected_character_profile,
+		selected_character_profile
 	})
 end
 
@@ -2144,9 +2058,9 @@ local function _is_main_menu_active()
 end
 
 functions.play_emote_animation = {
+	name = " ->",
 	button_text = "Play Emote",
 	category = "Player Equipment - Emotes",
-	name = " ->",
 	on_activated = function ()
 		if not Managers.state.game_mode then
 			Managers.event:trigger("event_add_notification_message", "dev", "Can only play Emotes in Hub")
@@ -2164,12 +2078,12 @@ functions.play_emote_animation = {
 		end
 
 		Managers.event:trigger("player_activate_emote", "emote_1")
-	end,
+	end
 }
 functions.add_all_animation_items = {
+	name = "Add All Emotes and EOR Animation Items to Inventory",
 	button_text = "Add",
 	category = "Player Equipment - Emotes",
-	name = "Add All Emotes and EOR Animation Items to Inventory",
 	on_activated = function ()
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
@@ -2212,11 +2126,11 @@ functions.add_all_animation_items = {
 				end
 			until true
 		end
-	end,
+	end
 }
 functions.delete_all_characters = {
-	category = "Player Profiles",
 	name = "Delete All Characters",
+	category = "Player Profiles",
 	on_activated = function ()
 		local is_main_menu_active = _is_main_menu_active()
 
@@ -2225,12 +2139,12 @@ functions.delete_all_characters = {
 		else
 			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-	end,
+	end
 }
 functions.delete_characters = {
-	category = "Player Profiles",
 	name = "Delete Characters",
 	number_button = true,
+	category = "Player Profiles",
 	on_activated = function (amount)
 		local is_main_menu_active = _is_main_menu_active()
 
@@ -2239,11 +2153,11 @@ functions.delete_characters = {
 		else
 			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-	end,
+	end
 }
 functions.delete_selected_character = {
-	category = "Player Profiles",
 	name = "Delete Selected Character",
+	category = "Player Profiles",
 	on_activated = function ()
 		local is_main_menu_active = _is_main_menu_active()
 
@@ -2252,7 +2166,7 @@ functions.delete_selected_character = {
 		else
 			Log.info("DebugFunctions", "You can only delete characters while in the main menu!")
 		end
-	end,
+	end
 }
 
 local function _select_player_voice(selected_voice)
@@ -2270,8 +2184,8 @@ end
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 
 functions.select_player_voice = {
-	category = "Player Voice",
 	name = "Select Player Voice",
+	category = "Player Voice",
 	options_function = function ()
 		local voices = DialogueBreedSettings.human.wwise_voices
 
@@ -2279,11 +2193,11 @@ functions.select_player_voice = {
 	end,
 	on_activated = function (new_value, old_value)
 		_select_player_voice(new_value)
-	end,
+	end
 }
 functions.report_error = {
-	category = "Error",
 	name = "Report Error",
+	category = "Error",
 	options_function = function ()
 		local level_names = {}
 
@@ -2298,11 +2212,11 @@ functions.report_error = {
 		local error_obj = test_error_class:new(level_name)
 
 		Managers.error:report_error(error_obj)
-	end,
+	end
 }
 functions.complete_game_mode = {
-	category = "Game Mode",
 	name = "Complete Game Mode",
+	category = "Game Mode",
 	on_activated = function ()
 		local outcome = "won"
 		local is_server = Managers.state.game_session:is_server()
@@ -2314,11 +2228,11 @@ functions.complete_game_mode = {
 
 			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
 		end
-	end,
+	end
 }
 functions.fail_game_mode = {
-	category = "Game Mode",
 	name = "Fail Game Mode",
+	category = "Game Mode",
 	on_activated = function ()
 		local outcome = "lost"
 		local is_server = Managers.state.game_session:is_server()
@@ -2330,11 +2244,11 @@ functions.fail_game_mode = {
 
 			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_complete_game_mode", outcome_id)
 		end
-	end,
+	end
 }
 functions.force_respawn = {
-	category = "Game Mode",
 	name = "Force Respawn All Players",
+	category = "Game Mode",
 	on_activated = function ()
 		local is_server = Managers.state.game_session:is_server()
 
@@ -2343,12 +2257,12 @@ functions.force_respawn = {
 		else
 			Managers.state.game_session:send_rpc_server("rpc_debug_client_request_force_respawn")
 		end
-	end,
+	end
 }
 functions.debug_stagger_selected_unit = {
+	name = "Stagger (DevParams)",
 	button_text = "Trigger",
 	category = "Stagger",
-	name = "Stagger (DevParams)",
 	on_activated = function ()
 		local selected_unit = Debug.selected_unit
 
@@ -2357,12 +2271,12 @@ functions.debug_stagger_selected_unit = {
 
 			Stagger.debug_trigger_minion_stagger(selected_unit)
 		end
-	end,
+	end
 }
 functions.debug_stagger_selected_unit_with_animation = {
+	name = "Stagger With Animation (DevParams)",
 	category = "Stagger",
 	dynamic_contents = true,
-	name = "Stagger With Animation (DevParams)",
 	on_activated = function (stagger_animation)
 		local selected_unit = Debug.selected_unit
 
@@ -2428,12 +2342,12 @@ functions.debug_stagger_selected_unit_with_animation = {
 		end
 
 		return options
-	end,
+	end
 }
 functions.force_max_suppression = {
+	name = "Force max suppression to unit",
 	button_text = "Apply",
 	category = "Suppression",
-	name = "Force max suppression to unit",
 	on_activated = function ()
 		local selected_unit = Debug.selected_unit
 
@@ -2450,12 +2364,12 @@ functions.force_max_suppression = {
 				suppression_extension:debug_force_max_suppression()
 			end
 		end
-	end,
+	end
 }
 functions.add_max_suppression = {
+	name = "Add suppression to unit",
 	button_text = "Apply",
 	category = "Suppression",
-	name = "Add suppression to unit",
 	on_activated = function ()
 		local selected_unit = Debug.selected_unit
 
@@ -2472,7 +2386,7 @@ functions.add_max_suppression = {
 				suppression_extension:debug_add_suppression()
 			end
 		end
-	end,
+	end
 }
 
 local function actions_options()
@@ -2502,10 +2416,10 @@ local function run_sweep_spline_editor(new_value, old_value)
 end
 
 functions.sweep_spline_editor = {
-	category = "Sweep Spline",
 	name = "Start Sweep Spline Editor",
+	category = "Sweep Spline",
 	options_function = actions_options,
-	on_activated = run_sweep_spline_editor,
+	on_activated = run_sweep_spline_editor
 }
 
 local function _dump_selected_talents_on_activated(new_value, old_value)
@@ -2533,16 +2447,16 @@ local function _dump_selected_talents_on_activated(new_value, old_value)
 end
 
 functions.dump_selected_talents = {
-	category = "Talents",
 	name = "Dump Selected Talents",
-	on_activated = _dump_selected_talents_on_activated,
+	category = "Talents",
+	on_activated = _dump_selected_talents_on_activated
 }
 functions.reset_time_scale = {
-	category = "Time",
 	name = "Reset Time Scale",
+	category = "Time",
 	on_activated = function (new_value, old_value)
 		Debug:reset_time_scale()
-	end,
+	end
 }
 
 local function _sleep(seconds)
@@ -2550,13 +2464,13 @@ local function _sleep(seconds)
 end
 
 functions.sleep = {
-	button_text = "Sleep",
-	category = "Time",
+	width = 60,
 	name = "Sleep for x seconds.",
 	num_decimals = 2,
+	category = "Time",
+	button_text = "Sleep",
 	number_button = true,
-	width = 60,
-	on_activated = _sleep,
+	on_activated = _sleep
 }
 
 local function _reset_dev_parameters()
@@ -2566,9 +2480,9 @@ local function _reset_dev_parameters()
 end
 
 functions.reset_dev_parameters = {
-	category = "Dev Parameters",
 	name = "Reset Dev Parameters",
-	on_activated = _reset_dev_parameters,
+	category = "Dev Parameters",
+	on_activated = _reset_dev_parameters
 }
 
 local function _params_to_string(actual, defaults)
@@ -2631,9 +2545,9 @@ local function _copy_parameters()
 end
 
 functions.copy_parameters = {
-	category = "Dev Parameters",
 	name = "Copy Parameters",
-	on_activated = _copy_parameters,
+	category = "Dev Parameters",
+	on_activated = _copy_parameters
 }
 
 local function _next_level()
@@ -2677,10 +2591,10 @@ local function _next_level()
 end
 
 functions.level_up = {
+	name = "Level Up Character",
 	button_text = "Level Up",
 	category = "Progression",
-	name = "Level Up Character",
-	on_activated = _next_level,
+	on_activated = _next_level
 }
 
 local function _set_xp(value)
@@ -2703,11 +2617,11 @@ local function _set_xp(value)
 end
 
 functions.set_xp = {
-	button_text = "Set XP",
-	category = "Progression",
 	name = "Set XP of Character",
+	category = "Progression",
+	button_text = "Set XP",
 	number_button = true,
-	on_activated = _set_xp,
+	on_activated = _set_xp
 }
 
 do
@@ -2715,7 +2629,7 @@ do
 
 	local function _get_chapter_names(chapters)
 		local names = {
-			"reset",
+			"reset"
 		}
 
 		for i = 1, #chapters do
@@ -2738,7 +2652,7 @@ do
 			category = "Progression",
 			name = string.format("Force %s to specific chapter", story_name),
 			on_activated = _set_story,
-			options_function = _get_chapter_names(chapters),
+			options_function = _get_chapter_names(chapters)
 		}
 	end
 
@@ -2751,10 +2665,10 @@ do
 	end
 
 	functions.skip_story = {
-		category = "Progression",
 		name = "Skip narrative story",
+		category = "Progression",
 		on_activated = _skip_story,
-		options_function = _get_story_names,
+		options_function = _get_story_names
 	}
 end
 
@@ -2769,10 +2683,10 @@ local function _complete_narrative_event(event_name)
 end
 
 functions.complete_narrative_event = {
-	category = "Progression",
 	name = "Set a narrative event to complete",
+	category = "Progression",
 	on_activated = _complete_narrative_event,
-	options_function = _list_narrative_event_names,
+	options_function = _list_narrative_event_names
 }
 
 local function _uncomplete_narrative_event(event_name)
@@ -2780,10 +2694,10 @@ local function _uncomplete_narrative_event(event_name)
 end
 
 functions.reset_narrative_event = {
-	category = "Progression",
 	name = "Set a narrative event to not completed",
+	category = "Progression",
 	on_activated = _uncomplete_narrative_event,
-	options_function = _list_narrative_event_names,
+	options_function = _list_narrative_event_names
 }
 
 local function _unlock_tracked_achievements()
@@ -2801,9 +2715,9 @@ local function _unlock_tracked_achievements()
 end
 
 functions.unlock_tracked_achievements = {
-	category = "Progression",
 	name = "Unlock tracked achievements",
-	on_activated = _unlock_tracked_achievements,
+	category = "Progression",
+	on_activated = _unlock_tracked_achievements
 }
 
 local function _delete_all_achievements()
@@ -2815,9 +2729,9 @@ local function _delete_all_achievements()
 end
 
 functions.delete_current_achievement_progression = {
-	category = "Progression",
 	name = "Reset achievement progress",
-	on_activated = _delete_all_achievements,
+	category = "Progression",
+	on_activated = _delete_all_achievements
 }
 
 local Views = require("scripts/ui/views/views")
@@ -2853,20 +2767,20 @@ local function _get_all_view_names()
 end
 
 functions.close_all_views = {
-	category = "UI",
 	name = "Close All Views",
+	category = "UI",
 	on_activated = function ()
 		if ui_manager then
 			ui_manager:close_all_views()
 		else
 			_ui_manager_not_initialized()
 		end
-	end,
+	end
 }
 functions.close_view = {
+	name = "Close View",
 	category = "UI",
 	dynamic_contents = true,
-	name = "Close View",
 	options_function = function ()
 		return _get_all_active_views()
 	end,
@@ -2876,11 +2790,11 @@ functions.close_view = {
 		else
 			_ui_manager_not_initialized()
 		end
-	end,
+	end
 }
 functions.open_view = {
-	category = "UI",
 	name = "Open View",
+	category = "UI",
 	options_function = function ()
 		return _get_all_view_names()
 	end,
@@ -2890,8 +2804,8 @@ functions.open_view = {
 
 			if not is_view_active then
 				local context = Views[view_name].dummy_data or {
-					can_exit = true,
 					debug_preview = true,
+					can_exit = true
 				}
 
 				ui_manager:open_view(view_name, nil, nil, nil, nil, context)
@@ -2901,7 +2815,7 @@ functions.open_view = {
 		else
 			_ui_manager_not_initialized()
 		end
-	end,
+	end
 }
 
 local selected_voice, selected_sound_event_type, selected_sound_event, player_manager
@@ -2983,7 +2897,7 @@ local function _play_selected_sound_event()
 		local sound_event = {
 			type = event_type,
 			wwise_route = wwise_route,
-			sound_event = selected_sound_event,
+			sound_event = selected_sound_event
 		}
 
 		dialogue_extension:play_event(sound_event)
@@ -3000,8 +2914,8 @@ local function _play_selected_sound_event()
 end
 
 functions.select_voice = {
-	category = "VO",
 	name = "01. Select Voice",
+	category = "VO",
 	get_function = function ()
 		return selected_voice or ""
 	end,
@@ -3022,12 +2936,12 @@ functions.select_voice = {
 	end,
 	on_activated = function (voice)
 		_select_voice(voice)
-	end,
+	end
 }
 functions.select_sound_event_type = {
+	name = "02. Select Sound Event Type",
 	category = "VO",
 	dynamic_contents = true,
-	name = "02. Select Sound Event Type",
 	get_function = function ()
 		return selected_sound_event_type or ""
 	end,
@@ -3037,12 +2951,12 @@ functions.select_sound_event_type = {
 	on_activated = function (sound_event_type)
 		selected_sound_event_type = sound_event_type
 		selected_sound_event = nil
-	end,
+	end
 }
 functions.select_sound_event = {
+	name = "03. Select Sound Event",
 	category = "VO",
 	dynamic_contents = true,
-	name = "03. Select Sound Event",
 	get_function = function ()
 		return selected_sound_event or ""
 	end,
@@ -3051,14 +2965,14 @@ functions.select_sound_event = {
 	end,
 	on_activated = function (sound_event)
 		selected_sound_event = sound_event
-	end,
+	end
 }
 functions.play_sound_event = {
-	category = "VO",
 	name = "04. Play Sound Event",
+	category = "VO",
 	on_activated = function ()
 		_play_selected_sound_event()
-	end,
+	end
 }
 
 local function voice_fx_options()
@@ -3088,7 +3002,7 @@ local function voice_fx_options()
 		"voice_fx_rtpc_epic_voice_box_pitch",
 		"voice_fx_rtpc_voice_box_a",
 		"voice_fx_rtpc_epic_psyker_collar",
-		"voice_fx_rtpc_robo_a",
+		"voice_fx_rtpc_robo_a"
 	}
 
 	return options
@@ -3115,21 +3029,21 @@ local function override_all_voice_fx(new_value)
 end
 
 functions.select_voice_fx = {
-	category = "VO",
 	name = "05. Select Voice FX",
+	category = "VO",
 	options_function = voice_fx_options,
-	on_activated = select_voice_fx,
+	on_activated = select_voice_fx
 }
 functions.override_all_voice_fx = {
-	category = "VO",
 	name = "06. Override All Voice FX",
+	category = "VO",
 	options_function = voice_fx_options,
-	on_activated = override_all_voice_fx,
+	on_activated = override_all_voice_fx
 }
 functions.apply_weapon_trait_lerp_value = {
-	category = "Weapon Traits",
-	name = "Override Weapon Trait Lerp Value",
 	num_decimals = 2,
+	name = "Override Weapon Trait Lerp Value",
+	category = "Weapon Traits",
 	number_button = true,
 	on_activated = function (value)
 		local local_player = Managers.player:local_player(1)
@@ -3147,11 +3061,11 @@ functions.apply_weapon_trait_lerp_value = {
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_apply_trait_lerp_value(value)
-	end,
+	end
 }
 functions.reset_weapon_lerp_values = {
-	category = "Weapon Traits",
 	name = "Remove Override Weapon Trait and Tweak Lerp Value",
+	category = "Weapon Traits",
 	on_activated = function ()
 		local local_player = Managers.player:local_player(1)
 
@@ -3168,12 +3082,12 @@ functions.reset_weapon_lerp_values = {
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_remove_trait_lerp_value()
-	end,
+	end
 }
 functions.apply_lerp_value_to_all_tweak_templates = {
-	category = "Weapon Traits",
-	name = "Apply lerp_value to all tweak templates",
 	num_decimals = 2,
+	name = "Apply lerp_value to all tweak templates",
+	category = "Weapon Traits",
 	number_button = true,
 	on_activated = function (value)
 		local local_player = Managers.player:local_player(1)
@@ -3191,33 +3105,33 @@ functions.apply_lerp_value_to_all_tweak_templates = {
 		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 
 		weapon_extension:debug_apply_tweak_template_lerp_value(value)
-	end,
+	end
 }
 functions.verify_trait_templates = {
-	category = "Weapon Traits",
 	name = "Verify Trait Templates",
+	category = "Weapon Traits",
 	on_activated = function ()
 		local trait_template_verification = require("scripts/settings/equipment/tests/trait_template_verification")
 		local success = trait_template_verification()
-	end,
+	end
 }
 functions.reset_weapon_mastery_override_xp = {
-	category = "Weapon Mastery",
 	name = "Reset Weapon Mastery XP Overrides",
+	category = "Weapon Mastery",
 	on_activated = function ()
 		local save_manager = Managers.save
 		local save_data = Managers.save:account_data()
 
 		table.clear(save_data.debug.weapon_mastery_xp)
 		save_manager:queue_save()
-	end,
+	end
 }
 
 local function character_state_options()
 	local options = {
 		"hogtied",
 		"knocked_down",
-		"dead",
+		"dead"
 	}
 
 	return options
@@ -3264,36 +3178,36 @@ local function force_character_state(new_value)
 end
 
 functions.force_character_state = {
-	button_text = "Activate",
-	category = "Player Character",
 	name = "Force character state",
+	category = "Player Character",
+	button_text = "Activate",
 	options_function = character_state_options,
-	on_activated = force_character_state,
+	on_activated = force_character_state
 }
 functions.reset_premium_store_custom_time = {
+	name = "Reset Store Time",
 	button_text = "Reset",
 	category = "Micro Transaction (\"Premium\") Store",
-	name = "Reset Store Time",
 	on_activated = function (new_value, old_value)
 		ParameterResolver.set_dev_parameter("premium_store_custom_time", 0)
-	end,
+	end
 }
 functions.premium_store_custom_time = {
-	button_text = "Set Time",
-	category = "Micro Transaction (\"Premium\") Store",
 	name = "Show Store Using Custom Time (in milliseconds)",
+	category = "Micro Transaction (\"Premium\") Store",
+	button_text = "Set Time",
 	number_button = true,
 	on_activated = function (new_value, old_value)
 		ParameterResolver.set_dev_parameter("premium_store_custom_time", new_value)
-	end,
+	end
 }
 functions.collect_cosmetics = {
+	name = "Collect playtest cosmetics",
 	button_text = "Activate",
 	category = "Micro Transaction (\"Premium\") Store",
-	name = "Collect playtest cosmetics",
 	on_activated = function ()
 		Managers.data_service.store:debug_empty_store("get_playtest_cosmetic_store")
-	end,
+	end
 }
 
 for key, config in pairs(functions) do
@@ -3320,6 +3234,58 @@ local function initialize()
 	ui_manager = Managers.ui
 end
 
+local function move_free_flight_camera_to_companion()
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		Log.error("move_free_flight_camera_to_companion", "No local player!")
+
+		return
+	end
+
+	local companion_spawner_extension = ScriptUnit.extension(local_player.player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+	local pos = Unit.world_position(companion_unit, 1)
+
+	Managers.free_flight:teleport_camera("global", pos)
+end
+
+functions.move_free_flight_camera_to_companion = {
+	name = "Move free flight camera to companion",
+	category = "Companion",
+	on_activated = move_free_flight_camera_to_companion
+}
+
+local function force_companion_OOB()
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		Log.error("force_companion_OOB", "No local player!")
+
+		return
+	end
+
+	local companion_spawner_extension = ScriptUnit.extension(local_player.player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+
+	if not companion_unit then
+		Log.error("force_companion_OOB", "No companion!")
+
+		return
+	end
+
+	local companion_blackboard = BLACKBOARDS[companion_unit]
+	local behavior_component = Blackboard.write_component(companion_blackboard, "behavior")
+
+	behavior_component.is_out_of_bound = true
+end
+
+functions.force_companion_OOB = {
+	name = "Force companion OOB",
+	category = "Companion",
+	on_activated = force_companion_OOB
+}
+
 local function add_account_to_block_users_states()
 	if IS_PLAYSTATION then
 		Managers.account:request_block_user_states("4030197760692964687")
@@ -3329,9 +3295,9 @@ local function add_account_to_block_users_states()
 end
 
 functions.add_account_to_block_users_states = {
-	category = "Social Features",
 	name = "Request random block user states",
-	on_activated = add_account_to_block_users_states,
+	category = "Social Features",
+	on_activated = add_account_to_block_users_states
 }
 
 return {
@@ -3343,5 +3309,5 @@ return {
 	is_initialized = function ()
 		return debug_functions_initialized
 	end,
-	initialize = initialize,
+	initialize = initialize
 }

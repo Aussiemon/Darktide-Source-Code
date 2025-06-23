@@ -193,7 +193,7 @@ function _unit_components(components, attachments)
 		for _, component in ipairs(unit_components) do
 			components[#components + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

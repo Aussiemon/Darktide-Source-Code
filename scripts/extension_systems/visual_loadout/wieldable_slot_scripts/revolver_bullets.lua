@@ -16,30 +16,30 @@ RevolverBullets.init = function (self, context, slot, weapon_template, fx_source
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 	self._bullets = {
 		{
-			bullet_attachment_name = "bullet_01",
 			casing_attachment_name = "casing_01",
-			visible = true,
+			bullet_attachment_name = "bullet_01",
+			visible = true
 		},
 		{
-			bullet_attachment_name = "bullet_02",
 			casing_attachment_name = "casing_02",
-			visible = true,
+			bullet_attachment_name = "bullet_02",
+			visible = true
 		},
 		{
-			bullet_attachment_name = "bullet_03",
 			casing_attachment_name = "casing_03",
-			visible = true,
+			bullet_attachment_name = "bullet_03",
+			visible = true
 		},
 		{
-			bullet_attachment_name = "bullet_04",
 			casing_attachment_name = "casing_04",
-			visible = true,
+			bullet_attachment_name = "bullet_04",
+			visible = true
 		},
 		{
-			bullet_attachment_name = "bullet_05",
 			casing_attachment_name = "casing_05",
-			visible = true,
-		},
+			bullet_attachment_name = "bullet_05",
+			visible = true
+		}
 	}
 	self._components_1p = {}
 	self._components_3p = {}
@@ -129,7 +129,7 @@ function _components(destination, destination_lookup, attachments, attachment_na
 			local data = {
 				unit = attachment_unit,
 				lookup_name = lookup_name,
-				component = component,
+				component = component
 			}
 
 			destination[#destination + 1] = data

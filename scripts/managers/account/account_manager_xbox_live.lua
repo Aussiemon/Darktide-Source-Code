@@ -12,14 +12,14 @@ local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local AccountManagerXboxLive = class("AccountManagerXboxLive", "AccountManagerBase")
 local SIGNIN_STATES = {
-	acquiring_storage = "loc_signin_acquire_storage",
-	deleting_save = "loc_signin_delete_save",
-	fetching_privileges = "loc_signin_fetch_privileges",
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
-	idle = "",
 	loading_save = "loc_signin_load_save",
-	querying_storage = "loc_signin_query_storage",
+	idle = "",
 	signin_profile = "loc_signin_acquiring_user_profile",
+	fetching_privileges = "loc_signin_fetch_privileges",
+	querying_storage = "loc_signin_query_storage",
+	acquiring_storage = "loc_signin_acquire_storage",
+	deleting_save = "loc_signin_delete_save"
 }
 
 AccountManagerXboxLive.init = function (self)
@@ -536,24 +536,24 @@ AccountManagerXboxLive._show_gamertag_popup = function (self)
 		self:_setup_friends_list()
 	else
 		local context = {
-			description_text = "loc_popup_desc_signed_in_gamertag",
 			title_text = "loc_popup_info",
+			description_text = "loc_popup_desc_signed_in_gamertag",
 			description_text_params = {
-				gamertag = self._gamertag,
+				gamertag = self._gamertag
 			},
 			options = {
 				{
-					close_on_pressed = true,
 					text = "loc_popup_button_confirm",
-					callback = callback(self, "_setup_friends_list"),
+					close_on_pressed = true,
+					callback = callback(self, "_setup_friends_list")
 				},
 				{
+					text = "loc_exit_to_title_display_name",
 					close_on_pressed = true,
 					hotkey = "back",
-					text = "loc_exit_to_title_display_name",
-					callback = callback(self, "return_to_title_screen"),
-				},
-			},
+					callback = callback(self, "return_to_title_screen")
+				}
+			}
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -790,30 +790,30 @@ AccountManagerXboxLive._show_disconnect_error = function (self)
 	end
 
 	local context = {
-		description_text = "loc_popup_desc_signed_out_error",
 		title_text = "loc_popup_header_controller_disconnect_error",
+		description_text = "loc_popup_desc_signed_out_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag,
+			gamertag = self._gamertag
 		},
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_retry",
-				callback = callback(self, "_cb_verify_profile"),
-			},
-			{
 				close_on_pressed = true,
-				text = "loc_select_profile",
-				callback = callback(self, "_cb_open_profile_picker"),
+				callback = callback(self, "_cb_verify_profile")
 			},
 			{
+				text = "loc_select_profile",
+				close_on_pressed = true,
+				callback = callback(self, "_cb_open_profile_picker")
+			},
+			{
+				text = "loc_exit_to_title_display_name",
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_exit_to_title_display_name",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -829,30 +829,30 @@ AccountManagerXboxLive._show_signed_out_error = function (self)
 	end
 
 	local context = {
-		description_text = "loc_popup_desc_signed_out_error",
 		title_text = "loc_popup_header_signed_out_error",
+		description_text = "loc_popup_desc_signed_out_error",
 		priority_order = math.huge,
 		description_text_params = {
-			gamertag = self._gamertag,
+			gamertag = self._gamertag
 		},
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_retry",
-				callback = callback(self, "_cb_verify_profile"),
-			},
-			{
 				close_on_pressed = true,
-				text = "loc_select_profile",
-				callback = callback(self, "_cb_open_profile_picker"),
+				callback = callback(self, "_cb_verify_profile")
 			},
 			{
+				text = "loc_select_profile",
+				close_on_pressed = true,
+				callback = callback(self, "_cb_open_profile_picker")
+			},
+			{
+				text = "loc_exit_to_title_display_name",
 				close_on_pressed = true,
 				hotkey = "back",
-				text = "loc_exit_to_title_display_name",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -867,11 +867,11 @@ AccountManagerXboxLive._show_fatal_error = function (self, title_text, descripti
 		description_text = description_text,
 		options = {
 			{
-				close_on_pressed = true,
 				text = "loc_popup_button_close",
-				callback = callback(self, "return_to_title_screen"),
-			},
-		},
+				close_on_pressed = true,
+				callback = callback(self, "return_to_title_screen")
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -950,6 +950,78 @@ AccountManagerXboxLive._setup_region = function (self)
 	self._region_restrictions = RegionRestrictionsXboxLive[country_code] or {}
 
 	Log.info("AccountManagerXboxLive", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
+end
+
+AccountManagerXboxLive.open_to_store = function (self, product_id)
+	local async_job, error_code = XboxLive.show_product_page_ui_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code)
+		})
+	end
+
+	local was_constrained = false
+
+	return Promise.until_value_is_true(function ()
+		local is_constrained = Application.is_constrained()
+
+		if is_constrained then
+			was_constrained = true
+		end
+
+		if not was_constrained then
+			return false
+		end
+
+		if is_constrained then
+			return false
+		end
+
+		local result = XboxLive.show_product_page_ui_async_result(async_job)
+
+		if result == nil then
+			return false
+		end
+
+		if result == 0 then
+			return {
+				success = true
+			}
+		else
+			return {
+				success = false
+			}
+		end
+	end)
+end
+
+AccountManagerXboxLive.is_owner_of = function (self, product_id)
+	local async_job, error_code = XboxLive.acquire_license_for_durables_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code)
+		})
+	end
+
+	return Promise.until_value_is_true(function ()
+		local result, error_code = XboxLive.acquire_license_for_durables_async_result(async_job)
+
+		if result == nil and error_code == nil then
+			return false
+		end
+
+		if result ~= nil then
+			return {
+				is_owner = result
+			}
+		end
+
+		return {
+			is_owner = false
+		}
+	end)
 end
 
 return AccountManagerXboxLive

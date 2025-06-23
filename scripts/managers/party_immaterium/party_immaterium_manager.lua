@@ -108,7 +108,7 @@ PartyImmateriumManager._resolve_join_permission = function (self, presence_entry
 		local context_suffix = context and "_" .. context or ""
 
 		return Promise.rejected({
-			error_details = "NOT_JOINABLE" .. context_suffix,
+			error_details = "NOT_JOINABLE" .. context_suffix
 		})
 	end
 
@@ -124,7 +124,7 @@ PartyImmateriumManager._resolve_join_permission = function (self, presence_entry
 
 			if Managers.account:is_blocked(platform_user_id) then
 				return Promise.rejected({
-					error_details = "XBOX_BLOCKED_" .. context,
+					error_details = "XBOX_BLOCKED_" .. context
 				})
 			end
 		end
@@ -152,11 +152,11 @@ PartyImmateriumManager._resolve_join_permission = function (self, presence_entry
 		for _, result in ipairs(results) do
 			if result == "declined" then
 				return Promise.rejected({
-					error_details = "PERMISSION_CHECK_FAILED",
+					error_details = "PERMISSION_CHECK_FAILED"
 				})
 			elseif result ~= "OK" then
 				return Promise.rejected({
-					error_details = result,
+					error_details = result
 				})
 			end
 		end
@@ -287,7 +287,7 @@ PartyImmateriumManager._reset_party_data = function (self)
 
 	for _, game_session_promise in ipairs(self._game_session_promises) do
 		game_session_promise:reject({
-			error_details = "PARTY_RESET",
+			error_details = "PARTY_RESET"
 		})
 	end
 
@@ -476,28 +476,28 @@ PartyImmateriumManager._parse_join_parameter_string = function (self, join_param
 		if #split >= 3 then
 			return {
 				party_id = split[2],
-				invite_token = split[3],
+				invite_token = split[3]
 			}
 		else
 			return {
-				malformed = true,
+				malformed = true
 			}
 		end
 	else
 		return {
-			party_id = join_parameter,
+			party_id = join_parameter
 		}
 	end
 end
 
 local PRESENCE_TO_JOIN_ERROR = {
-	cinematic = "YOU_ARE_IN_CINEMATIC",
-	loading = "YOU_ARE_IN_LOADING",
 	matchmaking = "YOU_ARE_IN_MATCHMAKING",
-	mission = "YOU_ARE_IN_MISSION",
 	onboarding = "YOU_ARE_IN_ONBOARDING",
 	splash_screen = "YOU_ARE_IN_SPLASH_SCREEN",
 	title_screen = "YOU_ARE_IN_TITLE_SCREEN",
+	loading = "YOU_ARE_IN_LOADING",
+	cinematic = "YOU_ARE_IN_CINEMATIC",
+	mission = "YOU_ARE_IN_MISSION"
 }
 
 PartyImmateriumManager._can_join_new_party_check = function (self, join_parameter, is_reconnect)
@@ -505,7 +505,7 @@ PartyImmateriumManager._can_join_new_party_check = function (self, join_paramete
 
 	if join_parameter.malformed then
 		return Promise.rejected({
-			error_details = "INVALID_INVITE_CODE",
+			error_details = "INVALID_INVITE_CODE"
 		})
 	elseif is_new_empty_party or is_reconnect then
 		return Promise.resolved()
@@ -516,7 +516,7 @@ PartyImmateriumManager._can_join_new_party_check = function (self, join_paramete
 		local error_details = PRESENCE_TO_JOIN_ERROR[presence_id]
 
 		return Promise.rejected({
-			error_details = error_details,
+			error_details = error_details
 		})
 	end
 end
@@ -591,7 +591,7 @@ PartyImmateriumManager._hot_join_ticket = function (self, mission_session_id)
 
 	if not character_id then
 		return Promise.rejected({
-			error_details = "NO_CHARACTER_SELECTED",
+			error_details = "NO_CHARACTER_SELECTED"
 		})
 	end
 
@@ -694,7 +694,7 @@ PartyImmateriumManager._handle_advertisement_request_to_join_list_update_event_t
 				if not join_request then
 					join_request = join_request or {
 						presence_synced = false,
-						account_id = account_id,
+						account_id = account_id
 					}
 					advertisement_join_requests_by_account_id[account_id] = join_request
 
@@ -1023,17 +1023,17 @@ PartyImmateriumManager._execute_triggers_for_game_state = function (self)
 			if game_state.matchmaking.matchmaking_status == "CANCELLED" then
 				self:_mission_matchmaking_aborted("CANCELLED")
 				self:_reject_game_session_promises({
-					error_details = "MATCHMAKING_CANCELLED",
+					error_details = "MATCHMAKING_CANCELLED"
 				})
 			else
 				self:_mission_matchmaking_aborted(game_state.matchmaking.failed_message)
 				self:_reject_game_session_promises({
-					error_details = game_state.matchmaking.failed_message,
+					error_details = game_state.matchmaking.failed_message
 				})
 			end
 		elseif game_state_status == "" then
 			self:_reject_game_session_promises({
-				error_details = "UNDEFINED_ERROR",
+				error_details = "UNDEFINED_ERROR"
 			})
 		elseif game_state_status == "GAME_SESSION_IN_PROGRESS" then
 			self:_resolve_game_session_promises()
@@ -1142,7 +1142,7 @@ PartyImmateriumManager.hot_join_party_hub_server = function (self)
 			return Promise.resolved(response.matched_hub_session_id)
 		else
 			return Promise.rejected({
-				error_details = response.failed_message,
+				error_details = response.failed_message
 			})
 		end
 	end)
@@ -1154,7 +1154,7 @@ PartyImmateriumManager.create_single_player_game = function (self, mission_id)
 
 	if not character_id then
 		return Promise.rejected({
-			error_details = "NO_CHARACTER_SELECTED",
+			error_details = "NO_CHARACTER_SELECTED"
 		})
 	end
 
@@ -1237,7 +1237,7 @@ PartyImmateriumManager.latched_hub_server_matchmaking = function (self)
 			return Promise.resolved(response.matched_hub_session_id)
 		else
 			return Promise.rejected({
-				error_details = response.failed_message,
+				error_details = response.failed_message
 			})
 		end
 	end):catch(function (error)
@@ -1273,7 +1273,7 @@ PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission
 	return Managers.voting:start_voting("mission_vote_matchmaking_immaterium", {
 		backend_mission_id = backend_mission_id,
 		private_session = private_session and "true" or "false",
-		reef = reef,
+		reef = reef
 	}):catch(function (error)
 		_error("Could not start voting, error=%s", self:_table_tostring_or_string(error))
 	end):next(function ()
@@ -1371,8 +1371,8 @@ PartyImmateriumManager.get_invite_code_for_platform_invite = function (self, pla
 		promise:resolve(self._standing_invite_code)
 	else
 		local error = {
-			error_code = -1,
 			error_details = "NO_STANDING_INVITE_FOUND",
+			error_code = -1
 		}
 
 		_warn("could not get_invite_code_for_platform_invite, error=%s", table.tostring(error, 3))
@@ -1387,7 +1387,7 @@ PartyImmateriumManager.invite_to_party = function (self, invitee_account_id)
 
 	if party_id == "" then
 		return Promise.rejected({
-			error_details = "NOT_IN_A_PARTY",
+			error_details = "NOT_IN_A_PARTY"
 		})
 	end
 
@@ -1408,7 +1408,7 @@ PartyImmateriumManager.cancel_party_invite = function (self, invite_token)
 
 	if party_id == "" then
 		return Promise.rejected({
-			error_details = "NOT_IN_A_PARTY",
+			error_details = "NOT_IN_A_PARTY"
 		})
 	end
 
@@ -1456,7 +1456,7 @@ PartyImmateriumManager._handle_member_joined = function (self, member_account_id
 
 	self:_get_presence_promise(member_account_id):next(function (presence)
 		local message = Localize("loc_party_notification_member_joined", true, {
-			member_character_name = presence:character_name(),
+			member_character_name = presence:character_name()
 		})
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_join_party)
@@ -1467,7 +1467,7 @@ end
 PartyImmateriumManager._handle_member_left = function (self, member_account_id)
 	self:_get_presence_promise(member_account_id):next(function (presence)
 		local message = Localize("loc_party_notification_member_left", true, {
-			member_character_name = presence:character_name(),
+			member_character_name = presence:character_name()
 		})
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_leave_party)
@@ -1479,7 +1479,7 @@ PartyImmateriumManager._handle_member_kicked = function (self, member_account_id
 	_info("party member %s was kicked for reason: %s", member_account_id, reason)
 	self:_get_presence_promise(member_account_id):next(function (presence)
 		local message = Localize("loc_party_notification_member_kicked", true, {
-			member_character_name = presence:character_name(),
+			member_character_name = presence:character_name()
 		})
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_leave_party)
@@ -1489,7 +1489,7 @@ end
 PartyImmateriumManager._handle_member_disconnected = function (self, member_account_id)
 	self:_get_presence_promise(member_account_id):next(function (presence)
 		local message = Localize("loc_party_notification_member_disconnected", true, {
-			member_character_name = presence:character_name(),
+			member_character_name = presence:character_name()
 		})
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_player_leave_party)
@@ -1512,7 +1512,7 @@ PartyImmateriumManager._handle_invite_canceled = function (self, invite_token, p
 
 	if answer_code and answer_code ~= "" then
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = LocalizedErrorCodes.loc_invite_error(answer_code),
+			text = LocalizedErrorCodes.loc_invite_error(answer_code)
 		}, nil, UISoundEvents.notification_join_party_failed)
 	else
 		self:_get_presence_promise(platform_user_id):next(function (invitee_presence)
@@ -1521,12 +1521,12 @@ PartyImmateriumManager._handle_invite_canceled = function (self, invite_token, p
 
 			if platform_user_id == canceler_account_id then
 				message = Localize("loc_party_notification_invite_declined", true, {
-					invitee_character_name = invitee_character_name,
+					invitee_character_name = invitee_character_name
 				})
 				sound_event = UISoundEvents.notification_join_party_failed
 			else
 				message = Localize("loc_party_notification_invite_canceled", true, {
-					invitee_character_name = invitee_character_name,
+					invitee_character_name = invitee_character_name
 				})
 				sound_event = UISoundEvents.notification_invite_canceled
 			end
@@ -1543,7 +1543,7 @@ PartyImmateriumManager._handle_invite_timeout = function (self, invite_token, pl
 
 	self:_get_presence_promise(platform_user_id):next(function (invitee_presence)
 		local message = Localize("loc_party_notification_invite_expired", true, {
-			invitee_character_name = invitee_presence:character_name(),
+			invitee_character_name = invitee_presence:character_name()
 		})
 
 		Managers.event:trigger("event_add_notification_message", "default", message, nil, UISoundEvents.notification_join_party_failed)
@@ -1565,7 +1565,7 @@ PartyImmateriumManager._handle_invite_accepted = function (self, invite_token, i
 			message = Localize("loc_party_notification_invite_accepted_no_character")
 		else
 			message = Localize("loc_party_notification_invite_accepted", true, {
-				invitee_character_name = character_name,
+				invitee_character_name = character_name
 			})
 		end
 
@@ -1586,7 +1586,7 @@ end
 
 PartyImmateriumManager._on_join_party_error = function (self, error_code)
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = LocalizedErrorCodes.loc_join_error(error_code),
+		text = LocalizedErrorCodes.loc_join_error(error_code)
 	}, nil, UISoundEvents.notification_join_party_failed)
 
 	self._cached_debug_get_parties_time = 9.7
@@ -1596,7 +1596,7 @@ PartyImmateriumManager._handle_stay_in_party_voting_started = function (self, vo
 	self._active_party_vote = {
 		voting_id = voting_id,
 		party_id = new_party_id,
-		party_invite_token = new_party_invite_token,
+		party_invite_token = new_party_invite_token
 	}
 end
 
@@ -1608,7 +1608,7 @@ PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, 
 		self:join_party({
 			stay_in_party_join = true,
 			party_id = new_party_id,
-			invite_token = new_party_invite_token,
+			invite_token = new_party_invite_token
 		}):next(function ()
 			Promise.delay(2):next(function ()
 				self:latched_hub_server_matchmaking()
@@ -1630,7 +1630,7 @@ end
 
 PartyImmateriumManager._on_invite_party_error = function (self, error_code)
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = LocalizedErrorCodes.loc_invite_error(error_code),
+		text = LocalizedErrorCodes.loc_invite_error(error_code)
 	}, nil, UISoundEvents.notification_join_party_failed)
 
 	self._cached_debug_get_parties_time = 9.7
@@ -1659,7 +1659,7 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 			if character_level then
 				player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
 					character_level = character_level,
-					character_name = character_name,
+					character_name = character_name
 				})
 			end
 
@@ -1675,64 +1675,64 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 				local grid_width = ConstantElementPopupHandlerSettings.text_max_width
 				local grid_size = {
 					grid_width,
-					500,
+					500
 				}
 				local group_size = {
 					480,
-					120,
+					120
 				}
 				local grid_blueprints = GroupFinderBlueprintsGenerateFunction(grid_size)
 				local grid_layout = {}
 
 				grid_layout[#grid_layout + 1] = {
-					horizontal_alignment = "center",
-					texture = "content/ui/materials/dividers/skull_center_01",
 					vertical_alignment = "center",
+					texture = "content/ui/materials/dividers/skull_center_01",
+					horizontal_alignment = "center",
 					widget_type = "texture",
 					texture_size = {
 						380,
-						30,
+						30
 					},
 					color = Color.terminal_text_body_sub_header(nil, true),
 					size = {
 						grid_width,
-						30,
-					},
+						30
+					}
 				}
 				grid_layout[#grid_layout + 1] = {
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_width,
-						10,
-					},
+						10
+					}
 				}
 				grid_layout[#grid_layout + 1] = {
 					widget_type = "body_centered",
 					text = Localize("loc_group_finder_group_invite_popup_desc"),
 					size = {
 						grid_width,
-						20,
-					},
+						20
+					}
 				}
 				grid_layout[#grid_layout + 1] = {
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_width,
-						30,
-					},
+						30
+					}
 				}
 				grid_layout[#grid_layout + 1] = {
 					widget_type = "dynamic_spacing",
 					size = {
 						(grid_width - group_size[1]) * 0.5,
-						10,
-					},
+						10
+					}
 				}
 
 				if party_data then
 					grid_layout[#grid_layout + 1] = {
-						disabled = true,
 						widget_type = "group",
+						disabled = true,
 						size = group_size,
 						description = party_data.description,
 						id = party_data.id,
@@ -1742,7 +1742,7 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 						restrictions = party_data.restrictions,
 						tags = party_data.tags,
 						metadata = party_data.metadata,
-						version = party_data.version,
+						version = party_data.version
 					}
 				end
 
@@ -1750,23 +1750,23 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_width,
-						30,
-					},
+						30
+					}
 				}
 				grid_layout[#grid_layout + 1] = {
-					horizontal_alignment = "center",
-					texture = "content/ui/materials/dividers/skull_center_03",
 					vertical_alignment = "center",
+					texture = "content/ui/materials/dividers/skull_center_03",
+					horizontal_alignment = "center",
 					widget_type = "texture",
 					texture_size = {
 						468,
-						16,
+						16
 					},
 					color = Color.terminal_text_body_sub_header(nil, true),
 					size = {
 						grid_width,
-						30,
-					},
+						30
+					}
 				}
 				context = {
 					title_text = "loc_group_finder_group_invite_popup_title",
@@ -1777,74 +1777,74 @@ PartyImmateriumManager._handle_immaterium_invite = function (self, party_id, inv
 					enter_popup_sound = UISoundEvents.social_menu_receive_invite,
 					options = {
 						{
-							close_on_pressed = true,
 							text = "loc_social_party_invite_received_accept_button",
+							close_on_pressed = true,
 							callback = function ()
 								self:join_party({
 									party_id = party_id,
-									invite_token = invite_token,
+									invite_token = invite_token
 								})
 
 								self._invite_popups[party_id] = nil
-							end,
+							end
 						},
 						{
+							text = "loc_social_party_invite_received_decline_button",
 							close_on_pressed = true,
 							hotkey = "back",
-							text = "loc_social_party_invite_received_decline_button",
 							callback = function ()
 								self:_decline_party_invite(party_id, invite_token)
 
 								self._invite_popups[party_id] = nil
-							end,
-						},
-					},
+							end
+						}
+					}
 				}
 			else
 				context = {
-					description_text = "loc_social_party_invite_received_description",
 					title_text = "loc_social_party_invite_received_header",
+					description_text = "loc_social_party_invite_received_description",
 					description_text_params = {
-						player_name = player_name_and_level or character_name,
+						player_name = player_name_and_level or character_name
 					},
 					enter_popup_sound = UISoundEvents.social_menu_receive_invite,
 					options = {
 						{
-							close_on_pressed = true,
 							text = "loc_social_party_invite_received_accept_button",
+							close_on_pressed = true,
 							callback = function ()
 								self:join_party({
 									party_id = party_id,
-									invite_token = invite_token,
+									invite_token = invite_token
 								})
 
 								self._invite_popups[party_id] = nil
-							end,
+							end
 						},
 						{
+							text = "loc_social_party_invite_received_decline_button",
 							close_on_pressed = true,
 							hotkey = "back",
-							text = "loc_social_party_invite_received_decline_button",
 							callback = function ()
 								self:_decline_party_invite(party_id, invite_token)
 
 								self._invite_popups[party_id] = nil
-							end,
+							end
 						},
 						{
-							close_on_pressed = true,
-							stop_exit_sound = true,
-							template_type = "terminal_button_hold_small",
 							text = "loc_social_party_invite_received_decline_and_block_button",
+							template_type = "terminal_button_hold_small",
+							stop_exit_sound = true,
+							close_on_pressed = true,
 							on_complete_sound = UISoundEvents.social_menu_block_player,
 							callback = function ()
 								self:_decline_party_invite(party_id, invite_token)
 								Managers.data_service.social:block_account(inviter_account_id)
 
 								self._invite_popups[party_id] = nil
-							end,
-						},
-					},
+							end
+						}
+					}
 				}
 			end
 
@@ -1863,11 +1863,11 @@ PartyImmateriumManager._handle_immaterium_invite_canceled = function (self, part
 
 	if answer_code == "PARTY_FULL" then
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_party_notification_canceled_invite_party_full"),
+			text = Localize("loc_party_notification_canceled_invite_party_full")
 		}, nil, UISoundEvents.notification_join_party_failed)
 	elseif answer_code == "PARTY_CANCELED" then
 		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_party_notification_canceled_invite"),
+			text = Localize("loc_party_notification_canceled_invite")
 		}, nil, UISoundEvents.notification_join_party_failed)
 	end
 end
@@ -1904,51 +1904,51 @@ PartyImmateriumManager._request_to_join_popup = function (self, joiner_account_i
 		if character_level then
 			player_name_and_level = Localize("loc_social_menu_character_name_format", true, {
 				character_level = character_level,
-				character_name = character_name,
+				character_name = character_name
 			})
 		end
 
 		local context = {
-			description_text = "loc_party_request_to_join_description",
 			title_text = "loc_party_request_to_join_header",
+			description_text = "loc_party_request_to_join_description",
 			description_text_params = {
-				player_name = player_name_and_level or character_name,
+				player_name = player_name_and_level or character_name
 			},
 			enter_popup_sound = UISoundEvents.social_menu_receive_invite,
 			options = {
 				{
-					close_on_pressed = true,
 					text = "loc_party_request_to_join_accept_button",
+					close_on_pressed = true,
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "OK_POPUP")
 
 						self._request_to_join_popups[joiner_account_id] = nil
-					end,
+					end
 				},
 				{
+					text = "loc_party_request_to_join_decline_button",
 					close_on_pressed = true,
 					hotkey = "back",
-					text = "loc_party_request_to_join_decline_button",
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "MEMBER_DECLINED_REQUEST_TO_JOIN")
 
 						self._request_to_join_popups[joiner_account_id] = nil
-					end,
+					end
 				},
 				{
-					close_on_pressed = true,
-					stop_exit_sound = true,
-					template_type = "terminal_button_hold_small",
 					text = "loc_social_party_request_to_join_decline_and_block_button",
+					template_type = "terminal_button_hold_small",
+					stop_exit_sound = true,
+					close_on_pressed = true,
 					on_complete_sound = UISoundEvents.social_menu_block_player,
 					callback = function ()
 						Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "MEMBER_DECLINED_REQUEST_TO_JOIN")
 						Managers.data_service.social:block_account(joiner_account_id)
 
 						self._request_to_join_popups[joiner_account_id] = nil
-					end,
-				},
-			},
+					end
+				}
+			}
 		}
 
 		Managers.event:trigger("event_show_ui_popup", context, function (id)
@@ -1974,14 +1974,14 @@ end
 
 PartyImmateriumManager._handle_game_session_aborted = function (self, payload)
 	local context = {
-		description_text = "loc_game_session_aborted_popup_description",
 		title_text = "loc_game_session_aborted_popup_title",
+		description_text = "loc_game_session_aborted_popup_description",
 		options = {
 			{
 				close_on_pressed = true,
-				text = "loc_game_session_aborted_popup_close_button",
-			},
-		},
+				text = "loc_game_session_aborted_popup_close_button"
+			}
+		}
 	}
 
 	Managers.event:trigger("event_show_ui_popup", context)

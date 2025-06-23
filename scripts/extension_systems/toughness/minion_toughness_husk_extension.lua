@@ -3,7 +3,7 @@
 local MinionToughnessHuskExtension = class("MinionToughnessHuskExtension")
 local _get_network_values
 local CLIENT_RPCS = {
-	"rpc_minion_toughness_attack_absorbed",
+	"rpc_minion_toughness_attack_absorbed"
 }
 local STATES = table.enum("active", "depleted")
 
@@ -92,7 +92,7 @@ end
 MinionToughnessHuskExtension._store_toughness_attack_absorbed = function (self, damage_amount, impact_world_position)
 	local attack = {
 		damage_amount = damage_amount,
-		impact_world_position = Vector3Box(impact_world_position),
+		impact_world_position = Vector3Box(impact_world_position)
 	}
 	local stored_attacks = self._stored_attacks
 

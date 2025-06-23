@@ -137,8 +137,8 @@ ProjectileLocomotion.projectile_cast = function (physics_world, travel_position,
 end
 
 local DO_NOTHING_IMPACT_RESULTS = {
-	continue_straight = true,
 	stick = true,
+	continue_straight = true
 }
 local hit_units_this_frame = {}
 

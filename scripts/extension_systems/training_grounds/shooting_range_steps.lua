@@ -11,7 +11,7 @@ local AchievementUIHelper = require("scripts/managers/achievements/utility/achie
 local aggro_states = PerceptionSettings.aggro_states
 local ShootingRangeSteps = {
 	dynamic = {},
-	_condition = {},
+	_condition = {}
 }
 
 local function reset_enemies(scenario_system, breed_name, spawn_group_name, enemies, t)
@@ -46,7 +46,7 @@ ShootingRangeSteps.make_player_invulnerable = {
 		if health_extension then
 			health_extension:set_invulnerable(true)
 		end
-	end,
+	end
 }
 ShootingRangeSteps.init = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -57,7 +57,7 @@ ShootingRangeSteps.init = {
 
 		PlayerMovement.teleport_fixed_update(player.player_unit, position, rotation)
 		scenario_system:spawn_attached_units_in_spawn_group("shooting_range_units")
-	end,
+	end
 }
 
 local function _respawn_loadout_chest(scenario_system, step_data)
@@ -78,7 +78,7 @@ end
 
 ShootingRangeSteps.chest_loop = {
 	events = {
-		"shooting_range_chest_interact",
+		"shooting_range_chest_interact"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_respawn_loadout_chest(scenario_system, step_data)
@@ -118,11 +118,11 @@ ShootingRangeSteps.chest_loop = {
 		end
 
 		return false
-	end,
+	end
 }
 ShootingRangeSteps.portal_loop = {
 	events = {
-		"leave_shooting_range",
+		"leave_shooting_range"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local portal_directional = scenario_system:get_directional_unit_extension("shooting_range_portal")
@@ -151,7 +151,7 @@ ShootingRangeSteps.portal_loop = {
 		end
 
 		return false
-	end,
+	end
 }
 ShootingRangeSteps.pickup_loop = {
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -213,7 +213,7 @@ ShootingRangeSteps.pickup_loop = {
 		end
 
 		return false
-	end,
+	end
 }
 
 local function _spawn_locked_vfx_unit(reference_unit, required_achievement)
@@ -225,7 +225,7 @@ local function _spawn_locked_vfx_unit(reference_unit, required_achievement)
 	local achievement_definition = Managers.achievements:achievement_definition(required_achievement)
 
 	interactee_extension:set_block_text("loc_requires_achievement", {
-		achievement_label = AchievementUIHelper.localized_title(achievement_definition),
+		achievement_label = AchievementUIHelper.localized_title(achievement_definition)
 	})
 
 	return locked_unit
@@ -258,7 +258,7 @@ ShootingRangeSteps.enemies_loop = {
 			local breed_name = string.sub(identifier, 1, string.find(identifier, ":") - 1)
 			local spawn_data = {
 				was_unlocked = true,
-				breed_name = breed_name,
+				breed_name = breed_name
 			}
 			local required_achievement = breed_unlocks[breed_name]
 
@@ -321,12 +321,12 @@ ShootingRangeSteps.enemies_loop = {
 				end
 			until true
 		end
-	end,
+	end
 }
 ShootingRangeSteps.weak_enemies_loop = {
 	events = {
 		"reset_weak_enemies",
-		"aggro_weak_enemies",
+		"aggro_weak_enemies"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		step_data.enemies = {}
@@ -342,12 +342,12 @@ ShootingRangeSteps.weak_enemies_loop = {
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		return false
-	end,
+	end
 }
 ShootingRangeSteps.medium_enemies_loop = {
 	events = {
 		"reset_medium_enemies",
-		"aggro_medium_enemies",
+		"aggro_medium_enemies"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		step_data.enemies = {}
@@ -363,12 +363,12 @@ ShootingRangeSteps.medium_enemies_loop = {
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		return false
-	end,
+	end
 }
 ShootingRangeSteps.heavy_enemies_loop = {
 	events = {
 		"reset_heavy_enemies",
-		"aggro_heavy_enemies",
+		"aggro_heavy_enemies"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		step_data.enemies = {}
@@ -384,19 +384,19 @@ ShootingRangeSteps.heavy_enemies_loop = {
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		return false
-	end,
+	end
 }
 ShootingRangeSteps.fade_to_black = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local local_player = Managers.player:local_player(1)
 
 		Managers.event:trigger("event_cutscene_fade_in", local_player, 0.5, math.easeCubic)
-	end,
+	end
 }
 ShootingRangeSteps.disable_loadout = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		Managers.event:trigger("shooting_range_chest_interact")
-	end,
+	end
 }
 ShootingRangeSteps.open_loadout = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -406,23 +406,23 @@ ShootingRangeSteps.open_loadout = {
 		local instance = Managers.ui:view_instance("inventory_background_view")
 
 		return instance and not instance:loading()
-	end,
+	end
 }
 ShootingRangeSteps.fade_from_black = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local local_player = Managers.player:local_player(1)
 
 		Managers.event:trigger("event_cutscene_fade_out", local_player, 0.3, math.easeCubic)
-	end,
+	end
 }
 
 ScriptedScenarioUtility.parse_condition_steps(ShootingRangeSteps)
 
 local ignored_templates = {
-	_condition = true,
-	condition_elseif = true,
 	condition_if = true,
 	dynamic = true,
+	condition_elseif = true,
+	_condition = true
 }
 
 for name, template in pairs(ShootingRangeSteps) do

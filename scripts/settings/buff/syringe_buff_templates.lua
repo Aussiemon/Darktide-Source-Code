@@ -46,16 +46,16 @@ local function _calulcate_coruption_buff_healing(template_data, heal_settings, h
 end
 
 templates.syringe_heal_corruption_buff = {
-	class_name = "buff",
-	duration = 8,
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_corruption_buff_hud",
 	predicted = false,
+	duration = 8,
+	class_name = "buff",
 	heal_settings = {
+		number_of_health_segments = 1,
 		heal_duration = 0,
 		min_percentage_of_heal = 0.25,
-		number_of_health_segments = 1,
 		heal_type_permanent = DamageSettings.heal_types.blessing_syringe,
-		heal_type_normal = DamageSettings.heal_types.syringe,
+		heal_type_normal = DamageSettings.heal_types.syringe
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -141,8 +141,8 @@ templates.syringe_heal_corruption_buff = {
 
 			if player then
 				local data = {
-					corruption_healed_amount = 0,
 					healed_amount = 0,
+					corruption_healed_amount = 0
 				}
 
 				Managers.telemetry_events:player_stimm_heal(player, data)
@@ -161,7 +161,7 @@ templates.syringe_heal_corruption_buff = {
 		if player then
 			local data = {
 				healed_amount = heal,
-				corruption_healed_amount = corruption_heal,
+				corruption_healed_amount = corruption_heal
 			}
 
 			Managers.telemetry_events:player_stimm_heal(player, data)
@@ -170,17 +170,17 @@ templates.syringe_heal_corruption_buff = {
 		local stimm_provider = template_data.stimm_provider
 
 		Managers.stats:record_private("hook_green_stimm_corruption_healed", stimm_provider, corruption_heal)
-	end,
+	end
 }
 templates.syringe_ability_boost_buff = {
-	class_name = "buff",
-	duration = 15,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_ability_buff_hud",
-	predicted = false,
 	unique_buff_id = "syringe_stimm",
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_ability_buff_hud",
 	unique_buff_priority = 1,
+	duration = 15,
+	class_name = "buff",
 	keywords = {
-		keywords.syringe_ability,
+		keywords.syringe_ability
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -220,23 +220,23 @@ templates.syringe_ability_boost_buff = {
 
 			Managers.stats:record_private("hook_ability_time_saved_by_yellow_stimm", player, time_reduced)
 		end
-	end,
+	end
 }
 templates.syringe_power_boost_buff = {
-	class_name = "buff",
-	duration = 15,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_power_buff_hud",
-	predicted = false,
 	unique_buff_id = "syringe_stimm",
+	duration = 15,
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_power_buff_hud",
 	unique_buff_priority = 1,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.25,
 		[stat_buffs.rending_multiplier] = 0.25,
 		[stat_buffs.fov_multiplier] = 0.985,
-		[stat_buffs.warp_charge_amount] = 0.66,
+		[stat_buffs.warp_charge_amount] = 0.66
 	},
 	keywords = {
-		keywords.syringe_power,
+		keywords.syringe_power
 	},
 	start_func = function (template_data, template_context)
 		local fx_extension = ScriptUnit.extension(template_context.unit, "fx_system")
@@ -251,15 +251,15 @@ templates.syringe_power_boost_buff = {
 		end
 
 		Managers.stats:record_private("hook_red_stimm_deactivated", template_context.player)
-	end,
+	end
 }
 templates.syringe_speed_boost_buff = {
-	class_name = "buff",
-	duration = 15,
-	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_speed_buff_hud",
-	predicted = false,
 	unique_buff_id = "syringe_stimm",
+	duration = 15,
+	predicted = false,
+	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_speed_buff_hud",
 	unique_buff_priority = 1,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.fov_multiplier] = 1.035,
 		[stat_buffs.reload_speed] = 0.15,
@@ -270,10 +270,10 @@ templates.syringe_speed_boost_buff = {
 		[stat_buffs.chain_lightning_jump_time_multiplier] = 0.75,
 		[stat_buffs.psyker_throwing_knife_speed_modifier] = 0.25,
 		[stat_buffs.smite_attack_speed] = 0.25,
-		[stat_buffs.vent_warp_charge_multiplier] = 1.25,
+		[stat_buffs.vent_warp_charge_multiplier] = 1.25
 	},
 	keywords = {
-		keywords.syringe_speed,
+		keywords.syringe_speed
 	},
 	start_func = function (template_data, template_context)
 		Stamina.add_stamina_percent(template_context.unit, 1)
@@ -290,7 +290,7 @@ templates.syringe_speed_boost_buff = {
 		end
 
 		Managers.stats:record_private("hook_blue_stimm_deactivated", template_context.player)
-	end,
+	end
 }
 
 return templates

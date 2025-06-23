@@ -7,7 +7,7 @@ local settings_list = {
 	"alpha_fade_delay",
 	"alpha_fade_duration",
 	"alpha_fade_min_value",
-	"animate_on_fraction_increase",
+	"animate_on_fraction_increase"
 }
 
 HudBarLogic.init = function (self, settings)
@@ -17,7 +17,7 @@ HudBarLogic.init = function (self, settings)
 	self._bar_animations = {}
 	self._update_order = {
 		"bar",
-		"bar_max",
+		"bar_max"
 	}
 	self._stored_fractions = {}
 
@@ -105,7 +105,7 @@ HudBarLogic._set_bar_fraction = function (self, name, fraction, current_fraction
 			time = 0,
 			duration = duration,
 			start_value = current_fraction,
-			end_value = fraction,
+			end_value = fraction
 		}
 		bar_animations[name] = anim_data
 	else

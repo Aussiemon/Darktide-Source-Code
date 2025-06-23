@@ -5,20 +5,20 @@ local PlayerUnitHologramExtension = class("PlayerUnitHologramExtension")
 local UPDATE_WAITING_PERIOD = 0.5
 local UNITS = {
 	human = {
-		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
 		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
+		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon"
 	},
 	ogryn = {
-		consumed = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
 		default = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton",
-	},
+		consumed = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon"
+	}
 }
 local SWITCH_STATES = {
-	consumed = true,
+	consumed = true
 }
 local IGNORED_DISABLED_OUTLINE_STATES = {
-	catapulted = true,
 	grabbed = true,
+	catapulted = true
 }
 local _spawn_hologram_unit, _despawn_hologram_unit
 
@@ -66,6 +66,19 @@ end
 PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 	local hologram_unit = self._hologram_unit
 	local world = self._world
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local player_outlines_enabled = interface_settings.player_outlines
+
+	if not player_outlines_enabled then
+		if hologram_unit then
+			_despawn_hologram_unit(world, hologram_unit)
+
+			self._hologram_unit = nil
+		end
+
+		return
+	end
 
 	if t < self._next_update_t then
 		return

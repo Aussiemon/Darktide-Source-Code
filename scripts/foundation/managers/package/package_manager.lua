@@ -26,7 +26,7 @@ PackageManager._new_load_call_item = function (self, package_name, reference_nam
 		package_name = package_name,
 		reference_name = reference_name,
 		callback = callback,
-		load_call_time = self._current_time,
+		load_call_time = self._current_time
 	}
 
 	self._load_call_data[self._current_item] = load_call_item
@@ -52,7 +52,7 @@ PackageManager._prioritize_package = function (self, package_name, use_resident_
 
 	local package_data = {
 		package_name = package_name,
-		use_resident_loading = use_resident_loading,
+		use_resident_loading = use_resident_loading
 	}
 
 	table.insert(self._queue_order, 1, package_data)
@@ -63,7 +63,7 @@ PackageManager._queue_package = function (self, package_name, prioritize, use_re
 
 	local package_data = {
 		package_name = package_name,
-		use_resident_loading = use_resident_loading,
+		use_resident_loading = use_resident_loading
 	}
 
 	if prioritize then
@@ -107,7 +107,7 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 	end
 
 	self._package_to_load_call_item[package_name] = {
-		load_call_item,
+		load_call_item
 	}
 
 	local package_is_unloading = self._unloading_packages[package_name]

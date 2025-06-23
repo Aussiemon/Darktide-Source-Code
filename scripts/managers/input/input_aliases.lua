@@ -164,7 +164,7 @@ InputAliases.set_keys_for_alias = function (self, name, device_types, new_key_in
 	local value = new_key_info and InputUtils.make_string(new_key_info)
 	local pc_device_types = {
 		"mouse",
-		"keyboard",
+		"keyboard"
 	}
 
 	if col then

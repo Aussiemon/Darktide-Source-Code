@@ -6,7 +6,7 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local BotOrder = {}
 
 BotOrder.lookup = {
-	drop = "pickup_names",
+	drop = "pickup_names"
 }
 
 local AMMO_PICKUP_VALID_DURATION = 5
@@ -97,7 +97,7 @@ BotOrder.pickup = function (bot_unit, pickup_unit, ordering_player)
 
 				bot_group_data.pickup_orders[slot_name] = {
 					unit = pickup_unit,
-					pickup_name = pickup_name,
+					pickup_name = pickup_name
 				}
 
 				local blackboard = BLACKBOARDS[bot_unit]

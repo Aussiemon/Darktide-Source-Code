@@ -9,7 +9,7 @@ local BLOOD_BALL_ACTOR_NAME = "blood_ball"
 local DEFAULT_NUM_BLOOD_BALL_UNITS = 64
 local DEFAULT_NUM_WEAPON_BLOOD_ENTRIES = 4
 local CLIENT_RPCS = {
-	"rpc_add_weapon_blood",
+	"rpc_add_weapon_blood"
 }
 
 BloodManager.init = function (self, world, is_server, network_event_delegate)
@@ -37,16 +37,16 @@ BloodManager._create_blood_ball_buffer = function (self)
 			speed = 0,
 			unit_name = "",
 			position = Vector3Box(),
-			direction = Vector3Box(),
+			direction = Vector3Box()
 		}
 	end
 
 	self._blood_ball_ring_buffer = {
+		write_index = 1,
 		read_index = 1,
 		size = 0,
-		write_index = 1,
 		buffer = buffer,
-		max_size = buffer_size,
+		max_size = buffer_size
 	}
 end
 

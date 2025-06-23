@@ -8,8 +8,8 @@ local hit_effect_armor_type = ArmorSettings.hit_effect_types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local prop_data = {
-	hit_mass = 0,
 	name = "hazard_sphere",
+	hit_mass = 0,
 	breed_type = breed_types.prop,
 	armor_type = armor_types.armored,
 	hit_effect_armor_override = hit_effect_armor_type.prop_armored,
@@ -19,23 +19,23 @@ local prop_data = {
 			actors = {
 				"c_intact",
 				"c_intact_destructible",
-				"c_broken",
-			},
+				"c_broken"
+			}
 		},
 		{
 			name = hit_zone_names.center_mass,
 			actors = {
 				"c_dynamic_cable_01_static_intact",
 				"c_dynamic_cable_02_intact",
-				"c_dynamic_cable_03_intact",
-			},
-		},
+				"c_dynamic_cable_03_intact"
+			}
+		}
 	},
 	tags = {
 		tags = {
-			hazard = true,
-		},
-	},
+			hazard = true
+		}
+	}
 }
 
 return prop_data

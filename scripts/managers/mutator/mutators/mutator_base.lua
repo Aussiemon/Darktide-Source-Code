@@ -89,7 +89,7 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, opti
 
 				buff_ids[#buff_ids + 1] = {
 					local_index = local_index,
-					component_index = component_index,
+					component_index = component_index
 				}
 			end
 

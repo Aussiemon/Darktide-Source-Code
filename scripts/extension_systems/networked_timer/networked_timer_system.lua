@@ -11,7 +11,7 @@ local RPCS = {
 	"rpc_networked_timer_fast_forward",
 	"rpc_networked_timer_set_speed_modifier",
 	"rpc_networked_timer_rewind",
-	"rpc_networked_timer_finished",
+	"rpc_networked_timer_finished"
 }
 
 NetworkedTimerSystem.init = function (self, context, system_init_data, ...)

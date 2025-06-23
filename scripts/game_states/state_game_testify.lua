@@ -28,7 +28,7 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
-		"FUNCTIONAL",
+		"FUNCTIONAL"
 	}
 
 	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
@@ -130,7 +130,7 @@ local StateGameTestify = {
 			"slot_gear_head",
 			"slot_gear_lowerbody",
 			"slot_gear_upperbody",
-			"slot_gear_extra_cosmetic",
+			"slot_gear_extra_cosmetic"
 		}
 		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
 
@@ -142,7 +142,7 @@ local StateGameTestify = {
 		end
 
 		local gears_slots = {
-			slot_name,
+			slot_name
 		}
 		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
 
@@ -229,7 +229,7 @@ local StateGameTestify = {
 
 		local weapon_slots = {
 			"slot_primary",
-			"slot_secondary",
+			"slot_secondary"
 		}
 		local weapons = retrieve_items_for_archetype(archetype, weapon_slots)
 
@@ -483,7 +483,7 @@ local StateGameTestify = {
 		local unit = world_unit_by_name(world, unit_name)
 
 		return unit
-	end,
+	end
 }
 
 return StateGameTestify

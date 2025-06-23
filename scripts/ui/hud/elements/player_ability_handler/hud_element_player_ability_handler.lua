@@ -73,7 +73,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 							slot_id = slot_id,
 							ability_id = ability_id,
 							icon = hud_icon,
-							definition_path = definition_path,
+							definition_path = definition_path
 						}
 
 						instance_data_tables[ability_id] = data
@@ -117,7 +117,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 								weapon_template = weapon_template,
 								slot_id = slot_id,
 								icon = hud_icon,
-								definition_path = definition_path,
+								definition_path = definition_path
 							}
 
 							instance_data_tables[weapon_name] = data

@@ -9,29 +9,29 @@ local template_functions = require("scripts/ui/views/first_run_settings_view/com
 local template_utils = require("scripts/ui/views/first_run_settings_view/utils")
 local screen_1 = {
 	{
-		default_value = 2.2,
-		display_name = "Gamma",
-		id = "gamma_value",
-		max_value = 3,
-		min_value = 0.1,
-		num_decimals = 1,
-		save_location = "",
 		step_size_value = 0.1,
+		min_value = 0.1,
+		display_name = "Gamma",
+		num_decimals = 1,
+		max_value = 3,
+		default_value = 2.2,
 		widget_type = "value_slider",
+		id = "gamma_value",
+		save_location = "",
 		get_function = function (template)
 			return template.default_value
 		end,
 		on_value_changed = function (template, value)
 			Application.set_render_setting("gamma", tostring(value))
-		end,
-	},
+		end
+	}
 }
 local screen_2 = {
 	{
-		default_value = true,
+		save_location = "interface_settings",
 		display_name = "loc_interface_setting_subtitle_enabled",
 		id = "subtitle_enabled",
-		save_location = "interface_settings",
+		default_value = true,
 		widget_type = "checkbox",
 		get_function = function (template)
 			return template_utils.get_account_settings(template.save_location, template.id) or template.default_value
@@ -39,13 +39,13 @@ local screen_2 = {
 		on_value_changed = function (template, value)
 			template_utils.save_account_settings(template.save_location, template.id, value)
 			Managers.event:trigger("event_update_subtitles_enabled", value)
-		end,
+		end
 	},
 	{
-		default_value = true,
+		save_location = "interface_settings",
 		display_name = "loc_interface_setting_subtitle_speaker_enabled",
 		id = "subtitle_speaker_enabled",
-		save_location = "interface_settings",
+		default_value = true,
 		widget_type = "checkbox",
 		get_function = function (template)
 			return template_utils.get_account_settings(template_utils.save_location, template_utils.id) or template.default_value
@@ -53,32 +53,32 @@ local screen_2 = {
 		on_value_changed = function (template, value)
 			template_utils.save_account_settings(template.save_location, template.id, value)
 			Managers.event:trigger("event_update_subtitle_speaker_enabled", value)
-		end,
+		end
 	},
 	{
-		default_value = 32,
-		display_name = "loc_interface_setting_subtitle_font_size",
-		id = "subtitle_font_size",
-		max_value = 72,
-		min_value = 12,
-		num_decimals = 0,
-		save_location = "interface_settings",
 		step_size_value = 1,
+		min_value = 12,
+		display_name = "loc_interface_setting_subtitle_font_size",
+		num_decimals = 0,
+		max_value = 72,
+		default_value = 32,
 		widget_type = "value_slider",
+		id = "subtitle_font_size",
+		save_location = "interface_settings",
 		get_function = function (template)
 			return template_utils.get_account_settings(template.save_location, template.id) or template.default_value
 		end,
 		on_value_changed = function (template, value)
 			template_utils.save_account_settings(template.save_location, template.id, value)
 			Managers.event:trigger("event_update_subtitles_font_size", value)
-		end,
+		end
 	},
 	{
-		default_value = 80,
+		save_location = "interface_settings",
+		min_value = 0,
 		display_name = "loc_interface_setting_subtitle_background_opacity",
 		id = "subtitle_background_opacity",
-		min_value = 0,
-		save_location = "interface_settings",
+		default_value = 80,
 		widget_type = "percent_slider",
 		get_function = function (template)
 			return template_utils.get_account_settings(template.save_location, template.id) or template.default_value
@@ -86,14 +86,14 @@ local screen_2 = {
 		on_value_changed = function (template, value)
 			template_utils.save_account_settings(template.save_location, template.id, value)
 			Managers.event:trigger("event_update_subtitles_background_opacity", value)
-		end,
+		end
 	},
 	{
-		default_value = 100,
+		save_location = "interface_settings",
+		min_value = 10,
 		display_name = "loc_interface_setting_subtitle_text_opacity",
 		id = "subtitle_text_opacity",
-		min_value = 10,
-		save_location = "interface_settings",
+		default_value = 100,
 		widget_type = "percent_slider",
 		get_function = function (template)
 			return template_utils.get_account_settings(template.save_location, template.id) or template.default_value
@@ -101,53 +101,53 @@ local screen_2 = {
 		on_value_changed = function (template, value)
 			template_utils.save_account_settings(template.save_location, template.id, value)
 			Managers.event:trigger("event_update_subtitle_text_opacity", value)
-		end,
-	},
+		end
+	}
 }
 local screen_3 = {
 	{
-		default_value = 1,
+		widget_type = "dropdown",
 		display_name = "loc_setting_speaker_settings",
 		id = "speaker_settings",
+		default_value = 1,
 		save_location = "sound_settings",
-		widget_type = "dropdown",
 		options = {
 			{
-				display_name = "loc_setting_speaker_five_one",
 				id = 0,
+				display_name = "loc_setting_speaker_five_one",
 				values = {
 					audio_settings = {
-						speaker_settings = 0,
-					},
-				},
+						speaker_settings = 0
+					}
+				}
 			},
 			{
-				display_name = "loc_setting_speaker_stereo",
 				id = 1,
+				display_name = "loc_setting_speaker_stereo",
 				values = {
 					audio_settings = {
-						speaker_settings = 1,
-					},
-				},
+						speaker_settings = 1
+					}
+				}
 			},
 			{
-				display_name = "loc_setting_speaker_stereo_headphones",
 				id = 2,
+				display_name = "loc_setting_speaker_stereo_headphones",
 				values = {
 					audio_settings = {
-						speaker_settings = 2,
-					},
-				},
+						speaker_settings = 2
+					}
+				}
 			},
 			{
-				display_name = "loc_setting_speaker_mono",
 				id = 3,
+				display_name = "loc_setting_speaker_mono",
 				values = {
 					audio_settings = {
-						speaker_settings = 3,
-					},
-				},
-			},
+						speaker_settings = 3
+					}
+				}
+			}
 		},
 		get_function = function (template)
 			return template_utils.get_account_settings(template.save_location, template.id) or template.default_value
@@ -170,22 +170,22 @@ local screen_3 = {
 				Wwise.set_panning_rule(PANNING_RULE_SPEAKERS)
 				Wwise.set_bus_config(mastering_bus_name, Wwise.AK_SPEAKER_SETUP_MONO)
 			end
-		end,
-	},
+		end
+	}
 }
 local page_settings = {
 	{
 		title = "Gamma Settings",
-		widgets = screen_1,
+		widgets = screen_1
 	},
 	{
 		title = "Acessibility",
-		widgets = screen_2,
+		widgets = screen_2
 	},
 	{
 		title = "Audio Settings",
-		widgets = screen_3,
-	},
+		widgets = screen_3
+	}
 }
 local FirstRunSettingsView = class("FirstRunSettingsView", "BaseView")
 
@@ -311,7 +311,7 @@ FirstRunSettingsView._create_setting_widget = function (self, widget_options, su
 		return widget, widget
 	else
 		return nil, {
-			size = size,
+			size = size
 		}
 	end
 end
@@ -330,7 +330,7 @@ FirstRunSettingsView._setup_grid = function (self)
 	local grid_scenegraph_id = "grid_start"
 	local grid_spacing = {
 		0,
-		10,
+		10
 	}
 	local widgets = self._current_settings_widgets
 	local alignment = self._current_settings_alignment

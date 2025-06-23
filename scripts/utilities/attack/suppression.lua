@@ -81,7 +81,7 @@ local NO_LERP_VALUES = {}
 local DEFAULT_RELATION = "enemy"
 local DEFAULT_COVER_DISABLE_RANGE = {
 	3,
-	8,
+	8
 }
 
 Suppression.apply_area_minion_suppression = function (attacking_unit, suppression_settings, from_position, optional_relation, optional_include_self, optional_lerp_values)

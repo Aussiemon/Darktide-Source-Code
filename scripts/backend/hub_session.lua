@@ -2,7 +2,7 @@
 
 local Interface = {
 	"fetch_server_details",
-	"update",
+	"update"
 }
 local HubSession = class("HubSession")
 
@@ -21,12 +21,12 @@ HubSession.update = function (self, session_id, jwt_sign_key_id, connection_info
 		timeAtUtilized = time_at_utilized,
 		deploymentId = deployment_id,
 		connectedParticipants = participants,
-		sortedSetKey = sorted_set_key,
+		sortedSetKey = sorted_set_key
 	}
 
 	return Managers.backend:title_request("/hub/sessions/" .. session_id .. "/update", {
 		method = "POST",
-		body = data,
+		body = data
 	}):next(function (data)
 		return data.body
 	end)

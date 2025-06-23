@@ -27,15 +27,15 @@ local light_cleave = DamageProfileSettings.light_cleave
 local no_cleave = DamageProfileSettings.no_cleave
 
 damage_templates.psyker_biomancer_shout = {
+	suppression_value = 30,
 	ignore_shield = true,
+	suppression_type = "ability",
+	stagger_duration_modifier = 1,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
-	stagger_duration_modifier = 1,
-	suppression_type = "ability",
-	suppression_value = 30,
 	power_distribution = {
 		attack = 0,
-		impact = 17,
+		impact = 17
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -46,7 +46,7 @@ damage_templates.psyker_biomancer_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -56,24 +56,24 @@ damage_templates.psyker_biomancer_shout = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	damage_type = damage_types.psyker_biomancer_discharge,
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.psyker_biomancer_shout_damage = {
+	suppression_value = 30,
 	ignore_shield = true,
+	suppression_type = "ability",
+	stagger_duration_modifier = 1,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
-	stagger_duration_modifier = 1,
-	suppression_type = "ability",
-	suppression_value = 30,
 	power_distribution = {
 		attack = 100,
-		impact = 17,
+		impact = 17
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -84,7 +84,7 @@ damage_templates.psyker_biomancer_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -94,24 +94,24 @@ damage_templates.psyker_biomancer_shout_damage = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	damage_type = damage_types.psyker_biomancer_discharge,
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.psyker_shield_stagger = {
+	suppression_value = 30,
 	ignore_shield = true,
+	suppression_type = "ability",
+	stagger_duration_modifier = 1,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
-	stagger_duration_modifier = 1,
-	suppression_type = "ability",
-	suppression_value = 30,
 	power_distribution = {
 		attack = 0,
-		impact = 250,
+		impact = 250
 	},
 	armor_damage_modifier = {
 		attack = {
@@ -122,7 +122,7 @@ damage_templates.psyker_shield_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 0,
+			[armor_types.void_shield] = 0
 		},
 		impact = {
 			[armor_types.unarmored] = 5,
@@ -132,19 +132,19 @@ damage_templates.psyker_shield_stagger = {
 			[armor_types.berserker] = 5,
 			[armor_types.super_armor] = 5,
 			[armor_types.disgustingly_resilient] = 5,
-			[armor_types.void_shield] = 5,
-		},
+			[armor_types.void_shield] = 5
+		}
 	},
 	damage_type = damage_types.electrocution,
 	targets = {
-		default_target = {},
-	},
+		default_target = {}
+	}
 }
 damage_templates.psyker_smite_kill = {
-	ignore_shield = true,
 	ignore_stagger_reduction = true,
-	ragdoll_only = true,
 	ragdoll_push_force = 0,
+	ignore_shield = true,
+	ragdoll_only = true,
 	stagger_category = "uppercut",
 	armor_damage_modifier = {
 		attack = {
@@ -155,7 +155,7 @@ damage_templates.psyker_smite_kill = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -165,29 +165,29 @@ damage_templates.psyker_smite_kill = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 100,
-		impact = 100,
+		impact = 100
 	},
 	power_distribution = {
 		attack = 900,
-		impact = 55,
+		impact = 55
 	},
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.warp,
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0,
-		},
-	},
+			boost_curve_multiplier_finesse = 0
+		}
+	}
 }
 damage_templates.psyker_smite_stagger = {
+	stagger_category = "flamer",
 	ignore_shield = true,
 	ignore_stagger_reduction = false,
-	stagger_category = "flamer",
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = 1,
@@ -197,7 +197,7 @@ damage_templates.psyker_smite_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
+			[armor_types.void_shield] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
@@ -207,91 +207,91 @@ damage_templates.psyker_smite_stagger = {
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 1,
 			[armor_types.disgustingly_resilient] = 1,
-			[armor_types.void_shield] = 1,
-		},
+			[armor_types.void_shield] = 1
+		}
 	},
 	power_distribution = {
 		attack = 0,
-		impact = 8,
+		impact = 8
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.psyker_smite_light = {
 	stagger_category = "ranged",
 	armor_damage_modifier = {
 		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
+		impact = flat_one_armor_mod
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	power_distribution = {
 		attack = 100,
-		impact = 12,
+		impact = 12
 	},
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.psyker_smite_heavy = {
 	ragdoll_push_force = 0,
 	stagger_category = "ranged",
 	armor_damage_modifier = {
 		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
+		impact = flat_one_armor_mod
 	},
 	cleave_distribution = {
 		attack = 100,
-		impact = 100,
+		impact = 100
 	},
 	power_distribution = {
 		attack = 120,
-		impact = 8,
+		impact = 8
 	},
 	wounds_template = WoundsTemplates.psyker_ball,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.psyker_biomancer_soul = {
-	ragdoll_only = true,
 	ragdoll_push_force = 0,
+	ragdoll_only = true,
 	stagger_category = "ranged",
 	armor_damage_modifier = {
 		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
+		impact = flat_one_armor_mod
 	},
 	cleave_distribution = {
 		attack = 0.25,
-		impact = 0.25,
+		impact = 0.25
 	},
 	power_distribution = {
 		attack = 100,
-		impact = 12,
+		impact = 12
 	},
 	damage_type = damage_types.biomancer_soul,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.psyker_throwing_knives = {
-	hit_mass_override = 1,
-	ignore_stagger_reduction = true,
 	psyker_smite = true,
-	stagger_category = "killshot",
+	hit_mass_override = 1,
 	stagger_override = "killshot",
 	vo_no_headshot = true,
+	ignore_stagger_reduction = true,
+	stagger_category = "killshot",
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -301,7 +301,7 @@ damage_templates.psyker_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -311,16 +311,16 @@ damage_templates.psyker_throwing_knives = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
+		}
 	},
 	cleave_distribution = {
 		attack = 2,
-		impact = 2,
+		impact = 2
 	},
 	power_distribution = {
 		attack = 125,
-		impact = 5,
+		impact = 5
 	},
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.warp_shard,
@@ -332,46 +332,46 @@ damage_templates.psyker_throwing_knives = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
 				attack = 225,
-				impact = 25,
+				impact = 25
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
-				[armor_types.armored] = 0.5,
-			},
+				[armor_types.armored] = 0.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 1,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
 				attack = 150,
-				impact = 5,
+				impact = 5
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
-				[armor_types.armored] = 0.5,
-			},
+				[armor_types.armored] = 0.5
+			}
 		},
 		{
 			boost_curve_multiplier_finesse = 1,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
 				attack = 100,
-				impact = 5,
+				impact = 5
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
-				[armor_types.armored] = 0.5,
-			},
+				[armor_types.armored] = 0.5
+			}
 		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.75,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.5,
-				[armor_types.armored] = 0.5,
-			},
-		},
-	},
+				[armor_types.armored] = 0.5
+			}
+		}
+	}
 }
 damage_templates.psyker_throwing_knives_aimed = table.clone(damage_templates.psyker_throwing_knives)
 damage_templates.psyker_throwing_knives_aimed.targets[1].power_distribution.attack = 380
@@ -396,28 +396,28 @@ damage_templates.psyker_throwing_knives_psychic_fortress = {
 	vo_no_headshot = true,
 	armor_damage_modifier = {
 		attack = flat_one_armor_mod,
-		impact = flat_one_armor_mod,
+		impact = flat_one_armor_mod
 	},
 	cleave_distribution = {
 		attack = 10,
-		impact = 10,
+		impact = 10
 	},
 	power_distribution = {
 		attack = 100,
-		impact = 12,
+		impact = 12
 	},
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.ballistic,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
-		},
-	},
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
 }
 damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
-	chain_lightning = true,
-	ignore_hitzone_multiplier = true,
 	random_gib_hitzone = true,
+	ignore_hitzone_multiplier = true,
+	chain_lightning = true,
 	stagger_category = "electrocuted",
 	armor_damage_modifier = {
 		attack = {
@@ -428,7 +428,7 @@ damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
@@ -438,23 +438,23 @@ damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_5
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 20,
+		impact = 20
 	},
 	power_distribution = {
 		attack = 16,
-		impact = 250,
+		impact = 250
 	},
 	charge_level_scaler = {
 		{
 			modifier = 1,
-			t = 1,
+			t = 1
 		},
-		start_modifier = 0.4,
+		start_modifier = 0.4
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.infinite,
@@ -462,15 +462,15 @@ damage_templates.psyker_protectorate_spread_chain_lightning_interval = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
-	},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+	}
 }
 damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
-	ignore_hitzone_multiplier = true,
 	ignore_stagger_reduction = true,
 	random_gib_hitzone = true,
+	ignore_hitzone_multiplier = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = {
@@ -481,7 +481,7 @@ damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
@@ -491,16 +491,16 @@ damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 5,
+		impact = 5
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 20,
+		impact = 20
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.infinite,
@@ -508,15 +508,15 @@ damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
-	},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+	}
 }
 damage_templates.psyker_heavy_swings_shock = {
-	chain_lightning = true,
-	ignore_hitzone_multiplier = true,
 	random_gib_hitzone = true,
+	ignore_hitzone_multiplier = true,
+	chain_lightning = true,
 	stagger_category = "electrocuted",
 	armor_damage_modifier = {
 		attack = {
@@ -527,7 +527,7 @@ damage_templates.psyker_heavy_swings_shock = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
@@ -537,23 +537,23 @@ damage_templates.psyker_heavy_swings_shock = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_5,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1_5,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_5
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 0,
+		impact = 0
 	},
 	power_distribution = {
 		attack = 64,
-		impact = 0,
+		impact = 0
 	},
 	charge_level_scaler = {
 		{
 			modifier = 1,
-			t = 1,
+			t = 1
 		},
-		start_modifier = 0.4,
+		start_modifier = 0.4
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.infinite,
@@ -561,10 +561,10 @@ damage_templates.psyker_heavy_swings_shock = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
-	},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+	}
 }
 damage_templates.psyker_protectorate_chain_lighting = {
 	chain_lightning = true,
@@ -579,7 +579,7 @@ damage_templates.psyker_protectorate_chain_lighting = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -589,16 +589,16 @@ damage_templates.psyker_protectorate_chain_lighting = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 8,
-		impact = 20,
+		impact = 20
 	},
 	power_distribution = {
 		attack = 20,
-		impact = 150,
+		impact = 150
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.heavy,
@@ -606,10 +606,10 @@ damage_templates.psyker_protectorate_chain_lighting = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
-	},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+	}
 }
 overrides.psyker_protectorate_chain_lighting_fast = {
 	parent_template_name = "psyker_smite_kill",
@@ -617,34 +617,34 @@ overrides.psyker_protectorate_chain_lighting_fast = {
 		{
 			"power_distribution",
 			"attack",
-			300,
+			300
 		},
 		{
 			"power_distribution",
 			"impact",
-			250,
+			250
 		},
 		{
 			"chain_lightning",
-			true,
+			true
 		},
 		{
 			"gibbing_power",
-			gibbing_power.heavy,
+			gibbing_power.heavy
 		},
 		{
 			"gibbing_type",
-			gibbing_types.warp_lightning,
+			gibbing_types.warp_lightning
 		},
 		{
 			"gib_push_force",
-			GibbingSettings.gib_push_force.ranged_heavy,
+			GibbingSettings.gib_push_force.ranged_heavy
 		},
 		{
 			"ragdoll_only",
-			true,
-		},
-	},
+			true
+		}
+	}
 }
 damage_templates.psyker_stun = {
 	chain_lightning = true,
@@ -658,7 +658,7 @@ damage_templates.psyker_stun = {
 			[armor_types.berserker] = damage_lerp_values.lerp_0_15,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_0_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_1
 		},
 		impact = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -668,16 +668,16 @@ damage_templates.psyker_stun = {
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-		},
+			[armor_types.void_shield] = damage_lerp_values.lerp_1
+		}
 	},
 	cleave_distribution = {
 		attack = 5,
-		impact = 20,
+		impact = 20
 	},
 	power_distribution = {
 		attack = 250,
-		impact = 250,
+		impact = 250
 	},
 	damage_type = damage_types.electrocution,
 	gibbing_power = gibbing_power.always,
@@ -685,13 +685,13 @@ damage_templates.psyker_stun = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 	targets = {
 		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve = PowerLevelSettings.boost_curves.default
 		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
-	},
+		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
+	}
 }
 
 return {
 	base_templates = damage_templates,
-	overrides = overrides,
+	overrides = overrides
 }

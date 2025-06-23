@@ -15,8 +15,8 @@ local DEFAULT_ANONYMOUS_USER_TYPES = DEFAULT_ANONYMOUS_USER_TYPES or {}
 local XBOX_PERMISSION_DENY_REASON_LUT = XBOX_PERMISSION_DENY_REASON_LUT or {}
 local BATCH_WAIT_TIMES = {
 	CHAT_HUB = 10,
-	CHAT_MISSION = 0,
 	CHAT_PARTY = 0,
+	CHAT_MISSION = 0
 }
 local BATCH_SEND_DELAY = 3
 
@@ -56,7 +56,7 @@ XboxPrivileges.verify_user_restriction_batched = function (self, xuid, restricti
 	if not batch then
 		batch = {
 			restrictions = {},
-			xuids = {},
+			xuids = {}
 		}
 		self._batched_user_restrictions[batch_type] = batch
 	end
@@ -184,7 +184,7 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 			self._privileges_data[privilege] = {
 				has_privilege = has_privilege,
 				deny_reason = deny_reason > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
-				resolution_required = resolution_required,
+				resolution_required = resolution_required
 			}
 		end
 	end
@@ -203,7 +203,7 @@ XboxPrivileges.update_privileges = function (self, user_id)
 		self._privileges_data[privilege] = {
 			has_privilege = has_privilege,
 			deny_reason = deny_reason > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
-			resolution_required = resolution_required,
+			resolution_required = resolution_required
 		}
 	end
 
@@ -218,7 +218,7 @@ XboxPrivileges._cb_user_privilege_done = function (self, user_id, privilege, asy
 
 	self._privileges_data[privilege] = {
 		deny_reason = "OK",
-		has_privilege = has_privilege,
+		has_privilege = has_privilege
 	}
 	self._async_privileges[privilege] = nil
 
@@ -237,7 +237,7 @@ XboxPrivileges._cb_user_privilege_failed = function (self, user_id, privilege, r
 	self._async_privileges[privilege] = nil
 	self._privileges_data[privilege] = {
 		has_privilege = false,
-		deny_reason = h_result > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN",
+		deny_reason = h_result > HRESULT.S_OK and PrivilegesManagerConstants.DenyReason[h_result] or "UNKNOWN"
 	}
 
 	if table.is_empty(self._async_privileges) and self._fetch_done_cb then

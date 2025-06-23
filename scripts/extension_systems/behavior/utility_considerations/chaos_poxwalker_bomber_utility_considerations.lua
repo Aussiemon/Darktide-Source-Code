@@ -3,8 +3,8 @@
 local considerations = {
 	chaos_poxwalker_bomber_explode = {
 		distance_to_target = {
-			blackboard_component = "perception",
 			component_field = "target_distance",
+			blackboard_component = "perception",
 			max_value = 5,
 			spline = {
 				0,
@@ -14,10 +14,10 @@ local considerations = {
 				0.60002,
 				0,
 				1,
-				0,
-			},
-		},
-	},
+				0
+			}
+		}
+	}
 }
 
 return considerations

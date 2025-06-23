@@ -49,7 +49,7 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 		is_visible = not visibility_function,
 		use_mouse_hold = use_mouse_hold,
 		extra_input_actions = extra_input_actions,
-		suffix_function = suffix_function,
+		suffix_function = suffix_function
 	}
 	local content = widget.content
 

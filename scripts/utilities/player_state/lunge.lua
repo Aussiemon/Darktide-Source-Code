@@ -56,8 +56,15 @@ Lunge.calculate_lunge_total_time = function (distance, lunge_speed_at_times)
 	return time_in_lunge
 end
 
-Lunge.distance = function (lunge_template, has_target)
+Lunge.distance = function (lunge_template, has_target, buff_extension)
 	local distance = has_target and lunge_template.has_target_distance or lunge_template.distance
+
+	if buff_extension then
+		local stat_buffs = buff_extension:stat_buffs()
+		local lunge_distance = stat_buffs.lunge_distance
+
+		distance = distance + lunge_distance
+	end
 
 	return distance
 end

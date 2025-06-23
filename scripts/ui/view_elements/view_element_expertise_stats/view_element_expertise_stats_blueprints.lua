@@ -14,14 +14,14 @@ local grid_width = 530
 ViewElementTraitInventoryBlueprints.spacing_vertical_small = {
 	size = {
 		grid_width,
-		5,
-	},
+		5
+	}
 }
 ViewElementTraitInventoryBlueprints.spacing_vertical = {
 	size = {
 		grid_width,
-		20,
-	},
+		20
+	}
 }
 
 local stat_title_size = 150
@@ -33,10 +33,10 @@ local weapon_stat_text_style = table.clone(UIFontSettings.body)
 weapon_stat_text_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 weapon_stat_text_style.size = {
-	stat_title_size,
+	stat_title_size
 }
 weapon_stat_text_style.font_size = 16
 weapon_stat_text_style.text_horizontal_alignment = "left"
@@ -49,10 +49,10 @@ local max_value_style = table.clone(UIFontSettings.body)
 max_value_style.offset = {
 	0,
 	0,
-	4,
+	4
 }
 max_value_style.size = {
-	max_value_size,
+	max_value_size
 }
 max_value_style.font_size = 20
 max_value_style.text_horizontal_alignment = "right"
@@ -65,12 +65,12 @@ local stat_value_style = table.clone(max_value_style)
 
 stat_value_style.text_color = Color.white(255, true)
 stat_value_style.size = {
-	stats_value_size,
+	stats_value_size
 }
 stat_value_style.offset = {
 	-(max_value_size + content_margin),
 	0,
-	4,
+	4
 }
 
 local bar_size = grid_width - stat_title_size - max_value_size - stats_value_size
@@ -79,127 +79,127 @@ local bar_offset = (grid_width - bar_size - content_margin * 2) * 0.5
 ViewElementTraitInventoryBlueprints.stat = {
 	size = {
 		grid_width,
-		30,
+		30
 	},
 	pass_template = {
 		{
-			pass_type = "text",
 			style_id = "text",
-			value = "n/a",
 			value_id = "text",
-			style = weapon_stat_text_style,
+			pass_type = "text",
+			value = "n/a",
+			style = weapon_stat_text_style
 		},
 		{
-			pass_type = "text",
 			style_id = "percentage",
-			value = "100%",
 			value_id = "percentage",
-			style = stat_value_style,
-		},
-		{
 			pass_type = "text",
-			style_id = "max_percentage",
-			value = "[100%]",
-			value_id = "max_percentage",
-			style = max_value_style,
+			value = "100%",
+			style = stat_value_style
 		},
 		{
-			pass_type = "rect",
+			style_id = "max_percentage",
+			value_id = "max_percentage",
+			pass_type = "text",
+			value = "[100%]",
+			style = max_value_style
+		},
+		{
 			style_id = "background",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					18 + bar_offset,
 					0,
-					3,
+					3
 				},
 				size = {
 					bar_size,
-					8,
+					8
 				},
-				color = Color.black(255, true),
-			},
+				color = Color.black(255, true)
+			}
 		},
 		{
-			pass_type = "rect",
 			style_id = "frame",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					18 + bar_offset - 2,
 					0,
-					2,
+					2
 				},
 				size = {
 					bar_size + 4,
-					12,
+					12
 				},
-				color = Color.terminal_frame(200, true),
-			},
+				color = Color.terminal_frame(200, true)
+			}
 		},
 		{
-			pass_type = "rect",
 			style_id = "max",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					18 + bar_offset,
 					0,
-					3,
+					3
 				},
 				size = {
 					bar_size,
-					8,
+					8
 				},
-				color = Color.terminal_text_header_disabled(255, true),
-			},
+				color = Color.terminal_text_header_disabled(255, true)
+			}
 		},
 		{
-			pass_type = "rect",
 			style_id = "current",
+			pass_type = "rect",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					18 + bar_offset,
 					0,
-					3,
+					3
 				},
 				size = {
 					bar_size,
-					8,
+					8
 				},
-				color = Color.terminal_text_body(255, true),
+				color = Color.terminal_text_body(255, true)
 			},
 			change_function = function (content, style, animations, dt)
 				local pulse_frequency = 5
 				local pulse = 0.5 * (1 + math.sin(Application.time_since_launch() * pulse_frequency))
 
 				style.color[1] = pulse * 255
-			end,
+			end
 		},
 		{
-			pass_type = "texture",
-			style_id = "bar",
 			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "bar",
+			pass_type = "texture",
 			style = {
-				horizontal_alignment = "left",
 				vertical_alignment = "center",
+				horizontal_alignment = "left",
 				offset = {
 					20 + bar_offset,
 					0,
-					4,
+					4
 				},
 				size = {
 					bar_size,
-					8,
+					8
 				},
-				color = Color.terminal_corner_selected(255, true),
-			},
-		},
+				color = Color.terminal_corner_selected(255, true)
+			}
+		}
 	},
 	init = function (parent, widget, element, callback_name)
 		local content = widget.content
@@ -271,7 +271,7 @@ ViewElementTraitInventoryBlueprints.stat = {
 		local current_value_percent = math.lerp(content.percent_start, content.percent_end, expertise_progress)
 
 		content[percentage_id] = math.floor(current_value_percent * 100 + 0.5) .. "%"
-	end,
+	end
 }
 
 return ViewElementTraitInventoryBlueprints

@@ -19,133 +19,133 @@ weapon_template.action_inputs = {
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_two_hold",
 				value = true,
-			},
-		},
+				input = "action_two_hold"
+			}
+		}
 	},
 	charge_power_release = {
 		buffer_time = 0.31,
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_two_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "action_two_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	charge_power_sticky = {
 		buffer_time = 0.31,
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = true,
-			},
-		},
+				input = "action_one_hold"
+			}
+		}
 	},
 	charge_power_lock_on = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = true,
-			},
-		},
+				input = "action_one_hold"
+			}
+		}
 	},
 	charge_power_sticky_release = {
 		buffer_time = 0.31,
 		max_queue = 1,
 		input_sequence = {
 			{
-				input = "action_one_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "action_one_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	use_power = {
 		buffer_time = 0.7,
 		input_sequence = {
 			{
-				input = "none",
 				value = true,
-			},
-		},
+				input = "none"
+			}
+		}
 	},
 	charge = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "action_two_hold",
 				value = true,
-			},
-		},
+				input = "action_two_hold"
+			}
+		}
 	},
 	wield = {
 		buffer_time = 0.5,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				inputs = wield_inputs,
-			},
-		},
+				inputs = wield_inputs
+			}
+		}
 	},
 	vent = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload_hold",
 				value = true,
-			},
-		},
+				input = "weapon_reload_hold"
+			}
+		}
 	},
 	vent_release = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
-				input = "weapon_reload_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "weapon_reload_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	inspect_start = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "weapon_inspect_hold",
 				value = true,
+				input = "weapon_inspect_hold"
 			},
 			{
-				duration = 0.2,
-				input = "weapon_inspect_hold",
 				value = true,
-			},
-		},
+				duration = 0.2,
+				input = "weapon_inspect_hold"
+			}
+		}
 	},
 	inspect_stop = {
 		buffer_time = 0.02,
 		input_sequence = {
 			{
-				input = "weapon_inspect_hold",
 				value = false,
-				time_window = math.huge,
-			},
-		},
+				input = "weapon_inspect_hold",
+				time_window = math.huge
+			}
+		}
 	},
 	combat_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
-	},
+				input = "combat_ability_pressed"
+			}
+		}
+	}
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -155,95 +155,95 @@ weapon_template.action_input_hierarchy = {
 		input = "charge_power",
 		transition = {
 			{
-				input = "charge_power_release",
 				transition = "base",
+				input = "charge_power_release"
 			},
 			{
 				input = "charge_power_lock_on",
 				transition = {
 					{
-						input = "charge_power_sticky_release",
 						transition = "base",
+						input = "charge_power_sticky_release"
 					},
 					{
-						input = "use_power",
 						transition = "base",
+						input = "use_power"
 					},
 					{
-						input = "wield",
 						transition = "base",
+						input = "wield"
 					},
 					{
-						input = "combat_ability",
 						transition = "base",
-					},
-				},
+						input = "combat_ability"
+					}
+				}
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
-				input = "combat_ability",
 				transition = "base",
-			},
-		},
+				input = "combat_ability"
+			}
+		}
 	},
 	{
 		input = "charge_power_sticky",
 		transition = {
 			{
-				input = "charge_power_sticky_release",
 				transition = "base",
+				input = "charge_power_sticky_release"
 			},
 			{
-				input = "use_power",
 				transition = "base",
+				input = "use_power"
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
-				input = "combat_ability",
 				transition = "base",
-			},
-		},
+				input = "combat_ability"
+			}
+		}
 	},
 	{
 		input = "vent",
 		transition = {
 			{
-				input = "vent_release",
 				transition = "base",
+				input = "vent_release"
 			},
 			{
-				input = "wield",
 				transition = "base",
+				input = "wield"
 			},
 			{
-				input = "combat_ability",
 				transition = "base",
-			},
-		},
+				input = "combat_ability"
+			}
+		}
 	},
 	{
-		input = "wield",
 		transition = "stay",
+		input = "wield"
 	},
 	{
-		input = "combat_ability",
 		transition = "stay",
+		input = "combat_ability"
 	},
 	{
 		input = "inspect_start",
 		transition = {
 			{
-				input = "inspect_stop",
 				transition = "base",
-			},
-		},
-	},
+				input = "inspect_stop"
+			}
+		}
+	}
 }
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
@@ -251,154 +251,154 @@ ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTem
 weapon_template.actions = {
 	action_unwield = {
 		allowed_during_sprint = true,
-		kind = "unwield",
 		start_input = "wield",
-		total_time = 0,
 		uninterruptible = true,
-		allowed_chain_actions = {},
+		kind = "unwield",
+		total_time = 0,
+		allowed_chain_actions = {}
 	},
 	action_wield = {
-		allowed_during_sprint = true,
-		anim_event = "equip",
 		kind = "wield",
-		total_time = 0,
+		allowed_during_sprint = true,
 		uninterruptible = true,
+		anim_event = "equip",
+		total_time = 0,
 		allowed_chain_actions = {
 			wield = {
-				action_name = "action_unwield",
+				action_name = "action_unwield"
 			},
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			vent = {
-				action_name = "action_vent",
-			},
-		},
+				action_name = "action_vent"
+			}
+		}
 	},
 	action_vent = {
-		abort_sprint = true,
-		additional_vent_source_name = "fx_right_hand",
-		additional_vent_vfx = "content/fx/particles/abilities/psyker_venting_2",
 		allowed_during_sprint = true,
-		anim_end_event = "vent_end",
-		anim_event = "vent_start",
+		start_input = "vent",
+		vent_source_name = "fx_left_hand",
 		kind = "vent_warp_charge",
 		prevent_sprint = true,
-		start_input = "vent",
-		stop_input = "vent_release",
-		uninterruptible = true,
-		vent_source_name = "fx_left_hand",
 		vent_vfx = "content/fx/particles/abilities/psyker_venting",
+		additional_vent_vfx = "content/fx/particles/abilities/psyker_venting_2",
+		additional_vent_source_name = "fx_right_hand",
+		anim_end_event = "vent_end",
 		vo_tag = "ability_venting",
+		abort_sprint = true,
+		uninterruptible = true,
+		anim_event = "vent_start",
+		stop_input = "vent_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.3,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.2,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.01,
-				t = 5,
+				t = 5
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		running_action_state_to_action_input = {
 			fully_vented = {
-				input_name = "vent_release",
-			},
+				input_name = "vent_release"
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.15,
-			},
-		},
+				chain_time = 0.15
+			}
+		}
 	},
 	action_charge_target_sticky = {
-		ability_type = "grenade_ability",
+		start_input = "charge_power_sticky",
+		target_finder_module_class_name = "psyker_smite_targeting",
+		kind = "smite_targeting",
+		sprint_ready_up_time = 0,
+		kill_charge = true,
+		sticky_targeting = true,
 		allowed_during_sprint = true,
+		ability_type = "grenade_ability",
+		target_charge = true,
+		minimum_hold_time = 0.3,
+		target_locked = true,
 		anim_end_event = "attack_charge_cancel",
-		anim_event = "attack_charge",
-		attack_target = true,
 		attack_target_time = 1,
 		charge_template = "psyker_smite_lock_target",
-		charge_time = 2,
-		kill_charge = true,
-		kind = "smite_targeting",
-		minimum_hold_time = 0.3,
 		overload_module_class_name = "warp_charge",
-		sprint_ready_up_time = 0,
-		start_input = "charge_power_sticky",
-		sticky_targeting = true,
-		stop_input = "charge_power_sticky_release",
-		target_charge = true,
-		target_finder_module_class_name = "psyker_smite_targeting",
-		target_locked = true,
+		charge_time = 2,
+		attack_target = true,
 		uninterruptible = true,
+		anim_event = "attack_charge",
+		stop_input = "charge_power_sticky_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
 				modifier = 0.4,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.4,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.6,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		targeting_fx = {
-			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
-			has_husk_events = true,
-			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
-			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			wwise_parameter_name = "charge_level",
+			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
+			has_husk_events = true,
+			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
+			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
-			looping_effect_alias = "ranged_charging",
-			looping_sound_alias = "ranged_charging",
 			sfx_source_name = "_charge",
-			vfx_source_name = "_charge",
+			looping_sound_alias = "ranged_charging",
+			looping_effect_alias = "ranged_charging",
+			vfx_source_name = "_charge"
 		},
 		smart_targeting_template = SmartTargetingTemplates.smite,
 		running_action_state_to_action_input = {
 			fully_charged = {
-				input_name = "use_power",
-			},
+				input_name = "use_power"
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			wield = {
-				action_name = "action_unwield",
+				action_name = "action_unwield"
 			},
 			use_power = {
-				action_name = "action_use_power",
-			},
+				action_name = "action_use_power"
+			}
 		},
 		attack_settings = {
-			damage_profile = DamageProfileTemplates.psyker_smite_stagger,
+			damage_profile = DamageProfileTemplates.psyker_smite_stagger
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if end_reason == "hold_input_released" or end_reason == "stunned" then
@@ -406,73 +406,73 @@ weapon_template.actions = {
 			end
 
 			return false
-		end,
+		end
 	},
 	action_charge_target = {
-		ability_type = "grenade_ability",
-		allowed_during_sprint = true,
-		always_charge = true,
-		anim_end_event = "attack_charge_cancel",
-		anim_event = "attack_charge",
-		charge_template = "psyker_smite_charge",
-		kill_charge = true,
-		kind = "smite_targeting",
-		minimum_hold_time = 0.3,
 		overload_module_class_name = "warp_charge",
-		sprint_ready_up_time = 0,
-		start_input = "charge_power",
-		stop_input = "charge_power_release",
-		target_charge = true,
+		charge_template = "psyker_smite_charge",
 		target_finder_module_class_name = "psyker_smite_targeting",
+		start_input = "charge_power",
+		kind = "smite_targeting",
+		sprint_ready_up_time = 0,
+		kill_charge = true,
+		allowed_during_sprint = true,
+		ability_type = "grenade_ability",
+		anim_end_event = "attack_charge_cancel",
+		target_charge = true,
+		minimum_hold_time = 0.3,
+		anim_event = "attack_charge",
 		uninterruptible = true,
+		always_charge = true,
+		stop_input = "charge_power_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
 				modifier = 0.6,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.6,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.8,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.6,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		targeting_fx = {
-			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
-			has_husk_events = true,
-			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
-			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			wwise_parameter_name = "charge_level",
+			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
+			has_husk_events = true,
+			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
+			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
-			looping_effect_alias = "ranged_charging",
-			looping_sound_alias = "ranged_charging",
 			sfx_source_name = "_charge",
-			vfx_source_name = "_charge",
+			looping_sound_alias = "ranged_charging",
+			looping_effect_alias = "ranged_charging",
+			vfx_source_name = "_charge"
 		},
 		smart_targeting_template = SmartTargetingTemplates.smite,
 		allowed_chain_actions = {
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			wield = {
-				action_name = "action_unwield",
+				action_name = "action_unwield"
 			},
 			charge_power_lock_on = {
-				action_name = "action_charge_target_lock_on",
-			},
+				action_name = "action_charge_target_lock_on"
+			}
 		},
 		attack_settings = {
-			damage_profile = DamageProfileTemplates.psyker_smite_stagger,
+			damage_profile = DamageProfileTemplates.psyker_smite_stagger
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if end_reason == "hold_input_released" or end_reason == "stunned" then
@@ -480,81 +480,81 @@ weapon_template.actions = {
 			end
 
 			return false
-		end,
+		end
 	},
 	action_charge_target_lock_on = {
-		ability_type = "grenade_ability",
-		allowed_during_sprint = true,
-		anim_end_event = "attack_charge_cancel",
-		attack_target = true,
-		attack_target_time = 0.25,
 		charge_template = "psyker_smite_lock_target",
-		dont_reset_charge = true,
-		kill_charge = true,
-		kind = "smite_targeting",
-		only_allowed_with_smite_target = true,
-		overload_module_class_name = "warp_charge",
-		sprint_ready_up_time = 0,
-		start_input = "charge_power_lock_on",
-		sticky_targeting = true,
-		stop_input = "charge_power_sticky_release",
 		target_finder_module_class_name = "psyker_smite_targeting",
-		target_locked = true,
+		start_input = "charge_power_lock_on",
+		kind = "smite_targeting",
+		sprint_ready_up_time = 0,
+		kill_charge = true,
+		only_allowed_with_smite_target = true,
+		allowed_during_sprint = true,
+		ability_type = "grenade_ability",
+		overload_module_class_name = "warp_charge",
 		target_missing_anim_event = "attack_charge_cancel",
+		target_locked = true,
+		anim_end_event = "attack_charge_cancel",
+		attack_target_time = 0.25,
+		sticky_targeting = true,
+		attack_target = true,
 		uninterruptible = true,
+		dont_reset_charge = true,
+		stop_input = "charge_power_sticky_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
 				modifier = 0.6,
-				t = 0.1,
+				t = 0.1
 			},
 			{
 				modifier = 0.6,
-				t = 0.15,
+				t = 0.15
 			},
 			{
 				modifier = 0.8,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.6,
-				t = 1,
+				t = 1
 			},
-			start_modifier = 1,
+			start_modifier = 1
 		},
 		targeting_fx = {
-			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
-			has_husk_events = true,
-			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
-			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			wwise_parameter_name = "charge_level",
+			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
+			has_husk_events = true,
+			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
+			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
-			looping_effect_alias = "ranged_charging",
-			looping_sound_alias = "ranged_charging",
 			sfx_source_name = "_charge",
-			vfx_source_name = "_charge",
+			looping_sound_alias = "ranged_charging",
+			looping_effect_alias = "ranged_charging",
+			vfx_source_name = "_charge"
 		},
 		smart_targeting_template = SmartTargetingTemplates.smite,
 		running_action_state_to_action_input = {
 			fully_charged = {
-				input_name = "use_power",
-			},
+				input_name = "use_power"
+			}
 		},
 		allowed_chain_actions = {
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			wield = {
-				action_name = "action_unwield",
+				action_name = "action_unwield"
 			},
 			use_power = {
-				action_name = "action_use_power",
-			},
+				action_name = "action_use_power"
+			}
 		},
 		attack_settings = {
-			damage_profile = DamageProfileTemplates.psyker_smite_stagger,
+			damage_profile = DamageProfileTemplates.psyker_smite_stagger
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if end_reason == "hold_input_released" or end_reason == "stunned" then
@@ -562,137 +562,137 @@ weapon_template.actions = {
 			end
 
 			return false
-		end,
+		end
 	},
 	action_use_power = {
-		allowed_during_sprint = true,
-		anim_event = "attack_charge_shoot",
-		charge_template = "psyker_smite_use_power",
-		fire_time = 0.2,
+		use_charge = true,
 		kind = "damage_target",
 		sprint_ready_up_time = 0,
-		total_time = 0.8,
-		uninterruptible = true,
-		use_charge = true,
 		use_charge_level = true,
+		fire_time = 0.2,
+		charge_template = "psyker_smite_use_power",
+		allowed_during_sprint = true,
+		uninterruptible = true,
+		anim_event = "attack_charge_shoot",
+		total_time = 0.8,
 		action_movement_curve = {
 			{
 				modifier = 0.25,
-				t = 0.2,
+				t = 0.2
 			},
 			{
 				modifier = 0.4,
-				t = 0.3,
+				t = 0.3
 			},
 			{
 				modifier = 1,
-				t = 0.5,
+				t = 0.5
 			},
-			start_modifier = 0.2,
+			start_modifier = 0.2
 		},
 		damage_profile = DamageProfileTemplates.psyker_smite_kill,
 		damage_type = damage_types.smite,
 		suppression_settings = {
-			distance = 5,
-			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 1,
+			instant_aggro = true,
+			distance = 5,
+			suppression_value = 1
 		},
 		allowed_chain_actions = {
 			combat_ability = {
-				action_name = "combat_ability",
+				action_name = "combat_ability"
 			},
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.3,
-			},
+				chain_time = 0.3
+			}
 		},
 		time_scale_stat_buffs = {
-			buff_stat_buffs.smite_attack_speed,
-		},
+			buff_stat_buffs.smite_attack_speed
+		}
 	},
 	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
 		skip_3p_anims = true,
+		lock_view = true,
 		start_input = "inspect_start",
+		anim_end_event = "inspect_end",
+		kind = "inspect",
+		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge,
 		crosshair = {
-			crosshair_type = "inspect",
-		},
+			crosshair_type = "inspect"
+		}
 	},
 	combat_ability = {
-		kind = "unwield_to_specific",
 		slot_to_wield = "slot_combat_ability",
 		start_input = "combat_ability",
-		total_time = 0,
 		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
+		kind = "unwield_to_specific",
+		total_time = 0,
+		allowed_chain_actions = {}
+	}
 }
 weapon_template.keywords = {
-	"psyker",
+	"psyker"
 }
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/psyker_smite",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed"
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/psyker_smite",
-	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
+	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed"
 }
 weapon_template.alternate_fire_settings = {
-	spread_template = "psyker_smite",
 	start_anim_event = "attack_charge",
 	stop_anim_event = "attack_charge_cancel",
+	spread_template = "psyker_smite",
 	action_movement_curve = {
 		{
 			modifier = 0.3,
-			t = 0.1,
+			t = 0.1
 		},
 		{
 			modifier = 0.3,
-			t = 0.15,
+			t = 0.15
 		},
 		{
 			modifier = 0.6,
-			t = 0.25,
+			t = 0.25
 		},
 		{
 			modifier = 0.6,
-			t = 0.5,
+			t = 0.5
 		},
 		{
 			modifier = 0.4,
-			t = 1,
+			t = 1
 		},
 		{
 			modifier = 0.3,
-			t = 2,
+			t = 2
 		},
-		start_modifier = 1,
-	},
+		start_modifier = 1
+	}
 }
 weapon_template.spread_template = "psyker_smite"
 weapon_template.ammo_template = "no_ammo"
 weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
-	uses_ammunition = false,
 	uses_overheat = false,
+	uses_ammunition = false
 }
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.smart_targeting_template = SmartTargetingTemplates.smite
 weapon_template.crosshair = {
-	crosshair_type = "charge_up",
+	crosshair_type = "charge_up"
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.fx_sources = {
-	_charge = "fx_charge",
 	_muzzle = "fx_right",
+	_charge = "fx_charge"
 }
 weapon_template.dodge_template = "default_ranged"
 weapon_template.sprint_template = "default"

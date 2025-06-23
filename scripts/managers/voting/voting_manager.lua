@@ -72,7 +72,7 @@ VotingManager.start_voting = function (self, template_name, params)
 
 	if not success then
 		return Promise.rejected({
-			fail_reason,
+			fail_reason
 		})
 	end
 

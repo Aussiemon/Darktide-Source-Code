@@ -79,7 +79,7 @@ HudElementSpectateFading.event_spectate_fade_out_at = function (self, player, du
 		player = player,
 		duration = duration,
 		easing_function = easing_function,
-		fade_out_at = fade_out_at,
+		fade_out_at = fade_out_at
 	}
 end
 

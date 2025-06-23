@@ -15,7 +15,7 @@ local PlayerHuskVisualLoadoutExtension = class("PlayerHuskVisualLoadoutExtension
 local RPCS = {
 	"rpc_player_equip_item_to_slot",
 	"rpc_player_equip_item_from_profile_to_slot",
-	"rpc_player_unequip_item_from_slot",
+	"rpc_player_unequip_item_from_slot"
 }
 
 local function _register_fx_sources(fx_extension, slot, source_config, slot_name, is_in_first_person_mode)
@@ -98,7 +98,7 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	local item_streaming_settings = {
 		package_synchronizer_client = self._package_synchronizer_client,
-		player = self._player,
+		player = self._player
 	}
 
 	self._item_definitions = MasterItems.get_cached()
@@ -107,7 +107,7 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	self._equipment_component = equipment_component
 
-	local breed_name = self._player:profile()
+	local breed_name = extension_init_data.archetype.breed
 	local breed_settings = Breeds[breed_name]
 	local equipment = equipment_component.initialize_equipment(slot_configuration, breed_settings)
 
@@ -141,9 +141,9 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 
 	self._wieldable_slot_scripts = wieldable_slot_scripts
 	self._wieldable_slot_scripts_context = {
-		is_husk = true,
 		is_local_unit = false,
 		is_server = false,
+		is_husk = true,
 		owner_unit = unit,
 		equipment_component = equipment_component,
 		game_session = game_session,
@@ -154,13 +154,14 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 		visual_loadout_extension = self,
 		unit_data_extension = ScriptUnit.extension(unit, "unit_data_system"),
 		fx_extension = fx_extension,
-		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
 	}
 	self._mission = extension_init_data.mission
 	self._archetype_property = extension_init_data.archetype.name
 	self._selected_voice_property = extension_init_data.selected_voice
 	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+	self._companion_slots = {}
 
 	for slot_name, config in pairs(slot_configuration) do
 		if config.wieldable then
@@ -506,6 +507,10 @@ PlayerHuskVisualLoadoutExtension.resolve_gear_particle = function (self, particl
 	return PlayerCharacterParticles.resolve_particle(particle_alias, properties, optional_external_properties)
 end
 
+PlayerHuskVisualLoadoutExtension.profile_properties = function (self)
+	return self._profile_properties
+end
+
 PlayerHuskVisualLoadoutExtension.current_wielded_slot_scripts = function (self)
 	local current_wielded_slot = self._wielded_slot
 
@@ -538,6 +543,33 @@ PlayerHuskVisualLoadoutExtension.set_force_hide_wieldable_slot = function (self,
 	slot.wants_hidden_by_gameplay_3p = third_person
 
 	self:_update_item_visibility(self._is_in_first_person_mode)
+end
+
+PlayerHuskVisualLoadoutExtension.companion_slots = function (self)
+	local gear_full = self._equipment.slot_companion_gear_full.item_name_by_unit_3p
+
+	self._companion_slots = {}
+
+	for unit, path in pairs(gear_full) do
+		table.insert(self._companion_slots, {
+			use_outline = true,
+			unit = unit
+		})
+	end
+
+	return self._companion_slots
+end
+
+PlayerHuskVisualLoadoutExtension.is_slot_unit_spawned = function (self, slot_name)
+	local gear_full = self._equipment[slot_name]
+
+	return gear_full and gear_full.attachment_spawn_status == "fully_spawned"
+end
+
+PlayerHuskVisualLoadoutExtension.is_slot_unit_valid = function (self, slot_name)
+	local gear_full = self._equipment[slot_name]
+
+	return gear_full and ALIVE[gear_full.unit_3p]
 end
 
 return PlayerHuskVisualLoadoutExtension

@@ -47,14 +47,14 @@ local templates = {}
 table.make_unique(templates)
 
 templates.zealot_damage_after_dash = {
-	active_duration = 4,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 4,
 	proc_events = {
-		[proc_events.on_lunge_end] = 1,
+		[proc_events.on_lunge_end] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = 1,
+		[stat_buffs.melee_damage] = 1
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local lunge_template_name = params.lunge_template_name
@@ -64,71 +64,71 @@ templates.zealot_damage_after_dash = {
 		end
 
 		return false
-	end,
+	end
 }
 templates.zealot_channel_damage = {
-	class_name = "buff",
-	duration = 10,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_channel_grants_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 1,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	duration = 10,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.3,
+		[stat_buffs.damage] = 0.3
 	},
 	related_talents = {
-		"zealot_channel_grants_damage",
-	},
+		"zealot_channel_grants_damage"
+	}
 }
 templates.zealot_channel_toughness_damage_reduction = {
-	class_name = "buff",
-	duration = 10,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_channel_grants_toughness_damage_reduction",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 1,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	duration = 10,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.6,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.6
 	},
 	player_effects = {
-		effect_template = EffectTemplates.zealot_relic_blessed,
+		effect_template = EffectTemplates.zealot_relic_blessed
 	},
 	related_talents = {
-		"zealot_channel_grants_toughness_damage_reduction",
-	},
+		"zealot_channel_grants_toughness_damage_reduction"
+	}
 }
 templates.zealot_channel_toughness_bonus = {
-	class_name = "buff",
-	duration = 10,
+	predicted = false,
+	refresh_duration_on_stack = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_bolstering_prayer",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	max_stacks = 5,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	duration = 10,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	stat_buffs = {
-		[stat_buffs.toughness_bonus_flat] = 15,
+		[stat_buffs.toughness_bonus_flat] = 15
 	},
 	related_talents = {
-		"zealot_bolstering_prayer",
-	},
+		"zealot_bolstering_prayer"
+	}
 }
 templates.bolstering_prayer_resist_death = {
-	class_name = "buff",
-	duration = 1.5,
-	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	max_stacks = 1,
+	duration = 1.5,
+	class_name = "buff",
 	keywords = {
 		keywords.resist_death,
-		keywords.stun_immune,
-	},
+		keywords.stun_immune
+	}
 }
 
 local quickness_max_stacks = talent_settings_3.quickness.max_stacks
@@ -136,21 +136,21 @@ local quickness_toughness_percentage = talent_settings_3.quickness.toughness_per
 local quickness_successful_dodge_stacks = talent_settings_3.quickness.dodge_stacks
 
 templates.zealot_quickness_passive = {
-	always_show_in_hud = true,
 	child_buff_template = "zealot_quickness_counter",
-	class_name = "parent_proc_buff",
+	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_quickness",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	predicted = false,
+	class_name = "parent_proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_successful_dodge] = quickness_successful_dodge_stacks,
+		[proc_events.on_successful_dodge] = quickness_successful_dodge_stacks
 	},
 	remove_child_proc_events = {
-		[proc_events.on_hit] = quickness_max_stacks,
+		[proc_events.on_hit] = quickness_max_stacks
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -183,7 +183,7 @@ templates.zealot_quickness_passive = {
 		end,
 		[proc_events.on_successful_dodge] = function (params, template_data, template_context)
 			return template_data.dodge_stacks
-		end,
+		end
 	},
 	restore_child_update = function (template_data, template_context, dt, t)
 		local player_velocity = template_data.locomotion_component.velocity_current
@@ -233,24 +233,24 @@ templates.zealot_quickness_passive = {
 		end
 	end,
 	related_talents = {
-		"zealot_quickness_passive",
-	},
+		"zealot_quickness_passive"
+	}
 }
 templates.zealot_quickness_counter = {
-	class_name = "buff",
 	predicted = false,
 	refresh_start_time_on_stack = true,
 	stack_offset = -1,
+	class_name = "buff",
 	max_stacks = quickness_max_stacks,
-	max_stacks_cap = quickness_max_stacks,
+	max_stacks_cap = quickness_max_stacks
 }
 templates.zealot_quickness_active = {
-	class_name = "buff",
-	duration = 6,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_quickness",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 4,
-	predicted = false,
+	duration = 6,
+	class_name = "buff",
 	max_stacks = quickness_max_stacks,
 	max_stacks_cap = quickness_max_stacks,
 	stat_buffs = {
@@ -259,41 +259,41 @@ templates.zealot_quickness_active = {
 		[stat_buffs.damage] = 0.01,
 		[stat_buffs.dodge_speed_multiplier] = 1.005,
 		[stat_buffs.dodge_distance_modifier] = 0.005,
-		[stat_buffs.dodge_cooldown_reset_modifier] = 0.01,
+		[stat_buffs.dodge_cooldown_reset_modifier] = 0.01
 	},
 	related_talents = {
-		"zealot_quickness_passive",
-	},
+		"zealot_quickness_passive"
+	}
 }
 templates.zealot_improved_weapon_handling_after_dodge = {
-	active_duration = 3,
+	predicted = false,
+	hud_priority = 3,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_improved_weapon_handling_after_dodge",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 3,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
 		[stat_buffs.spread_modifier] = -0.75,
-		[stat_buffs.recoil_modifier] = -0.5,
+		[stat_buffs.recoil_modifier] = -0.5
 	},
 	related_talents = {
-		"zealot_improved_weapon_handling_after_dodge",
-	},
+		"zealot_improved_weapon_handling_after_dodge"
+	}
 }
 templates.zealot_improved_weapon_swapping_no_ammo = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_improved_melee_after_no_ammo",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	max_stacks = 1,
-	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_ammo_consumed] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -310,32 +310,32 @@ templates.zealot_improved_weapon_swapping_no_ammo = {
 		end
 	end,
 	related_talents = {
-		"zealot_improved_melee_after_no_ammo",
-	},
+		"zealot_improved_melee_after_no_ammo"
+	}
 }
 templates.zealot_improved_weapon_swapping_impact = {
-	class_name = "buff",
-	duration = 5,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_improved_melee_after_no_ammo",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	duration = 5,
+	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.melee_impact_modifier] = 0.3,
-		[stat_buffs.melee_attack_speed] = 0.1,
+		[stat_buffs.melee_attack_speed] = 0.1
 	},
 	related_talents = {
-		"zealot_improved_melee_after_no_ammo",
-	},
+		"zealot_improved_melee_after_no_ammo"
+	}
 }
 templates.zealot_improved_weapon_swapping_melee_kills_reload_speed = {
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_kill,
 	start_func = function (template_data, template_context)
@@ -345,22 +345,22 @@ templates.zealot_improved_weapon_swapping_melee_kills_reload_speed = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.buff_extension:add_internally_controlled_buff("zealot_improved_weapon_swapping_reload_speed_buff", t)
-	end,
+	end
 }
 templates.zealot_improved_weapon_swapping_reload_speed_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
 	hud_always_show_stacks = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_increased_reload_speed_on_melee_kills",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	max_stacks = 5,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
-		[proc_events.on_reload] = 1,
+		[proc_events.on_reload] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.06,
+		[stat_buffs.reload_speed] = 0.06
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -387,20 +387,20 @@ templates.zealot_improved_weapon_swapping_reload_speed_buff = {
 		return template_data.done and not is_reloading
 	end,
 	related_talents = {
-		"zealot_increased_reload_speed_on_melee_kills",
-	},
+		"zealot_increased_reload_speed_on_melee_kills"
+	}
 }
 templates.zealot_leaving_stealth_restores_toughness = {
-	class_name = "buff",
-	duration = 5,
-	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_leaving_stealth_restores_toughness",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 4,
-	max_stacks = 1,
 	predicted = false,
 	total_toughness_restored = 0.4,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_leaving_stealth_restores_toughness",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
+	duration = 5,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.8,
+		[stat_buffs.damage_taken_multiplier] = 0.8
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -442,70 +442,70 @@ templates.zealot_leaving_stealth_restores_toughness = {
 		end
 	end,
 	related_talents = {
-		"zealot_leaving_stealth_restores_toughness",
-	},
+		"zealot_leaving_stealth_restores_toughness"
+	}
 }
 templates.zealot_toughness_on_heavy_kills = {
-	class_name = "proc_buff",
 	predicted = false,
 	toughness_percentage = 0.1,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_heavy_hit,
 	proc_func = function (params, template_data, template_context)
 		local template = template_context.template
 
 		Toughness.replenish_percentage(template_context.unit, template.toughness_percentage, false, "zealot_heavy_kill")
-	end,
+	end
 }
 templates.zealot_toughness_on_ranged_kill = {
-	class_name = "proc_buff",
 	predicted = false,
 	toughness_percentage = 0.04,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	proc_func = function (params, template_data, template_context)
 		local template = template_context.template
 
 		Toughness.replenish_percentage(template_context.unit, template.toughness_percentage, false, "zealot_ranged_kill")
-	end,
+	end
 }
 templates.zealot_toughness_on_dodge = {
-	class_name = "proc_buff",
 	cooldown_duration = 0.5,
 	predicted = false,
 	toughness_percentage = 0.15,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local toughness_percentage = template_context.template.toughness_percentage
 
 		Toughness.replenish_percentage(template_context.unit, toughness_percentage, false, "zealot_dodge")
-	end,
+	end
 }
 templates.zealot_improved_stun_grenade = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.explosion_radius_modifier_shock] = 0.5,
-	},
+		[stat_buffs.explosion_radius_modifier_shock] = 0.5
+	}
 }
 templates.zealot_increased_coherency_regen = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5,
-	},
+		[stat_buffs.toughness_coherency_regen_rate_modifier] = 0.5
+	}
 }
 templates.zealot_preacher_ally_defensive = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	cooldown_duration = talent_settings_3.coop_3.cooldown_duration,
 	check_proc_func = function (params, template_data, template_context)
@@ -523,19 +523,19 @@ templates.zealot_preacher_ally_defensive = {
 
 			buff_extension:add_internally_controlled_buff("zealot_preacher_ally_defensive_buff", t)
 		end
-	end,
+	end
 }
 templates.zealot_preacher_ally_defensive_buff = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	duration = talent_settings_3.coop_3.duration,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = talent_settings_3.coop_3.damage_taken_multiplier,
+		[stat_buffs.damage_taken_multiplier] = talent_settings_3.coop_3.damage_taken_multiplier
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_preacher_defense",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_preacher_defense"
+	}
 }
 
 local PUSH_SETTINGS = {
@@ -545,19 +545,19 @@ local PUSH_SETTINGS = {
 	inner_damage_profile = DamageProfileTemplates.push_test,
 	inner_damage_type = damage_types.physical,
 	outer_damage_profile = DamageProfileTemplates.push_test,
-	outer_damage_type = damage_types.physical,
+	outer_damage_type = damage_types.physical
 }
 local PUSH_POWER_LEVEL = talent_settings_3.defensive_1.power_level
 
 templates.zealot_preacher_push_on_hit = {
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_defensive_knockback",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "proc_buff",
 	cooldown_duration = talent_settings_3.defensive_1.cooldown_duration,
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
@@ -595,8 +595,8 @@ templates.zealot_preacher_push_on_hit = {
 		end
 	end,
 	related_talents = {
-		"zealot_defensive_knockback",
-	},
+		"zealot_defensive_knockback"
+	}
 }
 
 local martyrdom_max_stacks = talent_settings_2.passive_1.martyrdom_max_stacks
@@ -625,15 +625,15 @@ end
 local toughness_reduction_per_stack = talent_settings_2.passive_1.toughness_reduction_per_stack
 
 templates.zealot_martyrdom_toughness = {
-	class_name = "buff",
 	max_stacks = 1,
-	max_stacks_cap = 1,
 	predicted = false,
+	max_stacks_cap = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.toughness_damage_taken_modifier] = {
 			min = 0,
-			max = toughness_reduction_per_stack * martyrdom_max_stacks,
-		},
+			max = toughness_reduction_per_stack * martyrdom_max_stacks
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -646,7 +646,7 @@ templates.zealot_martyrdom_toughness = {
 		local missing_segments = _martyrdom_missing_health_segments(template_data)
 
 		return math.clamp01(missing_segments / martyrdom_max_stacks)
-	end,
+	end
 }
 templates.zealot_preacher_segment_breaking_half_damage = {
 	class_name = "buff",
@@ -654,11 +654,11 @@ templates.zealot_preacher_segment_breaking_half_damage = {
 	max_stacks_cap = 1,
 	predicted = false,
 	keywords = {
-		keywords.health_segment_breaking_reduce_damage_taken,
+		keywords.health_segment_breaking_reduce_damage_taken
 	},
 	stat_buffs = {
-		[stat_buffs.health_segment_damage_taken_multiplier] = talent_settings_3.defensive_2.health_segment_damage_taken_multiplier,
-	},
+		[stat_buffs.health_segment_damage_taken_multiplier] = talent_settings_3.defensive_2.health_segment_damage_taken_multiplier
+	}
 }
 
 local max_dist = talent_settings_3.passive_1.max_dist
@@ -670,20 +670,20 @@ local toughness_on_max_stacks_small = talent_settings_3.passive_1.toughness_on_m
 local _fanatic_rage_add_stack
 
 templates.zealot_fanatic_rage = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
-	hud_always_show_stacks = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
 	predicted = false,
+	hud_priority = 1,
+	hud_always_show_stacks = true,
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	use_talent_resource = true,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.75,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.75
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local current_resource = template_data.talent_resource_component.current_resource
@@ -750,7 +750,7 @@ templates.zealot_fanatic_rage = {
 			if template_data.crits_grants_stack and CheckProcFunctions.on_crit(params) then
 				_fanatic_rage_add_stack(template_data, template_context)
 			end
-		end,
+		end
 	},
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.remove_stack_t and t > template_data.remove_stack_t then
@@ -769,8 +769,8 @@ templates.zealot_fanatic_rage = {
 		end
 	end,
 	related_talents = {
-		"zealot_fanatic_rage",
-	},
+		"zealot_fanatic_rage"
+	}
 }
 
 function _fanatic_rage_add_stack(template_data, template_context)
@@ -798,20 +798,20 @@ function _fanatic_rage_add_stack(template_data, template_context)
 end
 
 templates.zealot_fanatic_rage_buff = {
+	predicted = false,
+	hud_priority = 1,
+	refresh_duration_on_stack = true,
 	always_active = true,
-	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = out_of_combat_time,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings_3.passive_1.crit_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings_3.passive_1.crit_chance
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings_3.spec_passive_2.crit_chance,
+		[stat_buffs.critical_strike_chance] = talent_settings_3.spec_passive_2.crit_chance
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -849,34 +849,34 @@ templates.zealot_fanatic_rage_buff = {
 		return template_data.conditional_stat_buff_active
 	end,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_preacher_rage",
+		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_preacher_rage"
 	},
 	related_talents = {
-		"zealot_fanatic_rage",
-	},
+		"zealot_fanatic_rage"
+	}
 }
 templates.zealot_preacher_damage_vs_disgusting = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	keywords = {
-		keywords.zealot_toughness,
+		keywords.zealot_toughness
 	},
 	stat_buffs = {
 		[stat_buffs.disgustingly_resilient_damage] = talent_settings_3.passive_2.damage_vs_disgusting,
-		[stat_buffs.resistant_damage] = talent_settings_3.passive_2.damage_vs_resistant,
-	},
+		[stat_buffs.resistant_damage] = talent_settings_3.passive_2.damage_vs_resistant
+	}
 }
 
 local corruption_heal_amount = talent_settings_3.coherency.corruption_heal_amount
 
 templates.zealot_preacher_coherency_corruption_healing = {
-	class_name = "interval_buff",
 	coherency_id = "zealot_preacher_coherency_corruption_healing",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_cleansing_prayer",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "interval_buff",
 	buff_category = buff_categories.aura,
 	interval = talent_settings_3.coherency.interval,
 	start_func = function (template_data, template_context)
@@ -903,20 +903,20 @@ templates.zealot_preacher_coherency_corruption_healing = {
 		end
 	end,
 	related_talents = {
-		"utilitieszealot_corruption_healing_coherency",
-	},
+		"utilitieszealot_corruption_healing_coherency"
+	}
 }
 
 local corruption_heal_amount_increased = talent_settings_3.coop_2.corruption_heal_amount_increased
 
 templates.zealot_preacher_coherency_corruption_healing_improved = {
-	class_name = "interval_buff",
 	coherency_id = "zealot_preacher_coherency_corruption_healing",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_cleansing_prayer",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "interval_buff",
 	buff_category = buff_categories.aura,
 	interval = talent_settings_3.coop_2.interval,
 	start_func = function (template_data, template_context)
@@ -943,64 +943,64 @@ templates.zealot_preacher_coherency_corruption_healing_improved = {
 		end
 	end,
 	related_talents = {
-		"zealot_corruption_healing_coherency_improved",
-	},
+		"zealot_corruption_healing_coherency_improved"
+	}
 }
 templates.zealot_preacher_reduce_corruption_damage = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.corruption_taken_multiplier] = talent_settings_3.passive_3.corruption_taken_multiplier,
-	},
+		[stat_buffs.corruption_taken_multiplier] = talent_settings_3.passive_3.corruption_taken_multiplier
+	}
 }
 templates.zealot_always_in_coherency_buff = {
-	class_name = "buff",
 	coherency_id = "zealot_always_at_least_one_coherency",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_always_in_coherency",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	related_talents = {
-		"zealot_always_in_coherency",
-	},
+		"zealot_always_in_coherency"
+	}
 }
 templates.zealot_preacher_impact_power = {
-	class_name = "buff",
-	max_stacks = 1,
-	max_stacks_cap = 1,
 	predicted = false,
+	max_stacks_cap = 1,
+	max_stacks = 1,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.impact_modifier] = talent_settings_3.mixed_1.impact_modifier,
-	},
+		[stat_buffs.impact_modifier] = talent_settings_3.mixed_1.impact_modifier
+	}
 }
 templates.zealot_preacher_more_segments = {
-	class_name = "buff",
-	max_stacks = 1,
-	max_stacks_cap = 1,
 	predicted = false,
+	max_stacks_cap = 1,
+	max_stacks = 1,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.extra_max_amount_of_wounds] = talent_settings_3.mixed_3.extra_max_amount_of_wounds,
-	},
+		[stat_buffs.extra_max_amount_of_wounds] = talent_settings_3.mixed_3.extra_max_amount_of_wounds
+	}
 }
 templates.zealot_pious_stabguy_increased_weaskpot_impact = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_weakspot_impact_modifier] = 0.5,
-	},
+		[stat_buffs.melee_weakspot_impact_modifier] = 0.5
+	}
 }
 
 local ZEALOT_PREACHER_MELEE_INCREASE_NEXT_MELEE_BUFF_ID = "zealot_preacher_melee_increase_next_melee_buff"
 
 templates.zealot_preacher_melee_increase_next_melee_proc = {
-	class_name = "proc_buff",
-	max_stacks = 1,
-	max_stacks_cap = 1,
 	predicted = false,
+	max_stacks_cap = 1,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	proc_func = function (params, template_data, template_context, t)
 		local num_hit_units = math.min(params.num_hit_units, talent_settings_3.offensive_1.max_stacks)
@@ -1011,21 +1011,21 @@ templates.zealot_preacher_melee_increase_next_melee_proc = {
 		if buff_extension and num_hit_units > 0 and not has_buff then
 			buff_extension:add_internally_controlled_buff_with_stacks("zealot_preacher_melee_increase_next_melee_buff", num_hit_units, t)
 		end
-	end,
+	end
 }
 templates.zealot_preacher_melee_increase_next_melee_buff = {
-	always_show_in_hud = true,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_multi_hits_increase_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 2,
-	predicted = false,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
 	buff_id = ZEALOT_PREACHER_MELEE_INCREASE_NEXT_MELEE_BUFF_ID,
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_3.offensive_1.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings_3.offensive_1.melee_damage
 	},
 	max_stacks = talent_settings_3.offensive_1.max_stacks,
 	max_stacks_cap = talent_settings_3.offensive_1.max_stacks,
@@ -1036,75 +1036,75 @@ templates.zealot_preacher_melee_increase_next_melee_buff = {
 		return template_data.exit
 	end,
 	related_talents = {
-		"zealot_multi_hits_increase_damage",
-	},
+		"zealot_multi_hits_increase_damage"
+	}
 }
 
 local crit_chance_shared = talent_settings_3.offensive_2.crit_share
 
 templates.zealot_fanatic_rage_minor = {
-	class_name = "buff",
+	max_stacks_cap = 1,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
 	max_stacks = 1,
-	max_stacks_cap = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	duration = out_of_combat_time,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings_3.passive_1.crit_chance * crit_chance_shared,
+		[stat_buffs.critical_strike_chance] = talent_settings_3.passive_1.crit_chance * crit_chance_shared
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/abilities/squad_leader_ability_damage_buff",
+		on_screen_effect = "content/fx/particles/abilities/squad_leader_ability_damage_buff"
 	},
 	related_talents = {
-		"zealot_fanatic_rage",
-	},
+		"zealot_fanatic_rage"
+	}
 }
 templates.zealot_fanatic_rage_major = {
-	class_name = "buff",
+	max_stacks_cap = 1,
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
 	max_stacks = 1,
-	max_stacks_cap = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	buff_category = buff_categories.talents_secondary,
 	duration = out_of_combat_time,
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = talent_settings_3.spec_passive_2.crit_chance * crit_chance_shared,
+		[stat_buffs.critical_strike_chance] = talent_settings_3.spec_passive_2.crit_chance * crit_chance_shared
 	},
 	player_effects = {
-		on_screen_effect = "content/fx/particles/abilities/squad_leader_ability_damage_buff",
+		on_screen_effect = "content/fx/particles/abilities/squad_leader_ability_damage_buff"
 	},
 	related_talents = {
-		"zealot_fanatic_rage_improved",
-	},
+		"zealot_fanatic_rage_improved"
+	}
 }
 templates.zealot_preacher_increased_cleave = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings_3.offensive_3.max_hit_mass_impact_modifier,
-	},
+		[stat_buffs.max_hit_mass_impact_modifier] = talent_settings_3.offensive_3.max_hit_mass_impact_modifier
+	}
 }
 templates.zealot_dash_buff = {
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	predicted = false,
 	refresh_duration_on_stack = true,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
 	max_stacks = talent_settings_2.combat_ability.max_stacks,
 	duration = talent_settings_2.combat_ability.duration,
 	stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings_2.combat_ability.melee_damage,
 		[stat_buffs.melee_critical_strike_chance] = talent_settings_2.combat_ability.melee_critical_strike_chance,
-		[stat_buffs.melee_rending_multiplier] = talent_settings_2.combat_ability.melee_rending_multiplier,
+		[stat_buffs.melee_rending_multiplier] = talent_settings_2.combat_ability.melee_rending_multiplier
 	},
 	proc_events = {
-		[proc_events.on_hit] = talent_settings_2.combat_ability.on_hit_proc_chance,
+		[proc_events.on_hit] = talent_settings_2.combat_ability.on_hit_proc_chance
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1134,24 +1134,24 @@ templates.zealot_dash_buff = {
 		return template_data.finish
 	end,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash_charge",
-	},
+		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash_charge"
+	}
 }
 
 local martyrdom_damage_step = talent_settings_2.passive_1.damage_per_step
 
 templates.zealot_martyrdom_base = {
-	class_name = "zealot_passive_buff",
 	hud_always_show_stacks = true,
+	predicted = false,
+	hud_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_martyrdom",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 2,
-	predicted = false,
+	class_name = "zealot_passive_buff",
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
 			min = 0,
-			max = martyrdom_max_stacks * martyrdom_damage_step,
-		},
+			max = martyrdom_max_stacks * martyrdom_damage_step
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1185,21 +1185,21 @@ templates.zealot_martyrdom_base = {
 		return lerp_t
 	end,
 	related_talents = {
-		"zealot_martyrdom",
-	},
+		"zealot_martyrdom"
+	}
 }
 templates.zealot_increased_melee_attack_speed = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings_2.passive_3.melee_attack_speed,
-	},
+		[stat_buffs.melee_attack_speed] = talent_settings_2.passive_3.melee_attack_speed
+	}
 }
 templates.zealot_flame_grenade_thrown = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_grenade_thrown] = 1,
+		[proc_events.on_grenade_thrown] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		local unit = template_context.unit
@@ -1208,21 +1208,21 @@ templates.zealot_flame_grenade_thrown = {
 		local buff_name = "zealot_enemies_engulfed_by_flames"
 
 		buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
-	end,
+	end
 }
 
 local ALLOWED_FIRE_DAMAGE_PROFILES = {
-	fire_grenade_impact = true,
-	flame_grenade_liquid_area_fire_burning = true,
 	liquid_area_fire_burning = true,
+	flame_grenade_liquid_area_fire_burning = true,
+	fire_grenade_impact = true
 }
 
 templates.zealot_enemies_engulfed_by_flames = {
-	class_name = "proc_buff",
-	duration = 10,
 	predicted = false,
+	duration = 10,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_damage_dealt] = 1,
+		[proc_events.on_damage_dealt] = 1
 	},
 	proc_func = function (params, template_data, template_context)
 		if not ALLOWED_FIRE_DAMAGE_PROFILES[params.damage_profile_name] then
@@ -1240,21 +1240,21 @@ templates.zealot_enemies_engulfed_by_flames = {
 	end,
 	stop_func = function (template_data, template_context)
 		Managers.stats:record_private("hook_zealot_engulfed_enemies", template_context.player, template_data.engulfed_enemies)
-	end,
+	end
 }
 templates.zealot_increased_toughness_recovery_from_kills = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_melee_replenish] = 1,
-	},
+		[stat_buffs.toughness_melee_replenish] = 1
+	}
 }
 templates.zealot_reduced_toughness_damage_taken_on_critical_strike_hits = {
-	class_name = "proc_buff",
-	max_stacks = 1,
 	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_crit,
 	start_func = function (template_data, template_context)
@@ -1262,41 +1262,41 @@ templates.zealot_reduced_toughness_damage_taken_on_critical_strike_hits = {
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.buff_extension:add_internally_controlled_buff("zealot_reduced_toughness_damage_taken_on_critical_strike_hits_effect", t)
-	end,
+	end
 }
 templates.zealot_reduced_toughness_damage_taken_on_critical_strike_hits_effect = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_crits_reduce_toughness_damage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_2.toughness_2.duration,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.toughness_2.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.toughness_2.toughness_damage_taken_multiplier
 	},
 	related_talents = {
-		"zealot_crits_reduce_toughness_damage",
-	},
+		"zealot_crits_reduce_toughness_damage"
+	}
 }
 
 local range = talent_settings_2.toughness_3.range
 
 templates.zealot_toughness_regen_in_melee = {
-	always_show_in_hud = true,
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_toughness_in_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "buff",
+	always_show_in_hud = true,
 	talent_overrides = {
 		{
-			toughness_percentage = talent_settings_2.toughness_3.toughness / 2 * 1,
+			toughness_percentage = talent_settings_2.toughness_3.toughness / 2 * 1
 		},
 		{
-			toughness_percentage = talent_settings_2.toughness_3.toughness / 2 * 2,
-		},
+			toughness_percentage = talent_settings_2.toughness_3.toughness / 2 * 2
+		}
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -1368,14 +1368,14 @@ templates.zealot_toughness_regen_in_melee = {
 		return template_data.is_active
 	end,
 	related_talents = {
-		"zealot_toughness_in_melee",
-	},
+		"zealot_toughness_in_melee"
+	}
 }
 templates.zealot_bleeding_crits = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -1408,32 +1408,32 @@ templates.zealot_bleeding_crits = {
 				victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
 			end
 		end
-	end,
+	end
 }
 templates.zealot_bleeding_crits_effect = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_crits_apply_bleed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
 	max_stacks = 3,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_2.offensive_1.duration,
 	stat_buffs = {
-		[stat_buffs.melee_critical_strike_chance] = talent_settings_2.offensive_1.melee_critical_strike_chance,
+		[stat_buffs.melee_critical_strike_chance] = talent_settings_2.offensive_1.melee_critical_strike_chance
 	},
 	related_talents = {
-		"zealot_crits_apply_bleed",
-	},
+		"zealot_crits_apply_bleed"
+	}
 }
 
 local min_hits = talent_settings_2.offensive_2.min_hits
 
 templates.zealot_multi_hits_increase_impact = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_sweep_finish] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1449,27 +1449,27 @@ templates.zealot_multi_hits_increase_impact = {
 		local t = FixedFrame.get_latest_fixed_time()
 
 		template_data.buff_extension:add_internally_controlled_buff("zealot_multi_hits_increase_impact_effect", t)
-	end,
+	end
 }
 
 local impact_buff_max_stacks = talent_settings_2.offensive_2.max_stacks
 
 templates.zealot_multi_hits_increase_impact_effect = {
+	refresh_duration_on_stack = true,
 	always_active = true,
-	class_name = "buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_multi_hits_grant_impact_and_uninterruptible",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings_2.offensive_2.duration,
 	max_stacks = impact_buff_max_stacks,
 	stat_buffs = {
-		[stat_buffs.impact_modifier] = talent_settings_2.offensive_2.impact_modifier,
+		[stat_buffs.impact_modifier] = talent_settings_2.offensive_2.impact_modifier
 	},
 	conditional_keywords = {
 		keywords.uninterruptible,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return template_context.stack_count >= impact_buff_max_stacks
@@ -1478,22 +1478,22 @@ templates.zealot_multi_hits_increase_impact_effect = {
 		return true
 	end,
 	related_talents = {
-		"zealot_multi_hits_grant_impact_and_uninterruptible",
-	},
+		"zealot_multi_hits_grant_impact_and_uninterruptible"
+	}
 }
 
 local attack_speed = talent_settings_2.offensive_3.attack_speed_per_segment
 
 templates.zealot_martyrdom_attack_speed = {
-	class_name = "buff",
 	max_stacks = 1,
-	max_stacks_cap = 1,
 	predicted = false,
+	max_stacks_cap = 1,
+	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.melee_attack_speed] = {
 			min = 0,
-			max = martyrdom_max_stacks * attack_speed,
-		},
+			max = martyrdom_max_stacks * attack_speed
+		}
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1506,13 +1506,13 @@ templates.zealot_martyrdom_attack_speed = {
 		local missing_segments = _martyrdom_missing_health_segments(template_data)
 
 		return math.clamp01(missing_segments / martyrdom_max_stacks)
-	end,
+	end
 }
 templates.zealot_backstab_kills_while_loner_aura_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1540,30 +1540,30 @@ templates.zealot_backstab_kills_while_loner_aura_tracking_buff = {
 		local player = template_context.player
 
 		Managers.stats:record_private("hook_zealot_loner_aura", player)
-	end,
+	end
 }
 templates.zealot_coherency_toughness_damage_resistance = {
-	class_name = "buff",
 	coherency_id = "zelot_maniac_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_the_emperor_will",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coherency.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coherency.toughness_damage_taken_multiplier
 	},
 	related_talents = {
-		"zealot_toughness_damage_coherency",
-	},
+		"zealot_toughness_damage_coherency"
+	}
 }
 templates.zealot_toughness_on_aura_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1597,30 +1597,30 @@ templates.zealot_toughness_on_aura_tracking_buff = {
 		else
 			template_data.last_damage_recived = 0
 		end
-	end,
+	end
 }
 templates.zealot_coherency_toughness_damage_resistance_improved = {
-	class_name = "buff",
 	coherency_id = "zelot_maniac_coherency_aura",
+	predicted = false,
+	hud_priority = 5,
 	coherency_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_aura_the_emperor_demand",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	predicted = false,
+	class_name = "buff",
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coop_2.max_stacks,
 	stat_buffs = {
-		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coop_2.toughness_damage_taken_multiplier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_2.coop_2.toughness_damage_taken_multiplier
 	},
 	related_talents = {
-		"zealot_toughness_damage_reduction_coherency_improved",
-	},
+		"zealot_toughness_damage_reduction_coherency_improved"
+	}
 }
 templates.zealot_improved_toughness_on_aura_tracking_buff = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1654,13 +1654,13 @@ templates.zealot_improved_toughness_on_aura_tracking_buff = {
 		else
 			template_data.last_damage_recived = 0
 		end
-	end,
+	end
 }
 templates.zealot_toughness_on_combat_ability = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_combat_ability] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1677,22 +1677,22 @@ templates.zealot_toughness_on_combat_ability = {
 				Toughness.replenish_percentage(coherency_unit, percentage, false, "manaic_coop_3")
 			end
 		end
-	end,
+	end
 }
 templates.zealot_resist_death = {
+	predicted = false,
+	hud_priority = 2,
 	always_show_in_hud = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_resist_death",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 2,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.passive_2.active_duration,
 	cooldown_duration = talent_settings_2.passive_2.cooldown_duration,
 	proc_events = {
-		[proc_events.on_damage_taken] = talent_settings_2.passive_2.on_damage_taken_proc_chance,
+		[proc_events.on_damage_taken] = talent_settings_2.passive_2.on_damage_taken_proc_chance
 	},
 	off_cooldown_keywords = {
-		BuffSettings.keywords.resist_death,
+		BuffSettings.keywords.resist_death
 	},
 	check_proc_func = CheckProcFunctions.would_die,
 	start_func = function (template_data, template_context)
@@ -1718,34 +1718,34 @@ templates.zealot_resist_death = {
 	end,
 	proc_effects = {
 		player_effects = {
+			on_screen_effect = "content/fx/particles/screenspace/screen_zealot_invincibility",
 			looping_wwise_start_event = "wwise/events/player/play_ability_zealot_maniac_resist_death_on",
 			looping_wwise_stop_event = "wwise/events/player/play_ability_zealot_maniac_resist_death_off",
-			on_screen_effect = "content/fx/particles/screenspace/screen_zealot_invincibility",
 			wwise_state = {
 				group = "player_ability",
-				off_state = "none",
 				on_state = "zealot_maniac_resist_death",
-			},
-		},
+				off_state = "none"
+			}
+		}
 	},
 	related_talents = {
-		"zealot_resist_death",
-	},
+		"zealot_resist_death"
+	}
 }
 templates.zealot_resist_death_improved_with_leech = {
+	predicted = false,
+	hud_priority = 2,
 	always_show_in_hud = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_resist_death_healing",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 2,
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.defensive_1.active_duration,
 	cooldown_duration = talent_settings_2.defensive_1.cooldown_duration,
 	proc_events = {
-		[proc_events.on_damage_taken] = talent_settings_2.defensive_1.on_damage_taken_proc_chance,
+		[proc_events.on_damage_taken] = talent_settings_2.defensive_1.on_damage_taken_proc_chance
 	},
 	off_cooldown_keywords = {
-		keywords.resist_death,
+		keywords.resist_death
 	},
 	check_proc_func = CheckProcFunctions.would_die,
 	start_func = function (template_data, template_context)
@@ -1776,30 +1776,30 @@ templates.zealot_resist_death_improved_with_leech = {
 	end,
 	proc_effects = {
 		player_effects = {
+			on_screen_effect = "content/fx/particles/screenspace/screen_zealot_invincibility",
 			looping_wwise_start_event = "wwise/events/player/play_ability_zealot_maniac_resist_death_on",
 			looping_wwise_stop_event = "wwise/events/player/play_ability_zealot_maniac_resist_death_off",
-			on_screen_effect = "content/fx/particles/screenspace/screen_zealot_invincibility",
 			wwise_state = {
 				group = "player_ability",
-				off_state = "none",
 				on_state = "zealot_maniac_resist_death",
-			},
-		},
+				off_state = "none"
+			}
+		}
 	},
 	related_talents = {
-		"zealot_resist_death_healing",
-	},
+		"zealot_resist_death_healing"
+	}
 }
 
 local leech = talent_settings_2.defensive_1.leech
 local melee_multiplier = talent_settings_2.defensive_1.melee_multiplier
 
 templates.zealot_resist_death_leech_effect = {
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
+	allow_proc_while_active = true,
 	proc_events = {
-		[proc_events.on_damage_dealt] = talent_settings_2.defensive_1.on_hit_proc_chance,
+		[proc_events.on_damage_dealt] = talent_settings_2.defensive_1.on_hit_proc_chance
 	},
 	duration = talent_settings_2.defensive_1.duration,
 	start_func = function (template_data, template_context)
@@ -1847,18 +1847,18 @@ templates.zealot_resist_death_leech_effect = {
 		local player = player_unit_spawn_manager:owner(unit)
 
 		Managers.stats:record_private("hook_zealot_health_leeched_during_resist_death", player, heal_percentage)
-	end,
+	end
 }
 templates.zealot_movement_enhanced = {
+	predicted = true,
+	hud_priority = 4,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_damage_boosts_movement",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = true,
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.defensive_2.active_duration,
 	proc_events = {
-		[proc_events.on_damage_taken] = talent_settings_2.defensive_2.on_damage_taken_proc_chance,
+		[proc_events.on_damage_taken] = talent_settings_2.defensive_2.on_damage_taken_proc_chance
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local attacked_unit = params.attacked_unit
@@ -1867,28 +1867,28 @@ templates.zealot_movement_enhanced = {
 		return attacked_unit == unit
 	end,
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = talent_settings_2.defensive_2.movement_speed,
+		[stat_buffs.movement_speed] = talent_settings_2.defensive_2.movement_speed
 	},
 	keywords = {
 		keywords.slowdown_immune,
-		keywords.stun_immune,
+		keywords.stun_immune
 	},
 	related_talents = {
-		"zealot_damage_boosts_movement",
-	},
+		"zealot_damage_boosts_movement"
+	}
 }
 
 local num_slices = 10
 
 templates.zealot_recuperate_a_portion_of_damage_taken = {
+	predicted = false,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_heal_part_of_damage_taken",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	predicted = false,
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.defensive_3.duration,
 	proc_events = {
-		[proc_events.on_damage_taken] = talent_settings_2.defensive_3.on_damage_taken_proc_chance,
+		[proc_events.on_damage_taken] = talent_settings_2.defensive_3.on_damage_taken_proc_chance
 	},
 	check_proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
@@ -1905,8 +1905,8 @@ templates.zealot_recuperate_a_portion_of_damage_taken = {
 
 		for i = 1, num_slices do
 			local damage_pool_slice = {
-				current_damage = 0,
 				ticks = 0,
+				current_damage = 0
 			}
 
 			template_data.damage_pool[i] = damage_pool_slice
@@ -1984,14 +1984,14 @@ templates.zealot_recuperate_a_portion_of_damage_taken = {
 		end
 	end,
 	related_talents = {
-		"zealot_heal_part_of_damage_taken",
-	},
+		"zealot_heal_part_of_damage_taken"
+	}
 }
 templates.zealot_close_ranged_damage = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.damage_near] = talent_settings_2.offensive_2_1.damage,
+		[stat_buffs.damage_near] = talent_settings_2.offensive_2_1.damage
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2008,13 +2008,13 @@ templates.zealot_close_ranged_damage = {
 		end
 
 		return false
-	end,
+	end
 }
 templates.zealot_stacking_melee_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings_2.offensive_2_2.on_hit_proc_chance,
+		[proc_events.on_hit] = talent_settings_2.offensive_2_2.on_hit_proc_chance
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
@@ -2031,23 +2031,23 @@ templates.zealot_stacking_melee_damage = {
 
 			buff_extension:add_internally_controlled_buff("zealot_stacking_melee_damage_effect", t)
 		end
-	end,
+	end
 }
 templates.zealot_stacking_melee_damage_effect = {
-	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_hits_grant_stacking_damage",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_hits_grant_stacking_damage",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	class_name = "buff",
 	max_stacks = talent_settings_2.offensive_2_2.max_stacks,
 	duration = talent_settings_2.offensive_2_2.duration,
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings_2.offensive_2_2.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings_2.offensive_2_2.melee_damage
 	},
 	related_talents = {
-		"zealot_hits_grant_stacking_damage",
-	},
+		"zealot_hits_grant_stacking_damage"
+	}
 }
 
 local external_properties = {}
@@ -2056,7 +2056,7 @@ templates.zealot_passive_replenish_throwing_knives_from_melee_kills = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_kill] = 1,
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_melee_kill,
 	start_func = function (template_data, template_context)
@@ -2094,13 +2094,13 @@ templates.zealot_passive_replenish_throwing_knives_from_melee_kills = {
 
 			external_properties.indicator_type = "zealot_throwing_knives"
 		end
-	end,
+	end
 }
 templates.zealot_throwing_knife_on_bleed_kill = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_minion_death] = 0.15,
+		[proc_events.on_minion_death] = 0.15
 	},
 	start_func = function (template_data, template_context)
 		return
@@ -2124,14 +2124,14 @@ templates.zealot_throwing_knife_on_bleed_kill = {
 		if valid_target then
 			-- Nothing
 		end
-	end,
+	end
 }
 templates.zealot_combat_ability_crits_reduce_cooldown = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_start] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2175,17 +2175,17 @@ templates.zealot_combat_ability_crits_reduce_cooldown = {
 		end,
 		on_sweep_start = function (params, template_data, template_context)
 			template_data.active = true
-		end,
-	},
+		end
+	}
 }
 templates.zealot_crits_cooldown_buff = {
-	class_name = "buff",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_crits_grant_cd",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 3,
 	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
+	class_name = "buff",
 	duration = talent_settings.crits_grants_cd.duration,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2206,29 +2206,29 @@ templates.zealot_crits_cooldown_buff = {
 		end
 	end,
 	related_talents = {
-		"zealot_crits_grant_cd",
-	},
+		"zealot_crits_grant_cd"
+	}
 }
 templates.zealot_combat_ability_attack_speed_increase = {
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_chastise_the_wicked",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 3,
 	predicted = false,
+	hud_priority = 3,
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_chastise_the_wicked",
+	class_name = "proc_buff",
 	active_duration = talent_settings_2.combat_ability_2.active_duration + 1,
 	proc_keywords = {
-		keywords.zealot_maniac_empowered_martyrdom,
+		keywords.zealot_maniac_empowered_martyrdom
 	},
 	proc_events = {
-		[proc_events.on_lunge_start] = talent_settings_2.combat_ability_2.on_lunge_end_proc_chance,
+		[proc_events.on_lunge_start] = talent_settings_2.combat_ability_2.on_lunge_end_proc_chance
 	},
 	proc_stat_buffs = {
-		[stat_buffs.attack_speed] = talent_settings_2.combat_ability_2.attack_speed,
+		[stat_buffs.attack_speed] = talent_settings_2.combat_ability_2.attack_speed
 	},
 	related_talents = {
-		"zealot_attack_speed_post_ability",
-	},
+		"zealot_attack_speed_post_ability"
+	}
 }
 
 local ALLOWED_INVISIBILITY_DAMAGE_TYPES = {
@@ -2236,26 +2236,26 @@ local ALLOWED_INVISIBILITY_DAMAGE_TYPES = {
 	[damage_types.burning] = true,
 	[damage_types.grenade_frag] = true,
 	[damage_types.plasma] = true,
-	[damage_types.electrocution] = true,
+	[damage_types.electrocution] = true
 }
 
 templates.zealot_invisibility = {
+	predicted = true,
+	hud_priority = 4,
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	duration = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_stealth",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 4,
-	predicted = true,
+	duration = 3,
+	class_name = "proc_buff",
 	unique_buff_id = "zealot_invisibility",
 	keywords = {
-		keywords.invisible,
+		keywords.invisible
 	},
 	stat_buffs = {
 		[stat_buffs.movement_speed] = 0.2,
 		[stat_buffs.critical_strike_chance] = 1,
 		[stat_buffs.finesse_modifier_bonus] = 1,
-		[stat_buffs.backstab_damage] = 1,
+		[stat_buffs.backstab_damage] = 1
 	},
 	proc_events = {
 		[proc_events.on_shoot] = 1,
@@ -2264,17 +2264,17 @@ templates.zealot_invisibility = {
 		[proc_events.on_rescue] = 1,
 		[proc_events.on_pull_up] = 1,
 		[proc_events.on_remove_net] = 1,
-		[proc_events.on_action_start] = 1,
+		[proc_events.on_action_start] = 1
 	},
 	player_effects = {
 		wwise_state = {
 			group = "player_ability",
-			off_state = "none",
 			on_state = "zealot_invisible",
+			off_state = "none"
 		},
 		wwise_parameters = {
-			player_zealot_invisible_effect = 1,
-		},
+			player_zealot_invisible_effect = 1
+		}
 	},
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -2333,104 +2333,104 @@ templates.zealot_invisibility = {
 		_shroudfield_penance_stop(template_data, template_context)
 	end,
 	related_talents = {
-		"zealot_stealth",
-	},
+		"zealot_stealth"
+	}
 }
 templates.zealot_invisibility_increased_duration = table.clone(templates.zealot_invisibility)
 templates.zealot_invisibility_increased_duration.duration = 5
 templates.zealot_sprinting_cost_reduction = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.sprinting_cost_multiplier] = 0.8,
-	},
+		[stat_buffs.sprinting_cost_multiplier] = 0.8
+	}
 }
 templates.zealot_backstab_damage = {
 	class_name = "buff",
-	coherency_id = "stab_guy_backstab_coherency_aura",
 	coherency_priority = 1,
+	coherency_id = "stab_guy_backstab_coherency_aura",
 	predicted = false,
 	keywords = {
-		keywords.allow_backstabbing,
+		keywords.allow_backstabbing
 	},
 	stat_buffs = {
-		[stat_buffs.backstab_damage] = 0.2,
-	},
+		[stat_buffs.backstab_damage] = 0.2
+	}
 }
 templates.zealot_critstrike_damage_on_dodge = {
-	active_duration = 3,
-	class_name = "proc_buff",
+	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_increased_crit_and_weakspot_damage_after_dodge",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 3,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
 		[stat_buffs.critical_strike_damage] = 0.5,
-		[stat_buffs.weakspot_damage] = 0.5,
+		[stat_buffs.weakspot_damage] = 0.5
 	},
 	proc_effects = {
 		player_effects = {
-			wwise_proc_event = "wwise/events/player/play_player_buff_damage_increase",
-		},
+			wwise_proc_event = "wwise/events/player/play_player_buff_damage_increase"
+		}
 	},
 	related_talents = {
-		"zealot_increased_crit_and_weakspot_damage_after_dodge",
-	},
+		"zealot_increased_crit_and_weakspot_damage_after_dodge"
+	}
 }
 templates.zealot_melee_damage_on_stamina_depleted = {
-	active_duration = 5,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_more_damage_when_low_on_stamina",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 5,
 	proc_events = {
-		[proc_events.on_stamina_depleted] = 1,
+		[proc_events.on_stamina_depleted] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.melee_damage] = 0.2,
+		[stat_buffs.melee_damage] = 0.2
 	},
 	related_talents = {
-		"zealot_more_damage_when_low_on_stamina",
-	},
+		"zealot_more_damage_when_low_on_stamina"
+	}
 }
 templates.zealot_damage_reduction_after_dodge = {
-	active_duration = 2.5,
-	class_name = "proc_buff",
+	predicted = false,
+	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_reduced_damage_after_dodge",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 4,
-	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 2.5,
 	proc_events = {
-		[proc_events.on_successful_dodge] = 1,
+		[proc_events.on_successful_dodge] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.75,
+		[stat_buffs.damage_taken_multiplier] = 0.75
 	},
 	related_talents = {
-		"zealot_reduced_damage_after_dodge",
-	},
+		"zealot_reduced_damage_after_dodge"
+	}
 }
 templates.zealot_increased_sprint_speed = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	keywords = {
-		keywords.sprint_dodge_in_overtime,
+		keywords.sprint_dodge_in_overtime
 	},
 	stat_buffs = {
-		[stat_buffs.sprint_movement_speed] = 0.05,
-	},
+		[stat_buffs.sprint_movement_speed] = 0.05
+	}
 }
 
 local damage_taken_to_ability_cd_percentage = talent_settings_3.combat_ability_cd_restore_on_damage.damage_taken_to_ability_cd_percentage
 
 templates.zealot_ability_cooldown_on_heavy_melee_damage = {
-	class_name = "proc_buff",
 	predicted = true,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_damage_taken] = 1,
+		[proc_events.on_damage_taken] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2467,14 +2467,14 @@ templates.zealot_ability_cooldown_on_heavy_melee_damage = {
 		local cooldown_percent = damage_taken * damage_taken_to_ability_cd_percentage
 
 		ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_percent)
-	end,
+	end
 }
 templates.zealot_ability_cooldown_on_leaving_coherency = {
-	class_name = "proc_buff",
 	cooldown_duration = 15,
 	predicted = true,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_coherency_exit] = 1,
+		[proc_events.on_coherency_exit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2495,28 +2495,28 @@ templates.zealot_ability_cooldown_on_leaving_coherency = {
 		local ability_extension = template_data.ability_extension
 
 		ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
-	end,
+	end
 }
 templates.zealot_flanking_damage = {
 	class_name = "buff",
 	max_stacks = 1,
 	predicted = false,
 	keywords = {
-		keywords.allow_flanking,
+		keywords.allow_flanking
 	},
 	stat_buffs = {
-		[stat_buffs.flanking_damage] = 0.3,
-	},
+		[stat_buffs.flanking_damage] = 0.3
+	}
 }
 
 local combat_ability_cd_restore_on_backstab = talent_settings_3.zealot_backstab_kills_restore_cd.combat_ability_cd_percentage
 
 templates.zealot_ability_cooldown_on_leaving_coherency_on_backstab = {
-	class_name = "proc_buff",
 	cooldown_duration = 1,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2550,24 +2550,24 @@ templates.zealot_ability_cooldown_on_leaving_coherency_on_backstab = {
 		local t = FixedFrame.get_latest_fixed_time()
 
 		template_data.next_proc_t = t + 0.2
-	end,
+	end
 }
 templates.zealot_increase_ability_cooldown_increase_bonus = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = 0.25,
+		[stat_buffs.ability_cooldown_modifier] = 0.25
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.finesse_modifier_bonus] = 0.5,
-		[stat_buffs.backstab_damage] = 0.5,
+		[stat_buffs.backstab_damage] = 0.5
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local buff_extension = template_context.buff_extension
 		local has_stealth = buff_extension:has_unique_buff_id("zealot_invisibility")
 
 		return has_stealth
-	end,
+	end
 }
 
 return templates

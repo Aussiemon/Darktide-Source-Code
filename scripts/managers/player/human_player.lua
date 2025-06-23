@@ -24,9 +24,9 @@ HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, l
 	self._account_id = account_id
 	self._cached_name = nil
 	self._orientation = {
-		pitch = 0,
-		roll = 0,
 		yaw = 0,
+		pitch = 0,
+		roll = 0
 	}
 	self._game_state_object = nil
 	self._slot = slot
@@ -118,7 +118,7 @@ HumanPlayer.set_profile = function (self, profile)
 	self._profile = profile
 	self._telemetry_subject = {
 		account_id = self._account_id,
-		character_id = self:character_id(),
+		character_id = self:character_id()
 	}
 
 	Managers.event:trigger("event_player_set_profile", self, profile)
@@ -138,6 +138,12 @@ end
 
 HumanPlayer.breed_name = function (self)
 	return self._profile.archetype.breed
+end
+
+HumanPlayer.companion_name = function (self)
+	local companion_data = self._profile.companion
+
+	return companion_data and companion_data.name or nil
 end
 
 HumanPlayer.telemetry_game_session = function (self)

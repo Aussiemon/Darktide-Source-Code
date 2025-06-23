@@ -191,7 +191,7 @@ HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, 
 		is_my_player = is_my_player,
 		local_player = self._my_player,
 		scenegraph_id = scenegraph_id,
-		using_fixed_scenegraph_id = fixed_scenegraph_id ~= nil,
+		using_fixed_scenegraph_id = fixed_scenegraph_id ~= nil
 	}
 	local panel
 	local host_type = Managers.connection:host_type()

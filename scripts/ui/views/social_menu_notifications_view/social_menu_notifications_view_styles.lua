@@ -21,17 +21,17 @@ scenegraph_styles.button_bar_height = ButtonPassTemplates.secondary_button_defau
 scenegraph_styles.button_bar_position = {
 	0,
 	48,
-	1,
+	1
 }
 scenegraph_styles.grid_position = {
 	0,
 	scenegraph_styles.button_bar_position[2] + scenegraph_styles.button_bar_height + 20,
-	1,
+	1
 }
 scenegraph_styles.scrollbar_position = {
 	0,
 	0,
-	3,
+	3
 }
 social_menu_notification_view_styles.button_bar = {}
 
@@ -39,18 +39,18 @@ local button_bar_styles = social_menu_notification_view_styles.button_bar
 
 button_bar_styles.button_size = {
 	230,
-	scenegraph_styles.button_bar_height,
+	scenegraph_styles.button_bar_height
 }
 social_menu_notification_view_styles.grid_spacing = {
 	scenegraph_styles.grid_width,
-	20,
+	20
 }
 
 local notification_height = 100
 
 social_menu_notification_view_styles.invitation_notification_size = {
 	scenegraph_styles.grid_width,
-	notification_height,
+	notification_height
 }
 social_menu_notification_view_styles.invitation_notification = {}
 
@@ -61,12 +61,12 @@ invitation_notification_style.background_selected = {
 	offset = {
 		0,
 		0,
-		0,
+		0
 	},
 	size = {
 		1150,
-		notification_height,
-	},
+		notification_height
+	}
 }
 invitation_notification_style.frame_highlight = {
 	hdr = true,
@@ -74,53 +74,53 @@ invitation_notification_style.frame_highlight = {
 	offset = {
 		0,
 		0,
-		11,
+		11
 	},
 	size_addition = {
 		0,
-		0,
+		0
 	},
 	highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition,
 	size = {
 		4,
-		notification_height,
-	},
+		notification_height
+	}
 }
 invitation_notification_style.new_notification_marker = {
+	vertical_alignment = "center",
 	hdr = true,
 	horizontal_alignment = "left",
-	vertical_alignment = "center",
 	size = {
 		30,
-		30,
+		30
 	},
 	offset = {
 		10,
 		0,
-		0,
+		0
 	},
-	color = Color.ui_hud_red_light(255, true),
+	color = Color.ui_hud_red_light(255, true)
 }
 invitation_notification_style.new_notification_ring = {
 	anim_time = 1,
-	hdr = true,
 	horizontal_alignment = "left",
-	pause_time = 1,
+	hdr = true,
 	vertical_alignment = "center",
+	pause_time = 1,
 	size = {
 		30,
-		30,
+		30
 	},
 	offset = {
 		10,
 		0,
-		0,
+		0
 	},
 	color = Color.ui_hud_red_light(255, true),
 	size_addition = {
 		0,
-		0,
-	},
+		0
+	}
 }
 invitation_notification_style.label = table.clone(UIFontSettings.header_3)
 
@@ -129,7 +129,7 @@ local invitation_notification_label = invitation_notification_style.label
 invitation_notification_label.offset = {
 	50,
 	-18,
-	0,
+	0
 }
 invitation_notification_label.text_vertical_alignment = "center"
 invitation_notification_style.text = table.clone(UIFontSettings.body)
@@ -139,7 +139,7 @@ local invitation_notification_text = invitation_notification_style.text
 invitation_notification_text.offset = {
 	50,
 	18,
-	0,
+	0
 }
 invitation_notification_text.text_vertical_alignment = "center"
 invitation_notification_style.age = table.clone(UIFontSettings.body)
@@ -150,7 +150,7 @@ invitation_notification_age.size = table.clone(invitation_notification_style.bac
 invitation_notification_age.offset = {
 	0,
 	-18,
-	0,
+	0
 }
 invitation_notification_age.text_horizontal_alignment = "right"
 invitation_notification_age.text_vertical_alignment = "center"
@@ -159,29 +159,29 @@ invitation_notification_style.age_debug = table.clone(UIFontSettings.body)
 local invitation_notification_age_debug = invitation_notification_style.age_debug
 
 invitation_notification_age_debug.size = {
-	500,
+	500
 }
 invitation_notification_age_debug.offset = {
 	0,
 	-18,
-	0,
+	0
 }
 invitation_notification_age_debug.horizontal_alignment = "right"
 invitation_notification_age_debug.text_horizontal_alignment = "left"
 invitation_notification_age_debug.text_vertical_alignment = "center"
 
 local join_button_base_style = {
-	horizontal_alignment = "right",
 	vertical_alignment = "center",
+	horizontal_alignment = "right",
 	size = {
 		230,
-		ButtonPassTemplates.secondary_button_default_height,
+		ButtonPassTemplates.secondary_button_default_height
 	},
 	offset = {
 		-270,
 		0,
-		0,
-	},
+		0
+	}
 }
 
 invitation_notification_style.join_hotspot = table.clone(join_button_base_style)
@@ -198,7 +198,7 @@ join_highlight_style.offset[3] = 3
 join_highlight_style.default_offset = table.clone(join_highlight_style.offset)
 join_highlight_style.size_addition = {
 	0,
-	0,
+	0
 }
 join_highlight_style.highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition
 join_highlight_style.color = Color.ui_terminal(255, true)
@@ -214,17 +214,17 @@ join_text_style.horizontal_alignment = join_button_base_style.horizontal_alignme
 join_text_style.vertical_alignment = join_button_base_style.vertical_alignment
 
 local remove_button_base_style = {
-	horizontal_alignment = "right",
 	vertical_alignment = "center",
+	horizontal_alignment = "right",
 	size = {
 		230,
-		ButtonPassTemplates.secondary_button_default_height,
+		ButtonPassTemplates.secondary_button_default_height
 	},
 	offset = {
 		-15,
 		0,
-		0,
-	},
+		0
+	}
 }
 
 invitation_notification_style.remove_hotspot = table.clone(remove_button_base_style)
@@ -236,7 +236,7 @@ remove_highlight_style.offset[3] = 3
 remove_highlight_style.default_offset = table.clone(remove_highlight_style.offset)
 remove_highlight_style.size_addition = {
 	0,
-	0,
+	0
 }
 remove_highlight_style.highlight_size_addition = ListHeaderPassTemplates.highlight_size_addition
 remove_highlight_style.color = Color.ui_terminal(255, true)

@@ -47,11 +47,11 @@ local talent_blueprint_description_style = table.clone(UIFontSettings.body)
 talent_blueprint_description_style.offset = {
 	98,
 	25,
-	8,
+	8
 }
 talent_blueprint_description_style.size = {
 	max_width - 106,
-	500,
+	500
 }
 talent_blueprint_description_style.font_size = 20
 talent_blueprint_description_style.text_horizontal_alignment = "left"
@@ -63,10 +63,10 @@ local talent_blueprint_title_style = table.clone(UIFontSettings.header_3)
 talent_blueprint_title_style.offset = {
 	98,
 	0,
-	8,
+	8
 }
 talent_blueprint_title_style.size = {
-	max_width - 106,
+	max_width - 106
 }
 talent_blueprint_title_style.font_size = 20
 talent_blueprint_title_style.text_horizontal_alignment = "left"
@@ -78,11 +78,11 @@ local weapon_description_style = table.clone(UIFontSettings.body)
 weapon_description_style.offset = {
 	47,
 	0,
-	8,
+	8
 }
 weapon_description_style.size = {
 	222,
-	0,
+	0
 }
 weapon_description_style.font_size = 20
 weapon_description_style.text_horizontal_alignment = "left"
@@ -93,7 +93,7 @@ local class_selection_view_blueprints = {
 	talent_info = {
 		size = {
 			max_width,
-			114,
+			114
 		},
 		size_function = function (parent, element, ui_renderer)
 			local description = element.description
@@ -102,64 +102,64 @@ local class_selection_view_blueprints = {
 
 			return {
 				max_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
 			{
-				pass_type = "text",
 				value = "n/a",
+				pass_type = "text",
 				value_id = "display_name",
-				style = talent_blueprint_title_style,
+				style = talent_blueprint_title_style
 			},
 			{
-				pass_type = "text",
 				style_id = "description",
-				value = "n/a",
 				value_id = "description",
-				style = talent_blueprint_description_style,
+				pass_type = "text",
+				value = "n/a",
+				style = talent_blueprint_description_style
 			},
 			{
-				pass_type = "texture",
 				style_id = "icon",
-				value = "content/ui/materials/frames/talents/talent_icon_container",
 				value_id = "icon",
+				pass_type = "texture",
+				value = "content/ui/materials/frames/talents/talent_icon_container",
 				style = {
 					size = {
 						74,
-						74,
+						74
 					},
 					material_values = {
 						intensity = 0,
-						saturation = 1,
+						saturation = 1
 					},
 					offset = {
 						16,
 						-4,
-						8,
-					},
-				},
+						8
+					}
+				}
 			},
 			{
-				pass_type = "texture",
 				style_id = "frame_default",
+				pass_type = "texture",
 				value = "content/ui/materials/frames/talents/circular_small_frame",
 				style = {
 					size = {
 						74,
-						74,
+						74
 					},
 					offset = {
 						16,
 						-4,
-						9,
+						9
 					},
-					color = Color.white(255, true),
+					color = Color.white(255, true)
 				},
 				visibility_function = function (content, style)
 					return not content.icon_texture
-				end,
-			},
+				end
+			}
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -196,12 +196,12 @@ local class_selection_view_blueprints = {
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			return
-		end,
+		end
 	},
 	stat = {
 		size = {
 			max_width,
-			114,
+			114
 		},
 		size_function = function (parent, element, ui_renderer)
 			local description = element.description
@@ -210,47 +210,47 @@ local class_selection_view_blueprints = {
 
 			return {
 				max_width,
-				entry_height,
+				entry_height
 			}
 		end,
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
-					font_size = 20,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "left",
+					font_size = 20,
 					text_vertical_alignment = "top",
+					text_horizontal_alignment = "left",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						98,
 						0,
-						8,
+						8
 					},
 					size = {
-						max_width - 106,
-					},
-				},
+						max_width - 106
+					}
+				}
 			},
 			{
-				pass_type = "text",
 				value = "•",
+				pass_type = "text",
 				style = {
-					font_size = 24,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "left",
+					font_size = 24,
 					text_vertical_alignment = "top",
+					text_horizontal_alignment = "left",
 					text_color = Color.terminal_text_body(255, true),
 					offset = {
 						72,
 						-3,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local content = widget.content
@@ -262,32 +262,32 @@ local class_selection_view_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	header = {
 		size = {
 			max_width,
-			100,
+			100
 		},
 		pass_template = {
 			{
-				pass_type = "text",
 				style_id = "text",
-				value = "n/a",
 				value_id = "text",
+				pass_type = "text",
+				value = "n/a",
 				style = {
-					font_size = 20,
 					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "left",
+					font_size = 20,
 					text_vertical_alignment = "center",
+					text_horizontal_alignment = "left",
 					text_color = Color.terminal_text_body_sub_header(255, true),
 					offset = {
 						27,
 						0,
-						3,
-					},
-				},
-			},
+						3
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local style = widget.style
@@ -316,7 +316,7 @@ local class_selection_view_blueprints = {
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
-		end,
+		end
 	},
 	dynamic_spacing = {
 		size_function = function (parent, element, ui_renderer)
@@ -324,22 +324,22 @@ local class_selection_view_blueprints = {
 
 			return size and {
 				size[1],
-				size[2],
+				size[2]
 			} or {
 				225,
-				20,
+				20
 			}
-		end,
+		end
 	},
 	title = {
 		pass_template = {
 			{
-				pass_type = "text",
-				style_id = "text",
-				value = "",
 				value_id = "text",
-				style = ClassSelectionViewFontStyle.class_abilities_group,
-			},
+				style_id = "text",
+				pass_type = "text",
+				value = "",
+				style = ClassSelectionViewFontStyle.class_abilities_group
+			}
 		},
 		init = function (parent, widget, element)
 			widget.element = element
@@ -351,54 +351,54 @@ local class_selection_view_blueprints = {
 			local title_style = widget.style.text
 			local _, title_text_height = UIRenderer.text_size(parent._ui_renderer, text, title_style.font_type, title_style.font_size, {
 				ClassSelectionViewSettings.class_details_size[1],
-				math.huge,
+				math.huge
 			})
 
 			widget.content.size = {
 				max_width,
-				title_text_height,
+				title_text_height
 			}
-		end,
+		end
 	},
 	ability = {
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "texture",
-				style_id = "texture",
-				value = "content/ui/materials/base/ui_default_base",
 				value_id = "texture",
+				style_id = "texture",
+				pass_type = "texture",
+				value = "content/ui/materials/base/ui_default_base",
 				style = {
 					vertical_alignment = "top",
 					size = {
 						110,
-						110,
+						110
 					},
 					offset = {
 						0,
 						0,
-						1,
+						1
 					},
-					material_values = {},
-				},
+					material_values = {}
+				}
 			},
 			{
-				pass_type = "text",
-				style_id = "title",
-				value = "content/ui/materials/base/ui_default_base",
 				value_id = "title",
-				style = ClassSelectionViewFontStyle.class_abilities_title,
+				style_id = "title",
+				pass_type = "text",
+				value = "content/ui/materials/base/ui_default_base",
+				style = ClassSelectionViewFontStyle.class_abilities_title
 			},
 			{
-				pass_type = "text",
-				style_id = "description",
-				value = "",
 				value_id = "description",
-				style = ClassSelectionViewFontStyle.class_abilities_description,
-			},
+				style_id = "description",
+				pass_type = "text",
+				value = "",
+				style = ClassSelectionViewFontStyle.class_abilities_description
+			}
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.content.element = element
@@ -433,20 +433,20 @@ local class_selection_view_blueprints = {
 			local description_style_options = UIFonts.get_font_options_by_style(description_style)
 			local _, title_text_height = UIRenderer.text_size(ui_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
 				title_width,
-				math.huge,
+				math.huge
 			}, title_style_options)
 			local _, description_text_height = UIRenderer.text_size(ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
 				description_width,
-				math.huge,
+				math.huge
 			}, description_style_options)
 
 			title_style.size = {
 				title_width,
-				title_text_height,
+				title_text_height
 			}
 			description_style.size = {
 				description_width,
-				description_text_height,
+				description_text_height
 			}
 			description_style.offset[2] = description_style.offset[2] + title_style.size[2]
 
@@ -461,102 +461,102 @@ local class_selection_view_blueprints = {
 
 			widget.content.size = {
 				max_width,
-				total_height,
+				total_height
 			}
 		end,
 		load_icon = function (self, widget, element)
 			local ability = element.ability
 
 			widget.style.texture.material_values.icon_texture = ability.large_icon or ability.icon
-		end,
+		end
 	},
 	weapon = {
 		pass_template = {
 			{
-				content_id = "hotspot",
 				pass_type = "hotspot",
+				content_id = "hotspot"
 			},
 			{
-				pass_type = "texture",
-				style_id = "texture",
 				value = "content/ui/materials/frames/inner_shadow_medium",
+				style_id = "texture",
+				pass_type = "texture",
 				style = {
+					vertical_alignment = "center",
 					horizontal_alignment = "left",
 					scale_to_material = true,
-					vertical_alignment = "center",
 					color = Color.terminal_frame(255, true),
 					size = {
 						535,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					offset = {
 						27,
 						0,
-						3,
-					},
-				},
+						3
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "frame",
 				value = "content/ui/materials/frames/frame_tile_2px",
+				style_id = "frame",
+				pass_type = "texture",
 				style = {
-					horizontal_alignment = "left",
-					scale_to_material = true,
 					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "left",
 					size_addition = {
 						0,
-						0,
+						0
 					},
 					color = Color.terminal_frame(255, true),
 					offset = {
 						27,
 						0,
-						5,
+						5
 					},
 					size = {
 						535,
-						128,
-					},
-				},
+						128
+					}
+				}
 			},
 			{
-				pass_type = "texture",
-				style_id = "icon",
-				value = "content/ui/materials/icons/items/containers/item_container_landscape",
 				value_id = "icon",
+				style_id = "icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/containers/item_container_landscape",
 				style = {
-					horizontal_alignment = "left",
 					vertical_alignment = "center",
+					horizontal_alignment = "left",
 					material_values = {
-						use_placeholder_texture = 1,
+						use_placeholder_texture = 1
 					},
 					offset = {
 						296,
 						0,
-						2,
+						2
 					},
 					size = {
 						256,
-						128,
+						128
 					},
 					size_addition = {
 						0,
-						0,
-					},
-				},
+						0
+					}
+				}
 			},
 			{
-				pass_type = "text",
-				style_id = "title",
-				value = "",
 				value_id = "title",
-				style = weapon_description_style,
-			},
+				style_id = "title",
+				pass_type = "text",
+				value = "",
+				style = weapon_description_style
+			}
 		},
 		init = function (parent, widget, element)
 			widget.content.element = element
@@ -569,11 +569,11 @@ local class_selection_view_blueprints = {
 
 			title_style.size = {
 				title_width - UISettings.weapon_icon_size[1],
-				total_height,
+				total_height
 			}
 			widget.content.size = {
 				max_width,
-				total_height,
+				total_height
 			}
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
@@ -588,7 +588,7 @@ local class_selection_view_blueprints = {
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
-					animation_event = item_animation_event,
+					animation_event = item_animation_event
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
@@ -603,17 +603,17 @@ local class_selection_view_blueprints = {
 
 				content.icon_load_id = nil
 			end
-		end,
+		end
 	},
 	description = {
 		pass_template = {
 			{
+				value_id = "description",
 				pass_type = "text",
 				style_id = "description",
 				value = "",
-				value_id = "description",
-				style = ClassSelectionViewFontStyle.class_description_style,
-			},
+				style = ClassSelectionViewFontStyle.class_description_style
+			}
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.element = element
@@ -622,33 +622,33 @@ local class_selection_view_blueprints = {
 			local description_style = widget.style.description
 			local _, description_text_height = UIRenderer.text_size(ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
 				max_width,
-				math.huge,
+				math.huge
 			})
 
 			widget.content.size = {
 				max_width,
-				description_text_height,
+				description_text_height
 			}
-		end,
+		end
 	},
 	video = {
 		pass_template = {
 			{
-				pass_type = "video",
 				value = "content/videos/class_selection/class_selection",
 				value_id = "video",
+				pass_type = "video",
 				style = {
 					size = {
 						ClassSelectionViewSettings.class_size[1],
-						360,
+						360
 					},
 					offset = {
 						-20,
 						0,
-						1,
-					},
-				},
-			},
+						1
+					}
+				}
+			}
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.element = element
@@ -661,7 +661,7 @@ local class_selection_view_blueprints = {
 				widget.content.video_player_reference = video_player_reference
 				widget.content.size = {
 					ClassSelectionViewSettings.class_size[1],
-					360,
+					360
 				}
 			end
 		end,
@@ -671,17 +671,17 @@ local class_selection_view_blueprints = {
 
 				widget.content.video_player_reference = nil
 			end
-		end,
+		end
 	},
 	description_short = {
 		pass_template = {
 			{
+				value_id = "class_attributes",
 				pass_type = "text",
 				style_id = "class_attributes",
 				value = "",
-				value_id = "class_attributes",
-				style = ClassSelectionViewFontStyle.class_attributes_style,
-			},
+				style = ClassSelectionViewFontStyle.class_attributes_style
+			}
 		},
 		init = function (parent, widget, element, _, _, ui_renderer)
 			widget.element = element
@@ -705,15 +705,15 @@ local class_selection_view_blueprints = {
 			local attributes_style = widget.style.class_attributes
 			local _, attributes_text_height = UIRenderer.text_size(ui_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
 				max_width,
-				math.huge,
+				math.huge
 			})
 
 			widget.content.size = {
 				max_width,
-				attributes_text_height,
+				attributes_text_height
 			}
-		end,
-	},
+		end
+	}
 }
 
 return class_selection_view_blueprints

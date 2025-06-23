@@ -52,7 +52,7 @@ AchievementUIHelper.get_all_reward_items = function (achievement_definition)
 			item_group = item_type and _item_type_group_lookup[item_type]
 			rewards_data[#rewards_data + 1] = {
 				reward_item = reward_item,
-				item_type = item_type,
+				item_type = item_type
 			}
 		end
 	end

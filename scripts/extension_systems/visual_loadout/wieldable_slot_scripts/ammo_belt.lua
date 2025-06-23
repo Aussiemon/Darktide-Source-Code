@@ -26,7 +26,7 @@ AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources, item
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end
@@ -41,7 +41,7 @@ AmmoBelt.init = function (self, context, slot, weapon_template, fx_sources, item
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
 				unit = attachment_unit,
-				component = component,
+				component = component
 			}
 		end
 	end

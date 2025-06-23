@@ -7,43 +7,43 @@ ability_template.action_inputs = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
 				value = true,
-			},
-		},
-	},
+				input = "combat_ability_pressed"
+			}
+		}
+	}
 }
 ability_template.action_input_hierarchy = {
 	{
-		input = "stance_pressed",
 		transition = "stay",
-	},
+		input = "stance_pressed"
+	}
 }
 ability_template.actions = {
 	action_stance_change = {
-		ability_type = "combat_ability",
-		allowed_during_sprint = true,
-		anim = "mid_reload_finished",
-		anim_3p = "ability_shout",
-		auto_wield_slot = "slot_secondary",
-		kind = "stance_change",
-		refill_toughness = false,
 		reload_secondary = true,
-		sprint_ready_up_time = 0,
+		refill_toughness = false,
 		start_input = "stance_pressed",
-		stop_current_action = true,
 		target_enemies = true,
-		total_time = 0,
+		kind = "stance_change",
+		sprint_ready_up_time = 0,
+		auto_wield_slot = "slot_secondary",
+		allowed_during_sprint = true,
+		stop_current_action = true,
 		uninterruptible = true,
+		anim_3p = "ability_shout",
 		use_ability_charge = true,
+		ability_type = "combat_ability",
+		anim = "mid_reload_finished",
 		vo_tag = "ability_gun_lugger",
-	},
+		total_time = 0
+	}
 }
 ability_template.fx_sources = {}
 ability_template.ability_meta_data = {
 	activation = {
-		action_input = "stance_pressed",
-	},
+		action_input = "stance_pressed"
+	}
 }
 
 return ability_template

@@ -1,13 +1,12 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view.lua
 
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
-local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -18,7 +17,7 @@ local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local trinket_slot_order = {
 	"slot_trinket_1",
-	"slot_trinket_2",
+	"slot_trinket_2"
 }
 local find_link_attachment_item_slot_path
 
@@ -208,13 +207,13 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 	local tabs_content = {
 		{
 			display_name = "loc_weapon_cosmetics_title_skins",
-			filter_on_weapon_template = true,
-			icon = "content/ui/materials/icons/item_types/weapon_skins",
-			item_type = "WEAPON_SKIN",
 			slot_name = "slot_weapon_skin",
+			item_type = "WEAPON_SKIN",
+			icon = "content/ui/materials/icons/item_types/weapon_skins",
+			filter_on_weapon_template = true,
 			get_item_filters = function (slot_name, item_type)
 				local item_type_filter = item_type and {
-					item_type,
+					item_type
 				}
 
 				return nil, item_type_filter
@@ -270,15 +269,15 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 				presentation_item.slot_weapon_skin = real_item
 				self._selected_weapon_skin = real_item
 				self._selected_weapon_skin_name = real_item and real_item.gear.masterDataInstance.id
-			end,
+			end
 		},
 		{
+			slot_name = "slot_trinket_1",
 			display_name = "loc_weapon_cosmetics_title_trinkets",
 			icon = "content/ui/materials/icons/item_types/weapon_trinkets",
-			slot_name = "slot_trinket_1",
 			get_item_filters = function (slot_name, item_type)
 				local slot_filter = slot_name and {
-					slot_name,
+					slot_name
 				}
 
 				return slot_filter, nil
@@ -319,7 +318,7 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 			generate_visual_item_function = function (real_item, selected_item)
 				local optional_preivew_item = selected_item.__gear.masterDataInstance.id
 
-				return ItemUtils.weapon_trinket_preview_item(real_item)
+				return Items.weapon_trinket_preview_item(real_item)
 			end,
 			apply_on_preview = function (real_item, presentation_item)
 				local path
@@ -344,8 +343,8 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 
 				self._selected_weapon_trinket_name = real_item and real_item.gear.masterDataInstance.id
 				self._selected_weapon_trinket = real_item
-			end,
-		},
+			end
+		}
 	}
 
 	self:_setup_menu_tabs(tabs_content)
@@ -360,7 +359,7 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 		self._weapon_preview:center_align(0, {
 			-0.2,
 			-0.3,
-			-0.2,
+			-0.2
 		})
 	end
 
@@ -404,8 +403,8 @@ InventoryWeaponCosmeticsView.present_grid_layout = function (self, layout, optio
 		widget_type = "dynamic_spacing",
 		size = {
 			grid_size[1],
-			10,
-		},
+			10
+		}
 	}
 
 	table.insert(layout, 1, spacing_entry)
@@ -425,24 +424,24 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self)
 		self._sort_options = {
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					"<",
 					"sort_data",
-					ItemUtils.compare_item_name,
-				}),
+					Items.compare_item_name
+				})
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+					sort_name = Localize("loc_inventory_item_grid_sort_title_name")
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					">",
 					"sort_data",
-					ItemUtils.compare_item_name,
-				}),
-			},
+					Items.compare_item_name
+				})
+			}
 		}
 	end
 
@@ -456,8 +455,8 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 10
 		local context = {
-			draw_background = true,
 			ignore_blur = true,
+			draw_background = true
 		}
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
@@ -477,18 +476,18 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	local layer = 10
 	local button_size = {
 		80,
-		80,
+		80
 	}
 	local button_spacing = 10
 	local tab_menu_settings = {
-		grow_vertically = true,
 		vertical_alignment = "top",
+		grow_vertically = true,
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
 			25,
-			30,
-		},
+			30
+		}
 	}
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 
@@ -503,7 +502,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	local tab_button_template = table.clone(ButtonPassTemplates.item_category_sort_button)
 
 	tab_button_template[1].style = {
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
 	}
 
 	local tab_ids = {}
@@ -584,10 +583,10 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 			layout[#layout + 1] = {
 				widget_type = "item_icon",
 				sort_data = {
-					display_name = "loc_weapon_cosmetic_empty",
+					display_name = "loc_weapon_cosmetic_empty"
 				},
 				item = empty_item,
-				slot_name = slot_name,
+				slot_name = slot_name
 			}
 		end
 
@@ -618,7 +617,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 					real_item = item,
 					slot_name = slot_name,
 					new_item_marker = is_new,
-					remove_new_marker_callback = remove_new_marker_callback,
+					remove_new_marker_callback = remove_new_marker_callback
 				}
 			end
 		end
@@ -677,10 +676,10 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 		local promise, item_type
 
 		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
-			promise = ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
+			promise = Items.equip_weapon_skin(selected_item, self._selected_weapon_skin)
 			item_type = "skin"
 		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
-			promise = ItemUtils.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
+			promise = Items.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
 			item_type = "trinket"
 		end
 
@@ -754,8 +753,8 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.sub_display_name.content.text = string.format("%s • %s", ItemUtils.weapon_card_display_name(self._selected_item), ItemUtils.weapon_card_sub_display_name(self._selected_item))
-	widgets_by_name.display_name.content.text = real_item and ItemUtils.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
+	widgets_by_name.sub_display_name.content.text = string.format("%s • %s", Items.weapon_card_display_name(self._selected_item), Items.weapon_card_sub_display_name(self._selected_item))
+	widgets_by_name.display_name.content.text = real_item and Items.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
 end
 
 InventoryWeaponCosmeticsView._preview_item = function (self, item)
@@ -878,7 +877,7 @@ InventoryWeaponCosmeticsView._draw_render_target = function (self)
 	local position = self:_scenegraph_world_position("canvas")
 	local size = {
 		width,
-		height,
+		height
 	}
 	local gui_position = Vector3(position[1] * scale, position[2] * scale, position[3] or 0)
 	local gui_size = Vector3(size[1] * scale, size[2] * scale, size[3] or 0)
