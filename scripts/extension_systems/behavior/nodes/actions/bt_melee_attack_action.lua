@@ -137,8 +137,7 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		local unit_z = POSITION_LOOKUP[unit].z
 		local target_z = POSITION_LOOKUP[target_unit].z
 		local z_diff = target_z - unit_z
-		local down_threshold = action_data.down_z_threshold or DEFAULT_DOWN_Z_THRESHOLD
-		local down_threshold, up_threshold = down_threshold, action_data.up_z_threshold or DEFAULT_UP_Z_THRESHOLD
+		local down_threshold, up_threshold = action_data.down_z_threshold or DEFAULT_DOWN_Z_THRESHOLD, action_data.up_z_threshold or DEFAULT_UP_Z_THRESHOLD
 
 		if up_threshold <= z_diff and attack_anim_events.up then
 			wanted_events = attack_anim_events.up

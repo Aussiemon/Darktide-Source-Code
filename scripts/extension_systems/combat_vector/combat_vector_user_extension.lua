@@ -107,8 +107,7 @@ CombatVectorUserExtension._get_new_location = function (self, unit_position, loc
 	end
 
 	local new_location
-	local min_dist = self._new_location_min_distance or 0
-	local min_dist, max_dist = min_dist, self._new_location_max_distance or math.huge
+	local min_dist, max_dist = self._new_location_min_distance or 0, self._new_location_max_distance or math.huge
 	local config = self._config
 	local choose_furthest_away = config.choose_furthest_away
 	local choose_closest_to_target = config.choose_closest_to_target

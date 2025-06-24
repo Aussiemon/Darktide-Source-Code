@@ -250,8 +250,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local settings = cjson.decode(case_settings)
 		local mission_name = settings.mission_name
 		local initial_wait_time = settings.initial_wait_time or 4
-		local nav_mesh_above = settings.nav_mesh_above or 0.5
-		local nav_mesh_above, nav_mesh_below = nav_mesh_above, settings.nav_mesh_below or 0.5
+		local nav_mesh_above, nav_mesh_below = settings.nav_mesh_above or 0.5, settings.nav_mesh_below or 0.5
 		local specific_breed_names = settings.specific_breed_names
 		local flags = {
 			"validate_minion_pathing_on_mission",

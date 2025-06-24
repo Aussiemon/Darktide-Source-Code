@@ -111,8 +111,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		end
 
 		local rot_right, prev_rot_right = Quaternion.right(rotation), Quaternion.right(previous_rotation)
-		local rot_up = Quaternion.up(rotation)
-		local rot_up, prev_rot_up = rot_up, previous_rotation_pitch_only and Quaternion.up(previous_rotation_pitch_only) or Quaternion.up(previous_rotation)
+		local rot_up, prev_rot_up = Quaternion.up(rotation), previous_rotation_pitch_only and Quaternion.up(previous_rotation_pitch_only) or Quaternion.up(previous_rotation)
 		local forward = Quaternion.forward(rotation)
 		local up_dot = math.clamp(Vector3.dot(rot_up, prev_rot_up), -1, 1)
 

@@ -135,9 +135,7 @@ AimProjectile.check_throw_position = function (throw_position, look_position, pr
 
 		local hits = PhysicsWorld.linear_sphere_sweep(physics_world, look_position, throw_position, radius, 1, "types", collision_type, "collision_filter", collision_filter)
 		local hit = hits and hits[1]
-		local hit_position = hit and hit.position
-		local hit_distance = hit and hit.distance
-		local hit_position, hit_distance, hit_normal = hit_position, hit_distance, hit and hit.normal
+		local hit_position, hit_distance, hit_normal = hit and hit.position, hit and hit.distance, hit and hit.normal
 
 		if hit then
 			local back_tracking_vector = hit_normal * (radius + 0.1)
