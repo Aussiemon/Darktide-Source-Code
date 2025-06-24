@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_veteran_female_c = {
 			3.240104,
 			2.663875,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

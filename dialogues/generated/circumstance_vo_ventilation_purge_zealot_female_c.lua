@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_zealot_female_c = {
 			3.314771,
 			3.25424,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

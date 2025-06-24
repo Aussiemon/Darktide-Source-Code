@@ -124,8 +124,8 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
-		name = "com_wheel_vo_lets_go_this_way",
-		response = "com_wheel_vo_lets_go_this_way",
+		name = "com_wheel_vo_location_ping",
+		response = "com_wheel_vo_location_ping",
 		wwise_route = 0,
 		criterias = {
 			{
@@ -564,8 +564,8 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "on_demand_vo",
-		name = "response_for_seen_enemy_netgunner_flee",
-		response = "response_for_seen_enemy_netgunner_flee",
+		name = "response_for_seen_netgunner_flee",
+		response = "response_for_seen_netgunner_flee",
 		wwise_route = 0,
 		criterias = {
 			{
@@ -813,6 +813,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -857,6 +860,9 @@ return function ()
 				"enemy_renegade_captain",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -903,6 +909,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -948,6 +957,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -992,6 +1004,9 @@ return function ()
 				"enemy_chaos_ogryn_executor",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1045,6 +1060,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1089,6 +1107,9 @@ return function ()
 				"enemy_chaos_ogryn_gunner",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1135,6 +1156,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1179,6 +1203,9 @@ return function ()
 				"enemy_renegade_sniper",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1225,6 +1252,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1270,6 +1300,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1314,6 +1347,9 @@ return function ()
 				"enemy_cultist_gunner",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1367,6 +1403,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1411,6 +1450,9 @@ return function ()
 				"enemy_chaos_daemonhost",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1457,6 +1499,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1501,6 +1546,9 @@ return function ()
 				"enemy_renegade_netgunner",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1547,6 +1595,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1591,6 +1642,9 @@ return function ()
 				"enemy_berserker",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1637,6 +1691,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1681,6 +1738,9 @@ return function ()
 				"enemy_renegade_executor",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1727,6 +1787,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1771,6 +1834,9 @@ return function ()
 				"enemy_renegade_gunner",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1824,6 +1890,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,
@@ -1868,6 +1937,9 @@ return function ()
 				"enemy_renegade_sniper",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "self",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

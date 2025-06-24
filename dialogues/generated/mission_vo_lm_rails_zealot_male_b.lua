@@ -12,10 +12,6 @@ local mission_vo_lm_rails_zealot_male_b = {
 			[1] = 5.179792,
 			[2] = 5.206021,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	mission_rails_district_gate = {

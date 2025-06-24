@@ -1,6 +1,94 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_a_veteran_male_c.lua
 
 local ogryn_a_veteran_male_c = {
+	bonding_conversation_waterloo_gone_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_gone_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.846729,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_gone_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_gone_d_01",
+		},
+		sound_events_duration = {
+			[1] = 0.807823,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_rannick_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_rannick_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.674688,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_rannick_07_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_rannick_07_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.305719,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_scowl_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_scowl_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.47274,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_scowl_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_scowl_d_01",
+		},
+		sound_events_duration = {
+			[1] = 0.644375,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_wolfer_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.066615,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_07_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_wolfer_07_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.533344,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

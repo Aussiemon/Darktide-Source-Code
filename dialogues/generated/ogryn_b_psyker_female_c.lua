@@ -1,6 +1,39 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_b_psyker_female_c.lua
 
 local ogryn_b_psyker_female_c = {
+	bonding_conversation_lex_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__bonding_conversation_lex_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.508375,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_lex_three_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__bonding_conversation_lex_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.09574,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_lex_three_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__bonding_conversation_lex_f_01",
+		},
+		sound_events_duration = {
+			[1] = 3.133188,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_b_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

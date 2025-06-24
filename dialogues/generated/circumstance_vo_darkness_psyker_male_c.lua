@@ -56,12 +56,6 @@ local circumstance_vo_darkness_psyker_male_c = {
 			6.562719,
 			4.975229,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

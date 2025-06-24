@@ -64,7 +64,7 @@ local on_demand_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
-	com_wheel_vo_lets_go_this_way = {
+	com_wheel_vo_location_ping = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
 		sound_events = {
@@ -82,14 +82,6 @@ local on_demand_vo_psyker_male_b = {
 			0.749438,
 			0.717729,
 			0.786708,
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
 		},
 		randomize_indexes = {},
 	},
@@ -311,7 +303,7 @@ local on_demand_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
-	response_for_seen_enemy_netgunner_flee = {
+	response_for_seen_netgunner_flee = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
 		sound_events = {

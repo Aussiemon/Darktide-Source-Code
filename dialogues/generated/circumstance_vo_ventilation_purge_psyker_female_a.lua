@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_psyker_female_a = {
 			4.066458,
 			3.461646,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

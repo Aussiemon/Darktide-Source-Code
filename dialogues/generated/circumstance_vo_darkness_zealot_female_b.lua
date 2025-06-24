@@ -76,12 +76,6 @@ local circumstance_vo_darkness_zealot_female_b = {
 			2.817042,
 			3.078896,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

@@ -52,6 +52,23 @@ local circumstance_vo_darkness_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	power_circumstance_start_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_a__power_circumstance_start_b_01",
+			"loc_veteran_female_a__power_circumstance_start_b_02",
+			"loc_veteran_female_a__power_circumstance_start_b_03",
+			"loc_veteran_female_a__power_circumstance_start_b_04",
+		},
+		sound_events_duration = {
+			2.288646,
+			3.294104,
+			1.943167,
+			4.089583,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("circumstance_vo_darkness_veteran_female_a", circumstance_vo_darkness_veteran_female_a)

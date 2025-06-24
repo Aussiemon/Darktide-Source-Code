@@ -89,6 +89,28 @@ local veteran_male_a_ogryn_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_handy_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__oval_bonding_conversation_handy_b_01",
+		},
+		sound_events_duration = {
+			[1] = 13.3442,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_handy_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__oval_bonding_conversation_handy_d_01",
+		},
+		sound_events_duration = {
+			[1] = 7.338885,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_male_a_ogryn_a", veteran_male_a_ogryn_a)

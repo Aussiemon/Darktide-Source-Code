@@ -53,12 +53,6 @@ local circumstance_vo_darkness_ogryn_b = {
 			6.020031,
 			4.585115,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

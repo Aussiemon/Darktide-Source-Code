@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_veteran_male_c = {
 			2.774615,
 			2.919521,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

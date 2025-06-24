@@ -45,6 +45,28 @@ local veteran_female_c_zealot_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversations_victoria_shaky_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__bonding_conversations_victoria_shaky_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.025208,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversations_victoria_shaky_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__bonding_conversations_victoria_shaky_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.119354,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_female_c_zealot_male_b", veteran_female_c_zealot_male_b)

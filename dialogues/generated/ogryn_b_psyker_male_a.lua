@@ -1,6 +1,50 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_b_psyker_male_a.lua
 
 local ogryn_b_psyker_male_a = {
+	bonding_conversation_hammersmith_moaning_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_moaning_b_01",
+		},
+		sound_events_duration = {
+			[1] = 8.356292,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_moaning_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_moaning_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.040396,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_monsters_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_monsters_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.654167,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_monsters_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_monsters_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.268042,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_metropolitan_killing_spikeys_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

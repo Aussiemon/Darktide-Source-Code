@@ -3817,6 +3817,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "players",
+		},
 	})
 	define_rule({
 		category = "enemy_vo_prio_1",
@@ -4274,6 +4277,9 @@ return function ()
 				"faction_memory_take_cover",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "players",
 		},
 	})
 	define_rule({

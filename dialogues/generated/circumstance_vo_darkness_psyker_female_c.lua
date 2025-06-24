@@ -56,12 +56,6 @@ local circumstance_vo_darkness_psyker_female_c = {
 			5.906854,
 			4.564208,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

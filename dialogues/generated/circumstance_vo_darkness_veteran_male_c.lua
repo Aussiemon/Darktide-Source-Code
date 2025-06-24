@@ -30,12 +30,6 @@ local circumstance_vo_darkness_veteran_male_c = {
 			1.742875,
 			1.985135,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

@@ -89,6 +89,72 @@ local veteran_male_b_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_brahms_11_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_brahms_11_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.256458,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_brahms_11_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_brahms_11_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.315583,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_toy_soldier_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_toy_soldier_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.735792,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_toy_soldier_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_toy_soldier_d_01",
+		},
+		sound_events_duration = {
+			[1] = 0.939771,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_11_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_wolfer_11_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.282813,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_11_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_wolfer_11_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.580938,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_male_b_veteran_male_a", veteran_male_b_veteran_male_a)

@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_psyker_male_b = {
 			6.671021,
 			2.477292,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

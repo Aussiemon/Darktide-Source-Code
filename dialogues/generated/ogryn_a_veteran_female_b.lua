@@ -1,6 +1,138 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_a_veteran_female_b.lua
 
 local ogryn_a_veteran_female_b = {
+	bonding_conversation_round_three_tree_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_tree_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.032188,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_round_three_tree_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_tree_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.063917,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_brahms_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_brahms_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.795542,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_brahms_04_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_brahms_04_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.540646,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_morrow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_morrow_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.699354,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_morrow_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_morrow_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.251625,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_rannick_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_rannick_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.218542,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_rannick_04_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_rannick_04_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.481917,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_suicide_mission_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_suicide_mission_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.367708,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_suicide_mission_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_suicide_mission_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.544771,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_wolfer_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.868833,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_04_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_wolfer_04_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.018292,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

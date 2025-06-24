@@ -64,7 +64,7 @@ local on_demand_vo_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
-	com_wheel_vo_lets_go_this_way = {
+	com_wheel_vo_location_ping = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
 		sound_events = {
@@ -82,14 +82,6 @@ local on_demand_vo_veteran_male_a = {
 			1.176479,
 			0.762167,
 			0.954063,
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
 		},
 		randomize_indexes = {},
 	},
@@ -311,7 +303,7 @@ local on_demand_vo_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
-	response_for_seen_enemy_netgunner_flee = {
+	response_for_seen_netgunner_flee = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
@@ -712,24 +704,30 @@ local on_demand_vo_veteran_male_a = {
 	},
 	smart_tag_vo_enemy_renegade_berserker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 6,
 		sound_events = {
+			"loc_veteran_male_a__seen_enemy_berserker_04",
+			"loc_veteran_male_a__seen_enemy_berserker_05",
 			"loc_veteran_male_a__smart_tag_vo_enemy_berserker_01",
 			"loc_veteran_male_a__smart_tag_vo_enemy_berserker_02",
 			"loc_veteran_male_a__smart_tag_vo_enemy_berserker_03",
 			"loc_veteran_male_a__smart_tag_vo_enemy_berserker_04",
 		},
 		sound_events_duration = {
+			0.526833,
+			0.737167,
 			0.650271,
 			0.781792,
 			1.298833,
 			1.518917,
 		},
 		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
 		},
 		randomize_indexes = {},
 	},

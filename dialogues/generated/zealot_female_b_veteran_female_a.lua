@@ -78,6 +78,28 @@ local zealot_female_b_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_metropolitan_spine_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__bonding_conversation_metropolitan_spine_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.463,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_metropolitan_spine_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__bonding_conversation_metropolitan_spine_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.690667,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_metropolitan_teeth_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

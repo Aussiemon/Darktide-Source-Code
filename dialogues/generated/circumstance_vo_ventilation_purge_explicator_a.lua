@@ -18,29 +18,6 @@ local circumstance_vo_ventilation_purge_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
-	vent_circumstance_start_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__vent_circumstance_start_b_01",
-			"loc_explicator_a__vent_circumstance_start_b_02",
-			"loc_explicator_a__vent_circumstance_start_b_03",
-			"loc_explicator_a__vent_circumstance_start_b_04",
-		},
-		sound_events_duration = {
-			5.099,
-			5.110542,
-			4.927292,
-			6.201313,
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
-		randomize_indexes = {},
-	},
 }
 
 return settings("circumstance_vo_ventilation_purge_explicator_a", circumstance_vo_ventilation_purge_explicator_a)

@@ -1033,6 +1033,8221 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_00_a",
+		response = "story_echo_brahms_00_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_00_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_00_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_00_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_00_b",
+		response = "story_echo_brahms_00_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_00_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_00_c",
+		response = "story_echo_brahms_00_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_00_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_00_d",
+		response = "story_echo_brahms_00_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_00_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_00_e",
+		response = "story_echo_brahms_00_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_00_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_a",
+		response = "story_echo_brahms_01_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_01_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_00_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_01_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_b",
+		response = "story_echo_brahms_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_01_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_c",
+		response = "story_echo_brahms_01_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_01_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_d",
+		response = "story_echo_brahms_01_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_01_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_e",
+		response = "story_echo_brahms_01_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_01_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_01_f",
+		response = "story_echo_brahms_01_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_01_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_02_a",
+		response = "story_echo_brahms_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_mourningstar_officer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_02_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_01_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_02_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_02_b",
+		response = "story_echo_brahms_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_02_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_02_c",
+		response = "story_echo_brahms_02_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_02_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_02_d",
+		response = "story_echo_brahms_02_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_02_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_02_e",
+		response = "story_echo_brahms_02_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_02_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_03_a",
+		response = "story_echo_brahms_03_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_03_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_02_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_03_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_03_b",
+		response = "story_echo_brahms_03_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_03_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_03_c",
+		response = "story_echo_brahms_03_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_03_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_03_d",
+		response = "story_echo_brahms_03_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_03_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_03_e",
+		response = "story_echo_brahms_03_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_03_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_a",
+		response = "story_echo_brahms_04_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_04_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_04_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_04_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_b",
+		response = "story_echo_brahms_04_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_c",
+		response = "story_echo_brahms_04_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_d",
+		response = "story_echo_brahms_04_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_e",
+		response = "story_echo_brahms_04_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04_f",
+		response = "story_echo_brahms_04_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_a",
+		response = "story_echo_brahms_04a_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_04a_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_04_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_04a_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_b",
+		response = "story_echo_brahms_04a_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04a_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_c",
+		response = "story_echo_brahms_04a_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04a_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_d",
+		response = "story_echo_brahms_04a_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04a_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_e",
+		response = "story_echo_brahms_04a_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04a_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_04a_f",
+		response = "story_echo_brahms_04a_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_04a_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_a",
+		response = "story_echo_brahms_05_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_05_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_04a_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_05_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_b",
+		response = "story_echo_brahms_05_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_05_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_c",
+		response = "story_echo_brahms_05_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_05_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_d",
+		response = "story_echo_brahms_05_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_05_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_e",
+		response = "story_echo_brahms_05_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_05_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_05_f",
+		response = "story_echo_brahms_05_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_05_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_06_a",
+		response = "story_echo_brahms_06_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_06_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_05_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_06_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_06_b",
+		response = "story_echo_brahms_06_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_06_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_06_c",
+		response = "story_echo_brahms_06_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_06_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_06_d",
+		response = "story_echo_brahms_06_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_06_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_06_e",
+		response = "story_echo_brahms_06_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_06_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_a",
+		response = "story_echo_brahms_07_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_07_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_magos_biologis_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_07_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_07_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_b",
+		response = "story_echo_brahms_07_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_07_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_c",
+		response = "story_echo_brahms_07_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_07_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_d",
+		response = "story_echo_brahms_07_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_07_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_e",
+		response = "story_echo_brahms_07_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_07_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_07_f",
+		response = "story_echo_brahms_07_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_07_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_08_a",
+		response = "story_echo_brahms_08_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_08_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_07_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_08_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_08_b",
+		response = "story_echo_brahms_08_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_08_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_08_c",
+		response = "story_echo_brahms_08_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_08_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_08_d",
+		response = "story_echo_brahms_08_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_08_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_08_e",
+		response = "story_echo_brahms_08_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_08_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_09_a",
+		response = "story_echo_brahms_09_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_matriarch_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_09_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_08_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_09_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_09_b",
+		response = "story_echo_brahms_09_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_09_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_09_c",
+		response = "story_echo_brahms_09_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_09_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_09_d",
+		response = "story_echo_brahms_09_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_09_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_09_e",
+		response = "story_echo_brahms_09_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_09_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_10_a",
+		response = "story_echo_brahms_10_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_alpha_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_10_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_09_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_10_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_10_b",
+		response = "story_echo_brahms_10_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_10_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_10_c",
+		response = "story_echo_brahms_10_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_10_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_10_d",
+		response = "story_echo_brahms_10_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_10_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_10_e",
+		response = "story_echo_brahms_10_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_10_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11_a",
+		response = "story_echo_brahms_11_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_11_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_mourningstar_officer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_11_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11_b",
+		response = "story_echo_brahms_11_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11_c",
+		response = "story_echo_brahms_11_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11_d",
+		response = "story_echo_brahms_11_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11_e",
+		response = "story_echo_brahms_11_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11a_a",
+		response = "story_echo_brahms_11a_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_magos_biologis_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11a_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_11a_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11a_b",
+		response = "story_echo_brahms_11a_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11a_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11a_c",
+		response = "story_echo_brahms_11a_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11a_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11a_d",
+		response = "story_echo_brahms_11a_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11a_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11b_a",
+		response = "story_echo_brahms_11b_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_magos_biologis_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11b_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11a_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_11b_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11b_b",
+		response = "story_echo_brahms_11b_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11b_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11b_c",
+		response = "story_echo_brahms_11b_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11b_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11b_d",
+		response = "story_echo_brahms_11b_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11b_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11c_a",
+		response = "story_echo_brahms_11c_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_alpha_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11c_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_11b_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_11c_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11c_b",
+		response = "story_echo_brahms_11c_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11c_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11c_c",
+		response = "story_echo_brahms_11c_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11c_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11c_d",
+		response = "story_echo_brahms_11c_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11c_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_11c_e",
+		response = "story_echo_brahms_11c_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_11c_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_12_a",
+		response = "story_echo_brahms_12_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_12_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_mourningstar_officer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_12_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_12_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_12_b",
+		response = "story_echo_brahms_12_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_12_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_12_c",
+		response = "story_echo_brahms_12_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_12_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_12_d",
+		response = "story_echo_brahms_12_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_12_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_12_e",
+		response = "story_echo_brahms_12_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_12_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_13_a",
+		response = "story_echo_brahms_13_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_13_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_12_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_13_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_13_b",
+		response = "story_echo_brahms_13_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_13_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_13_c",
+		response = "story_echo_brahms_13_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_13_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_13_d",
+		response = "story_echo_brahms_13_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_13_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_13_e",
+		response = "story_echo_brahms_13_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_13_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_14_a",
+		response = "story_echo_brahms_14_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_alpha_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_14_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_13_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_14_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_14_b",
+		response = "story_echo_brahms_14_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_14_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_14_c",
+		response = "story_echo_brahms_14_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_14_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_14_d",
+		response = "story_echo_brahms_14_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_14_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_14_e",
+		response = "story_echo_brahms_14_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_14_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_a",
+		response = "story_echo_brahms_15_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_mourningstar_officer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_15_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_14_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_15_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_b",
+		response = "story_echo_brahms_15_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_15_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_c",
+		response = "story_echo_brahms_15_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_15_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_d",
+		response = "story_echo_brahms_15_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_15_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_e",
+		response = "story_echo_brahms_15_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_15_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_15_f",
+		response = "story_echo_brahms_15_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_15_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_a",
+		response = "story_echo_brahms_16_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_16_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_16_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_16_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_b",
+		response = "story_echo_brahms_16_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_16_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_c",
+		response = "story_echo_brahms_16_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_16_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_d",
+		response = "story_echo_brahms_16_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_16_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_e",
+		response = "story_echo_brahms_16_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_16_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_16_f",
+		response = "story_echo_brahms_16_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_16_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_a",
+		response = "story_echo_brahms_17_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_17_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_16_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_17_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_b",
+		response = "story_echo_brahms_17_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_c",
+		response = "story_echo_brahms_17_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_d",
+		response = "story_echo_brahms_17_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_e",
+		response = "story_echo_brahms_17_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_f",
+		response = "story_echo_brahms_17_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_17_g",
+		response = "story_echo_brahms_17_g",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_17_f",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_18_a",
+		response = "story_echo_brahms_18_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_interrogator_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_18_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_17_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_18_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_18_b",
+		response = "story_echo_brahms_18_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_18_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_18_c",
+		response = "story_echo_brahms_18_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_18_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_18_d",
+		response = "story_echo_brahms_18_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_18_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_18_e",
+		response = "story_echo_brahms_18_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_18_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_a",
+		response = "story_echo_brahms_19_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_19_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_18_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_19_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_b",
+		response = "story_echo_brahms_19_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_19_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_c",
+		response = "story_echo_brahms_19_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_19_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_d",
+		response = "story_echo_brahms_19_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_19_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_e",
+		response = "story_echo_brahms_19_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_19_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_19_f",
+		response = "story_echo_brahms_19_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_19_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_a",
+		response = "story_echo_brahms_20_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_20_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_20_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_20_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_b",
+		response = "story_echo_brahms_20_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_c",
+		response = "story_echo_brahms_20_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_d",
+		response = "story_echo_brahms_20_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_e",
+		response = "story_echo_brahms_20_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_f",
+		response = "story_echo_brahms_20_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_20_g",
+		response = "story_echo_brahms_20_g",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_20_f",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_a",
+		response = "story_echo_brahms_21_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_21_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_20_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_21_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_b",
+		response = "story_echo_brahms_21_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_21_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_c",
+		response = "story_echo_brahms_21_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_21_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_d",
+		response = "story_echo_brahms_21_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_21_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_e",
+		response = "story_echo_brahms_21_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_21_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_21_f",
+		response = "story_echo_brahms_21_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_21_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_22_a",
+		response = "story_echo_brahms_22_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_22_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_21_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_22_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_22_b",
+		response = "story_echo_brahms_22_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_22_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_22_c",
+		response = "story_echo_brahms_22_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_22_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_22_d",
+		response = "story_echo_brahms_22_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_22_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_a",
+		response = "story_echo_brahms_23_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_armourer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_23_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_22_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_23_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_b",
+		response = "story_echo_brahms_23_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_c",
+		response = "story_echo_brahms_23_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_d",
+		response = "story_echo_brahms_23_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_e",
+		response = "story_echo_brahms_23_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_f",
+		response = "story_echo_brahms_23_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23_g",
+		response = "story_echo_brahms_23_g",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23_f",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23a_a",
+		response = "story_echo_brahms_23a_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_23a_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_interrogator_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_23a_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_23a_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23a_b",
+		response = "story_echo_brahms_23a_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23a_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23a_c",
+		response = "story_echo_brahms_23a_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23a_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23a_d",
+		response = "story_echo_brahms_23a_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23a_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_23a_e",
+		response = "story_echo_brahms_23a_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_23a_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_24_a",
+		response = "story_echo_brahms_24_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_interrogator_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_24_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_23a_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_24_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_24_b",
+		response = "story_echo_brahms_24_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_24_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_24_c",
+		response = "story_echo_brahms_24_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_24_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_24_d",
+		response = "story_echo_brahms_24_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_24_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_24_e",
+		response = "story_echo_brahms_24_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_24_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_25_a",
+		response = "story_echo_brahms_25_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_25_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_36_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_25_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_25_b",
+		response = "story_echo_brahms_25_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_25_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_25_c",
+		response = "story_echo_brahms_25_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_25_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_25_d",
+		response = "story_echo_brahms_25_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_25_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_25_e",
+		response = "story_echo_brahms_25_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_25_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_a",
+		response = "story_echo_brahms_26_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_26_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_26_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_26_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_b",
+		response = "story_echo_brahms_26_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_c",
+		response = "story_echo_brahms_26_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_d",
+		response = "story_echo_brahms_26_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_e",
+		response = "story_echo_brahms_26_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_f",
+		response = "story_echo_brahms_26_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_g",
+		response = "story_echo_brahms_26_g",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_f",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_26_h",
+		response = "story_echo_brahms_26_h",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_26_g",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_a",
+		response = "story_echo_brahms_27_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_27_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_26_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_27_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_b",
+		response = "story_echo_brahms_27_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_c",
+		response = "story_echo_brahms_27_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_d",
+		response = "story_echo_brahms_27_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_e",
+		response = "story_echo_brahms_27_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27_f",
+		response = "story_echo_brahms_27_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27a_a",
+		response = "story_echo_brahms_27a_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_sergeant_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_27a_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_27_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_27a_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27a_b",
+		response = "story_echo_brahms_27a_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27a_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27a_c",
+		response = "story_echo_brahms_27a_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27a_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27a_d",
+		response = "story_echo_brahms_27a_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27a_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27a_e",
+		response = "story_echo_brahms_27a_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27a_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_a",
+		response = "story_echo_brahms_27b_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_sergeant_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_27b_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_27a_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_27b_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_b",
+		response = "story_echo_brahms_27b_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27b_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_c",
+		response = "story_echo_brahms_27b_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27b_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_d",
+		response = "story_echo_brahms_27b_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27b_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_e",
+		response = "story_echo_brahms_27b_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27b_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_27b_f",
+		response = "story_echo_brahms_27b_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_27b_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_28_a",
+		response = "story_echo_brahms_28_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo_brahms_28_a",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_28_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_28_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_28_b",
+		response = "story_echo_brahms_28_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_28_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_28_c",
+		response = "story_echo_brahms_28_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_28_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_28_d",
+		response = "story_echo_brahms_28_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_28_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_29_a",
+		response = "story_echo_brahms_29_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_enginseer_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_29_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_28_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_29_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_29_b",
+		response = "story_echo_brahms_29_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_29_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_29_c",
+		response = "story_echo_brahms_29_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_29_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_29_d",
+		response = "story_echo_brahms_29_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_29_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_a",
+		response = "story_echo_brahms_30_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_30_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_29_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_30_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_b",
+		response = "story_echo_brahms_30_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_c",
+		response = "story_echo_brahms_30_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_d",
+		response = "story_echo_brahms_30_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_e",
+		response = "story_echo_brahms_30_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30_f",
+		response = "story_echo_brahms_30_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_a",
+		response = "story_echo_brahms_30a_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_alpha_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_30a_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_30_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_30a_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_b",
+		response = "story_echo_brahms_30a_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30a_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_c",
+		response = "story_echo_brahms_30a_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30a_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_d",
+		response = "story_echo_brahms_30a_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30a_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_e",
+		response = "story_echo_brahms_30a_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30a_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_30a_f",
+		response = "story_echo_brahms_30a_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_30a_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_36_a",
+		response = "story_echo_brahms_36_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"story_echo",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"past_shipmistress_a",
+				},
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_36_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"story_echo_brahms_24_a",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"story_echo_brahms_36_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_36_b",
+		response = "story_echo_brahms_36_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_36_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_36_c",
+		response = "story_echo_brahms_36_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_36_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_36_d",
+		response = "story_echo_brahms_36_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_36_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "story_echo_brahms_36_e",
+		response = "story_echo_brahms_36_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"story_echo_brahms_36_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"past",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event_generic",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "story_echo_morrow_01_a",
 		response = "story_echo_morrow_01_a",
 		wwise_route = 1,

@@ -1,6 +1,72 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_c_veteran_male_a.lua
 
 local ogryn_c_veteran_male_a = {
+	bonding_conversation_waterloo_cocky_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_cocky_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.939563,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_cocky_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_cocky_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.682813,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_forgot_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_forgot_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.747313,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_forgot_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_forgot_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.458646,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_memory_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_memory_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.780417,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_memory_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_memory_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.381979,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_c_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

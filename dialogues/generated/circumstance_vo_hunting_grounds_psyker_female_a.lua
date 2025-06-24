@@ -163,12 +163,6 @@ local circumstance_vo_hunting_grounds_psyker_female_a = {
 			5.611792,
 			4.707021,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 	smart_tag_vo_enemy_chaos_hound_mutator = {

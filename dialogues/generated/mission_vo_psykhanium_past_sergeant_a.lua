@@ -1,6 +1,149 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_psykhanium_past_sergeant_a.lua
 
 local mission_vo_psykhanium_past_sergeant_a = {
+	story_echo_brahms_21_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.918167,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_21_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.024729,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_21_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_21_f_01",
+		},
+		sound_events_duration = {
+			[1] = 1.410688,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_22_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_22_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.876563,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_22_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_22_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.036688,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.831958,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.589875,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_23_f_01",
+		},
+		sound_events_duration = {
+			[1] = 1.998854,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27a_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.663625,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27a_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27a_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.861208,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.226188,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.1125,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_sergeant_a__story_echo_brahms_27b_e_01",
+		},
+		sound_events_duration = {
+			[1] = 2.054333,
+		},
+		randomize_indexes = {},
+	},
 	story_echo_morrow_03_c = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

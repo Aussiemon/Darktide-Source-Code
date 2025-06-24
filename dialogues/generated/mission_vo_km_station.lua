@@ -918,7 +918,14 @@ return function ()
 				},
 			},
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"allow_captain_taunt_response",
+				OP.ADD,
+				1,
+			},
+		},
 		heard_speak_routing = {
 			target = "disabled",
 		},

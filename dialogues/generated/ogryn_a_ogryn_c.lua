@@ -12,6 +12,116 @@ local ogryn_a_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_bigger_gun_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_bigger_gun_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.902448,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_bigger_gun_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_bigger_gun_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.866333,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_feast_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_feast_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.697302,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_feast_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_feast_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.705813,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_heroes_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_heroes_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.082583,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_heroes_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_heroes_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.080969,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_song_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_song_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.74076,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_song_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_song_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.915146,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_stomping_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_stomping_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.828552,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_stomping_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_stomping_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.770219,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_10_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

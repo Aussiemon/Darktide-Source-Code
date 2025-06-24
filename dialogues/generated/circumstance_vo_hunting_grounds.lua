@@ -2191,6 +2191,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "self",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.15,

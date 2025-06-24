@@ -1,6 +1,94 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_psykhanium_past_armourer_a.lua
 
 local mission_vo_psykhanium_past_armourer_a = {
+	story_echo_brahms_19_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_19_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.396385,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_19_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_19_f_01",
+		},
+		sound_events_duration = {
+			[1] = 4.757479,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_20_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_20_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.738677,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_20_g = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_20_g_01",
+		},
+		sound_events_duration = {
+			[1] = 1.769396,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_23_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.132115,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_23_c_01",
+		},
+		sound_events_duration = {
+			[1] = 1.323771,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_23_e_01",
+		},
+		sound_events_duration = {
+			[1] = 2.480677,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23_g = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_armourer_a__story_echo_brahms_23_g_01",
+		},
+		sound_events_duration = {
+			[1] = 1.25775,
+		},
+		randomize_indexes = {},
+	},
 	story_echo_morrow_18_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

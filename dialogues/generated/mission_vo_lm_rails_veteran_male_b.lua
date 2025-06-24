@@ -10,9 +10,6 @@ local mission_vo_lm_rails_veteran_male_b = {
 		sound_events_duration = {
 			[1] = 4.741417,
 		},
-		sound_event_weights = {
-			[1] = 1,
-		},
 		randomize_indexes = {},
 	},
 	mission_rails_district_gate = {

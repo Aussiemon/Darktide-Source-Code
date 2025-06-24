@@ -623,16 +623,12 @@ local training_grounds_training_ground_psyker_a = {
 	},
 	tg_tagging = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 1,
 		sound_events = {
-			"loc_training_ground_psyker_a__tg_tagging_01",
-			"loc_training_ground_psyker_a__tg_tagging_02",
-			"loc_training_ground_psyker_a__tg_tagging_03",
+			[1] = "loc_training_ground_psyker_a__tg_tagging_03",
 		},
 		sound_events_duration = {
-			7.233292,
-			6.900833,
-			6.246313,
+			[1] = 6.246313,
 		},
 		randomize_indexes = {},
 	},

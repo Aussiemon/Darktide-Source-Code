@@ -163,12 +163,6 @@ local circumstance_vo_hunting_grounds_zealot_female_b = {
 			3.368167,
 			3.893521,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 	smart_tag_vo_enemy_chaos_hound_mutator = {

@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_zealot_male_a = {
 			2.915729,
 			3.833104,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

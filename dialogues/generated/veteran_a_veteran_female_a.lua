@@ -20,6 +20,28 @@ local veteran_a_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_veteran_a_01_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_01_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.805354,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_a_02_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_a_02_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.274,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_bolt_on_a_veteran_a_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

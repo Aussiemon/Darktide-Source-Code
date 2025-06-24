@@ -8,7 +8,7 @@ local veteran_a_zealot_female_c = {
 			[1] = "loc_zealot_female_c__combat_pause_limited_bolt_on_a_veteran_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.805333,
+			[1] = 4.805344,
 		},
 		randomize_indexes = {},
 	},

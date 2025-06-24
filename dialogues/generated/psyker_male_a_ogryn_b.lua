@@ -1,6 +1,72 @@
 ﻿-- chunkname: @dialogues/generated/psyker_male_a_ogryn_b.lua
 
 local psyker_male_a_ogryn_b = {
+	bonding_conversation_hammersmith_grumpy_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_grumpy_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.397365,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_grumpy_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_grumpy_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.667531,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_memory_loss_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_memory_loss_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.933583,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_memory_loss_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_memory_loss_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.594448,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_team_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_team_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.378333,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_team_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__bonding_conversation_hammersmith_team_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.451115,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_metropolitan_loom_shadow_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

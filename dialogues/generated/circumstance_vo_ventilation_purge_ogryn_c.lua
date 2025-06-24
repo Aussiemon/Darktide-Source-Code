@@ -81,12 +81,6 @@ local circumstance_vo_ventilation_purge_ogryn_c = {
 			3.088594,
 			3.746292,
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25,
-		},
 		randomize_indexes = {},
 	},
 }

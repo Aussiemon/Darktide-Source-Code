@@ -12,10 +12,6 @@ local mission_vo_lm_rails_ogryn_b = {
 			[1] = 1.860177,
 			[2] = 2.857333,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	mission_rails_district_gate = {

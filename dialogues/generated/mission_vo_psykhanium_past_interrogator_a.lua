@@ -1,6 +1,259 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_psykhanium_past_interrogator_a.lua
 
 local mission_vo_psykhanium_past_interrogator_a = {
+	story_echo_brahms_16_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_16_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.3565,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_16_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_16_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.772396,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_16_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_16_f_01",
+		},
+		sound_events_duration = {
+			[1] = 4.582771,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_17_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_17_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.058563,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_17_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_17_d_01",
+		},
+		sound_events_duration = {
+			[1] = 6.160021,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_17_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_17_f_01",
+		},
+		sound_events_duration = {
+			[1] = 1.933979,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_18_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_18_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.385,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_18_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_18_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.471688,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_18_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_18_e_01",
+		},
+		sound_events_duration = {
+			[1] = 5.512292,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_19_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_19_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.153271,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_19_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_19_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.993833,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23a_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_23a_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.047729,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_23a_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_23a_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.969792,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_24_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_24_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.874521,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_24_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_24_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.704563,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_24_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_24_e_01",
+		},
+		sound_events_duration = {
+			[1] = 4.985771,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_27_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.909417,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_27_f_01",
+		},
+		sound_events_duration = {
+			[1] = 5.752,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_27b_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.890917,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_27b_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.336146,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_27b_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_27b_f_01",
+		},
+		sound_events_duration = {
+			[1] = 4.823708,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_36_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_36_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.029813,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_brahms_36_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_interrogator_a__story_echo_brahms_36_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.805188,
+		},
+		randomize_indexes = {},
+	},
 	story_echo_morrow_17_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

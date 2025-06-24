@@ -3,6 +3,271 @@
 return function ()
 	define_rule({
 		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_a",
+		pre_wwise_event = "play_radio_static_start",
+		response = "hub_onboarding_02_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"hub_onboarding_02_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+			{
+				"faction_memory",
+				"prologue_hub_mourningstar_intro",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"prologue_hub_mourningstar_intro",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_b",
+		response = "hub_onboarding_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_a",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_c",
+		response = "hub_onboarding_02_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_d",
+		response = "hub_onboarding_02_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_e",
+		response = "hub_onboarding_02_e",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_d",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_f",
+		response = "hub_onboarding_02_f",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_e",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_om_hub_01",
+		name = "hub_onboarding_02_g",
+		post_wwise_event = "play_radio_static_end",
+		response = "hub_onboarding_02_g",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"hub_onboarding_02_f",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_officer",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "level_event",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
 		database = "mission_vo_om_hub_01",
 		name = "npc_first_interaction_training_ground_psyker_a",
 		response = "npc_first_interaction_training_ground_psyker_a",
