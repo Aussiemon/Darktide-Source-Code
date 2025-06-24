@@ -57,6 +57,9 @@ local settings = {
 		hotkey_system = "system_view",
 	},
 	default_inventory = {
+		adamant = {
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_adamant",
+		},
 		ogryn = {
 			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn",
 		},

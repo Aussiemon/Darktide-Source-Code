@@ -9,6 +9,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_more_resistance_description",
 			display_name = "loc_circumstance_dummy_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_add_resistance",
@@ -21,6 +22,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_less_resistance_description",
 			display_name = "loc_circumstance_dummy_less_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/less_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/less_resistance_01",
 		},
 		mutators = {
 			"mutator_subtract_resistance",
@@ -33,6 +35,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_more_resistance_description",
 			display_name = "loc_circumstance_dummy_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_set_min_resistance",
@@ -46,6 +49,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_more_resistance_description",
 			display_name = "loc_circumstance_dummy_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_set_max_resistance",
@@ -59,6 +63,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_min_resistance_max_challenge_description",
 			display_name = "loc_circumstance_min_resistance_max_challenge_title",
 			icon = "content/ui/materials/icons/circumstances/six_one_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/six_one_01",
 		},
 		mutators = {
 			"mutator_more_alive_specials",
@@ -79,6 +84,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_more_resistance_description",
 			display_name = "loc_circumstance_dummy_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_no_encampments",
@@ -96,6 +102,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_waves_of_specials_description",
 			display_name = "loc_circumstance_waves_of_specials_title",
 			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/special_waves_01",
 		},
 		mutators = {
 			"mutator_waves_of_specials",
@@ -108,6 +115,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_waves_of_specials_more_resistance_description",
 			display_name = "loc_circumstance_waves_of_specials_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/special_waves_02",
 		},
 		mutators = {
 			"mutator_waves_of_specials",
@@ -124,6 +132,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_waves_of_specials_less_resistance_description",
 			display_name = "loc_circumstance_waves_of_specials_less_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/special_waves_03",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/special_waves_03",
 		},
 		mutators = {
 			"mutator_waves_of_specials",
@@ -137,6 +146,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_exploration_mode_description",
 			display_name = "loc_circumstance_exploration_mode_title",
 			icon = "content/ui/materials/icons/circumstances/less_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/less_resistance_01",
 		},
 		mutators = {
 			"mutator_set_min_resistance",
@@ -154,6 +164,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_more_resistance_description",
 			display_name = "loc_circumstance_dummy_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_no_encampments",
@@ -171,6 +182,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_only_melee_description",
 			display_name = "loc_circumstance_dummy_only_melee_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_only_melee_roamers",
@@ -185,6 +197,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_only_melee_description",
 			display_name = "loc_circumstance_waves_of_specials_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_monster_specials",
@@ -197,6 +210,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_only_melee_description",
 			display_name = "loc_circumstance_waves_of_specials_more_resistance_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_monster_specials",
@@ -211,6 +225,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_dummy_only_melee_description",
 			display_name = "loc_circumstance_dummy_only_melee_title",
 			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/more_resistance_01",
 		},
 		mutators = {
 			"mutator_only_melee_roamers",
@@ -228,6 +243,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_more_captains_description",
 			display_name = "loc_circumstance_more_captains_title",
 			icon = "content/ui/materials/icons/circumstances/placeholder",
+			mission_board_icon = "content/ui/materials/icons/circumstances/placeholder",
 		},
 	},
 	more_boss_patrols_01 = {
@@ -239,6 +255,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_more_boss_patrols_description",
 			display_name = "loc_circumstance_more_boss_patrols_title",
 			icon = "content/ui/materials/icons/circumstances/placeholder",
+			mission_board_icon = "content/ui/materials/icons/circumstances/placeholder",
 		},
 	},
 }

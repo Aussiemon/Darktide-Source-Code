@@ -96,5 +96,11 @@ state_machine_settings["content/characters/player/ogryn/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/syringe"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/shock_mine"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/adamant_drone"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

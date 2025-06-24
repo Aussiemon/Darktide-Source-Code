@@ -251,6 +251,7 @@ minion_target_selection_weights.renegade_netgunner = {
 	max_distance = 50,
 	occupied_slots = 1,
 	archetypes = {
+		adamant = 1,
 		ogryn = 1,
 		psyker = 1,
 		veteran = 1,
@@ -309,6 +310,14 @@ minion_target_selection_weights.twin_captain_two = {
 	stickiness_duration = 6,
 	taunt_weight_multiplier = 20,
 	threat_multiplier = 5,
+}
+minion_target_selection_weights.companion_dog = {
+	disabled = -5,
+	distance_to_target = 3,
+	inverse_coherency_weight = 5,
+	max_distance = 50,
+	occupied_slots = -1,
+	threat_multiplier = 1.5,
 }
 
 return settings("MinionTargetSelectionWeights", minion_target_selection_weights)

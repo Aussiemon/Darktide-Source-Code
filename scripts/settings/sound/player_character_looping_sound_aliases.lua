@@ -192,6 +192,16 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_equipped_item_passive",
 		},
 	},
+	conditional_equipped_item_passive_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_conditional_equipped_item_passive",
+		},
+		stop = {
+			event_alias = "stop_conditional_equipped_item_passive",
+		},
+	},
 	sfx_minigame_loop = {
 		start = {
 			event_alias = "play_sfx_minigame_loop",
@@ -222,6 +232,26 @@ local PlayerCharacterLoopingSoundAliases = {
 		},
 		stop = {
 			event_alias = "stop_sfx_minigame_loop",
+		},
+	},
+	companion_attack_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_attack_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_attack_loop",
+		},
+	},
+	companion_breath_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_breath_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_breath_loop",
 		},
 	},
 }

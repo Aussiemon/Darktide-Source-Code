@@ -16,6 +16,7 @@ local circumstance_templates = {
 			favourable_to_players = true,
 			happening_display_name = "loc_happening_assault",
 			icon = "content/ui/materials/icons/circumstances/assault_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/assault_01",
 		},
 	},
 }

@@ -316,6 +316,15 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 					local debug_position = self._debug_position_when_starting_search:unbox()
 
 					Log.info("MinionNavigationExtension", "Minion %s got stuck when trying to navigate from %s to %s", breed_name, debug_position, current_destination)
+
+					local breed = self._breed
+					local is_companion = Breed.is_companion(breed)
+
+					if is_companion then
+						local behavior_component = Blackboard.write_component(self._blackboard, "behavior")
+
+						behavior_component.is_out_of_bound = true
+					end
 				elseif failed_move_attempts > DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW then
 					local debug_position = self._debug_position_when_starting_search:unbox()
 

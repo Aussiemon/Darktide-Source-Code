@@ -27,10 +27,6 @@ PlayerCharacterStateInteracting.init = function (self, character_state_init_cont
 
 	interacting_character_state_component.interaction_template = "none"
 	self._interacting_character_state_component = interacting_character_state_component
-
-	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
-
-	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 end
@@ -126,10 +122,6 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 
 	EXTERNAL_PROPERTIES.interaction_type = interaction_template_name
 
-	if not self._looping_sound_component.is_playing then
-		self._fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
-
 	local is_third_person = template.is_third_person
 
 	if is_third_person then
@@ -197,10 +189,6 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 
 	ForceRotation.stop(locomotion_force_rotation_component)
 
-	if self._looping_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
-
 	local is_third_person = template.is_third_person
 
 	if is_third_person then
@@ -212,6 +200,8 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 end
 
 PlayerCharacterStateInteracting.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
+	self._fx_extension:run_looping_sound(LOOPING_SOUND_ALIAS, nil, nil, fixed_frame)
+
 	return self:_check_transition(unit, t, next_state_params)
 end
 

@@ -209,6 +209,17 @@ local scenegraph_definition = {
 			0,
 		},
 	},
+	option_5 = {
+		horizontal_alignment = "left",
+		parent = "option_4",
+		vertical_alignment = "top",
+		size = option_size,
+		position = {
+			0,
+			option_size[2] + 20,
+			0,
+		},
+	},
 	play_button = {
 		horizontal_alignment = "right",
 		parent = "canvas",
@@ -249,6 +260,26 @@ local scenegraph_definition = {
 		},
 	},
 }
+
+local function _hide_when_disabled(content, style)
+	return not content.hotspot.disabled
+end
+
+local function _show_when_disabled(content, style)
+	return not _hide_when_disabled(content, style)
+end
+
+local function _toggle_color_when_disabled(selector, ok_color, disabled_color)
+	return function (content, style, animations, dt)
+		if content.hotspot.disabled then
+			style[selector] = disabled_color
+
+			return
+		end
+
+		style[selector] = ok_color
+	end
+end
 
 local function create_option_widget(scenegraph_id)
 	return UIWidget.create_definition({
@@ -322,6 +353,28 @@ local function create_option_widget(scenegraph_id)
 			},
 			change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
 			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function,
+		},
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/patterns/diagonal_lines_pattern_01",
+			style = {
+				offset = {
+					0,
+					0,
+					0,
+				},
+				color = {
+					107,
+					159,
+					67,
+					67,
+				},
+				size_addition = {
+					0,
+					-30,
+				},
+			},
+			visibility_function = _show_when_disabled,
 		},
 		{
 			pass_type = "texture",
@@ -438,6 +491,7 @@ local function create_option_widget(scenegraph_id)
 					20,
 				},
 			},
+			visibility_function = _hide_when_disabled,
 		},
 		{
 			pass_type = "texture",
@@ -462,6 +516,7 @@ local function create_option_widget(scenegraph_id)
 					20,
 				},
 			},
+			visibility_function = _hide_when_disabled,
 		},
 		{
 			pass_type = "text",
@@ -496,6 +551,7 @@ local function create_option_widget(scenegraph_id)
 					0,
 				},
 			},
+			visibility_function = _hide_when_disabled,
 		},
 		{
 			pass_type = "text",
@@ -530,6 +586,7 @@ local function create_option_widget(scenegraph_id)
 					0,
 				},
 			},
+			visibility_function = _hide_when_disabled,
 		},
 		{
 			pass_type = "text",
@@ -555,6 +612,7 @@ local function create_option_widget(scenegraph_id)
 					0,
 				},
 			},
+			change_function = _toggle_color_when_disabled("text_color", Color.terminal_text_header(nil, true), Color.terminal_text_header(128, true)),
 		},
 		{
 			pass_type = "text",
@@ -584,110 +642,69 @@ local function create_option_widget(scenegraph_id)
 					0,
 				},
 			},
+			visibility_function = _hide_when_disabled,
 		},
 		{
-			pass_type = "rect",
-			style_id = "difficulty_box_5",
+			pass_type = "text",
+			style_id = "required_difficulty_text",
+			value_id = "required_difficulty_text",
+			value = Localize("loc_hub_locked_by_progression"),
 			style = {
-				horizontal_alignment = "right",
+				drop_shadow = true,
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				horizontal_alignment = "left",
+				line_spacing = 1.2,
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "bottom",
+				text_color = {
+					255,
+					159,
+					67,
+					67,
+				},
 				offset = {
-					-30,
-					20,
-					2,
+					30,
+					-2,
+					5,
 				},
 				size = {
-					10,
+					nil,
 					30,
 				},
-				color = Color.terminal_text_body_dark(nil, true),
+				size_addition = {
+					-100,
+					0,
+				},
 			},
-		},
-		{
-			pass_type = "rect",
-			style_id = "difficulty_box_4",
-			style = {
-				horizontal_alignment = "right",
-				offset = {
-					-48,
-					20,
-					2,
-				},
-				size = {
-					10,
-					30,
-				},
-				color = Color.terminal_text_body_dark(nil, true),
-			},
-		},
-		{
-			pass_type = "rect",
-			style_id = "difficulty_box_3",
-			style = {
-				horizontal_alignment = "right",
-				offset = {
-					-66,
-					20,
-					2,
-				},
-				size = {
-					10,
-					30,
-				},
-				color = Color.terminal_text_body_dark(nil, true),
-			},
-		},
-		{
-			pass_type = "rect",
-			style_id = "difficulty_box_2",
-			style = {
-				horizontal_alignment = "right",
-				offset = {
-					-84,
-					20,
-					2,
-				},
-				size = {
-					10,
-					30,
-				},
-				color = Color.terminal_text_body_dark(nil, true),
-			},
-		},
-		{
-			pass_type = "rect",
-			style_id = "difficulty_box_1",
-			style = {
-				horizontal_alignment = "right",
-				offset = {
-					-102,
-					20,
-					2,
-				},
-				size = {
-					10,
-					30,
-				},
-				color = Color.terminal_text_body_dark(nil, true),
-			},
+			visibility_function = _show_when_disabled,
 		},
 		{
 			pass_type = "texture",
 			style_id = "difficulty_icon",
-			value = "content/ui/materials/icons/generic/danger",
+			value = "content/ui/materials/icons/difficulty/flat/difficulty_skull_uprising",
+			value_id = "difficulty_icon",
 			style = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
-				color = Color.terminal_icon(nil, true),
+				color = Color.terminal_text_header(255, true),
 				offset = {
-					-118,
-					15,
-					2,
+					-25,
+					10,
+					3,
 				},
 				size = {
-					40,
-					40,
+					48,
+					48,
 				},
 			},
+			change_function = _toggle_color_when_disabled("color", Color.terminal_text_header(255, true), {
+				255,
+				159,
+				67,
+				67,
+			}),
 		},
 	}, scenegraph_id)
 end
@@ -805,6 +822,7 @@ local widget_definitions = {
 	option_2 = create_option_widget("option_2"),
 	option_3 = create_option_widget("option_3"),
 	option_4 = create_option_widget("option_4"),
+	option_5 = create_option_widget("option_5"),
 	page_header = UIWidget.create_definition({
 		{
 			pass_type = "text",

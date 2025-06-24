@@ -21,7 +21,9 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local Vo = require("scripts/utilities/vo")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
+local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_animation_emote_1 = "ui_item",
@@ -31,6 +33,7 @@ local WIDGET_TYPE_BY_SLOT = {
 	slot_animation_emote_5 = "ui_item",
 	slot_animation_end_of_round = "gear_item",
 	slot_character_title = "character_title_item",
+	slot_companion_gear_full = "gear_item",
 	slot_gear_extra_cosmetic = "gear_item",
 	slot_gear_head = "gear_item",
 	slot_gear_lowerbody = "gear_item",
@@ -39,6 +42,14 @@ local WIDGET_TYPE_BY_SLOT = {
 	slot_portrait_frame = "ui_item",
 }
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
+local ANIMATION_SLOTS_MAP = {
+	slot_animation_emote_1 = true,
+	slot_animation_emote_2 = true,
+	slot_animation_emote_3 = true,
+	slot_animation_emote_4 = true,
+	slot_animation_emote_5 = true,
+	slot_animation_end_of_round = true,
+}
 local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase")
 
 InventoryCosmeticsView.init = function (self, settings, context)
@@ -61,6 +72,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._disable_rotation_input = context.disable_rotation_input
 		self._animation_event_name_suffix = context.animation_event_name_suffix
 		self._animation_event_variable_data = context.animation_event_variable_data
+		self._companion_animation_event_variable_data = context.companion_animation_event_variable_data or context.animation_event_variable_data
 		self.item_type = context.item_type
 
 		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
@@ -217,6 +229,13 @@ InventoryCosmeticsView.on_enter = function (self)
 
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
+
+	self._options_voice_fx = Application.user_setting("sound_settings", "voice_fx_setting") ~= false
+
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "on")
+	end
+
 	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 	self:_setup_background_world()
 end
@@ -298,17 +317,19 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 
 	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
 
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot and selected_slot.name
+
+	if selected_slot_name then
+		if selected_slot_name == "slot_companion_gear_full" then
+			self._profile_spawner:toggle_character(false)
+		elseif selected_slot_name ~= "slot_animation_end_of_round" then
+			self._profile_spawner:toggle_companion(false)
+		end
+	end
+
 	self._spawned_profile = profile
 end
-
-local ANIMATION_SLOTS_MAP = {
-	slot_animation_emote_1 = true,
-	slot_animation_emote_2 = true,
-	slot_animation_emote_3 = true,
-	slot_animation_emote_4 = true,
-	slot_animation_emote_5 = true,
-	slot_animation_end_of_round = true,
-}
 
 InventoryCosmeticsView._destroy_side_panel = function (self)
 	local side_panel_widgets = self._side_panel_widgets
@@ -449,13 +470,34 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		local item_animation_event = item.animation_event
 		local item_face_animation_event = item.face_animation_event
 		local animation_event_name_suffix = self._animation_event_name_suffix
+		local companion_animation_event_name_suffix = self._companion_animation_event_name_suffix
+		local companion_state_machine = item.companion_state_machine
+		local companion_item_animation_event = item.companion_animation_event
 		local animation_event = item_animation_event
 
 		if animation_event_name_suffix then
 			animation_event = animation_event .. animation_event_name_suffix
 		end
 
+		local companion_animation_event = companion_item_animation_event
+
+		if companion_animation_event_name_suffix then
+			companion_animation_event = companion_animation_event .. companion_animation_event_name_suffix
+		end
+
+		local profile = self._presentation_profile
+		local initial_rotation = self._initial_rotation
+		local disable_rotation_input = self._disable_rotation_input
+
+		self:_spawn_profile(profile, initial_rotation, disable_rotation_input)
 		self._profile_spawner:assign_state_machine(item_state_machine, animation_event, item_face_animation_event)
+
+		if companion_state_machine and companion_state_machine ~= "" then
+			self._profile_spawner:assign_companion_state_machine(companion_state_machine, companion_animation_event)
+			self._profile_spawner:toggle_companion(true)
+		else
+			self._profile_spawner:toggle_companion(false)
+		end
 
 		local animation_event_variable_data = self._animation_event_variable_data
 
@@ -628,6 +670,10 @@ end
 InventoryCosmeticsView.on_exit = function (self)
 	if self._world_spawner then
 		self._world_spawner:set_camera_blur(0, 0)
+	end
+
+	if not self._options_voice_fx then
+		Wwise.set_state("options_voice_fx", "off")
 	end
 
 	self._promise_container:delete()
@@ -878,7 +924,7 @@ local function items_by_name(entry_array, is_item)
 	for i = 1, #entry_array do
 		local entry = entry_array[i]
 		local item = is_item and entry or entry.item
-		local name = item.name
+		local name = item and item.name
 
 		if name then
 			_items_by_name[name] = entry
@@ -1062,7 +1108,7 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 	local archetype = profile.archetype
 	local lore = profile.lore
 	local backstory = lore.backstory
-	local crime = backstory.crime
+	local crime = CrimesCompabilityMap[backstory.crime] or backstory.crime
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed
 	local breed_valid = not item.breeds or table.contains(item.breeds, breed_name)
@@ -1097,7 +1143,7 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 
 			if item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY then
 				self:_play_sound(UISoundEvents.apparel_equip)
-			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
+			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
 				self:_play_sound(UISoundEvents.apparel_equip_small)
 			elseif item_type == ITEM_TYPES.PORTRAIT_FRAME or item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
 				self:_play_sound(UISoundEvents.apparel_equip_frame)

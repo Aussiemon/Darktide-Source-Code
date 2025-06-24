@@ -1172,4 +1172,578 @@ StepperPassTemplates.terminal_stepper.update = function (widget, renderer, dt, t
 	end
 end
 
+local Styles = {}
+
+Styles.difficulty_stepper = {}
+Styles.difficulty_stepper.frame_top = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "top",
+	color = Color.white(nil, true),
+	size = {
+		374.40000000000003,
+		62.400000000000006,
+	},
+	offset = {
+		0,
+		-20,
+		3,
+	},
+	size_addition = {
+		0,
+		0,
+	},
+}
+Styles.difficulty_stepper.frame_bottom = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "bottom",
+	color = Color.white(nil, true),
+	size = {
+		374.40000000000003,
+		62.400000000000006,
+	},
+	offset = {
+		0,
+		20,
+		3,
+	},
+	uvs = {
+		{
+			0,
+			1,
+		},
+		{
+			1,
+			0,
+		},
+	},
+	size_addition = {
+		0,
+		0,
+	},
+}
+Styles.difficulty_stepper.difficulty_text = {
+	font_size = 38,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	offset = {
+		0,
+		0,
+		2,
+	},
+	size_addition = {
+		0,
+		0,
+	},
+	text_color = Color.golden_rod(nil, true),
+}
+Styles.difficulty_stepper.left_button = {
+	horizontal_alignment = "left",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	size = {
+		84,
+		74,
+	},
+	offset = {
+		-42,
+		0,
+		6,
+	},
+	color = Color.golden_rod(nil, true),
+}
+Styles.difficulty_stepper.left_button_glow = table.clone(Styles.difficulty_stepper.left_button)
+Styles.difficulty_stepper.left_button_glow.offset[3] = 5
+Styles.difficulty_stepper.right_button = {
+	horizontal_alignment = "right",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	uvs = {
+		{
+			1,
+			0,
+		},
+		{
+			0,
+			1,
+		},
+	},
+	size = {
+		90,
+		74,
+	},
+	offset = {
+		45,
+		0,
+		6,
+	},
+	color = Color.golden_rod(nil, true),
+}
+Styles.difficulty_stepper.right_button_glow = table.clone(Styles.difficulty_stepper.right_button)
+Styles.difficulty_stepper.right_button_glow.offset[3] = 5
+Styles.difficulty_stepper.left_hotspot = {
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	size = {
+		74,
+		60,
+	},
+	offset = {
+		-37,
+		0,
+		5,
+	},
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
+}
+Styles.difficulty_stepper.right_hotspot = table.clone(Styles.difficulty_stepper.left_hotspot)
+Styles.difficulty_stepper.right_hotspot.offset[1] = 37
+Styles.difficulty_stepper.right_hotspot.horizontal_alignment = "right"
+Styles.difficulty_stepper.left_input_text = {
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		64,
+		54,
+	},
+	offset = {
+		-32,
+		0,
+		5,
+	},
+}
+Styles.difficulty_stepper.right_input_text = table.clone(Styles.difficulty_stepper.left_input_text)
+Styles.difficulty_stepper.right_input_text.offset[1] = 32
+Styles.difficulty_stepper.right_input_text.horizontal_alignment = "right"
+Styles.difficulty_stepper.right_input_text.text_color = {
+	255,
+	255,
+	255,
+	255,
+}
+Styles.difficulty_stepper.difficulty_indicator = {}
+Styles.difficulty_stepper.difficulty_indicator.frame = {
+	size = {
+		28,
+		28,
+	},
+	offset = {
+		0,
+		0,
+		10,
+	},
+	default_size = {
+		28,
+		28,
+	},
+	active_size = {
+		84,
+		84,
+	},
+	active_color = Color.white(255, true),
+	inactive_color = Color.gray(255, true),
+}
+Styles.difficulty_stepper.difficulty_indicator.background = {
+	size = {
+		26,
+		26,
+	},
+	offset = {
+		0,
+		0,
+		9,
+	},
+	default_size = {
+		26,
+		26,
+	},
+	active_size = {
+		78,
+		78,
+	},
+	color = Color.black(255, true),
+}
+Styles.difficulty_stepper.difficulty_indicator.hotspot = table.clone(Styles.difficulty_stepper.difficulty_indicator.frame)
+Styles.difficulty_stepper.difficulty_indicator.frame_fill = table.clone(Styles.difficulty_stepper.difficulty_indicator.frame)
+Styles.difficulty_stepper.difficulty_indicator.frame_fill.offset[3] = 12
+Styles.difficulty_stepper.difficulty_indicator.icon = {
+	size = {
+		22,
+		22,
+	},
+	default_size = {
+		22,
+		22,
+	},
+	active_size = {
+		48,
+		48,
+	},
+	offset = {
+		0,
+		0,
+		11,
+	},
+}
+Styles.difficulty_stepper.difficulty_indicator.indicator_locked = {
+	size = {
+		22,
+		22,
+	},
+	offset = {
+		0,
+		0,
+		13,
+	},
+	default_size = {
+		22,
+		22,
+	},
+	active_size = {
+		58,
+		58,
+	},
+	color = Color.white(255, true),
+}
+
+local function _stepper_static_elements_update(content, style, animations, dt)
+	local color = style.color or style.text_color
+	local from_color = style.color or style.text_color
+	local to_color = content.target_color
+
+	if to_color then
+		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+	end
+end
+
+local function _left_stepper_button_change_function(hotspot_data, content, style, dt)
+	local color = style.color
+	local from_color = style.color
+	local to_color = content.target_color
+
+	if from_color and to_color then
+		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+	end
+
+	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
+	style.size[2] = 80 + 14 * hotspot_data.anim_hover_progress
+end
+
+local function _right_stepper_button_change_function(hotspot_data, content, style, dt)
+	local color = style.color
+	local from_color = style.color
+	local to_color = content.target_color
+
+	if from_color and to_color then
+		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+	end
+
+	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
+	style.size[2] = 80 + 14 * hotspot_data.anim_hover_progress
+end
+
+local function _arrows_visibilit_function(content, style)
+	return not InputDevice.gamepad_active
+end
+
+local function _gamepad_input_visibilit_function(content, style)
+	return InputDevice.gamepad_active
+end
+
+StepperPassTemplates.mission_board_stepper = {
+	{
+		pass_type = "logic",
+		value = function (pass, ui_renderer, logic_style, content, position, size)
+			local gamepad_active = InputDevice.gamepad_active
+
+			if content.is_using_gamepad ~= gamepad_active then
+				content.is_using_gamepad = gamepad_active
+
+				if content.override_left_gamepad_input then
+					content.left_gamepad_input = content.override_left_gamepad_input
+				else
+					content.left_gamepad_input = "navigate_primary_left_pressed"
+				end
+
+				if content.override_right_gamepad_input then
+					content.right_gamepad_input = content.override_right_gamepad_input
+				else
+					content.right_gamepad_input = "navigate_primary_right_pressed"
+				end
+
+				content.gamepad_left_input_text = content.is_using_gamepad and _get_input_text(content.left_gamepad_input) or ""
+				content.gamepad_right_input_text = content.is_using_gamepad and _get_input_text(content.right_gamepad_input) or ""
+			end
+
+			local input_service = ui_renderer.input_service
+			local left_hotspot_data = content.left_hotspot
+			local right_hotspot_data = content.right_hotspot
+
+			if content.left_pressed_callback and (left_hotspot_data.on_released or content.left_gamepad_input and input_service:get(content.left_gamepad_input)) then
+				content.left_pressed_callback()
+			elseif left_hotspot_data.on_released or content.left_gamepad_input and input_service:get(content.left_gamepad_input) then
+				content.danger = content.danger > 1 and content.danger - 1 or content.danger
+			end
+
+			if content.right_pressed_callback and (right_hotspot_data.on_released or content.right_gamepad_input and input_service:get(content.right_gamepad_input)) then
+				content.right_pressed_callback()
+			elseif right_hotspot_data.on_released or content.right_gamepad_input and input_service:get(content.right_gamepad_input) then
+				content.danger = content.danger < 5 and content.danger + 1 or content.danger
+			end
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "stepper_frame_top",
+		value = "content/ui/materials/frames/difficulty_stepper_frame",
+		style = Styles.difficulty_stepper.frame_top,
+		change_function = _stepper_static_elements_update,
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "stepper_frame_bottom",
+		value = "content/ui/materials/frames/difficulty_stepper_frame",
+		style = Styles.difficulty_stepper.frame_bottom,
+		change_function = _stepper_static_elements_update,
+	},
+	{
+		pass_type = "text",
+		style_id = "difficulty_text",
+		value = "DIFFICULTY",
+		value_id = "difficulty_text",
+		style = Styles.difficulty_stepper.difficulty_text,
+		change_function = _stepper_static_elements_update,
+	},
+	{
+		content_id = "left_hotspot",
+		pass_type = "hotspot",
+		style_id = "left_hotspot",
+		style = Styles.difficulty_stepper.left_hotspot,
+		visibility_function = _arrows_visibilit_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "left_button",
+		value = "content/ui/materials/buttons/double_arrow",
+		style = Styles.difficulty_stepper.left_button,
+		visibility_function = _arrows_visibilit_function,
+		change_function = function (content, style, animations, dt)
+			local hotspot_data = content.left_hotspot
+
+			_left_stepper_button_change_function(hotspot_data, content, style, dt)
+
+			style.offset[1] = -(51 + 7 * hotspot_data.anim_hover_progress)
+			style.color[1] = 255 * (1 - hotspot_data.anim_input_progress)
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "gamepad_left_input_text",
+		value = "n/a",
+		value_id = "gamepad_left_input_text",
+		style = Styles.difficulty_stepper.left_input_text,
+		change_function = _stepper_static_elements_update,
+		visibility_function = _gamepad_input_visibilit_function,
+	},
+	{
+		pass_type = "texture",
+		style_id = "left_button_glow",
+		value = "content/ui/materials/buttons/double_arrow_glow",
+		style = Styles.difficulty_stepper.left_button_glow,
+		visibility_function = _arrows_visibilit_function,
+		change_function = function (content, style, animations, dt)
+			local hotspot_data = content.left_hotspot
+
+			_left_stepper_button_change_function(hotspot_data, content, style, dt)
+
+			style.offset[1] = -(51 + 7 * hotspot_data.anim_hover_progress)
+			style.color[1] = 255 * hotspot_data.anim_input_progress
+		end,
+	},
+	{
+		content_id = "right_hotspot",
+		pass_type = "hotspot",
+		style_id = "right_hotspot",
+		style = Styles.difficulty_stepper.right_hotspot,
+		visibility_function = _arrows_visibilit_function,
+	},
+	{
+		pass_type = "text",
+		style_id = "gamepad_right_input_text",
+		value = "n/a",
+		value_id = "gamepad_right_input_text",
+		style = Styles.difficulty_stepper.right_input_text,
+		visibility_function = _gamepad_input_visibilit_function,
+		change_function = _stepper_static_elements_update,
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "right_button",
+		value = "content/ui/materials/buttons/double_arrow",
+		style = Styles.difficulty_stepper.right_button,
+		visibility_function = _arrows_visibilit_function,
+		change_function = function (content, style, animations, dt)
+			local hotspot_data = content.right_hotspot
+
+			_right_stepper_button_change_function(hotspot_data, content, style, dt)
+
+			local base_alpha = content.next_page_unlocked and 255 or 90
+
+			style.color[1] = base_alpha * (1 - hotspot_data.anim_input_progress)
+			style.offset[1] = 51 + 7 * hotspot_data.anim_hover_progress
+		end,
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "right_button_glow",
+		value = "content/ui/materials/buttons/double_arrow_glow",
+		style = Styles.difficulty_stepper.right_button_glow,
+		visibility_function = _arrows_visibilit_function,
+		change_function = function (content, style, animations, dt)
+			local hotspot_data = content.right_hotspot
+
+			_right_stepper_button_change_function(hotspot_data, content, style, dt)
+
+			style.color[1] = 255 * hotspot_data.anim_input_progress
+			style.offset[1] = 51 + 7 * hotspot_data.anim_hover_progress
+		end,
+	},
+	{
+		content_id = "tooltip_hotspot",
+		pass_type = "hotspot",
+		style_id = "tooltip_hotspot",
+		style = {
+			anim_hover_speed = 5,
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size = {
+				260,
+				70,
+			},
+			offset = {
+				0,
+				15,
+				4,
+			},
+		},
+	},
+}
+
+local function _stepper_indicator_change_function(content, style, dt, ignore_color)
+	local is_active = content.active
+	local progress = content.active_progress or 0
+
+	if is_active then
+		progress = math.min(progress + dt * 5, 1)
+	else
+		progress = math.max(progress - dt * 5, 0)
+	end
+
+	style.size[1] = style.default_size[1] + (style.active_size[1] - style.default_size[1]) * progress
+	style.size[2] = style.default_size[2] + (style.active_size[2] - style.default_size[2]) * progress
+
+	local hotspot = content.hotspot or content.parent.hotspot
+
+	if hotspot then
+		local anim_hover_progress = hotspot.anim_hover_progress or 0
+
+		style.size[1] = style.size[1] + 10 * anim_hover_progress
+		style.size[2] = style.size[2] + 10 * anim_hover_progress
+	end
+
+	style.offset[1] = -style.size[1] * 0.5
+	style.offset[2] = -style.size[2] * 0.5
+
+	if not ignore_color then
+		local color = style.color
+		local from_color = style.color
+		local to_color = content.target_color
+
+		if from_color then
+			ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+		else
+			style.color = style.inactive_color
+		end
+	end
+
+	content.active_progress = progress
+end
+
+StepperPassTemplates.difficulty_stepper_indicator = {}
+StepperPassTemplates.difficulty_stepper_indicator.passes = {
+	{
+		content_id = "hotspot",
+		pass_type = "hotspot",
+		style_id = "hotspot",
+		style = Styles.difficulty_stepper.difficulty_indicator.hotspot,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt, true)
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "indicator_frame",
+		value = "content/ui/materials/icons/difficulty/difficulty_indicator_empty",
+		style = Styles.difficulty_stepper.difficulty_indicator.frame,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt)
+		end,
+		visibility_function = function (content, style)
+			return content.active
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "indicator_frame",
+		value = "content/ui/materials/icons/difficulty/selection_frame_dimond_small",
+		style = Styles.difficulty_stepper.difficulty_indicator.frame,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt)
+		end,
+		visibility_function = function (content, style)
+			return not content.active
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "indicator_background",
+		value = "content/ui/materials/icons/difficulty/difficulty_indicator_full",
+		style = Styles.difficulty_stepper.difficulty_indicator.background,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt, true)
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "icon",
+		value = "content/ui/materials/icons/difficulty/difficulty_skull_uprising",
+		value_id = "icon",
+		style = Styles.difficulty_stepper.difficulty_indicator.icon,
+		visibility_function = function (content, style)
+			return content.active
+		end,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt)
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "indicator_full",
+		value = "content/ui/materials/icons/difficulty/difficulty_indicator_full",
+		style = Styles.difficulty_stepper.difficulty_indicator.frame_fill,
+		change_function = function (content, style, animations, dt)
+			_stepper_indicator_change_function(content, style, dt)
+		end,
+		visibility_function = function (content, style)
+			return not content.active and content.is_unlocked
+		end,
+	},
+}
+
 return settings("StepperPassTemplates", StepperPassTemplates)

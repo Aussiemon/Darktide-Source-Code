@@ -48,6 +48,9 @@ local talent_builder_view_settings = {
 		},
 	},
 	node_gradient_colors = {
+		"content/ui/textures/color_ramps/class_node_colors/adamant_01",
+		"content/ui/textures/color_ramps/class_node_colors/adamant_02",
+		"content/ui/textures/color_ramps/class_node_colors/adamant_03",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_01",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_02",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_03",
@@ -212,6 +215,10 @@ local talent_builder_view_settings = {
 		},
 	},
 	starting_talent_nodes_offset_by_name = {
+		adamant = {
+			2,
+			-20,
+		},
 		ogryn = {
 			2,
 			-20,
@@ -230,18 +237,21 @@ local talent_builder_view_settings = {
 		},
 	},
 	starting_points_material_by_name = {
+		adamant = "content/ui/materials/frames/talents/starting_points/starting_point_adamant",
 		ogryn = "content/ui/materials/frames/talents/starting_points/starting_point_ogryn",
 		psyker = "content/ui/materials/frames/talents/starting_points/starting_point_psyker",
 		veteran = "content/ui/materials/frames/talents/starting_points/starting_point_veteran",
 		zealot = "content/ui/materials/frames/talents/starting_points/starting_point_zealot",
 	},
 	archetype_badge_texture_by_name = {
+		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
 		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
 		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
 		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",
 		zealot = "content/ui/textures/icons/class_badges/zealot_01_01",
 	},
 	archetype_backgrounds_by_name = {
+		adamant = "content/ui/materials/frames/talents/talent_bg_top_gradient_adamant",
 		ogryn = "content/ui/materials/frames/talents/talent_bg_top_gradient_ogryn",
 		psyker = "content/ui/materials/frames/talents/talent_bg_top_gradient_psyker",
 		veteran = "content/ui/materials/frames/talents/talent_bg_top_gradient_veteran",
@@ -268,6 +278,36 @@ local talent_builder_view_settings = {
 		},
 	},
 	glow_colors_by_class = {
+		adamant = {
+			line_chosen = {
+				fill_color = {
+					255,
+					224,
+					250,
+					255,
+				},
+				blur_color = {
+					255,
+					99,
+					167,
+					176,
+				},
+			},
+			line_available = {
+				fill_color = {
+					255,
+					39,
+					74,
+					78,
+				},
+				blur_color = {
+					127,
+					42,
+					55,
+					59,
+				},
+			},
+		},
 		psyker = {
 			line_chosen = {
 				fill_color = {

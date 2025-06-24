@@ -1,10 +1,9 @@
 ﻿-- chunkname: @scripts/settings/character/home_planets.lua
 
-local home_planets = {
-	option_1 = {
+local home_planet_options = {
+	{
 		description = "loc_character_birthplace_planet_01_description",
 		display_name = "loc_character_birthplace_planet_01_name",
-		id = "birthplace_planet_01",
 		name = "Branx Magna",
 		story_snippet = "loc_character_birthplace_planet_01_description_snippet",
 		image = {
@@ -19,10 +18,9 @@ local home_planets = {
 			2416,
 		},
 	},
-	option_2 = {
+	{
 		description = "loc_character_birthplace_planet_02_description",
 		display_name = "loc_character_birthplace_planet_02_name",
-		id = "birthplace_planet_02",
 		name = "Crucis",
 		story_snippet = "loc_character_birthplace_planet_02_description_snippet",
 		image = {
@@ -37,10 +35,9 @@ local home_planets = {
 			2447,
 		},
 	},
-	option_3 = {
+	{
 		description = "loc_character_birthplace_planet_03_description",
 		display_name = "loc_character_birthplace_planet_03_name",
-		id = "birthplace_planet_03",
 		name = "Mornax",
 		story_snippet = "loc_character_birthplace_planet_03_description_snippet",
 		image = {
@@ -55,10 +52,9 @@ local home_planets = {
 			1698,
 		},
 	},
-	option_4 = {
+	{
 		description = "loc_character_birthplace_planet_04_description",
 		display_name = "loc_character_birthplace_planet_04_name",
-		id = "birthplace_planet_04",
 		name = "Incron",
 		story_snippet = "loc_character_birthplace_planet_04_description_snippet",
 		image = {
@@ -73,10 +69,9 @@ local home_planets = {
 			1626,
 		},
 	},
-	option_5 = {
+	{
 		description = "loc_character_birthplace_planet_05_description",
 		display_name = "loc_character_birthplace_planet_05_name",
-		id = "birthplace_planet_05",
 		name = "Rocyria",
 		story_snippet = "loc_character_birthplace_planet_05_description_snippet",
 		image = {
@@ -91,10 +86,9 @@ local home_planets = {
 			822,
 		},
 	},
-	option_6 = {
+	{
 		description = "loc_character_birthplace_planet_06_description",
 		display_name = "loc_character_birthplace_planet_06_name",
-		id = "birthplace_planet_06",
 		name = "Pavane",
 		story_snippet = "loc_character_birthplace_planet_06_description_snippet",
 		image = {
@@ -109,10 +103,9 @@ local home_planets = {
 			1364,
 		},
 	},
-	option_7 = {
+	{
 		description = "loc_character_birthplace_planet_07_description",
 		display_name = "loc_character_birthplace_planet_07_name",
-		id = "birthplace_planet_07",
 		name = "Cadia",
 		story_snippet = "loc_character_birthplace_planet_07_description_snippet",
 		image = {
@@ -127,10 +120,9 @@ local home_planets = {
 			2588,
 		},
 	},
-	option_8 = {
+	{
 		description = "loc_character_birthplace_planet_08_description",
 		display_name = "loc_character_birthplace_planet_08_name",
-		id = "birthplace_planet_08",
 		name = "Messelina Gloriana",
 		story_snippet = "loc_character_birthplace_planet_08_description_snippet",
 		image = {
@@ -146,5 +138,14 @@ local home_planets = {
 		},
 	},
 }
+local home_planet_options_by_id = {}
 
-return home_planets
+for i = 1, #home_planet_options do
+	local home_planet_option = home_planet_options[i]
+	local id = string.format("option_%d", i)
+
+	home_planet_option.id = id
+	home_planet_options_by_id[id] = home_planet_option
+end
+
+return settings("home_planet", home_planet_options_by_id)

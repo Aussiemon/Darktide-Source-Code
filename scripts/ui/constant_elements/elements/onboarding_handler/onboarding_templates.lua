@@ -134,9 +134,45 @@ local function _complete_current_story_chapter(story_name)
 end
 
 local function _is_havoc_cadence_active()
-	local cadence_status = Managers.narrative:get_havoc_cadence_status()
+	return Managers.data_service.havoc:get_havoc_cadence_status()
+end
 
-	return cadence_status.active
+local function _journey_mission_completed(mission)
+	local mission_data = Managers.data_service.mission_board:get_filtered_missions_data()
+	local story_missions = mission_data.story
+	local mission_completed = story_missions and story_missions[mission] and story_missions[mission].completed
+
+	return mission_completed
+end
+
+local function _last_completed_chapter_is(story_name, chapter_name)
+	local completed_chapter = Managers.narrative:last_completed_chapter(story_name)
+
+	if completed_chapter then
+		local completed_chapter_name = completed_chapter.name
+
+		return completed_chapter_name == chapter_name
+	end
+end
+
+local function _archetype_name_is(archetype_name)
+	local player = _get_player()
+	local player_archetype_name = player:archetype_name()
+
+	return archetype_name == player_archetype_name
+end
+
+local function _has_new_difficulty()
+	local player = _get_player()
+	local profile = player:profile()
+	local character_id = profile.character_id
+	local new_difficulty_unlocked = Managers.data_service.mission_board:get_new_difficulty_unlocked(character_id)
+
+	if new_difficulty_unlocked then
+		Managers.data_service.mission_board:reset_cached_highest_difficulty(character_id)
+	end
+
+	return new_difficulty_unlocked
 end
 
 local templates = {
@@ -420,7 +456,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -438,12 +474,6 @@ local templates = {
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
-
-			local level = Managers.state.mission:mission_level()
-
-			if level then
-				Level.trigger_event(level, "event_onboarding_step_mission_board_introduction")
-			end
 		end,
 		on_deactivation = function (self)
 			if not self.objective then
@@ -474,6 +504,11 @@ local templates = {
 			local localization_key = "loc_onboarding_popup_mission_board_01"
 			local localized_text = Localize(localization_key)
 			local duration = UI_POPUP_INFO_DURATION
+			local level = Managers.state.mission:mission_level()
+
+			if level and not is_view_or_popup_active() then
+				Level.trigger_event(level, "event_onboarding_step_mission_board_introduction")
+			end
 
 			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 		end,
@@ -490,7 +525,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_contract_store_visited")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_contract_store_visited")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -542,13 +577,7 @@ local templates = {
 			local localized_text = Localize(localization_key)
 			local duration = UI_POPUP_INFO_DURATION
 
-			local function close_callback_function()
-				_complete_current_story_chapter("level_unlock_popups")
-			end
-
-			local close_callback = callback(close_callback_function)
-
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			_complete_current_story_chapter("level_unlock_popups")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -563,7 +592,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -621,7 +650,7 @@ local templates = {
 
 			local close_callback = callback(close_callback_function)
 
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			_complete_current_story_chapter("level_unlock_popups")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -636,7 +665,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited") and not _archetype_name_is("adamant")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -680,7 +709,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_popup")
+			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_popup") and not _journey_mission_completed("km_heresy")
 		end,
 		on_activation = function (self)
 			local player = _get_player()
@@ -688,13 +717,7 @@ local templates = {
 			local localized_text = Localize(localization_key)
 			local duration = UI_POPUP_INFO_DURATION
 
-			local function close_callback_function()
-				Managers.narrative:complete_event("level_unlock_cosmetic_store_popup")
-			end
-
-			local close_callback = callback(close_callback_function)
-
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			Managers.narrative:complete_event("level_unlock_cosmetic_store_popup")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -709,7 +732,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -767,7 +790,7 @@ local templates = {
 
 			local close_callback = callback(close_callback_function)
 
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			_complete_current_story_chapter("level_unlock_popups")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -796,14 +819,24 @@ local templates = {
 
 			local close_callback = callback(close_callback_function)
 
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			_complete_current_story_chapter("level_unlock_popups")
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
-
-			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
 		sync_on_events = {},
+	},
+	{
+		name = "Level 5/10/15/20/25/30 Unlocks Popup - Talent Tier Up",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_3") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_4") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_5") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_6"))
+		end,
+		on_activation = function (self)
+			_complete_current_story_chapter("level_unlock_popups")
+		end,
 	},
 	{
 		name = "Level 7 Introduce Objective - Penances / Track",
@@ -999,7 +1032,7 @@ local templates = {
 			end
 		end,
 		close_condition = function (self)
-			return Managers.narrative:get_ever_received_havoc_order()
+			return Managers.data_service.havoc:get_ever_received_havoc_order()
 		end,
 		sync_on_events = {},
 	},
@@ -1059,62 +1092,6 @@ local templates = {
 			return Managers.ui:is_view_closing("havoc_background_view")
 		end,
 		sync_on_events = {},
-	},
-	{
-		name = "Narrative main objective",
-		valid_states = {
-			"GameplayStateRun",
-		},
-		validation_func = function (self)
-			return _is_in_hub() and not Managers.narrative:is_story_complete("path_of_trust")
-		end,
-		on_activation = function (self)
-			if self.objective then
-				local objective = self.objective
-				local objective_name = objective:name()
-
-				Managers.event:trigger("event_remove_mission_objective", objective_name)
-
-				self.objective = nil
-
-				objective:destroy()
-			end
-
-			local ignore_requirement = true
-			local current_chapter = Managers.narrative:current_chapter("path_of_trust", ignore_requirement)
-
-			if current_chapter then
-				local chapter_data = current_chapter.data
-				local objective_name = self.name
-				local localization_key = chapter_data.localization_key
-				local level = chapter_data.level_to_reach
-				local text = Localize(localization_key, true, {
-					level = level or 0,
-				})
-				local objective = _create_objective(objective_name, nil, nil, false, text)
-
-				self.objective = objective
-
-				Managers.event:trigger("event_add_mission_objective", objective)
-			end
-		end,
-		on_deactivation = function (self)
-			if not self.objective then
-				return
-			end
-
-			local objective = self.objective
-			local objective_name = objective:name()
-
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
-
-			self.objective = nil
-
-			objective:destroy()
-		end,
-		sync_on_events = {
-			"event_on_path_of_trust_updated",
-		},
 	},
 	{
 		name = "Unspent Talent points available",
@@ -1225,6 +1202,463 @@ local templates = {
 			if level then
 				Level.trigger_event(level, "s1_event_twins_epilogue_3")
 			end
+		end,
+	},
+	{
+		name = "Player Journey - Mission Board Tier Up",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _has_hud() and _has_new_difficulty()
+		end,
+		on_activation = function (self)
+			local player = _get_player()
+			local current_difficulty_name = Managers.data_service.mission_board:get_difficulty_progression_data().current.name
+			local localization_key = "loc_onboarding_popup_difficulty_unlocked_" .. current_difficulty_name
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+		end,
+	},
+	{
+		name = "main_story_km_station",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_station") and not Managers.narrative:last_completed_chapter("main_story") or _journey_mission_completed("km_heresy") and _last_completed_chapter_is("main_story", "km_station")
+		end,
+		on_activation = function (self)
+			if _journey_mission_completed("km_heresy") then
+				Managers.narrative:complete_chapter_by_name("main_story", "km_heresy")
+				Managers.narrative:complete_event("level_unlock_credits_store_visited")
+				Managers.narrative:complete_event("level_unlock_crafting_station_visited")
+				Managers.narrative:complete_event("level_unlock_contract_store_visited")
+				Managers.narrative:complete_event("level_unlock_cosmetic_store_visited")
+				Managers.narrative:complete_event("level_unlock_cosmetic_store_popup")
+				Managers.narrative:complete_event("level_unlock_premium_store_visited")
+				Managers.narrative:complete_event("level_unlock_barber_visited")
+			else
+				if not _archetype_name_is("adamant") then
+					local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+					cinematic_scene_system:play_cutscene("path_of_trust_01")
+				end
+
+				Managers.narrative:complete_current_chapter("main_story")
+			end
+		end,
+		close_condition = function (self)
+			if not _journey_mission_completed("km_heresy") then
+				return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+			else
+				return true
+			end
+		end,
+		on_deactivation = function (self)
+			if not _journey_mission_completed("km_heresy") then
+				local player = _get_player()
+				local localization_key = "loc_onboarding_popup_weapon_shop"
+				local localized_text = Localize(localization_key)
+				local duration = UI_POPUP_INFO_DURATION
+
+				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+			end
+		end,
+	},
+	{
+		name = "main_story_dm_stockpile",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_stockpile") and _is_on_story_chapter("main_story", "dm_stockpile")
+		end,
+		on_activation = function (self)
+			if not _archetype_name_is("adamant") then
+				local player = _get_player()
+				local localization_key = "loc_onboarding_popup_cosmetics_shop"
+				local localized_text = Localize(localization_key)
+				local duration = UI_POPUP_INFO_DURATION
+
+				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+			end
+
+			Managers.narrative:complete_current_chapter("main_story")
+		end,
+	},
+	{
+		name = "main_story_hm_cartel",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("hm_cartel") and _is_on_story_chapter("main_story", "hm_cartel")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("main_story")
+		end,
+	},
+	{
+		name = "main_story_km_enforcer",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_enforcer") and _is_on_story_chapter("main_story", "km_enforcer")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("main_story")
+
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_crafting"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+		end,
+	},
+	{
+		name = "main_story_cm_habs",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_habs") and _is_on_story_chapter("main_story", "cm_habs")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("main_story")
+
+			if not _archetype_name_is("adamant") then
+				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+				cinematic_scene_system:play_cutscene("path_of_trust_05")
+			end
+		end,
+		close_condition = function (self)
+			return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+		end,
+		on_deactivation = function (self)
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_live_events_unlocked"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+		end,
+	},
+	{
+		name = "main_story_dm_propaganda",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_propaganda") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "core_research_0_2"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "cm_habs") then
+				jump_to_chapter = "dm_propaganda_1_0"
+			elseif _last_completed_chapter_is("main_story", "fm_cargo_0_1") then
+				jump_to_chapter = "dm_propaganda_1_1"
+			elseif _last_completed_chapter_is("main_story", "core_research_0_2") then
+				jump_to_chapter = "dm_propaganda_1_2"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+
+			local player = Managers.player:local_player(1)
+
+			Managers.achievements:unlock_achievement(player, "unlock_contracts", true)
+
+			local localization_key = "loc_onboarding_popup_contracts"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+		end,
+	},
+	{
+		name = "main_story_fm_cargo",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and _journey_mission_completed("fm_cargo") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "hm_strain_2_0"))
+		end,
+		on_activation = function (self)
+			local ui_manager = Managers.ui
+			local view_name = "video_view"
+			local template_name = "core_research_intro"
+			local context = {
+				allow_skip_input = true,
+				template = template_name,
+			}
+
+			ui_manager:open_view(view_name, nil, true, true, nil, context)
+		end,
+		close_condition = function (self)
+			return Managers.ui:is_view_closing("video_view")
+		end,
+		on_deactivation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "cm_habs") then
+				jump_to_chapter = "fm_cargo_0_1"
+			elseif _last_completed_chapter_is("main_story", "dm_propaganda_1_0") then
+				jump_to_chapter = "fm_cargo_1_1"
+			elseif _last_completed_chapter_is("main_story", "hm_strain_2_0") then
+				jump_to_chapter = "fm_cargo_2_1"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+
+			local level = Managers.state.mission:mission_level()
+
+			if level then
+				Level.trigger_event(level, "horde_intro_vo")
+			end
+
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_horde_mode_unlocked"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+		end,
+	},
+	{
+		name = "main_story_hm_strain",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and _journey_mission_completed("hm_strain") and (_last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "core_research_1_2") or _last_completed_chapter_is("main_story", "dm_propaganda_1_2"))
+		end,
+		on_activation = function (self)
+			if not _archetype_name_is("adamant") then
+				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+				cinematic_scene_system:play_cutscene("path_of_trust_08")
+			end
+		end,
+		close_condition = function (self)
+			return Managers.state.cinematic:last_story_time_left() and Managers.state.cinematic:last_story_time_left() < 0.5 or not is_view_or_popup_active() and _archetype_name_is("adamant")
+		end,
+		on_deactivation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "dm_propaganda_1_0") then
+				jump_to_chapter = "hm_strain_2_0"
+			elseif _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") then
+				jump_to_chapter = "hm_strain_2_1"
+			elseif _last_completed_chapter_is("main_story", "core_research_1_2") or _last_completed_chapter_is("main_story", "dm_propaganda_1_2") then
+				jump_to_chapter = "hm_strain_2_2"
+
+				local ui_manager = Managers.ui
+				local view_name = "video_view"
+				local template_name = "s1_intro"
+				local context = {
+					allow_skip_input = true,
+					template = template_name,
+				}
+
+				ui_manager:open_view(view_name, nil, true, true, nil, context)
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_core_research",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("core_research") and (_last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "hm_strain_2_1") or _last_completed_chapter_is("main_story", "fm_cargo_2_1"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "fm_cargo_0_1") then
+				jump_to_chapter = "core_research_0_2"
+			elseif _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") then
+				jump_to_chapter = "core_research_1_2"
+			elseif _last_completed_chapter_is("main_story", "hm_strain_2_1") or _last_completed_chapter_is("main_story", "fm_cargo_2_1") then
+				jump_to_chapter = "core_research_2_2"
+
+				local ui_manager = Managers.ui
+				local view_name = "video_view"
+				local template_name = "s1_intro"
+				local context = {
+					allow_skip_input = true,
+					template = template_name,
+				}
+
+				ui_manager:open_view(view_name, nil, true, true, nil, context)
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_fm_armoury",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("fm_armoury") and (_last_completed_chapter_is("main_story", "core_research_2_2") or _last_completed_chapter_is("main_story", "hm_strain_2_2"))
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_chapter_by_name("main_story", "fm_armoury")
+		end,
+	},
+	{
+		name = "main_story_cm_raid",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_raid") and _is_on_story_chapter("main_story", "cm_raid")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("main_story")
+		end,
+	},
+	{
+		name = "main_story_km_enforcer_twins",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_enforcer_twins") and _is_on_story_chapter("main_story", "km_enforcer_twins")
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_current_chapter("main_story")
+
+			local ui_manager = Managers.ui
+			local view_name = "video_view"
+			local template_name = "cin_nox_alpha"
+			local context = {
+				allow_skip_input = true,
+				template = template_name,
+			}
+
+			ui_manager:open_view(view_name, nil, true, true, nil, context)
+		end,
+	},
+	{
+		name = "main_story_fm_resurgence",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("fm_resurgence") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "dm_rise_0_1"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "km_enforcer_twins") then
+				jump_to_chapter = "fm_resurgence_1_0"
+			elseif _last_completed_chapter_is("main_story", "dm_rise_0_1") then
+				jump_to_chapter = "fm_resurgence_1_1"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_dm_rise",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_rise") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "hm_complex_3_0"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "km_enforcer_twins") then
+				jump_to_chapter = "dm_rise_0_1"
+			elseif _last_completed_chapter_is("main_story", "fm_resurgence_1_0") then
+				jump_to_chapter = "dm_rise_1_1"
+			elseif _last_completed_chapter_is("main_story", "cm_archives_2_0") then
+				jump_to_chapter = "dm_rise_2_1"
+			elseif _last_completed_chapter_is("main_story", "hm_complex_3_0") then
+				jump_to_chapter = "dm_rise_3_1"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_cm_archives",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_archives") and (_last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "dm_rise_1_1") or _last_completed_chapter_is("main_story", "fm_resurgence_1_1"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "fm_resurgence_1_0") then
+				jump_to_chapter = "cm_archives_2_0"
+			elseif _last_completed_chapter_is("main_story", "dm_rise_1_1") or _last_completed_chapter_is("main_story", "fm_resurgence_1_1") then
+				jump_to_chapter = "cm_archives_2_1"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_hm_complex",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("hm_complex") and (_last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "dm_rise_2_1") or _last_completed_chapter_is("main_story", "cm_archives_2_1"))
+		end,
+		on_activation = function (self)
+			local jump_to_chapter
+
+			if _last_completed_chapter_is("main_story", "cm_archives_2_0") then
+				jump_to_chapter = "hm_complex_3_0"
+			elseif _last_completed_chapter_is("main_story", "dm_rise_2_1") or _last_completed_chapter_is("main_story", "cm_archives_2_1") then
+				jump_to_chapter = "hm_complex_3_1"
+			end
+
+			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+		end,
+	},
+	{
+		name = "main_story_km_heresy",
+		valid_states = {
+			"GameplayStateRun",
+		},
+		validation_func = function (self)
+			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_heresy") and (_last_completed_chapter_is("main_story", "hm_complex_3_1") or _last_completed_chapter_is("main_story", "dm_rise_3_1"))
+		end,
+		on_activation = function (self)
+			Managers.narrative:complete_chapter_by_name("main_story", "km_heresy")
+
+			if not _archetype_name_is("adamant") then
+				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+
+				cinematic_scene_system:play_cutscene("path_of_trust_09")
+			end
+		end,
+		close_condition = function (self)
+			return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+		end,
+		on_deactivation = function (self)
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_maelstrom_unlocked"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 		end,
 	},
 }

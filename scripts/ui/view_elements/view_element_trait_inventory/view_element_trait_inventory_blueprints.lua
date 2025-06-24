@@ -1,10 +1,10 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_trait_inventory/view_element_trait_inventory_blueprints.lua
 
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local InputDevice = require("scripts/managers/input/input_device")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local InputDevice = require("scripts/managers/input/input_device")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local amount_style = table.clone(UIFontSettings.body_small)
 
 amount_style.text_color = Color.terminal_icon(nil, true)
@@ -255,7 +255,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 		content.config = config
 		content.parent = parent
 
-		local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
+		local texture_icon, texture_frame = Items.trait_textures(trait_item, trait_rarity)
 		local icon_material_values = style.icon.material_values
 
 		icon_material_values.icon = texture_icon

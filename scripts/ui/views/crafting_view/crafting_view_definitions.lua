@@ -2,10 +2,10 @@
 
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local CraftingMechanicusSettings = require("scripts/settings/item/crafting_mechanicus_settings")
+local InputDevice = require("scripts/managers/input/input_device")
+local Items = require("scripts/utilities/items")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local InputDevice = require("scripts/managers/input/input_device")
-local ItemUtils = require("scripts/utilities/items")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	corner_top_left = {
@@ -266,7 +266,7 @@ local crafting_tab_params = {
 							local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
 
 							if gear_id then
-								local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+								local is_favorite = Items.is_item_id_favorited(gear_id)
 								local display_name = is_favorite and "loc_inventory_remove_favorite" or "loc_inventory_add_favorite"
 
 								parent._input_legend_element:set_display_name(id, display_name)
@@ -369,7 +369,7 @@ local crafting_tab_params = {
 								local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
 
 								if gear_id then
-									local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+									local is_favorite = Items.is_item_id_favorited(gear_id)
 									local display_name = is_favorite and "loc_inventory_remove_favorite" or "loc_inventory_add_favorite"
 
 									parent._input_legend_element:set_display_name(id, display_name)
@@ -391,10 +391,10 @@ local used_settings = {
 	CraftingMechanicusSettings,
 }
 
-for i = 1, #used_settings do
-	local setting = used_settings[i]
+for ii = 1, #used_settings do
+	local setting = used_settings[ii]
 
-	for i, recipe in pairs(setting.recipes_ui_order) do
+	for _, recipe in pairs(setting.recipes_ui_order) do
 		local view_name = recipe.view_name
 
 		crafting_tab_params[view_name] = {

@@ -153,7 +153,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	special_action_hold = {
-		buffer_time = 0.2,
+		buffer_time = 0.4,
 		input_sequence = {
 			{
 				hold_input = "weapon_extra_hold",
@@ -374,6 +374,7 @@ weapon_template.actions = {
 		kind = "ranged_wield",
 		total_time = 1.8,
 		uninterruptible = true,
+		weapon_handling_template = "time_scale_1_5",
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
 		conditional_state_to_action_input = {
@@ -991,7 +992,7 @@ weapon_template.actions = {
 			},
 			special_action_heavy = {
 				action_name = "action_slash",
-				chain_time = 0.3,
+				chain_time = 0.25,
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip_start",
@@ -1018,7 +1019,7 @@ weapon_template.actions = {
 		allowed_during_sprint = true,
 		anim_event = "attack_slash",
 		damage_window_end = 0.26666666666666666,
-		damage_window_start = 0.1,
+		damage_window_start = 0.13333333333333333,
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
@@ -1086,19 +1087,19 @@ weapon_template.actions = {
 			},
 			special_action_hold = {
 				action_name = "action_slash_start",
-				chain_time = 0.7,
+				chain_time = 0.645,
 			},
 		},
 		weapon_box = {
 			0.2,
-			1.8,
+			1.6,
 			0.2,
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg/animations/attack_slash_01",
 			anchor_point_offset = {
 				0.1,
-				0.8,
+				1.2,
 				0,
 			},
 		},
@@ -1191,7 +1192,7 @@ weapon_template.alternate_fire_settings = {
 		crosshair_type = "charge_up_ads",
 	},
 	camera = {
-		custom_vertical_fov = 65,
+		custom_vertical_fov = 45,
 		near_range = 0.025,
 		vertical_fov = 45,
 	},

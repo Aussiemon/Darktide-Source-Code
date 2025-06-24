@@ -1,13 +1,12 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view.lua
 
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
-local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -319,7 +318,7 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 			generate_visual_item_function = function (real_item, selected_item)
 				local optional_preivew_item = selected_item.__gear.masterDataInstance.id
 
-				return ItemUtils.weapon_trinket_preview_item(real_item)
+				return Items.weapon_trinket_preview_item(real_item)
 			end,
 			apply_on_preview = function (real_item, presentation_item)
 				local path
@@ -427,20 +426,20 @@ InventoryWeaponCosmeticsView._setup_sort_options = function (self)
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					"<",
 					"sort_data",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 			{
 				display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
 					sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
 				}),
-				sort_function = ItemUtils.sort_element_key_comparator({
+				sort_function = Items.sort_element_key_comparator({
 					">",
 					"sort_data",
-					ItemUtils.compare_item_name,
+					Items.compare_item_name,
 				}),
 			},
 		}
@@ -677,10 +676,10 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 		local promise, item_type
 
 		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
-			promise = ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
+			promise = Items.equip_weapon_skin(selected_item, self._selected_weapon_skin)
 			item_type = "skin"
 		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
-			promise = ItemUtils.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
+			promise = Items.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
 			item_type = "trinket"
 		end
 
@@ -754,8 +753,8 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.sub_display_name.content.text = string.format("%s • %s", ItemUtils.weapon_card_display_name(self._selected_item), ItemUtils.weapon_card_sub_display_name(self._selected_item))
-	widgets_by_name.display_name.content.text = real_item and ItemUtils.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
+	widgets_by_name.sub_display_name.content.text = string.format("%s • %s", Items.weapon_card_display_name(self._selected_item), Items.weapon_card_sub_display_name(self._selected_item))
+	widgets_by_name.display_name.content.text = real_item and Items.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
 end
 
 InventoryWeaponCosmeticsView._preview_item = function (self, item)

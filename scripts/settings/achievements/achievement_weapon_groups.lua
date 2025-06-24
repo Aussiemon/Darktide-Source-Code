@@ -64,6 +64,12 @@ AchievementWeaponGroups.weapons = {
 		pattern = "shotgun_p2",
 	},
 	{
+		pattern = "shotgun_p4",
+	},
+	{
+		pattern = "shotpistol_shield_p1",
+	},
+	{
 		pattern = "stubrevolver_p1",
 	},
 	{
@@ -126,6 +132,12 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "powermaul_p1",
+	},
+	{
+		pattern = "powermaul_p2",
+	},
+	{
+		pattern = "powermaul_shield_p1",
 	},
 	{
 		pattern = "powersword_2h_p1",

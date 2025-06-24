@@ -74,13 +74,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	local fx_settings = action_settings.fx
 
 	if fx_settings then
-		local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
-
-		if looping_shoot_sfx_alias then
-			local component_name = PlayerUnitData.looping_sound_component_name(looping_shoot_sfx_alias)
-
-			self._looping_shoot_sound_component = unit_data_extension:read_component(component_name)
-		end
+		self._looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 	end
 
 	self._shot_result = {}
@@ -214,7 +208,7 @@ ActionShoot._update_delta_charge = function (self, fire_config, dt)
 	end
 end
 
-ActionShoot.fixed_update = function (self, dt, t, time_in_action)
+ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
 	local inventory_slot_component = self._inventory_slot_component
@@ -310,6 +304,10 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		end
 
 		self:_set_fire_state(t, next_fire_state)
+	end
+
+	if self._run_looping_sound then
+		self._fx_extension:run_looping_sound(self._looping_shoot_sfx_alias, self:_muzzle_fx_source(), nil, frame)
 	end
 end
 
@@ -708,7 +706,6 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 	local alternate_fire_component = self._alternate_fire_component
 	local critical_strike_component = self._critical_strike_component
 	local inventory_slot_component = self._inventory_slot_component
-	local looping_shoot_sound_component = self._looping_shoot_sound_component
 	local fx_extension = self._fx_extension
 	local visual_loadout_extension = self._visual_loadout_extension
 	local fx_settings = action_settings.fx or EMPTY_TABLE
@@ -724,7 +721,7 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 	local has_ammunition = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
 	local fire_state = action_component.fire_state
 	local num_shots_fired = action_component.num_shots_fired
-	local is_looping_shoot_sound_playing = looping_shoot_sound_component and looping_shoot_sound_component.is_playing
+	local is_looping_shoot_sound_playing = self._run_looping_sfx
 	local automatic_fire = is_looping_shoot_sound_playing and (fire_state == "waiting_to_shoot" or fire_state == "prepare_shooting")
 	local shooting = fire_state == "start_shooting" or automatic_fire
 	local trigger_single_shot_sound = shooting and has_ammunition and not automatic_fire
@@ -733,7 +730,7 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 	if trigger_single_shot_sound then
 		local reference_attachment_id = self:_reference_attachment_id(fire_config)
 
-		if looping_shoot_sound_component and num_shots_fired < num_pre_loop_events then
+		if num_shots_fired < num_pre_loop_events then
 			if pre_loop_shoot_sfx_alias then
 				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_loop_shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
 				_trigger_gear_tail_sound(fx_extension, muzzle_fx_source_name, pre_loop_tail_alias)
@@ -783,9 +780,7 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 end
 
 ActionShoot._update_looping_shoot_sound = function (self, fire_config)
-	local looping_shoot_sound_component = self._looping_shoot_sound_component
-
-	if not looping_shoot_sound_component then
+	if not self._looping_shoot_sfx_alias then
 		return
 	end
 
@@ -795,13 +790,12 @@ ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 	local action_settings = self._action_settings
 	local muzzle_fx_source_name = self:_muzzle_fx_source()
 	local fx_settings = action_settings.fx or EMPTY_TABLE
-	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 	local post_loop_tail_alias = fx_settings.post_loop_shoot_tail_sfx_alias
 	local num_pre_loop_events = fx_settings.num_pre_loop_events or 0
 	local reference_attachment_id = self:_reference_attachment_id(fire_config)
 	local has_ammo = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
 	local fire_state = action_component.fire_state
-	local is_looping_shoot_sfx_playing = looping_shoot_sound_component.is_playing
+	local is_looping_shoot_sfx_playing = self._run_looping_sound
 	local automatic_fire = is_looping_shoot_sfx_playing and (fire_state == "waiting_to_shoot" or fire_state == "prepare_shooting")
 	local shooting = fire_state == "start_shooting" or automatic_fire
 	local num_shots_fired = action_component.num_shots_fired
@@ -819,9 +813,10 @@ ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 			fx_extension:set_source_parameter(parameter_name, auto_fire_time, muzzle_fx_source_name, reference_attachment_id)
 		end
 
-		fx_extension:trigger_looping_wwise_event(looping_shoot_sfx_alias, muzzle_fx_source_name)
+		self._run_looping_sound = true
 	elseif stopped_shooting then
-		fx_extension:stop_looping_wwise_event(looping_shoot_sfx_alias)
+		self._run_looping_sound = false
+
 		_trigger_gear_tail_sound(fx_extension, muzzle_fx_source_name, post_loop_tail_alias)
 	end
 end

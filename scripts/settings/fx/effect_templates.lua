@@ -40,6 +40,7 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_cap
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_captain_void_shield")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_executor_chainaxe")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer_approach")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer_mutator_throw")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer_mutator")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_grenadier_grenade")
@@ -54,5 +55,10 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/linked_beam"
 _create_effect_template_entry("scripts/settings/fx/effect_templates/void_shield_explosion")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/netted")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/zealot_relic_blessed")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_bark")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_breath_effect")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_hurt_effect")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_leap_attack_effect")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_pounce_attack_effect")
 
 return settings("EffectTemplates", effect_templates)

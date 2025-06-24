@@ -76,8 +76,8 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	self._equipment_component = equipment_component
 	self._physics_world = physics_world
 
-	local breed_name = self._player:profile()
-	local breed_settings = Breeds[breed_name]
+	local breed_name = extension_init_data.archetype.breed
+	local breed_settings = breed_name and Breeds[breed_name]
 	local equipment = equipment_component.initialize_equipment(slot_configuration, breed_settings)
 
 	self._equipment = equipment
@@ -136,6 +136,8 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	}
 
 	local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
+
+	self._companion_slots = {}
 
 	for slot_name, config in pairs(slot_configuration) do
 		if config.wieldable then
@@ -380,7 +382,7 @@ PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, fra
 	local wielded_slot_scripts = self._wieldable_slot_scripts[wielded_slot_name]
 
 	if wielded_slot_scripts then
-		WieldableSlotScripts.fixed_update(wielded_slot_scripts, unit, dt, t)
+		WieldableSlotScripts.fixed_update(wielded_slot_scripts, unit, dt, t, frame)
 	end
 
 	local equipment = self._equipment
@@ -459,14 +461,6 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 			if local_item ~= UNEQUIPPED_SLOT then
 				if is_locally_wielded_slot then
 					self:_unwield_slot(self._locally_wielded_slot)
-				end
-
-				local fx_sources = self_fx_sources[slot_name]
-
-				if fx_sources then
-					for _, source_name in pairs(fx_sources) do
-						fx_extension:stop_looping_wwise_events_for_source_on_mispredict(source_name)
-					end
 				end
 
 				self:_unequip_item_from_slot(slot_name, from_server_correction_occurred, from_frame, false)
@@ -993,6 +987,10 @@ PlayerUnitVisualLoadoutExtension.resolve_gear_particle = function (self, particl
 	return PlayerCharacterParticles.resolve_particle(particle_alias, properties, optional_external_properties)
 end
 
+PlayerUnitVisualLoadoutExtension.profile_properties = function (self)
+	return self._profile_properties
+end
+
 PlayerUnitVisualLoadoutExtension.current_wielded_slot_scripts = function (self)
 	local inventory_component = self._inventory_component
 	local current_wielded_slot = inventory_component.wielded_slot
@@ -1133,6 +1131,33 @@ PlayerUnitVisualLoadoutExtension.set_force_hide_wieldable_slot = function (self,
 	slot.wants_hidden_by_gameplay_3p = third_person
 
 	self:_update_item_visibility(self._is_in_first_person_mode)
+end
+
+PlayerUnitVisualLoadoutExtension.companion_slots = function (self)
+	local gear_full = self._equipment.slot_companion_gear_full.item_name_by_unit_3p
+
+	self._companion_slots = {}
+
+	for unit, path in pairs(gear_full) do
+		table.insert(self._companion_slots, {
+			use_outline = true,
+			unit = unit,
+		})
+	end
+
+	return self._companion_slots
+end
+
+PlayerUnitVisualLoadoutExtension.is_slot_unit_spawned = function (self, slot_name)
+	local gear_full = self._equipment[slot_name]
+
+	return gear_full and gear_full.attachment_spawn_status == "fully_spawned"
+end
+
+PlayerUnitVisualLoadoutExtension.is_slot_unit_valid = function (self, slot_name)
+	local gear_full = self._equipment[slot_name]
+
+	return gear_full and ALIVE[gear_full.unit_3p]
 end
 
 return PlayerUnitVisualLoadoutExtension

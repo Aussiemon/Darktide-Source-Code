@@ -223,6 +223,17 @@ local scenegraph_definition = {
 			9,
 		},
 	},
+	slot_companion_gear_full = {
+		horizontal_alignment = "center",
+		parent = "canvas",
+		vertical_alignment = "center",
+		size = gear_icon_size,
+		position = {
+			-696,
+			-132,
+			9,
+		},
+	},
 	slot_gear_extra_cosmetic = {
 		horizontal_alignment = "center",
 		parent = "canvas",
@@ -763,6 +774,7 @@ local animations = {
 				parent:_set_scenegraph_position("slot_gear_head", scenegraph_definition.slot_gear_head.position[1] - x_anim_distance)
 				parent:_set_scenegraph_position("slot_gear_upperbody", scenegraph_definition.slot_gear_upperbody.position[1] - x_anim_distance - extra_amount)
 				parent:_set_scenegraph_position("slot_gear_lowerbody", scenegraph_definition.slot_gear_lowerbody.position[1] - x_anim_distance - extra_amount * 3)
+				parent:_set_scenegraph_position("slot_companion_gear_full", scenegraph_definition.slot_companion_gear_full.position[1] - x_anim_distance - extra_amount * 4)
 				parent:_set_scenegraph_position("slot_gear_extra_cosmetic", scenegraph_definition.slot_gear_extra_cosmetic.position[1] + x_anim_distance)
 				parent:_set_scenegraph_position("slot_portrait_frame", scenegraph_definition.slot_portrait_frame.position[1] + x_anim_distance + extra_amount)
 				parent:_set_scenegraph_position("slot_insignia", scenegraph_definition.slot_insignia.position[1] + x_anim_distance + extra_amount * 3)

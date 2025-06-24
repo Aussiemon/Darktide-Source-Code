@@ -252,6 +252,30 @@ local template_functions = {
 	value_slider = construct_interface_settings_value_slider,
 	dropdown = construct_interface_settings_dropdown,
 }
+
+local function _companion_outline_options()
+	local options = {
+		{
+			display_name = "loc_setting_companion_outline_in_mission_all",
+			name = "both",
+		},
+		{
+			display_name = "loc_setting_companion_outline_in_mission_self",
+			name = "own",
+		},
+		{
+			display_name = "loc_setting_companion_outline_in_mission_allies",
+			name = "allies",
+		},
+		{
+			display_name = "loc_setting_companion_outline_in_mission_none",
+			name = "none",
+		},
+	}
+
+	return options
+end
+
 local _notification_options = {
 	{
 		display_name = "loc_setting_notification_type_none",
@@ -271,6 +295,27 @@ local settings_definitions = {
 		display_name = "loc_settings_menu_group_gameplay_settings",
 		group_name = "gameplay_settings",
 		widget_type = "group_header",
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_player_outlines_enabled",
+		id = "player_outlines",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
+		end,
+	},
+	{
+		default_value = "none",
+		display_name = "loc_interface_setting_companion_outline_in_mission",
+		id = "companion_outlines",
+		save_location = "interface_settings",
+		widget_type = "dropdown",
+		options = _companion_outline_options(),
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_companion_outlines", value)
+		end,
 	},
 	{
 		default_value = true,
@@ -727,6 +772,56 @@ local settings_definitions = {
 		},
 		on_value_changed = function (value)
 			Managers.event:trigger("event_in_mission_title_color_type_changed", "color_changed")
+		end,
+	},
+	{
+		default_value = "mine_only",
+		display_name = "loc_interface_setting_companion_nameplate_in_mission",
+		id = "companion_nameplate_in_mission_type",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_companion_nameplate_in_mission_mouseover",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_notification_type_all",
+				name = "all",
+			},
+			{
+				display_name = "loc_setting_notification_type_mine",
+				name = "mine_only",
+			},
+			{
+				display_name = "loc_setting_nameplates_in_mission_none",
+				name = "none",
+			},
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_companion_nameplate_in_mission_setting_changed", value)
+		end,
+	},
+	{
+		default_value = "mine_only",
+		display_name = "loc_interface_setting_companion_nameplate_in_hub",
+		id = "companion_nameplate_in_hub_type",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_companion_nameplate_in_hub_mouseover",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_notification_type_all",
+				name = "all",
+			},
+			{
+				display_name = "loc_setting_notification_type_mine",
+				name = "mine_only",
+			},
+			{
+				display_name = "loc_setting_nameplates_in_mission_none",
+				name = "none",
+			},
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_companion_nameplate_in_hub_setting_changed", value)
 		end,
 	},
 	{

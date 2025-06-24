@@ -152,6 +152,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._weapons = {}
 	self._base_ammo_by_slot = {}
 	self._base_clip_by_slot = {}
+	self._active_special_rules = {}
 	self._weapon_special_context = {
 		input_extension = input_extension,
 		action_input_extension = ScriptUnit.extension(unit, "action_input_system"),
@@ -174,6 +175,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._weapon_action_movement = WeaponActionMovement:new(self, unit_data, buff_extension)
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
 	self._last_fixed_t = extension_init_context.fixed_frame_t
+	self.last_shoot_action_t = 0
 	self._wwise_ammo_parameter_value = 0
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 	self._persistent_data_by_slot = {}
@@ -476,7 +478,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	local wielded_slot = inventory_component.wielded_slot
 	local condition_func_params = self:condition_func_params(wielded_slot)
 
-	self._action_handler:fixed_update(dt, t, condition_func_params)
+	self._action_handler:fixed_update(dt, t, condition_func_params, fixed_frame)
 
 	self._last_fixed_t = t
 
@@ -584,6 +586,16 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 		self:_apply_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component, t, item)
 		self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t, item)
 		self:_apply_stat_buffs(inventory_slot_component, config.slot_type)
+
+		local special_rules = weapon.special_rules
+
+		self:_apply_special_rules(slot_name, special_rules)
+	end
+
+	local weapon_special_implementation = weapon.weapon_special_implementation
+
+	if weapon_special_implementation then
+		weapon_special_implementation:on_wieldable_slot_equipped()
 	end
 end
 
@@ -596,6 +608,7 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 
 		self:_remove_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component)
 		self:_remove_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component)
+		self:_remove_special_rules(slot_name)
 	end
 
 	local config = slot_configuration[slot_name]
@@ -820,6 +833,12 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 
 			animation_extension:anim_event_1p(parry_break_event)
 			animation_extension:anim_event(parry_break_event)
+		end
+
+		local weapon_special_implementation = weapon.weapon_special_implementation
+
+		if weapon_special_implementation then
+			weapon_special_implementation:blocked_attack(attacking_unit, block_cost, block_broken, is_perfect_block)
 		end
 	end
 
@@ -1210,6 +1229,42 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 	end
 end
 
+PlayerUnitWeaponExtension._apply_special_rules = function (self, slot_name, special_rules)
+	if not special_rules then
+		return
+	end
+
+	local active_special_rules = self._active_special_rules
+
+	if not active_special_rules[slot_name] then
+		active_special_rules[slot_name] = {}
+	end
+
+	table.clear(active_special_rules[slot_name])
+
+	for ii = 1, #special_rules do
+		local special_rule = special_rules[ii]
+
+		active_special_rules[slot_name][special_rule] = true
+	end
+end
+
+PlayerUnitWeaponExtension._remove_special_rules = function (self, slot_name)
+	local active_special_rules = self._active_special_rules
+
+	if not active_special_rules[slot_name] then
+		return
+	end
+
+	table.clear(active_special_rules[slot_name])
+end
+
+PlayerUnitWeaponExtension.has_special_rule = function (self, slot_name, special_rule_name)
+	local active_special_rules = self._active_special_rules
+
+	return active_special_rules[slot_name] and active_special_rules[slot_name][special_rule_name]
+end
+
 PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
 	local unit, first_person_unit = self._unit, self._first_person_unit
 
@@ -1265,7 +1320,7 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 				local clip_size = inventory_slot_component.max_ammunition_clip
 				local stat_buffs = self._buff_extension:stat_buffs()
 				local clip_size_capacity_modifier = stat_buffs.clip_size_modifier
-				local new_clip_size = math.floor(base_max_clip * clip_size_capacity_modifier)
+				local new_clip_size = math.ceil(base_max_clip * clip_size_capacity_modifier)
 				local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
 				local clamped_new_clip_size = math.clamp(new_clip_size, 0, ammo_small_hard_limit)
 

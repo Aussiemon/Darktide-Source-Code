@@ -402,6 +402,83 @@ templates.shock_grenade_interval = {
 		},
 	},
 }
+templates.shock_mine_interval = {
+	class_name = "interval_buff",
+	duration = 3,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	interval = {
+		0.3,
+		0.8,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+		template_data.start_time = FixedFrame.get_latest_fixed_time()
+
+		local owner_unit = template_context.owner_unit
+
+		template_data.player_applying_buff = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		local player_applying_buff = template_data.player_applying_buff
+
+		if not template_context.is_server or not player_applying_buff then
+			return
+		end
+
+		local stop_time = FixedFrame.get_latest_fixed_time()
+		local rounded_time_shocked = math.round(stop_time - template_data.start_time)
+
+		Managers.stats:record_private("hook_adamant_time_enemy_electrocuted_by_shockmine", player_applying_buff, rounded_time_shocked)
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = false,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_stummed",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
+}
 templates.ogryn_slabshield_shield_plant = {
 	class_name = "buff",
 	max_stacks = 1,
@@ -499,6 +576,149 @@ templates.power_maul_shock_hit = {
 		end
 	end,
 }
+templates.power_maul_p2_special_hit_primer = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_weapon_special_activate] = 1,
+		[buff_proc_events.on_weapon_special_deactivate] = 1,
+		[buff_proc_events.on_hit] = 1,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_hit] = CheckProcFunctions.on_melee_hit,
+	},
+	specific_proc_func = {
+		[buff_proc_events.on_weapon_special_activate] = function (params, template_data, template_context)
+			template_data.active = true
+		end,
+		[buff_proc_events.on_weapon_special_deactivate] = function (params, template_data, template_context)
+			template_data.active = false
+		end,
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			if not template_data.active then
+				return
+			end
+
+			if not template_context.is_server then
+				return
+			end
+
+			local target_unit = params.attacked_unit
+
+			if HEALTH_ALIVE[target_unit] then
+				local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+				if buff_extension then
+					local target_is_electrocuted = buff_extension:has_keyword(buff_keywords.electrocuted)
+
+					if target_is_electrocuted then
+						local t = FixedFrame.get_latest_fixed_time()
+
+						buff_extension:add_internally_controlled_buff("power_maul_p2_activated_stun_extra", t, "owner_unit", template_context.owner_unit)
+					else
+						local t = FixedFrame.get_latest_fixed_time()
+
+						buff_extension:add_internally_controlled_buff("power_maul_p2_activated_stun_basic", t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end,
+	},
+}
+templates.power_maul_p2_activated_stun_extra = {
+	buff_id = "power_maul_p2_activated_stun_extra",
+	class_name = "interval_buff",
+	duration = 3.5,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	interval = {
+		0.3,
+		0.8,
+	},
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if ALIVE[unit] and HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.powermaul_p2_stun_interval
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		ailment_effect = ailment_effects.electrocution,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
+	},
+}
+templates.power_maul_p2_activated_stun_basic = {
+	buff_id = "power_maul_p2_activated_stun_basic",
+	class_name = "interval_buff",
+	duration = 0.1,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	interval = {
+		0.3,
+		0.8,
+	},
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if ALIVE[unit] and HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.powermaul_p2_stun_interval_basic
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+}
 templates.power_maul_sticky_tick = table.clone(templates.shockmaul_stun_interval)
 templates.power_maul_sticky_tick.duration = 0.7
 templates.power_maul_sticky_tick.max_stacks = 5
@@ -581,6 +801,71 @@ templates.power_maul_stun = {
 			end
 		end
 	end,
+}
+templates.shotgun_special_stun = {
+	class_name = "interval_buff",
+	duration = 3,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	interval = {
+		0.3,
+		0.8,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if ALIVE[unit] and HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local owner_unit = template_context.owner_unit
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+			local power_level = smoothstep_multiplier * 500
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+
+			local buff_extension = template_context.buff_extension
+
+			if buff_extension then
+				buff_extension:add_internally_controlled_buff("shock_effect", t)
+			end
+		end
+	end,
+}
+templates.shotgun_special_rending_debuff = {
+	class_name = "buff",
+	duration = 8,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[buff_stat_buffs.rending_multiplier] = 0.25,
+	},
 }
 
 local function _chain_lightning_start_func(template_data, template_context)
@@ -733,6 +1018,8 @@ templates.psyker_heavy_swings_shock = table.clone(templates.psyker_protectorate_
 templates.psyker_heavy_swings_shock.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
 templates.psyker_heavy_swings_shock_improved = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved)
 templates.psyker_heavy_swings_shock_improved.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
+templates.adamant_whistle_electrocution = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved)
+templates.adamant_whistle_electrocution.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
 templates.shock_effect = {
 	class_name = "buff",
 	duration = 2,
@@ -900,6 +1187,22 @@ templates.shotgun_p1_m2_special_shell_reduced_spread = {
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.inventory_slot_component.special_active
 	end,
+}
+templates.suppression_immune_while_wielded = {
+	class_name = "buff",
+	predicted = false,
+	conditional_keywords = {
+		buff_keywords.suppression_immune,
+	},
+	conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.suppression_immune_while_blocking = {
+	class_name = "buff",
+	predicted = false,
+	conditional_keywords = {
+		buff_keywords.suppression_immune,
+	},
+	conditional_keywords_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.is_blocking),
 }
 
 return templates

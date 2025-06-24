@@ -2,24 +2,20 @@
 
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
-local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions")
 local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemUtils = require("scripts/utilities/items")
-local MasterItems = require("scripts/backend/master_items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
 local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_discard_items/view_element_discard_items")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
 local InventoryWeaponsView = class("InventoryWeaponsView", "ItemGridViewBase")
 
 InventoryWeaponsView.init = function (self, settings, context)
@@ -484,7 +480,7 @@ InventoryWeaponsView.cb_on_favorite_pressed = function (self)
 	end
 
 	local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
-	local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+	local is_favorite = Items.is_item_id_favorited(gear_id)
 
 	if self._discard_items_element and not is_favorite and widget.content.multi_selected then
 		local element = widget.content.element
@@ -492,7 +488,7 @@ InventoryWeaponsView.cb_on_favorite_pressed = function (self)
 		self:cb_on_grid_entry_left_pressed(widget, element)
 	end
 
-	ItemUtils.set_item_id_as_favorite(gear_id, not is_favorite)
+	Items.set_item_id_as_favorite(gear_id, not is_favorite)
 
 	if self._discard_items_element then
 		self._discard_items_element:refresh()
@@ -506,7 +502,7 @@ InventoryWeaponsView.cb_on_grid_entry_left_pressed = function (self, widget, ele
 		end
 
 		local item = element.item
-		local is_favorite = ItemUtils.is_item_id_favorited(element.item.gear_id)
+		local is_favorite = Items.is_item_id_favorited(element.item.gear_id)
 
 		if is_favorite then
 			return
@@ -563,7 +559,7 @@ InventoryWeaponsView.is_selected_item_favorited = function (self)
 		local item = element and element.item
 		local gear_id = item and item.gear_id
 
-		return gear_id and ItemUtils.is_item_id_favorited(gear_id)
+		return gear_id and Items.is_item_id_favorited(gear_id)
 	end
 end
 
@@ -984,7 +980,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 end
 
 InventoryWeaponsView._setup_weapon_options = function (self)
-	if ItemUtils.is_weapon(self.item_type) then
+	if Items.is_weapon(self.item_type) then
 		local button_size = self._definitions.blueprints.button.size
 		local top_padding = 30
 		local grid_size = {
@@ -1357,7 +1353,7 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 		end
 
 		if not disable_button then
-			local required_level = ItemUtils.character_level(previewed_item)
+			local required_level = Items.character_level(previewed_item)
 			local character_level = self:character_level()
 
 			level_requirement_met = required_level and required_level <= character_level

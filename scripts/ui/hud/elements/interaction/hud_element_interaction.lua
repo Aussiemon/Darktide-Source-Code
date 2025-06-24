@@ -137,13 +137,10 @@ HudElementInteraction._update_can_interact_target = function (self)
 	end
 
 	local interactee_unit = interactor_extension:target_unit()
+	local focus_target = interactor_extension:focus_unit()
 
-	if not interactee_unit then
-		local focus_target = interactor_extension:focus_unit()
-
-		if ALIVE[focus_target] and interactor_extension:hud_block_text() then
-			interactee_unit = focus_target
-		end
+	if not interactee_unit and ALIVE[focus_target] and interactor_extension:hud_block_text() then
+		interactee_unit = focus_target
 	end
 
 	if ALIVE[interactee_unit] and ALIVE[player_unit] then

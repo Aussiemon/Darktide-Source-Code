@@ -1,14 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view.lua
 
 local Definitions = require("scripts/ui/views/end_player_view/end_player_view_definitions")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Mastery = require("scripts/utilities/mastery")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
-local Items = require("scripts/utilities/items")
-local MasteryUtils = require("scripts/utilities/mastery")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
 local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon", "havocOrder")
 local item_type_group_lookup = UISettings.item_type_group_lookup
@@ -437,7 +437,7 @@ EndPlayerView._create_cards = function (self)
 					local trait_category_id = reward.masteryId
 
 					if slot and trait_category_id then
-						local pattern_name = MasteryUtils.get_category_id_to_pattern_id(trait_category_id)
+						local pattern_name = Mastery.get_category_id_to_pattern_id(trait_category_id)
 
 						if pattern_name == item.parent_pattern then
 							filtered_rewards[slot] = reward

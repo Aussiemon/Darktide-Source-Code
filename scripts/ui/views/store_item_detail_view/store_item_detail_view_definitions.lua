@@ -187,6 +187,20 @@ local scenegraph_definition = {
 			0,
 		},
 	},
+	dlc_required_text = {
+		horizontal_alignment = "center",
+		parent = "purchase_button",
+		vertical_alignment = "bottom",
+		size = {
+			300,
+			0,
+		},
+		position = {
+			0,
+			25,
+			0,
+		},
+	},
 	promo = {
 		horizontal_alignment = "right",
 		parent = "left_side",
@@ -874,6 +888,14 @@ bundle_description.size_addition = {
 	0,
 }
 
+local dlc_required_text_style = table.clone(UIFontSettings.header_5)
+
+dlc_required_text_style.drop_shadow = true
+dlc_required_text_style.text_color = Color.terminal_frame_selected(255, true)
+dlc_required_text_style.font_type = "proxima_nova_bold"
+dlc_required_text_style.text_horizontal_alignment = "center"
+dlc_required_text_style.text_vertical_alignment = "bottom"
+
 local widget_definitions = {
 	wallet_text = UIWidget.create_definition({
 		{
@@ -1298,6 +1320,17 @@ local widget_definitions = {
 			end,
 		},
 	}, "canvas"),
+	dlc_required_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = dlc_required_text_style,
+		},
+	}, "dlc_required_text", {
+		visible = false,
+	}),
 	aquilas_background = UIWidget.create_definition({
 		{
 			pass_type = "texture",

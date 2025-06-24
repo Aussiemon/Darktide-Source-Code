@@ -183,6 +183,32 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_mask_underside_back_06 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-1,
+				-0.617,
+			},
+			hair_mask_z = {
+				-1,
+				-0.84,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	hair_mask_half_left_01 = {
 		property_overrides = {
 			hair_mask_types_invert = {
@@ -1067,6 +1093,32 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_mask_top_04 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-1,
+				-1,
+			},
+			hair_mask_z = {
+				-0.196,
+				-1,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	hair_mask_remove_fringe_small = {
 		property_overrides = {
 			hair_mask_types_invert = {
@@ -1795,6 +1847,32 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_mask_medium_afro_reduce_top_02 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-1,
+				-1,
+			},
+			hair_mask_z = {
+				-0.02,
+				-1,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	hair_mask_bantu_remove_top = {
 		property_overrides = {
 			hair_mask_types_invert = {
@@ -1896,6 +1974,58 @@ local material_overrides = {
 				0,
 				0,
 				0,
+			},
+		},
+	},
+	hair_mask_short_modular_shorter_01 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-1,
+				-1,
+			},
+			hair_mask_z = {
+				-1,
+				-0.975,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
+	hair_mask_mullet_top_01 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.5,
+			},
+			hair_mask_y = {
+				-0.8,
+				-1,
+			},
+			hair_mask_z = {
+				-0.219,
+				-1,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				-1,
 			},
 		},
 	},

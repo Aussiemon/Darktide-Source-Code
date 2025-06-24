@@ -7,6 +7,7 @@ VideoManager.init = function (self)
 	self._video_config_name = nil
 	self._popup_config_name = nil
 	self._popup_id = nil
+	self._queued_video_config = nil
 end
 
 VideoManager.play_video_with_popup = function (self, video_config_name, popup_config_name)
@@ -20,6 +21,23 @@ VideoManager.play_video_with_popup = function (self, video_config_name, popup_co
 
 	self._popup_config_name = popup_config_name
 	self._video_config_name = video_config_name
+end
+
+VideoManager.queue_video = function (self, video_config_name)
+	self._queued_video_config = video_config_name
+end
+
+VideoManager.queued_video = function (self)
+	return self._queued_video_config
+end
+
+VideoManager.play_queued_video = function (self)
+	Managers.ui:open_view("video_view", nil, nil, nil, nil, {
+		allow_skip_input = true,
+		template = self._queued_video_config,
+	})
+
+	self._queued_video_config = nil
 end
 
 VideoManager.update = function (self)

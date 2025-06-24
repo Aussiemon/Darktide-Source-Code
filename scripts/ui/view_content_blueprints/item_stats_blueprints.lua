@@ -3588,8 +3588,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 				local content = widget.content
-				local style = widget.style
-				local rating_value = element.rating
 				local header = element.header
 
 				content.header = header or ""

@@ -37,8 +37,8 @@ ItemPackage._require_level_items = function (level_name, item_data)
 
 	local num_units = LevelResource.unit_count(level_name)
 
-	for u = 1, num_units do
-		local unit_data = LevelResource.unit_data(level_name, u)
+	for unit_i = 1, num_units do
+		local unit_data = LevelResource.unit_data(level_name, unit_i)
 		local num_components = DynamicData.get_table_size(unit_data, "component_guids") or 0
 
 		for guid_i = 1, num_components do
@@ -75,7 +75,11 @@ ItemPackage._get_item_data_from_component = function (items, unit_data, editor_o
 
 	path[#path] = "editor_only"
 
-	local editor_only = DynamicData.get(unit_data, unpack(path)) or editor_only_component_default
+	local editor_only = DynamicData.get(unit_data, unpack(path))
+
+	if editor_only == nil then
+		editor_only = editor_only_component_default
+	end
 
 	path[#path] = data_field
 
@@ -97,7 +101,11 @@ ItemPackage._get_items_data_from_component = function (items, unit_data, editor_
 
 	path[#path] = "editor_only"
 
-	local editor_only = DynamicData.get(unit_data, unpack(path)) or editor_only_component_default
+	local editor_only = DynamicData.get(unit_data, unpack(path))
+
+	if editor_only == nil then
+		editor_only = editor_only_component_default
+	end
 
 	path[#path] = data_field
 
@@ -204,6 +212,14 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 
 	if resource then
 		resource_dependencies[resource] = true
+	end
+
+	local resource_by_item = item_entry_data.resource_by_item
+
+	if resource_by_item then
+		for _, resource in pairs(resource_by_item) do
+			resource_dependencies[resource] = true
+		end
 	end
 
 	local base_unit_1p = item_entry_data.base_unit_1p

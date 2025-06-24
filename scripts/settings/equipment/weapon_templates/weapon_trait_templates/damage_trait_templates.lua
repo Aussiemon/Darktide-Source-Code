@@ -832,6 +832,178 @@ damage_trait_templates.default_armor_pierce_stat = {
 		},
 	},
 }
+damage_trait_templates.powermaul_shield_p1_armor_pierce_stat = {
+	{
+		"targets",
+		1,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		1,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.8,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.8,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.8,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.8,
+			min = 0.1,
+		},
+	},
+}
+damage_trait_templates.powermaul_p2_armor_pierce_stat = {
+	{
+		"targets",
+		1,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		1,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.9,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.9,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.9,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.9,
+			min = 0.1,
+		},
+	},
+}
 damage_trait_templates.default_armor_pierce_perk = {
 	{
 		"targets",
@@ -5140,7 +5312,154 @@ damage_trait_templates.stubrevolver_armor_piercing_stat = {
 		},
 	},
 }
+damage_trait_templates.shotpistol_shield_p1_m1_armor_piercing_stat = {
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"near",
+		"attack",
+		armor_types.void_shield,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+	{
+		"armor_damage_modifier_ranged",
+		"far",
+		"attack",
+		armor_types.void_shield,
+		{
+			max = 0.95,
+			min = 0.1,
+		},
+	},
+}
 damage_trait_templates.stubrevolver_crit_stat = {
+	{
+		"crit_mod",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.armored,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.void_shield,
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+}
+damage_trait_templates.shotpistol_shield_p1_m1_crit_stat = {
 	{
 		"crit_mod",
 		"attack",

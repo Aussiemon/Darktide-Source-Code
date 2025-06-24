@@ -39,6 +39,7 @@ AchievementBreedGroups.all = {
 	"renegade_captain",
 	"renegade_executor",
 	"renegade_flamer",
+	"renegade_flamer_mutator",
 	"renegade_grenadier",
 	"renegade_gunner",
 	"renegade_melee",
@@ -299,6 +300,9 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 			250,
 		},
 	},
+}
+AchievementBreedGroups.companion = {
+	"companion_dog",
 }
 
 return AchievementBreedGroups

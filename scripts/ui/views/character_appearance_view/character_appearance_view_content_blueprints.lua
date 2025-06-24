@@ -8,12 +8,64 @@ local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pas
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local MasterItems = require("scripts/backend/master_items")
 local grid_size = CharacterAppearanceViewSettings.grid_size
 local grid_width = grid_size[1]
 
+local function on_icon_load(widget, grid_index, rows, columns, render_target)
+	local material_values = widget.style.texture.material_values
+
+	material_values.use_placeholder_texture = 0
+	material_values.rows = rows
+	material_values.columns = columns
+	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
+end
+
+local function load_appearance_icon(parent, widget, element)
+	local profile = table.clone_instance(parent._character_create:profile())
+
+	parent._character_create.set_item_per_slot_preview(parent._character_create, element.slot_name, widget.content.option_value, profile)
+
+	local function cb(grid_index, rows, columns, render_target)
+		on_icon_load(widget, grid_index, rows, columns, render_target)
+	end
+
+	profile.character_id = math:uuid()
+
+	local render_context = {
+		size = {
+			128,
+			192,
+		},
+	}
+	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb, render_context)
+
+	widget.content.icon_load_id = icon_load_id
+	widget.content.icon_profile = profile
+end
+
+local function unload_appearance_icon(parent, widget, element)
+	local content = widget.content
+
+	if content.icon_load_id then
+		Managers.ui:unload_profile_portrait(widget.content.icon_load_id)
+
+		local material_values = widget.style.texture.material_values
+
+		material_values.use_placeholder_texture = 1
+		material_values.texture_icon = nil
+		material_values.rows = nil
+		material_values.columns = nil
+		material_values.grid_index = nil
+		widget.content.icon_load_id = nil
+		widget.content.icon_profile = nil
+	end
+end
+
 local function item_change_function(content, style)
 	local hotspot = content.hotspot
-	local is_selected = content.element_selected
+	local is_selected = hotspot.is_selected
 	local is_hover = hotspot.is_hover or hotspot.is_focused
 	local default_color = style.default_color
 	local selected_color = style.selected_color
@@ -44,23 +96,28 @@ local blueprints = {
 			60,
 		},
 		pass_template = TextInputPassTemplates.terminal_input_field,
-		init = function (parent, widget, initial_name)
+		init = function (parent, widget, element)
 			local content = widget.content
 
+			content.element = element
+
+			local initial_name = element and element.initial_name
+
 			content.input_text = initial_name
-			content.max_length = 18
+			content.max_length = element.max_length or 18
+			content.error_message = element.error_message
 			content.virtual_keyboard_title = Localize("loc_character_create_set_name_virtual_keyboard_title")
 
 			local hotspot = content.hotspot
 
 			hotspot.use_is_focused = true
+			content.on_update_function = element.on_update_function
 		end,
 		update = function (parent, widget)
 			local content = widget.content
-			local name = type(widget.content.input_text) == "string" and widget.content.input_text ~= "" and widget.content.input_text or widget.content.selected_text or ""
 
-			if parent._character_create:name() ~= name then
-				parent:_update_character_custom_name()
+			if content.on_update_function then
+				content.on_update_function(parent, widget)
 			end
 
 			if content.selected_text and not content.is_writing then
@@ -91,6 +148,8 @@ local blueprints = {
 			if active_page.name == "home_planet" then
 				content.hotspot.on_select_sound = nil
 			end
+
+			content.element = element
 		end,
 	},
 	divider = {
@@ -213,24 +272,6 @@ local blueprints = {
 				value = "content/ui/materials/dividers/divider_line_01",
 				style = {
 					horizontal_alignment = "center",
-					vertical_alignment = "top",
-					color = Color.terminal_frame(255, true),
-					size = {
-						nil,
-						2,
-					},
-					offset = {
-						0,
-						0,
-						0,
-					},
-				},
-			},
-			{
-				pass_type = "texture",
-				value = "content/ui/materials/dividers/divider_line_01",
-				style = {
-					horizontal_alignment = "center",
 					vertical_alignment = "bottom",
 					color = Color.terminal_frame(255, true),
 					size = {
@@ -310,6 +351,8 @@ local blueprints = {
 				content.icon = option.icon
 				style.text.offset[1] = 70
 			end
+
+			content.element = element
 		end,
 	},
 	slot_item_button = {
@@ -347,7 +390,7 @@ local blueprints = {
 				},
 				change_function = function (content, style, _, dt)
 					local hotspot = content.hotspot
-					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+					local progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
 
 					style.color[1] = 255 * math.easeOutCubic(progress)
 
@@ -401,7 +444,7 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return content.element_selected
+					return content.hotspot.is_selected
 				end,
 			},
 			{
@@ -414,7 +457,7 @@ local blueprints = {
 					local hover_text_color = style.hover_text_color
 					local text_color = style.text_color
 					local hotspot = content.hotspot
-					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+					local progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
 
 					for i = 2, 4 do
 						text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
@@ -431,7 +474,7 @@ local blueprints = {
 					local hover_text_color = style.hover_text_color
 					local text_color = style.text_color
 					local hotspot = content.hotspot
-					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
+					local progress = math.max(hotspot.anim_select_progress, hotspot.anim_hover_progress)
 
 					for i = 2, 4 do
 						text_color[i] = (hover_text_color[i] - default_text_color[i]) * progress + default_text_color[i]
@@ -446,6 +489,7 @@ local blueprints = {
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.text = option.value.display_name and option.value.display_name
 			content.description = option.value.description and option.value.description
+			content.element = element
 		end,
 	},
 	slot_icon = {
@@ -568,7 +612,7 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return content.element_selected
+					return content.hotspot.is_selected
 				end,
 			},
 			{
@@ -599,7 +643,31 @@ local blueprints = {
 			local content = widget.content
 
 			content.hotspot.use_is_focused = true
+			content.loads_icon = true
+			content.option_value = option.value
+			content.element = element
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
+		end,
+		load_icon = function (parent, widget, element)
+			if element.icon_type ~= "companion" then
+				load_appearance_icon(parent, widget, element)
+			end
+		end,
+		unload_icon = function (parent, widget, element)
+			if element.icon_type ~= "companion" then
+				unload_appearance_icon(parent, widget, element)
+			end
+		end,
+		update_icon = function (parent, widget, element)
+			if element.icon_type ~= "companion" then
+				local profile = table.clone_instance(parent._character_create:profile())
+
+				parent._character_create.set_item_per_slot_preview(parent._character_create, element.slot_name, widget.content.option_value, profile)
+
+				profile.character_id = widget.content.icon_profile and widget.content.icon_profile.character_id or math:uuid()
+
+				Managers.event:trigger("event_player_profile_updated", nil, nil, profile)
+			end
 		end,
 	},
 	icon = {
@@ -773,7 +841,7 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return content.element_selected
+					return content.hotspot.is_selected
 				end,
 			},
 			{
@@ -805,12 +873,15 @@ local blueprints = {
 			local style = widget.style
 
 			content.hotspot.use_is_focused = true
+			content.icon_background = element.icon_background
+			content.icon_texture = option.icon_texture
 			style.icon.material_values = {
 				texture_map = content.icon_texture,
 			}
 			style.icon_background.material_values = {
 				texture_map = content.icon_background,
 			}
+			content.element = element
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 		end,
 	},
@@ -906,7 +977,7 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return content.element_selected
+					return content.hotspot.is_selected
 				end,
 			},
 			{
@@ -963,6 +1034,7 @@ local blueprints = {
 
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
+			content.element = element
 			content.texture = element.texture
 			style.texture.color = option.color
 		end,
@@ -1066,7 +1138,7 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return content.element_selected
+					return content.hotspot.is_selected
 				end,
 			},
 			{
@@ -1121,6 +1193,7 @@ local blueprints = {
 			local content = widget.content
 			local style = widget.style
 
+			content.element = element
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.texture = element.texture
@@ -1130,7 +1203,7 @@ local blueprints = {
 	vertical_slider = {
 		size = {
 			140,
-			420,
+			580,
 		},
 		pass_template = {
 			{
@@ -1168,7 +1241,7 @@ local blueprints = {
 					},
 					size = {
 						20,
-						300,
+						460,
 					},
 				},
 			},
@@ -1186,7 +1259,7 @@ local blueprints = {
 					},
 					size = {
 						6,
-						300,
+						460,
 					},
 					disabled_color = Color.ui_grey_light(255, true),
 					default_color = Color.ui_brown_light(255, true),
@@ -1214,7 +1287,7 @@ local blueprints = {
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
-						-150,
+						-230,
 						2,
 					},
 					size = {
@@ -1233,7 +1306,7 @@ local blueprints = {
 					color = Color.ui_terminal(255, true),
 					offset = {
 						0,
-						150,
+						230,
 						2,
 					},
 					size = {
@@ -1262,10 +1335,11 @@ local blueprints = {
 					hover_color = Color.ui_terminal(255, true),
 				},
 				change_function = function (content, style)
-					local position_diff = 150
+					local size = 460
+					local position_diff = size / 2
 					local value = content.slider_value
 
-					style.offset[2] = value * 300 - position_diff
+					style.offset[2] = value * size - position_diff
 
 					local default_color = style.default_color
 					local hover_color = style.hover_color
@@ -1296,12 +1370,13 @@ local blueprints = {
 					color = Color.black(255, true),
 				},
 				change_function = function (content, style)
-					local position_diff = 150
+					local size = 460
+					local position_diff = size / 2
 					local value = content.slider_value
 					local hotspot = content.hotspot
 					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
-					style.offset[2] = value * 300 - position_diff
+					style.offset[2] = value * size - position_diff
 					style.hdr = progress == 1
 				end,
 			},
@@ -1324,11 +1399,12 @@ local blueprints = {
 					color = Color.ui_terminal(255, true),
 				},
 				change_function = function (content, style)
-					local position_diff = 150
+					local size = 460
+					local position_diff = size / 2
 					local value = content.slider_value
 					local hotspot = content.hotspot
 
-					style.offset[2] = value * 300 - position_diff
+					style.offset[2] = value * size - position_diff
 
 					local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
@@ -1359,13 +1435,15 @@ local blueprints = {
 						content.drag_active = nil
 					end
 
-					if not content.element_selected then
+					local is_selected = content.hotspot.is_focused or content.hotspot.is_hover
+
+					if not is_selected then
 						content.drag_active = false
 					end
 
-					if up_axis and content.element_selected then
+					if up_axis and is_selected then
 						content.drag_active = true
-					elseif down_axis and content.element_selected then
+					elseif down_axis and is_selected then
 						content.drag_active = true
 					elseif not content.drag_active then
 						return
@@ -1382,9 +1460,10 @@ local blueprints = {
 					else
 						local cursor = (IS_XBS or IS_PLAYSTATION) and base_cursor or UIResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
 						local input_coordinate = cursor[2] - (position[2] + 60)
+						local slide_size = 460
 
-						input_coordinate = math.clamp(input_coordinate, 0, 300)
-						slider_value = input_coordinate / 300
+						input_coordinate = math.clamp(input_coordinate, 0, slide_size)
+						slider_value = input_coordinate / slide_size
 					end
 
 					if slider_value ~= content.slider_value then
@@ -1392,7 +1471,9 @@ local blueprints = {
 
 						local inverted_value = 1 - slider_value
 
-						content.entry.on_value_updated(inverted_value)
+						if content.option and content.option.on_value_updated then
+							content.option.on_value_updated(inverted_value)
+						end
 					end
 				end,
 			},
@@ -1407,6 +1488,8 @@ local blueprints = {
 			local max_height = height_range.max
 			local value = parent._character_create:height()
 
+			content.element = element
+			content.option = option
 			content.slider_value = 1 - math.ilerp(min_height, max_height, value)
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 		end,
@@ -1620,7 +1703,7 @@ local blueprints = {
 				visibility_function = function (content, style)
 					local hotspot = content.hotspot
 					local is_hovered = hotspot.is_hover or hotspot.is_focused
-					local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0
+					local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_select_progress > 0
 
 					return is_hovered or was_hovered
 				end,
@@ -1714,14 +1797,14 @@ local blueprints = {
 					},
 				},
 				visibility_function = function (content, style)
-					return not content.audio_playing
+					return not content.sound_id
 				end,
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
@@ -1749,15 +1832,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 			{
@@ -1783,15 +1866,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 			{
@@ -1817,15 +1900,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 			{
@@ -1851,15 +1934,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 			{
@@ -1885,15 +1968,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 			{
@@ -1919,15 +2002,15 @@ local blueprints = {
 				},
 				change_function = function (content, style)
 					local hotspot = content.hotspot
-					local default_color = content.element_selected and style.selected_color or style.default_color
+					local default_color = content.hotspot.is_selected and style.selected_color or style.default_color
 					local hover_color = style.hover_color
 					local color = style.color
-					local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+					local progress = math.max(math.max(hotspot.anim_select_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 				end,
 				visibility_function = function (content, style)
-					return content.audio_playing
+					return content.sound_id
 				end,
 			},
 		},
@@ -1936,172 +2019,49 @@ local blueprints = {
 
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
-			content.voice_hotspot.pressed_callback = callback(option, "on_voice_pressed_function", widget)
 			content.text = option.text
 			content.value_text = Managers.localization:localize("loc_character_create_value_selected")
 			content.draw_arrow = element.entries ~= nil
+			content.element = element
 		end,
-	},
-	backstory_choice = {
-		grid = "backstory_choices_grid",
-		grid_direction = "right",
-		scenegraph = "backstory_choices_pivot",
-		size = {
-			280,
-			480,
-		},
-		pass_template = {
-			{
-				content_id = "hotspot",
-				pass_type = "hotspot",
-				content = {
-					on_hover_sound = UISoundEvents.default_mouse_hover,
-					on_pressed_sound = UISoundEvents.character_appearence_option_pressed,
-				},
-			},
-			{
-				pass_type = "text",
-				style_id = "title",
-				value = "",
-				value_id = "title",
-				style = CharacterAppearanceViewFontStyle.header_choice_text_style,
-			},
-			{
-				pass_type = "rect",
-				style_id = "background",
-				style = {
-					color = {
-						255,
-						255,
-						255,
-						255,
-					},
-					size = {
-						280,
-						400,
-					},
-					offset = {
-						0,
-						60,
-						1,
-					},
-				},
-			},
-			{
-				pass_type = "text",
-				style_id = "text",
-				value = "",
-				value_id = "text",
-				style = CharacterAppearanceViewFontStyle.effect_text_style,
-			},
-		},
-	},
-	reward_cosmetic = {
-		size = {
-			430,
-			60,
-		},
-		pass_template = {
-			{
-				pass_type = "texture",
-				style_id = "icon",
-				value = "",
-				value_id = "icon",
-				style = {
-					color = Color.ui_terminal(255, true),
-					offset = {
-						10,
-						10,
-						1,
-					},
-					size = {
-						40,
-						40,
-					},
-				},
-			},
-			{
-				pass_type = "texture",
-				style_id = "frame",
-				value = "content/ui/materials/base/ui_default_base",
-				value_id = "frame",
-				style = {
-					color = Color.white(255, true),
-					offset = {
-						0,
-						0,
-						0,
-					},
-					size = {
-						60,
-						60,
-					},
-					material_values = {
-						texture_map = "content/ui/textures/icons/achievement_rewards/frames/rarity_01",
-					},
-				},
-			},
-			{
-				pass_type = "text",
-				style_id = "title",
-				value = "",
-				value_id = "title",
-				style = CharacterAppearanceViewFontStyle.reward_description_style,
-			},
-		},
-		init = function (parent, widget, entry)
-			widget.content.icon = entry.icon
-			widget.content.title = Localize(entry.text)
-		end,
-	},
-	reward_text = {
-		size = {
-			430,
-			60,
-		},
-		pass_template = {
-			{
-				pass_type = "text",
-				style_id = "title",
-				value = "",
-				value_id = "title",
-				style = CharacterAppearanceViewFontStyle.reward_description_no_icon_style,
-			},
-		},
-		init = function (parent, widget, entry)
-			widget.content.title = Localize(entry.text)
+		update = function (parent, widget, dt)
+			if widget.content.sound_id then
+				if not widget.content.pulse_progress then
+					for i = 1, 6 do
+						local pass = widget.style["pulse_" .. i]
+
+						pass.min_value = math.random(5, 15)
+						pass.max_value = math.random(20, 50)
+						pass.speed = math.random(5, 20)
+					end
+
+					widget.content.pulse_progress = 0
+				else
+					widget.content.pulse_progress = widget.content.pulse_progress + dt
+				end
+
+				for i = 1, 6 do
+					local pass = widget.style["pulse_" .. i]
+					local min = pass.min_value
+					local max = pass.max_value
+					local speed = pass.speed
+					local wave_value = math.sin(widget.content.pulse_progress * speed)
+					local current_value = min + wave_value * wave_value * (max - min)
+
+					pass.size[2] = current_value
+				end
+
+				local world = Managers.ui:world()
+				local wwise_world = Managers.world:wwise_world(world)
+
+				if not WwiseWorld.is_playing(wwise_world, widget.content.sound_id) then
+					widget.content.sound_id = nil
+				end
+			elseif not widget.content.sound_id and widget.content.pulse_progress then
+				widget.content.pulse_progress = nil
+			end
 		end,
 	},
 }
-local pulse_animations = {
-	init = function (widget)
-		for i = 1, 6 do
-			local pass = widget.style["pulse_" .. i]
 
-			pass.min_value = math.random(5, 15)
-			pass.max_value = math.random(20, 50)
-			pass.speed = math.random(5, 20)
-		end
-	end,
-	update = function (dt, current_progress, widget)
-		local progress = current_progress + dt
-
-		for i = 1, 6 do
-			local pass = widget.style["pulse_" .. i]
-			local min = pass.min_value
-			local max = pass.max_value
-			local speed = pass.speed
-			local wave_value = math.sin(progress * speed)
-			local current_value = min + wave_value * wave_value * (max - min)
-
-			pass.size[2] = current_value
-		end
-
-		return progress
-	end,
-}
-
-return {
-	blueprints = blueprints,
-	pulse_animations = pulse_animations,
-}
+return blueprints

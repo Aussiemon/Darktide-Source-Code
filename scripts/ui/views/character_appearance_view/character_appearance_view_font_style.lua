@@ -103,6 +103,7 @@ list_description_style.offset = {
 }
 list_description_style.font_size = 20
 list_description_style.text_color = Color.terminal_text_body(255, true)
+list_description_style.horizontal_alignment = "center"
 
 local overlay_text_style = table.clone(UIFontSettings.header_2)
 
@@ -255,7 +256,7 @@ randomize_button_text_style.text_horizontal_alignment = "left"
 randomize_button_text_style.text_vertical_alignment = "center"
 randomize_button_text_style.character_spacing = 0.1
 randomize_button_text_style.offset = {
-	0,
+	60,
 	0,
 	1,
 }
@@ -291,6 +292,10 @@ error_style.text_vertical_alignment = "bottom"
 error_style.font_size = 18
 error_style.text_color = Color.ui_red_medium(255, true)
 
+local companion_input_text_style = table.clone(header_final_text_style)
+
+companion_input_text_style.text_vertical_alignment = "center"
+
 return {
 	header_choice_text_style = header_choice_text_style,
 	header_text_style = header_text_style,
@@ -316,4 +321,5 @@ return {
 	reward_description_no_icon_style = reward_description_no_icon_style,
 	error_style = error_style,
 	effect_description_not_selected_style = effect_description_not_selected_style,
+	companion_input_text_style = companion_input_text_style,
 }

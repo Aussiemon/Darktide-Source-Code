@@ -10,7 +10,7 @@ local DIRECTION = {
 }
 local UIWidgetGrid = class("UIWidgetGrid")
 
-UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation, use_select_on_focused, bottom_chin, top_padding, scroll_start_margin, center)
+UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation, use_select_on_focused, bottom_chin, top_padding, scroll_start_margin, center, optional_size)
 	self._direction = direction
 	self._scenegraph = scenegraph
 	self._spacing = spacing or {
@@ -34,7 +34,7 @@ UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_sc
 	self._axis = axis
 	self._scroll_direction_multiplier = negative_direction and 1 or -1
 
-	local area_size = self:_get_area_size()
+	local area_size = self:_get_area_size(optional_size)
 
 	self._start_offset = negative_direction and area_size[axis] - self._top_padding or self._top_padding
 	self._widgets = widgets
@@ -48,19 +48,30 @@ UIWidgetGrid.set_handle_grid_navigation = function (self, allow)
 	self._handle_grid_navigation = allow
 end
 
-UIWidgetGrid._get_area_size = function (self)
+UIWidgetGrid._get_area_size = function (self, optional_size)
 	if self._area_size then
 		return self._area_size
 	else
-		local scenegraph = self._scenegraph
-		local area_scenegraph_id = self._area_scenegraph_id
-		local scenegraph_size = UIScenegraph.size_scaled(scenegraph, area_scenegraph_id)
-		local size = Vector3.to_array(scenegraph_size)
+		local size
 
-		self._area_size = {
-			size[1],
-			size[2] - self._bottom_chin - self._top_padding,
-		}
+		if optional_size then
+			self._area_size = {
+				optional_size[1],
+				optional_size[2] - self._bottom_chin - self._top_padding,
+			}
+
+			return optional_size
+		else
+			local scenegraph = self._scenegraph
+			local area_scenegraph_id = self._area_scenegraph_id
+			local scenegraph_size = UIScenegraph.size_scaled(scenegraph, area_scenegraph_id)
+
+			size = Vector3.to_array(scenegraph_size)
+			self._area_size = {
+				size[1],
+				size[2] - self._bottom_chin - self._top_padding,
+			}
+		end
 
 		return size
 	end

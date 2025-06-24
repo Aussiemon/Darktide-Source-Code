@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
 
-local ColorUtils = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
@@ -9,7 +9,6 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
@@ -799,7 +798,7 @@ end_player_view_blueprints.item_reward = {
 		local item_rarity = config.rarity or 1
 		local background_color = style.rarity_background.color
 
-		ColorUtils.color_copy(RaritySettings[item_rarity].color, background_color, true)
+		Colors.color_copy(RaritySettings[item_rarity].color, background_color, true)
 		_item_pass_template_init(widget, config)
 
 		content.label = Localize("loc_eor_card_title_random_reward")
@@ -1828,8 +1827,8 @@ end_player_view_blueprints.havoc = {
 						local no_charges_color = charge_style.no_charges_color
 
 						if no_charges_color and i > content.previous_charges then
-							ColorUtilities.color_copy(no_charges_color, charge_style.start_color, true)
-							ColorUtilities.color_copy(no_charges_color, charge_style.in_focus_color)
+							Colors.color_copy(no_charges_color, charge_style.start_color, true)
+							Colors.color_copy(no_charges_color, charge_style.in_focus_color)
 						end
 					end
 				end

@@ -323,6 +323,17 @@ local mutator_templates = {
 			horde_timer_modifier = 99999,
 		},
 	},
+	mutator_renegade_flamer_none_packs = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_roamer_packs = {
+				none = {
+					renegade = RoamerPacks.renegade_flamers_mutator,
+					cultist = RoamerPacks.renegade_flamers_mutator,
+				},
+			},
+		},
+	},
 	mutator_only_traitor_guard_faction = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {

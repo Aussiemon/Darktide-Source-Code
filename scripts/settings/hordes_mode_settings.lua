@@ -48,6 +48,13 @@ local hordes_mode_settings = {
 		20,
 	},
 	terror_event_name_function = function (terror_event_name, difficulty, resistance)
+		local alt_difficulty_suffix = "_alt"
+		local is_alt_difficulty = difficulty == 5 and resistance == 5
+
+		if is_alt_difficulty then
+			terror_event_name = terror_event_name .. alt_difficulty_suffix
+		end
+
 		return terror_event_name
 	end,
 }

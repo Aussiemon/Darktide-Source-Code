@@ -592,10 +592,6 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 		return
 	end
 
-	if self._dynamic_mesh_spawning and self._sparse_nav_graph_connected then
-		self:_make_sparse_graph_dirty()
-	end
-
 	local layer_id = self._nav_tag_layer_lookup[layer_name]
 
 	self._nav_tag_allowed_layers[layer_name] = allowed
@@ -613,7 +609,7 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
-		if not allowed and Breed.is_minion(breed) then
+		if not allowed and Breed.is_minion(breed) and not Breed.is_companion(breed) then
 			local unit_position = POSITION_LOOKUP[unit]
 
 			if Navigation.inside_nav_tag_volume_layer(nav_world, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, layer_id) then

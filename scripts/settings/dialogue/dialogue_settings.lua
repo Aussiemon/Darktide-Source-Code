@@ -6,6 +6,7 @@ DialogueSettings.default_rule_path = "dialogues/generated/"
 DialogueSettings.default_voSources_path = "dialogues/generated/"
 DialogueSettings.default_lookup_path = "dialogues/generated/"
 DialogueSettings.auto_load_files = {
+	"adamant",
 	"asset_vo",
 	"class_rework",
 	"enemy_vo",
@@ -223,6 +224,30 @@ DialogueSettings.player_load_files = {
 		"zealot_c",
 		"zealot_male_c",
 	},
+	adamant_male_a = {
+		"adamant_a",
+		"adamant_male_a",
+	},
+	adamant_male_b = {
+		"adamant_b",
+		"adamant_male_b",
+	},
+	adamant_male_c = {
+		"adamant_c",
+		"adamant_male_c",
+	},
+	adamant_female_a = {
+		"adamant_a",
+		"adamant_female_a",
+	},
+	adamant_female_b = {
+		"adamant_b",
+		"adamant_female_b",
+	},
+	adamant_female_c = {
+		"adamant_c",
+		"adamant_female_c",
+	},
 }
 DialogueSettings.blocked_auto_load_files = {
 	hub_ship = true,
@@ -289,9 +314,19 @@ DialogueSettings.manual_subtitle_data = {
 	},
 }
 DialogueSettings.backend_vo_groups = table.enum("horde_mode")
-DialogueSettings.horde_mode = table.enum("story_echo_morrow_01_a", "story_echo_morrow_05_a", "story_echo_morrow_09_a", "story_echo_morrow_13_a", "story_echo_morrow_17_a", "story_echo_morrow_21_a", "story_echo_morrow_25_a", "story_echo_morrow_29_a", "story_echo_morrow_33_a", "story_echo_zola_01_a", "story_echo_zola_05_a", "story_echo_zola_09_a", "story_echo_zola_13_a", "story_echo_zola_17_a", "story_echo_zola_21_a", "story_echo_zola_25_a")
+DialogueSettings.horde_mode = table.enum("story_echo_morrow_01_a", "story_echo_morrow_05_a", "story_echo_morrow_09_a", "story_echo_morrow_13_a", "story_echo_morrow_17_a", "story_echo_morrow_21_a", "story_echo_morrow_25_a", "story_echo_morrow_29_a", "story_echo_morrow_33_a", "story_echo_zola_01_a", "story_echo_zola_05_a", "story_echo_zola_09_a", "story_echo_zola_13_a", "story_echo_zola_17_a", "story_echo_zola_21_a", "story_echo_zola_25_a", "story_echo_brahms_00_a", "story_echo_brahms_04_a", "story_echo_brahms_07_a", "story_echo_brahms_11_a", "story_echo_brahms_12_a", "story_echo_brahms_16_a", "story_echo_brahms_20_a", "story_echo_brahms_23a_a", "story_echo_brahms_26_a", "story_echo_brahms_28_a")
 DialogueSettings.stats = {
 	horde_mode = {
+		story_echo_brahms_00_a = "hook_backstory_brahms_part_1",
+		story_echo_brahms_04_a = "hook_backstory_brahms_part_2",
+		story_echo_brahms_07_a = "hook_backstory_brahms_part_3",
+		story_echo_brahms_11_a = "hook_backstory_brahms_part_4",
+		story_echo_brahms_12_a = "hook_backstory_brahms_part_5",
+		story_echo_brahms_16_a = "hook_backstory_brahms_part_6",
+		story_echo_brahms_20_a = "hook_backstory_brahms_part_7",
+		story_echo_brahms_23a_a = "hook_backstory_brahms_part_8",
+		story_echo_brahms_26_a = "hook_backstory_brahms_part_9",
+		story_echo_brahms_28_a = "hook_backstory_brahms_part_10",
 		story_echo_morrow_01_a = "hook_backstory_morrow_part_1",
 		story_echo_morrow_05_a = "hook_backstory_morrow_part_2",
 		story_echo_morrow_09_a = "hook_backstory_morrow_part_3",

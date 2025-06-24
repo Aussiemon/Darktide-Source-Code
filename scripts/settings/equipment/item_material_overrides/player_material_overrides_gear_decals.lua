@@ -1,6 +1,9 @@
 ﻿-- chunkname: @scripts/settings/equipment/item_material_overrides/player_material_overrides_gear_decals.lua
 
 local decal_table = {
+	decal_atlas_adamant_01 = "content/textures/gear_decals/decal_atlas_adamant_01",
+	decal_atlas_adamant_02 = "content/textures/gear_decals/decal_atlas_adamant_02",
+	decal_atlas_adamant_precincts_01 = "content/textures/gear_decals/decal_atlas_adamant_precincts_01",
 	decal_atlas_atoma_01 = "content/textures/gear_decals/decal_atlas_atoma_01",
 	decal_atlas_cadia_01 = "content/textures/gear_decals/decal_atlas_cadia_01",
 	decal_atlas_cadia_02 = "content/textures/gear_decals/decal_atlas_cadia_02",

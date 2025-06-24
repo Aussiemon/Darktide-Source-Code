@@ -27,12 +27,20 @@ local training_grounds_options_view_settings = {
 	panel_size = {
 		default = {
 			720,
-			690,
+			860,
 		},
 		small = {
 			720,
 			490,
 		},
+	},
+	reward_size = {
+		288,
+		153.6,
+	},
+	weapon_size = {
+		288,
+		153.6,
 	},
 }
 

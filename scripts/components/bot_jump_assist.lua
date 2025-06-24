@@ -10,7 +10,7 @@ BotJumpAssist.init = function (self, unit, is_server)
 	return run_update
 end
 
-BotJumpAssist.on_gameplay_post_init = function (self, unit, level)
+BotJumpAssist.on_gameplay_post_init = function (self, unit)
 	if self.is_server then
 		local wanted_from = Unit.world_position(unit, 1)
 		local via = Unit.world_position(unit, Unit.node(unit, "waypoint"))

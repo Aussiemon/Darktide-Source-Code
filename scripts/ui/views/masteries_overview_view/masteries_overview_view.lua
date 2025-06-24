@@ -13,7 +13,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 local FALLBACK_TEXTURE = "core/fallback_resources/missing_texture"
 local MasteriesOverviewView = class("MasteriesOverviewView", "BaseView")
 

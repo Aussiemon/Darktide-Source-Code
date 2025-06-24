@@ -170,6 +170,15 @@ local ErrorCodesLookup = {
 	failed_character_too_low_level = {
 		code = 5003,
 	},
+	failed_dlc_license_check = {
+		code = 6001,
+	},
+	failed_dlc_license_check_backend = {
+		code = 6002,
+	},
+	failed_dlc_license_check_engine = {
+		code = 6003,
+	},
 	unknown_error = {
 		code = 9999,
 	},

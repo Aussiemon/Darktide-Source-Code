@@ -52,8 +52,8 @@ pickup_settings.default_distribution_pool = {
 		},
 		health = {
 			medical_crate_pocketable = {
-				2,
-				2,
+				3,
+				3,
 				2,
 				2,
 				2,
@@ -117,22 +117,22 @@ pickup_settings.default_distribution_pool = {
 	primary = {
 		ammo = {
 			small_clip = {
-				9,
-				9,
+				12,
+				12,
 				8,
 				8,
 				8,
 			},
 			large_clip = {
-				2,
-				2,
+				3,
+				3,
 				2,
 				2,
 				2,
 			},
 			ammo_cache_pocketable = {
-				1,
-				1,
+				2,
+				2,
 				1,
 				1,
 				1,
@@ -140,8 +140,8 @@ pickup_settings.default_distribution_pool = {
 		},
 		grenade = {
 			small_grenade = {
-				2,
-				2,
+				3,
+				3,
 				2,
 				1,
 				1,
@@ -158,8 +158,8 @@ pickup_settings.default_distribution_pool = {
 		},
 		stimms = {
 			syringe_generic_pocketable = {
-				2,
-				2,
+				3,
+				3,
 				2,
 				2,
 				2,
@@ -185,8 +185,8 @@ pickup_settings.default_distribution_pool = {
 	secondary = {
 		ammo = {
 			small_clip = {
-				14,
-				14,
+				17,
+				17,
 				14,
 				13,
 				13,
@@ -201,9 +201,9 @@ pickup_settings.default_distribution_pool = {
 		},
 		grenade = {
 			small_grenade = {
-				2,
-				2,
-				2,
+				3,
+				3,
+				3,
 				3,
 				3,
 			},

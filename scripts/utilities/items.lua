@@ -778,6 +778,8 @@ Items.obtained_display_name = function (item)
 			display_name = Localize(display_name_localization_key, true, {
 				live_event_label = live_event_label_colored,
 			})
+		elseif source_settings.is_dlc then
+			optional_description = Localize("loc_term_glossary_dlc")
 		end
 	end
 
@@ -909,6 +911,55 @@ Items.set_item_class_requirement_text = function (item)
 	end
 
 	return text, true
+end
+
+Items.item_num_classes_not_available_by_total = function (item)
+	local archetype_restrictions = item and item.archetypes
+
+	if not archetype_restrictions or table.is_empty(archetype_restrictions) then
+		return 0, 0
+	else
+		local not_available_count = 0
+		local total_archetypes = #archetype_restrictions
+
+		for i = 1, total_archetypes do
+			local archetype_name = archetype_restrictions[i]
+			local archetype = Archetypes[archetype_name]
+			local is_archetype_available_func = archetype and archetype.is_available
+			local is_archetype_available = true
+
+			if is_archetype_available_func then
+				is_archetype_available = is_archetype_available_func()
+			end
+
+			if not is_archetype_available then
+				not_available_count = not_available_count + 1
+			end
+		end
+
+		return not_available_count, total_archetypes
+	end
+end
+
+Items.check_archetype_restrictions = function (item)
+	local restriction_type
+	local archetypes_not_available, total_archetypes = Items.item_num_classes_not_available_by_total(item)
+
+	if archetypes_not_available > 0 then
+		if archetypes_not_available == 1 and archetypes_not_available == total_archetypes then
+			local archetype = item.archetypes[1]
+
+			if restriction_type and archetype ~= restriction_type then
+				restriction_type = "generic"
+			elseif not restriction_type then
+				restriction_type = archetype
+			end
+		elseif archetypes_not_available > 1 then
+			restriction_type = "generic"
+		end
+	end
+
+	return restriction_type
 end
 
 local function _class_requirement_entries(item, available_archetypes)
@@ -1209,7 +1260,7 @@ Items.is_item_compatible_with_profile = function (item, profile)
 	end
 
 	local item_breeds = item.breeds
-	local wanted_breed = profile.breed or profile.archetype and profile.archetype.breed
+	local wanted_breed = profile.archetype.breed
 
 	if item_breeds and not table.is_empty(item_breeds) then
 		for ii = 1, #item_breeds do
@@ -1840,7 +1891,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 	return result
 end
 
-Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype)
+Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype, preferred_breed)
 	local item_gender, item_breed, item_archetype, item_slot_name
 
 	if item.genders and not table.is_empty(item.genders) then
@@ -1871,7 +1922,11 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 	end
 
 	if item.breeds and not table.is_empty(item.breeds) then
-		item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
+		if #item.breeds > 1 and preferred_breed and table.find(item.breeds, preferred_breed) then
+			item_breed = preferred_breed
+		else
+			item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
+		end
 	end
 
 	if item.slots and not table.is_empty(item.slots) then
@@ -1880,9 +1935,9 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		item_slot_name = nil
 	end
 
-	local breed = item_breed or item.breeds and item.breeds[1] or "human"
-	local archetype = breed == "ogryn" and Archetypes.ogryn or item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
-	local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+	local breed = item_breed or "human"
+	local archetype = item_archetype or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
+	local gender = item_gender or "male"
 	local loadout = {}
 	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
 	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
@@ -1898,6 +1953,10 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 				loadout[slot_name] = slot_item
 			end
 		end
+	end
+
+	if archetype.companion_breed == "companion_dog" and item.companion_state_machine then
+		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_dog/gear_full/companion_dog_set_02_var_01")
 	end
 
 	return {

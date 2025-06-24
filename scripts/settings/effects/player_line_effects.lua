@@ -290,8 +290,6 @@ local line_effects = {
 	},
 	pellet_trail = {
 		keep_aligned = true,
-		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_tracer_trail",
-		vfx_width = 0.025,
 		emitters = {
 			vfx = {
 				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
@@ -323,6 +321,19 @@ local line_effects = {
 			vfx = {
 				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke",
 				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke",
+			},
+			interval = {
+				distance = 5,
+				increase = 0,
+			},
+		},
+	},
+	pellet_trail_shock = {
+		keep_aligned = true,
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
 			},
 			interval = {
 				distance = 5,

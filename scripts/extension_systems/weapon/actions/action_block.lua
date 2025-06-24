@@ -85,9 +85,13 @@ ActionBlock.finish = function (self, reason, data, t, time_in_action)
 		local new_action_kind = data.new_action_kind
 		local want_push = new_action_kind == "push"
 		local want_sweep = new_action_kind == "sweep"
+		local want_shoot = new_action_kind == "shoot" or new_action_kind == "shoot_pellets" or new_action_kind == "shoot_projectile"
+		local want_continue_blocking = new_action_kind == "weapon_shout"
 
 		stop_blocking = not want_push
 		stop_blocking = stop_blocking and not want_sweep
+		stop_blocking = stop_blocking and not want_shoot
+		stop_blocking = stop_blocking and not want_continue_blocking
 	end
 
 	if stop_blocking then

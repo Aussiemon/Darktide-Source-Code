@@ -99,7 +99,28 @@ local action_data = {
 			death_strike_chest_right = 1.2666666666666666,
 		},
 	},
-	disable = {},
+	disable = {
+		disable_anims = {
+			pounced = {
+				fwd = {
+					"dog_leap_pinned",
+				},
+				bwd = {
+					"dog_leap_pinned",
+				},
+				left = {
+					"dog_leap_pinned",
+				},
+				right = {
+					"dog_leap_pinned",
+				},
+			},
+		},
+		stand_anim = {
+			duration = 4,
+			name = "dog_leap_pinned_stand",
+		},
+	},
 	stagger = {
 		stagger_duration_mods = {
 			stagger_explosion_front_2 = 0.8,

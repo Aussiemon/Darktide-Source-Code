@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/outline/outline_system.lua
 
 require("scripts/extension_systems/outline/player_unit_outline_extension")
+require("scripts/extension_systems/outline/companion_outline_extension")
 
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local OutlineSystem = class("OutlineSystem", "ExtensionSystemBase")
@@ -8,6 +9,7 @@ local OutlineSystem = class("OutlineSystem", "ExtensionSystemBase")
 OutlineSystem.system_extensions = {
 	"MinionOutlineExtension",
 	"PropOutlineExtension",
+	"CompanionOutlineExtension",
 	"PlayerUnitOutlineExtension",
 }
 
@@ -44,6 +46,8 @@ OutlineSystem.on_add_extension = function (self, world, unit, extension_name, ex
 	local extension
 
 	if extension_name == "PlayerUnitOutlineExtension" then
+		extension = OutlineSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+	elseif extension_name == "CompanionOutlineExtension" then
 		extension = OutlineSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
 	elseif extension_name == "MinionOutlineExtension" or extension_name == "PropOutlineExtension" then
 		extension = {}
@@ -101,7 +105,7 @@ local function _update_material_layers_color(unit, extension, wanted_outline_col
 						local material_layer_name = material_layers[j]
 						local material_variable_name = "outline_color"
 
-						Unit.set_vector3_for_material(slot_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
+						Unit.set_vector3_for_material(slot_unit or slot.unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
 					end
 
 					if attachments then
@@ -135,6 +139,8 @@ OutlineSystem.on_remove_extension = function (self, unit, extension_name)
 
 	if extension_name == "PlayerUnitOutlineExtension" then
 		OutlineSystem.super.on_remove_extension(self, unit, extension_name)
+	elseif extension_name == "CompanionOutlineExtension" then
+		OutlineSystem.super.on_remove_extension(self, unit, extension_name)
 	elseif extension_name == "MinionOutlineExtension" or extension_name == "PropOutlineExtension" then
 		ScriptUnit.remove_extension(unit, self.NAME)
 	end
@@ -150,6 +156,14 @@ end
 
 local function _sort_outlines_by_priority(o1, o2)
 	return o1.priority < o2.priority
+end
+
+OutlineSystem.has_outline = function (self, unit, outline_name)
+	local extension = self._unit_extension_data[unit]
+	local outlines = extension.outlines
+	local outline_index = _find_outline(outlines, outline_name)
+
+	return outline_index ~= nil
 end
 
 OutlineSystem.add_outline = function (self, unit, outline_name)
@@ -303,7 +317,12 @@ OutlineSystem.update = function (self, context, dt, t)
 
 		if top_outline then
 			local visible_material_layers = extension.visible_material_layers
-			local should_show = top_outline.visibility_check(unit)
+
+			if not top_outline.visibility_check then
+				table.dump(top_outline, "top outline", 2)
+			end
+
+			local should_show = not top_outline.visibility_check or top_outline.visibility_check(unit)
 
 			if visible_material_layers and not should_show then
 				_set_material_layers(unit, visible_material_layers, false)

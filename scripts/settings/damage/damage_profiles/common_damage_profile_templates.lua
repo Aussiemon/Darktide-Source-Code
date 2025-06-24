@@ -381,6 +381,47 @@ damage_templates.ogryn_shield_push = {
 		default_target = {},
 	},
 }
+damage_templates.human_shield_push = {
+	is_push = true,
+	shield_override_stagger_strength = 20,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = {
+			9,
+			18,
+		},
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.5,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 0,
+		},
+	},
+	stagger_duration_modifier = {
+		0.5,
+		0.75,
+	},
+	targets = {
+		default_target = {},
+	},
+}
 damage_templates.default_shield_push = {
 	is_push = true,
 	shield_override_stagger_strength = 20,

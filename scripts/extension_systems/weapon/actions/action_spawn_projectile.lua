@@ -148,6 +148,18 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	if vo_tag then
 		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
+
+	local ability_type = action_settings.ability_type
+
+	if ability_type == "combat_ability" then
+		local param_table = self._buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.unit = self._player_unit
+
+			self._buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+		end
+	end
 end
 
 ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)

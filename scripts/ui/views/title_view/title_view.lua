@@ -172,7 +172,7 @@ TitleView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	self.super.on_exit(self)
+	TitleView.super.on_exit(self)
 end
 
 TitleView.on_resolution_modified = function (self)

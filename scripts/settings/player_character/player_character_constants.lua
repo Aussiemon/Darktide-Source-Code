@@ -333,6 +333,9 @@ local constants = {
 			profile_field = true,
 			slot_type = "gear",
 			wieldable = false,
+			slot_dependencies = {
+				"slot_gear_material_override_decal",
+			},
 		},
 		slot_gear_head = {
 			mispredict_packages = true,
@@ -342,6 +345,7 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_skin_color",
+				"slot_gear_material_override_decal",
 			},
 		},
 		slot_gear_lowerbody = {
@@ -350,6 +354,10 @@ local constants = {
 			profile_field = true,
 			slot_type = "gear",
 			wieldable = false,
+			slot_dependencies = {
+				"slot_body_skin_color",
+				"slot_gear_material_override_decal",
+			},
 		},
 		slot_gear_upperbody = {
 			mispredict_packages = true,
@@ -357,6 +365,50 @@ local constants = {
 			profile_field = true,
 			slot_type = "gear",
 			wieldable = false,
+			slot_dependencies = {
+				"slot_body_skin_color",
+				"slot_gear_material_override_decal",
+			},
+		},
+		slot_gear_material_override_decal = {
+			mispredict_packages = true,
+			priority = 60,
+			profile_field = true,
+			slot_type = "gear",
+			wieldable = false,
+		},
+		slot_companion_body_skin_color = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_companion_body_fur_color = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_companion_body_coat_pattern = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_companion_gear_full = {
+			mispredict_packages = true,
+			priority = 30,
+			profile_field = true,
+			slot_type = "gear",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_companion_body_skin_color",
+				"slot_companion_body_fur_color",
+				"slot_companion_body_coat_pattern",
+			},
 		},
 		slot_attachment_1 = {
 			display_name = "loc_inventory_title_slot_attachment_1",
@@ -512,6 +564,12 @@ local constants = {
 	player_interactions_hub = {
 		{
 			interaction_type = "player_hub_inspect",
+			override_context = {},
+		},
+	},
+	companion_interactions_hub = {
+		{
+			interaction_type = "companion_hub_interact",
 			override_context = {},
 		},
 	},

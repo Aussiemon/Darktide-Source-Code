@@ -50,6 +50,7 @@ local VALID_END_ZONE_STATES = {
 	falling = true,
 	grabbed = true,
 	hogtied = false,
+	hub_companion_interaction = false,
 	hub_emote = false,
 	hub_jog = false,
 	interacting = true,

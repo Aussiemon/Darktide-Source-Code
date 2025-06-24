@@ -890,9 +890,11 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 
 	for i = 1, num_results do
 		local unit = BROADPHASE_RESULTS[i]
+		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+		local is_companion_unit = unit_data_extension and unit_data_extension:is_companion()
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) then
+		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) and not is_companion_unit then
 			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(in_liquid_buff_template_name, t, "owner_unit", self._source_unit, "source_item", self._optional_source_item)
 
 			buff_affected_units[unit] = {

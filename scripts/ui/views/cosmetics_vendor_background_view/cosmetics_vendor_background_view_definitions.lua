@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_definitions.lua
 
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
@@ -306,7 +307,7 @@ local cosmetics_vendor_option_tab_definition = {
 						local item_type = previewed_item.item_type
 						local ITEM_TYPES = UISettings.ITEM_TYPES
 
-						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
+						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
 							return view_instance._on_enter_animation_triggered
 						end
 					end
@@ -463,7 +464,7 @@ local weapon_cosmetics_vendor_option_tab_definition = {
 						local item_type = previewed_item.item_type
 						local ITEM_TYPES = UISettings.ITEM_TYPES
 
-						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
+						if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
 							return true
 						end
 					end
@@ -478,23 +479,25 @@ local cosmetic_gear_tabs = {}
 local cosmetic_weapon_tabs = {}
 
 for archetype_name, archetype in pairs(Archetypes) do
-	local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
+	if table.contains(ArchetypeSettings.archetype_cosmetics_whitelist, archetype_name) then
+		local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
 
-	cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
-	cosmetics_vendor_option_tab.view_function_context = {
-		archetype_name = archetype_name,
-	}
-	cosmetics_vendor_option_tab.display_name = archetype.archetype_name
-	cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+		cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab
+		cosmetics_vendor_option_tab.view_function_context = {
+			archetype_name = archetype_name,
+		}
+		cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+		cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
 
-	local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
+		local weapon_cosmetics_vendor_option_tab = table.clone_instance(weapon_cosmetics_vendor_option_tab_definition)
 
-	cosmetic_weapon_tabs[#cosmetic_weapon_tabs + 1] = weapon_cosmetics_vendor_option_tab
-	weapon_cosmetics_vendor_option_tab.view_function_context = {
-		archetype_name = archetype_name,
-	}
-	weapon_cosmetics_vendor_option_tab.display_name = archetype.archetype_name
-	weapon_cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+		cosmetic_weapon_tabs[#cosmetic_weapon_tabs + 1] = weapon_cosmetics_vendor_option_tab
+		weapon_cosmetics_vendor_option_tab.view_function_context = {
+			archetype_name = archetype_name,
+		}
+		weapon_cosmetics_vendor_option_tab.display_name = archetype.archetype_name
+		weapon_cosmetics_vendor_option_tab.ui_selection_order = archetype.ui_selection_order
+	end
 end
 
 table.sort(cosmetic_gear_tabs, function (a, b)

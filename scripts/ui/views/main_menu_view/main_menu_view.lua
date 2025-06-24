@@ -6,6 +6,8 @@ local InputDevice = require("scripts/managers/input/input_device")
 local MainMenuViewSettings = require("scripts/ui/views/main_menu_view/main_menu_view_settings")
 local MainMenuViewTestify = GameParameters.testify and require("scripts/ui/views/main_menu_view/main_menu_view_testify")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -28,6 +30,7 @@ MainMenuView.init = function (self, settings, context)
 	self._pass_draw = true
 	self._keybind_is_reset_on_start = false
 	self._show_news_popup = context.show_news_popup
+	self._promise_container = PromiseContainer:new()
 end
 
 MainMenuView.on_enter = function (self)
@@ -557,9 +560,8 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 
 	local selected_character_list_index = self._selected_character_list_index
 	local create_button = self._widgets_by_name.create_button.content
-	local play_button = self._widgets_by_name.play_button.content
+	local play_button = self._widgets_by_name.play_button
 
-	play_button.hotspot.disabled = self._is_main_menu_open
 	create_button.hotspot.disabled = self._is_main_menu_open or self:_are_slots_full()
 
 	local character_slot_widgets = self._character_list_widgets
@@ -590,10 +592,10 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= max_num_characters then
 				self:_on_character_widget_selected(selected_character_list_index + 1)
 			end
-		elseif play_button.visible and play_button.hotspot.disabled ~= true and input_service:get("confirm_pressed") then
-			self:_on_play_pressed()
+		elseif play_button.content.visible and not play_button.disabled and input_service:get("confirm_pressed") then
+			play_button.content.hotspot.pressed_callback()
 		elseif create_button.hotspot.disabled ~= true and input_service:get("hotkey_menu_special_1") then
-			self:_on_create_character_pressed()
+			self._widgets_by_name.create_button.content.hotspot.pressed_callback()
 		elseif IS_XBS and input_service:get("cycle_list_secondary") then
 			Managers.account:show_profile_picker()
 		elseif (IS_XBS or IS_PLAYSTATION) and input_service:get("back") and InputDevice.gamepad_active then
@@ -680,6 +682,8 @@ MainMenuView._destroy_character_list_renderer = function (self)
 end
 
 MainMenuView.on_exit = function (self)
+	self._promise_container:delete()
+
 	if self._input_legend_element then
 		self._input_legend_element = nil
 
@@ -871,6 +875,43 @@ MainMenuView._show_character_details = function (self, show, profile)
 		if player_title then
 			self._widgets_by_name.character_info.content.character_title = player_title
 		end
+
+		local selected_archetype = profile.archetype
+
+		if self._current_archetype_available_promise and not self._current_archetype_available_promise:is_fulfilled() then
+			self._current_archetype_available_promise:cancel()
+		end
+
+		local is_archetype_available_promise = Promise:resolved(false)
+
+		if selected_archetype.is_available then
+			is_archetype_available_promise = selected_archetype:is_available()
+		end
+
+		if not is_archetype_available_promise:is_fulfilled() then
+			self._widgets_by_name.play_button.visible = false
+			self._widgets_by_name.play_button.disabled = true
+		end
+
+		self._current_archetype_available_promise = is_archetype_available_promise
+
+		self._promise_container:cancel_on_destroy(is_archetype_available_promise):next(function (result)
+			self._widgets_by_name.play_button.visible = true
+			self._widgets_by_name.play_button.content.original_text = result.available and Utf8.upper(Localize("loc_main_menu_play_button")) or Utf8.upper(Localize("loc_dlc_cta"))
+			self._widgets_by_name.play_button.disabled = false
+
+			self._widgets_by_name.play_button.content.hotspot.pressed_callback = function ()
+				if result.available then
+					self:_on_play_pressed()
+				else
+					selected_archetype:acquire_callback(function (is_success)
+						if is_success then
+							self:_show_character_details(show, profile)
+						end
+					end)
+				end
+			end
+		end)
 	end
 end
 

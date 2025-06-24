@@ -406,6 +406,30 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.monster,
+	companion_pounce_setting = {
+		companion_pounce_action = "stagger_and_leap_away",
+		on_target_hit = {
+			anim_event = "attack_leap_nonhuman_start",
+			anim_event_on_stick = "attack_leap_nonhuman_stick",
+			animation_driven_duration = 0.5333333333333333,
+			linking_time = 1.55,
+			dog_target_nodes = {
+				"dog_target_position_back_01",
+				"dog_target_position_back_02",
+				"dog_target_position_front_01",
+				"dog_target_position_front_02",
+				"dog_target_position_right_01",
+				"dog_target_position_left_01",
+			},
+		},
+		land_anim_events = {
+			{
+				duration = 0.8333333333333334,
+				name = "attack_leap_nonhuman_land_02",
+			},
+		},
+		damage_profile = DamageProfileTemplates.adamant_companion_monster_pounce,
+	},
 }
 
 return breed_data

@@ -65,7 +65,6 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self:_setup_right_panel_widgets()
 	self:on_resolution_modified()
 
-	self._widgets_by_name.survival_currency.visible = false
 	self._using_input = false
 
 	self:_create_resource_renderer()
@@ -294,7 +293,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 			local is_active = buff_hud_data.show
 
 			if not is_generic and not is_weapon and not is_gadget and not is_aura and not is_talent and not is_horde_sub_buff or has_hud then
-				local skip_buff = false
+				local skip_buff = buff_template.skip_tactical_overlay
 				local material
 
 				if buff_icon == "content/ui/materials/icons/abilities/default" or not buff_icon then
@@ -1487,6 +1486,8 @@ HudElementTacticalOverlay._set_difficulty_icons = function (self)
 	local visible = danger_index ~= 0 and self._context.show_left_side_details
 
 	danger_info_widget.visible = visible
+	danger_info_widget.content.difficulty_icon = danger_settings and danger_settings.icon or "content/ui/materials/icons/difficulty/flat/difficulty_skull_uprising"
+	danger_info_widget.content.difficulty_name = danger_settings and Utf8.upper(Localize(danger_settings.display_name)) or "N/A"
 
 	local danger_info_style = danger_info_widget.style
 	local difficulty_icon_style = danger_info_style.difficulty_icon

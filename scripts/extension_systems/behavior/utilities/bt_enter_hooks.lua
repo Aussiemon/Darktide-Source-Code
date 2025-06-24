@@ -3,6 +3,8 @@
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 local BtEnterHooks = {}
 
 BtEnterHooks = {
@@ -104,6 +106,30 @@ BtEnterHooks = {
 			death_component.hit_zone_name = "center_mass"
 			death_component.damage_profile_name = "default"
 			death_component.herding_template_name = nil
+		end
+	end,
+	companion_prepare_for_movement = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+		local speed = math.max(0, Vector3.length(locomotion_extension:current_velocity()))
+
+		navigation_extension:set_enabled(true, speed)
+
+		local aim_component = Blackboard.write_component(blackboard, "aim")
+
+		aim_component.controlled_aiming = true
+	end,
+	companion_set_movement_vector = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local follow_component = Blackboard.write_component(blackboard, "follow")
+		local follow_config = CompanionDogSettings[args.follow_config]
+		local referenced_vector = follow_config.movement_vector(unit, blackboard, scratchpad, action_data)
+
+		follow_component.last_referenced_vector:store(referenced_vector)
+	end,
+	execute_multiple_hooks = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		for _, value in pairs(args) do
+			BtEnterHooks[value.hook](unit, breed, blackboard, scratchpad, action_data, t, value.args)
 		end
 	end,
 }

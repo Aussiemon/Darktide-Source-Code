@@ -376,6 +376,24 @@ local settings_definitions = {
 		widget_type = "dropdown",
 		options = _com_wheel_tap_options(),
 	},
+	{
+		default_value = "double",
+		display_name = "loc_interface_setting_companion_tag_in_mission",
+		id = "companion_command_tap",
+		save_location = "input_settings",
+		tooltip_text = "loc_interface_setting_companion_tag_in_mission_mouseover",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_interface_setting_companion_tag_in_mission_double",
+				name = "double",
+			},
+			{
+				display_name = "loc_interface_setting_companion_tag_in_mission_single",
+				name = "single",
+			},
+		},
+	},
 }
 local template_functions = {
 	boolean = construct_interface_settings_boolean,

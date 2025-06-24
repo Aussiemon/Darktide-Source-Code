@@ -46,6 +46,14 @@ local chaos_beast_of_nurgle = {
 		num_attacks_done = "number",
 		num_in_liquid = "number",
 	},
+	patrol = {
+		auto_patrol = "boolean",
+		patrol_id = "number",
+		patrol_index = "number",
+		patrol_leader_unit = "Unit",
+		should_patrol = "boolean",
+		walk_position = "Vector3Box",
+	},
 }
 
 table.merge(chaos_beast_of_nurgle, base_template)

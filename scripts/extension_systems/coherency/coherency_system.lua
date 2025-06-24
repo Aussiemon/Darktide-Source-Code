@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/coherency/unit_coherency_extension")
 require("scripts/extension_systems/coherency/husk_coherency_extension")
+require("scripts/extension_systems/coherency/companion_coherency_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -58,18 +59,20 @@ CoherencySystem._exit_removed_extension = function (self, exit_unit, exit_cohere
 	table.clear(exit_coherence_data.units_left_coherence_stickiness_time)
 
 	for _, extension in pairs(self._unit_to_extension_map) do
-		local units_in_coherence = extension:in_coherence_units()
+		if not extension.disabled then
+			local units_in_coherence = extension:in_coherence_units()
 
-		if units_in_coherence[exit_unit] then
-			local t = FixedFrame.get_latest_fixed_time()
+			if units_in_coherence[exit_unit] then
+				local t = FixedFrame.get_latest_fixed_time()
 
-			extension:on_coherency_exit(exit_unit, exit_coherency_extension, t)
+				extension:on_coherency_exit(exit_unit, exit_coherency_extension, t)
+			end
+
+			local data = extension:coherency_data()
+
+			data.units_in_direct_coherence[exit_unit] = nil
+			data.units_left_coherence_stickiness_time[exit_unit] = nil
 		end
-
-		local data = extension:coherency_data()
-
-		data.units_in_direct_coherence[exit_unit] = nil
-		data.units_left_coherence_stickiness_time[exit_unit] = nil
 	end
 end
 
@@ -158,54 +161,60 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 	local broadphase = self._broadphase
 
 	for unit, coherency_extension in pairs(self._unit_to_extension_map) do
-		local coherency_data = coherency_extension:coherency_data()
-		local coherence_stickiness_time = coherency_data.units_left_coherence_stickiness_time
-		local prev_units_in_direct_coherency = coherency_data.units_in_direct_coherence
-		local current_units_in_direct_coherency = coherency_data.units_in_direct_coherence_temp
-		local side = coherency_extension.side
-		local relation_side_names = side:relation_side_names("allied")
-		local coherence_radius, stickiness_limit, stickiness_time = coherency_extension:coherency_settings()
+		if not coherency_extension.disabled then
+			local coherency_data = coherency_extension:coherency_data()
+			local coherence_stickiness_time = coherency_data.units_left_coherence_stickiness_time
+			local prev_units_in_direct_coherency = coherency_data.units_in_direct_coherence
+			local current_units_in_direct_coherency = coherency_data.units_in_direct_coherence_temp
+			local side = coherency_extension.side
+			local relation_side_names = side:relation_side_names("allied")
+			local coherence_radius, stickiness_limit, stickiness_time = coherency_extension:coherency_settings()
 
-		Proximity.check_sticky_proximity(unit, relation_side_names, coherence_radius, current_units_in_direct_coherency, _has_coherency_system_filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
-		table.clear(prev_units_in_direct_coherency)
+			Proximity.check_sticky_proximity(unit, relation_side_names, coherence_radius, current_units_in_direct_coherency, _has_coherency_system_filter_function, broadphase, stickiness_limit, stickiness_time, coherence_stickiness_time, prev_units_in_direct_coherency, dt)
+			table.clear(prev_units_in_direct_coherency)
 
-		coherency_data.units_in_direct_coherence = current_units_in_direct_coherency
-		coherency_data.units_in_direct_coherence_temp = prev_units_in_direct_coherency
+			coherency_data.units_in_direct_coherence = current_units_in_direct_coherency
+			coherency_data.units_in_direct_coherence_temp = prev_units_in_direct_coherency
+		end
 	end
 
 	table.clear(daisy_chains)
 
 	for unit, coherency_extension in pairs(self._unit_to_extension_map) do
-		local new_chain = _get_daisy_chain(unit)
+		if not coherency_extension.disabled then
+			local new_chain = _get_daisy_chain(unit)
 
-		table.clear(new_chain)
+			table.clear(new_chain)
 
-		new_chain[unit] = coherency_extension
-		daisy_chains[unit] = new_chain
+			new_chain[unit] = coherency_extension
+			daisy_chains[unit] = new_chain
+		end
 	end
 
 	for unit, coherency_extension in pairs(self._unit_to_extension_map) do
-		local coherency_data = coherency_extension:coherency_data()
-		local direct_neighbours = coherency_data.units_in_direct_coherence
-		local my_chain = daisy_chains[unit]
+		if not coherency_extension.disabled then
+			local coherency_data = coherency_extension:coherency_data()
+			local direct_neighbours = coherency_data.units_in_direct_coherence
+			local my_chain = daisy_chains[unit]
 
-		for neighbour, neighbour_coherency_extension in pairs(direct_neighbours) do
-			local neighbours_chain = daisy_chains[neighbour]
+			for neighbour, neighbour_coherency_extension in pairs(direct_neighbours) do
+				local neighbours_chain = daisy_chains[neighbour]
 
-			if my_chain ~= neighbours_chain then
-				my_chain = table.merge(my_chain, neighbours_chain)
-				neighbours_chain = table.merge(neighbours_chain, my_chain)
-				daisy_chains[neighbour] = neighbours_chain
+				if my_chain ~= neighbours_chain and not neighbour_coherency_extension.disabled then
+					my_chain = table.merge(my_chain, neighbours_chain)
+					neighbours_chain = table.merge(neighbours_chain, my_chain)
+					daisy_chains[neighbour] = neighbours_chain
 
-				for daisy_unit, _ in pairs(my_chain) do
-					local dasy_unit_chain = daisy_chains[daisy_unit]
+					for daisy_unit, _ in pairs(my_chain) do
+						local dasy_unit_chain = daisy_chains[daisy_unit]
 
-					daisy_chains[daisy_unit] = table.merge(dasy_unit_chain, my_chain)
+						daisy_chains[daisy_unit] = table.merge(dasy_unit_chain, my_chain)
+					end
 				end
 			end
-		end
 
-		daisy_chains[unit] = my_chain
+			daisy_chains[unit] = my_chain
+		end
 	end
 
 	for unit, daisy_chain in pairs(daisy_chains) do
@@ -220,20 +229,22 @@ CoherencySystem.update = function (self, context, dt, t, ...)
 	end
 
 	for unit, extension in pairs(self._unit_to_extension_map) do
-		local units_currently_in_coherency = extension:in_coherence_units()
-		local units_in_chain_coherency = daisy_chains[unit]
+		if not extension.disabled then
+			local units_currently_in_coherency = extension:in_coherence_units()
+			local units_in_chain_coherency = daisy_chains[unit]
 
-		for exit_unit, exit_extension in pairs(units_currently_in_coherency) do
-			local in_chain = units_in_chain_coherency[exit_unit]
+			for exit_unit, exit_extension in pairs(units_currently_in_coherency) do
+				local in_chain = units_in_chain_coherency[exit_unit]
 
-			if not in_chain then
-				extension:on_coherency_exit(exit_unit, exit_extension, t)
+				if not in_chain then
+					extension:on_coherency_exit(exit_unit, exit_extension, t)
+				end
 			end
-		end
 
-		for daisy_unit, chained_extension in pairs(units_in_chain_coherency) do
-			if not units_currently_in_coherency[daisy_unit] then
-				extension:on_coherency_enter(daisy_unit, chained_extension, t)
+			for daisy_unit, chained_extension in pairs(units_in_chain_coherency) do
+				if not units_currently_in_coherency[daisy_unit] then
+					extension:on_coherency_enter(daisy_unit, chained_extension, t)
+				end
 			end
 		end
 	end

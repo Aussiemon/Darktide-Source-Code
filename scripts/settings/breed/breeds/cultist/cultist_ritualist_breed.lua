@@ -36,6 +36,7 @@ local breed_data = {
 	player_locomotion_constrain_radius = 0.4,
 	psyker_mark_target = true,
 	run_speed = 5.6,
+	smart_tag_target_type = "breed",
 	spawn_anim_state = "to_melee",
 	stagger_resistance = 5,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_cultist",
@@ -47,6 +48,7 @@ local breed_data = {
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
+		minion = true,
 		ritualist = true,
 	},
 	point_cost = math.huge,
@@ -351,6 +353,17 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.unarmed,
+	tokens = {},
+	companion_pounce_setting = {
+		companion_pounce_action = "human",
+		pounce_anim_event = "leap_attack",
+		damage_profile = DamageProfileTemplates.adamant_companion_human_pounce,
+		initial_damage_profile = DamageProfileTemplates.adamant_companion_initial_pounce,
+		required_token = {
+			free_target_on_assigned_token = true,
+			name = "pounced",
+		},
+	},
 }
 
 return breed_data

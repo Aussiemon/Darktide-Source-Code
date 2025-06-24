@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_animations.lua
 
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
@@ -14,8 +14,8 @@ local _math_ease_in_cubic = math.easeInCubic
 local _math_ease_out_cubic = math.easeOutCubic
 local _math_ease_out_elastic = math.ease_out_elastic
 local _math_ease_quad = math.ease_quad
-local _color_utils_color_lerp = ColorUtilities.color_lerp
-local _color_utils_color_copy = ColorUtilities.color_copy
+local _color_utils_color_lerp = Colors.color_lerp
+local _color_utils_color_copy = Colors.color_copy
 local animations = {}
 
 animations.carousel_state_slide_cards_to_the_left = function (parent, state_data, card_widgets, current_card, t)
@@ -1178,7 +1178,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 							local no_charges_color = charge_style.no_charges_color
 
 							if decrease_charges and current_charges < i and i <= previous_charges then
-								ColorUtilities.color_lerp(charges_color, no_charges_color, anim_charge_progress, charge_style.color)
+								Colors.color_lerp(charges_color, no_charges_color, anim_charge_progress, charge_style.color)
 
 								if charge_ghost_style then
 									charge_ghost_style.color[1] = 255 - 255 * anim_charge_progress
@@ -1191,7 +1191,7 @@ local function _create_progress_havoc_animation(animation_table, start_time)
 									charge_size[2] = charge_default_size[2] + size_add
 								end
 							elseif increase_charges and previous_charges < i and i <= current_charges then
-								ColorUtilities.color_lerp(no_charges_color, charges_color, anim_charge_progress, charge_style.color)
+								Colors.color_lerp(no_charges_color, charges_color, anim_charge_progress, charge_style.color)
 
 								if charge_ghost_style then
 									charge_ghost_style.color[1] = 255 * anim_charge_progress
@@ -1924,7 +1924,7 @@ animations.wallet_change_function = function (content, style, animation, dt)
 		anim_progress = math.min(anim_progress + dt / style.animation_time, 1)
 		style.font_size = math.lerp(style.highlighted_size, style.default_size, anim_progress)
 
-		ColorUtilities.color_lerp(style.highlighted_color, style.default_color, anim_progress, style.text_color)
+		Colors.color_lerp(style.highlighted_color, style.default_color, anim_progress, style.text_color)
 
 		if anim_progress < 1 then
 			content._anim_progress = anim_progress

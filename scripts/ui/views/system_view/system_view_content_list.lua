@@ -293,7 +293,8 @@ local default_list = {
 			local can_show = is_hub or is_training_grounds
 			local is_leaving_game = game_mode_manager:game_mode_state() == "leaving_game"
 			local is_in_matchmaking = Managers.data_service.social:is_in_matchmaking()
-			local is_disabled = is_leaving_game or is_in_matchmaking
+			local qp_unlocked = can_show and Managers.data_service.mission_board:is_key_unlocked("game_mode", "group_finder")
+			local is_disabled = not qp_unlocked or is_leaving_game or is_in_matchmaking
 
 			return can_show, is_disabled
 		end,

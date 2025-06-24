@@ -493,7 +493,7 @@ TalentBuilderView._refresh_all_nodes = function (self)
 	self:_update_base_talent_loadout_presentation()
 end
 
-TalentBuilderView._on_input_scroll_axis_changed = function (self, scroll_value)
+TalentBuilderView._on_input_scroll_axis_changed = function (self, scroll_value, cursor_position)
 	if self._player_mode then
 		self._is_scrolling = true
 		self._gamepad_selected_base_widget = nil
@@ -522,7 +522,7 @@ TalentBuilderView._on_input_scroll_axis_changed = function (self, scroll_value)
 
 		self:_scroll_to_height(final_y + scroll_value * scroll_add_value)
 	else
-		self.super._on_input_scroll_axis_changed(self, scroll_value)
+		TalentBuilderView.super._on_input_scroll_axis_changed(self, scroll_value, cursor_position)
 	end
 end
 
@@ -1391,6 +1391,9 @@ TalentBuilderView._update_node_widgets_blocked_symbol_state = function (self)
 	local hovered_node = self._selected_node or hovered_node_name and self:active_layout_node_by_name(hovered_node_name)
 	local exclusive_group = hovered_node and hovered_node.requirements.exclusive_group
 	local exclusive_group_node_names = exclusive_group and exclusive_group ~= "" and self:_nodes_in_exclusive_group(exclusive_group)
+	local hovered_incompatible_talent = hovered_node and hovered_node.requirements.incompatible_talent
+	local hovered_node_talent = hovered_node and hovered_node.talent
+	local hovered_node_is_incompatible_node = hovered_node_talent and self._incompatible_talents[hovered_node_talent]
 	local node_widgets = self._node_widgets
 
 	for i = 1, #node_widgets do
@@ -1409,6 +1412,37 @@ TalentBuilderView._update_node_widgets_blocked_symbol_state = function (self)
 			is_blocked = always_show or hovering_exclusive_node and true or false
 			draw_blocked_highlight = is_blocked and (hovering_exclusive_node or not always_show)
 			node_widget.style.blocked.material_values.saturation = is_blocked and always_show and not hovering_exclusive_node and 0.6 or 1
+		end
+
+		local node_talent = node.talent
+		local node_incompatible = self._incompatible_talents[node_talent]
+
+		if node_incompatible then
+			local hovered_node_is_incompatible = hovered_incompatible_talent and node.talent == hovered_incompatible_talent
+			local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node_talent)
+			local should_be_blocked = incompatible_node_is_selected or hovered_node_is_incompatible
+
+			if should_be_blocked then
+				is_blocked = true
+			end
+
+			draw_blocked_highlight = is_blocked and hovered_node_is_incompatible
+			node_widget.style.blocked.material_values.saturation = is_blocked and 0.6 or 1
+		end
+
+		local incompatible_talent = node.requirements.incompatible_talent
+
+		if incompatible_talent and incompatible_talent ~= "" then
+			local hovered_node_is_incompatible = hovered_node_is_incompatible_node and node.requirements.incompatible_talent == hovered_node_talent
+			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(incompatible_talent)
+			local should_be_blocked = hovered_node_is_incompatible or incompatible_node_is_selected
+
+			if should_be_blocked then
+				is_blocked = true
+			end
+
+			draw_blocked_highlight = is_blocked and hovered_node_is_incompatible
+			node_widget.style.blocked.material_values.saturation = is_blocked and 0.6 or 1
 		end
 
 		node_widget.content.is_blocked = is_blocked

@@ -4,6 +4,7 @@ local FadeSystem = class("FadeSystem", "ExtensionSystemBase")
 local DEFAULT_MIN_DISTANCE = 0.5
 local DEFAULT_MAX_DISTANCE = 0.7
 local DEFAULT_MAX_HEIGHT_DIFFERENCE = 1
+local DEFAULT_NODE_NAME = "j_spine"
 
 FadeSystem.system_extensions = {
 	"FadeExtension",
@@ -30,7 +31,7 @@ FadeSystem.destroy = function (self)
 end
 
 FadeSystem.on_add_extension = function (self, world, unit, extension_name)
-	local min_distance, max_distance, max_height_difference
+	local min_distance, max_distance, max_height_difference, node_name
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
 	if unit_data_extension then
@@ -41,14 +42,16 @@ FadeSystem.on_add_extension = function (self, world, unit, extension_name)
 			min_distance = fade.min_distance
 			max_distance = fade.max_distance
 			max_height_difference = fade.max_height_difference
+			node_name = fade.node_name
 		end
 	end
 
 	min_distance = min_distance or DEFAULT_MIN_DISTANCE
 	max_distance = max_distance or DEFAULT_MAX_DISTANCE
 	max_height_difference = max_height_difference or DEFAULT_MAX_HEIGHT_DIFFERENCE
+	node_name = node_name or DEFAULT_NODE_NAME
 
-	Fade.register_unit(self._fade_system, unit, min_distance, max_distance, max_height_difference)
+	Fade.register_unit(self._fade_system, unit, min_distance, max_distance, max_height_difference, node_name)
 
 	local extension = {}
 

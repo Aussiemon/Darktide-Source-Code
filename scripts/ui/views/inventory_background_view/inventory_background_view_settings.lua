@@ -36,6 +36,13 @@ local inventory_background_view = {
 		"slot_grenade_ability",
 	},
 	animations_per_archetype = {
+		adamant = {
+			initial_event = "character_customization_idle",
+			events = {
+				"character_customization_crime_select_idle",
+				"character_customization_idle",
+			},
+		},
 		psyker = {
 			initial_event = "character_customization_idle",
 			events = {

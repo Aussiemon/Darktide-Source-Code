@@ -1052,10 +1052,9 @@ steps.armor_types_heavy_armored_loop = {
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
 		local damage_profile = event_data.damage_profile
 		local target_unit = step_data.enemy_unit
-		local target_alive = HEALTH_ALIVE[target_unit]
 		local is_heavy_attack = damage_profile and damage_profile.melee_attack_strength == melee_attack_strengths.heavy
 		local valid_attack_result = _target_damaged_or_died(event_data)
-		local progress_step = target_alive and is_heavy_attack and valid_attack_result
+		local progress_step = is_heavy_attack and valid_attack_result
 
 		if progress_step then
 			step_data.hit_count = step_data.hit_count + 1
@@ -1453,6 +1452,12 @@ steps.incoming_suppression_crouch = {
 		local health_extension = ScriptUnit.extension(scenario_data.enemy, "health_system")
 
 		health_extension:set_invulnerable(true)
+
+		local buff_extension = ScriptUnit.has_extension(scenario_data.enemy, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("tg_minion_unperceivable", t)
+		end
 
 		local suppression_extension = ScriptUnit.extension(scenario_data.enemy, "suppression_system")
 
@@ -2240,6 +2245,128 @@ steps.sniper_tag_loop = {
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		_dissolve_unit(step_data.enemy_unit, t)
+	end,
+}
+steps.adamant_companion_targeting_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.adamant_companion_targeting)
+	end,
+}
+steps.adamant_companion_spawn = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local player_unit = player.player_unit
+		local position, rotation = _get_relative_position_rotation(player_unit, Vector3(0, 10, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
+		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
+
+		companion_spawner_extension:spawn_unit(position, rotation)
+	end,
+}
+steps.adamant_companion_despawn = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local player_unit = player.player_unit
+		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
+
+		companion_spawner_extension:despawn_unit()
+	end,
+}
+steps.adamant_companion_targeting_loop = {
+	events = {
+		"tg_on_attack_execute",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.kill_count = 0
+		step_data.target_kill_count = 3
+		step_data.enemies = {}
+		step_data.enemy_breeds_targeted = {}
+		step_data.enemy_breeds_to_spawn = {
+			{
+				breed_name = "cultist_shocktrooper",
+				relative_position_x = -5,
+			},
+			{
+				breed_name = "chaos_ogryn_bulwark",
+				relative_position_x = 0,
+			},
+			{
+				breed_name = "renegade_sniper",
+				relative_position_x = 5,
+			},
+		}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if step_data.kill_count >= step_data.target_kill_count then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		local enemy_breeds_targeted = step_data.enemy_breeds_targeted
+
+		if not enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			local enemies_to_spawn = {}
+
+			for _, enemy_to_spawn in pairs(step_data.enemy_breeds_to_spawn) do
+				if not enemy_breeds_targeted[enemy_to_spawn.breed_name] then
+					table.insert(enemies_to_spawn, {
+						breed_name = enemy_to_spawn.breed_name,
+						relative_position = Vector3(enemy_to_spawn.relative_position_x, 10, 0),
+						relative_look_direction = -Vector3.forward(),
+					})
+				end
+			end
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, enemies_to_spawn)
+		end
+
+		for enemy_breed, targeted_enemy in pairs(enemy_breeds_targeted) do
+			if HEALTH_ALIVE[targeted_enemy.unit] and not targeted_enemy.disolve_triggered and t >= targeted_enemy.disolve_time then
+				_dissolve_unit(targeted_enemy.unit, t)
+
+				targeted_enemy.disolve_triggered = true
+			end
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		local target_unit = event_data.attacked_unit
+		local enemy_breeds_targeted = step_data.enemy_breeds_targeted
+		local targeted_enemy_breed_name = event_data.breed_or_nil and event_data.breed_or_nil.name
+
+		if event_name == "tg_on_attack_execute" and targeted_enemy_breed_name and not enemy_breeds_targeted[targeted_enemy_breed_name] then
+			step_data.kill_count = step_data.kill_count + 1
+
+			_set_objective_tracker_value("adamant_companion_targeting", step_data.kill_count, true)
+
+			enemy_breeds_targeted[targeted_enemy_breed_name] = {
+				disolve_triggered = false,
+				unit = target_unit,
+				disolve_time = FixedFrame.get_latest_fixed_time() + 3,
+			}
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
 	end,
 }
 steps.dodge_prompt = {
@@ -3111,6 +3238,11 @@ steps.combat_ability_prompt_psyker_protectorate = {
 		_display_info(TrainingGroundsInfoLookup.combat_ability_protectorate)
 	end,
 }
+steps.combat_ability_prompt_adamant_buff_drone = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_adamant)
+	end,
+}
 steps.combat_ability_loop_veteran_ranger = {
 	events = {
 		"tg_on_attack_execute",
@@ -3591,6 +3723,86 @@ steps.combat_ability_loop_psyker_biomancer = {
 steps.combat_ability_biomancer_remove = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+	end,
+}
+steps.combat_ability_loop_adamant_buff_drone = {
+	events = {
+		"tg_on_attack_execute",
+		"tg_adamant_on_buff_drone_deployed",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.kill_count = 0
+		step_data.target_kill_count = 3
+		step_data.enemies = {}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_has_ammo(player)
+
+		if step_data.kill_count >= step_data.target_kill_count then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(4, 16, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(-3, 16, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(-4, 16, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+			})
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		if event_name == "tg_on_attack_execute" and _target_died(event_data) then
+			local player_unit = player.player_unit
+			local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+			if buff_extension and buff_extension:has_buff_using_buff_template("adamant_drone_base_buff") then
+				step_data.kill_count = step_data.kill_count + 1
+
+				_set_objective_tracker_value("combat_ability_adamant_2", step_data.kill_count, true)
+			end
+		elseif event_name == "tg_adamant_on_buff_drone_deployed" then
+			_set_objective_tracker_value("combat_ability_adamant_1", 1, true)
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
 			_dissolve_unit(enemies[i], t)

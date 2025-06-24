@@ -17,7 +17,6 @@ HazardPropSystem.init = function (self, context, system_init_data, ...)
 
 	self._hazard_prop_settings = self:_fetch_settings(system_init_data.mission, context.circumstance_name)
 	self._seed = system_init_data.level_seed
-	self._prop_extensions = {}
 
 	if not self._is_server then
 		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
@@ -78,14 +77,6 @@ HazardPropSystem.rpc_hazard_prop_hot_join = function (self, channel_id, level_un
 	extension:hot_join_sync(state, content)
 end
 
-HazardPropSystem.extensions_ready = function (self, world, unit)
-	if self._is_server then
-		local extension = self._unit_to_extension_map[unit]
-
-		self._prop_extensions[#self._prop_extensions + 1] = extension
-	end
-end
-
 HazardPropSystem.on_gameplay_post_init = function (self, level)
 	self:_populate_hazard_props()
 end
@@ -101,12 +92,10 @@ HazardPropSystem.re_populate_hazard_props = function (self)
 		return
 	end
 
-	local props = self._prop_extensions
-	local num_props = #props
 	local idle_state = HazardPropSettings.hazard_state.idle
 
-	for i = 1, num_props do
-		props[i]:set_current_state(idle_state)
+	for unit, extension in pairs(self._unit_to_extension_map) do
+		extension:set_current_state(idle_state)
 	end
 
 	self:_populate_hazard_props()
@@ -117,8 +106,8 @@ HazardPropSystem._populate_hazard_props = function (self)
 		return
 	end
 
-	local props = self._prop_extensions
-	local num_props = #props
+	local props = self._unit_to_extension_map
+	local num_props = table.size(props)
 
 	if num_props > 0 then
 		local hazard_weight = {}
@@ -163,8 +152,12 @@ HazardPropSystem._populate_hazard_props = function (self)
 
 		self:_shuffle(hazard_pool)
 
-		for i = 1, num_props do
-			props[i]:set_content(hazard_pool[i])
+		local i = 1
+
+		for unit, extension in pairs(props) do
+			extension:set_content(hazard_pool[i])
+
+			i = i + 1
 		end
 	end
 end

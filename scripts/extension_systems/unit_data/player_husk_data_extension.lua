@@ -172,6 +172,12 @@ PlayerHuskDataExtension.breed_name = function (self)
 	return breed.name
 end
 
+PlayerHuskDataExtension.is_companion = function (self)
+	local is_companion = Breed.is_companion(self._breed)
+
+	return is_companion
+end
+
 PlayerHuskDataExtension.archetype = function (self)
 	return self._archetype
 end

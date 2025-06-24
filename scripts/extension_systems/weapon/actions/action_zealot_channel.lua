@@ -3,6 +3,7 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
+local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -195,10 +196,15 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 			end
 		end
 
-		local fx_extension = ScriptUnit.has_extension(in_coherence_unit, "fx_system")
+		local unit_data_extension = ScriptUnit.has_extension(in_coherence_unit, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
 
-		if fx_extension then
-			fx_extension:spawn_exclusive_particle("content/fx/particles/screenspace/screen_buff_bolstering_prayer_proc", Vector3(0, 0, 1))
+		if Breed.is_player(breed) then
+			local fx_extension = ScriptUnit.has_extension(in_coherence_unit, "fx_system")
+
+			if fx_extension then
+				fx_extension:spawn_exclusive_particle("content/fx/particles/screenspace/screen_buff_bolstering_prayer_proc", Vector3(0, 0, 1))
+			end
 		end
 	end
 
@@ -384,10 +390,18 @@ ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, ac
 		local in_coherence_units = self._coherency_extension:in_coherence_units()
 
 		for in_coherence_unit, _ in pairs(in_coherence_units) do
-			local toughness_extension = ScriptUnit.has_extension(in_coherence_unit, "toughness_system")
-			local amount_restored = toughness_extension:get_and_clear_restored_amount()
+			local unit_data_extension = ScriptUnit.has_extension(in_coherence_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
 
-			restored_toughness = restored_toughness + amount_restored
+			if Breed.is_player(breed) then
+				local toughness_extension = ScriptUnit.has_extension(in_coherence_unit, "toughness_system")
+
+				if toughness_extension then
+					local amount_restored = toughness_extension:get_and_clear_restored_amount()
+
+					restored_toughness = restored_toughness + amount_restored
+				end
+			end
 		end
 
 		local source_player = self._player_unit and Managers.state.player_unit_spawn:owner(self._player_unit)

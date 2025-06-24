@@ -1,15 +1,15 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe.lua
 
-local ItemUtils = require("scripts/utilities/items")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
+local Mastery = require("scripts/utilities/mastery")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local MasteryUtils = require("scripts/utilities/mastery")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local WeaponStats = require("scripts/utilities/weapon_stats")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ViewElementCraftingRecipeBlueprints = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_blueprints")
 local ViewElementCraftingRecipeDefinitions = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_definitions")
 
@@ -137,7 +137,7 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 	local layout = {}
 	local active_recipes = {}
 
-	if item and ItemUtils.is_weapon(item.item_type) then
+	if item and Items.is_weapon(item.item_type) then
 		-- Nothing
 	end
 
@@ -150,10 +150,10 @@ ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, 
 	local expertise_data
 
 	if item and mastery_data then
-		local start_expertise = ItemUtils.expertise_level(item, true)
+		local start_expertise = Items.expertise_level(item, true)
 		local start_value = tonumber(start_expertise)
-		local max_available_value = MasteryUtils.get_current_expertise_cap(mastery_data) or 0
-		local max_value = MasteryUtils.get_max_expertise_cap(mastery_data) or 0
+		local max_available_value = Mastery.get_current_expertise_cap(mastery_data) or 0
+		local max_value = Mastery.get_max_expertise_cap(mastery_data) or 0
 
 		expertise_data = {
 			start = start_value,
@@ -351,9 +351,9 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 	local num_stats = table.size(comparing_stats)
 	local start_value = additional_data.expertise_data.start
 	local max_available = math.max(start_value, additional_data.expertise_data.max_available)
-	local start_stats = ItemUtils.preview_stats_change(item, 0, comparing_stats)
-	local end_stats = ItemUtils.preview_stats_change(item, additional_data.expertise_data.current - additional_data.expertise_data.start, comparing_stats)
-	local max_stats = ItemUtils.preview_stats_change(item, additional_data.expertise_data.max - additional_data.expertise_data.start, comparing_stats)
+	local start_stats = Items.preview_stats_change(item, 0, comparing_stats)
+	local end_stats = Items.preview_stats_change(item, additional_data.expertise_data.current - additional_data.expertise_data.start, comparing_stats)
+	local max_stats = Items.preview_stats_change(item, additional_data.expertise_data.max - additional_data.expertise_data.start, comparing_stats)
 	local sort_order = {
 		1,
 		5,

@@ -5,8 +5,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputHoldTracker = require("scripts/managers/input/input_hold_tracker")
 local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
-local ItemUtils = require("scripts/utilities/items")
-local LoadingIcon = require("scripts/ui/loading_icon")
+local Items = require("scripts/utilities/items")
 local LoadingReason = require("scripts/ui/loading_reason")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
@@ -92,7 +91,6 @@ UIManager.init = function (self)
 	Managers.event:register(self, "event_remove_ui_popup", "event_remove_ui_popup")
 	Managers.event:register(self, "event_remove_ui_popups_by_priority", "event_remove_ui_popups_by_priority")
 	Managers.event:register(self, "event_player_profile_updated", "event_player_profile_updated")
-	Managers.event:register(self, "event_player_appearance_updated", "event_player_appearance_updated")
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
 	Managers.event:register(self, "event_cinematic_skip_state", "event_cinematic_skip_state")
 	Managers.event:register(self, "event_portrait_render_change", "event_portrait_render_change")
@@ -149,20 +147,6 @@ UIManager._setup_icon_renderers = function (self)
 		height = cosmetics_icon_size[2],
 		render_target_atlas_generator = self._render_target_atlas_generator,
 	}
-	local appearance_render_settings = {
-		always_render = true,
-		height = 192,
-		level_name = "content/levels/ui/portrait/portrait",
-		shading_environment = "content/shading_environments/ui/portrait",
-		timer_name = "ui",
-		viewport_layer = 900,
-		viewport_name = "appearance_portrait_viewport",
-		viewport_type = "default_with_alpha",
-		width = 128,
-		world_layer = 900,
-		world_name = "appearance_portrait_world",
-		render_target_atlas_generator = self._render_target_atlas_generator,
-	}
 	local weapon_skins_render_settings = {
 		height = 128,
 		level_name = "content/levels/ui/weapon_icon/weapon_icon",
@@ -176,13 +160,26 @@ UIManager._setup_icon_renderers = function (self)
 		world_name = "weapon_skins_icon_world",
 		render_target_atlas_generator = self._render_target_atlas_generator,
 	}
+	local companion_render_settings = {
+		height = 128,
+		level_name = "content/levels/ui/weapon_icon/weapon_icon",
+		shading_environment = "content/shading_environments/ui/weapon_icons",
+		timer_name = "ui",
+		viewport_layer = 900,
+		viewport_name = "weapon_viewport",
+		viewport_type = "default_with_alpha",
+		width = 128,
+		world_layer = 800,
+		world_name = "companion_icon_world",
+		render_target_atlas_generator = self._render_target_atlas_generator,
+	}
 	local back_buffer_render_handlers = {}
 
 	back_buffer_render_handlers.portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings)
-	back_buffer_render_handlers.appearance = self:create_single_icon_renderer("portrait", "appearance", appearance_render_settings)
 	back_buffer_render_handlers.cosmetics = self:create_single_icon_renderer("portrait", "cosmetics", cosmetics_render_settings)
 	back_buffer_render_handlers.weapons = self:create_single_icon_renderer("weapon", "weapons")
 	back_buffer_render_handlers.weapon_skin = self:create_single_icon_renderer("weapon", "weapon_skin", weapon_skins_render_settings)
+	back_buffer_render_handlers.companion = self:create_single_icon_renderer("weapon", "companion", companion_render_settings)
 	back_buffer_render_handlers.icon = self:create_single_icon_renderer("icon", "icon")
 	self._back_buffer_render_handlers = back_buffer_render_handlers
 end
@@ -835,7 +832,6 @@ UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_remove_ui_popup")
 	Managers.event:unregister(self, "event_remove_ui_popups_by_priority")
 	Managers.event:unregister(self, "event_player_profile_updated")
-	Managers.event:unregister(self, "event_player_appearance_updated")
 	Managers.event:unregister(self, "event_on_render_settings_applied")
 	Managers.event:unregister(self, "event_cinematic_skip_state")
 	Managers.event:unregister(self, "event_portrait_render_change")
@@ -1499,30 +1495,6 @@ UIManager.portrait_has_request = function (self, id)
 	return instance:has_request(id)
 end
 
-UIManager.load_appearance_portrait = function (self, profile, cb, render_context, prioritized)
-	local instance = self._back_buffer_render_handlers.appearance
-
-	return instance:load_profile_portrait(profile, cb, render_context, prioritized)
-end
-
-UIManager.unload_appearance_portrait = function (self, id)
-	local instance = self._back_buffer_render_handlers.appearance
-
-	instance:unload_profile_portrait(id)
-end
-
-UIManager.update_player_appearance = function (self, profile, prioritized)
-	local instance = self._back_buffer_render_handlers.appearance
-
-	instance:profile_updated(profile, prioritized)
-end
-
-UIManager.event_player_appearance_updated = function (self, profile)
-	local instance = self._back_buffer_render_handlers.appearance
-
-	instance:profile_updated(profile)
-end
-
 UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize, unload_cb)
 	local item_name = real_item.name
 	local gear_id = real_item.gear_id or item_name
@@ -1544,132 +1516,35 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		return instance:load_weapon_icon(item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_SKIN" then
-		local visual_item = ItemUtils.weapon_skin_preview_item(item)
+		local visual_item = Items.weapon_skin_preview_item(item)
 		local instance = self._back_buffer_render_handlers.weapon_skin
 
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_TRINKET" then
 		local instance = self._back_buffer_render_handlers.weapon_skin
-		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
+		local visual_item = Items.weapon_trinket_preview_item(item)
 
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
+	elseif item_type == "COMPANION_GEAR_FULL" then
+		local instance = self._back_buffer_render_handlers.companion
+
+		return instance:load_weapon_icon(item, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		render_context = render_context or {}
 
 		local player = Managers.player:local_player(1)
+		local profile = dummy_profile or player:profile()
+		local gender_name = profile.gender
+		local breed_name = profile.archetype.breed
+		local archetype = profile.archetype
+		local archetype_name = archetype and archetype.name
 
-		dummy_profile = dummy_profile or player:profile()
+		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
 
-		local item_gender, item_breed, item_archetype
+		local item_slot_name
 
-		if item.genders and not table.is_empty(item.genders) then
-			for i = 1, #item.genders do
-				local gender = item.genders[i]
-
-				if gender == dummy_profile.gender then
-					item_gender = dummy_profile.gender
-
-					break
-				end
-			end
-		else
-			item_gender = dummy_profile.gender
-		end
-
-		if item.breeds and not table.is_empty(item.breeds) then
-			for i = 1, #item.breeds do
-				local breed = item.breeds[i]
-
-				if breed == dummy_profile.archetype.breed then
-					item_breed = dummy_profile.breed
-
-					break
-				end
-			end
-		else
-			item_breed = dummy_profile.breed
-		end
-
-		if item.archetypes and not table.is_empty(item.archetypes) then
-			for i = 1, #item.archetypes do
-				local archetype = item.archetypes[i]
-
-				if archetype == dummy_profile.archetype.name then
-					item_archetype = dummy_profile.archetype
-
-					break
-				end
-			end
-		else
-			item_archetype = dummy_profile.archetype
-		end
-
-		local compatible_profile = item_gender and item_breed and item_archetype
-
-		if compatible_profile then
-			dummy_profile = table.clone_instance(dummy_profile)
-		else
-			local breed = item_breed or item.breeds and item.breeds[1] or "human"
-			local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
-			local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
-
-			dummy_profile = {
-				loadout = {},
-				archetype = archetype,
-				breed = breed,
-				gender = gender,
-			}
-		end
-
-		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
-
-		local gender_name = dummy_profile.gender
-		local archetype = dummy_profile.archetype
-		local breed_name = archetype.breed
-		local first_slot_name = slots[1]
-		local loadout = dummy_profile.loadout
-		local required_slots_to_keep = UISettings.item_preview_required_slots_per_slot[first_slot_name]
-
-		if required_slots_to_keep then
-			for slot_name, slot_item in pairs(loadout) do
-				if not table.contains(required_slots_to_keep, slot_name) then
-					loadout[slot_name] = nil
-				end
-			end
-		end
-
-		for i = 1, #slots do
-			local slot_name = slots[i]
-
-			loadout[slot_name] = item
-		end
-
-		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-		local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[first_slot_name] or required_gender_item_names_per_slot.default)
-
-		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
-
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-
-					dummy_profile.loadout[slot_name] = slot_item
-				end
-			end
-		end
-
-		local slots_to_hide = UISettings.item_preview_hide_slots_per_slot[first_slot_name]
-
-		if slots_to_hide then
-			local hide_slots = table.clone(item.hide_slots or {})
-
-			item.hide_slots = hide_slots
-
-			for i = 1, #slots_to_hide do
-				hide_slots[#hide_slots + 1] = slots_to_hide[i]
-			end
+		if real_item.slots and not table.is_empty(item.slots) then
+			dummy_profile.loadout[item.slots[1]] = real_item
 		end
 
 		local prop_item_key = item.prop_item
@@ -1698,6 +1573,9 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			render_context.icon_camera_rotation_offset = nil
 		end
 
+		render_context.ignore_companion = not render_context.companion_state_machine and (real_item.companion_state_machine == "" or real_item.companion_state_machine == nil)
+		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
+
 		local instance = self._back_buffer_render_handlers.cosmetics
 
 		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize, unload_cb)
@@ -1717,7 +1595,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile = ItemUtils.create_mannequin_profile_by_item(item)
+		dummy_profile = Items.create_mannequin_profile_by_item(item)
 
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
@@ -1755,10 +1633,13 @@ end
 UIManager.unload_item_icon = function (self, id)
 	local weapons_instance = self._back_buffer_render_handlers.weapons
 	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
+	local companion_instance = self._back_buffer_render_handlers.companion
 	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
 	local icon_instance = self._back_buffer_render_handlers.icon
 
-	if weapon_skin_instance:has_request(id) then
+	if companion_instance:has_request(id) then
+		companion_instance:unload_weapon_icon(id)
+	elseif weapon_skin_instance:has_request(id) then
 		weapon_skin_instance:unload_weapon_icon(id)
 	elseif weapons_instance:has_request(id) then
 		weapons_instance:unload_weapon_icon(id)
@@ -1772,10 +1653,13 @@ end
 UIManager.update_item_icon_priority = function (self, id)
 	local weapons_instance = self._back_buffer_render_handlers.weapons
 	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
+	local companion_instance = self._back_buffer_render_handlers.companion
 	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
 	local icon_instance = self._back_buffer_render_handlers.icon
 
-	if weapon_skin_instance:has_request(id) then
+	if companion_instance:has_request(id) then
+		companion_instance:prioritize_request(id)
+	elseif weapon_skin_instance:has_request(id) then
 		weapon_skin_instance:prioritize_request(id)
 	elseif weapons_instance:has_request(id) then
 		weapons_instance:prioritize_request(id)
@@ -1789,10 +1673,13 @@ end
 UIManager.increment_item_icon_load_by_existing_id = function (self, id)
 	local weapons_instance = self._back_buffer_render_handlers.weapons
 	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
+	local companion_instance = self._back_buffer_render_handlers.companion
 	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
 	local icon_instance = self._back_buffer_render_handlers.icon
 
-	if weapon_skin_instance:has_request(id) then
+	if companion_instance:has_request(id) then
+		return companion_instance:increment_icon_request_by_reference_id(id)
+	elseif weapon_skin_instance:has_request(id) then
 		return weapon_skin_instance:increment_icon_request_by_reference_id(id)
 	elseif weapons_instance:has_request(id) then
 		return weapons_instance:increment_icon_request_by_reference_id(id)
@@ -1808,6 +1695,10 @@ UIManager.item_icon_updated = function (self, item)
 
 	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
 		local instance = self._back_buffer_render_handlers.weapons
+
+		instance:weapon_icon_updated(item)
+	elseif item_type == "COMPANION_GEAR_FULL" then
+		local instance = self._back_buffer_render_handlers.companion
 
 		instance:weapon_icon_updated(item)
 	elseif item_type == "WEAPON_TRINKET" or item_type == "WEAPON_SKIN" then

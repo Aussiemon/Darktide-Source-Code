@@ -11,5 +11,6 @@ local function _require_deployable(name)
 end
 
 _require_deployable("medical_crate")
+_require_deployable("shock_mine")
 
 return settings("Deployables", deployables)

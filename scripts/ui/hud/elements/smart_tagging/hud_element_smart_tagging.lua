@@ -264,15 +264,24 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local double_tap = tag_context.is_double_tap
 
 	if target_unit then
-		self:_handle_selected_unit(target_unit)
+		local account_data = Managers.save:account_data()
+		local single_tap = account_data.input_settings.companion_command_tap == "single"
+		local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
 
-		tag_context.enemy_tagged = true
+		if unit_data_extension and (double_tap or single_tap) then
+			self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
+		else
+			self:_handle_selected_unit(target_unit)
+
+			tag_context.enemy_tagged = true
+		end
 	elseif target_marker then
 		self:_handle_selected_marker(target_marker)
 
 		tag_context.marker_handled = true
 	end
 
+	tag_context.double_tapped_unit = double_tap and target_unit
 	tag_context.input_stop_time = t
 	tag_context.input_start_time = nil
 	tag_context.is_double_tap = nil
@@ -332,9 +341,10 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 		local account_data = Managers.save:account_data()
 		local com_wheel_single_tap = account_data.input_settings.com_wheel_single_tap
 		local com_wheel_double_tap = account_data.input_settings.com_wheel_double_tap
-		local allow_single_tap = com_wheel_single_tap ~= "none"
-		local allow_double_tap = com_wheel_double_tap ~= "none"
 		local tag_context = self._tag_context
+		local double_tapped_unit = tag_context.double_tapped_unit
+		local allow_single_tap = com_wheel_single_tap ~= "none"
+		local allow_double_tap = com_wheel_double_tap ~= "none" and not double_tapped_unit
 
 		if wheel_context.simultaneous_press and tag_context.enemy_tagged then
 			-- Nothing

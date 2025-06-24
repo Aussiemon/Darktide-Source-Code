@@ -24,9 +24,7 @@ CorruptorArmSystem.destroy = function (self)
 end
 
 CorruptorArmSystem.on_gameplay_post_init = function (self, level)
-	for unit, extension in pairs(self._unit_to_extension_map) do
-		extension:on_gameplay_post_init(level)
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 CorruptorArmSystem.rpc_set_animation_target = function (self, channel_id, level_unit_id, target_pos, speed_multiplier_type_id, optional_hot_join_animation_pos)

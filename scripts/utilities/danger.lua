@@ -40,11 +40,7 @@ Danger.calculate_danger = function (challenge, resistance)
 end
 
 Danger.required_level_by_mission_type = function (index, mission_type)
-	if not mission_type or not PlayerProgressionUnlocks.mission_difficulty_unlocks[mission_type] then
-		mission_type = "normal"
-	end
-
-	return PlayerProgressionUnlocks.mission_difficulty_unlocks[mission_type][index] or 1
+	return DangerSettings[index] and DangerSettings[index].unlocks_at
 end
 
 Danger.text_bars = function (difficulty_index)

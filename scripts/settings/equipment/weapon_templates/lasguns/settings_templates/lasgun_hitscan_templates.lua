@@ -86,6 +86,19 @@ hitscan_templates.lasgun_p2_m1_beam_charged = {
 			damage_profile = DamageProfileTemplates.lasgun_p2_m1_charge_killshot,
 		},
 	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.05,
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.lasgun_p2_m2_beam_charged = {
 	range = 100,
@@ -94,12 +107,38 @@ hitscan_templates.lasgun_p2_m2_beam_charged = {
 			damage_profile = DamageProfileTemplates.lasgun_p2_m2_charge_killshot,
 		},
 	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.05,
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.lasgun_p2_m3_beam_charged = {
 	range = 100,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.lasgun_p2_m3_charge_killshot,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.05,
+			test = "sphere",
 		},
 	},
 }

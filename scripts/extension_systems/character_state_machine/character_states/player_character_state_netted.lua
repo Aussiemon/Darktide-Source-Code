@@ -34,10 +34,6 @@ PlayerCharacterStateNetted.init = function (self, character_state_init_context, 
 	PlayerCharacterStateNetted.super.init(self, character_state_init_context, ...)
 
 	local unit_data_extension = character_state_init_context.unit_data
-	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
-
-	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
-
 	local disabled_character_state_component = unit_data_extension:write_component("disabled_character_state")
 
 	disabled_character_state_component.is_disabled = false
@@ -119,10 +115,6 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 		Managers.state.pacing:add_tension_type(TENSION_TYPE, unit)
 	end
 
-	if not self._looping_sound_component.is_playing then
-		fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS, SFX_SOURCE)
-	end
-
 	self._entered_state_t = t
 	self._time_disabled = is_server and 0 or nil
 
@@ -188,10 +180,6 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 	if is_server and next_state == "walking" then
 		fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
 	end
-
-	if self._looping_sound_component.is_playing then
-		fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
 end
 
 PlayerCharacterStateNetted.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
@@ -199,6 +187,8 @@ PlayerCharacterStateNetted.fixed_update = function (self, unit, dt, t, next_stat
 
 	local assist = self._assist
 	local assist_done = assist:update(dt, t)
+
+	self._fx_extension:run_looping_sound(LOOPING_SOUND_ALIAS, SFX_SOURCE, nil, fixed_frame)
 
 	if self._is_server then
 		if not assist:in_progress() then

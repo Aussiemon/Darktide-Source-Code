@@ -1,7 +1,12 @@
 ﻿-- chunkname: @scripts/script_flow_nodes/flow_callbacks.lua
 
+local Armor = require("scripts/utilities/attack/armor")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
+local Breed = require("scripts/utilities/breed")
+local BreedQueries = require("scripts/utilities/breed_queries")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
+local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
@@ -259,6 +264,32 @@ local function _minion_update_targeted_in_melee_parameter(unit, wwise_world, sou
 	end
 end
 
+local function _minion_target_unit_armor_type(unit)
+	local game_session = Managers.state.game_session:game_session()
+	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+	if not game_object_id then
+		return nil
+	end
+
+	local target_unit_id = GameSession.game_object_field(game_session, game_object_id, "target_unit_id")
+
+	if target_unit_id == NetworkConstants.invalid_game_object_id then
+		return nil
+	end
+
+	local target_unit = Managers.state.unit_spawner:unit(target_unit_id)
+
+	if not target_unit then
+		return nil
+	end
+
+	local target_breed_or_nil = Breed.unit_breed_or_nil(target_unit)
+	local armor_type = Armor.armor_type(unit, target_breed_or_nil)
+
+	return armor_type
+end
+
 FlowCallbacks.minion_fx = function (params)
 	if DEDICATED_SERVER then
 		flow_return_table.playing_id, flow_return_table.effect_id = nil
@@ -286,7 +317,8 @@ FlowCallbacks.minion_fx = function (params)
 	local particle_name = vfx[name]
 	local switch_name
 	local switch_on_wielded_slot = params.switch_on_wielded_slot
-	local use_switch = switch_on_wielded_slot
+	local switch_on_target_armor = params.switch_on_target_armor
+	local use_switch = switch_on_wielded_slot or switch_on_target_armor
 
 	if use_switch then
 		if switch_on_wielded_slot then
@@ -294,6 +326,10 @@ FlowCallbacks.minion_fx = function (params)
 			local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
 			switch_name = wielded_slot_name
+		elseif switch_on_target_armor then
+			local armor_type = _minion_target_unit_armor_type(unit)
+
+			switch_name = armor_type
 		end
 
 		if switch_name then
@@ -797,6 +833,64 @@ FlowCallbacks.player_footstep = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.companion_footstep = function (params)
+	local unit = params.unit
+	local sound_alias = params.sound_gear_alias
+	local unit_node_name = params.unit_node
+	local unit_node = Unit.node(unit, unit_node_name)
+	local query_from = Unit.world_position(unit, unit_node) + Vector3.up() * 0.5
+	local query_to = query_from - Vector3.up()
+	local world = Managers.world:world("level_world")
+	local wwise_world = World.get_data(world, "wwise_world")
+	local physics_world = World.get_data(world, "physics_world")
+	local hit, material, _, _ = MaterialQuery.query_material(physics_world, query_from, query_to, "companion_footstep")
+
+	if hit then
+		Unit.set_data(unit, "cache_material", material)
+	end
+
+	local owner_player = Managers.state.player_unit_spawn:owner(unit)
+	local player_unit = owner_player and owner_player.player_unit
+
+	if player_unit then
+		local owner_visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
+
+		if owner_visual_loadout_extension then
+			local resolved, event_name, has_husk_events = owner_visual_loadout_extension:resolve_gear_sound(sound_alias, nil)
+
+			if resolved then
+				local source_id = WwiseWorld.make_auto_source(wwise_world, unit, unit_node)
+
+				if not hit then
+					local cached_material = Unit.get_data(unit, "cache_material")
+
+					if cached_material then
+						WwiseWorld.set_switch(wwise_world, "surface_material", cached_material, source_id)
+					end
+				elseif material then
+					WwiseWorld.set_switch(wwise_world, "surface_material", material, source_id)
+				end
+
+				local locomotion_extension = ScriptUnit.has_extension(unit, "locomotion_system")
+				local current_velocity = locomotion_extension and locomotion_extension:current_velocity()
+				local move_speed = current_velocity and Vector3.length(current_velocity) or 0
+
+				WwiseWorld.set_source_parameter(wwise_world, source_id, "foley_speed", move_speed)
+
+				if has_husk_events and owner_player.remote then
+					event_name = event_name .. "_husk"
+				end
+
+				local wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
+
+				flow_return_table.playing_id = wwise_playing_id
+			end
+		end
+	end
+
+	return flow_return_table
+end
+
 FlowCallbacks.player_material_fx = function (params)
 	local unit = params.unit
 	local play_in = params.play_in
@@ -912,6 +1006,21 @@ FlowCallbacks.player_inventory_event = function (params)
 			end
 		end
 	end
+end
+
+FlowCallbacks.companion_inventory_fx = function (params)
+	local unit = params.unit
+	local sound_alias = params.sound_gear_alias
+	local unit_node_name = params.unit_node
+	local profile_properties_wwise_switch = params.profile_properties_wwise_switch
+	local unit_node = Unit.node(unit, unit_node_name)
+	local world = Managers.world:world("level_world")
+	local wwise_world = World.get_data(world, "wwise_world")
+	local source_id = WwiseWorld.make_auto_source(wwise_world, unit, unit_node)
+
+	CompanionVisualLoadout.trigger_gear_sound(unit, source_id, sound_alias, profile_properties_wwise_switch)
+
+	return flow_return_table
 end
 
 FlowCallbacks.disable_lights_event = function (params)
@@ -1269,10 +1378,9 @@ FlowCallbacks.bot_hold_position = function (params)
 end
 
 FlowCallbacks.local_player_archetype_name = function (params)
-	local is_server = Managers.state.game_session:is_server()
 	local local_player = Managers.player:local_player(1)
 
-	if not is_server or not local_player then
+	if not local_player then
 		return
 	end
 
@@ -2188,6 +2296,24 @@ FlowCallbacks.mission_objective_show_timer = function (params)
 	end
 end
 
+local function _teleport_player_companion(player, destination_position)
+	local player_unit = player.player_unit
+	local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+
+	if companion_unit and ALIVE[companion_unit] then
+		local companion_blackboard = BLACKBOARDS[companion_unit]
+
+		if companion_blackboard then
+			local teleport_component = Blackboard.write_component(companion_blackboard, "teleport")
+
+			teleport_component.teleport_position:store(destination_position)
+
+			teleport_component.has_teleport_position = true
+		end
+	end
+end
+
 FlowCallbacks.teleport_team_to_locations = function (params)
 	if not Managers.state.game_session:is_server() then
 		return
@@ -2223,6 +2349,7 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 			local target_rotation = Quaternion.look(look_direction_flat_forward, Vector3.up())
 
 			PlayerMovement.teleport(player, position, target_rotation)
+			_teleport_player_companion(player, position)
 
 			local channel_id = player:channel_id()
 			local pitch = Quaternion.pitch(target_rotation)
@@ -2917,6 +3044,15 @@ FlowCallbacks.set_unit_material_scalar = function (params)
 	local material_scalar = params.scalar or 1
 
 	Unit.set_scalar_for_material(unit, material_name, material_variable_name, material_scalar)
+end
+
+FlowCallbacks.pj_feature_check = function ()
+	local feature = "off"
+
+	feature = "on"
+	flow_return_table[feature] = true
+
+	return flow_return_table
 end
 
 return FlowCallbacks

@@ -2,15 +2,15 @@
 
 local player_progression_unlocks = {
 	barber = 1,
-	contracts = 11,
-	cosmetics_vendor = 3,
-	crafting = 4,
-	credits_vendor = 2,
+	contracts = "requisitorium",
+	cosmetics_vendor = "commissary",
+	crafting = "omnissiah",
+	credits_vendor = "armoury",
 	gadget_slot_1 = 8,
 	gadget_slot_2 = 16,
 	gadget_slot_3 = 24,
 	havoc_missions = 30,
-	horde_mode = 13,
+	horde_progression = "hordes",
 	pot_contracts = 11,
 	pot_crafting = 4,
 	pot_gadgets = 8,
@@ -22,12 +22,6 @@ local player_progression_unlocks = {
 	pot_story_traitor_second = 14,
 	premium_store = 1,
 	shooting_range = 2,
-	talent_1 = 5,
-	talent_2 = 10,
-	talent_3 = 15,
-	talent_4 = 20,
-	talent_5 = 25,
-	talent_6 = 30,
 	mission_difficulty_unlocks = {
 		normal = {
 			1,

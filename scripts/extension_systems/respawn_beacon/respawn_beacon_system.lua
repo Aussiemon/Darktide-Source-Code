@@ -45,45 +45,42 @@ RespawnBeaconSystem._create_respawn_beacons = function (self)
 
 			if target_navmesh_position then
 				local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
+				local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
+				local end_index = start_index + 1
+				local _, distance, percentage, _, segment_index = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+				local entry = {
+					unit = unit,
+					distance = distance,
+					percentage = percentage,
+					segment_index = segment_index,
+				}
 
-				if group_index then
-					local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-					local end_index = start_index + 1
-					local _, distance, percentage, _, segment_index = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
-					local entry = {
-						unit = unit,
-						distance = distance,
-						percentage = percentage,
-						segment_index = segment_index,
-					}
+				self._beacon_main_path_distance_lookup[unit] = distance
 
-					self._beacon_main_path_distance_lookup[unit] = distance
+				local sorted_beacons_entry = {
+					unit = unit,
+					distance = distance,
+					position = position,
+				}
 
-					local sorted_beacons_entry = {
-						unit = unit,
-						distance = distance,
-						position = position,
-					}
+				sorted_beacons[#sorted_beacons + 1] = sorted_beacons_entry
 
-					sorted_beacons[#sorted_beacons + 1] = sorted_beacons_entry
+				local num_beacons = #beacon_main_path_data
 
-					local num_beacons = #beacon_main_path_data
+				if num_beacons > 0 then
+					for i = 1, num_beacons do
+						local data = beacon_main_path_data[i]
 
-					if num_beacons > 0 then
-						for i = 1, num_beacons do
-							local data = beacon_main_path_data[i]
+						if distance < data.distance then
+							table.insert(beacon_main_path_data, i, entry)
 
-							if distance < data.distance then
-								table.insert(beacon_main_path_data, i, entry)
-
-								break
-							elseif i == num_beacons then
-								beacon_main_path_data[i + 1] = entry
-							end
+							break
+						elseif i == num_beacons then
+							beacon_main_path_data[i + 1] = entry
 						end
-					else
-						beacon_main_path_data[1] = entry
 					end
+				else
+					beacon_main_path_data[1] = entry
 				end
 			end
 		end

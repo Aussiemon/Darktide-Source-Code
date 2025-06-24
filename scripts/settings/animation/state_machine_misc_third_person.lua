@@ -66,5 +66,14 @@ state_machine_settings["content/characters/player/human/third_person/animations/
 state_machine_settings["content/characters/player/ogryn/third_person/animations/hub_ogryn"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/third_person/animations/hub_adamant"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/third_person/animations/shock_mine"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/third_person/animations/adamant_drone"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

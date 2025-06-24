@@ -2202,7 +2202,7 @@ templates.veteran_share_toughness_gained = {
 	proc_func = function (params, template_data, template_context)
 		local reason = params.reason
 
-		if reason == "squad_leader_share_toughness" then
+		if reason == "shared" then
 			return
 		end
 
@@ -2213,7 +2213,7 @@ templates.veteran_share_toughness_gained = {
 
 		for unit, _ in pairs(units_in_coherency) do
 			if unit ~= template_context.unit then
-				Toughness.replenish_flat(unit, toughness_to_restore, false, "squad_leader_share_toughness")
+				Toughness.replenish_flat(unit, toughness_to_restore, false, "shared")
 			end
 		end
 	end,

@@ -278,6 +278,16 @@ EndView.update = function (self, dt, t, input_service)
 		summary_view_context.session_report = character_session_report
 
 		Managers.ui:open_view(SUMMARY_VIEW_NAME, nil, nil, nil, nil, summary_view_context)
+
+		if context.round_won then
+			local debrief_circumstance = session_report.eor.mission.appliedEvent
+			local debrief_video = EndViewSettings.debrief_videos[debrief_circumstance]
+
+			if debrief_video then
+				Managers.video:queue_video(debrief_video)
+			end
+		end
+
 		self:_register_event("event_state_game_score_continue")
 
 		self._show_player_view_time = nil
@@ -785,8 +795,14 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
 
 	local profile_spawner = slot.profile_spawner
+	local companion_data = {
+		state_machine = end_of_round_pose_item.companion_state_machine ~= nil and end_of_round_pose_item.companion_state_machine ~= "" and end_of_round_pose_item.companion_state_machine or nil,
+		animation_event = end_of_round_pose_item.companion_animation_event ~= nil and end_of_round_pose_item.companion_animation_event ~= "" and end_of_round_pose_item.companion_animation_event or nil,
+	}
+	local companion_visible = not not companion_data.state_machine
 
-	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event)
+	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event, nil, nil, nil, nil, companion_data)
+	profile_spawner:toggle_companion(companion_visible)
 
 	if item_wield_slot then
 		profile_spawner:wield_slot(item_wield_slot)

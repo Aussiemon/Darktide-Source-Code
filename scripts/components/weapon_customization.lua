@@ -154,12 +154,12 @@ WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, s
 			local key = sorted_attachments[i]
 			local attachment_slot_data = attachments[key]
 			local mission_template
-			local attachments_by_unit = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, item_data.name, key, false, false, false, mission_template)
-			local all_attachment_units = attachments_by_unit[unit]
-			local num_attachments = #all_attachment_units
+			local attachment_units_by_unit = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, item_data.name, key, false, false, false, mission_template)
+			local attachment_units = attachment_units_by_unit[unit]
+			local num_attachments = #attachment_units
 
-			for j = 1, num_attachments do
-				Unit.set_data(unit, "attached_items", num_attached_units + (num_attachments - j + 1), all_attachment_units[j])
+			for jj = 1, num_attachments do
+				Unit.set_data(unit, "attached_items", num_attached_units + (num_attachments - jj + 1), attachment_units[jj])
 			end
 
 			num_attached_units = num_attached_units + num_attachments

@@ -119,7 +119,7 @@ ScriptedScenarioSystem.enabled = function (self)
 end
 
 ScriptedScenarioSystem.update = function (self, context, dt, t)
-	ScriptedScenarioSystem.super.fixed_update(self, context, dt, t)
+	ScriptedScenarioSystem.super.update(self, context, dt, t)
 
 	if not self._enabled then
 		return
@@ -152,8 +152,8 @@ ScriptedScenarioSystem._check_should_disable = function (self)
 	self:set_enabled(false)
 end
 
-ScriptedScenarioSystem.fixed_update = function (self, context, dt, t)
-	ScriptedScenarioSystem.super.fixed_update(self, context, dt, t)
+ScriptedScenarioSystem.fixed_update = function (self, context, dt, t, frame)
+	ScriptedScenarioSystem.super.fixed_update(self, context, dt, t, frame)
 
 	if not self._enabled then
 		return

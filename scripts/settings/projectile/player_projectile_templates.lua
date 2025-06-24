@@ -1,10 +1,12 @@
 ﻿-- chunkname: @scripts/settings/projectile/player_projectile_templates.lua
 
+local AimPlacement = require("scripts/extension_systems/weapon/actions/utilities/aim_placement")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local DeployableLocomotion = require("scripts/extension_systems/locomotion/utilities/deployable_locomotion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
@@ -15,6 +17,7 @@ local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local projectile_types = ProjectileSettings.projectile_types
 local special_rules = SpecialRulesSettings.special_rules
+local adamant_talent_settings = TalentSettings.adamant
 local projectile_templates = {}
 
 projectile_templates.ogryn_gauntlet_grenade = {
@@ -692,6 +695,177 @@ projectile_templates.luggable = {
 		impact = {
 			damage_profile = DamageProfileTemplates.luggable_battery,
 		},
+	},
+}
+projectile_templates.adamant_grenade = {
+	item_name = "content/items/weapons/player/grenade_adamant",
+	locomotion_template = ProjectileLocomotionTemplates.adamant_grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 2,
+			impact_fuse_time = 0,
+			impact_triggered = true,
+			explosion_template = ExplosionTemplates.adamant_grenade,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.adamant_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+}
+projectile_templates.shock_mine = {
+	item_name = "content/items/weapons/player/mine_shock",
+	unit_template_name = "item_deployable_projectile",
+	uses_script_components = true,
+	locomotion_template = ProjectileLocomotionTemplates.shock_mine,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = adamant_talent_settings.blitz_ability.shock_mine.duration,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.frag_grenade_impact,
+			damage_type = damage_types.shock_mine,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+	deployable = {
+		relation_init_data = {
+			enemy = {
+				proximity_radius = 3,
+				stickiness_limit = 5,
+				stickiness_time = 1,
+				logic = {
+					{
+						class_name = "ProximityShockMine",
+						use_as_job = true,
+						init_data = {
+							arming_time = 1,
+							buff_to_add = "shock_mine_interval",
+							life_time = 150,
+							num_targets_per_trigger = 3,
+							trigger_interval = 0.2,
+						},
+					},
+				},
+			},
+		},
+		deploy_func = function (world, physics_world, unit)
+			local job_class = ScriptUnit.extension(unit, "proximity_system")
+
+			Managers.state.unit_job:register_job(unit, job_class, true)
+
+			local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
+
+			if can_place and placed_on_unit then
+				DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+			end
+		end,
+	},
+}
+projectile_templates.area_buff_drone = {
+	item_name = "content/items/weapons/player/drone_area_buff",
+	unit_template_name = "item_deployable_projectile",
+	uses_script_components = true,
+	locomotion_template = ProjectileLocomotionTemplates.area_buff_drone,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 10,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.frag_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+	deployable = {
+		relation_init_data = {
+			allied = {
+				stickiness_limit = 5,
+				stickiness_time = 1,
+				proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				logic = {
+					{
+						class_name = "ProximityAreaBuffDrone",
+						use_as_job = false,
+						init_data = {
+							buff_to_add = "adamant_drone_base_buff",
+							buff_to_add_special_rule = "adamant_drone_talent_buff",
+							improved_buff_to_add = "adamant_drone_improved_buff",
+							life_time = adamant_talent_settings.blitz_ability.drone.duration,
+							special_rule = special_rules.adamant_drone_buff_talent,
+						},
+					},
+				},
+			},
+			enemy = {
+				stickiness_limit = 5,
+				stickiness_time = 1,
+				proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				logic = {
+					{
+						class_name = "ProximityAreaBuffDrone",
+						use_as_job = true,
+						init_data = {
+							buff_to_add = "adamant_drone_enemy_debuff",
+							buff_to_add_special_rule = "adamant_drone_talent_debuff",
+							life_time = adamant_talent_settings.blitz_ability.drone.duration,
+							special_rule = special_rules.adamant_drone_debuff_talent,
+						},
+					},
+				},
+			},
+		},
+		deploy_func = function (world, physics_world, unit)
+			local job_class = ScriptUnit.extension(unit, "proximity_system")
+
+			Managers.state.unit_job:register_job(unit, job_class, true)
+
+			local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
+
+			if can_place and placed_on_unit then
+				DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+			end
+		end,
 	},
 }
 

@@ -313,7 +313,7 @@ ContractsView._fetch_task_list = function (self)
 
 	local player = self:_player()
 	local character_id = player:character_id()
-	local promise = self._backend_interfaces.contracts:get_current_contract(character_id)
+	local promise = self._backend_interfaces.contracts:get_current_contract(character_id, nil, true)
 
 	promise:next(function (data)
 		if not self._destroyed then
@@ -322,6 +322,10 @@ ContractsView._fetch_task_list = function (self)
 		end
 
 		self._task_grid:set_loading_state(false)
+	end):catch(function (error)
+		if error.code ~= 404 then
+			Log.warning("ContractsView", "Failed to fetch contracts with error: %s", table.tostring(error, 5))
+		end
 	end)
 end
 

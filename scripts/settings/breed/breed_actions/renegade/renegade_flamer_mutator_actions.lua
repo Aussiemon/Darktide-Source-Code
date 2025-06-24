@@ -152,7 +152,28 @@ local action_data = {
 			jump_up_fence_5m = 0.2,
 		},
 	},
-	disable = {},
+	disable = {
+		disable_anims = {
+			pounced = {
+				fwd = {
+					"dog_leap_pinned",
+				},
+				bwd = {
+					"dog_leap_pinned",
+				},
+				left = {
+					"dog_leap_pinned",
+				},
+				right = {
+					"dog_leap_pinned",
+				},
+			},
+		},
+		stand_anim = {
+			duration = 4,
+			name = "dog_leap_pinned_stand",
+		},
+	},
 	jump_across = {
 		rotation_duration = 0.1,
 		stagger_immune = true,
@@ -326,7 +347,7 @@ local action_data = {
 			left = "aim_turn_left",
 			right = "aim_turn_right",
 		},
-		effect_template = EffectTemplates.renegade_flamer_mutator,
+		effect_template = EffectTemplates.renegade_flamer_mutator_throw,
 		inventory_slot = RenegadeFlamerSettings.inventory_slot,
 		fx_source_name = RenegadeFlamerSettings.fx_source_name,
 		range = RenegadeFlamerSettings.range,

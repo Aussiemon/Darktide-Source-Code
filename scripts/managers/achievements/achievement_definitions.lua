@@ -194,39 +194,37 @@ do
 		end
 	end
 
-	do
-		local category_name = "veteran_2"
-		local category_progression = "veteran_progression"
-		local category_abilites = "veteran_abilites"
-
-		old_numeric_target_family("rank_veteran_2_{index:%d}", {
-			description = "loc_achievement_rank_veteran_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0031",
-			stat_name = "max_rank_veteran",
+	local function _generate_base_archetype_penances(archetype_name, archetype_category_name, category_progression, category_abilites, achievement_icons, legacy_group_class_targets, group_class_targets)
+		tiered_target_family(string.format("rank_%s_2", archetype_name) .. "_{index:%d}", {
 			type = AchievementTypesLookup.increasing_stat,
+			title = string.format("loc_achievement_rank_%s_2_x_name", archetype_name),
+			description = string.format("loc_achievement_rank_%s_2_x_description", archetype_name),
+			icon = achievement_icons.rank,
+			stat_name = string.format("max_rank_%s", archetype_name),
 			category = category_progression,
 			flags = {},
 		}, rank_targets)
-		old_numeric_target_family("missions_veteran_2_{index:%d}", {
-			description = "loc_achievement_missions_veteran_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0032",
-			stat_name = "missions_veteran_2",
+		tiered_target_family(string.format("missions_%s_2", archetype_name) .. "_{index:%d}", {
 			type = AchievementTypesLookup.increasing_stat,
+			title = string.format("loc_achievement_missions_%s_2_x_name", archetype_name),
+			description = string.format("loc_achievement_missions_%s_2_x_description", archetype_name),
+			icon = achievement_icons.missions,
+			stat_name = string.format("missions_%s_2", archetype_name),
 			category = category_progression,
 			flags = {},
 		}, generic_mission_targets)
 		family({
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0033",
 			type = AchievementTypesLookup.multi_stat,
+			icon = achievement_icons.missions_objective,
 			category = category_progression,
 			target = #adventure_mission_types,
 			flags = {},
 		}, {
-			description = "loc_achievement_missions_veteran_2_objective_{index:%d}_description",
-			id = "missions_veteran_2_objective_{index:%d}",
-			title = "loc_achievement_missions_veteran_2_objective_{index:%d}_name",
-			stats = _generate_mission_difficulties("veteran"),
-			stats_sorting = _generate_mission_difficulties_sorting("veteran"),
+			id = string.format("missions_%s_2_objective", archetype_name) .. "_{index:%d}",
+			title = string.format("loc_achievement_missions_%s_2_objective", archetype_name) .. "_{index:%d}_name",
+			description = string.format("loc_achievement_missions_%s_2_objective", archetype_name) .. "_{index:%d}_description",
+			stats = _generate_mission_difficulties(archetype_name),
+			stats_sorting = _generate_mission_difficulties_sorting(archetype_name),
 		}, {
 			{
 				difficulty = 1,
@@ -239,16 +237,36 @@ do
 			},
 		})
 		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_02",
 			target = 1,
+			title = "loc_achievement_complete_missions_easy_difficulty_x_name",
 			type = AchievementTypesLookup.increasing_stat,
+			icon = achievement_icons.mission_easy_difficulty,
 			category = category_progression,
 			flags = {},
 		}, {
-			description = "loc_missions_veteran_2_easy_difficulty_{index:%d}_description",
-			id = "missions_veteran_2_easy_difficulty_{index:%d}",
-			stat_name = "missions_veteran_2_difficulty_{index:%d}",
-			title = "loc_missions_veteran_2_easy_difficulty_{index:%d}_name",
+			description = "loc_achievement_complete_missions_difficulty_{index:%d}_description",
+			id = string.format("missions_%s_2_easy_difficulty", archetype_name) .. "_{index:%d}",
+			stat_name = string.format("missions_%s_2_difficulty", archetype_name) .. "_{index:%d}",
+			loc_title_variables = _generate_tier_localization(),
+		}, {
+			{},
+			{},
+			{},
+			{},
+			{},
+		})
+		family({
+			target = 5,
+			title = "loc_achievement_complete_missions_medium_difficulty_x_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = achievement_icons.mission_medium_difficulty,
+			category = category_progression,
+			flags = {},
+		}, {
+			description = "loc_achievement_complete_missions_difficulty_{index:%d}_description",
+			id = string.format("missions_%s_2_medium_difficulty", archetype_name) .. "_{index:%d}",
+			stat_name = string.format("missions_%s_2_difficulty", archetype_name) .. "_{index:%d}",
+			loc_title_variables = _generate_tier_localization(),
 		}, {
 			{},
 			{},
@@ -257,58 +275,119 @@ do
 			{},
 		})
 
-		AchievementDefinitions.group_veteran_2_rank_1_difficulty_1 = {
-			description = "loc_group_veteran_2_rank_1_difficulty_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10",
-			target = 2,
-			title = "loc_group_veteran_2_rank_1_difficulty_1_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_veteran_2_1",
-				"missions_veteran_2_easy_difficulty_1",
-			}),
-			category = category_progression,
-			flags = {},
+		local rank_and_difficulties = {
+			{
+				1,
+				1,
+			},
+			{
+				2,
+				2,
+			},
+			{
+				4,
+				3,
+			},
+			{
+				5,
+				4,
+			},
 		}
-		AchievementDefinitions.group_veteran_2_rank_2_difficulty_2 = {
-			description = "loc_group_veteran_2_rank_2_difficulty_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10",
-			target = 2,
-			title = "loc_group_veteran_2_rank_2_difficulty_2_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_veteran_2_2",
-				"missions_veteran_2_easy_difficulty_2",
-			}),
-			category = category_progression,
-			flags = {},
+
+		for index, rank_and_difficulty in ipairs(rank_and_difficulties) do
+			local rank = rank_and_difficulty[1]
+			local difficulty = rank_and_difficulty[2]
+			local group_achievement_name = string.format("group_%s_2_rank_%d_difficulty_%d", archetype_name, rank, difficulty)
+
+			AchievementDefinitions[group_achievement_name] = {
+				target = 2,
+				type = AchievementTypesLookup.meta,
+				title = string.format("loc_achievement_group_rank_%d_difficulty_%d_name", rank, difficulty),
+				description = string.format("loc_achievement_group_%s_2_description", archetype_name),
+				icon = index > 2 and achievement_icons.group_rank_and_difficulty_b or achievement_icons.group_rank_and_difficulty,
+				achievements = table.set({
+					string.format("rank_%s_2_%d", archetype_name, rank),
+					string.format("missions_%s_2_easy_difficulty_%d", archetype_name, difficulty),
+				}),
+				category = category_progression,
+				flags = {},
+			}
+		end
+
+		if legacy_group_class_targets then
+			family({
+				title = "loc_achievement_group_class_challenges_x_name",
+				type = AchievementTypesLookup.meta,
+				description = string.format("loc_achievement_group_%s_2_description", archetype_name),
+				icon = achievement_icons.class_group_legacy,
+				category = category_progression,
+				flags = {},
+			}, {
+				id = string.format("group_class_%s_2", archetype_name) .. "_{index:%d}",
+				target = function (self, config)
+					return #config
+				end,
+				achievements = function (self, config)
+					return table.set(config)
+				end,
+				loc_title_variables = _generate_tier_localization(),
+			}, legacy_group_class_targets)
+		end
+
+		if group_class_targets then
+			family({
+				type = AchievementTypesLookup.meta,
+				description = string.format("loc_achievement_group_%s_2_description", archetype_name),
+				icon = achievement_icons.class_group,
+				category = category_progression,
+				flags = {},
+			}, {
+				id = string.format("group_class_%s_2", archetype_name) .. "_{index:%d}_rework",
+				title = string.format("loc_achievement_group_class_%s_2", archetype_name) .. "_{index:%d}_name",
+				target = function (self, config)
+					return #config
+				end,
+				achievements = function (self, config)
+					return table.set(config)
+				end,
+			}, group_class_targets)
+		end
+	end
+
+	do
+		local category_name = "veteran_2"
+		local category_progression = "veteran_progression"
+		local category_abilites = "veteran_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_09",
+			missions = "content/ui/textures/icons/achievements/achievement_icon_0012",
+			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0013",
+			rank = "content/ui/textures/icons/achievements/achievement_icon_0011",
 		}
-		AchievementDefinitions.group_veteran_2_rank_4_difficulty_3 = {
-			description = "loc_group_veteran_2_rank_4_difficulty_3_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11",
-			target = 2,
-			title = "loc_group_veteran_2_rank_4_difficulty_3_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_veteran_2_4",
-				"missions_veteran_2_easy_difficulty_3",
-			}),
-			category = category_progression,
-			flags = {},
+		local legacy_group_class_targets = {
+			{
+				"veteran_2_unbounced_grenade_kills",
+				"veteran_2_weakspot_hits_during_volley_fire_alternate_fire",
+			},
+			{
+				"group_class_veteran_2_1",
+				"veteran_2_no_melee_damage_taken",
+				"veteran_2_kills_with_last_round_in_mag",
+			},
+			{
+				"group_class_veteran_2_2",
+				"veteran_2_no_missed_shots_empty_ammo",
+				"veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire",
+			},
 		}
-		AchievementDefinitions.group_veteran_2_rank_5_difficulty_4 = {
-			description = "loc_group_veteran_2_rank_5_difficulty_4_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11",
-			target = 2,
-			title = "loc_group_veteran_2_rank_5_difficulty_4_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_veteran_2_5",
-				"missions_veteran_2_easy_difficulty_4",
-			}),
-			category = category_progression,
-			flags = {},
-		}
+
+		_generate_base_archetype_penances("veteran", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
+
 		AchievementDefinitions.veteran_2_easy_1 = {
 			description = "loc_achievement_veteran_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_03",
@@ -515,117 +594,36 @@ do
 		local category_name = "zealot_2"
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_09",
+			missions = "content/ui/textures/icons/achievements/achievement_icon_0032",
+			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0033",
+			rank = "content/ui/textures/icons/achievements/achievement_icon_0031",
+		}
+		local legacy_group_class_targets = {
+			{
+				"zelot_2_kill_mutant_charger_with_melee_while_dashing",
+				"zealot_2_stagger_sniper_with_grenade_distance",
+			},
+			{
+				"group_class_zealot_2_1",
+				"zealot_2_kills_of_shocked_enemies_last_15",
+				"zealot_2_not_use_ranged_attacks",
+			},
+			{
+				"group_class_zealot_2_2",
+				"zealot_2_health_on_last_segment_enough_during_mission",
+				"zealot_2_healed_up_after_resisting_death",
+			},
+		}
 
-		old_numeric_target_family("rank_zealot_2_{index:%d}", {
-			description = "loc_achievement_rank_zealot_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0031",
-			stat_name = "max_rank_zealot",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, rank_targets)
-		old_numeric_target_family("missions_zealot_2_{index:%d}", {
-			description = "loc_achievement_missions_zealot_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0032",
-			stat_name = "missions_zealot_2",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, generic_mission_targets)
-		family({
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0033",
-			type = AchievementTypesLookup.multi_stat,
-			category = category_progression,
-			target = #adventure_mission_types,
-			flags = {},
-		}, {
-			description = "loc_achievement_missions_zealot_2_objective_{index:%d}_description",
-			id = "missions_zealot_2_objective_{index:%d}",
-			title = "loc_achievement_missions_zealot_2_objective_{index:%d}_name",
-			stats = _generate_mission_difficulties("zealot"),
-			stats_sorting = _generate_mission_difficulties_sorting("zealot"),
-		}, {
-			{
-				difficulty = 1,
-			},
-			{
-				difficulty = 3,
-			},
-			{
-				difficulty = 4,
-			},
-		})
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_02",
-			target = 1,
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, {
-			description = "loc_missions_zealot_2_easy_difficulty_{index:%d}_description",
-			id = "missions_zealot_2_easy_difficulty_{index:%d}",
-			stat_name = "missions_zealot_2_difficulty_{index:%d}",
-			title = "loc_missions_zealot_2_easy_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
+		_generate_base_archetype_penances("zealot", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.group_zealot_2_rank_1_difficulty_1 = {
-			description = "loc_group_zealot_2_rank_1_difficulty_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10",
-			target = 2,
-			title = "loc_group_zealot_2_rank_1_difficulty_1_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_zealot_2_1",
-				"missions_zealot_2_easy_difficulty_1",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_zealot_2_rank_2_difficulty_2 = {
-			description = "loc_group_zealot_2_rank_2_difficulty_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10",
-			target = 2,
-			title = "loc_group_zealot_2_rank_2_difficulty_2_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_zealot_2_2",
-				"missions_zealot_2_easy_difficulty_2",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_zealot_2_rank_4_difficulty_3 = {
-			description = "loc_group_zealot_2_rank_4_difficulty_3_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11",
-			target = 2,
-			title = "loc_group_zealot_2_rank_4_difficulty_3_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_zealot_2_4",
-				"missions_zealot_2_easy_difficulty_3",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_zealot_2_rank_5_difficulty_4 = {
-			description = "loc_group_zealot_2_rank_5_difficulty_4_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11",
-			target = 2,
-			title = "loc_group_zealot_2_rank_5_difficulty_4_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_zealot_2_5",
-				"missions_zealot_2_easy_difficulty_4",
-			}),
-			category = category_progression,
-			flags = {},
-		}
 		AchievementDefinitions.zealot_2_easy_1 = {
 			description = "loc_achievement_zealot_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_03",
@@ -826,117 +824,36 @@ do
 		local category_name = "psyker_2"
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_09",
+			missions = "content/ui/textures/icons/achievements/achievement_icon_0022",
+			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0023",
+			rank = "content/ui/textures/icons/achievements/achievement_icon_0021",
+		}
+		local legacy_group_class_targets = {
+			{
+				"psyker_2_edge_kills_last_2_sec",
+				"psyker_2_smite_hound_mid_leap",
+			},
+			{
+				"group_class_psyker_2_1",
+				"psyker_2_perils_of_the_warp_elite_kills",
+				"psyker_2_stay_at_max_souls_for_duration",
+			},
+			{
+				"group_class_psyker_2_2",
+				"psyker_2_elite_or_special_kills_with_smite_last_10_sec",
+				"psyker_2_kill_boss_solo_with_smite",
+			},
+		}
 
-		old_numeric_target_family("rank_psyker_2_{index:%d}", {
-			description = "loc_achievement_rank_psyker_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0021",
-			stat_name = "max_rank_psyker",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, rank_targets)
-		old_numeric_target_family("missions_psyker_2_{index:%d}", {
-			description = "loc_achievement_missions_psyker_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0022",
-			stat_name = "missions_psyker_2",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, generic_mission_targets)
-		family({
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0023",
-			type = AchievementTypesLookup.multi_stat,
-			category = category_progression,
-			target = #adventure_mission_types,
-			flags = {},
-		}, {
-			description = "loc_achievement_missions_psyker_2_objective_{index:%d}_description",
-			id = "missions_psyker_2_objective_{index:%d}",
-			title = "loc_achievement_missions_psyker_2_objective_{index:%d}_name",
-			stats = _generate_mission_difficulties("psyker"),
-			stats_sorting = _generate_mission_difficulties_sorting("psyker"),
-		}, {
-			{
-				difficulty = 1,
-			},
-			{
-				difficulty = 3,
-			},
-			{
-				difficulty = 4,
-			},
-		})
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_02",
-			target = 1,
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, {
-			description = "loc_missions_psyker_2_easy_difficulty_{index:%d}_description",
-			id = "missions_psyker_2_easy_difficulty_{index:%d}",
-			stat_name = "missions_psyker_2_difficulty_{index:%d}",
-			title = "loc_missions_psyker_2_easy_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
+		_generate_base_archetype_penances("psyker", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.group_psyker_2_rank_1_difficulty_1 = {
-			description = "loc_group_psyker_2_rank_1_difficulty_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10",
-			target = 2,
-			title = "loc_group_psyker_2_rank_1_difficulty_1_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_psyker_2_1",
-				"missions_psyker_2_easy_difficulty_1",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_psyker_2_rank_2_difficulty_2 = {
-			description = "loc_group_psyker_2_rank_2_difficulty_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10",
-			target = 2,
-			title = "loc_group_psyker_2_rank_2_difficulty_2_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_psyker_2_2",
-				"missions_psyker_2_easy_difficulty_2",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_psyker_2_rank_4_difficulty_3 = {
-			description = "loc_group_psyker_2_rank_4_difficulty_3_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11",
-			target = 2,
-			title = "loc_group_psyker_2_rank_4_difficulty_3_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_psyker_2_4",
-				"missions_psyker_2_easy_difficulty_3",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_psyker_2_rank_5_difficulty_4 = {
-			description = "loc_group_psyker_2_rank_5_difficulty_4_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11",
-			target = 2,
-			title = "loc_group_psyker_2_rank_5_difficulty_4_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_psyker_2_5",
-				"missions_psyker_2_easy_difficulty_4",
-			}),
-			category = category_progression,
-			flags = {},
-		}
 		AchievementDefinitions.psyker_2_easy_1 = {
 			description = "loc_achievement_psyker_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_03",
@@ -1134,117 +1051,36 @@ do
 		local category_name = "ogryn_2"
 		local category_progression = "ogryn_progression"
 		local category_abilites = "ogryn_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_09",
+			missions = "content/ui/textures/icons/achievements/achievement_icon_0002",
+			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0003",
+			rank = "content/ui/textures/icons/achievements/achievement_icon_0001",
+		}
+		local legacy_group_class_targets = {
+			{
+				"ogryn_2_killed_corruptor_with_grenade_impact",
+				"ogryn_2_bull_rushed_charging_ogryn",
+			},
+			{
+				"group_class_ogryn_2_1",
+				"ogryn_2_bull_rushed_100_enemies",
+				"ogryn_2_win_with_coherency_all_alive_units",
+			},
+			{
+				"group_class_ogryn_2_2",
+				"ogryn_2_bull_rushed_70_within_25_seconds",
+				"ogryn_2_bull_rushed_4_ogryns",
+			},
+		}
 
-		old_numeric_target_family("rank_ogryn_2_{index:%d}", {
-			description = "loc_achievement_rank_ogryn_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0001",
-			stat_name = "max_rank_ogryn",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, rank_targets)
-		old_numeric_target_family("missions_ogryn_2_{index:%d}", {
-			description = "loc_achievement_missions_ogryn_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0002",
-			stat_name = "missions_ogryn_2",
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, generic_mission_targets)
-		family({
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0003",
-			type = AchievementTypesLookup.multi_stat,
-			category = category_progression,
-			target = #adventure_mission_types,
-			flags = {},
-		}, {
-			description = "loc_achievement_missions_ogryn_2_objective_{index:%d}_description",
-			id = "missions_ogryn_2_objective_{index:%d}",
-			title = "loc_achievement_missions_ogryn_2_objective_{index:%d}_name",
-			stats = _generate_mission_difficulties("ogryn"),
-			stats_sorting = _generate_mission_difficulties_sorting("ogryn"),
-		}, {
-			{
-				difficulty = 1,
-			},
-			{
-				difficulty = 3,
-			},
-			{
-				difficulty = 4,
-			},
-		})
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_02",
-			target = 1,
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, {
-			description = "loc_missions_ogryn_2_easy_difficulty_{index:%d}_description",
-			id = "missions_ogryn_2_easy_difficulty_{index:%d}",
-			stat_name = "missions_ogryn_2_difficulty_{index:%d}",
-			title = "loc_missions_ogryn_2_easy_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
+		_generate_base_archetype_penances("ogryn", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.group_ogryn_2_rank_1_difficulty_1 = {
-			description = "loc_group_ogryn_2_rank_1_difficulty_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10",
-			target = 2,
-			title = "loc_group_ogryn_2_rank_1_difficulty_1_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_ogryn_2_1",
-				"missions_ogryn_2_easy_difficulty_1",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_ogryn_2_rank_2_difficulty_2 = {
-			description = "loc_group_ogryn_2_rank_2_difficulty_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10",
-			target = 2,
-			title = "loc_group_ogryn_2_rank_2_difficulty_2_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_ogryn_2_2",
-				"missions_ogryn_2_easy_difficulty_2",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_ogryn_2_rank_4_difficulty_3 = {
-			description = "loc_group_ogryn_2_rank_4_difficulty_3_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11",
-			target = 2,
-			title = "loc_group_ogryn_2_rank_4_difficulty_3_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_ogryn_2_4",
-				"missions_ogryn_2_easy_difficulty_3",
-			}),
-			category = category_progression,
-			flags = {},
-		}
-		AchievementDefinitions.group_ogryn_2_rank_5_difficulty_4 = {
-			description = "loc_group_ogryn_2_rank_5_difficulty_4_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11",
-			target = 2,
-			title = "loc_group_ogryn_2_rank_5_difficulty_4_name",
-			type = AchievementTypesLookup.meta,
-			achievements = table.set({
-				"rank_ogryn_2_5",
-				"missions_ogryn_2_easy_difficulty_4",
-			}),
-			category = category_progression,
-			flags = {},
-		}
 		AchievementDefinitions.ogryn_2_easy_1 = {
 			description = "loc_achievement_ogryn_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_03",
@@ -1470,28 +1306,324 @@ do
 	end
 
 	do
-		local category_name = "veteran_2"
-		local category_progression = "veteran_progression"
-		local category_abilites = "veteran_abilites"
+		local category_name = "adamant"
+		local category_progression = "adamant_progression"
+		local category_abilites = "adamant_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0009",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0007",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0008",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0005",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0006",
+			missions = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0003",
+			missions_objective = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0004",
+			rank = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0002",
+		}
+		local legacy_group_class_targets = {
+			{
+				"adamant_pet_companion",
+				"adamant_saved_by_companion_from_disabling_hound",
+			},
+			{
+				"group_class_adamant_2_1",
+				"adamant_companion_pounced_special_enemies",
+				"adamant_companion_knocked_away_special_enemies",
+			},
+			{
+				"group_class_adamant_2_2",
+				"adamant_killed_enemies_pounced_by_companion",
+				"adamant_enemies_affected_by_buff_drone",
+			},
+		}
+		local rework_group_class_targets = {
+			{
+				"rank_adamant_2_4",
+				"missions_adamant_2_objective_1",
+				"missions_adamant_2_1",
+				"adamant_team_companion_in_coherency_kills",
+				"adamant_blocked_attack_from_unique_enemies",
+			},
+			{
+				"group_class_adamant_2_1_rework",
+				"rank_adamant_2_5",
+				"missions_adamant_2_objective_2",
+				"missions_adamant_2_2",
+				"adamant_companion_pounced_special_enemies",
+				"adamant_killed_electrocuted_enemies",
+			},
+			{
+				"group_class_adamant_2_2_rework",
+				"rank_adamant_2_6",
+				"missions_adamant_2_objective_3",
+				"missions_adamant_2_3",
+				"adamant_cluster_of_enemies_killed_with_grenade",
+				"adamant_monsters_staggered_by_whistle_explosion",
+			},
+		}
 
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_09",
-			target = 5,
+		_generate_base_archetype_penances("adamant", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets, rework_group_class_targets)
+
+		AchievementDefinitions.adamant_team_staggered_enemies_aura_kills = {
+			description = "loc_achievement_adamant_team_staggered_enemies_aura_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0010",
+			stat_name = "adamant_team_staggered_enemies_aura_kills",
+			target = 5000,
+			title = "loc_achievement_adamant_team_staggered_enemies_aura_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_team_wield_speed_aura_kills = {
+			description = "loc_achievement_adamant_team_wield_speed_aura_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0011",
+			stat_name = "adamant_team_wield_speed_aura_kills",
+			target = 7500,
+			title = "loc_achievement_adamant_team_wield_speed_aura_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_team_companion_in_coherency_kills = {
+			description = "loc_achievement_adamant_team_companion_in_coherency_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0012",
+			stat_name = "adamant_team_companion_in_coherency_kills",
+			target = 2500,
+			title = "loc_achievement_adamant_team_companion_in_coherency_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_time_enemies_electrocuted_by_shockmine = {
+			description = "loc_achievement_adamant_time_enemies_electrocuted_by_shockmine_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0013",
+			stat_name = "adamant_time_enemies_electrocuted_by_shockmine",
+			target = 5000,
+			title = "loc_achievement_adamant_time_enemies_electrocuted_by_shockmine_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_enemies_affected_by_buff_drone = {
+			description = "loc_achievement_adamant_enemies_affected_by_buff_drone_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0014",
+			stat_name = "adamant_enemies_affected_by_buff_drone",
+			target = 2500,
+			title = "loc_achievement_adamant_enemies_affected_by_buff_drone_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_time_allies_buffed_by_buff_drone = {
+			description = "loc_achievement_adamant_time_allies_buffed_by_buff_drone_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0015",
+			stat_name = "adamant_time_allies_buffed_by_buff_drone",
+			target = 10000,
+			title = "loc_achievement_adamant_time_allies_buffed_by_buff_drone_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_enemies_killed_during_stance = {
+			description = "loc_achievement_adamant_kill_during_stance_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0016",
+			stat_name = "adamant_enemies_killed_during_stance",
+			target = 250,
+			title = "loc_achievement_adamant_kill_during_stance",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 250,
+				talent_name = Localize("loc_talent_adamant_stance_ability_name"),
+			},
+		}
+		AchievementDefinitions.adamant_enemies_staggered_during_charge = {
+			description = "loc_achievement_adamant_stagger_elites_with_bash_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0017",
+			stat_name = "adamant_enemies_staggered_during_charge",
+			target = 500,
+			title = "loc_achievement_adamant_stagger_elites_with_bash",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 500,
+				talent_name = Localize("loc_talent_adamant_charge_ability_name"),
+			},
+		}
+		AchievementDefinitions.adamant_monsters_staggered_by_whistle_explosion = {
+			description = "loc_achievement_adamant_stagger_monster_detonation_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0018",
+			stat_name = "adamant_monsters_staggered_by_whistle_explosion",
+			target = 50,
+			title = "loc_achievement_adamant_stagger_monster_detonation",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 50,
+				talent_name = Localize("loc_talent_ability_detonate"),
+			},
+		}
+		AchievementDefinitions.adamant_cluster_of_enemies_killed_with_grenade = {
+			description = "loc_achievement_adamant_kill_cluster_with_grenade_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0019",
+			stat_name = "adamant_cluster_of_enemies_killed_with_grenade",
+			target = 50,
+			title = "loc_achievement_adamant_kill_cluster_with_grenade",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 50,
+				cluster = 3,
+				talent_name = Localize("loc_talent_ability_adamant_grenade_improved"),
+			},
+		}
+		AchievementDefinitions.adamant_companion_pounced_special_enemies = {
+			description = "loc_achievement_adamant_hunt_snipers_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0020",
+			stat_name = "adamant_companion_pounced_special_enemies",
+			target = 50,
+			title = "loc_achievement_adamant_hunt_snipers",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_progression,
 			flags = {},
-		}, {
-			description = "loc_missions_veteran_2_medium_difficulty_{index:%d}_description",
-			id = "missions_veteran_2_medium_difficulty_{index:%d}",
-			stat_name = "missions_veteran_2_difficulty_{index:%d}",
-			title = "loc_missions_veteran_2_medium_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
+			loc_variables = {
+				amount = 50,
+			},
+		}
+		AchievementDefinitions.adamant_companion_knocked_away_special_enemies = {
+			description = "loc_achievement_adamant_knock_chargers_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0021",
+			stat_name = "adamant_companion_knocked_away_special_enemies",
+			target = 50,
+			title = "loc_achievement_adamant_knock_chargers",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_progression,
+			flags = {},
+			loc_variables = {
+				amount = 50,
+			},
+		}
+		AchievementDefinitions.adamant_killed_enemies_pounced_by_companion = {
+			description = "loc_achievement_adamant_kill_pounced_enemies_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0022",
+			stat_name = "adamant_killed_enemies_pounced_by_companion",
+			target = 750,
+			title = "loc_achievement_adamant_kill_pounced_enemies",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_progression,
+			flags = {},
+			loc_variables = {
+				amount = 750,
+			},
+		}
+		AchievementDefinitions.adamant_killed_electrocuted_enemies = {
+			description = "loc_achievement_adamant_kill_electrocuted_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0023",
+			stat_name = "adamant_killed_electrocuted_enemies",
+			target = 500,
+			title = "loc_achievement_adamant_kill_electrocuted",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_progression,
+			flags = {},
+			loc_variables = {
+				amount = 500,
+			},
+		}
+		AchievementDefinitions.adamant_saved_by_companion_from_disabling_hound = {
+			description = "loc_achievement_adamant_saved_from_dog_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0024",
+			title = "loc_achievement_adamant_saved_from_dog",
+			type = AchievementTypesLookup.direct_unlock,
+			category = category_progression,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_pet_companion = {
+			description = "loc_achievement_adamant_pet_dog_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0025",
+			title = "loc_achievement_adamant_pet_dog",
+			type = AchievementTypesLookup.direct_unlock,
+			category = category_progression,
+			flags = {},
+		}
+		AchievementDefinitions.adamant_blocked_attack_from_unique_enemies = {
+			description = "loc_achievement_adamant_block_enemies_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0026",
+			stat_name = "adamant_blocked_attack_from_unique_enemies",
+			target = 250,
+			title = "loc_achievement_adamant_block_enemies",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_progression,
+			flags = {},
+			loc_variables = {
+				amount = 250,
+			},
+		}
+		AchievementDefinitions.adamant_killed_enemies_marked_by_execution_order = {
+			description = "loc_achievement_adamant_kill_marked_enemies_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0027",
+			stat_name = "adamant_killed_enemies_marked_by_execution_order",
+			target = 3500,
+			title = "loc_achievement_adamant_kill_marked_enemies",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 3500,
+				talent_name = Localize("loc_talent_adamant_exterminator"),
+			},
+		}
+		AchievementDefinitions.adamant_melee_kills_with_terminus_warrant = {
+			description = "loc_achievement_adamant_kill_with_melee_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0028",
+			stat_name = "adamant_melee_kills_with_terminus_warrant",
+			target = 3500,
+			title = "loc_achievement_adamant_kill_with_melee",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 3500,
+				talent_name = Localize("loc_talent_adamant_bullet_rain"),
+			},
+		}
+		AchievementDefinitions.adamant_ranged_kills_with_terminus_warrant = {
+			description = "loc_achievement_adamant_kill_with_ranged_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0029",
+			stat_name = "adamant_ranged_kills_with_terminus_warrant",
+			target = 3500,
+			title = "loc_achievement_adamant_kill_with_ranged",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				amount = 3500,
+				talent_name = Localize("loc_talent_adamant_bullet_rain"),
+			},
+		}
+		AchievementDefinitions.adamant_time_at_max_forceful_stacks = {
+			description = "loc_achievement_adamant_time_in_forceful_desc",
+			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0030",
+			stat_name = "adamant_time_at_max_forceful_stacks",
+			target = 3500,
+			title = "loc_achievement_adamant_time_in_forceful",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				time = 3500,
+				talent_name = Localize("loc_talent_adamant_forceful"),
+			},
+		}
+	end
+
+	do
+		local category_name = "veteran_2"
+		local category_progression = "veteran_progression"
+		local category_abilites = "veteran_abilites"
 
 		AchievementDefinitions.veteran_2_weakspot_hits_during_volley_fire_alternate_fire = {
 			description = "loc_achievement_veteran_2_weakspot_hits_during_volley_fire_alternate_fire_description",
@@ -1565,63 +1697,12 @@ do
 				accuracy = 90,
 			},
 		}
-
-		family({
-			description = "loc_group_class_challenges_veteran_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			type = AchievementTypesLookup.meta,
-			category = category_progression,
-			flags = {},
-		}, {
-			id = "group_class_veteran_2_{index:%d}",
-			title = "loc_group_class_challenges_veteran_2_{index:%d}_name",
-			target = function (self, config)
-				return #config
-			end,
-			achievements = function (self, config)
-				return table.set(config)
-			end,
-		}, {
-			{
-				"veteran_2_unbounced_grenade_kills",
-				"veteran_2_weakspot_hits_during_volley_fire_alternate_fire",
-			},
-			{
-				"group_class_veteran_2_1",
-				"veteran_2_no_melee_damage_taken",
-				"veteran_2_kills_with_last_round_in_mag",
-			},
-			{
-				"group_class_veteran_2_2",
-				"veteran_2_no_missed_shots_empty_ammo",
-				"veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire",
-			},
-		})
 	end
 
 	do
 		local category_name = "zealot_2"
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
-
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_09",
-			target = 5,
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, {
-			description = "loc_missions_zealot_2_medium_difficulty_{index:%d}_description",
-			id = "missions_zealot_2_medium_difficulty_{index:%d}",
-			stat_name = "missions_zealot_2_difficulty_{index:%d}",
-			title = "loc_missions_zealot_2_medium_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
 
 		AchievementDefinitions.zealot_2_stagger_sniper_with_grenade_distance = {
 			description = "loc_achievement_zealot_2_stagger_sniper_with_grenade_distance_description",
@@ -1700,63 +1781,12 @@ do
 				time_window = 20,
 			},
 		}
-
-		family({
-			description = "loc_group_class_challenges_zealot_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			type = AchievementTypesLookup.meta,
-			category = category_progression,
-			flags = {},
-		}, {
-			id = "group_class_zealot_2_{index:%d}",
-			title = "loc_group_class_challenges_zealot_2_{index:%d}_name",
-			target = function (self, config)
-				return #config
-			end,
-			achievements = function (self, config)
-				return table.set(config)
-			end,
-		}, {
-			{
-				"zelot_2_kill_mutant_charger_with_melee_while_dashing",
-				"zealot_2_stagger_sniper_with_grenade_distance",
-			},
-			{
-				"group_class_zealot_2_1",
-				"zealot_2_kills_of_shocked_enemies_last_15",
-				"zealot_2_not_use_ranged_attacks",
-			},
-			{
-				"group_class_zealot_2_2",
-				"zealot_2_health_on_last_segment_enough_during_mission",
-				"zealot_2_healed_up_after_resisting_death",
-			},
-		})
 	end
 
 	do
 		local category_name = "psyker_2"
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
-
-		family({
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_09",
-			target = 5,
-			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
-			flags = {},
-		}, {
-			description = "loc_missions_psyker_2_medium_difficulty_{index:%d}_description",
-			id = "missions_psyker_2_medium_difficulty_{index:%d}",
-			stat_name = "missions_psyker_2_difficulty_{index:%d}",
-			title = "loc_missions_psyker_2_medium_difficulty_{index:%d}_name",
-		}, {
-			{},
-			{},
-			{},
-			{},
-			{},
-		})
 
 		AchievementDefinitions.psyker_2_smite_hound_mid_leap = {
 			description = "loc_achievement_psyker_2_smite_hound_mid_leap_description",
@@ -1836,62 +1866,11 @@ do
 				AchievementFlags.private_only,
 			},
 		}
-
-		family({
-			description = "loc_group_class_challenges_psyker_2_x_description",
-			icon = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			type = AchievementTypesLookup.meta,
-			category = category_progression,
-			flags = {},
-		}, {
-			id = "group_class_psyker_2_{index:%d}",
-			title = "loc_group_class_challenges_psyker_2_{index:%d}_name",
-			target = function (self, config)
-				return #config
-			end,
-			achievements = function (self, config)
-				return table.set(config)
-			end,
-		}, {
-			{
-				"psyker_2_edge_kills_last_2_sec",
-				"psyker_2_smite_hound_mid_leap",
-			},
-			{
-				"group_class_psyker_2_1",
-				"psyker_2_perils_of_the_warp_elite_kills",
-				"psyker_2_stay_at_max_souls_for_duration",
-			},
-			{
-				"group_class_psyker_2_2",
-				"psyker_2_elite_or_special_kills_with_smite_last_10_sec",
-				"psyker_2_kill_boss_solo_with_smite",
-			},
-		})
 	end
 
 	local category_name = "ogryn_2"
 	local category_progression = "ogryn_progression"
 	local category_abilites = "ogryn_abilites"
-
-	family({
-		icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_09",
-		target = 5,
-		type = AchievementTypesLookup.increasing_stat,
-		category = category_progression,
-		flags = {},
-	}, {
-		description = "loc_missions_ogryn_2_medium_difficulty_{index:%d}_description",
-		id = "missions_ogryn_2_medium_difficulty_{index:%d}",
-		stat_name = "missions_ogryn_2_difficulty_{index:%d}",
-		title = "loc_missions_ogryn_2_medium_difficulty_{index:%d}_name",
-	}, {
-		{},
-		{},
-		{},
-		{},
-		{},
-	})
 
 	AchievementDefinitions.ogryn_2_bull_rushed_charging_ogryn = {
 		description = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_description",
@@ -1967,40 +1946,6 @@ do
 			"hide_from_carousel",
 		},
 	}
-
-	family({
-		description = "loc_group_class_challenges_ogryn_2_x_description",
-		icon = "content/ui/textures/icons/achievements/achievement_icon_0096",
-		type = AchievementTypesLookup.meta,
-		category = category_progression,
-		flags = {
-			"hide_from_carousel",
-		},
-	}, {
-		id = "group_class_ogryn_2_{index:%d}",
-		title = "loc_group_class_challenges_ogryn_2_{index:%d}_name",
-		target = function (self, config)
-			return #config
-		end,
-		achievements = function (self, config)
-			return table.set(config)
-		end,
-	}, {
-		{
-			"ogryn_2_killed_corruptor_with_grenade_impact",
-			"ogryn_2_bull_rushed_charging_ogryn",
-		},
-		{
-			"group_class_ogryn_2_1",
-			"ogryn_2_bull_rushed_100_enemies",
-			"ogryn_2_win_with_coherency_all_alive_units",
-		},
-		{
-			"group_class_ogryn_2_2",
-			"ogryn_2_bull_rushed_70_within_25_seconds",
-			"ogryn_2_bull_rushed_4_ogryns",
-		},
-	})
 end
 
 do
@@ -3325,7 +3270,6 @@ do
 
 		local vo_target = 1
 		local morrow_num_vo = 9
-		local zola_num_vo = 7
 
 		AchievementDefinitions.horde_morrow_story = {
 			category = "mission_survival",
@@ -3341,6 +3285,9 @@ do
 				target = vo_target,
 			},
 		}
+
+		local zola_num_vo = 7
+
 		AchievementDefinitions.horde_zola_story = {
 			category = "mission_survival",
 			description = "loc_horde_zola_story_desc",
@@ -3355,16 +3302,34 @@ do
 				target = vo_target,
 			},
 		}
+
+		local brahms_num_vo = 10
+
+		AchievementDefinitions.horde_brahms_story = {
+			category = "mission_survival",
+			description = "loc_horde_brahms_story_desc",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_brahms",
+			title = "loc_horde_brahms_story_title",
+			type = AchievementTypesLookup.multi_stat,
+			target = brahms_num_vo,
+			stats = generate_vo_stats("brahms", brahms_num_vo, vo_target),
+			stats_sorting = generate_vo_stats_sorting("brahms", brahms_num_vo),
+			flags = {},
+			loc_variables = {
+				target = vo_target,
+			},
+		}
 		AchievementDefinitions.horde_mortis_collect_all = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_mortis_collect_all_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memory_shard_collect_all",
-			target = 2,
+			target = 3,
 			title = "loc_achievement_horde_mortis_collect_all_name",
 			type = AchievementTypesLookup.meta,
 			achievements = table.set({
 				"horde_morrow_story",
 				"horde_zola_story",
+				"horde_brahms_story",
 			}),
 			flags = {},
 		}
@@ -3591,6 +3556,7 @@ do
 			"rank_zealot_2_6",
 			"rank_psyker_2_6",
 			"rank_ogryn_2_6",
+			"rank_adamant_2_6",
 		}),
 		category = category_name,
 		flags = {},

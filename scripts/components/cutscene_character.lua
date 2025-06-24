@@ -22,6 +22,10 @@ CutsceneCharacter.init = function (self, unit)
 
 	self._breed_name = breed_name
 
+	local companion_inclusion_setting = self:get_data(unit, "companion_inclusion_setting")
+
+	self._companion_inclusion_setting = companion_inclusion_setting
+
 	local cinematic_slot = self:get_data(unit, "cinematic_slot")
 
 	self._cinematic_slot = cinematic_slot
@@ -33,7 +37,7 @@ CutsceneCharacter.init = function (self, unit)
 		local prop_items = self:get_data(unit, "prop_items")
 		local animation_event = self:get_data(unit, "animation_event")
 
-		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign)
+		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign, companion_inclusion_setting)
 	end
 
 	if self:get_data(unit, "materialize") ~= "disabled" then
@@ -69,6 +73,10 @@ end
 
 CutsceneCharacter.breed_name = function (self)
 	return self._breed_name
+end
+
+CutsceneCharacter.companion_inclusion_setting = function (self)
+	return self._companion_inclusion_setting
 end
 
 CutsceneCharacter.start_weapon_specific_walk_animation = function (self)

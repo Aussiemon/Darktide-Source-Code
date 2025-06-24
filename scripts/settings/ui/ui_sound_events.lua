@@ -24,6 +24,7 @@ local ui_sound_events = {
 	character_appearence_option_pressed = "wwise/events/ui/play_ui_click",
 	character_appearence_stop_voice_preview = "wwise/events/vo/stop_voice_preview",
 	character_create_abort = "wwise/events/ui/play_ui_back_short",
+	character_create_archetype_adamant = "wwise/events/ui/play_ui_adamant_amb",
 	character_create_archetype_confirm = "wwise/events/ui/play_ui_character_create_archetype_confirm",
 	character_create_archetype_ogryn = "wwise/events/ui/play_ui_ogryn_amb",
 	character_create_archetype_pressed = "wwise/events/ui/play_ui_character_create_select_archetype",

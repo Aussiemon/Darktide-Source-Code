@@ -153,5 +153,15 @@ archetype_dodge_templates.ogryn = {
 	stop_threshold = 0.15,
 	dodge_speed_at_times = speed_curve_ogryn,
 }
+archetype_dodge_templates.adamant = {
+	base_distance = 2,
+	consecutive_dodges_reset = 0.85,
+	dodge_cooldown = 0.15,
+	dodge_jump_override_timer = 0.3,
+	dodge_linger_time = 0.2,
+	minimum_dodge_input = 0.25,
+	stop_threshold = 0.25,
+	dodge_speed_at_times = speed_curve,
+}
 
 return settings("ArchetypeDodgeTemplates", archetype_dodge_templates)

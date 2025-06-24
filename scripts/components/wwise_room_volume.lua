@@ -4,7 +4,6 @@ local WwiseRoomVolume = component("WwiseRoomVolume")
 
 WwiseRoomVolume.init = function (self, unit)
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
-	self._room_id = -1
 
 	if not Unit.has_volume(unit, "room_volume") then
 		return false

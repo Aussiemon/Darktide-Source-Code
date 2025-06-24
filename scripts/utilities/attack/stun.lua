@@ -31,7 +31,7 @@ Stun.apply = function (unit, disorientation_type, hit_direction, weapon_template
 		return
 	end
 
-	if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit, toughness_broken) or _is_stun_immune_from_character_state(unit_data_extension)) then
+	if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit_data_extension, unit, toughness_broken) or _is_stun_immune_from_character_state(unit_data_extension)) then
 		return
 	end
 
@@ -67,7 +67,7 @@ function _is_stun_immune_from_current_action(unit_data_extension, weapon_templat
 	return false
 end
 
-function _is_stun_immune_from_buff(unit, toughness_broken)
+function _is_stun_immune_from_buff(unit_data_extension, unit, toughness_broken)
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 	if not buff_extension then
@@ -78,6 +78,12 @@ function _is_stun_immune_from_buff(unit, toughness_broken)
 
 	if not has_buff and toughness_broken then
 		has_buff = buff_extension:has_keyword(buff_keywords.stun_immune_toughness_broken)
+	end
+
+	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+
+	if alternate_fire_component.is_active and buff_extension:has_keyword(buff_keywords.ranged_alternate_fire_interrupt_immune) then
+		has_buff = true
 	end
 
 	return has_buff

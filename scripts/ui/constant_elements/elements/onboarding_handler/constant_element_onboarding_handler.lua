@@ -51,7 +51,11 @@ ConstantElementOnboardingHandler.update = function (self, dt, t, ui_renderer, re
 		self:_on_state_changed(current_state_name)
 	end
 
-	self:_sync_state_settings()
+	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name == "hub" or game_mode_name == "prologue_hub" then
+		self:_sync_state_settings()
+	end
 end
 
 ConstantElementOnboardingHandler._on_state_changed = function (self, new_state_name)
@@ -95,7 +99,7 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 		if settings.active then
 			local close_condition = on_destroy or settings.close_condition and settings.close_condition(settings)
 
-			if close_condition then
+			if close_condition == true then
 				if settings.on_deactivation then
 					local close_condition_met = not on_destroy
 

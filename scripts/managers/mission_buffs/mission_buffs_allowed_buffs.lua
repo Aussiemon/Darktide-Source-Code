@@ -148,6 +148,32 @@ allowed_buffs.legendary_buffs.ogryn = {
 		},
 	},
 }
+allowed_buffs.legendary_buffs.adamant = {
+	generic = {},
+	grenade_ability = {
+		adamant_shock_mine = {
+			"hordes_buff_adamant_mine_explosion",
+		},
+		adamant_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
+			"hordes_buff_adamant_grenade_multi",
+		}),
+		adamant_whistle = {
+			"hordes_buff_adamant_auto_detonate",
+		},
+	},
+	combat_ability = {
+		adamant_area_buff_drone = {
+			"hordes_buff_adamant_drone_stun",
+		},
+		adamant_stance = {
+			"hordes_buff_adamant_stance_immunity",
+		},
+		adamant_charge = {
+			"hordes_buff_adamant_random_bash",
+		},
+	},
+}
+allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade_improved = table.clone(allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade)
 allowed_buffs.available_family_builds = {
 	"fire",
 	"unkillable",

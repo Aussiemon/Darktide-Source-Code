@@ -18,22 +18,22 @@ AuspexEffects.init = function (self, context, slot, weapon_template, fx_sources,
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
-
-	if not is_husk then
-		local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
-
-		self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
-	end
 end
 
 AuspexEffects.destroy = function (self)
-	if self._is_husk then
-		return
+	return
+end
+
+AuspexEffects._run_looping_sound = function (self, fixed_frame)
+	local fx_extension = self._fx_extension
+	local fx_source_name = self._fx_source_name
+	local fx_source = self._fx_extension:sound_source(fx_source_name)
+
+	if not fx_extension:is_looping_sound_playing(LOOPING_SOUND_ALIAS) then
+		WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME, PARAMETER_VALUE)
 	end
 
-	if self._looping_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
+	fx_extension:run_looping_sound(LOOPING_SOUND_ALIAS, fx_source_name, nil, fixed_frame)
 end
 
 AuspexEffects.wield = function (self)
@@ -41,14 +41,7 @@ AuspexEffects.wield = function (self)
 		return
 	end
 
-	local fx_extension = self._fx_extension
-	local fx_source_name = self._fx_source_name
-	local fx_source = self._fx_extension:sound_source(fx_source_name)
-
-	if not self._looping_sound_component.is_playing then
-		fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS, fx_source_name)
-		WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME, PARAMETER_VALUE)
-	end
+	self._play_looping_sfx = true
 end
 
 AuspexEffects.unwield = function (self)
@@ -56,13 +49,17 @@ AuspexEffects.unwield = function (self)
 		return
 	end
 
-	if self._looping_sound_component.is_playing then
-		self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
-	end
+	self._play_looping_sfx = false
 end
 
 AuspexEffects.fixed_update = function (self, unit, dt, t, frame)
-	return
+	if self._is_husk then
+		return
+	end
+
+	if self._play_looping_sfx then
+		self:_run_looping_sound(frame)
+	end
 end
 
 AuspexEffects.update = function (self, unit, dt, t)

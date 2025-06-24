@@ -145,6 +145,37 @@ local _MISSION_DUMMY_DATA = {
 		chapter = {},
 		extraRewards = {},
 	},
+	{
+		category = "narrative",
+		challenge = 5,
+		credits = 19950,
+		displayIndex = 30,
+		duration = 86399.999,
+		expiry = 1734040259999,
+		expiry_game_time = 49467.13009181449,
+		expiry_server_time = 1734040259999,
+		id = "5509473c-99d8-449c-b286-51e9f965dc5c",
+		map = "psykhanium",
+		missionGiver = "explicator_a",
+		missionSize = 1,
+		mission_reward = 19950,
+		mission_xp = 5450,
+		requiredLevel = 15,
+		required_level = 15,
+		resistance = 5,
+		start = 1733953860000,
+		start_game_time = -36932.86890818551,
+		start_server_time = 1733953860000,
+		xp = 5450,
+		flags = {},
+		book = {},
+		page = {},
+		noqp = {},
+		altered = {},
+		activate_twins = {},
+		chapter = {},
+		extraRewards = {},
+	},
 }
 local HordePlayView = class("HordePlayView", "BaseView")
 
@@ -230,7 +261,6 @@ end
 
 HordePlayView._fetch_success = function (self, data)
 	local missions = data.missions
-	local num_mission_to_display = 4
 	local mission_difficulties_selected = {}
 	local num_mission_difficulties_selected = 0
 	local filtered_missions = {}
@@ -238,7 +268,7 @@ HordePlayView._fetch_success = function (self, data)
 	for _, mission in ipairs(missions) do
 		local difficulty_id = mission.challenge .. "-" .. mission.resistance
 
-		if mission.category == "horde" and not mission_difficulties_selected[difficulty_id] and Danger.calculate_danger(mission.challenge, mission.resistance) then
+		if mission.category == "horde" and not mission_difficulties_selected[difficulty_id] then
 			mission_difficulties_selected[difficulty_id] = true
 			num_mission_difficulties_selected = num_mission_difficulties_selected + 1
 			filtered_missions[#filtered_missions + 1] = mission
@@ -258,6 +288,7 @@ HordePlayView._fetch_success = function (self, data)
 
 	local option_widgets = {}
 	local num_missions_available = #self._missions
+	local num_mission_to_display = num_missions_available
 
 	if num_missions_available > 0 then
 		for i = 1, num_mission_to_display do
@@ -268,6 +299,11 @@ HordePlayView._fetch_success = function (self, data)
 			local widgets_by_name = self._widgets_by_name
 
 			option_widgets[i] = widgets_by_name["option_" .. i]
+
+			local danger = Danger.danger_by_difficulty(mission.challenge, mission.resistance)
+			local is_unlocked = Managers.data_service.mission_board:is_difficulty_unlocked(danger.name)
+
+			widgets_by_name["option_" .. i].content.hotspot.disabled = not is_unlocked
 		end
 	end
 
@@ -365,18 +401,8 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 
 	local danger_settings = Danger.danger_by_difficulty(data.challenge, data.resistance)
 	local danger_color = danger_settings.color
-
-	for i = 1, 5 do
-		local difficulty_style_id = "difficulty_box_" .. i
-		local color = style[difficulty_style_id].color
-
-		if i <= danger_settings.index then
-			local ignore_alpha = true
-
-			ColorUtilities.color_copy(danger_color, color, ignore_alpha)
-		end
-	end
-
+	local difficulty_icon_color = style.difficulty_icon.color
+	local ignore_alpha = false
 	local xp = data.xp
 	local credits = data.credits
 	local extraRewards = data.extraRewards.circumstance
@@ -426,6 +452,7 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 	local display_name = danger_settings.display_name
 
 	content.title_text = Localize(display_name)
+	content.difficulty_icon = danger_settings.icon
 end
 
 HordePlayView._set_selected_mission = function (self, mission)
@@ -628,7 +655,7 @@ HordePlayView._handle_input = function (self, input_service, dt, t)
 				new_index = math.min(selected_mission_index + 1, num_options)
 			end
 
-			if new_index and new_index ~= selected_mission_index then
+			if new_index and new_index ~= selected_mission_index and not self._option_widgets[new_index].content.hotspot.disabled then
 				self:_set_selected_option(new_index)
 			end
 		end

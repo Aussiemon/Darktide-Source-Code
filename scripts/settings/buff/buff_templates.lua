@@ -79,10 +79,14 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_plasmagun_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_p2_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powermaul_shield_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p2_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p4_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotpistol_shield_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_thunderhammer_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/archetype_buff_templates/shared_archetype_buff_templates", buff_categories.talents)
@@ -90,6 +94,7 @@ _create_entry("scripts/settings/buff/archetype_buff_templates/ogryn_buff_templat
 _create_entry("scripts/settings/buff/archetype_buff_templates/psyker_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/veteran_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/adamant_buff_templates", buff_categories.talents)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
 local TEMPLATE_LOOKUPS = {

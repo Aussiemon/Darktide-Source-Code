@@ -75,6 +75,18 @@ local item_slot_settings = {
 			"slot_body_face_tattoo",
 		},
 	},
+	slot_companion_body_skin_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+	},
+	slot_companion_body_fur_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+	},
+	slot_companion_body_coat_pattern = {
+		show_in_character_create = true,
+		slot_type = "body",
+	},
 	slot_body_hair_color = {
 		show_in_character_create = true,
 		slot_type = "body",
@@ -86,6 +98,14 @@ local item_slot_settings = {
 	slot_body_eye_color = {
 		show_in_character_create = true,
 		slot_type = "body",
+	},
+	slot_companion_gear_full = {
+		display_icon = "content/ui/materials/icons/cosmetics/categories/companion_gear_full",
+		display_name = "loc_inventory_title_slot_companion_gear_full",
+		equipped_in_inventory = true,
+		show_in_character_create = true,
+		slot_type = "gear",
+		store_category = "companion_gear_full",
 	},
 	slot_gear_head = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/headgear",
@@ -114,6 +134,10 @@ local item_slot_settings = {
 		equipped_in_inventory = true,
 		slot_type = "gear",
 		store_category = "outfits",
+	},
+	slot_gear_material_override_decal = {
+		show_in_character_create = true,
+		slot_type = "material",
 	},
 	slot_attachment_1 = {
 		display_name = "loc_inventory_title_slot_attachment_1",

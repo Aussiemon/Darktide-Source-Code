@@ -48,6 +48,9 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context, t)
 	end,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context)
+		return params.attack_type == "melee"
+	end,
 	proc_func = function (params, template_data, template_context, t)
 		local attacking_unit = params.attacking_unit
 		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")

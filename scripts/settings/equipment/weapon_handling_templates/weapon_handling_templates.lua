@@ -776,6 +776,19 @@ local weapon_handling_templates = {
 			max_shots = 2,
 		},
 	},
+	shotgun_p4_full_auto = {
+		fire_rate = {
+			fire_time = 0,
+			auto_fire_time = {
+				lerp_basic = 0.23,
+				lerp_perfect = 0.17,
+			},
+		},
+		critical_strike = {
+			chance_modifier = -0.05,
+			max_critical_shots = 2,
+		},
+	},
 	heavy_stubber_p1_m1_hip = {
 		fire_rate = {
 			fire_time = 0,

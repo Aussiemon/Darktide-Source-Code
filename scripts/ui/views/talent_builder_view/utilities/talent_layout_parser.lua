@@ -198,7 +198,7 @@ local function _calculate_damage_profile(config)
 	local armor_type = config.armor_type or armor_types.unarmored
 	local target_settings = DamageProfile.target_settings(damage_profile, 0)
 	local lerp_values = EMPTY_TABLE
-	local hit_zone_name, charge_level, breed_or_nil, attacker_breed_or_nil
+	local hit_zone_name, charge_level, breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil
 	local is_critical_strike = false
 	local hit_weakspot = false
 	local hit_shield = false
@@ -215,7 +215,7 @@ local function _calculate_damage_profile(config)
 	local auto_completed_action = false
 	local stagger_impact
 
-	return DamageCalculation.calculate(damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
+	return DamageCalculation.calculate(damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
 end
 
 local function _value_from_path(base_table, path)

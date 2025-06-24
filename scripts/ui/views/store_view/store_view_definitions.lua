@@ -185,6 +185,17 @@ local scenegraph_definition = {
 			62,
 		},
 	},
+	get_dlc_button = {
+		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "top",
+		size = ButtonPassTemplates.aquila_button.size,
+		position = {
+			100,
+			5,
+			62,
+		},
+	},
 	navigation_arrow_left = {
 		horizontal_alignment = "left",
 		parent = "screen",
@@ -537,6 +548,11 @@ local widget_definitions = {
 	aquila_button = UIWidget.create_definition(ButtonPassTemplates.aquila_button, "aquila_button", {
 		gamepad_action = "hotkey_menu_special_1",
 		original_text = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button")),
+	}),
+	get_dlc_button = UIWidget.create_definition(ButtonPassTemplates.aquila_button, "get_dlc_button", {
+		gamepad_action = "hotkey_menu_special_2",
+		visible = false,
+		original_text = Utf8.upper(Localize("loc_dlc_cta")),
 	}),
 	navigation_arrow_left = UIWidget.create_definition({
 		{

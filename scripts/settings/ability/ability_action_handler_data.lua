@@ -14,9 +14,12 @@ end
 local ability_action_data = {}
 
 ability_action_data.actions = {
+	ability_target_finder = _require_ability_action("action_ability_target_finder"),
+	adamant_shout = _require_ability_action("action_adamant_shout"),
 	character_state_change = _require_ability_action("action_character_state_change"),
 	directional_dash_aim = _require_ability_action("action_directional_dash_aim"),
 	ogryn_shout = _require_ability_action("action_ogryn_shout"),
+	order_companion = _require_ability_action("action_order_companion"),
 	psyker_shout = _require_ability_action("action_psyker_shout"),
 	shout_aim = _require_ability_action("action_shout_aim"),
 	stance_change = _require_ability_action("action_stance_change"),
@@ -63,6 +66,9 @@ ability_action_data.action_kind_condition_funcs = {
 	stance_change = _can_use_ability_check,
 	stance_change_gunlugger = _can_use_ability_check,
 	targeted_dash_aim = _can_use_ability_check,
+	ability_target_finder = function (action_settings, condition_func_params, used_input)
+		return true
+	end,
 	veteran_combat_ability = _can_use_ability_check,
 	directional_dash_aim = function (action_settings, condition_func_params, used_input)
 		local can_use_ability = _can_use_ability_check(action_settings, condition_func_params, used_input)

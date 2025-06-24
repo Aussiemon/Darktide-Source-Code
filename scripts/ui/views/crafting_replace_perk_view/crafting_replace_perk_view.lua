@@ -2,9 +2,6 @@
 
 local CraftingReplacePerkViewDefinitions = require("scripts/ui/views/crafting_replace_perk_view/crafting_replace_perk_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
-local ItemUtils = require("scripts/utilities/items")
-local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
 local InputDevice = require("scripts/managers/input/input_device")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")

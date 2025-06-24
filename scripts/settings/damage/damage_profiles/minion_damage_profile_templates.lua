@@ -935,6 +935,7 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 	},
 }
 damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
+	ignore_toughness = true,
 	ragdoll_push_force = 500,
 	stagger_category = "ranged",
 	suppression_value = 0.5,
@@ -1657,6 +1658,7 @@ damage_templates.shocktrooper_shotgun = {
 	},
 }
 damage_templates.sniper_bullet = {
+	block_cost_multiplier = 15,
 	disorientation_type = "sniper",
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "sniper",
@@ -2768,6 +2770,70 @@ damage_templates.chaos_hound_push = {
 }
 damage_templates.chaos_hound_push.ignore_toughness = true
 damage_templates.chaos_hound_push.push_template = push_templates.chaos_hound_pounced_push
+damage_templates.cyber_mastiff_push = {
+	disorientation_type = "light",
+	ignore_toughness = true,
+	interrupt_alternate_fire = false,
+	ogryn_disorientation_type = "ogryn_light",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	armor_damage_modifier = {
+		attack = flat_one_armor_mod,
+		impact = flat_one_armor_mod,
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 0.25,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	push_template = push_templates.cyber_mastiff_push,
+	ragdoll_push_force = {
+		500,
+		1000,
+	},
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.explosion,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.cyber_mastiff_push_close = {
+	disorientation_type = "light",
+	ignore_toughness = true,
+	interrupt_alternate_fire = false,
+	ogryn_disorientation_type = "ogryn_light",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	armor_damage_modifier = {
+		attack = flat_one_armor_mod,
+		impact = flat_one_armor_mod,
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.5,
+	},
+	push_template = push_templates.cyber_mastiff_push,
+	ragdoll_push_force = {
+		500,
+		1000,
+	},
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.explosion,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.beast_of_nurgle_push_players = table.clone(damage_templates.chaos_hound_push)
 damage_templates.beast_of_nurgle_push_players.push_template = push_templates.beast_of_nurgle_move_push
 damage_templates.beast_of_nurgle_push_players.disorientation_type = "medium"

@@ -1,17 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_view/inventory_view_content_blueprints.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
-local ItemUtils = require("scripts/utilities/items")
+local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
+local Items = require("scripts/utilities/items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local MasterItems = require("scripts/backend/master_items")
-local TextUtilities = require("scripts/utilities/ui/text")
-local ProfileUtils = require("scripts/utilities/profile_utils")
 local grid_size = InventoryViewSettings.grid_size
 local grid_width = grid_size[1]
 local group_header_font_style = table.clone(UIFontSettings.header_3)
@@ -73,7 +70,7 @@ cosmetic_item_display_name_text_style.size = {
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon_style = widget.style.icon
-	local item_slot = ItemUtils.item_slot(item)
+	local item_slot = Items.item_slot(item)
 	local item_icon_size = item_slot and item_slot.item_icon_size
 	local material_values = icon_style.material_values
 
@@ -316,7 +313,7 @@ local blueprints = {
 			local item = element.item
 			local icon = element.icon or item and item.icon or "content/ui/materials/icons/items/default"
 
-			content.title_text = ItemUtils.display_name(item)
+			content.title_text = Items.display_name(item)
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
 			content.hotspot.right_pressed_callback = callback(parent, secondary_callback_name, widget, element)
 			content.element = element
@@ -350,8 +347,8 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = Items.display_name(equipped_item)
+					content.sub_display_name = Items.sub_display_name(equipped_item)
 				end
 
 				local item_icon_size = slot.item_icon_size
@@ -381,7 +378,7 @@ local blueprints = {
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -410,8 +407,8 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						content.display_name = Items.display_name(equipped_item)
+						content.sub_display_name = Items.sub_display_name(equipped_item)
 					end
 
 					if content.icon_load_id then
@@ -431,7 +428,7 @@ local blueprints = {
 					local rarity = equipped_item and equipped_item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+						local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -483,7 +480,7 @@ local blueprints = {
 				local item_display_name = equipped_item and equipped_item.display_name
 
 				if item_display_name then
-					content.name_text = ItemUtils.display_name(equipped_item)
+					content.name_text = Items.display_name(equipped_item)
 				else
 					content.name_text = Localize("loc_item_slot_empty")
 				end
@@ -492,7 +489,7 @@ local blueprints = {
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -525,7 +522,7 @@ local blueprints = {
 					local item_display_name = equipped_item and equipped_item.display_name
 
 					if item_display_name then
-						content.name_text = ItemUtils.display_name(equipped_item)
+						content.name_text = Items.display_name(equipped_item)
 					else
 						content.name_text = Localize("loc_item_slot_empty")
 					end
@@ -559,8 +556,8 @@ local blueprints = {
 				local display_name = item and item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 				end
 
 				local item_icon_size = slot.item_icon_size
@@ -640,14 +637,14 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = Items.display_name(equipped_item)
+					content.sub_display_name = Items.sub_display_name(equipped_item)
 				end
 
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -687,14 +684,14 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						content.display_name = Items.display_name(equipped_item)
+						content.sub_display_name = Items.sub_display_name(equipped_item)
 					end
 
 					local rarity = equipped_item and equipped_item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+						local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -754,15 +751,15 @@ local blueprints = {
 				local display_name = item and item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(item)
-					content.sub_display_name = ItemUtils.sub_display_name(item)
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
 				end
 
 				local style = widget.style
 				local rarity = item and item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(item)
+					local _, rarity_color_dark = Items.rarity_color(item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -851,8 +848,8 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = Items.display_name(equipped_item)
+					content.sub_display_name = Items.sub_display_name(equipped_item)
 				end
 
 				if equipped_item then
@@ -871,7 +868,7 @@ local blueprints = {
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -901,14 +898,14 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						content.display_name = Items.display_name(equipped_item)
+						content.sub_display_name = Items.sub_display_name(equipped_item)
 					end
 
 					local rarity = equipped_item and equipped_item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+						local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -978,8 +975,8 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = Items.display_name(equipped_item)
+					content.sub_display_name = Items.sub_display_name(equipped_item)
 				end
 
 				if equipped_item then
@@ -994,7 +991,7 @@ local blueprints = {
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -1024,14 +1021,14 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						content.display_name = Items.display_name(equipped_item)
+						content.sub_display_name = Items.sub_display_name(equipped_item)
 					end
 
 					local rarity = equipped_item and equipped_item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+						local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -1102,7 +1099,7 @@ local blueprints = {
 				local rarity = equipped_item and equipped_item.rarity
 
 				if rarity then
-					local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+					local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 					if rarity_color_dark then
 						style.background_gradient.color = table.clone(rarity_color_dark)
@@ -1137,7 +1134,7 @@ local blueprints = {
 					local rarity = equipped_item and equipped_item.rarity
 
 					if rarity then
-						local _, rarity_color_dark = ItemUtils.rarity_color(equipped_item)
+						local _, rarity_color_dark = Items.rarity_color(equipped_item)
 
 						if rarity_color_dark then
 							style.background_gradient.color = table.clone(rarity_color_dark)
@@ -1178,13 +1175,13 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
-					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
-					content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
+					content.display_name = Items.weapon_card_display_name(equipped_item)
+					content.sub_display_name = Items.weapon_card_sub_display_name(equipped_item)
+					content.rarity_name = Items.rarity_display_name(equipped_item)
 				end
 
 				if content.item_power then
-					content.item_power = ItemUtils.item_power(equipped_item)
+					content.item_power = Items.item_power(equipped_item)
 				end
 
 				if equipped_item then
@@ -1200,14 +1197,14 @@ local blueprints = {
 						material_values.use_placeholder_texture = 0
 					end
 
-					local rarity_color = ItemUtils.rarity_color(equipped_item)
+					local rarity_color = Items.rarity_color(equipped_item)
 
 					style.rarity_name.text_color = table.clone(rarity_color)
 					style.background_gradient.color = table.clone(rarity_color)
 					style.rarity_tag.color = table.clone(rarity_color)
 
 					if style.item_level then
-						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+						local item_level, has_level = Items.expertise_level(equipped_item)
 
 						content.item_level = has_level and item_level or ""
 					end
@@ -1232,23 +1229,23 @@ local blueprints = {
 					local display_name = equipped_item and equipped_item.display_name
 
 					if display_name then
-						content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
-						content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
-						content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
+						content.display_name = Items.weapon_card_display_name(equipped_item)
+						content.sub_display_name = Items.weapon_card_sub_display_name(equipped_item)
+						content.rarity_name = Items.rarity_display_name(equipped_item)
 					end
 
 					if content.item_power then
-						content.item_power = ItemUtils.item_power(equipped_item)
+						content.item_power = Items.item_power(equipped_item)
 					end
 
-					local rarity_color = ItemUtils.rarity_color(equipped_item)
+					local rarity_color = Items.rarity_color(equipped_item)
 
 					style.rarity_name.text_color = table.clone(rarity_color)
 					style.background_gradient.color = table.clone(rarity_color)
 					style.rarity_tag.color = table.clone(rarity_color)
 
 					if style.item_level then
-						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+						local item_level, has_level = Items.expertise_level(equipped_item)
 
 						content.item_level = has_level and item_level or ""
 					end
@@ -1282,9 +1279,9 @@ local blueprints = {
 
 				if updated_mark then
 					content.item = equipped_item
-					content.display_name = ItemUtils.weapon_card_display_name(equipped_item)
-					content.sub_display_name = ItemUtils.weapon_card_sub_display_name(equipped_item)
-					content.rarity_name = ItemUtils.rarity_display_name(equipped_item)
+					content.display_name = Items.weapon_card_display_name(equipped_item)
+					content.sub_display_name = Items.weapon_card_sub_display_name(equipped_item)
+					content.rarity_name = Items.rarity_display_name(equipped_item)
 
 					Managers.ui:item_icon_updated(content.item)
 				end
@@ -1334,18 +1331,18 @@ local blueprints = {
 				local display_name = equipped_item and equipped_item.display_name
 
 				if display_name then
-					content.display_name = ItemUtils.display_name(equipped_item)
-					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+					content.display_name = Items.display_name(equipped_item)
+					content.sub_display_name = Items.sub_display_name(equipped_item)
 				end
 
 				if equipped_item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+					style.background_gradient.color = table.clone(Items.rarity_color(equipped_item))
 
 					if style.item_level then
-						local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+						local item_level, has_level = Items.expertise_level(equipped_item)
 
 						content.item_level = has_level and item_level or ""
 					end
@@ -1380,10 +1377,10 @@ local blueprints = {
 						local cb = callback(_apply_live_item_icon_cb_func, widget)
 
 						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-						style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+						style.background_gradient.color = table.clone(Items.rarity_color(equipped_item))
 
 						if style.item_level then
-							local item_level, has_level = ItemUtils.expertise_level(equipped_item)
+							local item_level, has_level = Items.expertise_level(equipped_item)
 
 							content.item_level = has_level and item_level or ""
 						end
@@ -1391,8 +1388,8 @@ local blueprints = {
 						local display_name = equipped_item and equipped_item.display_name
 
 						if display_name then
-							content.display_name = ItemUtils.display_name(equipped_item)
-							content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+							content.display_name = Items.display_name(equipped_item)
+							content.sub_display_name = Items.sub_display_name(equipped_item)
 						end
 					else
 						style.background_gradient.color = style.background_gradient.default_color
@@ -1653,7 +1650,7 @@ local blueprints = {
 				change_function = function (content, style)
 					local color = content.modified_content and style.modified_color or style.warning_color
 
-					ColorUtilities.color_copy(color, style.color, true)
+					Colors.color_copy(color, style.color, true)
 				end,
 			},
 		},

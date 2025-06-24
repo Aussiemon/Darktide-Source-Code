@@ -25,6 +25,7 @@ _system_require("chest", "chest_system")
 _system_require("cinematic_scene", "cinematic_scene_system")
 _system_require("coherency", "coherency_system")
 _system_require("combat_vector", "combat_vector_system")
+_system_require("companion_spawner", "companion_spawner_extension")
 _system_require("component", "component_system")
 _system_require("corruptor_arm", "corruptor_arm_system")
 _system_require("corruptor", "corruptor_system")
@@ -101,6 +102,7 @@ _system_require("summoned_minions", "summoned_minions_extension")
 _system_require("scripted_scenario", "scripted_scenario_system")
 _system_require("talent", "talent_system")
 _system_require("trigger", "trigger_system")
+_system_require("token", "token_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "player_hub_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
 _system_require("visual_loadout", "visual_loadout_system")
@@ -122,6 +124,30 @@ local systems = {
 		enabled_in_runtime_loaded_levels,
 		{
 			"SideExtension",
+		},
+	},
+	{
+		"companion_spawner_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		enabled_in_runtime_loaded_levels,
+		{
+			"CompanionSpawnerExtension",
+		},
+	},
+	{
+		"token_system",
+		"TokenSystem",
+		false,
+		false,
+		false,
+		true,
+		enabled_in_runtime_loaded_levels,
+		{
+			"TokenExtension",
 		},
 	},
 	{
@@ -159,6 +185,7 @@ local systems = {
 		enabled_in_runtime_loaded_levels,
 		{
 			"BotPerceptionExtension",
+			"CompanionPerceptionExtension",
 			"MinionPerceptionExtension",
 		},
 	},
@@ -198,6 +225,7 @@ local systems = {
 		{
 			"BotBehaviorExtension",
 			"CombatRangeUserBehaviorExtension",
+			"CompanionBehaviorExtension",
 			"MinionBehaviorExtension",
 		},
 	},
@@ -433,6 +461,7 @@ local systems = {
 		true,
 		enabled_in_runtime_loaded_levels,
 		{
+			"CompanionVisualLoadoutExtension",
 			"MinionVisualLoadoutExtension",
 			"PlayerUnitVisualLoadoutExtension",
 			"PlayerHuskVisualLoadoutExtension",
@@ -917,7 +946,7 @@ local systems = {
 		"fx_system",
 		"FxSystem",
 		false,
-		false,
+		true,
 		true,
 		true,
 		enabled_in_runtime_loaded_levels,
@@ -1022,6 +1051,7 @@ local systems = {
 			"UnitCoherencyExtension",
 			"HuskCoherencyExtension",
 			"MedicalCrateCoherencyExtension",
+			"CompanionCoherencyExtension",
 		},
 	},
 	{
@@ -1280,6 +1310,7 @@ local systems = {
 		true,
 		{
 			"CutsceneCharacterExtension",
+			"CutsceneCompanionExtension",
 		},
 	},
 	{

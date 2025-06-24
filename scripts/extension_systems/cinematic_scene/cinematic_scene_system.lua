@@ -538,7 +538,7 @@ CinematicSceneSystem._activate_view = function (self, cinematic_name)
 			if not ui_manager:view_active(view) then
 				local view_context = {}
 				local template = CinematicSceneTemplates[cinematic_name]
-				local use_transition_ui = template.use_transition_ui
+				local use_transition_ui = template.use_transition_ui and not ui_manager:view_active("video_view")
 				local no_transition_ui = use_transition_ui == false
 				local view_settings_override = no_transition_ui and {
 					use_transition_ui = false,

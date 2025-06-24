@@ -260,6 +260,111 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_gen",
 		},
 	},
+	adamant_grenade = {
+		close_radius = 2.5,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_close_radius = 2.5,
+		min_radius = 10,
+		radius = 10,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.close_adamant_grenade,
+		close_damage_type = damage_types.grenade_frag,
+		damage_profile = DamageProfileTemplates.adamant_grenade,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 15,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 20,
+		},
+		radius_stat_buffs = {
+			"explosion_radius_modifier_frag",
+		},
+		scalable_vfx = {
+			{
+				min_radius = 5,
+				radius_variable_name = "radius",
+				effects = {
+					"content/fx/particles/explosions/frag_grenade_01",
+				},
+			},
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_frag",
+			"wwise/events/weapon/play_explosion_refl_gen",
+		},
+	},
+	adamant_whistle_explosion = {
+		close_radius = 2,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_close_radius = 2,
+		min_radius = 4,
+		radius = 4,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.close_whistle_explosion,
+		close_damage_type = damage_types.grenade_frag,
+		damage_profile = DamageProfileTemplates.whistle_explosion,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 15,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 20,
+		},
+		radius_stat_buffs = {
+			"explosion_radius_modifier_frag",
+		},
+		scalable_vfx = {
+			{
+				min_radius = 5,
+				radius_variable_name = "radius",
+				effects = {
+					"content/fx/particles/explosions/frag_grenade_01",
+				},
+			},
+		},
+		sfx = {
+			"wwise/events/player/play_player_ability_adamant_dog_explosion",
+		},
+	},
+	shock_mine_self_destruct = {
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_radius = 0.5,
+		radius = 2,
+		scalable_radius = true,
+		static_power_level = 500,
+		damage_profile = DamageProfileTemplates.shock_mine_self_destruct,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 5,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 5,
+		},
+		vfx = {
+			"content/fx/particles/weapons/grenades/shock_mine/shock_mine_self_destruct_01",
+		},
+	},
 }
 
 return explosion_templates

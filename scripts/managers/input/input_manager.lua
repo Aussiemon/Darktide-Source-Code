@@ -290,11 +290,9 @@ InputManager.set_dead_zones = function (self, raw_device)
 		local stick_axis = STICK_AXES[i]
 		local axis_id = raw_device.axis_index(stick_axis)
 
-		if raw_device._name == "Pad1" then
+		if axis_id then
 			axis_id = axis_id + 1
-		end
 
-		if axis_id and axis_id ~= 0 then
 			raw_device.set_dead_zone(axis_id, raw_device.CIRCULAR, dead_zone)
 		end
 	end

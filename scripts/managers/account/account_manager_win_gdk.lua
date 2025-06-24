@@ -473,4 +473,76 @@ AccountManagerWinGDK._setup_region = function (self)
 	Log.info("AccountManagerWinGDK", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
 end
 
+AccountManagerWinGDK.open_to_store = function (self, product_id)
+	local async_job, error_code = XboxLive.show_product_page_ui_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code),
+		})
+	end
+
+	local was_focus_lost = false
+
+	return Promise.until_value_is_true(function ()
+		local has_focus = Window.has_focus()
+
+		if not has_focus then
+			was_focus_lost = true
+		end
+
+		if not was_focus_lost then
+			return false
+		end
+
+		if not has_focus then
+			return false
+		end
+
+		local result = XboxLive.show_product_page_ui_async_result(async_job)
+
+		if result == nil then
+			return false
+		end
+
+		if result == 0 then
+			return {
+				success = true,
+			}
+		else
+			return {
+				success = false,
+			}
+		end
+	end)
+end
+
+AccountManagerWinGDK.is_owner_of = function (self, product_id)
+	local async_job, error_code = XboxLive.acquire_license_for_durables_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code),
+		})
+	end
+
+	return Promise.until_value_is_true(function ()
+		local result, error_code = XboxLive.acquire_license_for_durables_async_result(async_job)
+
+		if result == nil and error_code == nil then
+			return false
+		end
+
+		if result ~= nil then
+			return {
+				is_owner = result,
+			}
+		end
+
+		return {
+			is_owner = false,
+		}
+	end)
+end
+
 return AccountManagerWinGDK

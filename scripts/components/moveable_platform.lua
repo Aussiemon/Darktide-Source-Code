@@ -413,7 +413,7 @@ end
 MoveablePlatform.teleport_bots_to_node = function (self, node_name)
 	local moveable_platform_extension = self._moveable_platform_extension
 
-	if moveable_platform_extension then
+	if moveable_platform_extension and self._is_server then
 		moveable_platform_extension:teleport_bots_to_node(node_name)
 	end
 end

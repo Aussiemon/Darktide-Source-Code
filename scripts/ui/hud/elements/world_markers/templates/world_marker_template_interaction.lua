@@ -315,6 +315,13 @@ local template_visual_definitions = {
 					0.3,
 				},
 			},
+			companion_dog = {
+				position_offset = {
+					0,
+					0,
+					0,
+				},
+			},
 		},
 		colors = {
 			background = Color.black(0, true),
@@ -379,6 +386,14 @@ local function get_interactee_unit_breed(marker)
 
 	if player then
 		local breed_name = player:breed_name()
+
+		return breed_name
+	end
+
+	local marker_unit_data_extension = ScriptUnit.has_extension(marker_unit, "unit_data_system")
+
+	if marker_unit_data_extension then
+		local breed_name = marker_unit_data_extension:breed_name()
 
 		return breed_name
 	end

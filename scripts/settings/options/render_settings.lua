@@ -186,6 +186,23 @@ local RENDER_TEMPLATES = {
 					},
 				},
 			},
+			{
+				display_name = "loc_setting_dlss_quality_aa",
+				id = 6,
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						dlss_enabled = true,
+						upscaling_quality = "native",
+					},
+					master_render_settings = {
+						fsr = 0,
+						fsr2 = 0,
+						xess = 0,
+					},
+				},
+			},
 		},
 		disable_rules = {
 			{
@@ -229,7 +246,7 @@ local RENDER_TEMPLATES = {
 				require_restart = false,
 				values = {
 					render_settings = {
-						dlss_model = "f",
+						dlss_model = "e",
 					},
 				},
 			},

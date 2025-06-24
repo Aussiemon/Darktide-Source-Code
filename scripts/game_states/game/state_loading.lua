@@ -55,6 +55,7 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	local game_state_context = {
 		mission_name = params.mission_name,
 		mission_giver_vo = params.mission_giver_vo or "none",
+		circumstance_name = params.circumstance_name,
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -101,13 +102,14 @@ StateLoading._setup_loading_data = function (self, params)
 	self._havoc_data = params.havoc_data
 end
 
-StateLoading._reset_player_game_state = function (self, mission_name, mission_giver_vo)
+StateLoading._reset_player_game_state = function (self, mission_name, mission_giver_vo, circumstance_name)
 	Managers.player:on_game_state_exit(self)
 
 	local player_game_state_mapping = {}
 	local game_state_context = {
 		mission_name = mission_name,
 		mission_giver_vo = mission_giver_vo or "none",
+		circumstance_name = circumstance_name,
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
@@ -129,7 +131,7 @@ StateLoading._reset_state_loading = function (self, params)
 
 	local mission_name = params.mission_name
 
-	self:_reset_player_game_state(mission_name, params.mission_giver_vo)
+	self:_reset_player_game_state(mission_name, params.mission_giver_vo, params.circumstance_name)
 end
 
 StateLoading.update = function (self, main_dt, main_t)

@@ -65,6 +65,12 @@ local actions_lookup = {
 			input_action = "com_wheel",
 		},
 	},
+	adamant_companion_targeting = {
+		{
+			description = "loc_talent_adamant_tagging_command",
+			input_action = "smart_tag",
+		},
+	},
 	sprint_and_slide = {
 		{
 			description = "loc_input_sprint",

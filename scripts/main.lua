@@ -163,6 +163,12 @@ function on_close()
 	return should_close
 end
 
+function on_constrained(is_constrained)
+	if rawget(_G, "Managers") and Managers.event then
+		Managers.event:trigger("on_constrained", is_constrained)
+	end
+end
+
 function on_suspend()
 	if rawget(_G, "Managers") then
 		Managers.event:trigger("on_pre_suspend")

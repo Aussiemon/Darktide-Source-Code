@@ -97,6 +97,7 @@ Dialogue.component_data = {
 		value = "none",
 		options_keys = {
 			"None",
+			"Adamant Officer",
 			"Archive Servitor",
 			"Boon Vendor",
 			"Cargo Pilot",
@@ -135,6 +136,7 @@ Dialogue.component_data = {
 		},
 		options_values = {
 			"none",
+			"adamant_officer",
 			"archive_servitor",
 			"boon_vendor",
 			"cargo_pilot",
@@ -179,6 +181,7 @@ Dialogue.component_data = {
 		value = "none",
 		options_keys = {
 			"None",
+			"Adamant Officer A",
 			"Archive Servitor A",
 			"Boon Vendor A",
 			"Cargo Pilot A",
@@ -256,6 +259,7 @@ Dialogue.component_data = {
 		},
 		options_values = {
 			"none",
+			"adamant_officer_a",
 			"archive_servitor_a",
 			"boon_vendor_a",
 			"cargo_pilot_a",

@@ -18,6 +18,10 @@ WeaponSpecialSimpleWarpCharge.init = function (self, weapon_special_context, wea
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 end
 
+WeaponSpecialSimpleWarpCharge.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialSimpleWarpCharge.fixed_update = function (self, dt, t)
 	local was_active = self._inventory_slot_component.special_active
 
@@ -47,6 +51,10 @@ WeaponSpecialSimpleWarpCharge.on_sweep_action_finish = function (self, t, num_hi
 end
 
 WeaponSpecialSimpleWarpCharge.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)
+	return
+end
+
+WeaponSpecialSimpleWarpCharge.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
 	return
 end
 

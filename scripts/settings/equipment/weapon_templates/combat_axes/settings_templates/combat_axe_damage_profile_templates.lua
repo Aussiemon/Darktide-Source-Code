@@ -1036,6 +1036,19 @@ damage_templates.default_light_hatchet = {
 				},
 			},
 		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					30,
+					60,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+		},
 		default_target = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
@@ -1164,7 +1177,7 @@ damage_templates.medium_hatchet = {
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				},
@@ -1239,6 +1252,29 @@ damage_templates.medium_hatchet = {
 		},
 	},
 }
+overrides.medium_hatchet_smiter = {
+	parent_template_name = "medium_hatchet",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				115,
+				230,
+			},
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_5,
+		},
+	},
+}
 overrides.light_axe_p2_special = {
 	parent_template_name = "axe_stab",
 	overrides = {
@@ -1268,8 +1304,8 @@ overrides.light_axe_p2_special = {
 			"power_distribution",
 			"attack",
 			{
-				25,
-				50,
+				70,
+				140,
 			},
 		},
 		{
@@ -1321,8 +1357,8 @@ overrides.light_axe_p2_special_2 = {
 			"power_distribution",
 			"attack",
 			{
-				25,
-				50,
+				60,
+				120,
 			},
 		},
 		{
@@ -1331,8 +1367,8 @@ overrides.light_axe_p2_special_2 = {
 			"power_distribution",
 			"impact",
 			{
-				8,
-				16,
+				10,
+				20,
 			},
 		},
 	},

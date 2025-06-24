@@ -156,10 +156,8 @@ PickupSystem.on_remove_extension = function (self, unit, ...)
 	PickupSystem.super.on_remove_extension(self, unit, ...)
 end
 
-PickupSystem.on_gameplay_post_init = function (self)
-	for unit, extension in pairs(self._unit_to_extension_map) do
-		extension:on_gameplay_post_init()
-	end
+PickupSystem.on_gameplay_post_init = function (self, level)
+	self:call_gameplay_post_init_on_extensions(level)
 
 	if self._is_server then
 		self:_populate_pickups()

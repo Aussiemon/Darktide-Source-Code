@@ -128,6 +128,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_o",
 			type = "pressed",
 		},
+		toggle_companion_perception = {
+			raw = "keyboard_right shift+keyboard_z",
+			type = "pressed",
+		},
 		toggle_minion_perception = {
 			raw = "keyboard_left shift+keyboard_z",
 			type = "pressed",

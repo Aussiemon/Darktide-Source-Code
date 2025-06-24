@@ -494,6 +494,10 @@ Buff.set_start_time = function (self, start_time)
 	end
 end
 
+Buff.force_finish = function (self)
+	self._finished = true
+end
+
 Buff.need_to_sync_start_time = function (self)
 	return self._need_to_sync_start_time
 end

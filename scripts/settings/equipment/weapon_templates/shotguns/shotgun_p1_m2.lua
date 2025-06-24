@@ -286,6 +286,7 @@ weapon_template.actions = {
 			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
 			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_muzzle_slug",
+			line_effect = LineEffects.pellet_trail,
 			weapon_special_line_effect = LineEffects.shotgun_slug_trail,
 		},
 		fire_configuration = {
@@ -369,6 +370,7 @@ weapon_template.actions = {
 			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
 			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_muzzle_slug",
+			line_effect = LineEffects.pellet_trail,
 			weapon_special_line_effect = LineEffects.shotgun_slug_trail,
 		},
 		fire_configuration = {
@@ -462,6 +464,7 @@ weapon_template.actions = {
 			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
 			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_muzzle_slug",
+			line_effect = LineEffects.pellet_trail,
 			weapon_special_line_effect = LineEffects.shotgun_slug_trail,
 		},
 		fire_configuration = {
@@ -561,6 +564,7 @@ weapon_template.actions = {
 		start_input = "reload",
 		stop_alternate_fire = true,
 		total_time = 0.95,
+		weapon_handling_template = "time_scale_1_1",
 		crosshair = {
 			crosshair_type = "none",
 		},
@@ -639,7 +643,7 @@ weapon_template.actions = {
 		kind = "reload_shotgun",
 		sprint_requires_press_to_interrupt = true,
 		total_time = 0.5,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		crosshair = {
 			crosshair_type = "none",
 		},
@@ -726,7 +730,7 @@ weapon_template.actions = {
 		start_input = "special_action",
 		stop_alternate_fire = true,
 		total_time = 1.5,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		crosshair = {
 			crosshair_type = "none",
 		},
@@ -901,8 +905,8 @@ weapon_template.keywords = {
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.dodge_template = "shotgun"
-weapon_template.sprint_template = "killshot"
-weapon_template.stamina_template = "lasrifle"
+weapon_template.sprint_template = "assault"
+weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.movement_curve_modifier_template = "default"

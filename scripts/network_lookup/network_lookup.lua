@@ -422,9 +422,12 @@ NetworkLookup.sound_parameters = {
 NetworkLookup.sound_switches = {
 	"surface_material",
 }
-NetworkLookup.sound_switch_values = table.append({
+NetworkLookup.sound_switch_values = {
 	"default",
-}, MaterialQuerySettings.surface_materials)
+}
+
+table.append(NetworkLookup.sound_switch_values, MaterialQuerySettings.surface_materials)
+
 NetworkLookup.surface_materials = table.append({}, MaterialQuerySettings.surface_materials)
 NetworkLookup.surface_hit_types = _create_lookup({}, SurfaceMaterialSettings.hit_types)
 NetworkLookup.timed_explosives = _create_lookup({}, TimedExplosivesSettings)
@@ -503,6 +506,11 @@ for i = 1, #HavocSettings.positive_modifiers do
 end
 
 NetworkLookup.havoc_modifiers = _create_lookup({}, hash_table)
+NetworkLookup.havoc_unlock_status = {
+	"locked",
+	"awaiting_maelstrom_completion",
+	"unlocked",
+}
 
 local function _init(name, lookup_table)
 	for index, key in ipairs(lookup_table) do

@@ -37,8 +37,19 @@ local mission_intro_view_settings = {
 		"slot_support_ability",
 		"slot_combat_ability",
 		"slot_grenade_ability",
+		"slot_companion_gear_full",
+		"slot_companion_body_skin_color",
+		"slot_companion_body_fur_color",
+		"slot_companion_body_coat_pattern",
 	},
 	animations_per_archetype = {
+		adamant = {
+			"mission_briefing_pose_02",
+			"mission_briefing_pose_04",
+			"mission_briefing_pose_05",
+			"mission_briefing_pose_06",
+			"mission_briefing_pose_07",
+		},
 		ogryn = {
 			"mission_briefing_pose_01",
 			"mission_briefing_pose_02",
@@ -70,6 +81,94 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
 			"mission_briefing_pose_07",
+		},
+	},
+	journey_briefing_lines = {
+		player_journey_01 = {
+			1,
+			1,
+			1,
+		},
+		player_journey_02 = {
+			3,
+			1,
+			4,
+		},
+		player_journey_03 = {
+			3,
+			4,
+			1,
+		},
+		player_journey_04 = {
+			1,
+			2,
+			4,
+		},
+		player_journey_05 = {
+			2,
+			1,
+			3,
+		},
+		player_journey_06_A = {
+			1,
+			1,
+			2,
+		},
+		player_journey_07_A = {
+			3,
+			3,
+			3,
+		},
+		player_journey_06_B = {
+			1,
+			1,
+			1,
+		},
+		player_journey_07_B = {
+			3,
+			2,
+			3,
+		},
+		player_journey_08 = {
+			1,
+			4,
+			3,
+		},
+		player_journey_09 = {
+			1,
+			2,
+			1,
+		},
+		player_journey_010 = {
+			1,
+			1,
+			1,
+		},
+		player_journey_011_A = {
+			2,
+			2,
+			2,
+		},
+		player_journey_012_A = {
+			4,
+			1,
+			4,
+		},
+		player_journey_013_A = {
+			4,
+			2,
+			1,
+		},
+		player_journey_011_B = {
+			1,
+			2,
+			1,
+			2,
+		},
+		player_journey_014 = {
+			1,
+			1,
+			3,
 		},
 	},
 }

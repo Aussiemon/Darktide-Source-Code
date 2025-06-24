@@ -365,6 +365,26 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_poxwalker_bomber,
+	companion_pounce_setting = {
+		companion_pounce_action = "stagger_and_leap_away",
+		on_target_hit = {
+			anim_event = "attack_leap_pushed_back_start",
+			animation_driven_duration = 0.36666666666666664,
+		},
+		land_anim_events = {
+			{
+				duration = 1.3333333333333333,
+				name = "attack_leap_pushed_back_land",
+			},
+		},
+		damage_profile = DamageProfileTemplates.adamant_companion_no_damage_pounce,
+		force_stagger_settings = {
+			duration = 2.5,
+			immune_time = 2.5,
+			length_scale = 1,
+			stagger_type = "heavy",
+		},
+	},
 }
 
 return breed_data

@@ -2,8 +2,7 @@
 
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
-local ItemUtils = require("scripts/utilities/items")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Items = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -375,7 +374,7 @@ local function create_tab_widgets(tab_settings)
 			},
 			{
 				pass_type = "texture",
-				value = ItemUtils.perk_textures(nil, i),
+				value = Items.perk_textures(nil, i),
 				style = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",

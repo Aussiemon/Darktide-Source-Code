@@ -469,7 +469,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 		else
 			add_end_margin = false
 		end
-	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
+	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "COMPANION_GEAR_FULL" then
 		layout[#layout + 1] = {
 			widget_type = "item_header",
 			item = item,

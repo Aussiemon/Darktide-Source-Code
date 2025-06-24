@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts.lua
 
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/adamant_buff_drone_placement_preview_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/adamant_whistle_targeting_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_luggable_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_ads_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
@@ -41,8 +43,11 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/randomized_friend_rock_unit")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/riot_shield_charge_display")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/riot_shield_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shock_maul_hit_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shotgun_special_shell_carrier")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shovel_fold_corrector")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sticky_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_trail")
@@ -201,14 +206,14 @@ WieldableSlotScripts.update = function (wieldable_slot_scripts, unit, dt, t)
 	end
 end
 
-WieldableSlotScripts.fixed_update = function (wieldable_slot_scripts, unit, dt, t)
+WieldableSlotScripts.fixed_update = function (wieldable_slot_scripts, unit, dt, t, frame)
 	local num_scripts = #wieldable_slot_scripts
 
 	for ii = 1, num_scripts do
 		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		if wieldable_slot_script.fixed_update then
-			wieldable_slot_script:fixed_update(unit, dt, t)
+			wieldable_slot_script:fixed_update(unit, dt, t, frame)
 		end
 	end
 end

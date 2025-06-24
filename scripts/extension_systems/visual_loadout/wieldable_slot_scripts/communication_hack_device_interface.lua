@@ -4,9 +4,11 @@ local LevelProps = require("scripts/settings/level_prop/level_props")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local CommunicationHackInterfaceDevice = class("CommunicationHackInterfaceDevice")
-local SINUS_LOOPING_SOUND_ALIAS = "sfx_minigame_sinus_loop"
-local SINUS_LOOPING_SOUND_ALIAS_A = "sfx_minigame_sinus_loop_a"
-local SINUS_LOOPING_SOUND_ALIAS_B = "sfx_minigame_sinus_loop_b"
+local SOUND_LOOP_ALIASES = {
+	"sfx_minigame_sinus_loop",
+	"sfx_minigame_sinus_loop",
+	"sfx_minigame_sinus_loop_b",
+}
 local FX_SOURCE_NAME = "_speaker"
 
 CommunicationHackInterfaceDevice.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
@@ -40,24 +42,7 @@ CommunicationHackInterfaceDevice.init = function (self, context, slot, weapon_te
 			local minigame_extension = ScriptUnit.fetch_component_extension(interface_unit, "minigame_system")
 			local minigame_type = minigame_extension:minigame_type()
 
-			self._sinus_looping_sound_components = {}
-
-			if minigame_type == "frequency" then
-				self._play_sinus_loop = true
-
-				local owner_unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
-				local sinus_looping_sound_component_name = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS)
-
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name)
-
-				local sinus_looping_sound_component_name_a = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS_A)
-
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_A] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name_a)
-
-				local sinus_looping_sound_component_name_b = PlayerUnitData.looping_sound_component_name(SINUS_LOOPING_SOUND_ALIAS_B)
-
-				self._sinus_looping_sound_components[SINUS_LOOPING_SOUND_ALIAS_B] = owner_unit_data_extension:read_component(sinus_looping_sound_component_name_b)
-			end
+			self._is_minigame_frequency = minigame_type == "frequency"
 		end
 	end
 end
@@ -74,14 +59,12 @@ CommunicationHackInterfaceDevice.destroy = function (self)
 		unit_spawner_manager:mark_for_deletion(self._interface_unit)
 
 		self._interface_unit = nil
+	end
+end
 
-		if not self._is_husk and self._play_sinus_loop then
-			for alias, sound_component in pairs(self._sinus_looping_sound_components) do
-				if sound_component.is_playing then
-					self._fx_extension:stop_looping_wwise_event(alias)
-				end
-			end
-		end
+CommunicationHackInterfaceDevice.run_sound_loops = function (self, frame)
+	for i = 1, #SOUND_LOOP_ALIASES do
+		self._fx_extension:run_looping_sound(SOUND_LOOP_ALIASES[i], FX_SOURCE_NAME, nil, frame)
 	end
 end
 
@@ -92,15 +75,8 @@ CommunicationHackInterfaceDevice.wield = function (self)
 		self._minigame_character_state_component.interface_is_level_unit = false
 		self._minigame_character_state_component.pocketable_device_active = false
 
-		if not self._is_husk and self._play_sinus_loop then
-			local fx_extension = self._fx_extension
-			local fx_source_name = self._fx_source_name
-
-			for alias, sound_component in pairs(self._sinus_looping_sound_components) do
-				if not sound_component.is_playing then
-					fx_extension:trigger_looping_wwise_event(alias, fx_source_name)
-				end
-			end
+		if not self._is_husk and self._is_minigame_frequency then
+			self._should_run_sound_loops = true
 		end
 	end
 end
@@ -112,18 +88,20 @@ CommunicationHackInterfaceDevice.unwield = function (self)
 		self._minigame_character_state_component.interface_is_level_unit = true
 		self._minigame_character_state_component.pocketable_device_active = false
 
-		if not self._is_husk and self._play_sinus_loop then
-			for alias, sound_component in pairs(self._sinus_looping_sound_components) do
-				if sound_component.is_playing then
-					self._fx_extension:stop_looping_wwise_event(alias)
-				end
-			end
+		if not self._is_husk and self._is_minigame_frequency then
+			self._should_run_sound_loops = false
 		end
 	end
 end
 
 CommunicationHackInterfaceDevice.fixed_update = function (self, unit, dt, t, frame)
-	return
+	if self._is_husk then
+		return
+	end
+
+	if self._should_run_sound_loops then
+		self:run_sound_loops(frame)
+	end
 end
 
 CommunicationHackInterfaceDevice.update = function (self, unit, dt, t)

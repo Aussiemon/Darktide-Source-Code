@@ -409,6 +409,31 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_color_2_red_black_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_gray_01",
+			},
+			two_color_blend_mask = {
+				resource = "content/characters/player/human/attachments_base/hair/shared/textures/hair_material_mask/hair_material_mask_01",
+			},
+		},
+		property_overrides = {
+			two_color_blend_bool = {
+				1,
+			},
+			two_color_blend_color_a = {
+				0.1,
+				0,
+				0,
+			},
+			two_color_blend_color_b = {
+				0.6,
+				0.01,
+				0,
+			},
+		},
+	},
 }
 
 return material_overrides

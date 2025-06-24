@@ -386,6 +386,7 @@ weapon_template.actions = {
 			shoot_sfx_alias = "ranged_single_shot",
 			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
+			line_effect = LineEffects.pellet_trail,
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
@@ -484,6 +485,7 @@ weapon_template.actions = {
 			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
 			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_p2_m1/shotgun_p2_m1_muzzle_double",
+			line_effect = LineEffects.pellet_trail,
 		},
 		fire_configuration = {
 			same_side_suppression_enabled = false,
@@ -831,7 +833,7 @@ weapon_template.actions = {
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.5,
+				chain_time = 0.4,
 			},
 			zoom = {
 				action_name = "action_zoom",

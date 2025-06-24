@@ -11,7 +11,7 @@ local Mastery = require("scripts/utilities/mastery")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 
 local function _info(...)
 	Log.info("ProgressionManager", ...)

@@ -34,10 +34,10 @@ local material_overrides = {
 	emissive_red_04 = {
 		property_overrides = {
 			emissive_color_intensity = {
-				0.09,
+				0.1,
 				0,
-				0.01,
-				1,
+				0.002,
+				6,
 			},
 		},
 	},

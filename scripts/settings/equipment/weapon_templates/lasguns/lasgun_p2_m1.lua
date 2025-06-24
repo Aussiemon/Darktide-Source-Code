@@ -143,7 +143,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	special_action_hold = {
-		buffer_time = 0.2,
+		buffer_time = 0.4,
 		input_sequence = {
 			{
 				hold_input = "weapon_extra_hold",
@@ -364,6 +364,7 @@ weapon_template.actions = {
 		kind = "ranged_wield",
 		total_time = 1.8,
 		uninterruptible = true,
+		weapon_handling_template = "time_scale_1_5",
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
 		conditional_state_to_action_input = {

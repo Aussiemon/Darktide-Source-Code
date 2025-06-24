@@ -107,6 +107,10 @@ ProjectileFxExtension.destroy = function (self)
 	end
 end
 
+ProjectileFxExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	return
+end
+
 ProjectileFxExtension.update = function (self, unit, dt, t)
 	local effects = self._effects
 

@@ -1,15 +1,15 @@
 ﻿-- chunkname: @scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view.lua
 
-local CreditsGoodsVendorViewSettings = require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_settings")
+require("scripts/ui/views/vendor_view_base/vendor_view_base")
+
 local Definitions = require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_definitions")
 local InputUtils = require("scripts/managers/input/input_utils")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings_new")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)
@@ -211,8 +211,8 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 
 				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
 
-				local display_name = ItemUtils.weapon_card_display_name(master_item) or "n/a"
-				local sub_display_name = ItemUtils.weapon_card_sub_display_name(master_item) or "n/a"
+				local display_name = Items.weapon_card_display_name(master_item) or "n/a"
+				local sub_display_name = Items.weapon_card_sub_display_name(master_item) or "n/a"
 				local weapon_level_requirement
 
 				for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
@@ -300,7 +300,7 @@ CreditsGoodsVendorView._close_result_overlay = function (self)
 
 	local result_item = self._result_item
 
-	ItemUtils.mark_item_id_as_new(result_item)
+	Items.mark_item_id_as_new(result_item)
 	Managers.event:trigger("event_vendor_view_purchased_item")
 end
 

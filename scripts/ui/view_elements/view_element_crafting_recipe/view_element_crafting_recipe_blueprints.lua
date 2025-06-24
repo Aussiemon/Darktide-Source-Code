@@ -3,9 +3,7 @@
 local Items = require("scripts/utilities/items")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local InputUtils = require("scripts/managers/input/input_utils")
+local Colors = require("scripts/utilities/ui/colors")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -31,7 +29,7 @@ local function highlight_color_change_function(content, style)
 	local is_highlighted = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
 	local progress = is_highlighted and content.highlight_progress or 0
 
-	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+	Colors.color_lerp(default_color, hover_color, progress, color)
 end
 
 local ViewElementCraftingRecipeBlueprints = {}
@@ -258,7 +256,7 @@ local function item_selection_button_change_function(content, style)
 	end
 
 	if color then
-		ColorUtilities.color_copy(color, style.color)
+		Colors.color_copy(color, style.color)
 	end
 end
 
@@ -474,7 +472,7 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
+				Colors.color_lerp(default_color, hover_color, progress, text_color)
 			end,
 		},
 	},
@@ -716,7 +714,7 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 				local text_color = style.text_color
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
+				Colors.color_lerp(default_color, hover_color, progress, text_color)
 			end,
 		},
 	},

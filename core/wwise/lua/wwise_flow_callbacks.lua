@@ -1,7 +1,6 @@
 ﻿-- chunkname: @core/wwise/lua/wwise_flow_callbacks.lua
 
 local WwiseVisualization = require("core/wwise/lua/wwise_visualization")
-local WwiseBankReference = require("core/wwise/lua/wwise_bank_reference")
 
 WwiseFlowCallbacks = WwiseFlowCallbacks or {}
 
@@ -44,12 +43,6 @@ M.wwise_load_bank = function (t)
 	end
 
 	Wwise.load_bank(name)
-
-	local use_ref_count = t.Reference_Count or false
-
-	if use_ref_count and use_ref_count == true then
-		WwiseBankReference:add(name)
-	end
 end
 
 M.wwise_unit_load_bank = function (t)
@@ -63,42 +56,12 @@ M.wwise_unit_load_bank = function (t)
 
 		if name and name ~= "" then
 			Wwise.load_bank(name)
-
-			local use_ref_count = t.Reference_Count or false
-
-			if use_ref_count and use_ref_count == true then
-				WwiseBankReference:add(name)
-			end
 		end
 	end
 end
 
 M.wwise_unload_bank = function (t)
-	local name = t.Name or t.name or ""
-
-	if name == "" then
-		local unit = Application.flow_callback_context_unit()
-
-		if unit then
-			name = Unit.get_data(unit, "Wwise", "bank_name")
-		end
-
-		if name == nil or name == "" then
-			return
-		end
-	end
-
-	local use_ref_count = t.Reference_Count or false
-
-	if use_ref_count and use_ref_count == true then
-		WwiseBankReference:remove(name)
-
-		if WwiseBankReference:count(name) == 0 then
-			Wwise.unload_bank(name)
-		end
-	else
-		Wwise.unload_bank(name)
-	end
+	return
 end
 
 M.wwise_set_language = function (t)

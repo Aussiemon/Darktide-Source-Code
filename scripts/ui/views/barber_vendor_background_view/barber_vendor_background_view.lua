@@ -14,7 +14,7 @@ end
 BarberVendorBackgroundView.on_enter = function (self)
 	BarberVendorBackgroundView.super.on_enter(self)
 
-	local viewport_name = Definitions.background_world_params.viewport_name
+	local viewport_name = self._definitions.background_world_params.viewport_name
 
 	if self._world_spawner then
 		self._world_spawner:set_listener(viewport_name)

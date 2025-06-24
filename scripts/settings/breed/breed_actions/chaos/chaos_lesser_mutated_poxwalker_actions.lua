@@ -271,7 +271,28 @@ local action_data = {
 			jump_vault_right_2 = "jumping",
 		},
 	},
-	disable = {},
+	disable = {
+		disable_anims = {
+			pounced = {
+				fwd = {
+					"dog_leap_pinned",
+				},
+				bwd = {
+					"dog_leap_pinned",
+				},
+				left = {
+					"dog_leap_pinned",
+				},
+				right = {
+					"dog_leap_pinned",
+				},
+			},
+		},
+		stand_anim = {
+			duration = 4,
+			name = "dog_leap_pinned_stand",
+		},
+	},
 	follow = {
 		controlled_stagger = true,
 		controlled_stagger_ignored_combat_range = "melee",

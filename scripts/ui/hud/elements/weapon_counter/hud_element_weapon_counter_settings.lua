@@ -19,6 +19,7 @@ local hud_element_weapon_counter_settings = {
 		29,
 	},
 	templates = {
+		"scripts/ui/hud/elements/weapon_counter/templates/weapon_counter_template_block_charges",
 		"scripts/ui/hud/elements/weapon_counter/templates/weapon_counter_template_kill_charges",
 		"scripts/ui/hud/elements/weapon_counter/templates/weapon_counter_template_overheat_lockout",
 	},

@@ -14,6 +14,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_01",
 		},
 	},
 	ventilation_purge_more_resistance_01 = {
@@ -29,6 +30,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_more_resistance_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_03",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_03",
 		},
 	},
 	ventilation_purge_less_resistance_01 = {
@@ -44,6 +46,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_less_resistance_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_04",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_04",
 		},
 	},
 	ventilation_purge_with_snipers_01 = {
@@ -60,6 +63,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_with_snipers_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_02",
 		},
 	},
 	ventilation_purge_with_snipers_more_resistance_01 = {
@@ -76,6 +80,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_with_snipers_more_resistance_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_03",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_03",
 		},
 	},
 	ventilation_purge_with_snipers_less_resistance_01 = {
@@ -92,6 +97,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_ventilation_purge_with_snipers_less_resistance_title",
 			happening_display_name = "loc_happening_ventilation_purge",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_04",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/ventilation_purge_04",
 		},
 	},
 }

@@ -204,6 +204,16 @@ weapon_handling_trait_templates.stubrevolver_crit_stat = {
 		},
 	},
 }
+weapon_handling_trait_templates.shotpistol_shield_p1_m1_crit_stat = {
+	{
+		"critical_strike",
+		"chance_modifier",
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+}
 weapon_handling_trait_templates.default_reload_speed_modify = {
 	{
 		"time_scale",

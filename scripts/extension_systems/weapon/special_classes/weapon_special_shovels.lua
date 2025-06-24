@@ -22,6 +22,10 @@ WeaponSpecialShovels.init = function (self, context, init_data)
 	self._locomotion_push_component = unit_data_extension:write_component("locomotion_push")
 end
 
+WeaponSpecialShovels.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialShovels.fixed_update = function (self, dt, t)
 	local time_to_play_deactivation_animation = self._time_to_play_deactivation_animation
 	local special_active = self._inventory_slot_component.special_active
@@ -81,6 +85,10 @@ WeaponSpecialShovels.process_hit = function (self, t, weapon, action_settings, n
 	if push_template then
 		Push.add(player_unit, self._locomotion_push_component, direction, push_template, attack_types.melee)
 	end
+end
+
+WeaponSpecialShovels.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialShovels.on_exit_damage_window = function (self, t, num_hit_enemies, aborted)

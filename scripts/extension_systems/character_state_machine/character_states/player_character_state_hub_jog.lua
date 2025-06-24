@@ -342,6 +342,12 @@ PlayerCharacterStateHubJog._check_transition = function (self, unit, t, next_sta
 
 		return "hub_emote"
 	end
+
+	local is_player_interacting = Managers.state.companion_interaction:is_player_interacting(unit)
+
+	if is_player_interacting then
+		return "hub_companion_interaction"
+	end
 end
 
 function _anims_from_angle(angle, anims)

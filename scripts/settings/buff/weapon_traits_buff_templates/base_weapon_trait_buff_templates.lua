@@ -1660,17 +1660,16 @@ local function _follow_up_shots_conditional_stat_buff_func(template_data, templa
 	local template = template_context.template
 	local use_combo = template.use_combo
 	local shooting_status_component = template_data.shooting_status_component
+	local num_shots_fired = shooting_status_component.num_shots
 	local is_follow_up_shots
 
 	if not use_combo then
-		local num_shots_fired = shooting_status_component.num_shots
-
 		is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2 or num_shots_fired == 3
 	else
-		local shooting_status_component_two = template_data.weapon_action_component
-		local combo_count = shooting_status_component_two.combo_count
+		local weapon_action_component = template_data.weapon_action_component
+		local combo_count = weapon_action_component.combo_count
 
-		is_follow_up_shots = combo_count == 1 or combo_count == 2
+		is_follow_up_shots = combo_count == 1 or combo_count == 2 or combo_count == 3
 	end
 
 	return is_follow_up_shots

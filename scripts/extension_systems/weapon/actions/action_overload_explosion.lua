@@ -44,8 +44,8 @@ ActionOverloadExplosion.start = function (self, action_settings, ...)
 	self._psyker_alternative_overload = talent_extension and talent_extension:has_special_rule("psyker_no_knock_down_overload")
 end
 
-ActionOverloadExplosion.fixed_update = function (self, dt, t, time_in_action)
-	ActionOverloadExplosion.super.fixed_update(self, dt, t, time_in_action)
+ActionOverloadExplosion.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionOverloadExplosion.super.fixed_update(self, dt, t, time_in_action, frame)
 
 	local action_settings = self._action_settings
 	local dot_settings = action_settings.dot_settings

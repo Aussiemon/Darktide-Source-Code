@@ -4,6 +4,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 
 local function _set_component_value(unit, breed, blackboard, scratchpad, action_data, t, args)
 	local component_name = args.component_name
@@ -157,6 +158,25 @@ local BtLeaveHooks = {
 
 		behavior_component.net_is_ready = true
 		behavior_component.shoot_net_cooldown = 0
+	end,
+	companion_leaving_movement = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+		navigation_extension:set_enabled(false)
+
+		local aim_component = Blackboard.write_component(blackboard, "aim")
+
+		aim_component.controlled_aiming = false
+	end,
+	companion_restore_pounce_state = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local pounce_component = Blackboard.write_component(blackboard, "pounce")
+
+		pounce_component.has_pounce_started = false
+		pounce_component.has_pounce_target = false
+		pounce_component.started_leap = false
+		pounce_component.pounce_cooldown = 0
+		pounce_component.has_jump_off_direction = true
+		pounce_component.use_fast_jump = false
 	end,
 }
 

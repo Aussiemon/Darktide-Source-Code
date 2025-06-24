@@ -77,7 +77,6 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 	local animation_extension = self._animation_extension
 
 	animation_extension:anim_event_1p("slide_in")
-	self._fx_extension:trigger_looping_wwise_event(self._sliding_loop_alias, FX_SOURCE_NAME)
 
 	local buff_extension = self._buff_extension
 
@@ -128,8 +127,6 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 		self._dodge_character_state_component.consecutive_dodges_cooldown = t + base_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
 	end
 
-	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
-
 	if next_state == "falling" and movement_state_component.is_crouching and not Crouch.crouch_input(self._input_extension, true, false, true) and Crouch.can_exit(unit) then
 		Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 	end
@@ -159,6 +156,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local move_state_component = self._movement_state_component
 	local velocity_current = locomotion.velocity_current
 
+	self._fx_extension:run_looping_sound(self._sliding_loop_alias, FX_SOURCE_NAME, nil, fixed_frame)
 	weapon_extension:update_weapon_actions(fixed_frame)
 	self._ability_extension:update_ability_actions(fixed_frame)
 

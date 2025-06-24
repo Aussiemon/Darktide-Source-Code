@@ -1,25 +1,21 @@
 ﻿-- chunkname: @scripts/ui/views/havoc_play_view/havoc_play_view.lua
 
 local HavocPlayViewDefinitions = require("scripts/ui/views/havoc_play_view/havoc_play_view_definitions")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local Havoc = require("scripts/utilities/havoc")
+local Colors = require("scripts/utilities/ui/colors")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local TextUtilities = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTutorialOverlay = require("scripts/ui/view_elements/view_element_tutorial_overlay/view_element_tutorial_overlay")
-local Zones = require("scripts/settings/zones/zones")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local InputUtils = require("scripts/managers/input/input_utils")
+local Zones = require("scripts/settings/zones/zones")
 local HavocPlayView = class("HavocPlayView", "BaseView")
 local havoc_info = Managers.data_service.havoc:get_settings()
 
@@ -146,9 +142,9 @@ HavocPlayView._setup_current_havoc_mission_data = function (self)
 		local destination_color = charges_widget.style["havoc_charge_" .. i].color
 
 		if i <= num_charges then
-			ColorUtilities.color_copy(Color.terminal_text_header(255, true), destination_color)
+			Colors.color_copy(Color.terminal_text_header(255, true), destination_color)
 		else
-			ColorUtilities.color_copy({
+			Colors.color_copy({
 				255,
 				74,
 				21,
@@ -363,7 +359,7 @@ HavocPlayView._update_reward_timer = function (self, dt)
 		timer_color[4] = timer_color[4] * background_color_intensity
 	end
 
-	self._widgets_by_name.reward_timer_header.content.text = string.format("%s %s", Localize("loc_havoc_time"), TextUtilities.apply_color_to_text(TextUtilities.format_time_span_long_form_localized(self._reward_end_time), timer_color))
+	self._widgets_by_name.reward_timer_header.content.text = string.format("%s %s", Localize("loc_havoc_time"), Text.apply_color_to_text(Text.format_time_span_long_form_localized(self._reward_end_time), timer_color))
 end
 
 HavocPlayView._setup_mission_detail_grid = function (self, mission_circumstances)

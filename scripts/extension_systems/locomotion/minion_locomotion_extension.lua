@@ -2,14 +2,16 @@
 
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local Breed = require("scripts/utilities/breed")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local LOCOMOTION_GRAVITY = 20
 local MinionLocomotionExtension = class("MinionLocomotionExtension")
 
 MinionLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
+	self._breed = extension_init_data.breed
 
-	local breed = extension_init_data.breed
-	local game_object_type = breed.game_object_type
+	local game_object_type = self._breed.game_object_type
 	local sync_full_rotation = Network.object_has_field(game_object_type, "rotation")
 
 	self._engine_extension_id = MinionLocomotion.register_extension(unit, LOCOMOTION_GRAVITY, sync_full_rotation)
@@ -112,9 +114,18 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 	local kill = MinionLocomotion.set_movement_type(self._engine_extension_id, movement_types[movement_type], override_mover_separate_distance)
 
 	if kill and not ignore_forced_mover_kill then
-		local damage_profile = DamageProfileTemplates.default
+		if Breed.is_companion(self._breed) then
+			local blackboard = BLACKBOARDS[unit]
+			local behavior_component = blackboard and Blackboard.write_component(blackboard, "behavior")
 
-		Attack.execute(unit, damage_profile, "instakill", true)
+			if behavior_component then
+				behavior_component.is_out_of_bound = true
+			end
+		else
+			local damage_profile = DamageProfileTemplates.default
+
+			Attack.execute(unit, damage_profile, "instakill", true)
+		end
 	end
 
 	return not kill

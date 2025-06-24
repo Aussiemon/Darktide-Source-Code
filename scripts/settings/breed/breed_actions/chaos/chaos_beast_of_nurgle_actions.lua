@@ -1107,6 +1107,54 @@ local action_data = {
 	exit_spawner = {
 		run_anim_event = "move_fwd",
 	},
+	patrol = {
+		anim_events = {
+			"walk_fwd",
+		},
+		speeds = {
+			walk_fwd = 1.8,
+		},
+	},
+	passive_alerted = {
+		instant_aggro_chance = 1,
+		moving_alerted_anim_events = {
+			bwd = "turn_bwd",
+			fwd = "walk_fwd",
+			left = "turn_left",
+			right = "turn_right",
+		},
+		start_move_anim_data = {
+			walk_fwd = {},
+			turn_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			turn_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			turn_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			turn_bwd = 0.13333333333333333,
+			turn_left = 0.1,
+			turn_right = 0.1,
+		},
+		start_rotation_durations = {
+			turn_bwd = 0.4666666666666667,
+			turn_left = 0.5,
+			turn_right = 0.5,
+		},
+		alerted_durations = {
+			turn_bwd = 0.6666666666666666,
+			turn_left = 0.6666666666666666,
+			turn_right = 0.6666666666666666,
+			walk_fwd = 0.6666666666666666,
+		},
+	},
 }
 
 action_data.weakspot_stagger = table.clone(action_data.stagger)

@@ -12,6 +12,7 @@ end
 _add_live_event("abhuman")
 _add_live_event("communication_hack")
 _add_live_event("darkness")
+_add_live_event("ember")
 _add_live_event("get_em_in_shape")
 _add_live_event("mechanicus")
 _add_live_event("moebian_21")

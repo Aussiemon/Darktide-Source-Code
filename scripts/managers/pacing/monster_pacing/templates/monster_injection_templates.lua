@@ -18,7 +18,7 @@ MonsterInjectionTemplates.backend_twins = {
 		local pacing_manager = Managers.state.pacing
 		local backend_activated = pacing_manager and pacing_manager:get_backend_pacing_control_flag("activate_twins")
 		local circumstance_name = Managers.state.circumstance:circumstance_name()
-		local non_twin_circumstance = circumstance_name ~= "toxic_gas_twins_01"
+		local non_twin_circumstance = circumstance_name ~= "player_journey_010"
 
 		return backend_activated and non_twin_circumstance
 	end,
@@ -40,6 +40,7 @@ do
 	local single_twin = table.clone(MonsterInjectionTemplates.backend_twins)
 
 	single_twin.breed_names = {
+		"renegade_twin_captain",
 		"renegade_twin_captain_two",
 	}
 	single_twin.difficulties = {

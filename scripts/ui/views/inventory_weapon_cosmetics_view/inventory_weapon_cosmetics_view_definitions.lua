@@ -1,9 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
-local ItemUtils = require("scripts/utilities/items")
-local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local Items = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")

@@ -17,6 +17,16 @@ SummonedMinionsExtension.init = function (self, extension_init_context, unit, ex
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_init_blackboard_components(blackboard)
+
+	local event_manager = Managers.event
+
+	event_manager:register(self, "player_unit_stealth_entered", "_wwise_on_player_stealth")
+end
+
+SummonedMinionsExtension.destroy = function (self)
+	local event_manager = Managers.event
+
+	event_manager:unregister(self, "player_unit_stealth_entered")
 end
 
 SummonedMinionsExtension._init_blackboard_components = function (self, blackboard)
@@ -91,6 +101,27 @@ SummonedMinionsExtension._wwise_on_death = function (self)
 end
 
 SummonedMinionsExtension.wwise_on_minion_success = function (self)
+	local template = self._template
+	local wwise_events = template.wwise_on_success_events
+
+	if not wwise_events then
+		return
+	end
+
+	local probability = template.wwise_event_probability
+	local chance = math.random()
+
+	if probability < chance then
+		local unit = self._unit
+		local position = POSITION_LOOKUP[unit]
+		local random_event = wwise_events[math.random(1, #wwise_events)]
+		local fx_system = Managers.state.extension:system("fx_system")
+
+		fx_system:trigger_wwise_event(random_event, position)
+	end
+end
+
+SummonedMinionsExtension._wwise_on_player_stealth = function (self)
 	local template = self._template
 	local wwise_events = template.wwise_on_success_events
 

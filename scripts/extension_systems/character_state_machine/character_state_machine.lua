@@ -118,8 +118,12 @@ CharacterStateMachine.exit_current_state = function (self)
 	end
 end
 
-CharacterStateMachine.current_state = function (self)
+CharacterStateMachine.current_state_name = function (self)
 	return self._state_current and self._state_current.name or "none"
+end
+
+CharacterStateMachine.current_state = function (self)
+	return self._state_current
 end
 
 CharacterStateMachine.set_state = function (self, unit, dt, t, next_state, params)

@@ -10,14 +10,8 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local get_hud_color = UIHudSettings.get_hud_color
 local view_styles = TrainingGroundsOptionsViewStyles
 local left_panel_size = TrainingGroundsOptionsViewSettings.panel_size.default
-local reward_size = {
-	288,
-	153.6,
-}
-local weapon_size = {
-	288,
-	153.6,
-}
+local reward_size = TrainingGroundsOptionsViewSettings.reward_size
+local weapon_size = TrainingGroundsOptionsViewSettings.weapon_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	left_panel = {
@@ -156,13 +150,27 @@ local scenegraph_definition = {
 		parent = "separator",
 		vertical_alignment = "bottom",
 		size = {
-			600,
-			60,
+			336,
+			94,
 		},
 		position = {
 			0,
-			130,
+			150,
 			10,
+		},
+	},
+	difficulty_stepper_indicators = {
+		horizontal_alignment = "left",
+		parent = "difficulty_stepper",
+		vertical_alignment = "top",
+		size = {
+			280,
+			0,
+		},
+		position = {
+			0,
+			0,
+			1,
 		},
 	},
 }
@@ -458,7 +466,9 @@ local widget_definitions = {
 			style = view_styles.select_difficulty_text_style,
 		},
 	}, "difficulty_stepper"),
-	difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.difficulty_stepper, "difficulty_stepper"),
+	difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.mission_board_stepper, "difficulty_stepper", {
+		next_page_unlocked = true,
+	}),
 }
 
 return {

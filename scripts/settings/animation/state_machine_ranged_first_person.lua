@@ -27,6 +27,9 @@ state_machine_settings["content/characters/player/ogryn/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/shotgun_rifle"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/shotgun_assault"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/human/first_person/animations/plasma_rifle"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
@@ -61,6 +64,9 @@ state_machine_settings["content/characters/player/ogryn/first_person/animations/
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/human/first_person/animations/double_barrel"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/assault_shield_shotpistol"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 

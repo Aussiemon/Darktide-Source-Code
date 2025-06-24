@@ -21,6 +21,10 @@ Store.get_ogryn_credits_goods_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_bespoke_weapons_ogryn", character_id, character_id)
 end
 
+Store.get_adamant_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_adamant", character_id, character_id)
+end
+
 Store.get_veteran_credits_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_veteran", character_id, character_id, true)
 end
@@ -35,6 +39,10 @@ end
 
 Store.get_ogryn_credits_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_ogryn", character_id, character_id, true)
+end
+
+Store.get_adamant_credits_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_adamant", character_id, character_id, true)
 end
 
 Store.get_veteran_credits_cosmetics_store = function (self, t, character_id)
@@ -53,6 +61,10 @@ Store.get_ogryn_credits_cosmetics_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_cosmetics_store_ogryn", character_id, character_id, false)
 end
 
+Store.get_adamant_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_adamant", character_id, character_id, false)
+end
+
 Store.get_veteran_credits_weapon_cosmetics_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_weapon_cosmetics_store_veteran", character_id, character_id, false)
 end
@@ -69,6 +81,10 @@ Store.get_ogryn_credits_weapon_cosmetics_store = function (self, t, character_id
 	return self:_get_storefront(t, "credits_weapon_cosmetics_store_ogryn", character_id, character_id, false)
 end
 
+Store.get_adamant_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_adamant", character_id, character_id, false)
+end
+
 Store.get_veteran_marks_store = function (self, t, character_id)
 	return self:_get_storefront(t, "marks_store_veteran", character_id, character_id, true)
 end
@@ -83,6 +99,10 @@ end
 
 Store.get_ogryn_marks_store = function (self, t, character_id)
 	return self:_get_storefront(t, "marks_store_ogryn", character_id, character_id, true)
+end
+
+Store.get_adamant_marks_store = function (self, t, character_id)
+	return self:_get_storefront(t, "marks_store_adamant", character_id, character_id, true)
 end
 
 Store.get_premium_storefront = function (self, storefront, t)

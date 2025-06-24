@@ -506,6 +506,13 @@ templates.renegade_flamer_backpack_damaged = {
 				_flamer_explode(unit, template_context)
 			end
 
+			local blackboard = template_data.blackboard
+			local disable_component = blackboard and blackboard.disable
+
+			if disable_component and disable_component.is_disabled then
+				return
+			end
+
 			if t >= template_data.duration then
 				template_data.duration = _play_flinch_anim(template_data, template_context)
 				template_data.duration = template_data.duration + t

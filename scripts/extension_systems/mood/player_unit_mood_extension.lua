@@ -393,7 +393,7 @@ PlayerUnitMoodExtension.remove_all_moods = function (self)
 		if mood_data.status ~= mood_status.inactive then
 			mood_data.entered_t = math.huge
 			mood_data.removed_t = math.huge
-			mood_data.status = mood_status.inactive
+			mood_data.status = mood_status.removing
 		end
 	end
 end

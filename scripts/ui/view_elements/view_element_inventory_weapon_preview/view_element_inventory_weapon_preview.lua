@@ -328,7 +328,9 @@ ViewElementInventoryWeaponPreview.present_item = function (self, item, disable_a
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
 	local item_base_unit_name = item.base_unit
-	local item_level_link_unit = self:_get_unit_by_value_key("weapon_alignment_tag", item_base_unit_name)
+	local ui_alignment_tag = item.ui_alignment_tag
+	local alignment_key_value = ui_alignment_tag or item_base_unit_name
+	local item_level_link_unit = self:_get_unit_by_value_key("weapon_alignment_tag", alignment_key_value)
 	local spawn_point_unit = item_level_link_unit or self._spawn_point_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
@@ -337,7 +339,7 @@ ViewElementInventoryWeaponPreview.present_item = function (self, item, disable_a
 	local ui_weapon_spawner = UIWeaponSpawner:new(previewer_reference_name, world, camera, unit_spawner)
 	local on_loaded_callback = callback(self, "cb_on_preview_loaded")
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, on_loaded_callback)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, on_loaded_callback)
 
 	if not disable_auto_spin then
 		local ignore_spin_randomness = true

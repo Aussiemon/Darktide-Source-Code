@@ -65,7 +65,7 @@ templates.weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting = {
 	format_values = {
 		weapon_spread = {
 			format_type = "percentage",
-			prefix = "+",
+			prefix = "",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting",
 				find_value_type = "trait_override",
@@ -77,7 +77,7 @@ templates.weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting = {
 		},
 		damage_near = {
 			format_type = "percentage",
-			prefix = "-",
+			prefix = "+",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_boltpistol_p1_hipfire_while_sprinting",
 				find_value_type = "trait_override",

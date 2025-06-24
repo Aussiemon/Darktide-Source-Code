@@ -52,6 +52,8 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renega
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_sniper_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_twin_captain_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_twin_captain_two_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/companion/companion_dog_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/companion/companion_dog_hub_actions")
 
 for _, actions_data in pairs(breed_actions) do
 	for action_name, action_data in pairs(actions_data) do

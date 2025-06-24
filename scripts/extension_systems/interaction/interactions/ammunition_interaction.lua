@@ -11,7 +11,7 @@ local Vo = require("scripts/utilities/vo")
 local buff_proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
-local _can_interact, _can_refill_grenades
+local _can_interact, _can_refill_grenades, _can_refill_weapon_special_charges
 
 AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
 	if interactor_is_server then
@@ -90,6 +90,12 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 				end
 			end
 		end
+
+		local can_refill_weapon_special_charges = _can_refill_weapon_special_charges(interactor_unit, slot_name)
+
+		if can_refill_weapon_special_charges then
+			inventory_slot_component.num_special_charges = inventory_slot_component.max_num_special_charges
+		end
 	end
 
 	local can_refill_grenades, _ = _can_refill_grenades(interactor_unit, pickup_data)
@@ -162,6 +168,13 @@ function _can_refill_grenades(interactor_unit, pickup_data)
 	end
 
 	return false, false
+end
+
+function _can_refill_weapon_special_charges(interactor_unit, slot_name)
+	local weapon_extension = ScriptUnit.has_extension(interactor_unit, "weapon_system")
+	local ammo_replenishes_num_special_charges = weapon_extension and weapon_extension:has_special_rule(slot_name, special_rules.ammo_pickups_replenishes_num_special_charges)
+
+	return ammo_replenishes_num_special_charges
 end
 
 return AmmunitionInteraction

@@ -37,13 +37,7 @@ ScanningEventSystem.get_scanning_device_units = function (self)
 end
 
 ScanningEventSystem.on_gameplay_post_init = function (self, level)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		if extension.on_gameplay_post_init then
-			extension:on_gameplay_post_init(level)
-		end
-	end
+	self:call_gameplay_post_init_on_extensions(level)
 end
 
 ScanningEventSystem.destroy = function (self)

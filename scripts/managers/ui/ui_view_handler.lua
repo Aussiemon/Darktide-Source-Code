@@ -159,19 +159,16 @@ UIViewHandler.wwise_music_state = function (self, wwise_state_group_name)
 
 	for i = #active_views_array, 1, -1 do
 		local view_name = active_views_array[i]
+		local view_settings = self:settings_by_view_name(view_name)
+		local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
 
-		if TEMP_DRAWN_VIEWS[view_name] then
-			local view_settings = self:settings_by_view_name(view_name)
-			local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
+		if wwise_state then
+			return wwise_state
+		elseif view_settings.wwise_state_query then
+			local view_data = self._active_views_data[view_name]
+			local view_instance = view_data.instance
 
-			if wwise_state then
-				return wwise_state
-			elseif view_settings.wwise_state_query then
-				local view_data = self._active_views_data[view_name]
-				local view_instance = view_data.instance
-
-				return view_instance:wwise_music_state()
-			end
+			return view_instance:wwise_music_state()
 		end
 	end
 end

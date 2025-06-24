@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/item/crafting_mechanicus_settings.lua
 
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local RankSettings = require("scripts/settings/item/rank_settings")
@@ -153,7 +153,7 @@ CraftingSettings.recipes.upgrade_item = {
 				}
 			end
 
-			local min_new_item_level = ItemUtils.item_trait_rating(item)
+			local min_new_item_level = Items.item_trait_rating(item)
 
 			if (not item.traits[#item.traits].rarity or item.traits[#item.traits].rarity == 0) and RankSettings[0].trait_rating[rank_item_type_name] == 0 then
 				min_new_item_level = min_new_item_level + RankSettings[1].trait_rating[rank_item_type_name]
@@ -178,7 +178,7 @@ CraftingSettings.recipes.upgrade_item = {
 				}
 			end
 
-			local min_new_item_level = ItemUtils.item_perk_rating(item)
+			local min_new_item_level = Items.item_perk_rating(item)
 
 			if (not item.perks[#item.perks].rarity or item.perks[#item.perks].rarity == 0) and RankSettings[0].perk_rating[rank_item_type_name] == 0 then
 				min_new_item_level = min_new_item_level + RankSettings[1].perk_rating[rank_item_type_name]
@@ -233,9 +233,9 @@ CraftingSettings.recipes.upgrade_expertise = {
 		local crafting_costs = Managers.backend.interfaces.crafting:crafting_costs()
 
 		if additional_data then
-			local start_expertise = additional_data.expertise_data.start / ItemUtils.get_expertise_multiplier()
-			local current_expertise = additional_data.expertise_data.current > 0 and additional_data.expertise_data.current / ItemUtils.get_expertise_multiplier() or start_expertise
-			local current_max = additional_data.expertise_data.max_available / ItemUtils.get_expertise_multiplier()
+			local start_expertise = additional_data.expertise_data.start / Items.get_expertise_multiplier()
+			local current_expertise = additional_data.expertise_data.current > 0 and additional_data.expertise_data.current / Items.get_expertise_multiplier() or start_expertise
+			local current_max = additional_data.expertise_data.max_available / Items.get_expertise_multiplier()
 			local can_craft = start_expertise < current_max
 			local operation_costs = crafting_costs.weapon and crafting_costs.weapon.addExpertise and crafting_costs.weapon.addExpertise.startCost
 
@@ -291,7 +291,7 @@ CraftingSettings.recipes.upgrade_expertise = {
 	end,
 	craft = function (ingredients, additional_data)
 		local item = ingredients.item
-		local added_expertise = additional_data.expertise_data.current / ItemUtils.get_expertise_multiplier()
+		local added_expertise = additional_data.expertise_data.current / Items.get_expertise_multiplier()
 		local costs = CraftingSettings.recipes.upgrade_expertise.get_costs(ingredients, additional_data)
 		local promise = Managers.data_service.crafting:add_weapon_expertise(item.gear_id, added_expertise, costs)
 
@@ -375,7 +375,7 @@ CraftingSettings.recipes.replace_trait = {
 			return false, Localize("loc_crafting_not_allowed_wasteful")
 		end
 
-		local trait_category = ItemUtils.trait_category(item)
+		local trait_category = Items.trait_category(item)
 		local seen_traits = Managers.data_service.crafting:cached_trait_sticker_book(trait_category)
 		local seen = true
 		local trait_id = new_trait_item.name

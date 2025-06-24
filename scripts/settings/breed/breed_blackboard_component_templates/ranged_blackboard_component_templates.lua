@@ -153,6 +153,16 @@ ranged_patroller_no_suppression.patrol = {
 }
 ranged_patroller_no_suppression.suppression = nil
 
+local renegade_flamer_mutator = table.clone(ranged_patroller)
+
+renegade_flamer_mutator.slot = nil
+renegade_flamer_mutator.blocked = nil
+renegade_flamer_mutator.suppression = nil
+renegade_flamer_mutator.statistics = {
+	num_attacks_done = "number",
+	num_in_liquid = "number",
+}
+
 local renegade_twin_captain = table.clone(grenadier)
 
 renegade_twin_captain.behavior = {
@@ -236,6 +246,7 @@ local templates = {
 	ranged_patroller = ranged_patroller,
 	ranged_patroller_no_suppression = ranged_patroller_no_suppression,
 	renegade_flamer = renegade_flamer,
+	renegade_flamer_mutator = renegade_flamer_mutator,
 	renegade_radio_operator = renegade_radio_operator,
 	renegade_twin_captain = renegade_twin_captain,
 	renegade_twin_captain_two = renegade_twin_captain_two,

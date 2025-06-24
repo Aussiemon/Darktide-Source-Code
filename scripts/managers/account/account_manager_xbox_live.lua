@@ -952,4 +952,76 @@ AccountManagerXboxLive._setup_region = function (self)
 	Log.info("AccountManagerXboxLive", "Geo location: %q, regional restrictions: %s", country_code, table.tostring(self._region_restrictions))
 end
 
+AccountManagerXboxLive.open_to_store = function (self, product_id)
+	local async_job, error_code = XboxLive.show_product_page_ui_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("show_product_page_ui_async returned error_code=0x%x", error_code),
+		})
+	end
+
+	local was_constrained = false
+
+	return Promise.until_value_is_true(function ()
+		local is_constrained = Application.is_constrained()
+
+		if is_constrained then
+			was_constrained = true
+		end
+
+		if not was_constrained then
+			return false
+		end
+
+		if is_constrained then
+			return false
+		end
+
+		local result = XboxLive.show_product_page_ui_async_result(async_job)
+
+		if result == nil then
+			return false
+		end
+
+		if result == 0 then
+			return {
+				success = true,
+			}
+		else
+			return {
+				success = false,
+			}
+		end
+	end)
+end
+
+AccountManagerXboxLive.is_owner_of = function (self, product_id)
+	local async_job, error_code = XboxLive.acquire_license_for_durables_async(product_id)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code),
+		})
+	end
+
+	return Promise.until_value_is_true(function ()
+		local result, error_code = XboxLive.acquire_license_for_durables_async_result(async_job)
+
+		if result == nil and error_code == nil then
+			return false
+		end
+
+		if result ~= nil then
+			return {
+				is_owner = result,
+			}
+		end
+
+		return {
+			is_owner = false,
+		}
+	end)
+end
+
 return AccountManagerXboxLive

@@ -69,7 +69,12 @@ select_difficulty_text_style.offset = {
 }
 select_difficulty_text_style.text_horizontal_alignment = "center"
 select_difficulty_text_style.vertical_alignment = "top"
+select_difficulty_text_style.horizontal_alignment = "center"
 select_difficulty_text_style.font_size = 28
+select_difficulty_text_style.size = {
+	600,
+	50,
+}
 
 local reward_font_style = table.clone(UIFontSettings.body)
 

@@ -56,6 +56,13 @@ local character_appearance_view_settings = {
 		"slot_grenade_ability",
 	},
 	animations_per_archetype = {
+		adamant = {
+			initial_event = "character_customization_idle",
+			events = {
+				body = "character_customization_idle",
+				head = "character_customization_idle_head",
+			},
+		},
 		ogryn = {
 			initial_event = "character_customization_idle",
 			events = {

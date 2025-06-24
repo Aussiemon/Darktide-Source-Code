@@ -422,6 +422,45 @@ overrides.fire_grenade_impact = {
 		},
 	},
 }
+overrides.adamant_grenade_impact = {
+	parent_template_name = "ogryn_grenade_impact",
+	overrides = {
+		{
+			"power_distribution",
+			"attack",
+			2,
+		},
+		{
+			"power_distribution",
+			"impact",
+			3,
+		},
+		{
+			"ragdoll_push_force",
+			150,
+		},
+		{
+			"gibbing_power",
+			0,
+		},
+		{
+			"ignore_stagger_reduction",
+			false,
+		},
+		{
+			"ignore_shield",
+			false,
+		},
+		{
+			"shield_override_stagger_strength",
+			0,
+		},
+		{
+			"gibbing_power",
+			0,
+		},
+	},
+}
 damage_templates.ogryn_friendly_rock_impact = {
 	gibbing_power = 0,
 	gibbing_type = 0,

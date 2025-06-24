@@ -1125,12 +1125,6 @@ RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 		group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_main_path)
 	end
 
-	if not group_index then
-		Log.info("RoamerPacing", "Failed to aggro roamer zones at position from_position, found no group near player.")
-
-		return
-	end
-
 	local zones = self._zones
 	local num_zones = #self._zones
 	local start_range = math.max(group_index - range, 1)

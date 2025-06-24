@@ -26,11 +26,11 @@ local function _handle_error(error_data)
 	return Promise.rejected(error_data)
 end
 
-ExternalPaymentPlatformXbox._get_payment_platform = function (self)
+ExternalPaymentPlatformXbox.get_payment_platform = function (self)
 	return "xbox"
 end
 
-ExternalPaymentPlatformXbox._get_platform_token = function (self)
+ExternalPaymentPlatformXbox.get_platform_token = function (self)
 	local user_id = Managers.account:user_id()
 
 	if user_id then
@@ -203,9 +203,9 @@ ExternalPaymentPlatformXbox.payment_options = function (self)
 end
 
 ExternalPaymentPlatformXbox.reconcile_pending_txns = function (self)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/reconcile"):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
@@ -220,9 +220,9 @@ ExternalPaymentPlatformXbox.reconcile_pending_txns = function (self)
 end
 
 ExternalPaymentPlatformXbox.reconcile_dlc = function (self, store_ids)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
@@ -244,7 +244,7 @@ end
 
 ExternalPaymentPlatformXbox.init_txn = function (self, payment_option)
 	return Managers.backend:authenticate():next(function (account)
-		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments"):query("platform", self:_get_payment_platform())
+		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments"):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",
@@ -258,9 +258,9 @@ ExternalPaymentPlatformXbox.init_txn = function (self, payment_option)
 end
 
 ExternalPaymentPlatformXbox.finalize_txn = function (self, order_id)
-	return self:_get_platform_token():next(function (token)
+	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:_get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
@@ -279,7 +279,7 @@ end
 
 ExternalPaymentPlatformXbox.fail_txn = function (self, order_id)
 	return Managers.backend:authenticate():next(function (account)
-		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:_get_payment_platform())
+		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payments/"):path(order_id):query("platform", self:get_payment_platform())
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "DELETE",
@@ -461,6 +461,32 @@ ExternalPaymentPlatformXbox.get_options = function (self)
 				return result
 			end
 		end)
+	end)
+end
+
+ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, signature_string)
+	local async_job, error_code = XStore.query_license_token_async(product_ids, signature_string)
+
+	if not async_job then
+		return Promise.rejected({
+			message = string.format("query_license_token_async returned error_code=0x%x", error_code),
+		})
+	end
+
+	return Promise.until_value_is_true(function ()
+		local result, error_code = XStore.query_license_token_async_result(async_job)
+
+		if result == nil and error_code == nil then
+			return false
+		end
+
+		if error_code ~= nil then
+			return false, {
+				error = string.format("query_license_token_async_result returned error_code=0x%x", error_code),
+			}
+		end
+
+		return result
 	end)
 end
 

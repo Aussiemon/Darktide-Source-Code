@@ -56,12 +56,23 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 	local unit_data = extensions.unit_data
 	local inventory_component = unit_data:read_component("inventory")
 	local ability_extension = extensions.ability
+	local equipped_abilities = ability_extension:equipped_abilities()
+	local grenade_ability = equipped_abilities.grenade_ability
 	local force_update_positions = false
 
 	for slot_id, settings in pairs(HudElementPlayerWeaponHandlerSettings.slots_settings) do
 		local slot_component = unit_data:read_component(slot_id)
 		local item_slot_settings = ItemSlotSettings[slot_id]
-		local weapon_name = inventory_component[slot_id]
+		local weapon_name
+
+		if settings.ability then
+			local ability_name = grenade_ability and grenade_ability.name
+
+			weapon_name = inventory_component[slot_id] ~= "not_equipped" and inventory_component[slot_id] or ability_name or "not_equipped"
+		else
+			weapon_name = inventory_component[slot_id]
+		end
+
 		local slot_data = player_weapons[slot_id]
 		local weapon_template = weapon_name and visual_loadout_extension:weapon_template_from_slot(slot_id)
 		local item = weapon_name and visual_loadout_extension:item_from_slot(slot_id)
@@ -99,6 +110,31 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 					ability_type = ability_type,
 					slot_component = slot_component,
 					weapon_template = weapon_template,
+					weapon_name = weapon_name,
+					index = order_index,
+				}
+
+				player_weapons[slot_id] = data
+				player_weapons_array[#player_weapons_array + 1] = data
+				data.hud_element_player_weapon = HudElementPlayerWeapon:new(parent, draw_layer, scale, data)
+				force_update_positions = true
+			end
+		elseif not player_weapons[slot_id] and settings.ability and grenade_ability and grenade_ability and grenade_ability.hud_configuration then
+			local can_add_ability = num_weapons < self._max_slots
+
+			if can_add_ability then
+				local ability_type = grenade_ability.ability_type
+				local order_index = settings.order_index
+				local data = {
+					synced = true,
+					player = my_player,
+					slot_id = slot_id,
+					icon = grenade_ability.hud_icon,
+					inventory_component = inventory_component,
+					ability_extension = ability_extension,
+					ability = grenade_ability,
+					ability_type = ability_type,
+					slot_component = slot_component,
 					weapon_name = weapon_name,
 					index = order_index,
 				}

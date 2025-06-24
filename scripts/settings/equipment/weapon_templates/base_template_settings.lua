@@ -79,6 +79,10 @@ base_template_settings.action_inputs = {
 			},
 		},
 	},
+	adamant_whistle_command = {
+		buffer_time = 0,
+		dont_queue = true,
+	},
 }
 
 table.add_missing(base_template_settings.action_inputs, base_template_settings.combat_ability_action_inputs)
@@ -105,7 +109,7 @@ base_template_settings.grenade_ability_actions = {
 		uninterruptible = true,
 		allowed_chain_actions = {},
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and not _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
+			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and not _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives) and not _has_talent_special_rule(condition_func_params, special_rules.adamant_whistle)
 		end,
 	},
 	grenade_ability_zealot_throwing_knives = {
@@ -141,7 +145,7 @@ base_template_settings.grenade_ability_actions = {
 		},
 		projectile_template = ProjectileTemplates.zealot_throwing_knives,
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
+			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives) and not _has_talent_special_rule(condition_func_params, special_rules.adamant_whistle)
 		end,
 	},
 }
@@ -157,6 +161,10 @@ base_template_settings.action_input_hierarchy = {
 	},
 	{
 		input = "grenade_ability",
+		transition = "stay",
+	},
+	{
+		input = "adamant_whistle_command",
 		transition = "stay",
 	},
 	{

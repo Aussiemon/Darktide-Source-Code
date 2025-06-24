@@ -58,5 +58,6 @@ _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade_sh
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade_sniper_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade_twin_captain_two_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade_twin_captain_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/companion_dog_visual_loadout_templates")
 
 return settings("MinionVisualLoadoutTemplates", minion_visual_loadout_templates)

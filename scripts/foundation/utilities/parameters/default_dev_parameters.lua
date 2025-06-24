@@ -22,6 +22,7 @@ local categories = {
 	"Chunk Lod",
 	"Coherency",
 	"Combat Vector",
+	"Companion",
 	"Corruptors",
 	"Covers",
 	"Critical Strikes",
@@ -411,6 +412,10 @@ params.debug_template_effects = {
 	category = "Effects",
 	value = false,
 }
+params.debug_companion_dog_effects = {
+	category = "Effects",
+	value = false,
+}
 params.debug_draw_cultist_ritualist_chanting_effects = {
 	category = "Effects",
 	value = false,
@@ -548,6 +553,10 @@ params.debug_fill_pickup_spawners = {
 	},
 }
 params.debug_proximity_heal = {
+	category = "Pickups",
+	value = false,
+}
+params.debug_proximity_shock = {
 	category = "Pickups",
 	value = false,
 }
@@ -1518,6 +1527,22 @@ params.debug_perception = {
 		"both",
 	},
 }
+params.disable_companion_perception = {
+	category = "Perception",
+	name = "disable_companion_perception, Keybind: R-SHIFT + Z",
+	value = false,
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_disable_companion_perception(channel, new_value)
+		end
+	end,
+}
 params.disable_minion_perception = {
 	category = "Perception",
 	name = "disable_minion_perception, Keybind: L-SHIFT + Z",
@@ -1750,6 +1775,10 @@ params.debug_draw_force_translation = {
 	value = false,
 }
 params.draw_third_person_player_rotation = {
+	category = "Locomotion",
+	value = false,
+}
+params.debug_move_around_target = {
 	category = "Locomotion",
 	value = false,
 }
@@ -2040,6 +2069,14 @@ params.debug_draw_ballistic_raycast = {
 	value = false,
 }
 params.debug_aim_placement_raycast = {
+	category = "Action",
+	value = false,
+}
+params.always_validate_weapon_shout_action_condition = {
+	category = "Action",
+	value = false,
+}
+params.debug_draw_action_weapon_shout = {
 	category = "Action",
 	value = false,
 }
@@ -2475,6 +2512,10 @@ params.kill_debug_spawned_minions_outside_navmesh = {
 	category = "Minions",
 	value = true,
 }
+params.show_minion_tokens = {
+	category = "Minions",
+	value = false,
+}
 params.mute_minion_sounds = {
 	category = "Minions",
 	value = false,
@@ -2675,7 +2716,7 @@ params.chunk_lod_free_flight_camera_raycast = {
 }
 params.debug_print_stripped_items = {
 	category = "Item",
-	value = true,
+	value = false,
 }
 params.show_gear_ids = {
 	category = "Item",
@@ -2940,25 +2981,6 @@ params.enemy_outlines = {
 	options = {
 		"off",
 		"on",
-	},
-}
-params.player_outlines_mode = {
-	category = "Hud",
-	value = "skeleton",
-	options = {
-		"off",
-		"always",
-		"obscured",
-		"skeleton",
-	},
-}
-params.player_outlines_type = {
-	category = "Hud",
-	value = "both",
-	options = {
-		"outlines",
-		"mesh",
-		"both",
 	},
 }
 params.disable_outlines = {
@@ -3381,6 +3403,10 @@ params.perfhud_io = {
 	on_value_set = function (new_value)
 		Application.console_command("perfhud", "io")
 	end,
+}
+params.ui_skip_campaign_missions = {
+	category = "UI",
+	value = false,
 }
 params.ui_developer_mode = {
 	category = "UI",
@@ -4586,6 +4612,10 @@ params.debug_skip_backend_talent_verification = {
 	category = "Talents",
 	value = false,
 }
+params.talent_tree_no_restrictions = {
+	category = "Talents",
+	value = false,
+}
 params.talent_tree_infinite_points = {
 	category = "Talents",
 	value = false,
@@ -4714,7 +4744,7 @@ params.debug_blocking = {
 	category = "Weapon",
 	value = false,
 }
-params.debug_looping_sound_components = {
+params.debug_looping_sounds = {
 	category = "Weapon",
 	value = false,
 }
@@ -4755,6 +4785,10 @@ params.debug_movement_aim_assist_logging = {
 	value = false,
 }
 params.debug_ammo_count_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_area_buff_drone_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -4799,6 +4833,18 @@ params.debug_power_weapon_overheat_effects = {
 	value = false,
 }
 params.debug_psyker_throwing_knives_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_riot_shield_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_shock_mine_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_shock_mine_target_link_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -5259,6 +5305,10 @@ params.force_hub_location_intros = {
 	name = "Always show hub location introductions (hli)",
 	value = false,
 }
+params.ignore_journey = {
+	category = "Game Flow",
+	value = false,
+}
 params.skip_prologue = {
 	category = "Game Flow",
 	value = BUILD ~= "release",
@@ -5380,6 +5430,63 @@ params.debug_haptics = {
 	category = "Rumble & Haptics",
 	value = false,
 }
+params.debug_companion_movement = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_points = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_idle_state = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_move_around_enemy_action = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_leap_action = {
+	category = "Companion",
+	value = false,
+}
+params.companion_force_miss_target = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_force_idle = {
+	category = "Companion",
+	value = false,
+}
+params.companion_show_target_weights = {
+	category = "Companion",
+	value = false,
+}
+params.companion_show_animation_movement_speed = {
+	category = "Companion",
+	value = false,
+}
+params.companion_show_animation_movement_speed_offset = {
+	category = "Companion",
+	value = false,
+}
+params.companion_debug_jump_off = {
+	category = "Companion",
+	value = false,
+}
+params.companion_log_leap_fail_reason = {
+	category = "Companion",
+	value = false,
+}
+params.companion_debug_unstuck_check = {
+	category = "Companion",
+	value = false,
+}
+params.debug_companion_hub_interaction_distance_to_player = {
+	category = "Companion",
+	num_decimals = 2,
+	value = 2.25,
+}
 
 local function _draw_broadphase_spheres_of_all_units_in_broadphase()
 	local destructible_system = Managers.state.extension:system("destructible_system")
@@ -5494,6 +5601,9 @@ params.disable_beast_of_nurgle_consumed_effect = {
 }
 params.imgui_lua_inspector_input = {
 	value = "",
+}
+params.auto_attach_debugger = {
+	value = false,
 }
 
 local function _set_build_override_parameter(parameter_name, value)

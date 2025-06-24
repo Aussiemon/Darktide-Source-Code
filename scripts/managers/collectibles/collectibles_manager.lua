@@ -168,11 +168,12 @@ CollectiblesManager.collectible_destroyed = function (self, data, attacking_unit
 	end
 
 	local peer_id = player:peer_id()
+	local local_player_id = player:local_player_id()
 	local section_id = data.section_id
 	local id = data.id
 
-	Managers.state.game_session:send_rpc_clients("rpc_player_destroyed_destructible_collectible", peer_id, section_id, id)
-	self:_show_delayed_destructible_notification(peer_id, section_id, id)
+	Managers.state.game_session:send_rpc_clients("rpc_player_destroyed_destructible_collectible", peer_id, local_player_id, section_id, id)
+	self:_show_destructible_notification(peer_id, local_player_id, section_id, id)
 
 	local optional_ignore_notification = true
 	local optional_allow_multiple_per_unit = true
@@ -190,39 +191,14 @@ CollectiblesManager.collectible_destroyed = function (self, data, attacking_unit
 	end
 end
 
-CollectiblesManager.rpc_player_destroyed_destructible_collectible = function (self, channel_id, peer_id, section_id, id)
-	self:_show_delayed_destructible_notification(peer_id, section_id, id)
+CollectiblesManager.rpc_player_destroyed_destructible_collectible = function (self, channel_id, peer_id, local_player_id, section_id, id)
+	self:_show_destructible_notification(peer_id, local_player_id, section_id, id)
 end
 
 local DELAY = 0.4
 
-CollectiblesManager._show_delayed_destructible_notification = function (self, peer_id, section_id, id)
-	self._delayed_notifications[#self._delayed_notifications + 1] = {
-		peer_id = peer_id,
-		section_id = section_id,
-		id = id,
-		timer = DELAY,
-	}
-end
-
-CollectiblesManager._update_delayed_destructible_notification = function (self, dt)
-	for i = 1, #self._delayed_notifications do
-		local delayed_notification = self._delayed_notifications[i]
-
-		delayed_notification.timer = delayed_notification.timer - dt
-
-		if delayed_notification.timer <= 0 then
-			self:_show_destructible_notification(delayed_notification.peer_id, delayed_notification.section_id, delayed_notification.id)
-			table.remove(self._delayed_notifications, i)
-
-			return
-		end
-	end
-end
-
-CollectiblesManager._show_destructible_notification = function (self, peer_id, section_id, id)
+CollectiblesManager._show_destructible_notification = function (self, peer_id, local_player_id, section_id, id)
 	local player_manager = Managers.player
-	local local_player_id = 1
 	local player = player_manager:player(peer_id, local_player_id)
 	local player_name = player and player:name()
 
@@ -236,14 +212,17 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, s
 		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
 	end
 
-	local num_total = self._num_destructibles
+	player_name = player_name or Localize("loc_unknown_player_name")
 
-	Managers.event:trigger("event_add_notification_message", "destructible", {
+	local num_total = self._num_destructibles
+	local notification_data = {
 		player_name = player_name,
 		player = player,
 		num_collected = self._num_destructibles_destroyed,
 		num_total = num_total,
-	})
+	}
+
+	Managers.event:trigger("event_add_notification_message", "destructible", notification_data, nil, nil, nil, DELAY)
 end
 
 CollectiblesManager.rpc_player_collected_collectible = function (self, channel_id, peer_id, collectible_type_lookup)
@@ -303,7 +282,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 end
 
 CollectiblesManager.update = function (self, dt, t)
-	self:_update_delayed_destructible_notification(dt)
+	return
 end
 
 return CollectiblesManager

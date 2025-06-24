@@ -381,49 +381,6 @@ local difficulty = styles.difficulty
 
 difficulty.difficulty_font = table.clone(UIFontSettings.mission_detail_sub_header)
 difficulty.difficulty_font.text_horizontal_alignment = "center"
-difficulty.difficulty_icon = {
-	amount = 0,
-	direction = 1,
-	spacing = 8,
-	vertical_alignment = "center",
-	offset = {
-		40,
-		10,
-		0,
-	},
-	size = {
-		18,
-		40,
-	},
-	color = {
-		255,
-		169,
-		191,
-		153,
-	},
-}
-difficulty.diffulty_icon_background = table.clone(difficulty.difficulty_icon)
-
-local stat_diffulty_icon_background_style = difficulty.diffulty_icon_background
-
-stat_diffulty_icon_background_style.color = Color.terminal_background_dark(255, true)
-stat_diffulty_icon_background_style.amount = 5
-difficulty.diffulty_icon_background_frame = table.clone(difficulty.difficulty_icon)
-
-local diffulty_icon_background_frame_style = difficulty.diffulty_icon_background_frame
-
-diffulty_icon_background_frame_style.color = {
-	255,
-	169,
-	191,
-	153,
-}
-diffulty_icon_background_frame_style.amount = 5
-diffulty_icon_background_frame_style.offset = {
-	40,
-	10,
-	3,
-}
 difficulty.rankup_icon = {
 	amount = 0,
 	axis = 2,

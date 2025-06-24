@@ -960,6 +960,54 @@ local base_talents = {
 				identifier = "player_melee_damage_node_buff_low_5",
 			},
 		},
+		base_impact_node_buff_medium_1 = {
+			description = "loc_talent_impact_boost_medium_desc",
+			display_name = "loc_talent_impact_boost_medium",
+			name = "[dev] impact bonus",
+			format_values = {
+				impact = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_impact_node_buff_medium_1",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.impact_modifier,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_impact_node_buff_medium_1",
+				identifier = "player_impact_node_buff_medium_1",
+			},
+		},
+		base_cleave_node_buff_medium_1 = {
+			description = "loc_talent_cleave_boost_medium_desc",
+			display_name = "loc_talent_cleave_boost_medium",
+			name = "[dev] cleave bonus",
+			format_values = {
+				cleave = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_cleave_node_buff_medium_1",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.max_hit_mass_attack_modifier,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_cleave_node_buff_medium_1",
+				identifier = "player_cleave_node_buff_medium_1",
+			},
+		},
 		base_melee_damage_node_buff_medium_1 = {
 			description = "loc_talent_melee_damage_boost_medium_desc",
 			display_name = "loc_talent_melee_damage_boost_medium",

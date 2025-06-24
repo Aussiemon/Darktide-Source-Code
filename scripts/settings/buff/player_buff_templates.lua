@@ -201,7 +201,7 @@ templates.coherency_toughness_regen = {
 	display_title = "loc_player_buff_coherency_toughness_regen",
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_coherence_buff_hud",
 	hud_priority = 0,
-	max_stacks = 4,
+	max_stacks = 8,
 	predicted = false,
 	title = "Coherency",
 	keywords = {},
@@ -217,6 +217,18 @@ templates.coherency_toughness_regen = {
 		},
 		{
 			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1,
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.25,
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.5,
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 1.75,
+		},
+		{
+			[buff_stat_buffs.toughness_coherency_regen_rate_modifier] = 2,
 		},
 	},
 	start_func = function (template_data, template_context)
@@ -799,6 +811,69 @@ templates.player_melee_damage_node_buff_low_2 = table.clone(templates.player_mel
 templates.player_melee_damage_node_buff_low_3 = table.clone(templates.player_melee_damage_node_buff_low_1)
 templates.player_melee_damage_node_buff_low_4 = table.clone(templates.player_melee_damage_node_buff_low_1)
 templates.player_melee_damage_node_buff_low_5 = table.clone(templates.player_melee_damage_node_buff_low_1)
+templates.player_impact_node_buff_medium_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.impact_modifier] = 0.25,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.impact_modifier] = 0.25,
+			},
+		},
+	},
+}
+templates.player_cleave_node_buff_medium_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+		[stat_buffs.max_hit_mass_impact_modifier] = 0.25,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25,
+				[stat_buffs.max_hit_mass_impact_modifier] = 0.25,
+			},
+		},
+	},
+}
 templates.player_melee_damage_node_buff_medium_1 = {
 	class_name = "buff",
 	predicted = false,

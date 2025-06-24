@@ -189,6 +189,7 @@ local function profile_from_backend_data(backend_profile_data)
 		specialization = specialization,
 		name = character.name,
 		personal = character.personal,
+		companion = character.companion,
 	}
 	local items = profile_data.items
 	local loadout_item_data = backend_profile.loadout_item_data
@@ -352,17 +353,6 @@ local function _generate_visual_loadout(visual_items)
 				for index, attachment_data in pairs(attachments) do
 					overrides.attachments[index] = attachment_data
 				end
-			end
-
-			local skin_color_slot_name = "slot_body_skin_color"
-			local skin_color_item_data = visual_items[skin_color_slot_name]
-
-			if skin_color_item_data and slot_name ~= skin_color_slot_name then
-				overrides = overrides or {}
-				overrides.attachments = overrides.attachments or {}
-				overrides.attachments[skin_color_slot_name] = {
-					item = skin_color_item_data.item,
-				}
 			end
 
 			if #voice_fx_presets > 0 then
@@ -679,6 +669,10 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		personal = character.personal,
 	}
 
+	if character.companion then
+		profile.companion = character.companion
+	end
+
 	for slot, gear_id in pairs(item_ids) do
 		if ItemSlotSettings[slot] then
 			local gear = gear_list[gear_id]
@@ -720,6 +714,10 @@ end
 
 ProfileUtils.character_name = function (profile)
 	return profile.name or "<profile_character_name>"
+end
+
+ProfileUtils.character_companion_name = function (profile)
+	return profile.companion and profile.companion.name or "<profile_companion_name>"
 end
 
 ProfileUtils.generate_random_name = function (profile)
@@ -1181,6 +1179,60 @@ ProfileUtils.verify_saved_profile_presets_talents_version = function (character_
 	end
 
 	return profile_presets
+end
+
+ProfileUtils.generate_visual_loadout = function (loadout)
+	local ui_loadout = {}
+
+	for slot_name, item in pairs(loadout) do
+		local visual_item = ProfileUtils.generate_visual_item(item)
+
+		if visual_item then
+			ui_loadout[slot_name] = visual_item
+		end
+	end
+
+	return _generate_visual_loadout(ui_loadout)
+end
+
+ProfileUtils.generate_visual_item = function (item)
+	local visual_item
+
+	if not item.is_ui_item_preview then
+		visual_item = item and item.name and MasterItems.get_ui_item_instance(item)
+	else
+		visual_item = item
+	end
+
+	if visual_item and visual_item.base_unit then
+		return {
+			item = visual_item,
+			gear = visual_item.gear,
+			item_id = visual_item.gear_id,
+		}
+	end
+end
+
+ProfileUtils.has_companion = function (profile)
+	local equiped_talents = profile.talents
+	local archetype = profile.archetype
+	local archetype_talents = archetype.talents
+
+	if not archetype.companion_breed then
+		return false
+	end
+
+	if equiped_talents then
+		for archetype_name, _ in pairs(equiped_talents) do
+			local talent_data = archetype_talents[archetype_name]
+
+			if talent_data and talent_data.special_rule and talent_data.special_rule.special_rule_name == "disable_companion" then
+				return false
+			end
+		end
+	end
+
+	return true, archetype.companion_breed
 end
 
 return ProfileUtils

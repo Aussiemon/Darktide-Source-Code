@@ -140,6 +140,12 @@ HumanPlayer.breed_name = function (self)
 	return self._profile.archetype.breed
 end
 
+HumanPlayer.companion_name = function (self)
+	local companion_data = self._profile.companion
+
+	return companion_data and companion_data.name or nil
+end
+
 HumanPlayer.telemetry_game_session = function (self)
 	return self._telemetry_game_session
 end

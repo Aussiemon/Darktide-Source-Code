@@ -1149,6 +1149,20 @@ TelemetryEvents.player_hordes_mode_ended = function (self, player, game_won, tim
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.player_interacted_with_companion_in_hub = function (self, player, interaction_name, interaction_completion_percentage)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_interacted_with_companion_in_hub", {
+		game = player:telemetry_game_session(),
+		gameplay = self._session.gameplay,
+	})
+	local data = {
+		interaction_name = interaction_name,
+		completion_percent = interaction_completion_percentage,
+	}
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.fixed_update_missed_inputs_report = function (self, reports)
 	for player, report in pairs(reports) do
 		local entries = report.entries
@@ -1221,7 +1235,7 @@ TelemetryEvents.post_batch = function (self, batch_size, time_since_last_post, e
 end
 
 TelemetryEvents.crashify_properties = function (self)
-	local crashify_properties = Application.get_crash_properties()
+	local crashify_properties = Crashify.get_print_properties()
 	local event = self:_create_event("crashify_properties")
 
 	event:set_data(crashify_properties)
@@ -1244,6 +1258,29 @@ TelemetryEvents.memory_usage = function (self, tag)
 		mission_id = mission_id,
 		missions_started = missions_started,
 		usage = usage,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.dlc_popup_opened = function (self, dlc_telemetry_id)
+	local event = self:_create_event("dlc_popup_opened")
+	local active_views = Managers.ui:active_views()
+
+	event:set_data({
+		identifier = dlc_telemetry_id,
+		active_views = active_views,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.dlc_purchase_button_clicked = function (self, dlc_telemetry_id, dlc_variant)
+	local event = self:_create_event("dlc_purchase_button_clicked")
+	local active_views = Managers.ui:active_views()
+
+	event:set_data({
+		identifier = dlc_telemetry_id,
+		dlc_variant = dlc_variant,
+		active_views = active_views,
 	})
 	self._manager:register_event(event)
 end

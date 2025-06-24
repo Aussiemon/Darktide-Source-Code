@@ -841,22 +841,17 @@ local button_options_definitions = {
 
 				content.text = Localize("loc_horde_psykanium_horde_button")
 
-				local player = Managers.player:local_player(1)
-				local profile = player:profile()
-				local player_level = profile.current_level
-				local horde_mode_min_level = PlayerProgressionUnlocks.horde_mode
+				local game_mode_data = Managers.data_service.mission_board:get_game_modes_progression_data()
+				local game_mode_progression = game_mode_data and game_mode_data.hordes
+				local locked = game_mode_progression and not game_mode_progression.unlocked or not game_mode_progression
 
-				content.level_requirement_met = horde_mode_min_level <= player_level
+				content.level_requirement_met = not locked
 
 				if not Managers.narrative:is_chapter_complete("onboarding", "play_training") then
 					content.hotspot.disabled = true
 				elseif not content.level_requirement_met then
-					local required_level = horde_mode_min_level
-
 					content.hotspot.disabled = true
-					content.required_level_text = Localize("loc_requires_level", true, {
-						level = horde_mode_min_level,
-					})
+					content.required_level_text = Localize("loc_requires_player_journey_progress")
 				else
 					content.hotspot.pressed_callback = callback_function
 				end

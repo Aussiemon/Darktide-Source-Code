@@ -462,7 +462,7 @@ ItemGridViewBase._preview_item = function (self, item)
 				self._weapon_stats:present_item(item, item_stats_context)
 			end
 		end
-	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND") and self._weapon_stats then
+	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "COMPANION_GEAR_FULL") and self._weapon_stats then
 		self._weapon_stats:present_item(item, item_stats_context)
 	end
 

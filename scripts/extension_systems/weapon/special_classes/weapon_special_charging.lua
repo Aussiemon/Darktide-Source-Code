@@ -19,6 +19,10 @@ WeaponSpecialCharging.init = function (self, context, init_data)
 	self._weapon_tweak_templates_component = context.weapon_tweak_templates_component
 end
 
+WeaponSpecialCharging.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialCharging.fixed_update = function (self, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
 	local buff_extension = self._buff_extension
@@ -90,6 +94,10 @@ WeaponSpecialCharging.on_sweep_action_finish = function (self, t, num_hit_enemie
 end
 
 WeaponSpecialCharging.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
+	return
+end
+
+WeaponSpecialCharging.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
 	return
 end
 

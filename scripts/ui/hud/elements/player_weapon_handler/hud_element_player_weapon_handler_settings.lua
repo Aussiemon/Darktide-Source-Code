@@ -68,6 +68,7 @@ local hud_element_player_weapon_handler_settings = {
 			order_index = 1,
 		},
 		slot_grenade_ability = {
+			ability = true,
 			default_icon = "content/ui/materials/icons/weapons/flat/grenade",
 			order_index = 3,
 		},

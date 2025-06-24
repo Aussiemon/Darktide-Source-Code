@@ -83,6 +83,25 @@ archetype_toughness_templates.ogryn = {
 		[replenish_types.bonebreaker_heavy_hit] = 0.05,
 	},
 }
+archetype_toughness_templates.adamant = {
+	max = 100,
+	regeneration_delay = 3,
+	template_type = template_types.player,
+	regeneration_speed = {
+		moving = 5,
+		still = 5,
+	},
+	state_damage_modifiers = {
+		dodging = 0.5,
+		sliding = 0.5,
+		sprinting = 1,
+	},
+	on_depleted_function = ToughnessDepleted.spill_over,
+	recovery_percentages = {
+		[replenish_types.melee_kill] = 0.05,
+		[replenish_types.gunslinger_crit_regen] = 0.15,
+	},
+}
 
 for name, settings in pairs(archetype_toughness_templates) do
 	settings.name = name

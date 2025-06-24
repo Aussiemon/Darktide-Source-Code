@@ -793,6 +793,30 @@ local material_overrides = {
 			},
 		},
 	},
+	eyes_brown_03 = {
+		property_overrides = {
+			eye_blindness = {
+				0,
+			},
+			hsv_eye = {
+				0.478,
+				2.2,
+				0.15,
+			},
+			pupil_size = {
+				3,
+			},
+			eye_emissive = {
+				0,
+			},
+			iris_brightness = {
+				1,
+			},
+			scalera_brightness = {
+				1,
+			},
+		},
+	},
 	eyes_psyker_01 = {
 		property_overrides = {
 			eye_blindness = {

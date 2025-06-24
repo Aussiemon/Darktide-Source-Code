@@ -72,6 +72,10 @@ push_settings.push_templates = {
 		max_speed_override = 4,
 		speed = 4,
 	},
+	cyber_mastiff_push = {
+		max_speed_override = 2,
+		speed = 2,
+	},
 	chaos_ogryn_gunner_bullet = {
 		max_speed_override = 2,
 		speed = 2,

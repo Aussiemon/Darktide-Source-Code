@@ -8,6 +8,7 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
+local MissionBuffsAllowedBuffs = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
@@ -27,6 +28,7 @@ local categories = {
 	"Ailments",
 	"Bot Character",
 	"Buffs",
+	"Companion",
 	"Cinematics",
 	"Coherency Buffs",
 	"Crafting",
@@ -114,99 +116,11 @@ functions.apply_ailment_to_selected_unit = {
 	on_activated = apply_ailment_to_selected_unit,
 }
 
-local hordes_mode_buff_options = {
-	"hordes_buff_rending_increase",
-	"hordes_buff_damage_increase",
-	"hordes_buff_suppression_immunity",
-	"hordes_buff_increased_damage_after_reload",
-	"hordes_buff_reduce_damage_taken_on_disabled_allies",
-	"hordes_buff_improved_weapon_reload_on_melee_kill",
-	"hordes_buff_burning_on_melee_hit",
-	"hordes_buff_burning_on_ranged_hit",
-	"hordes_buff_heavy_attacks_gain_damage_and_stagger",
-	"hordes_buff_toughness_on_ranged_kill",
-	"hordes_buff_toughness_regen_in_melee_range",
-	"hordes_buff_grenade_replenishment_over_time",
-	"hordes_buff_combat_ability_cooldown_on_damage_taken",
-	"hordes_buff_coherency_corruption_healing",
-	"hordes_buff_grenade_duplication_on_explosion",
-	"hordes_buff_extra_grenade_throw_chance",
-	"hordes_buff_ogryn_box_of_surprises",
-	"hordes_buff_ogryn_taunt_on_lunge",
-	"hordes_buff_ogryn_apply_fire_on_shout",
-	"hordes_buff_veteran_infinite_ammo_during_stance",
-	"hordes_buff_veteran_increased_damage_after_stealth",
-	"hordes_buff_ogryn_omega_lucky_rock",
-	"hordes_buff_combat_ability_cooldown_on_kills",
-	"hordes_buff_burning_on_melee_hit_taken",
-	"hordes_buff_auto_clip_fill_while_melee",
-	"hordes_buff_grenade_heals_on_explosion",
-	"hordes_buff_damage_vs_burning",
-	"hordes_buff_toughness_on_fire_damage_dealt",
-	"hordes_buff_burning_damage_per_burning_enemy",
-	"hordes_buff_damage_taken_by_flamers_and_grenadier_reduced",
-	"hordes_buff_coherency_burning_duration",
-	"hordes_buff_coherency_damage_vs_burning",
-	"hordes_buff_fire_pulse",
-	"hordes_buff_shock_pulse_on_toughness_broken",
-	"hordes_buff_health_regen",
-	"hordes_buff_toughness_damage_taken_above_threshold",
-	"hordes_buff_reduce_swap_time",
-	"hordes_buff_bonus_crit_chance_on_ammo",
-	"hordes_buff_no_ammo_consumption_on_crits",
-	"hordes_buff_other_slot_damage_increase_on_kill",
-	"hordes_buff_damage_vs_electrocuted",
-	"hordes_buff_two_extra_wounds",
-	"hordes_buff_instakill_melee_hit_on_electrocuted_enemy",
-	"hordes_buff_improved_dodge_speed_and_distance",
-	"hordes_buff_shock_on_hit_after_dodge",
-	"hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy",
-	"hordes_buff_damage_taken_close_to_electrocuted_enemy",
-	"hordes_buff_shock_on_melee_hit",
-	"hordes_buff_shock_on_ranged_hit",
-	"hordes_buff_weakspot_ranged_hit_always_stagger",
-	"hordes_buff_spawn_dome_shield_on_grenade_explosion",
-	"hordes_buff_grenade_explosion_applies_elemental_weakness",
-	"hordes_buff_psyker_shock_on_touch_force_field",
-	"hordes_buff_psyker_smite_always_max_damage",
-	"hordes_buff_psyker_shout_always_stagger",
-	"hordes_buff_psyker_shout_boosts_allies",
-	"hordes_buff_psyker_overcharge_reduced_damage_taken",
-	"hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit",
-	"hordes_buff_psyker_brain_burst_spreads_fire_on_hit",
-	"hordes_buff_psyker_burning_on_throwing_knife_hit",
-	"hordes_buff_psyker_recover_knife_on_knife_kill",
-	"hordes_buff_explode_enemies_on_ranged_kill",
-	"hordes_buff_grenade_explosion_applies_rending_debuff",
-	"hordes_buff_grenade_explosion_kill_replenish_grenades",
-	"hordes_buff_psyker_brain_burst_hits_nearby_enemies",
-	"hordes_buff_zealot_channel_heals_corruption",
-	"hordes_buff_zealot_shock_grenade_increase_next_hit_damage",
-	"hordes_buff_zealot_fire_pulse_while_aiming_lunge",
-	"hordes_buff_zealot_lunge_hit_triggers_shout",
-	"hordes_buff_zealot_regen_toughness_inside_fire_grenade",
-	"hordes_buff_zealot_knives_bleed_and_restore_thoughness_on_kill",
-	"hordes_buff_shock_on_grenade_impact",
-	"hordes_buff_shock_closest_enemy_on_interval",
-	"hordes_buff_damage_increase_on_toughness_broken",
-	"hordes_buff_ranged_attacks_hit_mass_penetration_increased",
-	"hordes_buff_weakspot_ranged_hit_gives_infinite_ammo",
-	"hordes_buff_melee_damage_missing_ammo_in_clip",
-	"hordes_buff_veteran_shock_units_in_smoke_grenade",
-	"hordes_buff_veteran_grouped_upgraded_stealth",
-	"hordes_buff_veteran_apply_infinite_bleed_on_shout",
-	"hordes_buff_extra_ability_charge",
-	"hordes_buff_ogryn_fire_trail_on_lunge",
-	"hordes_buff_zealot_fire_trail_on_lunge",
-	"hordes_buff_aoe_shock_closest_enemy_on_interval",
-	"hordes_buff_veteran_sticky_grenade_pulls_enemies",
-	"hordes_buff_ogryn_rock_charge_while_wield",
-	"hordes_buff_ogryn_biggest_boom_grenade",
-	"hordes_buff_staggering_pulse",
-	"hordes_buff_ogryn_increase_penetration_during_stance",
-	"hordes_buff_extra_toughness_near_burning_shocked_enemies",
-	"hordes_buff_shock_on_blocking_melee_attack",
-}
+local hordes_mode_buff_options = {}
+
+for buff_name, _ in pairs(MissionBuffsAllowedBuffs.debug_only_list_used_buffs) do
+	table.insert(hordes_mode_buff_options, buff_name)
+end
 
 table.sort(hordes_mode_buff_options)
 
@@ -3319,6 +3233,58 @@ local function initialize()
 	player_manager = Managers.player
 	ui_manager = Managers.ui
 end
+
+local function move_free_flight_camera_to_companion()
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		Log.error("move_free_flight_camera_to_companion", "No local player!")
+
+		return
+	end
+
+	local companion_spawner_extension = ScriptUnit.extension(local_player.player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+	local pos = Unit.world_position(companion_unit, 1)
+
+	Managers.free_flight:teleport_camera("global", pos)
+end
+
+functions.move_free_flight_camera_to_companion = {
+	category = "Companion",
+	name = "Move free flight camera to companion",
+	on_activated = move_free_flight_camera_to_companion,
+}
+
+local function force_companion_OOB()
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		Log.error("force_companion_OOB", "No local player!")
+
+		return
+	end
+
+	local companion_spawner_extension = ScriptUnit.extension(local_player.player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+
+	if not companion_unit then
+		Log.error("force_companion_OOB", "No companion!")
+
+		return
+	end
+
+	local companion_blackboard = BLACKBOARDS[companion_unit]
+	local behavior_component = Blackboard.write_component(companion_blackboard, "behavior")
+
+	behavior_component.is_out_of_bound = true
+end
+
+functions.force_companion_OOB = {
+	category = "Companion",
+	name = "Force companion OOB",
+	on_activated = force_companion_OOB,
+}
 
 local function add_account_to_block_users_states()
 	if IS_PLAYSTATION then

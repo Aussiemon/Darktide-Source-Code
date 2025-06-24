@@ -2,12 +2,12 @@
 
 local ViewElementPerksItemBlueprints = require("scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_blueprints")
 local ViewElementPerksItemDefinitions = require("scripts/ui/view_elements/view_element_perks_item/view_element_perks_item_definitions")
-local RankSettings = require("scripts/settings/item/rank_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIAnimation = require("scripts/managers/ui/ui_animation")
 local InputDevice = require("scripts/managers/input/input_device")
+local Mastery = require("scripts/utilities/mastery")
 local Promise = require("scripts/foundation/utilities/promise")
-local MasteryUtils = require("scripts/utilities/mastery")
+local RankSettings = require("scripts/settings/item/rank_settings")
+local UIAnimation = require("scripts/managers/ui/ui_animation")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -276,7 +276,7 @@ ViewElementPerksItem.present_perks = function (self, item, ingredients, external
 		local max_unlocked
 
 		if not table.is_empty(mastery_data) then
-			max_unlocked = MasteryUtils.get_max_perk_rarity_unlocked_level(mastery_data)
+			max_unlocked = Mastery.get_max_perk_rarity_unlocked_level(mastery_data)
 		else
 			max_unlocked = RankSettings.max_perk_rank
 		end

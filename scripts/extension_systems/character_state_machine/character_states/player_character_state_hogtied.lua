@@ -9,6 +9,7 @@ local ForceRotation = require("scripts/extension_systems/locomotion/utilities/fo
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local PlayerCharacterStateHogtied = class("PlayerCharacterStateHogtied", "PlayerCharacterStateBase")
 local assist_anims = CharacterStateAssistSettings.anim_settings.hogtied
 local ANIM_EVENT_ON_ENTER = "captured_idle"
@@ -95,6 +96,16 @@ PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 		local is_player_alive = player:unit_is_alive()
 
 		if is_player_alive then
+			local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
+			local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+			local talent_extension = ScriptUnit.has_extension(unit, "talent_system")
+			local companion_is_disabled = talent_extension and talent_extension:has_special_rule(SpecialRulesSettings.special_rules.disable_companion)
+			local should_have_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
+
+			if companion_spawner_extension and should_have_companion and not companion_unit and not companion_is_disabled then
+				companion_spawner_extension:spawn_unit()
+			end
+
 			local rescued_by_player = true
 			local state_name = "hogtied"
 			local time_in_captivity = t - self._entered_state_t
@@ -129,11 +140,15 @@ PlayerCharacterStateHogtied._update_close_friendlies = function (self, unit)
 
 	for in_coherence_unit, _ in pairs(in_coherence_units) do
 		local unit_data_extension = ScriptUnit.extension(in_coherence_unit, "unit_data_system")
-		local character_state_component = unit_data_extension:read_component("character_state")
-		local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
+		local companion = unit_data_extension:is_companion()
 
-		if not is_hogtied then
-			num_non_hogtied_nearby_friendlies = num_non_hogtied_nearby_friendlies + 1
+		if not companion then
+			local character_state_component = unit_data_extension:read_component("character_state")
+			local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
+
+			if not is_hogtied then
+				num_non_hogtied_nearby_friendlies = num_non_hogtied_nearby_friendlies + 1
+			end
 		end
 	end
 

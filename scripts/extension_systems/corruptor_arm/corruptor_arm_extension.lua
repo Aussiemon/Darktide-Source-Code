@@ -35,7 +35,7 @@ CorruptorArmExtension.setup_from_component = function (self, activation_delay, a
 	self._corruptor_arm_component = corruptor_arm_component
 end
 
-CorruptorArmExtension.on_gameplay_post_init = function (self, level)
+CorruptorArmExtension.on_gameplay_post_init = function (self, unit)
 	Component.event(self._unit, "set_animation_pos", self._animation_pos)
 end
 

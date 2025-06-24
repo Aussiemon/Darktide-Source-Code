@@ -183,7 +183,7 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/cosmetics_preview/cosmetics_preview",
+			"content/levels/ui/inventory_weapon_view/inventory_weapon_view",
 		},
 		dummy_data = {
 			debug = true,
@@ -267,6 +267,7 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
+			"content/levels/ui/class_selection/class_selection_adamant/class_selection_adamant",
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn",
 			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
@@ -433,11 +434,11 @@ local views = {
 		display_name = "loc_mission_board_view_display_name",
 		load_in_hub = true,
 		package = "packages/ui/views/mission_board_view/mission_board_view",
-		path = "scripts/ui/views/mission_board_view/mission_board_view",
+		path = "scripts/ui/views/mission_board_view_pj/mission_board_view",
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/mission_board/mission_board",
+			"content/levels/ui/mission_board_player_journey/mission_board_player_journey",
 		},
 		enter_sound_events = {
 			UISoundEvents.mission_board_enter,
@@ -864,6 +865,7 @@ _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/g
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
+_declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

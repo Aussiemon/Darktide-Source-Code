@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings.lua
 
 local view_element_profile_presets_settings = {
-	max_profile_presets = 5,
+	max_profile_presets = 8,
 	optional_preset_icon_reference_keys = {
 		"icon_01",
 		"icon_02",

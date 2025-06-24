@@ -188,7 +188,7 @@ local material_overrides = {
 			negative_mask = {
 				0,
 				0,
-				0.195,
+				0.163,
 				0,
 			},
 		},
@@ -478,6 +478,38 @@ local material_overrides = {
 				0.508,
 				0.352,
 				0,
+			},
+		},
+	},
+	mask_face_keep_neck_cap = {
+		property_overrides = {
+			positive_mask = {
+				1,
+				1,
+				1,
+				0.799,
+			},
+			negative_mask = {
+				1,
+				1,
+				1,
+				0.677,
+			},
+		},
+	},
+	mask_face_keep_neck_cap_b = {
+		property_overrides = {
+			positive_mask = {
+				1,
+				1,
+				1,
+				0.799,
+			},
+			negative_mask = {
+				1,
+				1,
+				1,
+				0.622,
 			},
 		},
 	},

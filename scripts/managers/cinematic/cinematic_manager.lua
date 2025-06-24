@@ -347,6 +347,18 @@ CinematicManager.has_queued_stories = function (self)
 	return self._queued_stories[1] ~= nil
 end
 
+CinematicManager.last_story_time_left = function (self)
+	local story = self._active_story
+
+	if story and not self:has_queued_stories() then
+		local story_id = story.story_id
+		local story_time = self._storyteller:time(story_id)
+		local length = self._storyteller:length(story_id)
+
+		return length - story_time
+	end
+end
+
 CinematicManager.active_camera = function (self)
 	if self._active_testify_camera then
 		return self._active_testify_camera, CameraModes.testify

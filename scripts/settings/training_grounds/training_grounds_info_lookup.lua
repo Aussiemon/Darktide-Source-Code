@@ -181,6 +181,23 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.combat_ability_zealot_2,
 		},
 	},
+	combat_ability_adamant = {
+		description = "loc_combat_ability_tutorial_adamant_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_adamant_1,
+			TrainingGroundsObjectivesLookup.combat_ability_adamant_2,
+		},
+	},
+	adamant_companion_targeting = {
+		description = "loc_companion_tutorial_adamant_desc",
+		title = "loc_companion_tutorial_adamant_name",
+		input_descriptions = TrainingGroundsActionsLookup.adamant_companion_targeting,
+		objectives = {
+			TrainingGroundsObjectivesLookup.adamant_companion_targeting,
+		},
+	},
 	weapon_special_chainsword = {
 		description = "loc_weapon_special_desc",
 		title = "loc_weapon_special",

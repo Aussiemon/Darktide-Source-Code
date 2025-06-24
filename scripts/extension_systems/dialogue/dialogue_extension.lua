@@ -681,7 +681,7 @@ DialogueExtension.stop_currently_playing_vo = function (self)
 	end
 end
 
-DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed)
+DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route_key, on_play_callback, seed, specific_lines)
 	local dialogue_system = self._dialogue_system
 	local vo_choice, rule_queue, unit = self._vo_choice, dialogue_system._vo_rule_queue, self._unit
 
@@ -695,6 +695,7 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 				wwise_route_key = wwise_route_key,
 				on_play_callback = on_play_callback,
 				seed = seed,
+				specific_line = specific_lines and specific_lines[i],
 			}
 
 			rule_queue[#rule_queue + 1] = vo_event
@@ -706,7 +707,7 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 	dialogue_system:_trigger_face_animation_event(unit, animation_event)
 end
 
-DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking, pre_wwise_event, post_wwise_event)
+DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking, pre_wwise_event, post_wwise_event, specific_line)
 	local rule = self._vo_choice[rule_name]
 
 	if not rule or self._is_currently_playing_dialogue then
@@ -721,6 +722,10 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		dialogue_index = random_n
 	else
 		dialogue_index = DialogueQueries.get_dialogue_event_index(rule)
+	end
+
+	if specific_line then
+		dialogue_index = specific_line
 	end
 
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)

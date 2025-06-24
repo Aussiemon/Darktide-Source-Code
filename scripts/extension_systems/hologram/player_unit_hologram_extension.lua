@@ -66,6 +66,19 @@ end
 PlayerUnitHologramExtension.update = function (self, unit, dt, t)
 	local hologram_unit = self._hologram_unit
 	local world = self._world
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local player_outlines_enabled = interface_settings.player_outlines
+
+	if not player_outlines_enabled then
+		if hologram_unit then
+			_despawn_hologram_unit(world, hologram_unit)
+
+			self._hologram_unit = nil
+		end
+
+		return
+	end
 
 	if t < self._next_update_t then
 		return

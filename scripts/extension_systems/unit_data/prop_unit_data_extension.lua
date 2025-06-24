@@ -62,6 +62,12 @@ PropUnitDataExtension.breed_name = function (self)
 	return breed_name
 end
 
+PropUnitDataExtension.is_companion = function (self)
+	local is_companion = Breed.is_companion(self._breed)
+
+	return is_companion
+end
+
 PropUnitDataExtension.archetype = function (self)
 	ferror("[PropUnitDataExtension:archetype()] Props don't have archetypes.")
 end

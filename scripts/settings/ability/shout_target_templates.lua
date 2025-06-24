@@ -3,7 +3,29 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local shout_target_templates = {}
+local talent_settings_adamant = TalentSettings.adamant
 
+shout_target_templates.adamant_shout = {
+	enemies = {
+		buff_to_add = "adamant_whistle_electrocution",
+		force_stagger_duration = 2.5,
+		force_stagger_type = "light",
+		power_level = 1000,
+		damage_profile = DamageProfileTemplates.adamant_shout,
+	},
+}
+shout_target_templates.adamant_shout_improved = {
+	enemies = {
+		force_stagger_duration = 2.5,
+		force_stagger_type = "light",
+		power_level = 1000,
+		damage_profile = DamageProfileTemplates.adamant_shout,
+	},
+	allies = {
+		shout_restores_toughness = true,
+		toughness_replenish_percent = talent_settings_adamant.combat_ability.shout_improved.toughness,
+	},
+}
 shout_target_templates.veteran_shout = {
 	enemies = {
 		force_stagger_type_if_not_staggered = "heavy",

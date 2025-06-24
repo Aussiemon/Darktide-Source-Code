@@ -10,6 +10,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_nurgle_manifestation_title",
 			happening_display_name = "loc_happening_nurgle_manifestation",
 			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/nurgle_manifestation_01",
 		},
 		mutators = {
 			"mutator_minion_nurgle_blessing",
@@ -24,6 +25,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_nurgle_manifestation_title",
 			happening_display_name = "loc_happening_nurgle_manifestation",
 			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/nurgle_manifestation_01",
 		},
 		mutators = {
 			"mutator_corruption_over_time",

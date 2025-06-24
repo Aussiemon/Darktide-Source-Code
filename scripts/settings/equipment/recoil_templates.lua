@@ -20,6 +20,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_recoil_templates", recoil_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotpistol_shield/settings_templates/shotpistol_shield_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_recoil_templates", recoil_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_recoil_templates", recoil_templates, loaded_template_files)
 

@@ -593,6 +593,8 @@ BtChaosHoundLeapAction._advance_leap = function (self, unit, scratchpad, action_
 	return scratchpad.state
 end
 
+local DEFAULT_MAGNITUDE = 0.5
+
 BtChaosHoundLeapAction._update_in_air_stagger = function (self, scratchpad, action_data, t)
 	local stagger_component = scratchpad.stagger_component
 
@@ -634,7 +636,8 @@ BtChaosHoundLeapAction._update_in_air_stagger = function (self, scratchpad, acti
 		self:_stop_in_air_stagger(scratchpad)
 	else
 		local stagger_direction = stagger_component.direction:unbox()
-		local magnitude = scratchpad.stagger_velocity_magnitude * 0.5
+		local magnitude_multiplier = action_data.magnitude_multiplier
+		local magnitude = scratchpad.stagger_velocity_magnitude * (magnitude_multiplier or DEFAULT_MAGNITUDE)
 		local stagger_velocity = Vector3(stagger_direction.x * magnitude, stagger_direction.y * magnitude, 0)
 
 		locomotion_extension:set_wanted_velocity(stagger_velocity)

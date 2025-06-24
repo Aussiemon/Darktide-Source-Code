@@ -120,6 +120,8 @@ local function default_button_text_change_function(content, style, optional_hots
 	end
 end
 
+ButtonPassTemplates.default_button_text_change_function = default_button_text_change_function
+
 ButtonPassTemplates.terminal_list_button_background_change_function = function (content, style)
 	local math_lerp = math_lerp
 	local math_max = math_max

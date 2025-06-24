@@ -28,6 +28,7 @@ local VIEW_BY_SLOT = {
 	slot_attachment_2 = "inventory_weapons_view",
 	slot_attachment_3 = "inventory_weapons_view",
 	slot_character_title = "inventory_cosmetics_view",
+	slot_companion_gear_full = "inventory_cosmetics_view",
 	slot_gear_extra_cosmetic = "inventory_cosmetics_view",
 	slot_gear_head = "inventory_cosmetics_view",
 	slot_gear_lowerbody = "inventory_cosmetics_view",

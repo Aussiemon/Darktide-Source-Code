@@ -110,7 +110,7 @@ Social.suggested_names_by_archetype = function (self, archetype_name, gender, bi
 	local builder = BackendUtilities.url_builder():path("/social/names/"):path(archetype_name):query("gender", gender):query("planet", birthplace)
 
 	return Managers.backend:title_request(builder:to_string()):next(function (response)
-		return response.body.names
+		return response.body
 	end)
 end
 

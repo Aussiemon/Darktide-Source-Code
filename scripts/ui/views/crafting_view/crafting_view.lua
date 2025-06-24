@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/crafting_view/crafting_view.lua
 
 local CraftingViewDefinitions = require("scripts/ui/views/crafting_view/crafting_view_definitions")
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 
@@ -136,7 +136,9 @@ CraftingView.start_present_item = function (self, item)
 	end
 
 	local item_base_unit_name = item.base_unit
-	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, item_base_unit_name)
+	local ui_alignment_tag = item.ui_alignment_tag
+	local alignment_key_value = ui_alignment_tag or item_base_unit_name
+	local item_level_link_unit = self:_get_unit_by_value_key(alignment_key, alignment_key_value)
 	local default_level_link_unit = self:_get_unit_by_value_key(alignment_key, "content/weapons/player/melee/combat_knife/wpn_combat_knife_chained_rig")
 	local spawn_point_unit = item_level_link_unit or default_level_link_unit
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
@@ -144,7 +146,7 @@ CraftingView.start_present_item = function (self, item)
 	local spawn_scale = Unit.world_scale(spawn_point_unit, 1)
 	local force_highest_mip = true
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, nil, force_highest_mip)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, nil, force_highest_mip)
 
 	self._ui_weapon_spawner = ui_weapon_spawner
 end
@@ -457,7 +459,7 @@ CraftingView._loadout_refresh = function (self, item)
 		local equipped_item = loadout[slot_name]
 
 		if equipped_item and equipped_item.gear_id == gear_id then
-			ItemUtils.refresh_equipped_items()
+			Items.refresh_equipped_items()
 
 			break
 		end

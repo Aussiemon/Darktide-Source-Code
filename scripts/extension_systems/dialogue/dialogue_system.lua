@@ -910,7 +910,7 @@ DialogueSystem._process_local_vo_event_queue = function (self)
 
 	local extension = self._unit_to_extension_map[event.unit]
 
-	extension:play_local_vo_event(event.rule_name, event.wwise_route_key, event.on_play_callback, event.seed, true)
+	extension:play_local_vo_event(event.rule_name, event.wwise_route_key, event.on_play_callback, event.seed, true, nil, nil, event.specific_line)
 end
 
 DialogueSystem.append_faction_event = function (self, source_unit, event_name, event_data, identifier, breed_faction_name, exclude_me)

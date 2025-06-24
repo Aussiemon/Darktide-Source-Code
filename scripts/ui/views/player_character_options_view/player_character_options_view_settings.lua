@@ -17,12 +17,14 @@ local player_character_options_view_settings = {
 	image_size = image_size,
 	content_size = content_size,
 	animation_event_by_archetype = {
+		adamant = "human_adamant_inspect_pose",
 		ogryn = "ogryn_inspect_pose",
 		psyker = "human_psyker_inspect_pose",
 		veteran = "human_veteran_inspect_pose",
 		zealot = "human_zealot_inspect_pose",
 	},
 	archetype_badge_texture_by_name = {
+		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
 		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
 		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
 		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",

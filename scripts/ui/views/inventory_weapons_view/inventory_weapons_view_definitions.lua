@@ -1,13 +1,9 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions.lua
 
-local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Items = require("scripts/utilities/items")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local ItemUtils = require("scripts/utilities/items")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local title_height = 108
 local edge_padding = 44
 local grid_width = 640
@@ -36,8 +32,6 @@ local grid_settings = {
 	title_height = title_height,
 	edge_padding = edge_padding,
 }
-local button_margin = 20
-local button_size = ButtonPassTemplates.terminal_button.size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	corner_top_left = {
@@ -301,7 +295,7 @@ local legend_inputs = {
 			local gear_id = widget and widget.content.element and widget.content.element.item and widget.content.element.item.gear_id
 
 			if gear_id then
-				local is_favorite = ItemUtils.is_item_id_favorited(gear_id)
+				local is_favorite = Items.is_item_id_favorited(gear_id)
 				local display_name = is_favorite and "loc_inventory_remove_favorite" or "loc_inventory_add_favorite"
 
 				parent._input_legend_element:set_display_name(id, display_name)

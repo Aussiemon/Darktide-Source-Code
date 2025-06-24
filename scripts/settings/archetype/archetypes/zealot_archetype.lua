@@ -7,6 +7,7 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
 local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Promise = require("scripts/foundation/utilities/promise")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/zealot",
 	archetype_badge = "content/ui/materials/icons/class_badges/zealot_01_01",
@@ -25,7 +26,6 @@ local archetype_data = {
 	breed = "human",
 	health = 200,
 	knocked_down_health = 1000,
-	name = "zealot",
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/zealot_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/zealot",
 	ui_selection_order = 2,
@@ -51,6 +51,15 @@ local archetype_data = {
 			item = "content/items/weapons/player/ranged/flamer_p1_m1",
 		},
 	},
+	is_available = function (archetype_ref)
+		return Promise.resolved({
+			available = true,
+			archetype = archetype_ref,
+		})
+	end,
+	acquire_callback = function (archetype_ref, on_flow_finished_callback)
+		return
+	end,
 }
 
 return archetype_data

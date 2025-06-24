@@ -544,6 +544,16 @@ local stat_descriptions = {
 			display_type = "default",
 		},
 	},
+	weapon_shout = {
+		range = {
+			display_name = "loc_weapon_stats_display_power_output_range",
+			display_type = "default",
+		},
+		dot = {
+			display_name = "loc_weapon_stats_display_power_output_angle",
+			display_type = "default",
+		},
+	},
 	dodge = {
 		distance_scale = {
 			display_name = "loc_weapon_stats_display_dodge_distance",

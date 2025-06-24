@@ -24,6 +24,10 @@ WeaponSpecialKillCountCharges.init = function (self, context, init_data)
 	self._last_hits = {}
 end
 
+WeaponSpecialKillCountCharges.on_wieldable_slot_equipped = function (self)
+	return
+end
+
 WeaponSpecialKillCountCharges.fixed_update = function (self, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
 	local special_charge_remove_at_t = inventory_slot_component.special_charge_remove_at_t
@@ -92,6 +96,10 @@ WeaponSpecialKillCountCharges.process_hit = function (self, t, weapon, action_se
 			self._last_hits[target_unit] = t + killsteal_safety_time
 		end
 	end
+end
+
+WeaponSpecialKillCountCharges.blocked_attack = function (self, attacking_unit, block_cost, block_broken, is_perfect_block)
+	return
 end
 
 WeaponSpecialKillCountCharges._add_charge = function (self, t, target_unit)

@@ -5,7 +5,6 @@ local ViewElementTraitInventoryDefinitions = require("scripts/ui/view_elements/v
 local InputDevice = require("scripts/managers/input/input_device")
 local Items = require("scripts/utilities/items")
 local RankSettings = require("scripts/settings/item/rank_settings")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 

@@ -705,6 +705,12 @@ PlayerUnitDataExtension.breed_name = function (self)
 	return breed_name
 end
 
+PlayerUnitDataExtension.is_companion = function (self)
+	local is_companion = Breed.is_companion(self._breed)
+
+	return is_companion
+end
+
 PlayerUnitDataExtension.archetype = function (self)
 	return self._archetype
 end

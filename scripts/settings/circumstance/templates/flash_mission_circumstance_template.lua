@@ -13,6 +13,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_01_description",
 			display_name = "loc_circumstance_flash_mission_01_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_02 = {
@@ -25,6 +26,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_02_description",
 			display_name = "loc_circumstance_flash_mission_02_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_03 = {
@@ -37,6 +39,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_03_description",
 			display_name = "loc_circumstance_flash_mission_03_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_04 = {
@@ -50,6 +53,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_04_description",
 			display_name = "loc_circumstance_flash_mission_04_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_05 = {
@@ -65,6 +69,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_05_description",
 			display_name = "loc_circumstance_flash_mission_05_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_06 = {
@@ -80,6 +85,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_06_description",
 			display_name = "loc_circumstance_flash_mission_06_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_07 = {
@@ -89,6 +95,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_07_description",
 			display_name = "loc_circumstance_flash_mission_07_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_only_melee_roamers",
@@ -107,6 +114,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_08_description",
 			display_name = "loc_circumstance_flash_mission_08_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_chaos_hounds",
@@ -132,6 +140,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_09_description",
 			display_name = "loc_circumstance_flash_mission_09_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_10 = {
@@ -148,6 +157,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_10_description",
 			display_name = "loc_circumstance_flash_mission_10_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 	},
 	flash_mission_11 = {
@@ -156,6 +166,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_11_description",
 			display_name = "loc_circumstance_flash_mission_11_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_poxwalker_bombers",
@@ -171,6 +182,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_12_description",
 			display_name = "loc_circumstance_flash_mission_12_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_poxwalker_bombers",
@@ -186,6 +198,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_13_description",
 			display_name = "loc_circumstance_flash_mission_13_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_mutants",
@@ -202,6 +215,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_14_description",
 			display_name = "loc_circumstance_flash_mission_14_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_no_encampments",
@@ -222,6 +236,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_15_description",
 			display_name = "loc_circumstance_flash_mission_15_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -239,6 +254,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_16_description",
 			display_name = "loc_circumstance_flash_mission_16_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -257,6 +273,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_17_description",
 			display_name = "loc_circumstance_flash_mission_17_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -274,6 +291,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_18_description",
 			display_name = "loc_circumstance_flash_mission_18_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -294,6 +312,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_19_description",
 			display_name = "loc_circumstance_flash_mission_19_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -311,6 +330,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_01_description",
 			display_name = "loc_circumstance_flash_mission_01_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_02 = {
@@ -327,6 +347,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_02_description",
 			display_name = "loc_circumstance_flash_mission_02_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_03 = {
@@ -343,6 +364,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_03_description",
 			display_name = "loc_circumstance_flash_mission_03_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_04 = {
@@ -360,6 +382,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_04_description",
 			display_name = "loc_circumstance_flash_mission_04_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_05 = {
@@ -379,6 +402,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_05_description",
 			display_name = "loc_circumstance_flash_mission_05_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_06 = {
@@ -398,6 +422,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_06_description",
 			display_name = "loc_circumstance_flash_mission_06_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_07 = {
@@ -407,6 +432,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_07_description",
 			display_name = "loc_circumstance_flash_mission_07_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_only_melee_roamers",
@@ -429,6 +455,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_08_description",
 			display_name = "loc_circumstance_flash_mission_08_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_chaos_hounds",
@@ -462,6 +489,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_09_description",
 			display_name = "loc_circumstance_flash_mission_09_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_10 = {
@@ -482,6 +510,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_10_description",
 			display_name = "loc_circumstance_flash_mission_10_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 	},
 	high_flash_mission_11 = {
@@ -490,6 +519,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_11_description",
 			display_name = "loc_circumstance_flash_mission_11_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_poxwalker_bombers",
@@ -509,6 +539,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_12_description",
 			display_name = "loc_circumstance_flash_mission_12_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_poxwalker_bombers",
@@ -528,6 +559,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_13_description",
 			display_name = "loc_circumstance_flash_mission_13_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_mutants",
@@ -548,6 +580,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_14_description",
 			display_name = "loc_circumstance_flash_mission_14_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mutators = {
 			"mutator_no_encampments",
@@ -576,6 +609,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_15_description",
 			display_name = "loc_circumstance_flash_mission_15_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -597,6 +631,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_16_description",
 			display_name = "loc_circumstance_flash_mission_16_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -619,6 +654,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_17_description",
 			display_name = "loc_circumstance_flash_mission_17_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -640,6 +676,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_18_description",
 			display_name = "loc_circumstance_flash_mission_18_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -664,6 +701,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_flash_mission_19_description",
 			display_name = "loc_circumstance_flash_mission_19_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_02",
 		},
 		mission_overrides = MissionOverrides.more_corruption_syringes,
 	},
@@ -674,6 +712,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_six_one_flash_mission_01_description",
 			display_name = "loc_circumstance_six_one_flash_mission_01_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_modify_challenge_resistance_scale_six_one",
@@ -693,6 +732,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_six_one_flash_mission_02_description",
 			display_name = "loc_circumstance_six_one_flash_mission_02_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_modify_challenge_resistance_scale_six_one",
@@ -713,6 +753,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_six_one_flash_mission_03_description",
 			display_name = "loc_circumstance_six_one_flash_mission_03_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_darkness_los",
@@ -732,6 +773,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_six_one_flash_mission_04_description",
 			display_name = "loc_circumstance_six_one_flash_mission_04_title",
 			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/maelstrom_01",
 		},
 		mutators = {
 			"mutator_modify_challenge_resistance_scale_six_one",

@@ -457,6 +457,25 @@ local material_overrides = {
 			},
 		},
 	},
+	human_facial_hair_male_face_adamant_01 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/male_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.00897519111633,
+				-0.00971249103546,
+				-0.0197993469238,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00748768091202,
+				0.00915758132935,
+				0.0113226318359,
+			},
+		},
+	},
 	human_facial_hair_female_face_middle_eastern_01 = {
 		texture_overrides = {
 			facial_hair_wrap_deform_map = {
@@ -720,6 +739,25 @@ local material_overrides = {
 				0.00363485097885,
 				0.00227131843567,
 				0.00618942260742,
+			},
+		},
+	},
+	human_facial_hair_female_face_adamant_01 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/female_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.00547333717346,
+				-0.00371122360229,
+				-0.00795303344727,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00512167930603,
+				0.0032127904892,
+				0.0022265625,
 			},
 		},
 	},
@@ -1445,6 +1483,44 @@ local material_overrides = {
 			},
 		},
 	},
+	human_scars_male_face_adamant_01 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/male_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.00902917861938,
+				-0.00874636173248,
+				-0.018936920166,
+			},
+			scars_wrap_deform_max = {
+				0.00692248344421,
+				0.00847133636475,
+				0.011328125,
+			},
+		},
+	},
+	human_scars_female_face_adamant_01 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/female_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.0139652109146,
+				-0.0139377856255,
+				-0.0171195983887,
+			},
+			scars_wrap_deform_max = {
+				0.014102602005,
+				0.0122415184975,
+				0.00752532958984,
+			},
+		},
+	},
 	ogryn_headgear_face_caucasian_03 = {
 		texture_overrides = {
 			headgear_wrap_deform_map = {
@@ -2164,6 +2240,44 @@ local material_overrides = {
 				0.0104118442535,
 				0.0132494926453,
 				0.0080908203125,
+			},
+		},
+	},
+	human_headgear_male_face_adamant_01 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/male_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00724515914917,
+				-0.00738526821136,
+				-0.0183003234863,
+			},
+			headgear_wrap_deform_max = {
+				0.00685930967331,
+				0.00644799232483,
+				0.00960525512695,
+			},
+		},
+	},
+	human_headgear_female_face_adamant_01 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/female_face_adamant_01_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00917598247528,
+				-0.0130355453491,
+				-0.0171987915039,
+			},
+			headgear_wrap_deform_max = {
+				0.0088601064682,
+				0.00834927558899,
+				0.00600189208984,
 			},
 		},
 	},

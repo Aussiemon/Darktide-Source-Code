@@ -101,8 +101,8 @@ local INDEX_POSITION = 1
 local INDEX_NORMAL = 3
 local INDEX_ACTOR = 4
 
-ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action)
-	ActionFlamerGas.super.fixed_update(self, dt, t, time_in_action)
+ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionFlamerGas.super.fixed_update(self, dt, t, time_in_action, frame)
 
 	if not self._flamer_gas_template then
 		self:_setup_flame_data(self._action_settings)

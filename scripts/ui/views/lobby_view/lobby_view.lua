@@ -205,6 +205,7 @@ LobbyView._initialize_background_world = function (self)
 	self:_register_event("event_register_lobby_camera")
 
 	self._human_spawn_point_units = {}
+	self._companion_spawn_point_units = {}
 	self._ogryn_spawn_point_units = {}
 
 	local max_spawn_slots = 4
@@ -212,6 +213,7 @@ LobbyView._initialize_background_world = function (self)
 	for i = 1, max_spawn_slots do
 		local event_name_human = "event_register_lobby_spawn_point_human_" .. i
 		local event_name_ogryn = "event_register_lobby_spawn_point_ogryn_" .. i
+		local event_name_companion = "event_register_lobby_spawn_point_companion_" .. i
 
 		self[event_name_human] = function (self, spawn_unit)
 			self._human_spawn_point_units[i] = spawn_unit
@@ -235,9 +237,15 @@ LobbyView._initialize_background_world = function (self)
 				self:_sync_votes()
 			end
 		end
+		self[event_name_companion] = function (self, spawn_unit)
+			self._companion_spawn_point_units[i] = spawn_unit
+
+			self:_unregister_event(event_name_companion)
+		end
 
 		self:_register_event(event_name_human)
 		self:_register_event(event_name_ogryn)
+		self:_register_event(event_name_companion)
 	end
 
 	local world_name = LobbyViewSettings.world_name
@@ -665,6 +673,7 @@ LobbyView._setup_spawn_slots = function (self)
 			profile_spawner = profile_spawner,
 			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[i],
 			human_spawn_point_unit = self._human_spawn_point_units[i],
+			companion_spawn_point_unit = self._companion_spawn_point_units[i],
 			boxed_initial_position = Vector3.to_array(initial_position),
 			panel_widget = self:_create_widget(panel_widget_name, panel_definition),
 			loading_widget = self:_create_widget(loading_widget_name, loading_definition),
@@ -955,7 +964,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local unique_id = player:unique_id()
 	local profile = player:profile()
 	local archetype_settings = profile.archetype
-	local breed_name = archetype_settings and archetype_settings.breed or profile.breed
+	local breed_name = archetype_settings.breed
 	local spawn_point_unit
 
 	if breed_name == "ogryn" then
@@ -966,18 +975,35 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local companion_spawn_position = slot.companion_spawn_point_unit and Unit.world_position(slot.companion_spawn_point_unit, 1)
+	local companion_spawn_rotation = slot.companion_spawn_point_unit and Unit.world_rotation(slot.companion_spawn_point_unit, 1)
 	local profile_size = profile.personal and profile.personal.character_height
 	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = slot.profile_spawner
 	local selected_archetype = profile.archetype
-	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 	local slot_name = slot.default_slot
 	local slot_item = profile.loadout[slot_name]
 	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
+	local has_companion, companion_breed_name = ProfileUtils.has_companion(profile)
+	local companion_state_machine
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event)
+	if companion_breed_name then
+		local breed_settings = Breeds[companion_breed_name]
+
+		companion_state_machine = breed_settings.hub_state_machine
+	end
+
+	local companion_data = {
+		animation_event = "pregame_entry",
+		position = companion_spawn_position,
+		rotation = companion_spawn_rotation,
+		state_machine = companion_state_machine,
+	}
+
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)
+	profile_spawner:toggle_companion(has_companion)
 
 	local panel_widget = slot.panel_widget
 	local panel_content = panel_widget.content
@@ -1756,7 +1782,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	spawn_slot.profile_spawner:destroy()
 
 	local archetype_settings = profile.archetype
-	local breed_name = archetype_settings and archetype_settings.breed or profile.breed
+	local breed_name = archetype_settings.breed
 	local spawn_point_unit
 
 	if breed_name == "ogryn" then
@@ -1767,18 +1793,35 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local companion_spawn_position = spawn_slot.companion_spawn_point_unit and Unit.world_position(spawn_slot.companion_spawn_point_unit, 1)
+	local companion_spawn_rotation = spawn_slot.companion_spawn_point_unit and Unit.world_rotation(spawn_slot.companion_spawn_point_unit, 1)
 	local profile_size = profile.personal and profile.personal.character_height
 	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = spawn_slot.profile_spawner
 	local selected_archetype = profile.archetype
-	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 	local slot_name = spawn_slot.default_slot
 	local slot_item = spawn_slot.profile.loadout[slot_name]
 	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
+	local has_companion, companion_breed_name = ProfileUtils.has_companion(profile)
+	local companion_state_machine
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event)
+	if companion_breed_name then
+		local breed_settings = Breeds[companion_breed_name]
+
+		companion_state_machine = breed_settings.hub_state_machine
+	end
+
+	local companion_data = {
+		animation_event = "pregame_entry",
+		position = companion_spawn_position,
+		rotation = companion_spawn_rotation,
+		state_machine = companion_state_machine,
+	}
+
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)
+	profile_spawner:toggle_companion(has_companion)
 	self:_update_presentation_wield_item(spawn_slot)
 	spawn_slot.profile_spawner:wield_slot(slot_name)
 end
@@ -1877,6 +1920,7 @@ LobbyView._start_animation_ready = function (self, spawn_slot)
 	end
 
 	spawn_slot.profile_spawner:assign_animation_event("ready")
+	spawn_slot.profile_spawner:assign_companion_animation_event("pregame_to_ready")
 end
 
 LobbyView._start_animation_unready = function (self, spawn_slot)
@@ -1885,6 +1929,7 @@ LobbyView._start_animation_unready = function (self, spawn_slot)
 	end
 
 	spawn_slot.profile_spawner:assign_animation_event("unready")
+	spawn_slot.profile_spawner:assign_companion_animation_event("pregame_to_notready")
 end
 
 local dummy_tooltip_text_size = {

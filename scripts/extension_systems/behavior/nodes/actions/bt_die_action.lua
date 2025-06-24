@@ -24,7 +24,9 @@ BtDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_
 	local force_instant_ragdoll = death_component.force_instant_ragdoll
 
 	if instant_ragdoll or force_instant_ragdoll or self:_check_if_need_to_ragdoll(unit) then
-		scratchpad.ragdoll_timing = t
+		local delay = damage_profile.instant_ragdoll_delay or 0
+
+		scratchpad.ragdoll_timing = t + delay
 		scratchpad.instant_ragdoll = true
 
 		return

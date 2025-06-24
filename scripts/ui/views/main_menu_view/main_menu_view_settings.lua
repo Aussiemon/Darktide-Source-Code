@@ -4,7 +4,7 @@ local main_menu_view_settings = {
 	character_delete_button_hold_time = 3,
 	character_delete_button_spacing = 10,
 	character_slot_spacing = 10,
-	max_num_characters = 5,
+	max_num_characters = 8,
 	max_party_size = 4,
 	character_new_slot_size = {
 		100,

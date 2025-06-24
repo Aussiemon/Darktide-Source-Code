@@ -110,6 +110,28 @@ Sprint.is_sprinting = function (sprint_character_state_component)
 	return sprint_character_state_component.is_sprinting or sprint_character_state_component.is_sprint_jumping
 end
 
+Sprint.is_in_start_slowdown = function (unit, sprint_character_state_component)
+	local is_server = Managers.state.game_session:is_server()
+	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
+
+	if is_sprinting then
+		local character_state_machine_extension = ScriptUnit.has_extension(unit, "character_state_machine_system")
+		local current_state = character_state_machine_extension:current_state()
+		local current_state_name = character_state_machine_extension:current_state_name()
+
+		if current_state and current_state_name and current_state_name == "sprinting" then
+			local slowdown_duration = current_state:slowdown_duration()
+			local entered_t = current_state:entered_t()
+			local slowdown_end_t = entered_t + slowdown_duration
+			local gameplay_t = Managers.time:time("gameplay")
+
+			return gameplay_t <= slowdown_end_t
+		end
+	end
+
+	return false
+end
+
 local NO_STAT_BUFFS = {
 	[BuffSettings.stat_buffs.sprint_dodge_reduce_angle_threshold_rad] = 0,
 }

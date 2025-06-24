@@ -72,6 +72,10 @@ VendorInteractionViewBase.on_enter = function (self)
 
 	local button_options_definitions = self._base_definitions.button_options_definitions
 
+	if type(button_options_definitions) == "function" then
+		button_options_definitions = button_options_definitions()
+	end
+
 	self:_setup_option_buttons(button_options_definitions)
 
 	self._presenting_options = true

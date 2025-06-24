@@ -1101,20 +1101,4 @@ for looping_particle_alias, config in pairs(PlayerCharacterLoopingParticleAliase
 	end
 end
 
-for looping_sound_alias, config in pairs(PlayerCharacterLoopingSoundAliases) do
-	if not config.exclude_from_unit_data_components then
-		local looping_sound_component = {
-			is_playing = "bool",
-		}
-
-		if not config.is_2d then
-			looping_sound_component.source_name = FX_SOURCES
-		end
-
-		local component_name = PlayerUnitData.looping_sound_component_name(looping_sound_alias)
-
-		PlayerComponentConfig[component_name] = looping_sound_component
-	end
-end
-
 return PlayerComponentConfig

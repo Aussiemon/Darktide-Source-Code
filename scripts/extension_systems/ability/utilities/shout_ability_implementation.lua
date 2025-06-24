@@ -2,6 +2,7 @@
 
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MinionState = require("scripts/utilities/minion_state")
@@ -227,17 +228,22 @@ function _handle_allied_targets(t, radius, target_settings, player_unit, locomot
 				end
 
 				if shout_restores_toughness then
-					local recover_toughness_effect = target_settings.recover_toughness_effect
+					local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+					local breed = unit_data_extension and unit_data_extension:breed()
 
-					if recover_toughness_effect then
-						local fx_extension = ScriptUnit.extension(unit, "fx_system")
+					if Breed.is_player(breed) then
+						local recover_toughness_effect = target_settings.recover_toughness_effect
 
-						fx_extension:spawn_exclusive_particle(recover_toughness_effect, Vector3(0, 0, 1))
+						if recover_toughness_effect then
+							local fx_extension = ScriptUnit.extension(unit, "fx_system")
+
+							fx_extension:spawn_exclusive_particle(recover_toughness_effect, Vector3(0, 0, 1))
+						end
+
+						local toughness_percent = target_settings.toughness_replenish_percent or 1
+
+						Toughness.replenish_percentage(unit, toughness_percent, nil, "ability_shout")
 					end
-
-					local toughness_percent = target_settings.toughness_replenish_percent or 1
-
-					Toughness.replenish_percentage(unit, toughness_percent, nil, "ability_shout")
 				end
 			end
 		end

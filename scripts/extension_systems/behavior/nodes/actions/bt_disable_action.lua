@@ -53,8 +53,11 @@ BtDisableAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 
 		if scratchpad.current_slot then
 			local visual_loadout_extension = scratchpad.visual_loadout_extension
+			local current_slot_data = visual_loadout_extension:slot_item(scratchpad.current_slot)
 
-			visual_loadout_extension:set_slot_visibility(scratchpad.current_slot, true)
+			if not current_slot_data.visible then
+				visual_loadout_extension:set_slot_visibility(scratchpad.current_slot, true)
+			end
 		end
 	end
 
@@ -91,8 +94,7 @@ BtDisableAction._play_disable_anim = function (self, unit, blackboard, action_da
 	local disable_type = disable_component.type
 	local disable_anims = action_data.disable_anims[disable_type]
 	local attacker_unit = disable_component.attacker_unit
-	local attacker_position = attacker_unit and POSITION_LOOKUP[attacker_unit]
-	local attack_direction = attacker_position and Vector3.normalize(Vector3.flat(POSITION_LOOKUP[unit] - attacker_position))
+	local attack_direction = Vector3.normalize(Quaternion.forward(Unit.local_rotation(attacker_unit, 1)))
 
 	scratchpad.disable_component = disable_component
 

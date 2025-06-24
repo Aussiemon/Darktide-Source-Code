@@ -151,7 +151,7 @@ GroupFinderView._setup_widgets_stating_states = function (self)
 		start_input_action = self._cancel_group_button_input_action,
 	})
 
-	widgets_by_name.join_button_level_warning.content.level_requirement_met = true
+	widgets_by_name.join_button_level_warning.content.text = ""
 
 	self:_set_preview_grid_visibility(false)
 
@@ -312,116 +312,115 @@ GroupFinderView.event_register_camera = function (self, camera_unit)
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end
 
-GroupFinderView._get_group_finder_tags = function (self)
-	local function format_response(response)
-		if not response or not response.tags then
-			Log.error("GroupFinderView", "Invalid response: response or response.tags is nil")
+local function _format_group_finder_tags(backend_data)
+	if not backend_data or not backend_data.tags then
+		Log.error("GroupFinderView", "Invalid response: response or response.tags is nil")
 
-			return {}
-		end
+		return {}
+	end
 
-		local formatted_response = {}
-		local formatted_response_by_name = {}
-		local parents_map = {}
-		local response_tags = response.tags.tags
+	local formatted_response = {}
+	local formatted_response_by_name = {}
+	local parents_map = {}
+	local response_tags = backend_data.tags.tags
 
-		for _, tag in ipairs(response_tags) do
-			local formatted_tag = {
-				name = tag.name,
-				locked = tag.locked,
-				level_requirement = tag.levelRequirement,
-				mutually_exclusive = tag.mutuallyExclusive,
-				unlocks = tag.unlocks,
-				pattern = tag.pattern,
-				root_tag = tag.rootTag,
-				display_mode = tag.display and tag.display.mode,
-				ui_category = tag.display and tag.display.uiGroup,
-				widget_type = tag.display and tag.display.widgetType,
-				header = tag.display and tag.display.header,
-				text = tag.display and tag.display.text and Localize(tag.display.text) or "",
-				background_texture = tag.display and tag.display.backgroundTexture,
-				difficulty = tag.display and tag.display.difficulty,
-				difficulty_board = tag.display and tag.display.difficulty_board,
-			}
+	for _, tag in ipairs(response_tags) do
+		local formatted_tag = {
+			name = tag.name,
+			locked = tag.locked,
+			access_requirement = tag.accessRequirement,
+			difficulty_requirement = tag.difficultyRequirement,
+			level_requirement = tag.levelRequirement,
+			mutually_exclusive = tag.mutuallyExclusive,
+			unlocks = tag.unlocks,
+			pattern = tag.pattern,
+			root_tag = tag.rootTag,
+			display_mode = tag.display and tag.display.mode,
+			ui_category = tag.display and tag.display.uiGroup,
+			widget_type = tag.display and tag.display.widgetType,
+			header = tag.display and tag.display.header,
+			text = tag.display and tag.display.text and Localize(tag.display.text) or "",
+			background_texture = tag.display and tag.display.backgroundTexture,
+			difficulty = tag.display and tag.display.difficulty,
+		}
 
-			if tag.unlocks then
-				for _, child_name in ipairs(tag.unlocks) do
-					if not parents_map[child_name] then
-						parents_map[child_name] = {}
-					end
-
-					table.insert(parents_map[child_name], tag.name)
+		if tag.unlocks then
+			for _, child_name in ipairs(tag.unlocks) do
+				if not parents_map[child_name] then
+					parents_map[child_name] = {}
 				end
-			end
 
-			table.insert(formatted_response, formatted_tag)
-
-			formatted_response_by_name[tag.name] = formatted_tag
-		end
-
-		for _, tag in ipairs(formatted_response) do
-			if tag.locked and parents_map[tag.name] then
-				tag.parents = parents_map[tag.name]
+				table.insert(parents_map[child_name], tag.name)
 			end
 		end
 
-		for _, tag in ipairs(formatted_response) do
-			if not tag.root_tag then
-				local unlocks = tag.unlocks
+		table.insert(formatted_response, formatted_tag)
 
-				if unlocks then
-					local mutually_exclusive = tag.mutually_exclusive
+		formatted_response_by_name[tag.name] = formatted_tag
+	end
 
-					if mutually_exclusive then
-						local mutually_exclusive_additions = {}
+	for _, tag in ipairs(formatted_response) do
+		if tag.locked and parents_map[tag.name] then
+			tag.parents = parents_map[tag.name]
+		end
+	end
 
-						for _, mutually_exclusive_tag_name in ipairs(mutually_exclusive) do
-							local mutually_exclusive_tag = formatted_response_by_name[mutually_exclusive_tag_name]
-							local mutually_exclusive_tag_unlocks = mutually_exclusive_tag.unlocks
+	for _, tag in ipairs(formatted_response) do
+		if not tag.root_tag then
+			local unlocks = tag.unlocks
 
-							if mutually_exclusive_tag_unlocks then
-								for _, key in ipairs(mutually_exclusive_tag_unlocks) do
-									if not table.contains(unlocks, key) then
-										mutually_exclusive_additions[key] = true
-									end
+			if unlocks then
+				local mutually_exclusive = tag.mutually_exclusive
+
+				if mutually_exclusive then
+					local mutually_exclusive_additions = {}
+
+					for _, mutually_exclusive_tag_name in ipairs(mutually_exclusive) do
+						local mutually_exclusive_tag = formatted_response_by_name[mutually_exclusive_tag_name]
+						local mutually_exclusive_tag_unlocks = mutually_exclusive_tag.unlocks
+
+						if mutually_exclusive_tag_unlocks then
+							for _, key in ipairs(mutually_exclusive_tag_unlocks) do
+								if not table.contains(unlocks, key) then
+									mutually_exclusive_additions[key] = true
 								end
 							end
 						end
+					end
 
-						for key, _ in pairs(mutually_exclusive_additions) do
-							if not table.contains(mutually_exclusive, key) then
-								mutually_exclusive[#mutually_exclusive + 1] = key
-							end
+					for key, _ in pairs(mutually_exclusive_additions) do
+						if not table.contains(mutually_exclusive, key) then
+							mutually_exclusive[#mutually_exclusive + 1] = key
 						end
 					end
 				end
 			end
 		end
-
-		for _, tag in ipairs(formatted_response) do
-			local tag_name = tag.name
-
-			if not tag.root_tag then
-				local mutually_exclusive = tag.mutually_exclusive or {}
-
-				for _, inspect_tag in ipairs(formatted_response) do
-					if inspect_tag.mutually_exclusive and table.contains(inspect_tag.mutually_exclusive, tag_name) and not table.contains(mutually_exclusive, inspect_tag.name) then
-						table.insert(mutually_exclusive, inspect_tag.name)
-					end
-				end
-
-				if table.size(mutually_exclusive) > 0 then
-					tag.mutually_exclusive = mutually_exclusive
-				end
-			end
-		end
-
-		return formatted_response
 	end
 
-	local promise = self._promise_container:cancel_on_destroy(Managers.data_service.social:get_group_finder_tags():next(function (response)
-		return response
-	end):catch(function (error)
+	for _, tag in ipairs(formatted_response) do
+		local tag_name = tag.name
+
+		if not tag.root_tag then
+			local mutually_exclusive = tag.mutually_exclusive or {}
+
+			for _, inspect_tag in ipairs(formatted_response) do
+				if inspect_tag.mutually_exclusive and table.contains(inspect_tag.mutually_exclusive, tag_name) and not table.contains(mutually_exclusive, inspect_tag.name) then
+					table.insert(mutually_exclusive, inspect_tag.name)
+				end
+			end
+
+			if table.size(mutually_exclusive) > 0 then
+				tag.mutually_exclusive = mutually_exclusive
+			end
+		end
+	end
+
+	return formatted_response
+end
+
+GroupFinderView._get_group_finder_tags = function (self)
+	local promise = self._promise_container:cancel_on_destroy(Managers.data_service.social:get_group_finder_tags():catch(function (error)
 		local error_string = tostring(error)
 
 		Log.error("GroupFinderView", "Error fetching groupfinder tags: %s", error_string)
@@ -429,9 +428,7 @@ GroupFinderView._get_group_finder_tags = function (self)
 		return {}
 	end))
 
-	return promise:next(function (response)
-		return format_response(response)
-	end)
+	return promise:next(_format_group_finder_tags)
 end
 
 GroupFinderView._on_fetching_tags_complete = function (self)
@@ -585,7 +582,29 @@ GroupFinderView._get_layout_by_tags = function (self, tags, grid_size, tags_layo
 		layout_data.required_level = not level_requirement_met and level_requirement
 		layout_data.level_requirement_met = level_requirement_met
 
-		if layout_data.level_requirement_met then
+		if not level_requirement_met and not layout_data.block_reason then
+			layout_data.block_reason = Localize("loc_group_finder_tag_level_requirement", true, {
+				level = level_requirement,
+			})
+		end
+
+		local access_requirement = tag.access_requirement
+
+		if access_requirement and not layout_data.block_reason then
+			local block_reason, block_context = Managers.data_service.mission_board:get_block_reason("group_finder", access_requirement)
+
+			layout_data.block_reason = block_reason and Localize(block_reason, block_context ~= nil, block_context)
+		end
+
+		local difficulty_requirement = tag.difficulty_requirement
+
+		if difficulty_requirement and not Managers.data_service.mission_board:is_difficulty_unlocked(difficulty_requirement) and not layout_data.block_reason then
+			local block_reason, block_context = "loc_narrative_unknown_lock_reason"
+
+			layout_data.block_reason = block_reason and Localize(block_reason, block_context ~= nil, block_context)
+		end
+
+		if layout_data.block_reason == nil then
 			local personal_havoc_order_exists = self._has_active_havoc_order
 
 			layout_data.active_havoc_order = personal_havoc_order_exists
@@ -790,38 +809,58 @@ GroupFinderView._handle_input = function (self, input_service, dt, t)
 	self:_handle_group_list_input(input_service)
 end
 
-GroupFinderView._handle_group_list_input = function (self, input_service)
-	local widgets_by_name = self._widgets_by_name
-	local join_button = widgets_by_name.join_button
-	local button_disabled = true
-	local selected_group_id = self._selected_group_id
+GroupFinderView._block_reason_for_group = function (self, group_id)
+	local group = self:_group_by_id(group_id)
 
-	if selected_group_id then
-		local group_grid = self._group_grid
+	if not group then
+		return
+	end
 
-		if group_grid then
-			local grid_widgets = group_grid:widgets()
+	local player = self:_player()
+	local profile = player:profile()
+	local current_level = profile and profile.current_level or 0
+	local tags = group.tags
+	local num_tags = tags and #tags or 0
+	local block_reason
 
-			for i = 1, #grid_widgets do
-				local grid_widget = grid_widgets[i]
-				local content = grid_widget.content
-				local group_id = content.group_id
+	for i = 1, num_tags do
+		local tag = tags[i]
+		local level_requirement = tag.level_requirement or 0
+		local level_requirement_met = level_requirement <= current_level
 
-				if group_id == selected_group_id then
-					if not content.use_overlay then
-						button_disabled = false
-					end
+		if not level_requirement_met then
+			block_reason = block_reason or Localize("loc_group_finder_tag_level_requirement", true, {
+				level = level_requirement,
+			})
+		end
 
-					break
-				end
-			end
+		local access_requirement = tag.access_requirement
+
+		if access_requirement and not block_reason then
+			local block_loc_key, block_context = Managers.data_service.mission_board:get_block_reason("group_finder", access_requirement)
+
+			block_reason = block_loc_key and Localize(block_loc_key, block_context ~= nil, block_context)
+		end
+
+		local difficulty_requirement = tag.difficulty_requirement
+
+		if difficulty_requirement and not Managers.data_service.mission_board:is_difficulty_unlocked(difficulty_requirement) and not block_reason then
+			local block_loc_key, block_context = "loc_narrative_unknown_lock_reason"
+
+			block_reason = block_loc_key and Localize(block_loc_key, block_context ~= nil, block_context)
 		end
 	end
 
-	local selected_group_level_requirement_met = self._selected_group_level_requirement_met
+	return block_reason
+end
 
-	button_disabled = button_disabled or selected_group_level_requirement_met == false
-	join_button.content.hotspot.disabled = button_disabled
+GroupFinderView._handle_group_list_input = function (self, input_service)
+	local widgets_by_name = self._widgets_by_name
+	local join_button = widgets_by_name.join_button
+	local selected_group_id = self._selected_group_id
+	local block_reason = selected_group_id and self:_block_reason_for_group(selected_group_id)
+
+	join_button.content.hotspot.disabled = selected_group_id == nil or block_reason ~= nil
 end
 
 GroupFinderView._respond_to_join_request = function (self, element, accept)
@@ -904,6 +943,14 @@ GroupFinderView._can_select_tag = function (self, tag, _ignore_tag_name)
 		return false
 	end
 
+	local access_requirement = tag.access_requirement
+
+	if access_requirement and not Managers.data_service.mission_board:is_key_unlocked("group_finder", access_requirement) then
+		_temp_return_value_by_visisted_tag[tag_name] = false
+
+		return false
+	end
+
 	local tag_is_already_selected = self:_is_tag_name_selected(tag_name)
 
 	if tag_is_already_selected then
@@ -956,7 +1003,7 @@ GroupFinderView._can_select_tag = function (self, tag, _ignore_tag_name)
 end
 
 GroupFinderView._cb_on_list_tag_pressed = function (self, element)
-	if not element.level_requirement_met then
+	if element.block_reason then
 		return
 	end
 
@@ -1047,9 +1094,9 @@ GroupFinderView._update_tag_widgets = function (self, clear_slot_widgets)
 				if root_tag then
 					disabled = false
 				else
-					local level_requirement_met = widget_element.level_requirement_met
+					local block_reason = widget_element.block_reason
 
-					if level_requirement_met then
+					if block_reason == nil then
 						local can_select_tag = self:_can_select_tag(tag)
 
 						if not can_select_tag then
@@ -1147,7 +1194,7 @@ GroupFinderView._update_tag_navigation_buttons_status = function (self)
 	local is_party_full = self._is_party_full
 
 	widgets_by_name.start_group_button_party_full_warning.content.is_party_full = is_party_full
-	widgets_by_name.start_group_button_level_warning.content.level_requirement_met = is_party_full and true or is_level_requirement_met
+	widgets_by_name.start_group_button_level_warning.content.level_requirement_met = is_party_full or is_level_requirement_met
 
 	local start_group_button = widgets_by_name.start_group_button
 
@@ -1255,20 +1302,9 @@ GroupFinderView._on_group_selection_changed = function (self)
 	else
 		self._selected_group_id = nil
 		self._selected_group_grid_index = nil
-		self._selected_group_level_requirement_met = nil
 	end
 
-	local group = self._selected_group_id and self:_group_by_id(self._selected_group_id)
-
-	if group then
-		local level_requirement_met = group.level_requirement_met
-
-		self._selected_group_level_requirement_met = level_requirement_met
-	else
-		self._selected_group_level_requirement_met = nil
-	end
-
-	self._widgets_by_name.join_button_level_warning.content.level_requirement_met = self._selected_group_level_requirement_met ~= false
+	self._widgets_by_name.join_button_level_warning.content.text = self._selected_group_id and self:_block_reason_for_group(self._selected_group_id) or ""
 end
 
 GroupFinderView._setup_group_preview = function (self, group_id)
@@ -1898,6 +1934,32 @@ GroupFinderView._cb_on_refresh_button_pressed = function (self)
 	self:_play_sound(UISoundEvents.group_finder_refresh_group_list)
 end
 
+GroupFinderView.get_narrative_metadata = function (self)
+	local player = Managers.player:local_player(1)
+
+	return Managers.data_service.mission_board:fetch_player_journey_data(player:account_id(), player:character_id(), false)
+end
+
+GroupFinderView._show_error = function (self)
+	local context = {
+		description_text = "loc_popup_unavailable_view_group_finder_description",
+		title_text = "loc_action_interaction_unavailable",
+		enter_popup_sound = UISoundEvents.social_menu_receive_invite,
+		options = {
+			{
+				close_on_pressed = true,
+				hotkey = "back",
+				text = "loc_popup_button_close",
+				callback = function ()
+					Managers.ui:close_view(self.view_name)
+				end,
+			},
+		},
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context)
+end
+
 GroupFinderView._set_state = function (self, new_state)
 	if self._update_listed_group_on_update and self._state == STATE.advertising and new_state ~= STATE.advertising then
 		self._update_listed_group_on_update = false
@@ -1922,31 +1984,19 @@ GroupFinderView._set_state = function (self, new_state)
 		self:_set_group_browsing_widgets_visibility(false)
 		self:_set_tag_grid_visibility(false)
 		self:_update_party_statuses()
-		self._promise_container:cancel_on_destroy(Promise.all(self:fetch_regions(), self:_get_group_finder_tags():next(function (group_finder_tags_data)
-			if not group_finder_tags_data or #group_finder_tags_data <= 0 then
-				local context = {
-					description_text = "loc_popup_unavailable_view_group_finder_description",
-					title_text = "loc_action_interaction_unavailable",
-					enter_popup_sound = UISoundEvents.social_menu_receive_invite,
-					options = {
-						{
-							close_on_pressed = true,
-							hotkey = "back",
-							text = "loc_popup_button_close",
-							callback = function ()
-								Managers.ui:close_view(self.view_name)
-							end,
-						},
-					},
-				}
+		self._promise_container:cancel_on_destroy(Promise.all(self:fetch_regions(), self:_get_group_finder_tags(), self:get_narrative_metadata(), self:get_havoc_order_metadata())):next(function (data)
+			local group_finder_tags = data[2]
 
-				Managers.event:trigger("event_show_ui_popup", context)
+			if not group_finder_tags or #group_finder_tags <= 0 then
+				self:_show_error()
 			else
-				self._tags = group_finder_tags_data
+				self._tags = group_finder_tags
 
 				self:_on_fetching_tags_complete()
 			end
-		end), self:get_havoc_order_metadata()))
+		end):catch(function (err)
+			self:_show_error()
+		end)
 	elseif new_state == STATE.browsing then
 		self:_set_group_list_empty_info_visibility(false)
 		self:_update_grids_selection()
@@ -2700,7 +2750,6 @@ end
 GroupFinderView._update_group_grid = function (self, optional_complete_callback)
 	self._selected_group_id = nil
 	self._selected_group_grid_index = nil
-	self._selected_group_level_requirement_met = nil
 
 	local groups = self._groups
 

@@ -36,6 +36,7 @@ local weapon_template = {}
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 weapon_template.action_inputs.start_attack.buffer_time = 0.5
+weapon_template.action_inputs.wield.buffer_time = 0.4
 
 local _force_abort_breed_tags_special_active = {
 	"elite",
@@ -566,14 +567,15 @@ weapon_template.actions = {
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
+				chain_time = 0.45,
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.6,
+				chain_time = 0.45,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.7,
+				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_start_special",
@@ -715,7 +717,7 @@ weapon_template.actions = {
 		range_mod = 1.25,
 		total_time = 1.5,
 		uninterruptible = true,
-		weapon_handling_template = "time_scale_0_85",
+		weapon_handling_template = "time_scale_0_9",
 		action_movement_curve = {
 			{
 				modifier = 1.25,
@@ -820,6 +822,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
+		power_level = 525,
 		range_mod = 1.25,
 		total_time = 1.5,
 		weapon_handling_template = "time_scale_1",
@@ -890,8 +893,7 @@ weapon_template.actions = {
 		damage_type = damage_types.sawing_2h,
 		damage_profile_on_abort = DamageProfileTemplates.heavy_chainsword_2h_smiter,
 		damage_type_on_abort = damage_types.sawing_2h,
-		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_smiter_active_abort_2h,
-		damage_profile_special_active_on_abort = DamageProfileTemplates.heavy_chainsword_smiter_active_abort_2h,
+		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_active_2h_smiter,
 		damage_type_special_active = damage_types.sawing_stuck,
 		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
@@ -1002,6 +1004,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
+		power_level = 525,
 		range_mod = 1.25,
 		total_time = 1.3,
 		uninterruptible = true,
@@ -1446,7 +1449,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
 		damage_type = damage_types.sawing_2h,
-		damage_profile_on_abort = DamageProfileTemplates.light_chainsword_2h_push_follow,
+		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword_2h,
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_push_follow,
 		damage_type_special_active = damage_types.sawing_stuck,

@@ -31,7 +31,7 @@ BtTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 
 		local has_outline_system = Managers.state.extension:has_system("outline_system")
 
-		if has_outline_system then
+		if has_outline_system and (not action_data or not action_data.keep_outline) then
 			local outline_system = Managers.state.extension:system("outline_system")
 
 			outline_system:remove_all_outlines(unit)

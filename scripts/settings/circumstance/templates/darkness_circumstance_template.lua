@@ -11,6 +11,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_darkness_title",
 			happening_display_name = "loc_happening_darkness",
 			icon = "content/ui/materials/icons/circumstances/darkness_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_01",
 		},
 		mutators = {
 			"mutator_more_witches",
@@ -32,6 +33,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_darkness_hunting_grounds_title",
 			happening_display_name = "loc_happening_darkness",
 			icon = "content/ui/materials/icons/circumstances/darkness_02",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_02",
 		},
 		mutators = {
 			"mutator_more_witches",
@@ -49,6 +51,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_darkness_more_resistance_title",
 			happening_display_name = "loc_happening_darkness",
 			icon = "content/ui/materials/icons/circumstances/darkness_03",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_03",
 		},
 		mutators = {
 			"mutator_more_witches",
@@ -66,6 +69,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_darkness_less_resistance_title",
 			happening_display_name = "loc_happening_darkness",
 			icon = "content/ui/materials/icons/circumstances/darkness_04",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_04",
 		},
 		mutators = {
 			"mutator_more_witches",
@@ -90,6 +94,7 @@ local circumstance_templates = {
 			display_name = "loc_circumstance_darkness_twins_solo_title",
 			happening_display_name = "loc_happening_darkness",
 			icon = "content/ui/materials/icons/circumstances/darkness_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_01",
 		},
 		mutators = {
 			"mutator_single_twin",

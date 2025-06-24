@@ -40,8 +40,8 @@ ActionOverloadChargeWeaponSpecial.start = function (self, action_settings, t, ti
 	WarpCharge.check_and_set_state(t, warp_charge_component, buff_extension)
 end
 
-ActionOverloadChargeWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)
-	ActionOverloadChargeWeaponSpecial.super.fixed_update(self, dt, t, time_in_action)
+ActionOverloadChargeWeaponSpecial.fixed_update = function (self, dt, t, time_in_action, frame)
+	ActionOverloadChargeWeaponSpecial.super.fixed_update(self, dt, t, time_in_action, frame)
 	self._overload_module:fixed_update(dt, t)
 
 	local action_settings = self._action_settings

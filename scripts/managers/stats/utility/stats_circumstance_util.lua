@@ -36,5 +36,6 @@ _create_circumstance_entry("scripts/settings/circumstance/templates/stealth_circ
 _create_circumstance_entry("scripts/settings/circumstance/templates/toxic_gas_circumstance_template")
 _create_circumstance_entry("scripts/settings/circumstance/templates/live_event_skulls_circumstance_template")
 _create_circumstance_entry("scripts/settings/circumstance/templates/ventilation_purge_circumstance_template")
+_create_circumstance_entry("scripts/settings/circumstance/templates/player_journey_circumstance_template")
 
 return settings("circumstances", circumstances)

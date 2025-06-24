@@ -696,7 +696,7 @@ PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, pee
 	local wield_slot_after_sync = sync_data.wield_slot_after_sync
 
 	if wield_slot_after_sync then
-		if wield_slot_after_sync == "slot_combat_ability" then
+		if wield_slot_after_sync == "slot_combat_ability" or wield_slot_after_sync == "slot_grenade_ability" then
 			wield_slot_after_sync = "slot_primary"
 		end
 
@@ -768,8 +768,11 @@ PackageSynchronizerHost._cleanup_owned_units = function (self, player)
 		Interrupt.ability_and_action(t, player_unit, "PackageSynchronizer", nil, true)
 	end
 
+	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
+	local companion_unit = companion_spawner_extension:companion_unit()
+
 	for unit, _ in pairs(owned_units) do
-		if unit ~= player_unit then
+		if unit ~= player_unit and unit ~= companion_unit then
 			unit_spawner_manager:mark_for_deletion(unit)
 		end
 	end

@@ -4,9 +4,8 @@ local AchievementUIHelper = require("scripts/managers/achievements/utility/achie
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
 local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
 local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
-local ItemUtils = require("scripts/utilities/items")
-local TextUtilities = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
+local Items = require("scripts/utilities/items")
+local Text = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -478,15 +477,15 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
-			rarity_color, background_rarity_color = ItemUtils.rarity_color(visual_item)
+			rarity_color, background_rarity_color = Items.rarity_color(visual_item)
 			rarity_color = table.clone(rarity_color)
 			texts = {
 				{
-					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", ItemUtils.weapon_card_display_name(visual_item), ItemUtils.weapon_card_sub_display_name(visual_item)) or ItemUtils.display_name(visual_item),
+					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", Items.weapon_card_display_name(visual_item), Items.weapon_card_sub_display_name(visual_item)) or Items.display_name(visual_item),
 					color = rarity_color,
 				},
 				{
-					display_name = ItemUtils.rarity_display_name(item),
+					display_name = Items.rarity_display_name(item),
 					color = rarity_color,
 				},
 				{
@@ -502,7 +501,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 			texts = {
 				{
-					display_name = ItemUtils.display_name(visual_item),
+					display_name = Items.display_name(visual_item),
 				},
 				{
 					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
@@ -538,7 +537,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = "medium"
 
 			local rarity = visual_item.rarity
-			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, rarity)
+			local texture_icon, texture_frame = Items.trait_textures(visual_item, rarity)
 
 			icon_material_values = {
 				icon = texture_icon,
@@ -553,7 +552,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = nil
 			texts = {
 				{
-					display_name = string.format("'%s'", ItemUtils.display_name(visual_item)),
+					display_name = string.format("'%s'", Items.display_name(visual_item)),
 				},
 				{
 					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
@@ -611,7 +610,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
 			local selected_color = Color.terminal_corner_selected(255, true)
 
-			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtils.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
+			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or Text.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
 
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
@@ -784,7 +783,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 		if player_name and player_slot_color then
-			player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+			player_name = Text.apply_color_to_text(player_name, player_slot_color)
 		end
 
 		local localization_context = _localization_context
@@ -972,15 +971,15 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
-			rarity_color, background_rarity_color = ItemUtils.rarity_color(visual_item)
+			rarity_color, background_rarity_color = Items.rarity_color(visual_item)
 			rarity_color = table.clone(rarity_color)
 			texts = {
 				{
-					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", ItemUtils.weapon_card_display_name(visual_item), ItemUtils.weapon_card_sub_display_name(visual_item)) or ItemUtils.display_name(visual_item),
+					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", Items.weapon_card_display_name(visual_item), Items.weapon_card_sub_display_name(visual_item)) or Items.display_name(visual_item),
 					color = rarity_color,
 				},
 				{
-					display_name = ItemUtils.rarity_display_name(data),
+					display_name = Items.rarity_display_name(data),
 					color = rarity_color,
 				},
 				{
@@ -996,7 +995,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 			texts = {
 				{
-					display_name = ItemUtils.display_name(visual_item),
+					display_name = Items.display_name(visual_item),
 				},
 				{
 					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
@@ -1033,7 +1032,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = "medium"
 
 			local rarity = visual_item.rarity
-			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, rarity)
+			local texture_icon, texture_frame = Items.trait_textures(visual_item, rarity)
 
 			icon_material_values = {
 				icon = texture_icon,
@@ -1048,7 +1047,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = nil
 			texts = {
 				{
-					display_name = string.format("'%s'", ItemUtils.display_name(visual_item)),
+					display_name = string.format("'%s'", Items.display_name(visual_item)),
 				},
 				{
 					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),

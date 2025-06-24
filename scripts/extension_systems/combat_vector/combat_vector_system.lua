@@ -765,12 +765,14 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 					if not group_index then
 						local latest_position_on_nav_mesh = ScriptUnit.extension(player_unit, "navigation_system"):latest_position_on_nav_mesh()
 
-						if latest_position_on_nav_mesh then
-							group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+						if not latest_position_on_nav_mesh then
+							break
 						end
+
+						group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
 					end
 
-					local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+					local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
 					local end_index = start_index + 1
 					local _, travel_distance = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
 

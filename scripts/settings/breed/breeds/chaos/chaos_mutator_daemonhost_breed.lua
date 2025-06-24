@@ -19,6 +19,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
@@ -423,6 +424,18 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_daemonhost,
+	tokens = {},
+	companion_pounce_setting = {
+		companion_pounce_action = "human",
+		pounce_anim_event = "leap_attack",
+		damage_profile = DamageProfileTemplates.adamant_companion_human_pounce,
+		initial_damage_profile = DamageProfileTemplates.adamant_companion_initial_pounce,
+		required_token = {
+			free_target_on_assigned_token = true,
+			name = "pounced",
+		},
+		hurt_effect_template = EffectTemplates.companion_dog_hurt_attack_effect,
+	},
 }
 
 return breed_data

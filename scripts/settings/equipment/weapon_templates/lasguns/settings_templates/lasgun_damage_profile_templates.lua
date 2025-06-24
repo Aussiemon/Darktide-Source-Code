@@ -72,13 +72,13 @@ local lasgun_armor_mod_default = {
 local lasgun_p2_armor_mod_charged = {
 	near = {
 		attack = {
-			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
 			[armor_types.armored] = damage_lerp_values.lerp_1,
 			[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 			[armor_types.player] = damage_lerp_values.lerp_1,
-			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_1,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 		},
 		impact = {
@@ -94,13 +94,13 @@ local lasgun_p2_armor_mod_charged = {
 	},
 	far = {
 		attack = {
-			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
 			[armor_types.armored] = damage_lerp_values.lerp_1,
 			[armor_types.resistant] = damage_lerp_values.lerp_1_5,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
 			[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
 		},
 		impact = {
@@ -276,9 +276,9 @@ damage_templates.lasgun_p2_charge_killshot = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.armored] = 0.75,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.berserker] = 0.25,
-				[armor_types.resistant] = 0.25,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.berserker] = 0.35,
+				[armor_types.resistant] = 0.3,
 			},
 			boost_curve_multiplier_finesse = damage_lerp_values.lerp_2,
 		},
@@ -1178,6 +1178,7 @@ overrides.bayonette_weapon_special_stab_heavy = {
 	},
 }
 damage_templates.bayonette_weapon_special_slash = {
+	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 250,
 	stagger_category = "melee",
@@ -1211,7 +1212,7 @@ damage_templates.bayonette_weapon_special_slash = {
 	},
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.75,
+			boost_curve_multiplier_finesse = 1,
 			power_distribution = {
 				impact = 10,
 				attack = {

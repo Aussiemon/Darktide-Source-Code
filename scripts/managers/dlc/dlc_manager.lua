@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/managers/dlc/dlc_manager.lua
 
-local DLCDurable = require("scripts/managers/dlc/dlc_durable")
 local DLCSettings = require("scripts/managers/dlc/dlc_settings")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local DLCManager = class("DLCManager")
 local EVALUATE_CONSUMABLES_TIMER = 30
@@ -66,6 +66,47 @@ end
 
 DLCManager.evaluate_consumables = function (self)
 	self._evaluate_consumables = true
+end
+
+DLCManager.is_owner_of = function (self, product_ids)
+	local result_promises = {}
+
+	for k, v in pairs(product_ids) do
+		table.insert(result_promises, Managers.account:is_owner_of(v))
+	end
+
+	return Promise.all(unpack(result_promises)):next(function (results)
+		for _, result in ipairs(results) do
+			if result.is_owner then
+				return true
+			end
+		end
+
+		return false
+	end, function (errors)
+		return false
+	end)
+end
+
+DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callback)
+	if Backend.get_auth_method() ~= Backend.AUTH_METHOD_STEAM then
+		Managers.ui:open_view("dlc_purchase_view", nil, false, false, nil, {
+			dlc_settings = dlc_settings,
+			on_flow_finished_callback = on_flow_finished_callback,
+		})
+
+		return
+	end
+
+	return self:open_to_store(dlc_settings.steam_dlc_target, on_flow_finished_callback)
+end
+
+DLCManager.open_to_store = function (self, product_id, on_flow_finished_callback)
+	Managers.account:open_to_store(product_id):next(function (result)
+		if on_flow_finished_callback then
+			on_flow_finished_callback(result.success)
+		end
+	end)
 end
 
 DLCManager._ui_in_blocked_state = function (self)

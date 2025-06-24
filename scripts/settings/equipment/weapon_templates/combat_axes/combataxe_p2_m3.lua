@@ -31,6 +31,7 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupFast.action_inputs)
+weapon_template.action_inputs.special_action.buffer_time = 0.4
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupFast.action_input_hierarchy)
 
 local hit_zone_priority = {
@@ -172,6 +173,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
+		power_level = 550,
 		range_mod = 1.25,
 		total_time = 1,
 		uninterruptible = true,
@@ -231,14 +233,18 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.2,
+			0.15,
+			1,
+		},
 		hit_zone_priority = hit_zone_priority,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_down",
 			anchor_point_offset = {
-				0.15,
+				0.2,
 				0,
-				0,
+				0.1,
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_hatchet_smiter,
@@ -260,8 +266,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		range_mod = 1.25,
-		total_time = 0.77,
+		range_mod = 1.3,
+		total_time = 1.5,
 		weapon_handling_template = "time_scale_1_hatchet",
 		action_movement_curve = {
 			{
@@ -394,11 +400,12 @@ weapon_template.actions = {
 		anim_event = "attack_right_diagonal_up_ninja",
 		anim_event_3p = "attack_swing_up_right_ninja",
 		damage_window_end = 0.35,
-		damage_window_start = 0.21666666666666667,
+		damage_window_start = 0.2833333333333333,
 		first_person_hit_stop_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		range_mod = 1.35,
+		power_level = 550,
+		range_mod = 1.45,
 		total_time = 1.15,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_0_9_hatchet",
@@ -463,7 +470,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.575,
+				-0.475,
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_hatchet,
@@ -485,8 +492,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		range_mod = 1.25,
-		total_time = 0.78,
+		range_mod = 1.35,
+		total_time = 1.5,
 		weapon_handling_template = "time_scale_1_3_hatchet",
 		action_movement_curve = {
 			{
@@ -542,7 +549,7 @@ weapon_template.actions = {
 				0,
 			},
 		},
-		damage_profile = DamageProfileTemplates.medium_hatchet,
+		damage_profile = DamageProfileTemplates.medium_hatchet_smiter,
 		damage_type = damage_types.axe_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -551,6 +558,7 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.horizontal_slash_clean,
 	},
 	action_melee_start_left_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_charge_left_diagonal_down",
 		anim_event_3p = "attack_swing_charge_down_left",
@@ -615,6 +623,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_left_light = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_left_diagonal_down_ninja",
 		anim_event_3p = "attack_swing_left_diagonal_ninja",
@@ -623,7 +632,8 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		range_mod = 1.35,
+		power_level = 550,
+		range_mod = 1.45,
 		total_time = 1,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_hatchet",
@@ -820,9 +830,9 @@ weapon_template.actions = {
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_right_diagonal_down_ninja",
 			anchor_point_offset = {
+				-0.25,
 				0,
-				0,
-				0,
+				-0.2,
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_hatchet,
@@ -905,7 +915,7 @@ weapon_template.actions = {
 		range_mod = 1.2,
 		start_input = "special_action",
 		total_time = 1.5,
-		weapon_handling_template = "time_scale_1_3_hatchet",
+		weapon_handling_template = "time_scale_1_3",
 		action_movement_curve = {
 			{
 				modifier = 1,
@@ -974,7 +984,7 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		range_mod = 1.25,
 		total_time = 1.5,
-		weapon_handling_template = "time_scale_1_3_hatchet",
+		weapon_handling_template = "time_scale_1_3",
 		action_movement_curve = {
 			{
 				modifier = 1.25,
@@ -1035,7 +1045,7 @@ weapon_template.actions = {
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_backside_down_left",
 			anchor_point_offset = {
-				0,
+				0.15,
 				0,
 				0,
 			},
@@ -1093,7 +1103,7 @@ weapon_template.keywords = {
 	"p2",
 }
 weapon_template.dodge_template = "ninjafencer"
-weapon_template.sprint_template = "default"
+weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"

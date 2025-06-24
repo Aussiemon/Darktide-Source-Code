@@ -106,6 +106,19 @@ true_flight_templates.throwing_knives_aimed = {
 		return distance < d and 1 or d / distance
 	end,
 }
+true_flight_templates.drone = {
+	on_target_acceleration = 0,
+	speed_multiplier = 1,
+	target_tracking_update_function = "drone_update_towards_position",
+	time_between_raycasts = 0.1,
+	trigger_time = 0,
+	update_seeking_position_function = "drone_projectile_locomotion",
+	lerp_modifier_func = function (integration_data, distance)
+		local d = 1.5
+
+		return distance < d and 1 or d / distance
+	end,
+}
 true_flight_templates.magic_missile = {
 	bot_threat_at_distance = 5,
 	broadphase_radius = 2.5,

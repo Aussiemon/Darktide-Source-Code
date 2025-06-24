@@ -15,6 +15,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
+local CompanionAdditionalLeapingCondition = require("scripts/extension_systems/behavior/utilities/companion/companion_additional_leaping_condition")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
@@ -150,9 +151,10 @@ local breed_data = {
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_hound,
 	fade = {
-		max_distance = 0.7,
+		max_distance = 1.1,
 		max_height_difference = 1,
-		min_distance = 0.2,
+		min_distance = 0.7,
+		node_name = "fade_root",
 	},
 	hit_zones = {
 		{
@@ -402,6 +404,27 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_hound,
+	companion_pounce_setting = {
+		companion_pounce_action = "stagger_and_leap_away",
+		on_target_hit = {
+			anim_event = "attack_leap_nonhuman_start",
+			animation_driven_duration = 0.5333333333333333,
+		},
+		land_anim_events = {
+			{
+				duration = 0.8333333333333334,
+				name = "attack_leap_nonhuman_land_02",
+			},
+		},
+		companion_additional_leaping_condition = CompanionAdditionalLeapingCondition.is_target_leaping,
+		damage_profile = DamageProfileTemplates.adamant_companion_ogryn_pounce,
+		force_stagger_settings = {
+			duration = 2.5,
+			immune_time = 2.5,
+			length_scale = 1,
+			stagger_type = "heavy",
+		},
+	},
 }
 
 return breed_data
