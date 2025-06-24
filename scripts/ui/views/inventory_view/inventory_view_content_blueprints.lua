@@ -790,10 +790,14 @@ local blueprints = {
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				local item_state_machine = item.state_machine
 				local item_animation_event = item.animation_event
+				local companion_item_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
+				local companion_item_animation_event = item.companion_animation_event ~= nil and item.companion_animation_event ~= "" and item.companion_animation_event or nil
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
 					animation_event = item_animation_event,
+					companion_state_machine = companion_item_state_machine,
+					companion_animation_event = companion_item_animation_event,
 				}
 
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
@@ -856,10 +860,14 @@ local blueprints = {
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 					local item_state_machine = equipped_item.state_machine
 					local item_animation_event = equipped_item.animation_event
+					local companion_item_state_machine = equipped_item.companion_state_machine ~= nil and equipped_item.companion_state_machine ~= "" and equipped_item.companion_state_machine or nil
+					local companion_item_animation_event = equipped_item.companion_animation_event ~= nil and equipped_item.companion_animation_event ~= "" and equipped_item.companion_animation_event or nil
 					local render_context = {
 						camera_focus_slot_name = slot_name,
 						state_machine = item_state_machine,
 						animation_event = item_animation_event,
+						companion_state_machine = companion_item_state_machine,
+						companion_animation_event = companion_item_animation_event,
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb, render_context)

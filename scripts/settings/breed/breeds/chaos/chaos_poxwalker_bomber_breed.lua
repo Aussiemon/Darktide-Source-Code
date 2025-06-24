@@ -367,6 +367,7 @@ local breed_data = {
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_poxwalker_bomber,
 	companion_pounce_setting = {
 		companion_pounce_action = "stagger_and_leap_away",
+		ignore_target_selection = true,
 		on_target_hit = {
 			anim_event = "attack_leap_pushed_back_start",
 			animation_driven_duration = 0.36666666666666664,

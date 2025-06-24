@@ -905,13 +905,8 @@ local templates = {
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
 
-			local function close_callback_function()
-				_complete_current_story_chapter("level_unlock_popups")
-			end
-
-			local close_callback = callback(close_callback_function)
-
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			_complete_current_story_chapter("level_unlock_popups")
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 		end,
 		close_condition = function (self)
 			local input_service = Managers.input:get_input_service("View")
@@ -1444,7 +1439,9 @@ local templates = {
 			end
 		end,
 		close_condition = function (self)
-			return Managers.state.cinematic:last_story_time_left() and Managers.state.cinematic:last_story_time_left() < 0.5 or not is_view_or_popup_active() and _archetype_name_is("adamant")
+			local cinematic_manager = Managers.state.cinematic
+
+			return cinematic_manager and cinematic_manager:last_story_time_left() and cinematic_manager:last_story_time_left() < 0.5 or not is_view_or_popup_active()
 		end,
 		on_deactivation = function (self)
 			local jump_to_chapter

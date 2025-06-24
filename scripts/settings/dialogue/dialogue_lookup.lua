@@ -19,6 +19,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_d
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_ember")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_hunting_grounds")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_nurgle_rot")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_toxic_gas")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_ventilation_purge")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_class_rework")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_conversations_core")

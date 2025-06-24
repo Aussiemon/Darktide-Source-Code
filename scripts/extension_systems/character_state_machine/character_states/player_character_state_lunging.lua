@@ -96,7 +96,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 
 	local action_settings = self._weapon_extension:running_action_settings()
 
-	if action_settings and not ActionAvailability.available_in_lunge(action_settings) then
+	if action_settings and not ActionAvailability.available_in_lunge(action_settings) or lunge_template.disable_weapon_actions then
 		Interrupt.ability_and_action(t, unit, "lunging", nil)
 	end
 
@@ -358,7 +358,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 
 				hit = true
 
-				if on_finish_directional_shout.force_stagger_type_if_not_staggered and stagger_result and stagger_result == "no_stagger" and tags and not tags.monster and not tags.captain then
+				if on_finish_directional_shout.force_stagger_type_if_not_staggered and stagger_result and stagger_result == "no_stagger" and tags and not tags.monster and not tags.captain and not tags.cultist_captain then
 					hit_enemy_units[enemy_unit] = true
 
 					local force_stagger_type_if_not_staggered_duration = on_finish_directional_shout.force_stagger_type_if_not_staggered_duration

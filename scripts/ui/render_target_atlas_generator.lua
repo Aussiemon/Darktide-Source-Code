@@ -4,7 +4,8 @@ local RenderTargetAtlasGenerator = class("RenderTargetAtlasGenerator")
 
 RenderTargetAtlasGenerator.init = function (self, render_settings)
 	self._atlases = {}
-	self._atlases_to_destory = {}
+	self._indexes_to_remove = {}
+	self._atlases_to_destroy = {}
 	self._default_atlas_rows = 5
 	self._default_atlas_columns = 5
 	self._atlas_destruction_delay_time = 1
@@ -26,47 +27,57 @@ end
 
 RenderTargetAtlasGenerator.free_atlas_grid_index = function (self, atlas_id, grid_index)
 	local atlas = self:_get_atlas_by_id(atlas_id)
-	local occupied_grid_slots = atlas.occupied_grid_slots
-	local num_used_grid_slots = atlas.num_used_grid_slots
 
-	atlas.num_used_grid_slots = num_used_grid_slots - 1
-	occupied_grid_slots[grid_index] = false
+	self._indexes_to_remove[#self._indexes_to_remove + 1] = {
+		atlas = atlas,
+		grid_index = grid_index,
+	}
+end
 
-	if atlas.num_used_grid_slots == 0 then
-		local atlases = self._atlases
+RenderTargetAtlasGenerator.update = function (self, dt, t)
+	self:_handle_grid_index_removal()
+	self:_handle_atlas_destruction(dt)
+end
 
-		for i = 1, #atlases do
-			if atlases[i].id == atlas.id then
-				table.remove(atlases, i)
+RenderTargetAtlasGenerator._handle_grid_index_removal = function (self)
+	local indexes_to_remove = self._indexes_to_remove
 
-				self._atlases_to_destory[#self._atlases_to_destory + 1] = atlas
+	for i = #self._indexes_to_remove, 1, -1 do
+		local index_to_remove = self._indexes_to_remove[i]
+		local atlas = index_to_remove.atlas
+		local grid_index = index_to_remove.grid_index
+		local atlas_id = atlas.id
+		local occupied_grid_slots = atlas.occupied_grid_slots
+		local num_used_grid_slots = atlas.num_used_grid_slots
 
-				break
+		atlas.num_used_grid_slots = num_used_grid_slots - 1
+		occupied_grid_slots[grid_index] = false
+
+		table.remove(self._indexes_to_remove, i)
+
+		if atlas.num_used_grid_slots == 0 then
+			local atlases = self._atlases
+
+			if atlases[atlas_id] then
+				self._atlases[atlas_id] = nil
+				self._atlases_to_destroy[atlas_id] = atlas
 			end
 		end
 	end
 end
 
-RenderTargetAtlasGenerator.update = function (self, dt, t)
-	self:_handle_atlas_destruction(dt)
-end
-
 RenderTargetAtlasGenerator._handle_atlas_destruction = function (self, dt, instant)
-	local atlases_to_destory = self._atlases_to_destory
+	local atlases_to_destroy = self._atlases_to_destroy
 
-	for i = #atlases_to_destory, 1, -1 do
-		local atlas = atlases_to_destory[i]
+	for atlas_id, atlas in pairs(atlases_to_destroy) do
+		if not instant and (not atlas.destruction_timer or atlas.destruction_timer > 0) then
+			atlas.destruction_timer = (atlas.destruction_timer or self._atlas_destruction_delay_time) - dt
+		else
+			atlases_to_destroy[atlas_id] = nil
 
-		if atlas then
-			if not instant and (not atlas.destruction_timer or atlas.destruction_timer > 0) then
-				atlas.destruction_timer = (atlas.destruction_timer or self._atlas_destruction_delay_time) - dt
-			else
-				table.remove(atlases_to_destory, i)
+			local render_target = atlas.render_target
 
-				local render_target = atlas.render_target
-
-				Renderer.destroy_resource(render_target)
-			end
+			Renderer.destroy_resource(render_target)
 		end
 	end
 end
@@ -87,8 +98,7 @@ end
 RenderTargetAtlasGenerator.destroy = function (self)
 	local atlases = self._atlases
 
-	for i = 1, #atlases do
-		local atlas = atlases[i]
+	for atlas_id, atlas in pairs(atlases) do
 		local render_target = atlas.render_target
 
 		Renderer.destroy_resource(render_target)
@@ -171,7 +181,7 @@ RenderTargetAtlasGenerator._create_atlas_grid = function (self, slot_width, slot
 		max_grid_slots = num_columns * num_rows,
 	}
 
-	self._atlases[#self._atlases + 1] = atlas
+	self._atlases[atlas_id] = atlas
 
 	return atlas
 end
@@ -179,20 +189,13 @@ end
 RenderTargetAtlasGenerator._get_atlas_by_id = function (self, atlas_id)
 	local atlases = self._atlases
 
-	for i = 1, #atlases do
-		local atlas = atlases[i]
-
-		if atlas.id == atlas_id then
-			return atlas
-		end
-	end
+	return atlases[atlas_id]
 end
 
 RenderTargetAtlasGenerator._get_available_atlas_by_slot_size = function (self, width, height)
 	local atlases = self._atlases
 
-	for i = 1, #atlases do
-		local atlas = atlases[i]
+	for atlas_id, atlas in pairs(atlases) do
 		local max_grid_slots = atlas.max_grid_slots
 		local num_used_grid_slots = atlas.num_used_grid_slots
 

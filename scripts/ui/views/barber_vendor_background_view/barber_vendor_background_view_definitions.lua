@@ -133,7 +133,7 @@ local function button_options_definitions()
 
 	if archetype == "adamant" then
 		table.insert(buttons, 2, {
-			unlocalized_name = "Modify Cyber-Mastiff Appearance",
+			display_name = "loc_barber_vendor_view_option_modify_companion_dog",
 			callback = function (self)
 				local tab_bar_params = {
 					hide_tabs = true,

@@ -120,6 +120,10 @@ BtCompanionLeapAction.run = function (self, unit, breed, blackboard, scratchpad,
 		self:_check_if_stuck(unit, scratchpad, action_data, t, locomotion_extension)
 	end
 
+	if state == "wall_jump" then
+		self:_check_if_stuck_between_walls(unit, scratchpad, action_data, dt)
+	end
+
 	if state == "starting" then
 		result = self:_update_starting_state(unit, scratchpad, action_data, dt, t, locomotion_extension, perception_component, target_unit)
 	elseif state == "stopping" then
@@ -666,6 +670,22 @@ BtCompanionLeapAction._check_if_stuck = function (self, unit, scratchpad, action
 
 	if scratchpad.stuck_timer and t > scratchpad.stuck_timer then
 		scratchpad.behavior_component.is_out_of_bound = true
+	end
+end
+
+BtCompanionLeapAction._check_if_stuck_between_walls = function (self, unit, scratchpad, action_data, dt)
+	local state = scratchpad.state
+
+	if state and state == "wall_jump" then
+		if not scratchpad.stuck_between_walls_timer then
+			scratchpad.stuck_between_walls_timer = 0
+		else
+			scratchpad.stuck_between_walls_timer = scratchpad.stuck_between_walls_timer + dt
+		end
+
+		if scratchpad.stuck_between_walls_timer and scratchpad.stuck_between_walls_timer > action_data.stuck_between_walls_time then
+			scratchpad.behavior_component.is_out_of_bound = true
+		end
 	end
 end
 

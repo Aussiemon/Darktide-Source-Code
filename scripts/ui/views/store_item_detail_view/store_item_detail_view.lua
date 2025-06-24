@@ -2701,7 +2701,10 @@ StoreItemDetailView._get_item_archetypes = function (self, item)
 	local item_archetypes = {}
 
 	if not item.archetypes then
-		return item_archetypes
+		local preview_item = item.preview_item and MasterItems.get_item(item.preview_item)
+		local preview_item_archetypes = preview_item and self:_get_item_archetypes(preview_item)
+
+		return preview_item_archetypes or item_archetypes
 	end
 
 	for k, v in pairs(item.archetypes) do

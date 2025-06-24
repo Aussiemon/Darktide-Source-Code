@@ -240,6 +240,10 @@ local archetype_talents = {
 					format_type = "percentage",
 					value = talent_settings.combat_ability.stance.cooldown_reduction,
 				},
+				toughness = {
+					format_type = "percentage",
+					value = talent_settings.combat_ability.stance.cooldown_reduction,
+				},
 			},
 			player_ability = {
 				ability_type = "combat_ability",
@@ -531,6 +535,10 @@ local archetype_talents = {
 					format_type = "percentage",
 					value = talent_settings.blitz_ability.drone.toughness,
 				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.blitz_ability.drone.cooldown,
+				},
 			},
 		},
 		adamant_area_buff_drone_improved = {
@@ -576,6 +584,10 @@ local archetype_talents = {
 				recoil = {
 					format_type = "percentage",
 					value = talent_settings.blitz_ability.drone.recoil_modifier,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.blitz_ability.drone.cooldown,
 				},
 			},
 			special_rule = {

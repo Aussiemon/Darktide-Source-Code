@@ -424,17 +424,20 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.chaos_daemonhost,
-	tokens = {},
 	companion_pounce_setting = {
-		companion_pounce_action = "human",
-		pounce_anim_event = "leap_attack",
-		damage_profile = DamageProfileTemplates.adamant_companion_human_pounce,
-		initial_damage_profile = DamageProfileTemplates.adamant_companion_initial_pounce,
-		required_token = {
-			free_target_on_assigned_token = true,
-			name = "pounced",
+		companion_pounce_action = "stagger_and_leap_away",
+		on_target_hit = {
+			anim_event = "attack_leap_pushed_back_start",
+			animation_driven_duration = 0.36666666666666664,
 		},
 		hurt_effect_template = EffectTemplates.companion_dog_hurt_attack_effect,
+		land_anim_events = {
+			{
+				duration = 1.3333333333333333,
+				name = "attack_leap_pushed_back_land",
+			},
+		},
+		damage_profile = DamageProfileTemplates.adamant_companion_human_pounce,
 	},
 }
 

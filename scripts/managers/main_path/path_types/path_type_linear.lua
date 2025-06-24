@@ -128,6 +128,29 @@ PathTypeLinear.update_progress_on_path = function (self, t)
 				else
 					group_index = previous_frame_group_index_by_unit[player_unit]
 				end
+
+				if not group_index then
+					local players = Managers.player:players()
+
+					for _, friendly_player in pairs(players) do
+						local friendly_player_unit = friendly_player.player_unit
+
+						if friendly_player_unit and friendly_player_unit ~= player_unit then
+							local friendly_navigation_extension = ScriptUnit.extension(friendly_player_unit, "navigation_system")
+							local friendly_latest_position_on_nav_mesh = friendly_navigation_extension:latest_position_on_nav_mesh()
+
+							if friendly_latest_position_on_nav_mesh then
+								group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+							else
+								group_index = previous_frame_group_index_by_unit[friendly_player_unit]
+							end
+						end
+
+						if group_index then
+							break
+						end
+					end
+				end
 			end
 
 			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)

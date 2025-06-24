@@ -1654,6 +1654,13 @@ conditions.companion_is_aggroed = function (unit, blackboard, scratchpad, condit
 	local owner_unit = behavior_component.owner_unit
 	local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
 	local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local owner_unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+	local character_state = owner_unit_data_extension and owner_unit_data_extension:read_component("character_state")
+	local owner_unit_is_disabled = character_state and PlayerUnitStatus.is_disabled(character_state)
+
+	in_combat = in_combat or owner_unit_is_disabled
+
 	local companion_whistle_target
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 	local tag_target, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)

@@ -89,7 +89,9 @@ DLCManager.is_owner_of = function (self, product_ids)
 end
 
 DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callback)
-	if Backend.get_auth_method() ~= Backend.AUTH_METHOD_STEAM then
+	local has_steam_overlay = Backend.get_auth_method() == Backend.AUTH_METHOD_STEAM and Steam.is_overlay_enabled()
+
+	if not has_steam_overlay then
 		Managers.ui:open_view("dlc_purchase_view", nil, false, false, nil, {
 			dlc_settings = dlc_settings,
 			on_flow_finished_callback = on_flow_finished_callback,
@@ -98,7 +100,7 @@ DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callba
 		return
 	end
 
-	return self:open_to_store(dlc_settings.steam_dlc_target, on_flow_finished_callback)
+	self:open_to_store(dlc_settings.steam_dlc_target, on_flow_finished_callback)
 end
 
 DLCManager.open_to_store = function (self, product_id, on_flow_finished_callback)

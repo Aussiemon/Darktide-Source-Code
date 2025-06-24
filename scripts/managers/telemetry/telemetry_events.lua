@@ -1285,4 +1285,14 @@ TelemetryEvents.dlc_purchase_button_clicked = function (self, dlc_telemetry_id, 
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.player_journey_popup_play_journey = function (self, context, choice)
+	local event = self:_create_event("player_journey_skip_popup_choice")
+
+	event:set_data({
+		context = context,
+		chose_to_skip = choice,
+	})
+	self._manager:register_event(event)
+end
+
 return TelemetryEvents

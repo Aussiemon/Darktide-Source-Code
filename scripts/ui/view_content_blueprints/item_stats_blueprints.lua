@@ -2802,11 +2802,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local slot_name = slots[1]
 					local item_state_machine = item.state_machine
 					local item_animation_event = item.animation_event
+					local item_companion_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
+					local item_companion_animation_event = item.companion_animation_event ~= nil and item.companion_animation_event ~= "" and item.companion_animation_event or nil
 					local profile = element.profile
 					local render_context = {
 						camera_focus_slot_name = slot_name,
 						state_machine = item_state_machine,
 						animation_event = item_animation_event,
+						companion_state_machine = item_companion_state_machine,
+						companion_animation_event = item_companion_animation_event,
 						size = {
 							grid_width,
 							350,

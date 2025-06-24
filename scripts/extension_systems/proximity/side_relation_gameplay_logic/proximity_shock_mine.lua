@@ -102,7 +102,7 @@ ProximityShockMine.update = function (self, dt, t)
 	self:_apply_buffs(t)
 end
 
-local HARD_CODED_RADIUS = 3
+local HARD_CODED_RADIUS = talent_settings.blitz_ability.shock_mine.range
 local _broadphase_results = {}
 
 ProximityShockMine._apply_buffs = function (self, t)

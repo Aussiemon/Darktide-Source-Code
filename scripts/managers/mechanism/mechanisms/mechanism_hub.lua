@@ -7,19 +7,6 @@ local Popups = require("scripts/utilities/ui/popups")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
-local PLAYER_CAMPAIGN_SKIP_LVL_THRESHOLD = 15
-
-local function _character_save_data()
-	local local_player_id = 1
-	local player_manager = Managers.player
-	local player = player_manager and player_manager:local_player(local_player_id)
-	local character_id = player and player:character_id()
-	local save_manager = Managers.save
-	local character_data = character_id and save_manager and save_manager:character_data(character_id)
-
-	return character_data
-end
-
 local MechanismHub = class("MechanismHub", "MechanismBase")
 
 MechanismHub.init = function (self, ...)
@@ -254,6 +241,7 @@ MechanismHub.wanted_transition = function (self)
 					end
 
 					if mission_board_service then
+						Managers.telemetry_events:player_journey_popup_play_journey("hub", true)
 						mission_board_service:skip_and_unlock_campaign(account_id, character_id):next(function (data)
 							return mission_board_service:set_character_has_been_shown_skip_campaign_popup(account_id, character_id)
 						end)
@@ -270,6 +258,8 @@ MechanismHub.wanted_transition = function (self)
 					end
 
 					if mission_board_service then
+						Managers.telemetry_events:player_journey_popup_play_journey("hub", false)
+
 						return mission_board_service:set_character_has_been_shown_skip_campaign_popup(account_id, character_id)
 					end
 				end)

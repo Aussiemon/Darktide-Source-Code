@@ -679,9 +679,12 @@ MissionBoardView._update_mission_widgets = function (self, t)
 
 	if not self._selected_mission_id and self._has_synced_missions_data then
 		local has_active_campaign_missions, active_story_mission_id = self:_has_active_campaign_missions(filtered_missions)
-		local preselected_mission = active_story_mission_id or "qp_mission_widget"
 
-		self:_set_selected_mission(preselected_mission, true, true)
+		if active_story_mission_id then
+			self:_set_selected_mission(active_story_mission_id, true, true)
+		else
+			self:_set_selected_quickplay(true, true)
+		end
 	end
 end
 

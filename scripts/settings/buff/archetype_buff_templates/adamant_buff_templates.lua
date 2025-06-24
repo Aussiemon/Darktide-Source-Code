@@ -1002,13 +1002,15 @@ templates.adamant_execution_order = {
 					end
 				end
 
-				local tags = params.tags
+				if template_data.adamant_execution_order_monster_debuff then
+					local tags = params.tags
 
-				if tags.monster then
-					local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
+					if tags.monster then
+						local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
 
-					if buff_extension then
-						buff_extension:add_internally_controlled_buff("adamant_execution_order_monster_debuff", t)
+						if buff_extension then
+							buff_extension:add_internally_controlled_buff("adamant_execution_order_monster_debuff", t)
+						end
 					end
 				end
 			end

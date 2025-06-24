@@ -776,10 +776,14 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				local slot_name = ItemUtils.slot_name(item)
 				local item_state_machine = item.state_machine
 				local item_animation_event = item.animation_event
+				local item_companion_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
+				local item_companion_animation_event = item.companion_animation_event ~= nil and item.companion_animation_event ~= "" and item.companion_animation_event or nil
 				local render_context = {
 					camera_focus_slot_name = slot_name,
 					state_machine = item_state_machine,
 					animation_event = item_animation_event,
+					companion_state_machine = item_companion_state_machine,
+					companion_animation_event = item_companion_animation_event,
 				}
 				local cb, unload_cb
 

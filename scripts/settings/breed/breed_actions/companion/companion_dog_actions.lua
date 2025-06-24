@@ -224,6 +224,7 @@ local action_data = {
 		start_move_speed = 12,
 		stop_anim = "run_to_stop",
 		stop_duration = 0.5,
+		stuck_between_walls_time = 10,
 		stuck_time = 3,
 		wall_jump_align_rotation_speed = 30,
 		wall_jump_anim_event = "leap_hit_wall",

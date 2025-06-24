@@ -67,6 +67,7 @@ local talent_settings = {
 		blitz_ability = {
 			drone = {
 				attack_speed = 0.1,
+				cooldown = 60,
 				damage_taken = 1.15,
 				duration = 20,
 				enemy_melee_attack_speed = -0.25,
@@ -82,7 +83,7 @@ local talent_settings = {
 			},
 			shock_mine = {
 				duration = 15,
-				range = 5,
+				range = 3,
 			},
 			whistle = {
 				charges = 3,

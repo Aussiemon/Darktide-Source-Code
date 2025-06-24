@@ -1894,16 +1894,6 @@ end
 Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype, preferred_breed)
 	local item_gender, item_breed, item_archetype, item_slot_name
 
-	if item.genders and not table.is_empty(item.genders) then
-		if preferred_gender and table.find(item.genders, preferred_gender) then
-			item_gender = preferred_gender
-		else
-			item_gender = table.find(item.genders, "male") and "male" or item.genders[1]
-		end
-	elseif (not item.genders or item.genders and table.is_empty(item.genders)) and preferred_gender then
-		item_gender = preferred_gender
-	end
-
 	if item.archetypes and not table.is_empty(item.archetypes) then
 		if preferred_archetype and table.find(item.archetypes, preferred_archetype) then
 			item_archetype = type(preferred_archetype) == "string" and Archetypes[preferred_archetype] or preferred_archetype
@@ -1927,6 +1917,16 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		else
 			item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
 		end
+	end
+
+	if item.genders and not table.is_empty(item.genders) then
+		if preferred_gender and table.find(item.genders, preferred_gender) then
+			item_gender = preferred_gender
+		else
+			item_gender = table.find(item.genders, "male") and "male" or item.genders[1]
+		end
+	elseif (not item.genders or item.genders and table.is_empty(item.genders)) and preferred_gender and item_breed ~= "ogryn" then
+		item_gender = preferred_gender
 	end
 
 	if item.slots and not table.is_empty(item.slots) then

@@ -3020,12 +3020,15 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 					narrative_manager:complete_chapter_by_name("main_story", "km_station")
 					Popups.skip_player_journey.mind_wipe(nil, function ()
 						if mission_board_service then
+							Managers.telemetry_events:player_journey_popup_play_journey("mind_wipe", true)
 							mission_board_service:skip_and_unlock_campaign(account_id, character_id):next(function (data)
 								return mission_board_service:set_character_has_been_shown_skip_campaign_popup(account_id, character_id)
 							end)
 						end
 					end, function ()
 						if mission_board_service then
+							Managers.telemetry_events:player_journey_popup_play_journey("mind_wipe", false)
+
 							return mission_board_service:set_character_has_been_shown_skip_campaign_popup(account_id, character_id)
 						end
 					end)

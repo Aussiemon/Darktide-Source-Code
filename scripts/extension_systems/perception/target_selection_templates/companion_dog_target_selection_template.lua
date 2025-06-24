@@ -246,89 +246,93 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 				if is_aggroed and is_alive then
 					local unit_data_extension = ScriptUnit.has_extension(possible_unit, "unit_data_system")
 					local possible_unit_breed = unit_data_extension:breed()
-					local optional_assign_token = false
+					local ignore_target_selection = possible_unit_breed.companion_pounce_setting.ignore_target_selection
 
-					if not _check_for_token(unit, possible_unit, optional_assign_token) then
-						break
-					end
+					if not ignore_target_selection then
+						local optional_assign_token = false
 
-					local tags = possible_unit_breed.tags
-					local check_dist_sq_companion_target, check_dist_sq_owner_target, _, delta_z = _calculate_distances(possible_unit, companion_position, owner_unit_position)
-					local close = check_dist_sq_owner_target < close_distane
-					local distance_owner = math.sqrt(check_dist_sq_owner_target)
-					local distCompanion = math.sqrt(check_dist_sq_companion_target)
-					local player_distance = math.min(distance_owner, player_radius) / player_radius
-					local dog_distance = math.min(distCompanion, dog_radius) / dog_radius
-					local possible_unit_blackboard = BLACKBOARDS[possible_unit]
-					local possible_unit_perception_component = possible_unit_blackboard.perception
-					local possible_unit_target_unit = possible_unit_perception_component.target_unit
-					local targeting_owner = possible_unit_target_unit == owner_unit
-					local player_focus = targeting_owner and 1 or 0
-					local threatVal = 1
-
-					if tags then
-						local is_special = tags.special
-						local is_elite = tags.elite
-						local is_melee = tags.melee
-						local is_ranged = tags.far or possible_unit_breed.ranged
-
-						if is_special then
-							threatVal = threatVal + special_weight
+						if not _check_for_token(unit, possible_unit, optional_assign_token) then
+							break
 						end
 
-						if is_elite then
-							threatVal = threatVal + elite_weight
+						local tags = possible_unit_breed.tags
+						local check_dist_sq_companion_target, check_dist_sq_owner_target, _, delta_z = _calculate_distances(possible_unit, companion_position, owner_unit_position)
+						local close = check_dist_sq_owner_target < close_distane
+						local distance_owner = math.sqrt(check_dist_sq_owner_target)
+						local distCompanion = math.sqrt(check_dist_sq_companion_target)
+						local player_distance = math.min(distance_owner, player_radius) / player_radius
+						local dog_distance = math.min(distCompanion, dog_radius) / dog_radius
+						local possible_unit_blackboard = BLACKBOARDS[possible_unit]
+						local possible_unit_perception_component = possible_unit_blackboard.perception
+						local possible_unit_target_unit = possible_unit_perception_component.target_unit
+						local targeting_owner = possible_unit_target_unit == owner_unit
+						local player_focus = targeting_owner and 1 or 0
+						local threatVal = 1
+
+						if tags then
+							local is_special = tags.special
+							local is_elite = tags.elite
+							local is_melee = tags.melee
+							local is_ranged = tags.far or possible_unit_breed.ranged
+
+							if is_special then
+								threatVal = threatVal + special_weight
+							end
+
+							if is_elite then
+								threatVal = threatVal + elite_weight
+							end
+
+							if is_melee and close then
+								threatVal = threatVal + close_melee_weight
+							end
+
+							if is_melee and melee_focus then
+								threatVal = threatVal + melee_focus_weight
+							end
+
+							if is_ranged and ranged_focus then
+								threatVal = threatVal + ranged_focus_weight
+							end
+
+							if is_elite and elite_focus then
+								threatVal = threatVal + elite_focus_weight
+							end
+
+							if is_special and elite_focus then
+								threatVal = threatVal + special_focus_weight
+							end
 						end
 
-						if is_melee and close then
-							threatVal = threatVal + close_melee_weight
+						local possible_unit_position = POSITION_LOOKUP[possible_unit]
+						local direction_to_possible_unit = Vector3.normalize(possible_unit_position - owner_unit_position)
+						local dot = Vector3.dot(direction_to_possible_unit, owner_look_direction)
+						local normalized_angle_target_owner = math.clamp((dot - dot_check) / (1 - dot_check), 0, 1)
+						local baseScore = player_clossness_weight * (1 - player_distance) + dog_clossness_weight * (1 - dog_distance) + targeting_owner_weight * player_focus + dangerous_target_weight * threatVal + in_dot_weight * normalized_angle_target_owner
+
+						baseScore = baseScore / math.max(delta_z, 1)
+
+						local penalty = 0
+						local far_distance = ranged_focus and RANGED_FOCUS_FAR_DISTANCE or FAR_DISTANCE
+
+						if far_distance < distance_owner then
+							penalty = math.huge
+						elseif close_distane < distance_owner then
+							local t_calculated = (distance_owner - close_distane) / (far_distance - close_distane)
+
+							penalty = maxPenalty * (t_calculated * t_calculated)
 						end
 
-						if is_melee and melee_focus then
-							threatVal = threatVal + melee_focus_weight
-						end
+						finalScore = baseScore - penalty
 
-						if is_ranged and ranged_focus then
-							threatVal = threatVal + ranged_focus_weight
-						end
+						if chosen_unit_weight < finalScore then
+							local perception_extension = ScriptUnit.has_extension(possible_unit, "perception_system")
+							local has_line_of_sight = perception_extension and perception_extension:immediate_line_of_sight_check(owner_unit)
 
-						if is_elite and elite_focus then
-							threatVal = threatVal + elite_focus_weight
-						end
-
-						if is_special and elite_focus then
-							threatVal = threatVal + special_focus_weight
-						end
-					end
-
-					local possible_unit_position = POSITION_LOOKUP[possible_unit]
-					local direction_to_possible_unit = Vector3.normalize(possible_unit_position - owner_unit_position)
-					local dot = Vector3.dot(direction_to_possible_unit, owner_look_direction)
-					local normalized_angle_target_owner = math.clamp((dot - dot_check) / (1 - dot_check), 0, 1)
-					local baseScore = player_clossness_weight * (1 - player_distance) + dog_clossness_weight * (1 - dog_distance) + targeting_owner_weight * player_focus + dangerous_target_weight * threatVal + in_dot_weight * normalized_angle_target_owner
-
-					baseScore = baseScore / math.max(delta_z, 1)
-
-					local penalty = 0
-					local far_distance = ranged_focus and RANGED_FOCUS_FAR_DISTANCE or FAR_DISTANCE
-
-					if far_distance < distance_owner then
-						penalty = math.huge
-					elseif close_distane < distance_owner then
-						local t_calculated = (distance_owner - close_distane) / (far_distance - close_distane)
-
-						penalty = maxPenalty * (t_calculated * t_calculated)
-					end
-
-					finalScore = baseScore - penalty
-
-					if chosen_unit_weight < finalScore then
-						local perception_extension = ScriptUnit.has_extension(possible_unit, "perception_system")
-						local has_line_of_sight = perception_extension and perception_extension:immediate_line_of_sight_check(owner_unit)
-
-						if has_line_of_sight then
-							chosen_unit = possible_unit
-							chosen_unit_weight = finalScore
+							if has_line_of_sight then
+								chosen_unit = possible_unit
+								chosen_unit_weight = finalScore
+							end
 						end
 					end
 				end

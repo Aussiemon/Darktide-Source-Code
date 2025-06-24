@@ -34,7 +34,19 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 	local children = self._children
 
 	do
-		local node_companion_unstuck = children[1]
+		local node_manual_teleport = children[1]
+		local teleport_component = blackboard.teleport
+		local condition_result = teleport_component.has_teleport_position
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_manual_teleport
+
+			return node_manual_teleport
+		end
+	end
+
+	do
+		local node_companion_unstuck = children[2]
 		local condition_result = blackboard.behavior.is_out_of_bound
 
 		if condition_result then
@@ -45,25 +57,13 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 	end
 
 	do
-		local node_move_with_platform = children[2]
+		local node_move_with_platform = children[3]
 		local condition_result = blackboard.movable_platform.unit_reference ~= nil
 
 		if condition_result then
 			new_running_child_nodes[node_identifier] = node_move_with_platform
 
 			return node_move_with_platform
-		end
-	end
-
-	do
-		local node_manual_teleport = children[3]
-		local teleport_component = blackboard.teleport
-		local condition_result = teleport_component.has_teleport_position
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_manual_teleport
-
-			return node_manual_teleport
 		end
 	end
 
@@ -179,6 +179,13 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 		local owner_unit = behavior_component.owner_unit
 		local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
 		local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+		local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+		local owner_unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+		local character_state = owner_unit_data_extension and owner_unit_data_extension:read_component("character_state")
+		local owner_unit_is_disabled = character_state and PlayerUnitStatus.is_disabled(character_state)
+
+		in_combat = in_combat or owner_unit_is_disabled
+
 		local companion_whistle_target
 		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 		local tag_target, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)

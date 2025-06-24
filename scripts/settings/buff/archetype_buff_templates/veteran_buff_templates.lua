@@ -264,6 +264,11 @@ templates.veteran_combat_ability_outlines_coherency.duration = talent_settings_2
 templates.veteran_combat_ability_outlines_coherency.start_func = function (template_data, template_context)
 	local is_local_unit = template_context.is_local_unit
 	local player = template_context.player
+
+	if not player then
+		return
+	end
+
 	local is_human_controlled = player:is_human_controlled()
 	local local_player = Managers.player:local_player(1)
 	local camera_handler = local_player and local_player.camera_handler

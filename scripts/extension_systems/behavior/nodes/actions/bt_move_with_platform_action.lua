@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local MinionMovement = require("scripts/utilities/minion_movement")
 local BtMoveWithPlatformAction = class("BtMoveWithPlatformAction", "BtNode")
 
 BtMoveWithPlatformAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -66,7 +67,7 @@ BtMoveWithPlatformAction.run = function (self, unit, breed, blackboard, scratchp
 		return "running"
 	elseif scratchpad.set_fall then
 		local unit_position = POSITION_LOOKUP[unit]
-		local above, below, lateral, nav_world, traverse_logic = 1, 30, 0.3, scratchpad.nav_world, scratchpad.traverse_logic
+		local above, below, lateral, nav_world, traverse_logic = 1, 30, 1, scratchpad.nav_world, scratchpad.traverse_logic
 		local landing_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, unit_position, above, below, lateral)
 
 		if not landing_position then
@@ -110,6 +111,7 @@ BtMoveWithPlatformAction.leave = function (self, unit, breed, blackboard, scratc
 		self:_move_towards_platform(unit, breed, blackboard, scratchpad)
 	end
 
+	MinionMovement.set_anim_driven(scratchpad, false)
 	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 end
 

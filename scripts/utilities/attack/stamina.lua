@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/attack/stamina.lua
 
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local proc_events = BuffSettings.proc_events
 local Stamina = {}
@@ -99,14 +100,15 @@ Stamina.add_stamina = function (unit, amount)
 end
 
 Stamina.add_stamina_percent = function (unit, percent_amount)
-	local unit_data_ext = ScriptUnit.has_extension(unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 
-	if not unit_data_ext then
+	if not Breed.is_player(breed_or_nil) then
 		return
 	end
 
-	local stamina_write_component = unit_data_ext:write_component("stamina")
-	local archetype = unit_data_ext:archetype()
+	local stamina_write_component = unit_data_extension:write_component("stamina")
+	local archetype = unit_data_extension:archetype()
 	local base_stamina_template = archetype.stamina
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
 	local amount = percent_amount * max_value

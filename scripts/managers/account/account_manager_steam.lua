@@ -34,9 +34,11 @@ end
 
 AccountManagerSteam.open_to_store = function (self, to_target)
 	if not Steam.is_overlay_enabled() then
-		Log.info("AccountManagerSteam", "Steam Overlay not enabled")
+		Log.info("AccountManagerSteam", "Can't open store. Steam Overlay is not enabled.")
 
-		return
+		return Promise.resolved({
+			success = true,
+		})
 	end
 
 	if type(to_target) == "number" then

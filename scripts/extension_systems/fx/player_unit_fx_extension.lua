@@ -945,13 +945,15 @@ PlayerUnitFxExtension._unregister_sound_source = function (self, source_name)
 	local looping_sounds = self._looping_sounds
 
 	for looping_sound_alias, data in pairs(looping_sounds) do
-		if data.is_playing and data.source_name == source_name then
-			Log.warning("PlayerUnitFxExtension", "Stopping looping sound %q due to unregistering of sound_source %q. Should clean this up properly before unregistering.", looping_sound_alias, source_name)
+		if data.source_name == source_name then
+			if data.is_playing then
+				local force_stop = true
+				local is_moving_sound_source = false
 
-			local force_stop = true
-			local is_moving_sound_source = false
+				self:_stop_looping_wwise_event(looping_sound_alias, force_stop, is_moving_sound_source)
+			end
 
-			self:_stop_looping_wwise_event(looping_sound_alias, force_stop, is_moving_sound_source)
+			data.should_trigger = false
 		end
 	end
 

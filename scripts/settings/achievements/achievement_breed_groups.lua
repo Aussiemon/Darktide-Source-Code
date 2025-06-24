@@ -99,7 +99,6 @@ AchievementBreedGroups.renegade = {
 	"renegade_gunner",
 	"renegade_melee",
 	"renegade_netgunner",
-	"renegade_radio_operator",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
 	"renegade_sniper",

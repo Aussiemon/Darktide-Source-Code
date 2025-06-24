@@ -87,6 +87,12 @@ local IDLE = {
 local behavior_tree = {
 	"BtSelectorNode",
 	{
+		"BtManualTeleportAction",
+		condition = "has_manual_teleport",
+		name = "manual_teleport",
+		action_data = action_data.manual_teleport,
+	},
+	{
 		"BtCompanionUnstuckAction",
 		condition = "companion_is_out_of_bound",
 		name = "companion_unstuck",
@@ -97,12 +103,6 @@ local behavior_tree = {
 		condition = "companion_is_on_platform",
 		name = "move_with_platform",
 		action_data = action_data.move_with_platform,
-	},
-	{
-		"BtManualTeleportAction",
-		condition = "has_manual_teleport",
-		name = "manual_teleport",
-		action_data = action_data.manual_teleport,
 	},
 	{
 		"BtSelectorNode",
