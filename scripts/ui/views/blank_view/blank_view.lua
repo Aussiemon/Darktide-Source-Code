@@ -12,13 +12,18 @@ BlankView.init = function (self, settings, context)
 
 	self._pass_draw = false
 	self._loading_icon = context and context.loading_icon
+	self._loading_icon_delay = context and context.loading_icon_delay or 0
 end
 
 BlankView.draw = function (self, dt, t, input_service, layer)
 	BlankView.super.draw(self, dt, t, input_service, layer)
 
 	if self._loading_icon then
-		Managers.ui:render_loading_info()
+		if self._loading_icon_delay <= 0 then
+			Managers.ui:render_loading_info()
+		else
+			self._loading_icon_delay = self._loading_icon_delay - dt
+		end
 	end
 end
 

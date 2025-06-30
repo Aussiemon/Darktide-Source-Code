@@ -190,6 +190,13 @@ CompanionSpawnerExtension._despawn_unit = function (self)
 			spawned_unit_brain:set_active(false)
 			Managers.state.minion_spawn:unregister_unit(spawned_unit)
 			Managers.state.unit_spawner:mark_for_deletion(spawned_unit)
+
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local has_owner = player_unit_spawn_manager and player_unit_spawn_manager:owner(spawned_unit) ~= nil
+
+			if has_owner then
+				player_unit_spawn_manager:relinquish_unit_ownership(spawned_unit)
+			end
 		end
 
 		self._spawned_unit = nil
@@ -260,6 +267,13 @@ CompanionSpawnerExtension.destroy = function (self)
 			spawned_unit_brain:set_active(false)
 			Managers.state.minion_spawn:unregister_unit(spawned_unit)
 			Managers.state.unit_spawner:mark_for_deletion(spawned_unit)
+
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local has_owner = player_unit_spawn_manager and player_unit_spawn_manager:owner(spawned_unit) ~= nil
+
+			if has_owner then
+				player_unit_spawn_manager:relinquish_unit_ownership(spawned_unit)
+			end
 		end
 	end
 end

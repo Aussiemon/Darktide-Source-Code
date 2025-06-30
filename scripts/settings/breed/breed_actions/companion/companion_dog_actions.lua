@@ -67,6 +67,9 @@ local move_to_position_default = {
 		speed_timer = 0,
 	},
 	push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
+	push_ignored_breeds = {
+		chaos_poxwalker_bomber = true,
+	},
 	dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
 	dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_config,
 	dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_config,
@@ -198,6 +201,9 @@ local action_data = {
 			"idle",
 		},
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		push_ignored_breeds = {
+			chaos_poxwalker_bomber = true,
+		},
 		max_angle_for_fast_jump = math.pi / 6,
 	},
 	leap = {
@@ -213,7 +219,7 @@ local action_data = {
 		leap_cooldown = 1.5,
 		max_pounce_dot = 0.1,
 		push_enemies_power_level = 2000,
-		push_enemies_radius = 1,
+		push_enemies_radius = 1.25,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -236,8 +242,8 @@ local action_data = {
 		wall_land_anim_event = "leap_hit_wall_land",
 		wall_land_duration = 0.5333333333333333,
 		wall_land_length = 3,
-		push_minions_damage_profile = DamageProfileTemplates.chaos_hound_push,
-		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		push_minions_damage_profile = DamageProfileTemplates.cyber_mastiff_push,
+		push_enemies_damage_profile = DamageProfileTemplates.cyber_mastiff_push,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 		in_air_staggers = {
 			"stagger_inair_bwd",
@@ -318,6 +324,9 @@ local action_data = {
 			"idle",
 		},
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		push_ignored_breeds = {
+			chaos_poxwalker_bomber = true,
+		},
 		rotation_angle = math.pi / 3,
 	},
 	climb = {

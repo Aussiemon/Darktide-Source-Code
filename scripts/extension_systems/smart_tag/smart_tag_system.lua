@@ -463,7 +463,7 @@ SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 	if target_unit and ALIVE[target_unit] then
 		local target_extension = self._unit_extension_data[target_unit]
 
-		target_extension:unregister_tag()
+		target_extension:unregister_tag(tag_id)
 
 		if self._is_server and tagger_unit then
 			local side_system = Managers.state.extension:system("side_system")

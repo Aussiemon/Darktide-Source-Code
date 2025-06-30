@@ -229,7 +229,7 @@ local function generate_base_template()
 					action_name = "action_unwield",
 				},
 				instant_release_drone = {
-					action_name = "action_release_drone_fast",
+					action_name = "action_instant_release_drone",
 				},
 				cancel = {
 					action_name = "action_cancel",
@@ -242,12 +242,14 @@ local function generate_base_template()
 		},
 		action_release_drone = {
 			ability_type = "combat_ability",
-			allowed_during_sprint = false,
+			abort_sprint = true,
+			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
 			fire_time = 0.4,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
+			prevent_sprint = true,
 			recoil_template = "default_shotgun_killshot",
 			spawn_at_time = 0.4,
 			total_time = 1.3,
@@ -277,14 +279,16 @@ local function generate_base_template()
 				return ability_extension and ability_extension:can_use_ability(ability_type)
 			end,
 		},
-		action_release_drone_fast = {
+		action_instant_release_drone = {
 			ability_type = "combat_ability",
-			allowed_during_sprint = false,
+			abort_sprint = true,
+			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
 			fire_time = 0.25,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
+			prevent_sprint = true,
 			recoil_template = "default_shotgun_killshot",
 			spawn_at_time = 0.22,
 			total_time = 1,

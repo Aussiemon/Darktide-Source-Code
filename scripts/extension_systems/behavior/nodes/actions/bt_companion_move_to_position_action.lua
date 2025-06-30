@@ -136,7 +136,7 @@ end
 
 BtCompanionMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if action_data.push_enemies_damage_profile then
-		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, unit)
+		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, unit, nil, action_data.push_ignored_breeds)
 	end
 
 	MinionMovement.update_ground_normal_rotation(unit, scratchpad, nil, 0.7)

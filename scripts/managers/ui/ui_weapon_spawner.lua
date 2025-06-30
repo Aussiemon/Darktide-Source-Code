@@ -229,7 +229,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 		spawn_with_extensions = extension_manager ~= nil,
 	}
 	local mission_template, equipment
-	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, false, false, false, mission_template, equipment)
+	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, true, false, true, mission_template, equipment)
 	local spawn_data = {
 		streaming_complete = false,
 		visible = false,

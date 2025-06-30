@@ -167,6 +167,8 @@ scenarios.ranged_grenade = {
 		TrainingGroundsSteps.ranged_grenade_prompt,
 		TrainingGroundsSteps.kill_enemies_grenade_loop,
 		TrainingGroundsSteps.condition_end,
+		TrainingGroundsSteps.dynamic.set_grenade_count(0),
+		TrainingGroundsSteps.dynamic.wield_slot("slot_primary"),
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),

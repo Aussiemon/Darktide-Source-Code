@@ -2417,9 +2417,15 @@ CharacterAppearanceView._show_final_popup = function (self)
 			},
 		}
 	elseif self._is_barber_appearance or self._is_barber_companion_appearance then
+		local player = Managers.player:local_player(1)
+		local real_profile = player:profile()
+		local is_companion_appearance = self._is_barber_companion_appearance
+		local archetype = real_profile and real_profile.archetype
+		local companion_breed_name = archetype and archetype.companion_breed or "no_companion_in_archetype"
+
 		context = {
-			description_text = "loc_popup_description_barber_finalise_changes",
 			title_text = "loc_popup_header_barber_finalise_changes",
+			description_text = not is_companion_appearance and "loc_popup_description_barber_finalise_changes" or "loc_popup_description_barber_" .. companion_breed_name .. "_finalise_changes",
 			options = {
 				{
 					close_on_pressed = true,
@@ -3535,8 +3541,10 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		content_width + background_margin[1] * 2,
 		0,
 	}
-	local title_font_style_options = UIFonts.get_font_options_by_style(title_font_style)
-	local description_font_style_options = UIFonts.get_font_options_by_style(description_font_style)
+	local title_font_style_options = {}
+	local description_font_style_options = {}
+	local title_font_style_options = UIFonts.get_font_options_by_style(title_font_style, title_font_style_options)
+	local description_font_style_options = UIFonts.get_font_options_by_style(description_font_style, description_font_style_options)
 	local effect_margin = 100
 	local text_margin = 20
 	local _, title_height = UIRenderer.text_size(self._ui_renderer, option_title, title_font_style.font_type, title_font_style.font_size, {
@@ -3615,7 +3623,10 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 	if grid_data.unlocks then
 		local effect_title_font_style = CharacterAppearanceViewFontStyle.effect_title_style
 		local option_effect_title = Localize("loc_character_title_unlocks")
-		local effect_title_font_style_options = UIFonts.get_font_options_by_style(effect_title_font_style)
+		local effect_title_font_style_options = {}
+
+		UIFonts.get_font_options_by_style(effect_title_font_style, effect_title_font_style_options)
+
 		local _, effect_title_height = UIRenderer.text_size(self._ui_renderer, option_effect_title, effect_title_font_style.font_type, effect_title_font_style.font_size, {
 			content_width,
 			0,
@@ -3685,7 +3696,10 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		for i = 1, #grid_data.unlocks do
 			local unlock = grid_data.unlocks[i]
 			local text_style = CharacterAppearanceViewFontStyle.reward_description_no_icon_style
-			local style = UIFonts.get_font_options_by_style(text_style)
+			local style = {}
+
+			UIFonts.get_font_options_by_style(text_style, style)
+
 			local _, text_height = UIRenderer.text_size(self._ui_renderer, Localize(unlock.text), text_style.font_type, text_style.font_size, {
 				content_width,
 				2000,
@@ -4169,7 +4183,10 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		local text = grid_data.description
 		local style_name = "list_description_style"
 		local font_style = CharacterAppearanceViewFontStyle[style_name]
-		local style = UIFonts.get_font_options_by_style(font_style)
+		local style = {}
+
+		UIFonts.get_font_options_by_style(font_style, style)
+
 		local x_offset = 20
 		local text_size = {
 			grid_description_widget.content.size[1] - x_offset * 2,
@@ -6043,7 +6060,10 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 	}
 	local text_style = CharacterAppearanceViewFontStyle.randomize_button_text_style
 	local randomize_text = Utf8.upper(Localize("loc_randomize"))
-	local style = UIFonts.get_font_options_by_style(text_style)
+	local style = {}
+
+	UIFonts.get_font_options_by_style(text_style, style)
+
 	local text_width, text_height = UIRenderer.text_size(self._ui_renderer, randomize_text, text_style.font_type, text_style.font_size, {
 		math.huge,
 		500,
@@ -6395,7 +6415,10 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 
 	local backstory_text = self:_generate_final_backstory_text()
 	local backstory_font_style = CharacterAppearanceViewFontStyle.description_style
-	local backstory_style = UIFonts.get_font_options_by_style(backstory_font_style)
+	local backstory_style = {}
+
+	UIFonts.get_font_options_by_style(backstory_font_style, backstory_style)
+
 	local backstory_text_width, backstory_text_height = UIRenderer.text_size(self._ui_renderer, backstory_text, backstory_font_style.font_type, backstory_font_style.font_size, {
 		grid_size[1],
 		0,

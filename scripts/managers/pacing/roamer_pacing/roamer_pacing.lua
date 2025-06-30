@@ -1118,11 +1118,19 @@ end
 RoamerPacing.aggro_zone_range = function (self, target_unit, range)
 	local from_position, nav_world, nav_spawn_points = POSITION_LOOKUP[target_unit], self._nav_world, self._nav_spawn_points
 	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
+	local closest_position_to_main_path, travel_distance
 
 	if not group_index then
-		local position_on_main_path = MainPathQueries.closest_position(from_position)
+		closest_position_to_main_path, travel_distance = MainPathQueries.closest_position(from_position)
+		group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, closest_position_to_main_path, 5, 5)
 
-		group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_main_path)
+		if not group_index then
+			local ahead_position_in_main_path = MainPathQueries.position_from_distance(travel_distance + 20)
+			local behind_position_in_main_path = MainPathQueries.position_from_distance(travel_distance - 20)
+
+			group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, ahead_position_in_main_path, 5, 5)
+			group_index = not group_index and SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, behind_position_in_main_path, 5, 5) or group_index
+		end
 	end
 
 	local zones = self._zones

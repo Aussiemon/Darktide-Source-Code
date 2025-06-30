@@ -1863,8 +1863,30 @@ do
 				},
 				change_function = function (content, style, animations, dt)
 					local hotspot = content.hotspot
-					local height = style.default_size[2] * hotspot.anim_select_progress
+					local is_selected = hotspot and hotspot.is_selected
+					local is_selected_mission_board = hotspot and hotspot.is_selected_mission_board
+					local is_focused = hotspot and hotspot.is_focused
+					local is_parent_selected = is_selected or is_focused or is_selected_mission_board
+					local progress = content.line_progress or 0
+					local height = style.default_size[2] or 300
+					local line_delay = content.line_delay or 0
 
+					if is_parent_selected then
+						line_delay = math.min(line_delay + dt, 1)
+
+						if line_delay >= 1 then
+							progress = math.min(progress + dt, 1)
+						end
+
+						height = style.default_size[2] * math.easeInCubic(progress)
+					else
+						line_delay = math.max(line_delay - dt, 0)
+						progress = math.max(progress - dt * 5, 0)
+						height = style.default_size[2] * progress
+					end
+
+					content.line_progress = progress
+					content.line_delay = line_delay
 					style.size[2] = height
 					style.offset[2] = height
 				end,

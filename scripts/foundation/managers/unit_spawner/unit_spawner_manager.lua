@@ -452,4 +452,8 @@ UnitSpawnerManager.rpc_is_fully_hot_join_synced = function (self, sender, channe
 	self.is_fully_hot_join_synced = true
 end
 
+UnitSpawnerManager.fully_hot_join_synced = function (self)
+	return self.is_fully_hot_join_synced
+end
+
 return UnitSpawnerManager

@@ -609,6 +609,10 @@ MissionVotingView._populate_quickplay_data = function (self)
 	mission_rewards_text.content.visible = false
 
 	local danger_level_widget = widgets_by_name.mission_danger_info
+
+	danger_level_widget.style.danger_icon.visible = false
+	danger_level_widget.style.danger_icon_drop_shadow.visible = false
+
 	local danger_level, danger_level_text = calculate_quickplay_danger_level(self._backend_mission_id)
 
 	self:_set_difficulty_icons(danger_level_widget.style, danger_level)

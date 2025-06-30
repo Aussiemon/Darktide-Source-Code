@@ -248,6 +248,7 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local tag_context = self._tag_context
 	local target_marker, target_unit, target_position
 	local parent = self._parent
+	local player = parent:player()
 	local player_unit = parent:player_unit()
 	local interactor_extension = ScriptUnit.extension(player_unit, "interactor_system")
 	local interactor_target_unit = interactor_extension:target_unit()
@@ -264,12 +265,45 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local double_tap = tag_context.is_double_tap
 
 	if target_unit then
-		local account_data = Managers.save:account_data()
-		local single_tap = account_data.input_settings.companion_command_tap == "single"
-		local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+		local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
+		local has_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
 
-		if unit_data_extension and (double_tap or single_tap) then
-			self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
+		if has_companion then
+			local account_data = Managers.save:account_data()
+			local single_tap = account_data.input_settings.companion_command_tap == "single"
+			local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+			local tag_id = smart_tag_system:unit_tag_id(target_unit)
+			local tag = smart_tag_system:unit_tag(target_unit)
+
+			if single_tap then
+				if tag_id then
+					local tag = smart_tag_system:tag_by_id(tag_id)
+					local tag_template = tag:template()
+					local already_tagged = tag:tagger_player() == player and tag_template.companion_order
+
+					if already_tagged then
+						self:_trigger_smart_tag_interaction(tag_id, target_unit)
+					end
+				else
+					self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
+				end
+			elseif double_tap then
+				if tag_id then
+					local tag = smart_tag_system:tag_by_id(tag_id)
+					local tag_template = tag:template()
+					local already_tagged = tag:tagger_player() == player and tag_template.companion_order
+
+					if already_tagged then
+						self:_trigger_smart_tag_interaction(tag_id, target_unit)
+					else
+						self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
+					end
+				end
+			else
+				self:_handle_selected_unit(target_unit)
+
+				tag_context.enemy_tagged = true
+			end
 		else
 			self:_handle_selected_unit(target_unit)
 

@@ -277,6 +277,8 @@ CinematicSceneSystem.load_cutscene = function (self, cinematic_name, preload_id)
 end
 
 CinematicSceneSystem.play_cutscene = function (self, cinematic_name, client_channel_id)
+	self:_cleanup_level_unit_for_cutscene(cinematic_name)
+
 	if client_channel_id ~= nil then
 		local cinematic_name_id = NetworkLookup.cinematic_scene_names[cinematic_name]
 
@@ -353,6 +355,14 @@ CinematicSceneSystem._prepare_cutscene_levels = function (self, cinematic_name, 
 		Managers.state.cinematic:load_levels(cinematic_name, origin_level_names, on_level_prepared_callback, client_channel_id, hotjoin_only, false)
 
 		return true
+	end
+end
+
+CinematicSceneSystem._cleanup_level_unit_for_cutscene = function (self, cinematic_name)
+	local should_remove_deployables = cinematic_name == CINEMATIC_NAMES.outro_fail or cinematic_name == CINEMATIC_NAMES.outro_win
+
+	if should_remove_deployables and Managers.state.unit_job then
+		Managers.state.unit_job:delete_units()
 	end
 end
 

@@ -92,6 +92,7 @@ RiotShieldChargeDisplay.update = function (self, unit, dt, t)
 		local display = unit_components[ii]
 
 		display.component:set_charges(display.unit, charge_level or 0, max_visual_charges or 0, above_threshold)
+		display.component:set_frame_enabled(display.unit, not not max_charges and max_charges > 0)
 	end
 
 	if not self._is_local_unit or self._is_husk then

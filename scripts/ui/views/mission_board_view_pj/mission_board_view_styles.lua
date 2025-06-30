@@ -167,6 +167,56 @@ local color_by_mission_type = {
 
 MissionBoardViewStyles.colors.default = default_colors
 MissionBoardViewStyles.colors.color_by_mission_type = color_by_mission_type
+MissionBoardViewStyles.difficulty_progress_tooltip = {}
+MissionBoardViewStyles.difficulty_progress_tooltip.background = {
+	scale_to_material = true,
+	size = {
+		Dimensions.threat_tooltip_size[1],
+		Dimensions.threat_tooltip_size[2],
+	},
+	offset = {
+		0,
+		0,
+		3,
+	},
+	color = Color.black(255, true),
+}
+MissionBoardViewStyles.difficulty_progress_tooltip.frame = {
+	scale_to_material = true,
+	size = {
+		Dimensions.threat_tooltip_size[1],
+		Dimensions.threat_tooltip_size[2],
+	},
+	offset = {
+		0,
+		0,
+		4,
+	},
+	color = {
+		255,
+		169,
+		211,
+		158,
+	},
+}
+MissionBoardViewStyles.difficulty_progress_tooltip.text = {
+	font_size = 16,
+	font_type = "proxima_nova_medium",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		Dimensions.threat_tooltip_size[1] - 20,
+		Dimensions.threat_tooltip_size[2] - 10,
+	},
+	text_color = table.shallow_copy(default_colors.terminal_text_dark),
+	offset = {
+		0,
+		0,
+		5,
+	},
+}
 MissionBoardViewStyles.screen_frame = {
 	scale_to_material = true,
 	size = {},
@@ -702,7 +752,7 @@ MissionBoardViewStyles.mission_area_info.circumstance.circumstance_title = {
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
 	size = {
-		Dimensions.details_width - 90,
+		Dimensions.details_width - 90 - 21,
 	},
 	text_color = Color.terminal_text_header(nil, true),
 	offset = {
@@ -717,7 +767,7 @@ MissionBoardViewStyles.mission_area_info.circumstance.circumstance_description =
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
 	size = {
-		Dimensions.details_width - 90,
+		Dimensions.details_width - 90 - 21,
 	},
 	text_color = Color.terminal_text_body(nil, true),
 	offset = {

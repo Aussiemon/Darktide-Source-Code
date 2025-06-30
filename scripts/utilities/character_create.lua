@@ -1250,9 +1250,11 @@ CharacterCreate.transform = function (self, character_id, operation_cost)
 	local prison_garbs = self:_add_crime_items_to_parsed_profile()
 	local upperbody_slot = "slot_gear_upperbody"
 	local lowerbody_slot = "slot_gear_lowerbody"
+	local decal_slot = "slot_gear_material_override_decal"
 
 	parsed_profile.inventory[upperbody_slot] = prison_garbs[upperbody_slot]
 	parsed_profile.inventory[lowerbody_slot] = prison_garbs[lowerbody_slot]
+	parsed_profile.inventory[decal_slot] = prison_garbs[decal_slot]
 
 	local real_profile_gear = self._real_profile_gear
 	local slots_to_equip = {}
@@ -1272,13 +1274,14 @@ CharacterCreate.transform = function (self, character_id, operation_cost)
 			local new_items = data.body and data.body.gear
 			local upperbody = "slot_gear_upperbody"
 			local lowerbody = "slot_gear_lowerbody"
+			local decal = "slot_gear_material_override_decal"
 
 			if new_items then
 				for i = 1, #new_items do
 					local item = new_items[i]
 					local slot = item.slots and item.slots[1]
 
-					if slot == upperbody or slot == lowerbody then
+					if slot == upperbody or slot == lowerbody or slot == decal then
 						granted_garbs[#granted_garbs + 1] = item
 					end
 

@@ -191,6 +191,9 @@ templates.weapon_trait_bespoke_flamer_p1_negate_stagger_reduction_with_primary_o
 					stat_buffs.stagger_burning_reduction_modifier,
 				},
 			},
+			value_manipulation = function (value)
+				return 100 * (1 - value)
+			end,
 		},
 		impact_modifier = {
 			format_type = "percentage",

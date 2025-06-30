@@ -335,7 +335,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_ogryn_and_monsters_stat_buff
 
-	local target_is_monster = attacked_breed_or_nil and attacked_breed_or_nil.tags and (attacked_breed_or_nil.tags.ogryn or attacked_breed_or_nil.tags.monster)
+	local target_is_monster = attacked_breed_or_nil and attacked_breed_or_nil.tags and attacked_breed_or_nil.tags.monster
 	local damage_vs_monsters_stat_buff = (target_is_monster and attacker_stat_buffs.damage_vs_monsters or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_monsters_stat_buff

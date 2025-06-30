@@ -318,6 +318,7 @@ TrainingGroundsOptionsView._create_difficulty_stepper_indicators = function (sel
 		local indicator = UIWidget.create_definition(indicator_pass_templates, "difficulty_stepper", content_overrides)
 		local widget = UIWidget.init("difficulty_indicator_" .. i, indicator)
 
+		widget.content.hotspot.pressed_callback = callback(self, "_update_difficulty_stepper", i)
 		widget.offset[1] = 56 + (i - 1) * (280 / num_settings)
 		stepper_indicators[#stepper_indicators + 1] = widget
 	end
@@ -331,6 +332,8 @@ TrainingGroundsOptionsView._update_difficulty_stepper = function (self, current_
 	local difficulty_selector = self._widgets_by_name.difficulty_stepper
 	local content = difficulty_selector.content
 
+	content.danger = current_difficulty_index
+	self._selected_danger = current_difficulty_index
 	content.difficulty_text = TextUtils.localize_to_upper(DangerSettings[current_difficulty_index].display_name)
 	content.target_color = DangerSettings[current_difficulty_index].color
 

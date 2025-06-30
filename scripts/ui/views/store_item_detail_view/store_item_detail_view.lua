@@ -1934,6 +1934,14 @@ StoreItemDetailView.update = function (self, dt, t, input_service)
 
 		self:_spawn_profile(profile, initial_rotation, disable_rotation_input, keep_current_rotation)
 
+		local item = self._selected_element and self._selected_element.item and MasterItems.get_item(self._selected_element.item)
+		local is_companion_slot = item and item.slots and table.find(item.slots, "slot_companion_gear_full")
+		local toggle_companion = item and (item.companion_state_machine ~= nil and item.companion_state_machine ~= "" or is_companion_slot)
+		local toggle_character = not is_companion_slot
+
+		self._profile_spawner:toggle_companion(toggle_companion)
+		self._profile_spawner:toggle_character(toggle_character)
+
 		self._keep_current_rotation = nil
 		self._spawn_player = false
 	end

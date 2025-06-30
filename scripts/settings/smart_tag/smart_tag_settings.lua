@@ -484,6 +484,7 @@ local templates = {
 	},
 	enemy_companion_target = {
 		can_override = true,
+		companion_order = true,
 		display_name = "loc_smart_tag_type_threat",
 		group = "enemy",
 		lifetime = 25,

@@ -79,6 +79,12 @@ AmmoDisplay.set_charges = function (self, unit, charge_level, max_charges, charg
 	end
 end
 
+AmmoDisplay.set_frame_enabled = function (self, unit, enabled)
+	local material_slot_name = self._material_slot_name
+
+	Unit.set_scalar_for_material(unit, material_slot_name, "frame_enabled", enabled and 1 or 0)
+end
+
 AmmoDisplay._update_material_values = function (self, unit, charge_value, is_critical, color)
 	local material_slot_name = self._material_slot_name
 	local num_steps = self._ammo_display_steps

@@ -219,8 +219,10 @@ SmartTagExtension.register_tag = function (self, tag_id)
 	self._tag_id = tag_id
 end
 
-SmartTagExtension.unregister_tag = function (self)
-	self._tag_id = nil
+SmartTagExtension.unregister_tag = function (self, tag_id)
+	if not tag_id or self._tag_id == tag_id then
+		self._tag_id = nil
+	end
 end
 
 SmartTagExtension.display_name = function (self, tagger_unit)

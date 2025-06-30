@@ -176,8 +176,8 @@ local function _cb_update_companion_name(self)
 	local data = marker.data
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
-	local companion_nameplate_in_hub_type = interface_settings.companion_nameplate_in_hub_type
-	local show_nameplate = _should_show_nameplate(data, companion_nameplate_in_hub_type)
+	local companion_nameplate_in_mission_type = interface_settings.companion_nameplate_in_mission_type
+	local show_nameplate = _should_show_nameplate(data, companion_nameplate_in_mission_type)
 	local header_text = _generate_header_text(data, show_nameplate)
 	local widget = marker.widget
 	local content = widget.content

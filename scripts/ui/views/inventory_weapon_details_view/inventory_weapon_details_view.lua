@@ -119,9 +119,9 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 		local title_height = 70
 		local edge_padding = 40
 		local grid_width = 600
-		local grid_height = 1000
+		local grid_height = 950
 		local grid_size = {
-			grid_width - edge_padding,
+			grid_width,
 			grid_height,
 		}
 		local grid_spacing = {
@@ -129,7 +129,7 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 			0,
 		}
 		local mask_size = {
-			grid_width,
+			grid_width + edge_padding,
 			grid_height,
 		}
 		local context = {
@@ -165,7 +165,7 @@ InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
 		local title_height = 70
 		local edge_padding = 4
 		local grid_width = 460
-		local grid_height = 1000
+		local grid_height = 900
 		local grid_size = {
 			grid_width - edge_padding,
 			grid_height,
@@ -218,7 +218,7 @@ InventoryWeaponDetailsView._setup_attack_patterns = function (self)
 		local title_height = 70
 		local edge_padding = 4
 		local grid_width = 850
-		local grid_height = 1000
+		local grid_height = 900
 		local grid_size = {
 			grid_width - edge_padding,
 			grid_height,

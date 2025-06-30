@@ -113,7 +113,6 @@ AchievementBreedGroups.renegade_elite = {
 	"renegade_berzerker",
 	"renegade_executor",
 	"renegade_gunner",
-	"renegade_radio_operator",
 	"renegade_shocktrooper",
 }
 AchievementBreedGroups.special_and_elite_breed_lookup = {

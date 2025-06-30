@@ -173,10 +173,6 @@ circumstance_templates.player_journey_09 = {
 circumstance_templates.player_journey_010 = {
 	theme_tag = "default",
 	wwise_state = "None",
-	vo_units = {
-		"renegade_twin_captain",
-		"renegade_twin_captain_two",
-	},
 	mutators = {
 		"mutator_toxic_gas_twins",
 		"mutator_no_hordes",

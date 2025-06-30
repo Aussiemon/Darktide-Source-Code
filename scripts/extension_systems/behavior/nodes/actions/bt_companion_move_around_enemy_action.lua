@@ -57,7 +57,7 @@ local MAX_ANGLE_SWITCH = 1
 
 BtCompanionMoveAroundEnemyAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if action_data.push_enemies_damage_profile then
-		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, unit)
+		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, unit, nil, action_data.push_ignored_breeds)
 	end
 
 	local behavior_component, perception_component = scratchpad.behavior_component, scratchpad.perception_component

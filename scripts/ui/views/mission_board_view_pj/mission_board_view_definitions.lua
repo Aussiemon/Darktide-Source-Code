@@ -11,6 +11,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local InputDevice = require("scripts/managers/input/input_device")
 local MissionBoardViewDefinitions = {}
 local Dimensions = Settings.dimensions
 local top_buffer = Dimensions.top_buffer
@@ -322,7 +323,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		size = Dimensions.threat_tooltip_size,
 		position = {
 			0,
-			-100,
+			-120,
 			-10,
 		},
 	},
@@ -504,6 +505,27 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		},
 	},
 })
+widget_definitions.difficulty_progress_tooltip = UIWidget.create_definition({
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = Styles.difficulty_progress_tooltip.frame,
+	},
+	{
+		pass_type = "rect",
+		style_id = "background",
+		value_id = "background",
+		style = Styles.difficulty_progress_tooltip.background,
+	},
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "TOOLTIP TEXT",
+		value_id = "text",
+		style = Styles.difficulty_progress_tooltip.text,
+	},
+}, "difficulty_stepper_tooltip")
 widget_definitions.difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.mission_board_stepper, "difficulty_stepper")
 
 MissionBoardViewDefinitions.create_objectives_panel_widget = function (scenegraph_id, title, sub_title, icon, size)
@@ -1147,6 +1169,24 @@ MissionBoardViewDefinitions.legend_inputs = {
 			local mission_board_logic = parent._mission_board_logic
 
 			return mission_board_logic._regions_latency and not parent._mission_board_options
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_menu_toggle_ui_visibility_off",
+		input_action = "hotkey_toggle_item_tooltip",
+		on_pressed_callback = "_callback_hide_threat_level_tooltip",
+		visibility_function = function (parent, id)
+			return InputDevice.gamepad_active and parent._threat_level_tooltip_visible and parent._threat_level_tooltip_visible == true
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_menu_toggle_ui_visibility_on",
+		input_action = "hotkey_toggle_item_tooltip",
+		on_pressed_callback = "_callback_show_threat_level_tooltip",
+		visibility_function = function (parent, id)
+			return InputDevice.gamepad_active and (not parent._threat_level_tooltip_visible or parent._threat_level_tooltip_visible == false)
 		end,
 	},
 	{

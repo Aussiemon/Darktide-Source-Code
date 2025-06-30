@@ -38,14 +38,12 @@ Crashify.remove_print_property = function (key, print_func)
 	print_func(output)
 end
 
-Crashify.get_print_properties = function (key)
-	if key == nil then
-		Application.warning("[Crashify] Property key can't be nil")
-
-		return {}
+Crashify.get_print_properties = function (optional_key)
+	if optional_key == nil then
+		return Application.get_crash_properties()
 	end
 
-	return Application.get_crash_properties(tostring(key))
+	return Application.get_crash_properties(tostring(optional_key))
 end
 
 Crashify.print_breadcrumb = function (crumb, print_func)

@@ -517,6 +517,7 @@ UIProfileSpawner._sync_profile_changes = function (self)
 	local loading_profile_data = self._loading_profile_data
 	local character_spawn_data = self._character_spawn_data
 	local data = loading_profile_data or character_spawn_data
+	local use_loader_version = loading_profile_data ~= nil
 
 	if data then
 		local profile = data.profile
@@ -530,18 +531,25 @@ UIProfileSpawner._sync_profile_changes = function (self)
 				local item = loadout[slot_id]
 				local loaded_item_name = loading_items[slot_id]
 				local item_name = item and item.name or nil
-				local use_loader_version = loading_profile_data ~= nil
 
 				if use_loader_version then
 					if item_name ~= loaded_item_name then
-						changed_slots[slot_id] = item
+						if not item then
+							changed_slots[slot_id] = false
+						else
+							changed_slots[slot_id] = item
+						end
 					end
 				else
 					local equipped_items = data.equipped_items
 					local equipped_item = equipped_items[slot_id]
 
 					if item ~= equipped_item and (item_name ~= loaded_item_name or not item) then
-						changed_slots[slot_id] = item
+						if not item then
+							changed_slots[slot_id] = false
+						else
+							changed_slots[slot_id] = item
+						end
 					end
 				end
 			end
@@ -549,14 +557,31 @@ UIProfileSpawner._sync_profile_changes = function (self)
 
 		if not table.is_empty(changed_slots) then
 			local modified_loadout = table.clone_instance(profile.loadout)
+			local equipped_items = not use_loader_version and data.equipped_items
 
 			for slot_id, item in pairs(changed_slots) do
-				modified_loadout[slot_id] = item
+				if item then
+					modified_loadout[slot_id] = item
+				end
+
+				if equipped_items then
+					local equipped_item = equipped_items[slot_id]
+
+					if equipped_item and equipped_item.hide_slots then
+						for i = 1, #equipped_item.hide_slots do
+							local hidden_slot = equipped_item.hide_slots[i]
+
+							changed_slots[hidden_slot] = modified_loadout[hidden_slot]
+						end
+					end
+				end
 			end
 
 			local visual_loadout = ProfileUtils.generate_visual_loadout(modified_loadout)
 
 			for slot_id, item in pairs(changed_slots) do
+				item = item or nil
+
 				self:_change_slot_item(slot_id, item, loadout, visual_loadout)
 			end
 		end
@@ -804,6 +829,19 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 	local slot = slots[slot_id]
 	local slot_config = PlayerCharacterConstants.slot_configuration[slot_id]
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
+	local slot_dependency_items
+
+	if slot.equipped then
+		slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
+
+		equipment_component:unequip_item(slot)
+	end
+
+	local unit_spawner = self._unit_spawner
+
+	if unit_spawner then
+		unit_spawner:remove_pending_units()
+	end
 
 	equipped_items[slot_id] = item
 	loading_items[slot_id] = nil
@@ -812,20 +850,6 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 	local display_item = visual_item
 
 	if slot and display_item then
-		local slot_dependency_items
-
-		if slot.equipped then
-			slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
-
-			equipment_component:unequip_item(slot)
-		end
-
-		local unit_spawner = self._unit_spawner
-
-		if unit_spawner then
-			unit_spawner:remove_pending_units()
-		end
-
 		if COMPANION_SLOTS[slot.name] and not companion_unit_3p then
 			local position = Unit.world_position(unit_3p, 1)
 			local rotation = Unit.local_rotation(unit_3p, 1)
@@ -918,7 +942,16 @@ end
 
 UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine, companion_data)
 	local loadout = profile.loadout
-	local visual_loadout = ProfileUtils.generate_visual_loadout(profile.loadout)
+	local visual_loadout = ProfileUtils.generate_visual_loadout(loadout)
+
+	if loadout.slot_companion_gear_full then
+		table.dump(loadout.slot_companion_gear_full, "original loadout", 5)
+	end
+
+	if visual_loadout.slot_companion_gear_full then
+		table.dump(visual_loadout.slot_companion_gear_full, "visual loadout", 5)
+	end
+
 	local archetype = profile.archetype
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed

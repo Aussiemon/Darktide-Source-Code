@@ -770,6 +770,149 @@ local roamer_pacing_template = {
 				},
 			},
 		},
+		{
+			low = {
+				zone_range = {
+					4,
+					6,
+				},
+				num_roamers_range = {
+					renegade = {
+						4,
+						7,
+					},
+					cultist = {
+						5,
+						8,
+					},
+				},
+				roamer_slot_placement_functions = {
+					"circle_placement",
+				},
+				roamer_slot_placement_settings = {
+					circle_placement = {
+						num_slots = 4,
+						position_offset = 1,
+					},
+				},
+				packs = {
+					default_packs.melee_low,
+					default_packs.close_low,
+					default_packs.far_low,
+					default_packs.melee_low,
+					default_packs.close_low,
+					default_packs.far_low,
+				},
+				limits = RoamerLimits.low,
+			},
+			high = {
+				chance_to_skip_limits = 1,
+				zone_range = {
+					6,
+					7,
+				},
+				num_roamers_range = {
+					renegade = {
+						9,
+						11,
+					},
+					cultist = {
+						10,
+						12,
+					},
+				},
+				roamer_slot_placement_functions = {
+					"circle_placement",
+				},
+				roamer_slot_placement_settings = {
+					circle_placement = {
+						num_slots = 7,
+						position_offset = 1.15,
+					},
+				},
+				packs = {
+					default_packs.melee_high,
+					default_packs.close_high,
+					default_packs.far_high,
+					default_packs.melee_high,
+					default_packs.close_high,
+					default_packs.far_high,
+				},
+				limits = RoamerLimits.high,
+			},
+			none = {
+				zone_range = {
+					1,
+					2,
+				},
+				num_roamers_range = {
+					renegade = {
+						1,
+						1,
+					},
+					cultist = {
+						1,
+						1,
+					},
+				},
+				roamer_slot_placement_functions = {
+					"circle_placement",
+				},
+				roamer_slot_placement_settings = {
+					circle_placement = {
+						num_slots = 1,
+						position_offset = 1.1,
+					},
+				},
+				packs = {
+					default_packs.none,
+					default_packs.none,
+					default_packs.none,
+					default_packs.none,
+					default_packs.none,
+					default_packs.none,
+				},
+				limits = RoamerLimits.none,
+			},
+			poxwalkers = {
+				shared_aggro_trigger = true,
+				try_fill_one_sub_zone = true,
+				empty_zone_range = {
+					1,
+					1,
+				},
+				zone_range = {
+					1,
+					1,
+				},
+				num_roamers_range = {
+					renegade = {
+						45,
+						55,
+					},
+					cultist = {
+						45,
+						55,
+					},
+				},
+				roamer_slot_placement_functions = {
+					"flood_fill",
+				},
+				roamer_slot_placement_settings = {
+					flood_fill = {
+						num_slots = 80,
+					},
+				},
+				packs = {
+					default_packs.encampment,
+					default_packs.encampment,
+					default_packs.encampment,
+					default_packs.encampment,
+					default_packs.encampment,
+					default_packs.encampment,
+				},
+			},
+		},
 	},
 	num_encampments = {
 		1,
@@ -818,6 +961,7 @@ local roamer_pacing_template = {
 				60,
 				30,
 				20,
+				10,
 			},
 		},
 	},

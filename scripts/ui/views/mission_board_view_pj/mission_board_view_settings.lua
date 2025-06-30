@@ -85,10 +85,10 @@ MissionBoardViewSettings.fluff_frames = {
 	"content/ui/materials/fluff/hologram/frames/fluff_frame_08",
 }
 MissionBoardViewSettings.currency_icons = {
-	credits = "content/ui/materials/mission_board/currencies/experience_small_digital",
+	credits = "content/ui/materials/mission_board/currencies/credits_small_digital",
 	diamantine = "content/ui/materials/mission_board/currencies/diamantine_small_digital",
 	plasteel = "content/ui/materials/mission_board/currencies/plasteel_small_digital",
-	xp = "content/ui/materials/mission_board/currencies/credits_small_digital",
+	xp = "content/ui/materials/mission_board/currencies/experience_small_digital",
 }
 MissionBoardViewSettings.currency_order = {
 	"credits",
@@ -152,6 +152,10 @@ MissionBoardViewSettings.dimensions = {
 	threat_level_progress_bar_size = {
 		276,
 		8,
+	},
+	threat_tooltip_size = {
+		400,
+		90,
 	},
 }
 MissionBoardViewSettings.page_selector_settings = {

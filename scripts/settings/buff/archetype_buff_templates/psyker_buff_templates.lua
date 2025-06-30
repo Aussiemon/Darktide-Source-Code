@@ -2776,16 +2776,27 @@ templates.psyker_crits_empower_warp = {
 		[proc_events.on_critical_strike] = 1,
 		[proc_events.on_hit] = 1,
 	},
+	specific_check_proc_funcs = {
+		[proc_events.on_critical_strike] = function (params, template_data)
+			template_data.crit = true
+
+			return false
+		end,
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			local is_critical_strike = params.is_critical_strike
+			local is_melee_hit = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
+			local is_ranged_hit = CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t)
+
+			return is_critical_strike or template_data.crit and (is_melee_hit or is_ranged_hit)
+		end,
+	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
-			if template_data.crit then
+			if template_data.crit or template_context.is_critical_strike then
 				template_context.buff_extension:add_internally_controlled_buff("psyker_crits_empower_warp_buff", t)
 			end
 
 			template_data.crit = false
-		end,
-		on_critical_strike = function (params, template_data, template_context)
-			template_data.crit = true
 		end,
 	},
 }
@@ -2856,12 +2867,16 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 
 			return false
 		end,
-		[proc_events.on_hit] = function (params, template_data)
-			return template_data.crit
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			local is_critical_strike = params.is_critical_strike
+			local is_melee_hit = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
+			local is_ranged_hit = CheckProcFunctions.on_ranged_hit(params, template_data, template_context, t)
+
+			return is_critical_strike or template_data.crit and (is_melee_hit or is_ranged_hit)
 		end,
 	},
-	proc_func = function (params, template_data, template_context)
-		if template_data.crit then
+	specific_proc_func = {
+		on_hit = function (params, template_data, template_context, t)
 			local unit = template_context.unit
 			local template_override_data = template_context.template_override_data
 			local toughness_percentage_to_replenish = template_override_data.toughness_percentage
@@ -2870,13 +2885,13 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 
 			local buff_to_add = "psyker_stacking_movement_buff"
 			local buff_extension = template_data.buff_extension
-			local t = FixedFrame.get_latest_fixed_time()
+			local fixed_t = FixedFrame.get_latest_fixed_time()
 
-			buff_extension:add_internally_controlled_buff(buff_to_add, t)
-		end
+			buff_extension:add_internally_controlled_buff(buff_to_add, fixed_t)
 
-		template_data.crit = false
-	end,
+			template_data.crit = false
+		end,
+	},
 	talent_overrides = {
 		{
 			toughness_percentage = 0.05,

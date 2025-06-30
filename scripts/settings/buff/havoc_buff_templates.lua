@@ -7,6 +7,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")

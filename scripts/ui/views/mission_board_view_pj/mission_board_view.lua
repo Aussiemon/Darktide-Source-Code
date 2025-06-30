@@ -1016,6 +1016,7 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	widgets_by_name.gamepad_cursor.content.visible = not is_loading
 	widgets_by_name.difficulty_stepper.content.visible = not is_loading
 	widgets_by_name.difficulty_progress_bar.content.visible = not is_loading
+	widgets_by_name.difficulty_progress_tooltip.content.visible = not is_loading
 	input_service = is_loading and input_service:null_service() or input_service
 
 	MissionBoardView.super.update(self, dt, t, input_service)
@@ -1031,6 +1032,7 @@ MissionBoardView.update = function (self, dt, t, input_service)
 
 		self:_create_difficulty_stepper_indicators()
 		self:_setup_difficulty_selector()
+		self:_setup_threat_level_tooltip()
 		self:_open_current_page()
 
 		local has_active_campaign_missions = self:_has_active_campaign_missions(self._filtered_missions)
@@ -1049,6 +1051,7 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	self:_update_info_state(t)
 	self:_update_camera(dt, t)
 	self:_update_hologram_unit(dt, t)
+	self:_update_threat_level_tooltip(dt, t)
 
 	local world_spawner = self._world_spawner
 
@@ -2241,6 +2244,100 @@ MissionBoardView._update_difficulty_stepper = function (self, page_index)
 	content.next_page_unlocked = next_page and next_page.is_unlocked or false
 
 	self:_update_threat_level_progress(page_index, target_color)
+end
+
+MissionBoardView._setup_threat_level_tooltip = function (self)
+	local difficulty_progress_tooltip = self._widgets_by_name.difficulty_progress_tooltip
+
+	if not difficulty_progress_tooltip then
+		return
+	end
+
+	local difficulty_progress_data = self._mission_board_logic:get_threat_level_progress()
+
+	if not difficulty_progress_data or table.is_empty(difficulty_progress_data) then
+		difficulty_progress_tooltip.visible = false
+
+		return
+	end
+
+	local content = difficulty_progress_tooltip.content
+	local current_difficulty = difficulty_progress_data.current_difficulty
+	local next_difficulty = difficulty_progress_data.next_difficulty
+	local current_exp = difficulty_progress_data.current or 0
+	local next_exp = difficulty_progress_data.target or 0
+	local current_difficulty_data = self:_get_difficulty_data_by_name(current_difficulty)
+	local next_difficulty_data = self:_get_difficulty_data_by_name(next_difficulty)
+
+	if not current_difficulty_data or not next_difficulty_data then
+		difficulty_progress_tooltip.visible = false
+
+		return
+	end
+
+	local formatted_tooltip_text = Localize("loc_mission_board_current_threat_level_progress_tooltip", true, {
+		current_difficulty = Localize(current_difficulty_data.display_name),
+		next_difficulty = Localize(next_difficulty_data.display_name),
+		current = current_exp,
+		target = next_exp,
+	})
+
+	content.text = formatted_tooltip_text
+	difficulty_progress_tooltip.visible = true
+end
+
+MissionBoardView._update_threat_level_tooltip = function (self, dt, t)
+	local stepper_widget = self._widgets_by_name.difficulty_stepper
+
+	if not stepper_widget then
+		return
+	end
+
+	local content = stepper_widget.content
+	local hotspot = content.tooltip_hotspot
+
+	if not hotspot then
+		return
+	end
+
+	local difficulty_progress_tooltip = self._widgets_by_name.difficulty_progress_tooltip
+
+	if not difficulty_progress_tooltip then
+		return
+	end
+
+	local style = difficulty_progress_tooltip.style
+
+	if InputDevice.gamepad_active then
+		local gamepad_anim_progress = content.gamepad_anim_progress or 0
+
+		if self._threat_level_tooltip_visible then
+			gamepad_anim_progress = math.clamp(gamepad_anim_progress + dt * 2, 0, 1)
+		else
+			gamepad_anim_progress = math.clamp(gamepad_anim_progress - dt * 2, 0, 1)
+		end
+
+		difficulty_progress_tooltip.offset[1] = 400 - gamepad_anim_progress * 400
+		style.text.text_color[1] = 255 * gamepad_anim_progress
+		style.background.color[1] = 255 * gamepad_anim_progress
+		style.frame.color[1] = 255 * gamepad_anim_progress
+		content.gamepad_anim_progress = gamepad_anim_progress
+	else
+		local hover_progress = hotspot.anim_hover_progress or 0
+
+		difficulty_progress_tooltip.offset[1] = 400 - hover_progress * 400
+		style.text.text_color[1] = 255 * hover_progress
+		style.background.color[1] = 255 * hover_progress
+		style.frame.color[1] = 255 * hover_progress
+	end
+end
+
+MissionBoardView._callback_hide_threat_level_tooltip = function (self)
+	self._threat_level_tooltip_visible = false
+end
+
+MissionBoardView._callback_show_threat_level_tooltip = function (self)
+	self._threat_level_tooltip_visible = true
 end
 
 MissionBoardView._set_stepper_gamepad_input = function (self)

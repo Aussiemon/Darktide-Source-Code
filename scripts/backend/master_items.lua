@@ -388,15 +388,15 @@ end
 
 MasterItems.get_ui_item_instance = function (item)
 	local gear_override = item.gear and item.gear.masterDataInstance and item.gear.masterDataInstance.overrides
-	local overrides = item.overrides or gear_override or nil
+	local overrides = item.overrides or gear_override
+
+	if overrides then
+		overrides = table.clone_instance(overrides)
+	else
+		overrides = {}
+	end
 
 	if item.slot_weapon_skin then
-		if overrides then
-			overrides = table.clone_instance(overrides)
-		else
-			overrides = {}
-		end
-
 		overrides.slot_weapon_skin = type(item.slot_weapon_skin) == "table" and item.slot_weapon_skin.name or item.slot_weapon_skin
 	end
 

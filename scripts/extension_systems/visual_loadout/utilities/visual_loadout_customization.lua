@@ -469,7 +469,7 @@ function _attach_hierarchy(attachment_slot_data, override_lookup, settings, pare
 		return
 	end
 
-	local override_attach_node = attachment_slot_data.leaf_attach_node_override
+	local override_attach_node = attachment_slot_data.leaf_attach_node_override ~= "" and attachment_slot_data.leaf_attach_node_override or nil
 	local override_map_mode = World[attachment_slot_data.link_map_mode_override]
 	local attachment_unit, bind_pose = _spawn_attachment(item, settings, parent_unit, optional_mission_template, override_attach_node, override_map_mode)
 

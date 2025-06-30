@@ -800,7 +800,7 @@ local settings_definitions = {
 		end,
 	},
 	{
-		default_value = "mine_only",
+		default_value = "all",
 		display_name = "loc_interface_setting_companion_nameplate_in_hub",
 		id = "companion_nameplate_in_hub_type",
 		save_location = "interface_settings",

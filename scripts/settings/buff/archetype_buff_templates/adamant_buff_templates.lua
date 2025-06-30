@@ -2633,7 +2633,7 @@ templates.adamant_dog_pounces_bleed_nearby = {
 	},
 	check_proc_func = CheckProcFunctions.attacker_is_my_companion,
 	proc_func = function (params, template_data, template_context, t)
-		local pounce = params.damage_profile and params.damage_profile.name == "cyber_mastiff_push"
+		local pounce = params.damage_profile and (params.damage_profile.name == "cyber_mastiff_push" or params.damage_profile.companion_pounce)
 
 		if pounce then
 			local victim_unit = params.attacked_unit

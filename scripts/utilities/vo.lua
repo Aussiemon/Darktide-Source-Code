@@ -410,10 +410,13 @@ Vo.closest_player_except_vo_enemy_attack_event = function (unit, breed_name, vo_
 end
 
 Vo.player_vo_event_by_concept = function (vo_concept)
-	local random_player = _get_random_player()
+	local healthy_players = _get_healthy_players()
+	local num_healthy_players = #healthy_players
 
-	if random_player then
-		local dialogue_extension = ScriptUnit.has_extension(random_player, "dialogue_system")
+	for i = 1, num_healthy_players do
+		local player = healthy_players[i]
+		local unit = player.player_unit
+		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 		local concept = vo_concept
 
 		if _can_player_trigger_vo(dialogue_extension, concept) then

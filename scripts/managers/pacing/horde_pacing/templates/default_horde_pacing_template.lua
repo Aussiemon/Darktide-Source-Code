@@ -1650,6 +1650,485 @@ local horde_pacing_template = {
 				},
 			},
 		},
+		{
+			aggro_nearby_roamers_zone_range = 3,
+			max_active_minions = 110,
+			max_active_minions_for_ambush = 50,
+			num_trickle_hordes_active_for_cooldown = 5,
+			time_between_waves = 10,
+			travel_distance_spawning = true,
+			trigger_heard_dialogue = true,
+			horde_timer_range = {
+				130,
+				280,
+			},
+			first_spawn_timer_modifer = {
+				0.4,
+				0.8,
+			},
+			num_waves = {
+				ambush_horde = 1,
+				far_vector_horde = 3,
+			},
+			max_active_hordes = {
+				ambush_horde = 1,
+				far_vector_horde = 3,
+			},
+			travel_distance_required_for_horde = {
+				30,
+				60,
+			},
+			horde_templates = {
+				HordeTemplates.far_vector_horde,
+				HordeTemplates.ambush_horde,
+			},
+			horde_compositions = {
+				far_vector_horde = {
+					HordeCompositions.renegade_medium,
+					HordeCompositions.infected_medium,
+				},
+				ambush_horde = {
+					HordeCompositions.infected_large,
+				},
+				trickle_horde = HIGH_TRICKLE_HORDE_COMPOSITIONS,
+				flood_horde = {
+					HordeCompositions.renegade_flood,
+				},
+			},
+			stinger_sound_events = STINGER_SOUND_EVENTS,
+			pre_stinger_sound_events = PRE_STINGER_SOUND_EVENTS,
+			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
+			pre_stinger_delays = PRE_STINGER_DELAYS,
+			trickle_horde_travel_distance_range = {
+				20,
+				100,
+			},
+			trickle_horde_cooldown = {
+				25,
+				30,
+			},
+			coordinated_horde_strike_settings = {
+				[COORDINATED_HORDE_STRIKE_TYPES.long_horde] = {
+					chance = 0.2,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_high,
+						has_high_challenge_rating,
+					},
+					total_num_allowed = {
+						0,
+						2,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 5,
+							time_to_first_wave = 7,
+							num_waves = {
+								6,
+								7,
+							},
+							composition = HordeCompositions.renegade_medium,
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.coordinated_special_attack] = {
+					chance = 0.2,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						3,
+						6,
+					},
+					horde_setup = {
+						{
+							horde_type = "ambush_horde",
+							stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_3d",
+							time_between_waves = 12,
+							time_to_first_wave = 7,
+							trigger_special_coordinated_attack_num_breeds = 10,
+							trigger_special_coordinated_attack_on_first_wave = true,
+							trigger_special_coordinated_attack_timer_offset = 5,
+							num_waves = {
+								3,
+								4,
+							},
+							composition = HordeCompositions.infected_medium,
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.push_from_behind] = {
+					chance = 0.2,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_high,
+						more_than_one_num_alive_players,
+						has_high_challenge_rating,
+						has_high_combat_vector_minions,
+					},
+					high_chance_conditions = {
+						has_high_combat_vector_minions,
+					},
+					total_num_allowed = {
+						1,
+						3,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							prefered_direction = "behind",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 9,
+							time_to_first_wave = 7,
+							num_waves = {
+								7,
+								8,
+							},
+							composition = HordeCompositions.renegade_small,
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.ranged_push_from_behind] = {
+					chance = 0.05,
+					high_chance = 0.5,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+						has_medium_challenge_rating,
+					},
+					high_chance_conditions = {
+						has_high_combat_vector_minions,
+					},
+					total_num_allowed = {
+						1,
+						3,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							prefered_direction = "behind",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 9,
+							time_to_first_wave = 7,
+							num_waves = {
+								4,
+								5,
+							},
+							composition = HordeCompositions.renegade_small,
+						},
+						{
+							horde_type = "far_vector_horde",
+							prefered_direction = "ahead",
+							time_between_waves = 9,
+							time_to_first_wave = 12,
+							num_waves = {
+								2,
+								3,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_coordinated_ranged_horde,
+								},
+								cultist = {
+									HordeCompositions.cultist_coordinated_ranged_horde,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.elite_roamer_mix_vector] = {
+					chance = 0.2,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+						has_below_high_challenge_rating,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						1,
+						3,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 7,
+							time_to_first_wave = 6,
+							num_waves = {
+								3,
+								4,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_coordinated_melee_mix,
+								},
+								cultist = {
+									HordeCompositions.cultist_coordinated_melee_mix,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.spread_ambush] = {
+					chance = 0.5,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+					},
+					high_chance_conditions = {
+						low_coherency,
+					},
+					total_num_allowed = {
+						2,
+						4,
+					},
+					horde_setup = {
+						{
+							horde_type = "ambush_horde",
+							random_targets = true,
+							stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_3d",
+							time_between_waves = 5,
+							time_to_first_wave = 3,
+							num_waves = {
+								6,
+								7,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.infected_small,
+								},
+								cultist = {
+									HordeCompositions.infected_small,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.sandwich] = {
+					chance = 0.3,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+						has_below_high_challenge_rating,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						2,
+						4,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 7,
+							time_to_first_wave = 6,
+							two_waves_ahead_and_behind = true,
+							num_waves = {
+								5,
+								6,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_medium,
+								},
+								cultist = {
+									HordeCompositions.infected_medium,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.elite_sandwich_waves] = {
+					chance = 0.3,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+						has_below_high_challenge_rating,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						2,
+						4,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 7,
+							time_to_first_wave = 6,
+							two_waves_ahead_and_behind = true,
+							num_waves = {
+								5,
+								6,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_coordinated_melee_mix,
+									HordeCompositions.renegade_coordinated_melee_mix_2,
+								},
+								cultist = {
+									HordeCompositions.cultist_coordinated_melee_mix,
+									HordeCompositions.renegade_coordinated_melee_mix_2,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.elite_coordinated_special_attack] = {
+					chance = 0.3,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+						has_below_high_challenge_rating,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						2,
+						4,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 7,
+							time_to_first_wave = 6,
+							trigger_special_coordinated_attack_num_breeds = 10,
+							trigger_special_coordinated_attack_on_first_wave = true,
+							trigger_special_coordinated_attack_timer_offset = 5,
+							two_waves_ahead_and_behind = true,
+							num_waves = {
+								3,
+								4,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_coordinated_melee_mix,
+									HordeCompositions.renegade_coordinated_melee_mix_2,
+								},
+								cultist = {
+									HordeCompositions.cultist_coordinated_melee_mix,
+									HordeCompositions.renegade_coordinated_melee_mix_2,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.ranged_trickle_forward_horde_push_from_behind] = {
+					chance = 0.2,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_signal_horde_poxwalkers_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						1,
+						3,
+					},
+					horde_setup = {
+						{
+							horde_type = "far_vector_horde",
+							prefered_direction = "behind",
+							stinger = "wwise/events/minions/play_signal_horde_poxwalkers_3d",
+							time_between_waves = 9,
+							time_to_first_wave = 7,
+							num_waves = {
+								4,
+								5,
+							},
+							composition = HordeCompositions.renegade_small,
+						},
+						{
+							horde_type = "far_vector_horde",
+							prefered_direction = "ahead",
+							time_between_waves = 9,
+							time_to_first_wave = 8,
+							num_waves = {
+								4,
+								5,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_small_coordinated_ranged_horde,
+								},
+								cultist = {
+									HordeCompositions.cultist_small_coordinated_ranged_horde,
+								},
+							},
+						},
+					},
+				},
+				[COORDINATED_HORDE_STRIKE_TYPES.elite_spread_ambush] = {
+					chance = 0.2,
+					high_chance = 0.8,
+					pre_stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_2d",
+					conditions = {
+						has_build_up_tension_or_low,
+						more_than_one_num_alive_players,
+					},
+					high_chance_conditions = {
+						long_low_period,
+					},
+					total_num_allowed = {
+						2,
+						4,
+					},
+					horde_setup = {
+						{
+							horde_type = "ambush_horde",
+							random_targets = true,
+							skip_spawners = true,
+							stinger = "wwise/events/minions/play_minion_horde_poxwalker_ambush_3d",
+							time_between_waves = 2,
+							time_to_first_wave = 4,
+							num_waves = {
+								6,
+								7,
+							},
+							faction_composition = {
+								renegade = {
+									HordeCompositions.renegade_elite_poxwalkers_small,
+								},
+								cultist = {
+									HordeCompositions.cultist_elite_poxwalkers_small,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 }
 

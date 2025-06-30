@@ -703,7 +703,7 @@ end
 
 local ENEMY_BROADPHASE_RESULTS = {}
 
-MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, ignored_unit, optional_only_ahead_targets)
+MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, ignored_unit, optional_only_ahead_targets, optional_ignored_breeds)
 	table.clear(ENEMY_BROADPHASE_RESULTS)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -748,6 +748,12 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 
 				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+				local breed_name = breed_or_nil and breed_or_nil.name
+
+				if breed_name and optional_ignored_breeds and optional_ignored_breeds[breed_name] then
+					break
+				end
+
 				local is_player_character = Breed.is_player(breed_or_nil)
 
 				if is_player_character and action_data.push_enemies_push_template then

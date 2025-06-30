@@ -765,35 +765,42 @@ DialogueSystem.force_stop_all = function (self)
 	end
 end
 
+DialogueSystem._is_calm = function (self)
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side_from_name("villains")
+	local alive_monsters = side:alive_units_by_tag("enemy", "monster")
+	local num_alive_monsters = alive_monsters.size
+	local is_calm = self.global_context.team_threat_level ~= "high" and num_alive_monsters == 0
+
+	return is_calm
+end
+
 DialogueSystem._update_story_lines = function (self, t)
-	local is_calm = self.global_context.team_threat_level == "low" and self.global_context.active_hordes == 0
 	local padded_ticker_time = t + DialogueSettings.story_tickers_intensity_cooldown
 	local is_story_ticker = DialogueSettings.story_ticker_enabled
-
-	if is_story_ticker and not is_calm and padded_ticker_time > self._next_story_line_update_t then
-		self._next_story_line_update_t = padded_ticker_time + DialogueSettings.story_tick_time
-	end
-
 	local next_story_line_update_t = self._next_story_line_update_t
 
 	if is_story_ticker and next_story_line_update_t < t then
-		self._next_story_line_update_t = t + DialogueSettings.story_tick_time
+		if not self:_is_calm() then
+			self._next_story_line_update_t = padded_ticker_time + DialogueSettings.story_tick_time
+		else
+			self._next_story_line_update_t = t + DialogueSettings.story_tick_time
 
-		Vo.player_vo_event_by_concept("story_talk")
+			Vo.player_vo_event_by_concept("story_talk")
+		end
 	end
 
 	local is_short_story_ticker = DialogueSettings.short_story_ticker_enabled
-
-	if is_short_story_ticker and not is_calm and padded_ticker_time > self._next_short_story_line_update_t then
-		self._next_short_story_line_update_t = padded_ticker_time + DialogueSettings.short_story_tick_time
-	end
-
 	local next_short_story_line_update_t = self._next_short_story_line_update_t
 
 	if is_short_story_ticker and next_short_story_line_update_t < t then
-		self._next_short_story_line_update_t = t + DialogueSettings.short_story_tick_time
+		if not self:_is_calm() then
+			self._next_short_story_line_update_t = padded_ticker_time + DialogueSettings.short_story_tick_time
+		else
+			self._next_short_story_line_update_t = t + DialogueSettings.short_story_tick_time
 
-		Vo.player_vo_event_by_concept("short_story_talk")
+			Vo.player_vo_event_by_concept("short_story_talk")
+		end
 	end
 
 	local is_vox_stories = DialogueSettings.npc_story_ticker_enabled
