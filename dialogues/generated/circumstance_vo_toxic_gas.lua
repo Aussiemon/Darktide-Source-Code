@@ -1984,7 +1984,7 @@ return function ()
 				"global_context",
 				"circumstance_vo_id",
 				OP.EQ,
-				"circumstance_vo_ember",
+				"circumstance_vo_toxic_gas",
 			},
 			{
 				"query_context",

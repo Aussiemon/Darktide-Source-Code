@@ -47,7 +47,7 @@ local conversations_hub_adamant_officer_a = {
 			4.232052,
 			5.287885,
 			5.196479,
-			7.509823,
+			5.727104,
 		},
 		randomize_indexes = {},
 	},

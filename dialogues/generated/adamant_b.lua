@@ -60,8 +60,6 @@ return function ()
 					"adamant_female_a",
 					"adamant_male_c",
 					"adamant_female_c",
-					"adamant_male_b",
-					"adamant_female_b",
 					"psyker_male_a",
 					"psyker_female_a",
 				},
@@ -77,7 +75,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -211,8 +209,6 @@ return function ()
 				args = {
 					"adamant_male_c",
 					"adamant_female_c",
-					"adamant_male_b",
-					"adamant_female_b",
 					"psyker_male_b",
 					"psyker_female_b",
 					"psyker_male_c",
@@ -234,7 +230,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -368,8 +364,6 @@ return function ()
 				args = {
 					"adamant_male_c",
 					"adamant_female_c",
-					"adamant_male_b",
-					"adamant_female_b",
 					"zealot_male_a",
 					"zealot_female_a",
 					"veteran_male_b",
@@ -389,7 +383,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -542,7 +536,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -674,8 +668,6 @@ return function ()
 				args = {
 					"adamant_male_c",
 					"adamant_female_c",
-					"adamant_male_b",
-					"adamant_female_b",
 					"psyker_male_b",
 					"psyker_female_b",
 					"psyker_male_c",
@@ -695,7 +687,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -846,7 +838,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -997,7 +989,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1144,7 +1136,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1290,7 +1282,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1418,8 +1410,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 					"ogryn_a",
@@ -1438,7 +1428,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1565,8 +1555,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 					"adamant_male_a",
@@ -1590,7 +1578,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1742,7 +1730,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -1888,7 +1876,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2033,7 +2021,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2182,7 +2170,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2312,8 +2300,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 					"ogryn_b",
@@ -2335,7 +2321,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2465,8 +2451,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 					"zealot_female_a",
@@ -2488,7 +2472,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2618,8 +2602,6 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 					"veteran_male_a",
@@ -2637,7 +2619,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2782,7 +2764,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -2930,7 +2912,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3082,7 +3064,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3232,7 +3214,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3378,7 +3360,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3525,7 +3507,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3676,8 +3658,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -3693,7 +3673,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3832,8 +3812,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -3849,7 +3827,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -3988,8 +3966,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4005,7 +3981,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4144,8 +4120,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4161,7 +4135,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4300,8 +4274,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4317,7 +4289,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4456,8 +4428,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4473,7 +4443,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4612,8 +4582,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4629,7 +4597,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4768,8 +4736,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4785,7 +4751,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -4924,8 +4890,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -4941,7 +4905,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",
@@ -5080,8 +5044,6 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
 					"adamant_male_c",
 					"adamant_female_c",
 				},
@@ -5097,7 +5059,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				140,
+				120,
 			},
 			{
 				"faction_memory",

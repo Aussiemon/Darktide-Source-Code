@@ -718,6 +718,23 @@ local adamant_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	response_for_adamant_start_revive_adamant = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_adamant_female_c__response_for_adamant_start_revive_adamant_01",
+			"loc_adamant_female_c__response_for_adamant_start_revive_adamant_02",
+			"loc_adamant_female_c__response_for_adamant_start_revive_adamant_03",
+			"loc_adamant_female_c__response_for_adamant_start_revive_adamant_04",
+		},
+		sound_events_duration = {
+			3.323625,
+			3.096375,
+			3.650896,
+			3.89626,
+		},
+		randomize_indexes = {},
+	},
 	response_for_friendly_fire_from_adamant_to_adamant = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

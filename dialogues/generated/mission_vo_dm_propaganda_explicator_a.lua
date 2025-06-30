@@ -66,16 +66,14 @@ local mission_vo_dm_propaganda_explicator_a = {
 	},
 	mission_propaganda_consulate = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_explicator_a__mission_propaganda_consulate_a_01",
-			"loc_explicator_a__mission_propaganda_consulate_a_02",
-			"loc_explicator_a__mission_propaganda_consulate_a_03",
+			[1] = "loc_explicator_a__mission_propaganda_consulate_a_01",
+			[2] = "loc_explicator_a__mission_propaganda_consulate_a_02",
 		},
 		sound_events_duration = {
-			4.25125,
-			7.366042,
-			5.998229,
+			[1] = 4.25125,
+			[2] = 7.366042,
 		},
 		randomize_indexes = {},
 	},
