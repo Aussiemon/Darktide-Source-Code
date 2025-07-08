@@ -389,10 +389,6 @@ CharacterAppearanceView.on_enter = function (self)
 			custom = false,
 		}
 
-		if not self._is_barber then
-			self._character_create:reset_backstory()
-		end
-
 		if self._is_barber_mindwipe then
 			self._page_open_vo = {
 				[2] = CharacterAppearanceViewSettings.vo_event_mindwipe_backstory,
@@ -407,7 +403,9 @@ CharacterAppearanceView.on_enter = function (self)
 			end
 		end
 
-		self._character_create:reset_backstory()
+		if not self._is_barber then
+			self._character_create:reset_backstory()
+		end
 
 		self._fade_animation_id = self:_start_animation("on_level_switch")
 

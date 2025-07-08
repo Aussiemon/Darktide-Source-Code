@@ -1529,7 +1529,8 @@ Items.compare_set_item_parts_presentation_order = function (a, b)
 end
 
 Items.compare_item_type = function (a, b)
-	local a_item_type, b_type = a.item_type or "", b.item_type or ""
+	local a_item_type = a.item_type or ""
+	local a_item_type, b_type = a_item_type, b.item_type or ""
 
 	if a_item_type < b_type then
 		return true
@@ -1541,7 +1542,8 @@ Items.compare_item_type = function (a, b)
 end
 
 Items.compare_item_name = function (a, b)
-	local a_display_name, b_display_name = Items.display_name(a) or "", Items.display_name(b) or ""
+	local a_display_name = Items.display_name(a) or ""
+	local a_display_name, b_display_name = a_display_name, Items.display_name(b) or ""
 
 	a_display_name = a_display_name:gsub("[\n\r]", "")
 	b_display_name = b_display_name:gsub("[\n\r]", "")
@@ -1556,7 +1558,8 @@ Items.compare_item_name = function (a, b)
 end
 
 Items.compare_item_rarity = function (a, b)
-	local a_rarity, b_rarity = a.rarity or 0, b.rarity or 0
+	local a_rarity = a.rarity or 0
+	local a_rarity, b_rarity = a_rarity, b.rarity or 0
 
 	if a_rarity < b_rarity then
 		return true
@@ -1568,7 +1571,8 @@ Items.compare_item_rarity = function (a, b)
 end
 
 Items.compare_item_sort_order = function (a, b)
-	local a_sort_order, b_sort_order = a.sort_order or 0, b.sort_order or 0
+	local a_sort_order = a.sort_order or 0
+	local a_sort_order, b_sort_order = a_sort_order, b.sort_order or 0
 
 	if a_sort_order < b_sort_order then
 		return true

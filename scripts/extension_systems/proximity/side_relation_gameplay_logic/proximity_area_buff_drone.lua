@@ -13,13 +13,14 @@ local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shar
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local STOP_EVENT_TIME_OFFSET = 1
 local ProximityAreaBuffDrone = class("ProximityAreaBuffDrone")
 local adamant_talent_settings = TalentSettings.adamant
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSettings.special_rules
 local BROADPHASE_RESULTS = {}
-local COMPONENT_STATES = table.enum("none", "active", "deployed")
+local COMPONENT_STATES = table.enum("none", "active", "deployed", "deployed_about_to_expire")
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 ProximityAreaBuffDrone.init = function (self, logic_context, init_data, owner_unit_or_nil)
@@ -110,6 +111,26 @@ ProximityAreaBuffDrone.update = function (self, dt, t)
 
 	if self._started then
 		self:_update_buff_keywords_triggered_effects(t)
+
+		if self._component_state == COMPONENT_STATES.deployed then
+			local life_time = self._life_time
+
+			if life_time then
+				local about_to_expire = t - self._start_time >= self._life_time - STOP_EVENT_TIME_OFFSET
+
+				if about_to_expire then
+					for ii = 1, #self._drone_components do
+						Component.trigger_event_on_clients(self._drone_components[ii], "area_buff_drone_stop_deployed_loop")
+					end
+
+					if not DEDICATED_SERVER then
+						Component.event(self._unit, "area_buff_drone_stop_deployed_loop")
+					end
+
+					self._component_state = COMPONENT_STATES.deployed_about_to_expire
+				end
+			end
+		end
 	end
 end
 
@@ -150,18 +171,24 @@ ProximityAreaBuffDrone.start_job = function (self, is_job)
 	end
 
 	if is_job then
-		for ii = 1, #self._particle_components do
-			Component.trigger_event_on_clients(self._particle_components[ii], "create_particle")
+		if self._particle_components then
+			for ii = 1, #self._particle_components do
+				Component.trigger_event_on_clients(self._particle_components[ii], "create_particle")
+			end
 		end
 
-		for ii = 1, #self._drone_components do
-			Component.trigger_event_on_clients(self._drone_components[ii], "area_buff_drone_deploy")
+		if self._drone_components then
+			for ii = 1, #self._drone_components do
+				Component.trigger_event_on_clients(self._drone_components[ii], "area_buff_drone_deploy")
+			end
 		end
 
 		if not DEDICATED_SERVER then
 			Component.event(self._unit, "create_particle")
 			Component.event(self._unit, "area_buff_drone_deploy")
 		end
+
+		self._component_state = COMPONENT_STATES.deployed
 	end
 end
 

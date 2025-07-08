@@ -1566,13 +1566,13 @@ do
 			description = "loc_achievement_adamant_kill_marked_enemies_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0027",
 			stat_name = "adamant_killed_enemies_marked_by_execution_order",
-			target = 3500,
+			target = 750,
 			title = "loc_achievement_adamant_kill_marked_enemies",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {},
 			loc_variables = {
-				amount = 3500,
+				amount = 750,
 				talent_name = Localize("loc_talent_adamant_exterminator"),
 			},
 		}
@@ -1580,13 +1580,13 @@ do
 			description = "loc_achievement_adamant_kill_with_melee_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0028",
 			stat_name = "adamant_melee_kills_with_terminus_warrant",
-			target = 3500,
+			target = 2000,
 			title = "loc_achievement_adamant_kill_with_melee",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {},
 			loc_variables = {
-				amount = 3500,
+				amount = 2000,
 				talent_name = Localize("loc_talent_adamant_bullet_rain"),
 			},
 		}
@@ -1594,13 +1594,13 @@ do
 			description = "loc_achievement_adamant_kill_with_ranged_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0029",
 			stat_name = "adamant_ranged_kills_with_terminus_warrant",
-			target = 3500,
+			target = 2000,
 			title = "loc_achievement_adamant_kill_with_ranged",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {},
 			loc_variables = {
-				amount = 3500,
+				amount = 2000,
 				talent_name = Localize("loc_talent_adamant_bullet_rain"),
 			},
 		}

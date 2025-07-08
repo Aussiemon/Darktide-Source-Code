@@ -40,6 +40,7 @@ local MissionsObjectiveTargetUiTypeStrings = require("scripts/settings/mission_o
 local MissionsObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionsObjectiveUiStrings = require("scripts/settings/mission_objective/mission_objective_ui_strings")
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
@@ -125,6 +126,7 @@ NetworkLookup.chest_states = {
 }
 NetworkLookup.cinematic_scene_names = _create_lookup({}, CinematicSceneSettings.CINEMATIC_NAMES)
 NetworkLookup.circumstance_templates = _create_lookup({}, CircumstanceTemplates)
+NetworkLookup.MutatorMinionVisualOverrideSettings = _create_lookup({}, MutatorMinionVisualOverrideSettings)
 NetworkLookup.corruptor_arm_animation_speed_types = _create_lookup({}, CorruptorSettings.animation_speed_multiplier)
 NetworkLookup.damage_efficiencies = _create_lookup({}, AttackSettings.damage_efficiencies)
 NetworkLookup.damage_profile_templates = _create_lookup({}, DamageProfileTemplates)

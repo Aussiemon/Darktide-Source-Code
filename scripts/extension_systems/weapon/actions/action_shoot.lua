@@ -195,6 +195,13 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 			inventory_slot_component.reload_state = transition_state
 		end
 	end
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_shoot_start, param_table)
+	end
 end
 
 ActionShoot._update_delta_charge = function (self, fire_config, dt)

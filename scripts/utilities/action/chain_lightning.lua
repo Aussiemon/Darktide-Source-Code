@@ -334,7 +334,7 @@ ChainLightning.targeting_parameters = function (time_in_action, chain_settings, 
 	return max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time, max_targets
 end
 
-ChainLightning.execute_attack = function (target_unit, attacking_unit, power_level, charge_level, target_index, target_number, attack_direction_or_nil, damage_profile, damage_type, is_critical_strike, source_item)
+ChainLightning.execute_attack = function (target_unit, attacking_unit, power_level, charge_level, target_index, target_number, attack_direction_or_nil, damage_profile, damage_type, is_critical_strike, source_item, attack_type_or_nil)
 	local hit_zone_name = "center_mass"
 	local hit_zone_actors = HitZone.get_actor_names(target_unit, hit_zone_name)
 	local num_hit_actor_names = #hit_zone_actors
@@ -342,7 +342,7 @@ ChainLightning.execute_attack = function (target_unit, attacking_unit, power_lev
 	local hit_actor = Unit.actor(target_unit, hit_actor_name)
 	local node_index = hit_actor and Actor.node(hit_actor)
 	local hit_world_position = node_index and Unit.world_position(target_unit, node_index)
-	local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "damage_type", damage_type, "attacking_unit", HEALTH_ALIVE[attacking_unit] and attacking_unit, "attack_direction", attack_direction_or_nil, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name, "hit_world_position", hit_world_position, "target_index", target_index, "target_number", target_number, "attack_type", ATTACK_TYPES.ranged, "is_critical_strike", is_critical_strike, "item", source_item)
+	local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "damage_type", damage_type, "attacking_unit", HEALTH_ALIVE[attacking_unit] and attacking_unit, "attack_direction", attack_direction_or_nil, "hit_actor", hit_actor, "hit_zone_name", hit_zone_name, "hit_world_position", hit_world_position, "target_index", target_index, "target_number", target_number, "attack_type", attack_type_or_nil or ATTACK_TYPES.ranged, "is_critical_strike", is_critical_strike, "item", source_item)
 
 	return damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot
 end

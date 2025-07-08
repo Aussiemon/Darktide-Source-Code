@@ -746,6 +746,193 @@ templates.havoc_sticky_poxburster = {
 		end
 	end,
 }
+
+local rotten_armor_data = {
+	kill_time = 1.5,
+	reduction_threshold = {
+		0.25,
+		0.5,
+		0.75,
+		1.25,
+	},
+	damage_thresholds = {
+		0.9,
+		0.75,
+		0.5,
+		0.25,
+	},
+	specific_head_gib_settings = {
+		random_radius = 2,
+		hit_zones = {
+			"head",
+			"lower_right_leg",
+			"lower_left_leg",
+			"lower_right_arm",
+			"lower_left_arm",
+		},
+		damage_profile = DamageProfileTemplates.havoc_self_gib,
+	},
+}
+
+local function _on_rotten_armor_death(template_data, template_context)
+	local unit = template_context.unit
+	local nav_world = template_data.nav_world
+	local vfx_name = "content/fx/particles/enemies/rotten_armor_death"
+	local sfx_death_name = "wwise/events/minions/play_nurgle_corpse_explode_rotten"
+	local position = POSITION_LOOKUP[unit]
+
+	if not position then
+		return
+	end
+
+	local node_position = position + Vector3(0, 0, 0.25)
+	local fx_system = Managers.state.extension:system("fx_system")
+	local rotation = Unit.local_rotation(unit, 1)
+
+	fx_system:trigger_vfx(vfx_name, node_position, rotation)
+	fx_system:trigger_wwise_event(sfx_death_name, position)
+	LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates.rotten_armor, nil, nil, true)
+end
+
+local function _rotten_armor_stat_reduction(unit, index)
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local value = rotten_armor_data.reduction_threshold[index]
+
+	stat_buffs.ranged_damage_taken_multiplier = value
+	stat_buffs.ranged_damage_taken_multiplier = value
+
+	return rotten_armor_data.damage_thresholds[index]
+end
+
+templates.mutator_rotten_armor = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_minion_damage_taken] = 1,
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		template_data.nav_world = navigation_extension:nav_world()
+
+		local breed = unit_data_extension:breed()
+		local variable_name = "anim_move_speed"
+
+		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+			animation_extension:set_variable(variable_name, 0.85)
+		end
+
+		local start_index = 1
+
+		template_data.current_index = start_index
+		template_data.current_damage_threshold = _rotten_armor_stat_reduction(unit, start_index)
+
+		local fx_system = Managers.state.extension:system("fx_system")
+		local effect_template = EffectTemplates.mutator_rotten_armor_stages
+
+		fx_system:start_template_effect(effect_template, unit)
+
+		local blackboard = BLACKBOARDS[unit]
+		local has_gib_override = Blackboard.has_component(blackboard, "gib_override")
+
+		if has_gib_override then
+			local gib_override = Blackboard.write_component(blackboard, "gib_override")
+
+			gib_override.should_override = true
+			gib_override.target_template = "havoc_self_gib"
+			gib_override.override_hit_zone_name = "center_mass"
+		end
+	end,
+	update_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local effect_id = template_data.effect_id
+
+		if not effect_id then
+			return
+		end
+
+		local t = Managers.time:time("gameplay")
+		local kill_time = template_data.kill_time
+
+		if kill_time < t then
+			local fx_system = Managers.state.extension:system("fx_system")
+
+			fx_system:stop_template_effect(effect_id)
+
+			template_data.effect_id = nil
+		end
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local current_health_percent = health_extension:current_health_percent()
+		local current_damage_threshold = template_data.current_damage_threshold
+		local current_index = template_data.current_index
+
+		if current_health_percent <= current_damage_threshold then
+			current_index = current_index + 1
+			template_data.current_damage_threshold = _rotten_armor_stat_reduction(unit, current_index)
+
+			local hit_zone = params.hit_zone_name_or_nil
+			local attacking_unit = params.attacking_unit
+
+			if hit_zone and attacking_unit then
+				local hit_zone_id = NetworkLookup.hit_zones[hit_zone]
+
+				if hit_zone_id then
+					local node_name = HitZone.get_actor_names(unit, hit_zone)
+					local Unit_index = Unit.node(unit, node_name[1])
+					local unit_position = Unit.world_position(unit, Unit_index)
+					local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
+					local look_at_vector = attacking_unit_position - unit_position
+					local fx_system = Managers.state.extension:system("fx_system")
+					local effect_template = EffectTemplates.mutator_rotten_armor_impact
+
+					if not template_data.effect_id then
+						template_data.effect_id = fx_system:start_template_effect(effect_template, unit, hit_zone_id, look_at_vector)
+
+						local t = Managers.time:time("gameplay")
+
+						template_data.kill_time = t + 1.5
+					end
+				end
+			end
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		if template_context.is_server then
+			_on_rotten_armor_death(template_data, template_context)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_head",
+				sfx = {
+					looping_wwise_start_event = "wwise/events/minions/play_fly_swarm_plague_loop_mutator",
+					looping_wwise_stop_event = "wwise/events/minions/stop_fly_swarm_plague_loop_mutator",
+				},
+			},
+		},
+	},
+}
 templates.havoc_thorny_armor = {
 	class_name = "proc_buff",
 	predicted = false,

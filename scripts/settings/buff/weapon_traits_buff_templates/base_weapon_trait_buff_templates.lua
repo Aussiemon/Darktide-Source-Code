@@ -2578,6 +2578,96 @@ base_templates.rending_on_crit = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
+base_templates.power_level_on_aim_time = {
+	class_name = "proc_buff",
+	duration_per_step = 1,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	num_steps_for_max_stat = 10,
+	predicted = false,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+
+		template_data.alternate_fire_component = unit_data_extension and unit_data_extension:read_component("alternate_fire")
+		template_data.action_shoot_component = unit_data_extension and unit_data_extension:read_component("action_shoot")
+		template_data.lerp_t_value = 0
+		template_data.steps = 0
+		template_data.consume_charges = false
+	end,
+	lerped_stat_buffs = {
+		[stat_buffs.power_level_modifier] = {
+			max = 1,
+			min = 0,
+		},
+	},
+	lerp_t_func = function (t, start_time, duration, template_data, template_context)
+		return template_data.lerp_t_value
+	end,
+	proc_events = {
+		[proc_events.on_shoot_start] = 1,
+		[proc_events.on_shoot] = 1,
+	},
+	specific_proc_func = {
+		on_shoot_start = function (params, template_data, template_context)
+			template_data.shooting = true
+			template_data.consume_charges = false
+		end,
+		on_shoot = function (params, template_data, template_context)
+			template_data.shooting = false
+			template_data.consume_charges = true
+		end,
+	},
+	check_active_func = function (template_data, template_context)
+		return template_data.steps > 0
+	end,
+	visual_stack_count = function (template_data, template_context)
+		return template_data.steps
+	end,
+	update_func = function (template_data, template_context, dt, t, template)
+		if template_data.consume_charges then
+			template_data.consume_charges = false
+			template_data.lerp_t_value = 0
+			template_data.steps = 0
+
+			return
+		end
+
+		local alternate_fire_component = template_data.alternate_fire_component
+		local is_aiming = alternate_fire_component.is_active
+
+		if not is_aiming then
+			template_data.lerp_t_value = 0
+			template_data.steps = 0
+
+			return
+		end
+
+		if template_data.shooting then
+			return
+		end
+
+		local action_shoot_component = template_data.action_shoot_component
+		local alternate_fire_time = alternate_fire_component.start_t
+		local last_shoot_time = action_shoot_component.fire_last_t
+		local check_time = math.max(alternate_fire_time, last_shoot_time)
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+		local time_lapsed = fixed_t - check_time
+
+		if time_lapsed <= 0.1 then
+			return
+		end
+
+		local template = template_context.template
+		local override_data = template_context.template_override_data
+		local duration_per_step = override_data.duration_per_step or template.duration_per_step
+		local num_steps_for_max_stat = override_data.num_steps_for_max_stat or template.num_steps_for_max_stat
+		local steps = math.min(math.floor(time_lapsed / duration_per_step), num_steps_for_max_stat)
+
+		template_data.lerp_t_value = 1 / num_steps_for_max_stat * steps
+		template_data.steps = steps
+	end,
+}
 base_templates.chance_based_on_aim_time = {
 	class_name = "stepped_stat_buff",
 	duration_per_stack = 1,

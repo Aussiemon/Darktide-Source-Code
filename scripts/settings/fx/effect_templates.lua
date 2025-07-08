@@ -60,5 +60,7 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/companion_do
 _create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_hurt_effect")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_leap_attack_effect")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/companion_dog_pounce_attack_effect")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/mutator_rotten_armor_impact")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/mutator_rotten_armor_stages")
 
 return settings("EffectTemplates", effect_templates)

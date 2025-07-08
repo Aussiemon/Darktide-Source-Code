@@ -7161,6 +7161,33 @@ StatDefinitions.ember_mission_won = {
 		return self.data.circumstances[circumstance_name]
 	end,
 }
+StatDefinitions.rotten_armor_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			rotten_armor = true,
+			rotten_armor_darkness = true,
+			rotten_armor_gas = true,
+			rotten_armor_hunt_grou = true,
+			rotten_armor_more_res = true,
+			rotten_armor_waves_spec = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

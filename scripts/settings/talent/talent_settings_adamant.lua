@@ -77,7 +77,7 @@ local talent_settings = {
 				recoil_modifier = -0.25,
 				revive_speed_modifier = 0.3,
 				suppression = 0.3,
-				tdr = 0.3,
+				tdr = 0.7,
 				toughness = 0.05,
 				toughness_improved = 0.075,
 			},

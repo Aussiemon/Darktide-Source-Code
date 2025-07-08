@@ -4,6 +4,7 @@ local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loado
 local Component = require("scripts/utilities/component")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
+local MasterItems = require("scripts/backend/master_items")
 local unit_alive = Unit.alive
 local unit_set_unit_visibility = Unit.set_unit_visibility
 local unit_set_visibility = Unit.set_visibility
@@ -66,6 +67,44 @@ end
 
 local NO_OPTIONS = {}
 local NO_SLOT_OPTIONS = {}
+
+local function _get_unit_3p_and_item_for_wanted_slot(equipment, wanted_slot)
+	local data = equipment[wanted_slot]
+
+	if data and data.equipped then
+		return {
+			unit_3p = data.unit_3p,
+			item = data.item,
+		}
+	end
+
+	for slot_name, slot in pairs(equipment) do
+		if slot.attachment_id_lookup_3p then
+			for attachment_name, attachment_unit in pairs(slot.attachment_id_lookup_3p) do
+				if attachment_name == wanted_slot then
+					local item
+
+					if slot.item_name_by_unit_3p then
+						for unit, item_name in pairs(slot.item_name_by_unit_3p) do
+							if attachment_unit == unit then
+								item = MasterItems.get_item(item_name)
+
+								break
+							end
+						end
+					end
+
+					return {
+						unit_3p = attachment_unit,
+						item = item,
+					}
+				end
+			end
+		end
+	end
+
+	return {}
+end
 
 EquipmentComponent.initialize_equipment = function (slot_configuration, breed_settings, optional_slot_options)
 	local equipment = {}
@@ -803,7 +842,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 	local base_unit_name = first_person_mode and "unit_1p" or "unit_3p"
 	local slot_names_to_hide = _hidden_slot_names(equipment, base_unit_name, wielded_slot, first_person_mode)
-	local slot_body_face_unit = equipment.slot_body_face and equipment.slot_body_face.unit_3p
+	local slot_data = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_body_face")
+	local slot_body_face_unit = slot_data.unit_3p
 
 	if slot_body_face_unit then
 		VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, "mask_face_none", false)
@@ -873,7 +913,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 				for i = 1, #mask_hair_override do
 					local mask_hair_item = item.mask_hair_override[i].HairItem
-					local current_hair_item = equipment.slot_body_hair.item
+					local slot_data = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_body_hair")
+					local current_hair_item = slot_data.item
 
 					if current_hair_item and mask_hair_item == current_hair_item.name then
 						local mask_hair = item.mask_hair_override[i].HairMaskOverride
@@ -908,7 +949,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 	end
 
 	if first_person_mode then
-		local slot_gear_upperbody = equipment.slot_gear_upperbody
+		local slot_gear_upperbody = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_gear_upperbody")
 		local gear_upperbody_item = slot_gear_upperbody and slot_gear_upperbody.item
 
 		if gear_upperbody_item and slot_names_to_hide.slot_body_arms == nil then
@@ -925,7 +966,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 			end
 		end
 	else
-		local slot_gear_upperbody = equipment.slot_gear_upperbody
+		local slot_gear_upperbody = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_gear_upperbody")
 		local gear_upperbody_item = slot_gear_upperbody and slot_gear_upperbody.item
 
 		if gear_upperbody_item then
@@ -970,7 +1011,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 			end
 		end
 
-		local slot_gear_lowerbody = equipment.slot_gear_lowerbody
+		local slot_gear_lowerbody = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_gear_lowerbody")
 		local gear_lowerbody_item = slot_gear_lowerbody and slot_gear_lowerbody.item
 
 		if gear_lowerbody_item then

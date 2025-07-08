@@ -18,6 +18,7 @@ local ExplosionTemplates = require("scripts/settings/damage/explosion_templates"
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local MinionState = require("scripts/utilities/minion_state")
+local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -32,6 +33,7 @@ local Sway = require("scripts/utilities/sway")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local aggro_states = PerceptionSettings.aggro_states
 local ailment_effects = AilmentSettings.effects
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
@@ -812,18 +814,60 @@ templates.adamant_hunt_stance_dog_bloodlust = {
 }
 
 function _adamant_mark_enemies_select_unit(template_data, template_context, last_unit_pos, t)
+	local player_unit = template_context.unit
+	local player_rotation = template_data.first_person_component.rotation
+	local player_horizontal_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
+	local player_position = POSITION_LOOKUP[player_unit]
+	local broadphase_distance = template_data.distance
+
+	for marked_unit, t in pairs(template_data.targets) do
+		if not ALIVE[marked_unit] then
+			template_data.targets[marked_unit] = nil
+		else
+			local marked_unit_position = POSITION_LOOKUP[marked_unit]
+			local distance_sq = Vector3.distance_squared(player_position, marked_unit_position)
+			local check_distance = broadphase_distance * broadphase_distance
+
+			if check_distance < distance_sq then
+				local direction_to_player = Vector3.normalize(marked_unit_position - player_position)
+				local dot = Vector3.dot(player_horizontal_look_direction, direction_to_player)
+
+				if dot < 0 then
+					local target_blackboard = BLACKBOARDS[marked_unit]
+					local aggro_state = target_blackboard.perception.aggro_state
+
+					if aggro_state ~= PerceptionSettings.aggro_states.aggroed then
+						local unit_id = Managers.state.unit_spawner:game_object_id(marked_unit)
+						local outline_name = "adamant_mark_target"
+						local outline_id = NetworkLookup.outline_types[outline_name]
+						local channel_id = template_context.player:channel_id()
+
+						if channel_id and unit_id then
+							RPC.rpc_remove_outline_from_unit(channel_id, unit_id, outline_id)
+						end
+
+						if not DEDICATED_SERVER then
+							local outline_system = Managers.state.extension:system("outline_system")
+
+							outline_system:remove_outline(marked_unit, outline_name)
+						end
+
+						template_data.targets[marked_unit] = nil
+
+						break
+					end
+				end
+			end
+		end
+	end
+
 	local broadphase = template_data.broadphase
 	local enemy_side_names = template_data.enemy_side_names
 	local broadphase_results = template_data.broadphase_results
 
 	table.clear(broadphase_results)
 
-	local player_unit = template_context.unit
-	local player_rotation = template_data.first_person_component.rotation
-	local player_horizontal_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
-	local player_position = POSITION_LOOKUP[player_unit]
-	local boradphase_distance = template_data.distance
-	local num_results = broadphase.query(broadphase, player_position, boradphase_distance, broadphase_results, enemy_side_names)
+	local num_results = broadphase.query(broadphase, player_position, broadphase_distance, broadphase_results, enemy_side_names)
 	local chosen_unit
 	local chosen_distance = math.huge
 
@@ -2633,6 +2677,13 @@ templates.adamant_dog_pounces_bleed_nearby = {
 	},
 	check_proc_func = CheckProcFunctions.attacker_is_my_companion,
 	proc_func = function (params, template_data, template_context, t)
+		if not template_data.companion_unit then
+			local companion_spawner_extension = ScriptUnit.has_extension(template_context.unit, "companion_spawner_system")
+			local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+
+			template_data.companion_unit = companion_unit
+		end
+
 		local pounce = params.damage_profile and (params.damage_profile.name == "cyber_mastiff_push" or params.damage_profile.companion_pounce)
 
 		if pounce then
@@ -2644,7 +2695,7 @@ templates.adamant_dog_pounces_bleed_nearby = {
 				if buff_extension then
 					local stacks = talent_settings.dog_pounces_bleed_nearby.bleed_stacks
 
-					buff_extension:add_internally_controlled_buff_with_stacks("bleed", stacks, t)
+					buff_extension:add_internally_controlled_buff_with_stacks("bleed", stacks, t, "owner_unit", template_data.companion_unit)
 				end
 			end
 		end

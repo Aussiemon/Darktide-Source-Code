@@ -55,6 +55,10 @@ MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_templa
 	self._visual_loadout_system = Managers.state.extension:system("visual_loadout_system")
 end
 
+MinionGibbing.set_new_gib_template = function (self, template)
+	self._template = template
+end
+
 MinionGibbing.spawn_gib_from_queue = function (self, unit, gib_settings, gib_position, gib_rotation, hit_zone_name, attack_direction, damage_profile, hit_zone_gib_template, optional_override_gib_forces)
 	local world = self._world
 	local wwise_world = self._wwise_world
@@ -245,6 +249,12 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		return false
 	end
 
+	local using_full_gib_override = false
+
+	if damage_profile.name == "havoc_self_gib" then
+		using_full_gib_override = true
+	end
+
 	local gibbing_power = damage_profile.gibbing_power or GibbingPower.light
 	local gibbing_type = override_gib_type or damage_profile.gibbing_type or GibbingTypes.default
 
@@ -265,11 +275,11 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 
 	local gibbing_threshold = hit_zone_gib_template and hit_zone_gib_template.gibbing_threshold or GibbingThresholds.light
 
-	if gibbing_threshold > 10 then
+	if gibbing_power < gibbing_threshold then
 		try_fallback = true
 	end
 
-	if try_fallback then
+	if try_fallback and not using_full_gib_override then
 		local forced_fallback_gibbing_hit_zone_name = self._template.forced_fallback_gibbing_hit_zone_name
 
 		if forced_fallback_gibbing_hit_zone_name and forced_fallback_gibbing_hit_zone_name ~= hit_zone_name_or_nil then

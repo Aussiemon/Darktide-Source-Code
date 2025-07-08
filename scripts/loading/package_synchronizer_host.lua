@@ -769,7 +769,7 @@ PackageSynchronizerHost._cleanup_owned_units = function (self, player)
 	end
 
 	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension:companion_unit()
+	local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
 
 	for unit, _ in pairs(owned_units) do
 		if unit ~= player_unit and unit ~= companion_unit then

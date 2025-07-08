@@ -507,7 +507,7 @@ function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab
 	local melee_rending_multiplier = is_melee and attacker_stat_buffs.melee_rending_multiplier or 1
 	local attacker_melee_vs_staggered_multiplier = is_target_staggered and is_melee and attacker_stat_buffs.melee_rending_vs_staggered_multiplier or 1
 	local ranged_rending_multiplier = is_ranged and attacker_stat_buffs.ranged_rending_multiplier or 1
-	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier - 13
+	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_ranged_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier - 14
 
 	rending_multiplier = math.min(rending_multiplier, 1)
 

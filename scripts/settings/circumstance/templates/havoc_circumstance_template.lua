@@ -27,6 +27,19 @@ local circumstance_templates = {
 		},
 		mission_overrides = {},
 	},
+	mutator_havoc_rotten_armor = {
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/havoc_mutator_nurgle",
+			description = "loc_havoc_enemies_corrupted_description",
+			display_name = "loc_havoc_enemies_corrupted_name",
+			happening_display_name = "loc_happening_nurgle_manifestation",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+		},
+		mutators = {
+			"mutator_rotten_armor",
+		},
+		mission_overrides = {},
+	},
 	mutator_havoc_enemies_parasite_headshot = {
 		ui = {
 			background = "content/ui/materials/backgrounds/mutators/havoc_mutator_parasite",

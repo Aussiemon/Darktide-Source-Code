@@ -124,7 +124,8 @@ end
 ShockMaulHitEffects._start_particle_effect = function (self, particle_alias)
 	local use_1p = self:_use_1p()
 	local unit_1p, node_1p, unit_3p, node_3p = self._fx_extension:vfx_spawner_unit_and_node(self._source_name)
-	local vfx_link_unit, vfx_link_node = use_1p and unit_1p or unit_3p, use_1p and node_1p or node_3p
+	local vfx_link_unit = use_1p and unit_1p or unit_3p
+	local vfx_link_unit, vfx_link_node = vfx_link_unit, use_1p and node_1p or node_3p
 	local particle_resolved, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
 
 	if particle_resolved then

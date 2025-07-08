@@ -603,6 +603,9 @@ local archetype_talents = {
 				tdr = {
 					format_type = "percentage",
 					value = talent_settings.blitz_ability.drone.tdr,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
 				},
 				revive_speed = {
 					format_type = "percentage",

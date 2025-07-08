@@ -518,59 +518,90 @@ templates.weapon_trait_bespoke_shotpistol_shield_p1_rending_on_crit = {
 		},
 	},
 }
+
+local windup_increases_power_trait_num_steps = 5
+
 templates.weapon_trait_bespoke_shotpistol_shield_p1_windup_increases_power = {
 	format_values = {
 		power_level = {
 			format_type = "percentage",
 			prefix = "+",
 			find_value = {
-				buff_template_name = "weapon_trait_bespoke_shotpistol_shield_p1_windup_increases_power",
+				buff_template_name = "weapon_trait_bespoke_shotpistol_shield_p1_increases_power_while_aiming",
 				find_value_type = "trait_override",
 				path = {
-					"stat_buffs",
+					"lerped_stat_buffs",
 					stat_buffs.power_level_modifier,
+					"max",
 				},
 			},
+			value_manipulation = function (value)
+				local value_per_stack = value / windup_increases_power_trait_num_steps
+
+				return math.round(value_per_stack * 100)
+			end,
 		},
 		time = {
 			format_type = "number",
 			find_value = {
-				buff_template_name = "weapon_trait_bespoke_shotpistol_shield_p1_windup_increases_power",
+				buff_template_name = "weapon_trait_bespoke_shotpistol_shield_p1_increases_power_while_aiming",
 				find_value_type = "trait_override",
 				path = {
-					"duration_per_stack",
+					"duration_per_step",
 				},
 			},
 		},
 		stacks = {
-			format_type = "string",
-			value = "5",
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_shotpistol_shield_p1_increases_power_while_aiming",
+				find_value_type = "trait_override",
+				path = {
+					"num_steps_for_max_stat",
+				},
+			},
 		},
 	},
 	buffs = {
-		weapon_trait_bespoke_shotpistol_shield_p1_windup_increases_power = {
+		weapon_trait_bespoke_shotpistol_shield_p1_increases_power_while_aiming = {
 			{
-				duration_per_stack = 0.4,
-				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.05,
+				duration_per_step = 0.4,
+				num_steps_for_max_stat = windup_increases_power_trait_num_steps,
+				lerped_stat_buffs = {
+					[stat_buffs.power_level_modifier] = {
+						max = 0.25,
+						min = 0,
+					},
 				},
 			},
 			{
-				duration_per_stack = 0.4,
-				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.06,
+				duration_per_step = 0.4,
+				num_steps_for_max_stat = windup_increases_power_trait_num_steps,
+				lerped_stat_buffs = {
+					[stat_buffs.power_level_modifier] = {
+						max = 0.3,
+						min = 0,
+					},
 				},
 			},
 			{
-				duration_per_stack = 0.4,
-				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.07,
+				duration_per_step = 0.4,
+				num_steps_for_max_stat = windup_increases_power_trait_num_steps,
+				lerped_stat_buffs = {
+					[stat_buffs.power_level_modifier] = {
+						max = 0.35,
+						min = 0,
+					},
 				},
 			},
 			{
-				duration_per_stack = 0.4,
-				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.08,
+				duration_per_step = 0.4,
+				num_steps_for_max_stat = windup_increases_power_trait_num_steps,
+				lerped_stat_buffs = {
+					[stat_buffs.power_level_modifier] = {
+						max = 0.4,
+						min = 0,
+					},
 				},
 			},
 		},

@@ -17,6 +17,7 @@ local mutator_templates = {
 				dm_forge = 5,
 				dm_propaganda = 5,
 				dm_rise = 5,
+				dm_stockpile = 5,
 				fm_armoury = 5,
 				fm_cargo = 5,
 				fm_resurgence = 5,
