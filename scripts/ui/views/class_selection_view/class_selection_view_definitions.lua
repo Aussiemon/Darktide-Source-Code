@@ -543,7 +543,7 @@ local archetype_option_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "icon",
-		value = "content/ui/materials/base/ui_default_base",
+		value = "content/ui/textures/frames/class_selection/windows/class_selection_top_adamant_effect",
 		value_id = "icon",
 		style = {
 			hdr = true,
@@ -552,39 +552,15 @@ local archetype_option_definition = UIWidget.create_definition({
 			offset = {
 				0,
 				0,
-				2,
+				4,
 			},
-			material_values = {
-				texture_map = "content/ui/textures/frames/class_selection/windows/class_selection_top_temp_unselected",
-			},
-		},
-	},
-	{
-		pass_type = "texture",
-		style_id = "icon_highlight",
-		value = "content/ui/materials/base/ui_default_base",
-		value_id = "icon_highlight",
-		style = {
-			hdr = true,
-			horizontal_alignment = "center",
-			vertical_alignment = "center",
-			offset = {
-				0,
-				0,
-				3,
-			},
-			material_values = {
-				texture_map = "content/ui/textures/frames/class_selection/windows/class_selection_top_temp",
-			},
+			material_values = {},
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local anim_progress = hotspot.anim_select_progress
 
-			style.color[1] = anim_progress * 255
-		end,
-		visibility_function = function (content, style)
-			return content.hotspot.is_selected
+			style.material_values.selected_not_selected = 1 - anim_progress
 		end,
 	},
 	{
@@ -593,15 +569,15 @@ local archetype_option_definition = UIWidget.create_definition({
 		value = "content/ui/materials/frames/class_selection_top_highlight",
 		style = {
 			hdr = true,
-			horizontal_alignment = "center",
+			horizontal_alignment = "left",
 			scale_to_material = true,
-			vertical_alignment = "center",
+			vertical_alignment = "top",
 			default_color = Color.terminal_text_body(255, true),
 			selected_color = Color.terminal_corner_selected(255, true),
 			hover_color = Color.terminal_corner_hover(255, true),
 			offset = {
-				0,
-				0,
+				-15,
+				-15,
 				4,
 			},
 			size_addition = {

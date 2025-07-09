@@ -3302,11 +3302,11 @@ damage_templates.havoc_self_gib = {
 		impact = 1,
 	},
 	ragdoll_push_force = {
-		500,
-		800,
+		250,
+		350,
 	},
 	gibbing_power = gibbing_power.impossible,
-	gibbing_type = gibbing_types.crushing,
+	gibbing_type = gibbing_types.explosion,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,

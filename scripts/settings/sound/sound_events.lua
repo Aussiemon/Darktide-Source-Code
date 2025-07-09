@@ -193,6 +193,8 @@ local sound_events = {
 	"wwise/events/player/play_player_get_hit_mutator_damage_2d_tick",
 	"wwise/events/minions/play_havoc_mutator_enraging_elites_buff_stinger",
 	"wwise/events/player/play_player_ability_adamant_dog_explosion",
+	"wwise/events/minions/play_fly_swarm_plague_loop_mutator",
+	"wwise/events/minions/stop_fly_swarm_plague_loop_mutator",
 }
 
 return sound_events

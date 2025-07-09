@@ -503,6 +503,10 @@ end
 SmartTagSystem._add_reply_locally = function (self, tag_id, replier_unit, reply)
 	local tag = self._all_tags[tag_id]
 
+	if not tag then
+		return
+	end
+
 	tag:add_reply(replier_unit, reply)
 
 	local replier_extension = self._unit_extension_data[replier_unit]

@@ -458,7 +458,7 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_
 				buff_template_name = "weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_kill",
 				find_value_type = "trait_override",
 				path = {
-					"conditional_stat_buffs",
+					"proc_stat_buffs",
 					stat_buffs.melee_critical_strike_chance,
 				},
 			},
@@ -477,22 +477,22 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_
 	buffs = {
 		weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_kill = {
 			{
-				conditional_stat_buffs = {
+				proc_stat_buffs = {
 					[stat_buffs.melee_critical_strike_chance] = 0.05,
 				},
 			},
 			{
-				conditional_stat_buffs = {
+				proc_stat_buffs = {
 					[stat_buffs.melee_critical_strike_chance] = 0.1,
 				},
 			},
 			{
-				conditional_stat_buffs = {
+				proc_stat_buffs = {
 					[stat_buffs.melee_critical_strike_chance] = 0.15,
 				},
 			},
 			{
-				conditional_stat_buffs = {
+				proc_stat_buffs = {
 					[stat_buffs.melee_critical_strike_chance] = 0.2,
 				},
 			},

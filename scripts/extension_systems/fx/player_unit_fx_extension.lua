@@ -1781,7 +1781,11 @@ PlayerUnitFxExtension._update_looping_sounds = function (self, fixed_frame)
 				self:stop_looping_wwise_event(sound_alias)
 			end
 
-			self:trigger_looping_wwise_event(sound_alias, trigger_data.source_name, trigger_data.source_attach_name)
+			if not trigger_data.source_name or self._sources[trigger_data.source_name] then
+				self:trigger_looping_wwise_event(sound_alias, trigger_data.source_name, trigger_data.source_attach_name)
+			else
+				trigger_data.should_trigger = false
+			end
 		elseif data.is_playing then
 			local previous_frame = fixed_frame - 1
 

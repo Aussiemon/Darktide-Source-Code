@@ -930,7 +930,7 @@ local function _chain_lightning_interval_func(template_data, template_context, t
 			charge_level = math.clamp01(time_since_start_attack / max_charge_at_time)
 		end
 
-		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, owner_unit, CHAIN_LIGHTNING_POWER_LEVEL, charge_level, 1, 1, attack_direction, damage_template, damage_types.electrocution, false, template_context.source_item)
+		local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = ChainLightning.execute_attack(unit, owner_unit, CHAIN_LIGHTNING_POWER_LEVEL, charge_level, 1, 1, attack_direction, damage_template, damage_types.electrocution, false, template_context.source_item, template.attack_type)
 
 		if template_data.is_poxwalker_bomber and template.trigger_poxwalker_bomber and stagger_result == "stagger" then
 			local target_blackboard = BLACKBOARDS[unit]
@@ -1020,6 +1020,7 @@ templates.psyker_heavy_swings_shock_improved = table.clone(templates.psyker_prot
 templates.psyker_heavy_swings_shock_improved.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
 templates.adamant_whistle_electrocution = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved)
 templates.adamant_whistle_electrocution.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
+templates.adamant_whistle_electrocution.attack_type = attack_types.buff
 templates.shock_effect = {
 	class_name = "buff",
 	duration = 2,

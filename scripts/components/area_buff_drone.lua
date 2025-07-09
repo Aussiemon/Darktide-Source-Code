@@ -47,16 +47,16 @@ AreaBuffDrone.destroy = function (self, unit)
 		source_id = nil
 	end
 
-	if self._arming_playing_id then
-		self:_stop_looping_sound(source_id, self._arming_playing_id, RESOURCES.sfx.idle_loop.stop)
-
-		self._arming_playing_id = nil
-	end
-
 	if self._idle_playing_id then
-		self:_stop_looping_sound(source_id, self._idle_playing_id, RESOURCES.sfx.deployed_loop.stop)
+		self:_stop_looping_sound(source_id, self._idle_playing_id, RESOURCES.sfx.idle_loop.stop)
 
 		self._idle_playing_id = nil
+	end
+
+	if self._deployed_playing_id then
+		self:_stop_looping_sound(source_id, self._deployed_playing_id, RESOURCES.sfx.deployed_loop.stop)
+
+		self._deployed_playing_id = nil
 	end
 
 	if source_id then
@@ -91,10 +91,10 @@ end
 AreaBuffDrone._set_active = function (self)
 	self:_setup()
 
-	if not self._arming_playing_id then
+	if not self._idle_playing_id then
 		local playing_id = self:_start_looping_sound(self._source_id, RESOURCES.sfx.idle_loop.start)
 
-		self._arming_playing_id = playing_id
+		self._idle_playing_id = playing_id
 	end
 
 	Unit.animation_event(self._unit, "hover_fwd")
@@ -105,10 +105,10 @@ AreaBuffDrone._deploy = function (self)
 
 	local source_id = self._source_id
 
-	if self._arming_playing_id then
-		self:_stop_looping_sound(source_id, self._arming_playing_id, RESOURCES.sfx.idle_loop.stop)
+	if self._idle_playing_id then
+		self:_stop_looping_sound(source_id, self._idle_playing_id, RESOURCES.sfx.idle_loop.stop)
 
-		self._arming_playing_id = nil
+		self._idle_playing_id = nil
 	end
 
 	local unit = self._unit
@@ -117,7 +117,7 @@ AreaBuffDrone._deploy = function (self)
 
 	local playing_id = self:_start_looping_sound(source_id, RESOURCES.sfx.deployed_loop.start)
 
-	self._idle_playing_id = playing_id
+	self._deployed_playing_id = playing_id
 end
 
 AreaBuffDrone._start_looping_sound = function (self, source_id, event_name)
@@ -155,6 +155,20 @@ end
 
 AreaBuffDrone.events.area_buff_drone_deploy = function (self)
 	self:_deploy()
+end
+
+AreaBuffDrone.events.area_buff_drone_stop_deployed_loop = function (self)
+	local source_id = self._source_id
+
+	if self._source_id ~= nil and not WwiseWorld.has_source(self._wwise_world, source_id) then
+		return
+	end
+
+	if self._deployed_playing_id then
+		self:_stop_looping_sound(source_id, self._deployed_playing_id, RESOURCES.sfx.deployed_loop.stop)
+
+		self._deployed_playing_id = nil
+	end
 end
 
 AreaBuffDrone.component_data = {}

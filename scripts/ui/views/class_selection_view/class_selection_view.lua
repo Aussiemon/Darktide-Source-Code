@@ -442,8 +442,34 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 			end
 		end
 
-		icon_style.icon.material_values.texture_map = option.archetype_selection_icon
-		icon_style.icon_highlight.material_values.texture_map = option.archetype_selection_highlight_icon
+		if option.archetype_selection_locked then
+			icon_style.icon.material_values.icon_unselected = option.archetype_selection_unselected_locked
+			icon_style.icon.material_values.icon_selected = option.archetype_selection_locked
+		end
+
+		icon_style.icon.material_values.blur_opacity = 0
+
+		local is_archetype_available_promise = Promise.resolved({
+			available = true,
+		})
+
+		if option.is_available and option.archetype_selection_locked then
+			is_archetype_available_promise = option:is_available()
+		end
+
+		self._current_archetype_available_promise = is_archetype_available_promise
+
+		self._promise_container:cancel_on_destroy(is_archetype_available_promise):next(function (result)
+			if result.available then
+				icon_style.icon.material_values.icon_unselected = option.archetype_selection_icon
+				icon_style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon
+
+				if option.archetype_selection_locked then
+					icon_style.icon.material_values.blur_opacity = 0.1
+				end
+			end
+		end)
+
 		icon_widget.offset[1] = frame_widget.offset[1] + icon_offset[1]
 		icon_widget.offset[2] = frame_widget.offset[2] + icon_offset[2]
 		icon_widgets[#icon_widgets + 1] = icon_widget
@@ -490,6 +516,7 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 	end
 
 	local archetype_options_widgets = self._archetype_options_widgets
+	local selected_archetype_widget
 
 	for i = 1, #archetype_options_widgets do
 		local widget = archetype_options_widgets[i]
@@ -498,6 +525,10 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 
 		content.hotspot.is_selected = is_selected
 		content.hotspot.is_focused = is_selected
+
+		if is_selected then
+			selected_archetype_widget = widget
+		end
 	end
 
 	if self._archetype_details_visible then
@@ -535,6 +566,20 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 		self._widgets_by_name.continue_button.visible = true
 		self._widgets_by_name.continue_button.content.original_text = result.available and Utf8.upper(Localize("loc_character_creator_continue")) or Utf8.upper(Localize("loc_dlc_cta"))
 		self._widgets_by_name.continue_button.disabled = false
+
+		if selected_archetype_widget then
+			local style = selected_archetype_widget.style
+			local option = self._selected_archetype
+
+			if result.available then
+				style.icon.material_values.icon_unselected = option.archetype_selection_icon
+				style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon
+
+				if option.archetype_selection_locked then
+					style.icon.material_values.blur_opacity = 0.1
+				end
+			end
+		end
 
 		self._widgets_by_name.continue_button.content.hotspot.pressed_callback = function ()
 			if result.available then

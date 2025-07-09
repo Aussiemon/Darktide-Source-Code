@@ -7,6 +7,7 @@ local RegionConstants = require("scripts/settings/region/region_constants")
 local SideColor = require("scripts/utilities/side_color")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local CLIENT_RPCS = {
 	"rpc_minion_wield_slot",
 	"rpc_minion_unwield_slot",
@@ -14,6 +15,7 @@ local CLIENT_RPCS = {
 	"rpc_minion_send_on_death_event",
 	"rpc_minion_send_on_show_hide_weapon_event",
 	"rpc_minion_unequip_slot",
+	"rpc_minion_override_slot",
 	"rpc_minion_set_slot_visibility",
 	"rpc_minion_gib",
 }
@@ -294,6 +296,10 @@ end
 
 MinionVisualLoadoutExtension.inventory_slots = function (self)
 	return self._inventory.slots
+end
+
+MinionVisualLoadoutExtension.set_new_gib_template = function (self, template)
+	self._minion_gibbing:set_new_gib_template(template)
 end
 
 MinionVisualLoadoutExtension.set_unit_local = function (self)
@@ -825,6 +831,7 @@ end
 
 MinionVisualLoadoutExtension.hot_join_sync = function (self, unit, sender, channel)
 	local game_object_id = self._game_object_id
+	local override_id = self._override_id
 	local slots = self._slots
 
 	for slot_name, slot_data in pairs(slots) do
@@ -837,12 +844,20 @@ MinionVisualLoadoutExtension.hot_join_sync = function (self, unit, sender, chann
 			RPC.rpc_minion_drop_slot(channel, game_object_id, slot_id)
 		elseif slot_state == "unequipped" then
 			RPC.rpc_minion_unequip_slot(channel, game_object_id, slot_id)
+		elseif slot_state == "overriden" then
+			RPC.rpc_minion_override_slot(channel, game_object_id, override_id)
+
+			break
 		end
 
 		if not slot_data.visible and not slot_data.starts_invisible and slot_state ~= "unequipped" then
 			RPC.rpc_minion_set_slot_visibility(channel, game_object_id, slot_id, false)
 		end
 	end
+end
+
+MinionVisualLoadoutExtension.set_override_id = function (self, override_id)
+	self._override_id = override_id
 end
 
 MinionVisualLoadoutExtension.rpc_minion_wield_slot = function (self, channel_id, go_id, slot_id)
@@ -875,6 +890,94 @@ MinionVisualLoadoutExtension.rpc_minion_unequip_slot = function (self, channel_i
 	local slot_name = NetworkLookup.minion_inventory_slot_names[slot_id]
 
 	self:_unequip_slot(slot_name)
+end
+
+MinionVisualLoadoutExtension.override_slot = function (self, override_name, template)
+	self:_override_slot(template)
+
+	local override_id = NetworkLookup.MutatorMinionVisualOverrideSettings[override_name]
+
+	self:set_override_id(override_id)
+
+	local game_object_id = self._game_object_id
+
+	Managers.state.game_session:send_rpc_clients("rpc_minion_override_slot", game_object_id, override_id)
+end
+
+MinionVisualLoadoutExtension.rpc_minion_override_slot = function (self, channel_id, go_id, override_id)
+	local override_template_name = NetworkLookup.MutatorMinionVisualOverrideSettings[override_id]
+	local override_template = MutatorMinionVisualOverrideSettings[override_template_name]
+	local breed_name = self._breed_name
+	local overrides
+	local breed = self._breed
+
+	if override_template[breed_name] then
+		overrides = override_template[breed_name]
+	end
+
+	if overrides == nil then
+		for tag, _ in pairs(breed.tags) do
+			if override_template[tag] then
+				overrides = override_template[tag]
+
+				break
+			end
+		end
+	end
+
+	if overrides == nil then
+		overrides = override_template.default
+	end
+
+	local chosen_template = overrides
+
+	self:_override_slot(chosen_template)
+end
+
+MinionVisualLoadoutExtension._override_slot = function (self, template)
+	local slots = self._slots
+	local unit = self._unit
+
+	if template.has_gib_override then
+		self:set_new_gib_template(template.has_gib_override)
+	end
+
+	for slot, items in pairs(template.item_slot_data) do
+		local slot_data = slots[slot]
+
+		if not slot_data then
+			return
+		end
+
+		if self._wielded_slot_name == slot then
+			self._wielded_slot_name = nil
+		end
+
+		local unit_spawner_manager = Managers.state.unit_spawner
+		local attachments = slot_data.attachments
+
+		if attachments then
+			for i = #attachments, 1, -1 do
+				local attach_unit = attachments[i]
+
+				unit_spawner_manager:mark_for_deletion(attach_unit)
+			end
+		end
+
+		local item_unit = slot_data.unit
+
+		if item_unit then
+			unit_spawner_manager:mark_for_deletion(item_unit)
+			Managers.state.out_of_bounds:unregister_soft_oob_unit(item_unit, self)
+		end
+
+		if not DEDICATED_SERVER then
+			slot_data = self:create_slot_entry(unit, items)
+		end
+
+		slot_data.state = "overriden"
+		slots[slot] = slot_data
+	end
 end
 
 MinionVisualLoadoutExtension.rpc_minion_set_slot_visibility = function (self, channel_id, go_id, slot_id, visibility)

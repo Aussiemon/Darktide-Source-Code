@@ -353,6 +353,7 @@ buff_settings.proc_event_validation = {
 		shotgun = "bool",
 		weapon_template = "table",
 	},
+	on_shoot_start = {},
 	on_shoot = {
 		attacking_unit = "unit",
 		combo_count = "number",

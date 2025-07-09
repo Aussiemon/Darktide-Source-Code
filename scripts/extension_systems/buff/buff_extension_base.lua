@@ -417,7 +417,8 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 		local source_player = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
 
 		if source_player then
-			local attacker_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local player_unit = source_player.player_unit
+			local attacker_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 			local weapon_action_component = attacker_data_extension and attacker_data_extension:read_component("weapon_action")
 			local target_weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
 			local weapon_template_name = target_weapon_template and target_weapon_template.name
