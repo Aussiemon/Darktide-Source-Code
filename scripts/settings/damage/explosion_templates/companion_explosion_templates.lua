@@ -13,7 +13,7 @@ local explosion_templates = {
 		radius = 2,
 		scalable_radius = true,
 		close_damage_profile = DamageProfileTemplates.cyber_mastiff_push_close,
-		damage_profile = DamageProfileTemplates.cyber_mastiff_push,
+		damage_profile = DamageProfileTemplates.cyber_mastiff_push_aoe,
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",

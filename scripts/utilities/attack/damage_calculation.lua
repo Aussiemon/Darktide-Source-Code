@@ -218,7 +218,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local is_companion = attacker_instigator_breed_or_nil and Breed.is_companion(attacker_instigator_breed_or_nil)
 	local owner_stat_buffs = attacker_owner_buff_extension and attacker_owner_buff_extension:stat_buffs()
 
-	if is_companion and owner_stat_buffs then
+	if is_companion and owner_stat_buffs and damage_type ~= damage_types.bleeding then
 		local companion_damage_multiplier = owner_stat_buffs.companion_damage_multiplier or 1
 
 		damage_multiplier = damage_multiplier * companion_damage_multiplier

@@ -2802,8 +2802,42 @@ damage_templates.cyber_mastiff_push = {
 		},
 	},
 }
+damage_templates.cyber_mastiff_push_aoe = {
+	disorientation_type = "light",
+	dog_bleed = true,
+	ignore_toughness = true,
+	interrupt_alternate_fire = false,
+	ogryn_disorientation_type = "ogryn_light",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	armor_damage_modifier = {
+		attack = flat_one_armor_mod,
+		impact = flat_one_armor_mod,
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 0.25,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	push_template = push_templates.cyber_mastiff_push,
+	ragdoll_push_force = {
+		500,
+		1000,
+	},
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.explosion,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.cyber_mastiff_push_close = {
 	disorientation_type = "light",
+	dog_bleed = true,
 	ignore_toughness = true,
 	interrupt_alternate_fire = false,
 	ogryn_disorientation_type = "ogryn_light",

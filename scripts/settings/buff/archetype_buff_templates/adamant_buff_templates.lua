@@ -2684,7 +2684,7 @@ templates.adamant_dog_pounces_bleed_nearby = {
 			template_data.companion_unit = companion_unit
 		end
 
-		local pounce = params.damage_profile and (params.damage_profile.name == "cyber_mastiff_push" or params.damage_profile.companion_pounce)
+		local pounce = params.damage_profile and params.damage_profile.dog_bleed
 
 		if pounce then
 			local victim_unit = params.attacked_unit
