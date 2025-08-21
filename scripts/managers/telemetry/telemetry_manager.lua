@@ -32,6 +32,18 @@ TelemetryManager.init = function (self)
 	self._network_event_delegate:register_connection_events(self, unpack(RPCS_HOST))
 end
 
+TelemetryManager.apply_backend_game_settings = function (self)
+	local allocator_string = GameParameters.allocators_to_track_telemetry
+
+	if allocator_string and allocator_string ~= "" then
+		self._allocators_to_track = string.split(allocator_string, ",")
+	end
+end
+
+TelemetryManager.allocators_to_track = function (self)
+	return self._allocators_to_track
+end
+
 local log_cache = {}
 
 TelemetryManager.rpc_failed_sending_telemetry = function (self, channel_id, message)

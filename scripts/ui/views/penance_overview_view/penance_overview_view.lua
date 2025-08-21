@@ -65,6 +65,7 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._ui_animations = {}
 	self._total_score = 0
 	self._score_by_category = {}
+	self._is_claiming_rewards = false
 
 	local save_manager = Managers.save
 
@@ -2390,6 +2391,12 @@ PenanceOverviewView._on_penance_grid_selection_changed = function (self, index)
 end
 
 PenanceOverviewView._claim_penance = function (self, reward_bundle)
+	if self._is_claiming_rewards then
+		return
+	end
+
+	self._is_claiming_rewards = true
+
 	local backend_interface = Managers.backend.interfaces
 	local player_rewards = backend_interface.player_rewards
 	local promise = player_rewards:claim_bundle_reward(reward_bundle.id):next(function (data)
@@ -2516,6 +2523,8 @@ PenanceOverviewView._claim_penance = function (self, reward_bundle)
 	end)
 
 	return promise:next(function (data)
+		self._is_claiming_rewards = false
+
 		return data
 	end)
 end
@@ -2542,7 +2551,10 @@ PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget, c
 end
 
 PenanceOverviewView._cb_on_penance_pressed = function (self, widget, config)
-	if widget.content.can_claim then
+	local should_claim = widget.content.can_claim
+	local can_claim = not self._is_claiming_rewards
+
+	if should_claim and can_claim then
 		local achievement_id = widget.content.element.achievement_id
 		local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
 
@@ -2561,7 +2573,7 @@ PenanceOverviewView._cb_on_penance_pressed = function (self, widget, config)
 
 			self._penance_claimed_callback = nil
 		end
-	else
+	elseif not should_claim then
 		self._present_reward = true
 
 		local penance_grid = self._penance_grid

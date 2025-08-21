@@ -15,6 +15,8 @@ local function dprint(...)
 	end
 end
 
+local DLC_SUCCESS_CACHE_TIME_SECONDS = 60
+
 DLCManager.init = function (self)
 	self._state = "none"
 	self._durable_dlcs = {}
@@ -23,6 +25,7 @@ DLCManager.init = function (self)
 	self._pending_dlcs = {}
 	self._pending_dlc_lookup = {}
 	self._initialized = false
+	self._dlc_check_cache = {}
 end
 
 DLCManager.initialize = function (self)
@@ -68,7 +71,17 @@ DLCManager.evaluate_consumables = function (self)
 	self._evaluate_consumables = true
 end
 
-DLCManager.is_owner_of = function (self, product_ids)
+DLCManager.is_owner_of = function (self, dlc_settings)
+	local current_time = Managers.time:time("main")
+	local cached_time = self._dlc_check_cache[dlc_settings.dlc_id]
+
+	if cached_time and current_time - cached_time < DLC_SUCCESS_CACHE_TIME_SECONDS then
+		return Promise.resolved(true)
+	end
+
+	self._dlc_check_cache[dlc_settings.dlc_id] = nil
+
+	local product_ids = dlc_settings:get_ids_for_auth_method(Backend:get_auth_method())
 	local result_promises = {}
 
 	for k, v in pairs(product_ids) do
@@ -78,6 +91,8 @@ DLCManager.is_owner_of = function (self, product_ids)
 	return Promise.all(unpack(result_promises)):next(function (results)
 		for _, result in ipairs(results) do
 			if result.is_owner then
+				self._dlc_check_cache[dlc_settings.dlc_id] = current_time
+
 				return true
 			end
 		end

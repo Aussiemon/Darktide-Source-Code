@@ -469,6 +469,7 @@ ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, s
 
 	if not async_job then
 		return Promise.rejected({
+			error_code = error_code,
 			message = string.format("query_license_token_async returned error_code=0x%x", error_code),
 		})
 	end
@@ -482,6 +483,7 @@ ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, s
 
 		if error_code ~= nil then
 			return false, {
+				error_code = error_code,
 				error = string.format("query_license_token_async_result returned error_code=0x%x", error_code),
 			}
 		end

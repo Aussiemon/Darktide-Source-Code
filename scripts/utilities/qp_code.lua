@@ -16,13 +16,11 @@ QPCode.encode = function (keys)
 
 		if value == true then
 			qp_entries[#qp_entries + 1] = key
+		elseif type(value) == "table" then
+			value = table.concat(value, ",")
+			qp_entries[#qp_entries + 1] = string.format("%s=%s", key, value)
 		elseif value ~= nil then
-			if type(value) == "table" then
-				value = table.concat(value, ",")
-				qp_entries[#qp_entries + 1] = string.format("%s=%s", key, value)
-			else
-				qp_entries[#qp_entries + 1] = string.format("%s=%s", key, tostring(value))
-			end
+			qp_entries[#qp_entries + 1] = string.format("%s=%s", key, tostring(value))
 		end
 	end
 

@@ -15,6 +15,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local Promise = require("scripts/foundation/utilities/promise")
 local trinket_slot_order = {
 	"slot_trinket_1",
 	"slot_trinket_2",
@@ -347,8 +348,6 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 		},
 	}
 
-	self:_setup_menu_tabs(tabs_content)
-
 	if not self._on_enter_anim_id then
 		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
 	end
@@ -365,7 +364,10 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 
 	self:present_grid_layout({})
 	self:_register_button_callbacks()
-	self:cb_switch_tab(1)
+	self:_fetch_inventory_items(tabs_content):next(function (items_by_slots)
+		self:_setup_menu_tabs(tabs_content)
+		self:cb_switch_tab(1)
+	end)
 end
 
 InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
@@ -377,10 +379,11 @@ end
 
 InventoryWeaponCosmeticsView._update_equip_button_state = function (self)
 	local disable_button = true
+	local has_items = self._offer_items_layout and #self._offer_items_layout > 0
 
-	if self._selected_tab_index == 1 and self._selected_weapon_skin_name ~= self._equipped_weapon_skin_name then
+	if self._selected_tab_index == 1 and has_items and self._selected_weapon_skin_name ~= self._equipped_weapon_skin_name then
 		disable_button = false
-	elseif self._selected_tab_index == 2 and self._selected_weapon_trinket_name ~= self._equipped_weapon_trinket_name then
+	elseif self._selected_tab_index == 2 and has_items and self._selected_weapon_trinket_name ~= self._equipped_weapon_trinket_name then
 		disable_button = false
 	end
 
@@ -389,30 +392,6 @@ InventoryWeaponCosmeticsView._update_equip_button_state = function (self)
 
 	button_content.hotspot.disabled = disable_button
 	button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
-end
-
-InventoryWeaponCosmeticsView.present_grid_layout = function (self, layout, optional_on_present_callback)
-	local grid_display_name = self._grid_display_name
-	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
-	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
-	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
-	local grid_settings = self._definitions.grid_settings
-	local grid_size = grid_settings.grid_size
-	local ContentBlueprints = generate_blueprints_function(grid_size)
-	local spacing_entry = {
-		widget_type = "dynamic_spacing",
-		size = {
-			grid_size[1],
-			10,
-		},
-	}
-
-	table.insert(layout, 1, spacing_entry)
-	table.insert(layout, #layout + 1, spacing_entry)
-
-	local grow_direction = self._grow_direction or "down"
-
-	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction, optional_on_present_callback)
 end
 
 InventoryWeaponCosmeticsView._setup_weapon_stats = function (self)
@@ -549,85 +528,138 @@ InventoryWeaponCosmeticsView._setup_input_legend = function (self)
 	end
 end
 
-InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name, item_type, get_item_filters_function, get_empty_item_function, generate_visual_item_function, filter_on_weapon_template)
+InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, tabs_content)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
-	local slot_filter, item_type_filter
-
-	if get_item_filters_function then
-		slot_filter, item_type_filter = get_item_filters_function(slot_name, item_type)
-	end
-
 	local selected_item = self._selected_item
+	local promises = Promise.resolved({})
 
-	Managers.data_service.gear:fetch_inventory(character_id, slot_filter, item_type_filter):next(function (items)
-		if self._destroyed then
-			return
+	for i = 1, #tabs_content do
+		local tab_content = tabs_content[i]
+		local slot_name = tab_content.slot_name
+		local item_type = tab_content.item_type
+		local get_empty_item_function = tab_content.get_empty_item
+		local get_item_filters_function = tab_content.get_item_filters
+		local generate_visual_item_function = tab_content.generate_visual_item_function
+		local filter_on_weapon_template = tab_content.filter_on_weapon_template
+		local slot_filter, item_type_filter
+
+		if get_item_filters_function then
+			slot_filter, item_type_filter = get_item_filters_function(slot_name, item_type)
 		end
 
-		local items_array = {}
-
-		for gear_id, item in pairs(items) do
-			items_array[#items_array + 1] = item
-		end
-
-		self._inventory_items = items_array
-
-		local selected_item_weapon_template = selected_item.weapon_template
-		local layout = {}
-
-		if get_empty_item_function then
-			local empty_item = get_empty_item_function(selected_item)
-
-			layout[#layout + 1] = {
-				widget_type = "item_icon",
-				sort_data = {
-					display_name = "loc_weapon_cosmetic_empty",
-				},
-				item = empty_item,
-				slot_name = slot_name,
-			}
-		end
-
-		for i = 1, #items_array do
-			local item = items_array[i]
-			local valid = true
-
-			if filter_on_weapon_template then
-				local weapon_template_restriction = item.weapon_template_restriction
-
-				valid = weapon_template_restriction and table.contains(weapon_template_restriction, selected_item_weapon_template) and true or false
+		promises[i] = Managers.data_service.gear:fetch_inventory(character_id, slot_filter, item_type_filter):next(function (items)
+			if self._destroyed then
+				return
 			end
 
-			if valid then
-				local visual_item = generate_visual_item_function(item, selected_item)
-				local gear_id = item.gear_id
-				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-				local remove_new_marker_callback
+			local selected_item_weapon_template = selected_item and selected_item.weapon_template
+			local items_data = {}
 
-				if is_new then
-					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
-				end
+			if get_empty_item_function then
+				local empty_item = get_empty_item_function(selected_item)
 
-				layout[#layout + 1] = {
-					widget_type = "item_icon",
-					sort_data = item,
-					item = visual_item,
-					real_item = item,
+				items_data[#items_data + 1] = {
+					is_empty = true,
+					item = empty_item,
 					slot_name = slot_name,
-					new_item_marker = is_new,
-					remove_new_marker_callback = remove_new_marker_callback,
+					sort_data = {
+						display_name = "loc_weapon_cosmetic_empty",
+					},
 				}
 			end
+
+			local equipped_item_name = self:equipped_item_name_in_slot(slot_name)
+
+			for gear_id, item in pairs(items) do
+				local item_name = item.name
+				local item_equipped = equipped_item_name == item_name
+
+				if item_equipped then
+					if slot_name == "slot_weapon_skin" then
+						self._equipped_weapon_skin = item
+					else
+						self._equipped_weapon_trinket = item
+					end
+				end
+
+				self._inventory_items[#self._inventory_items + 1] = item
+
+				local valid = true
+
+				if filter_on_weapon_template then
+					local weapon_template_restriction = item.weapon_template_restriction
+
+					valid = weapon_template_restriction and table.contains(weapon_template_restriction, selected_item_weapon_template) and true or false
+				end
+
+				if valid then
+					local gear_id = item.gear_id
+
+					items_data[#items_data + 1] = {
+						item = item,
+						slot_name = slot_name,
+						gear_id = gear_id,
+						sort_data = item,
+					}
+				end
+			end
+
+			return Promise.resolved(items_data)
+		end)
+	end
+
+	return Promise.all(unpack(promises)):next(function (items_data)
+		self._items_by_slot = {}
+
+		for i = 1, #items_data do
+			local tab_content = tabs_content[i]
+			local slot_name = tab_content.slot_name
+
+			self._items_by_slot[slot_name] = items_data[i]
 		end
-
-		self._offer_items_layout = table.clone_instance(layout)
-
-		local start_index = #layout > 0 and 1
-
-		self:_present_layout_by_slot_filter()
 	end)
+end
+
+InventoryWeaponCosmeticsView._requested_index_on_present = function (self)
+	local grid_widgets = self._item_grid:widgets()
+	local selected_gear_id = self._selected_gear_id
+	local selected_tab_index = self._selected_tab_index
+	local tab_content = selected_tab_index and self._tabs_content[selected_tab_index]
+	local slot_name = tab_content and tab_content.slot_name
+	local equipped_item = self:equipped_item_name_in_slot(slot_name)
+	local new_selection_index = 1
+
+	for i = 1, #grid_widgets do
+		local widget = grid_widgets[i]
+
+		if widget then
+			local content = widget.content
+			local element = content.element
+
+			if element then
+				local item = element.item
+				local real_item = element.real_item
+
+				if item and item.gear_id == selected_gear_id then
+					new_selection_index = i
+
+					break
+				end
+
+				if real_item and real_item.name == equipped_item then
+					new_selection_index = i
+
+					break
+				end
+			end
+		end
+	end
+
+	self._selected_gear_id = nil
+
+	return new_selection_index
 end
 
 InventoryWeaponCosmeticsView._item_valid_by_current_profile = function (self, item)
@@ -688,7 +720,7 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 
 			promise:next(function (result)
 				local gear = result.item
-				local gear_id = selected_item.gear_id
+				local gear_id = selected_item and selected_item.gear_id
 				local item = MasterItems.get_item_instance(gear, gear_id)
 
 				self._selected_item = item
@@ -921,19 +953,47 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 
 		local content = self._tabs_content[index]
 		local slot_name = content.slot_name
-		local item_type = content.item_type
-		local get_empty_item = content.get_empty_item
-		local get_item_filters = content.get_item_filters
 		local generate_visual_item_function = content.generate_visual_item_function
-		local filter_on_weapon_template = content.filter_on_weapon_template
 
 		self._grid_display_name = content.display_name
-
-		self:_fetch_inventory_items(slot_name, item_type, get_item_filters, get_empty_item, generate_visual_item_function, filter_on_weapon_template)
 
 		if not self._using_cursor_navigation then
 			self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 		end
+
+		local layout = {}
+
+		if self._items_by_slot[slot_name] then
+			for i = 1, #self._items_by_slot[slot_name] do
+				local item_data = self._items_by_slot[slot_name][i]
+				local item = item_data.item
+				local is_empty = item_data.is_empty
+				local visual_item = is_empty and item or generate_visual_item_function(item, self._selected_item)
+				local item_slot_name = item_data.slot_name
+				local sort_data = item_data.sort_data
+				local gear_id = item_data.gear_id
+				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+				local remove_new_marker_callback
+
+				if is_new then
+					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+				end
+
+				layout[#layout + 1] = {
+					widget_type = "item_icon",
+					sort_data = sort_data,
+					item = visual_item,
+					real_item = not is_empty and item or nil,
+					slot_name = item_slot_name,
+					new_item_marker = is_new,
+					remove_new_marker_callback = remove_new_marker_callback,
+				}
+			end
+		end
+
+		self._offer_items_layout = layout
+
+		self:_present_layout_by_slot_filter()
 	end
 end
 

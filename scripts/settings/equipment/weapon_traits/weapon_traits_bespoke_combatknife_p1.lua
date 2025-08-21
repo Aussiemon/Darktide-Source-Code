@@ -81,7 +81,7 @@ templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_po
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.melee_power_level_modifier,
+					stat_buffs.power_level_modifier,
 				},
 			},
 		},
@@ -110,22 +110,22 @@ templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_po
 		weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_power_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.045,
+					[stat_buffs.power_level_modifier] = 0.045,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.05,
+					[stat_buffs.power_level_modifier] = 0.05,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.055,
+					[stat_buffs.power_level_modifier] = 0.055,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.06,
+					[stat_buffs.power_level_modifier] = 0.06,
 				},
 			},
 		},

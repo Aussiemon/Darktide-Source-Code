@@ -93,7 +93,8 @@ BtChaosHoundRoamAction.run = function (self, unit, breed, blackboard, scratchpad
 		self:_move_to(scratchpad, navigation_extension)
 	end
 
-	local behavior_component, is_in_stagger = scratchpad.behavior_component, scratchpad.stagger_duration and t <= scratchpad.stagger_duration
+	local behavior_component = scratchpad.behavior_component
+	local behavior_component, is_in_stagger = behavior_component, scratchpad.stagger_duration and t <= scratchpad.stagger_duration
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, behavior_component)
 
 	if (should_start_idle or should_be_idling) and not is_in_stagger then

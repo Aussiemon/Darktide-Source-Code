@@ -7188,6 +7188,34 @@ StatDefinitions.rotten_armor_mission_won = {
 		return self.data.circumstances[circumstance_name]
 	end,
 }
+StatDefinitions.barrel_grounds_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			barrel_grounds = true,
+			barrel_grounds_darkness = true,
+			barrel_grounds_gas = true,
+			barrel_grounds_hunt_grou = true,
+			barrel_grounds_more_res = true,
+			barrel_grounds_ventilation = true,
+			barrel_grounds_waves_spec = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

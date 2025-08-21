@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/settings/archetype/archetypes/adamant_archetype_dlc_settings.lua
 
 local DLCSettings = {
+	dlc_id = "adamant",
 	loc_name_generic = "loc_dlc_adamant_name",
 	steam_dlc_target = 3710910,
-	telemetry_id = "adamant",
 	texture_package = "packages/ui/dlc/adamant",
 	standard = {
 		image = "content/ui/textures/dlc/adamant/dt_adamant_standard_store_large",

@@ -6,7 +6,9 @@ local rotten_armor = {
 	id = "rotten_armor",
 	name = "loc_rotten_armor_event_name",
 	stat = "rotten_armor_mission_won",
-	item_rewards = {},
+	item_rewards = {
+		"content/items/2d/portrait_frames/achievements_86",
+	},
 }
 
 return rotten_armor

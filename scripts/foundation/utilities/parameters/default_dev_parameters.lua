@@ -3539,6 +3539,10 @@ params.ui_debug_havoc_menu = {
 	category = "UI",
 	value = false,
 }
+params.ui_debug_buff_hud = {
+	category = "UI",
+	value = false,
+}
 params.ui_enable_item_names = {
 	category = "UI",
 	value = false,

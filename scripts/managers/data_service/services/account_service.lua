@@ -37,6 +37,7 @@ end
 local function _resolve_backend_game_settings()
 	return Managers.backend.interfaces.game_settings:resolve_backend_game_settings():next(function ()
 		ErrorCodes.apply_backend_game_settings()
+		Managers.telemetry:apply_backend_game_settings()
 
 		return nil
 	end)

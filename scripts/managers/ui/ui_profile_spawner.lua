@@ -943,15 +943,6 @@ end
 UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine, companion_data)
 	local loadout = profile.loadout
 	local visual_loadout = ProfileUtils.generate_visual_loadout(loadout)
-
-	if loadout.slot_companion_gear_full then
-		table.dump(loadout.slot_companion_gear_full, "original loadout", 5)
-	end
-
-	if visual_loadout.slot_companion_gear_full then
-		table.dump(visual_loadout.slot_companion_gear_full, "visual loadout", 5)
-	end
-
 	local archetype = profile.archetype
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed

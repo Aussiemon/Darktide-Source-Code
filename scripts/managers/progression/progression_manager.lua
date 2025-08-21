@@ -347,13 +347,46 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			return Promise.resolved()
 		end
 
+		local weapon_slots = {
+			slot_primary = true,
+			slot_secondary = true,
+		}
+		local has_mastery_rewards = false
 		local promises = {}
 
 		for i = 1, #self._session_report.character.mastery_rewards do
+			has_mastery_rewards = true
+
 			local mastery_reward = self._session_report.character.mastery_rewards[i]
 			local mastery_data = Managers.data_service.mastery:get_mastery(mastery_reward.trackId)
 
+			weapon_slots[mastery_reward.weapon_slot] = nil
+
 			table.insert(promises, mastery_data)
+		end
+
+		if has_mastery_rewards then
+			local profile = self:_get_profile()
+
+			for slot, _ in pairs(weapon_slots) do
+				local item = profile.loadout[slot]
+				local pattern = item and item.parent_pattern
+				local missing_weapon_promise = Managers.data_service.mastery:get_mastery_by_pattern(pattern):next(function (mastery_data)
+					local mastery_rewards = self._session_report.character.mastery_rewards
+
+					self._session_report.character.mastery_rewards[#mastery_rewards + 1] = {
+						gainedXp = 0,
+						weapon_slot = slot,
+						startXp = mastery_data.current_xp,
+						trackId = mastery_data.id,
+						masteryId = item.trait_category,
+					}
+
+					return Promise.resolved(mastery_data)
+				end)
+
+				table.insert(promises, missing_weapon_promise)
+			end
 		end
 
 		return Promise.all(unpack(promises)):next(function (masteries_data)

@@ -9,7 +9,9 @@ local COHERENCY_BEST_IDENTIFIER = {}
 local SPECIAL_RULE_BEST_IDENTIFIER = {}
 
 CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_nodes)
-	local ability, blitz, aura = destination.ability or TRASH_TABLE, destination.blitz or TRASH_TABLE, destination.aura or TRASH_TABLE
+	local ability = destination.ability or TRASH_TABLE
+	local blitz = destination.blitz or TRASH_TABLE
+	local ability, blitz, aura = ability, blitz, destination.aura or TRASH_TABLE
 	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics, modifiers = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics, destination.modifiers
 
 	table.clear(ability)

@@ -48,7 +48,8 @@ ViewElementNewsSlide.destroy = function (self)
 end
 
 local function _compare_slides(a, b)
-	local a_index, b_index = a.sort_index or 0, b.sort_index or 0
+	local a_index = a.sort_index or 0
+	local a_index, b_index = a_index, b.sort_index or 0
 
 	return b_index < a_index
 end

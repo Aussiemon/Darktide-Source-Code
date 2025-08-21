@@ -669,6 +669,219 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_extra_shocktrooper = {
+		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				disallow_spawning_too_close_to_other_spawn = true,
+				ignore_disallowance = true,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 20,
+				optional_main_path_offset = 50,
+				optional_num_tries = 6,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_renegade_shocktrooper,
+							},
+							low = {
+								HordeCompositions.mutator_renegade_shocktrooper,
+							},
+							high = {
+								HordeCompositions.mutator_renegade_shocktrooper,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_renegade_shocktrooper,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_cultist_shocktrooper,
+							},
+							low = {
+								HordeCompositions.mutator_cultist_shocktrooper,
+							},
+							high = {
+								HordeCompositions.mutator_cultist_shocktrooper,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_cultist_shocktrooper,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					110,
+					190,
+				},
+				trickle_horde_cooldown = {
+					30,
+					45,
+				},
+				pause_pacing_on_spawn = {
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						trickle_hordes = 20,
+					},
+					{
+						trickle_hordes = 10,
+					},
+				},
+				num_trickle_waves = {
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						2,
+					},
+					{
+						1,
+						3,
+					},
+					{
+						2,
+						3,
+					},
+				},
+				time_between_waves = {
+					1,
+					3,
+				},
+			},
+		},
+	},
+	mutator_extra_grenadiers = {
+		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				disallow_spawning_too_close_to_other_spawn = true,
+				ignore_disallowance = true,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 20,
+				optional_num_tries = 6,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							low = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							high = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_renegade_grenadier,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_cultist_grenadier,
+							},
+							low = {
+								HordeCompositions.mutator_cultist_grenadier,
+							},
+							high = {
+								HordeCompositions.mutator_cultist_grenadier,
+							},
+							poxwalkers = {
+								HordeCompositions.mutator_cultist_grenadier,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					120,
+					140,
+				},
+				trickle_horde_cooldown = {
+					40,
+					45,
+				},
+				pause_pacing_on_spawn = {
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						trickle_hordes = 20,
+					},
+					{
+						trickle_hordes = 10,
+					},
+				},
+				optional_main_path_offset = {
+					-60,
+					60,
+				},
+				num_trickle_waves = {
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						2,
+					},
+					{
+						1,
+						3,
+					},
+					{
+						2,
+						3,
+					},
+				},
+				time_between_waves = {
+					1,
+					3,
+				},
+			},
+		},
+	},
 	mutator_poxwalker_bombers = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
 		trickle_horde_templates = {

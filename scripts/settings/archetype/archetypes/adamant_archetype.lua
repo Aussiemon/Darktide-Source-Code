@@ -6,9 +6,9 @@ local ArchetypeStaminaTemplates = require("scripts/settings/stamina/archetype_st
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
-local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
-local Promise = require("scripts/foundation/utilities/promise")
 local DLCSettings = require("scripts/settings/archetype/archetypes/adamant_archetype_dlc_settings")
+local Promise = require("scripts/foundation/utilities/promise")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/adamant",
 	archetype_badge = "content/ui/materials/icons/class_badges/adamant_01_01",
@@ -56,7 +56,7 @@ local archetype_data = {
 	dlc_settings = DLCSettings,
 	is_available = function (archetype_ref)
 		local availability_promise = Promise.new()
-		local dlc_check_promise = Managers.dlc:is_owner_of(DLCSettings:get_ids_for_auth_method(Backend:get_auth_method()))
+		local dlc_check_promise = Managers.dlc:is_owner_of(DLCSettings)
 
 		dlc_check_promise:next(function (ok)
 			availability_promise:resolve({

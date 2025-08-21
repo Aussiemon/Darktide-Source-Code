@@ -1195,7 +1195,7 @@ end_player_view_blueprints.weapon = {
 			widget.content["weapon_current_mastery_level_" .. slot] = max_level
 			widget.content["weapon_start_mastery_level_" .. slot] = max_level
 
-			for i = 1, #exp_per_level do
+			for i = 1, #exp_per_level - 1 do
 				local level_exp = exp_per_level[i]
 
 				if start_exp <= level_exp then

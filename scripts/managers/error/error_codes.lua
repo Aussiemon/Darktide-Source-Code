@@ -95,6 +95,27 @@ local ErrorCodesLookup = {
 	pong_timeout = {
 		code = 2014,
 	},
+	gamesession_error = {
+		code = 2015,
+	},
+	channel_accept_timeout = {
+		code = 2016,
+	},
+	packet_resend_error = {
+		code = 2017,
+	},
+	packet_payload_error = {
+		code = 2018,
+	},
+	parse_error = {
+		code = 2019,
+	},
+	transport_error = {
+		code = 2020,
+	},
+	no_references = {
+		code = 2099,
+	},
 	failed_joining_lobby = {
 		code = 3001,
 	},

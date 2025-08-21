@@ -5,6 +5,7 @@ local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings
 local Breeds = require("scripts/settings/breed/breeds")
 local Childhood = require("scripts/settings/character/childhood")
 local Crimes = require("scripts/settings/character/crimes")
+local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local FormativeEvent = require("scripts/settings/character/formative_event")
 local GrowingUp = require("scripts/settings/character/growing_up")
 local HomePlanets = require("scripts/settings/character/home_planets")
@@ -14,7 +15,6 @@ local MasterItems = require("scripts/backend/master_items")
 local Personalities = require("scripts/settings/character/personalities")
 local PlayerCharacterCreatorPresets = require("scripts/settings/player_character/player_character_creator_presets")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local CharacterCreate = class("CharacterCreate")
 local fallback_slots_to_strip = {
 	"slot_body_face",

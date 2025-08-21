@@ -54,6 +54,8 @@ MissionBoardViewLogic.init = function (self, context)
 	self._save_data = character_save_data.mission_board
 	self._is_private = self._save_data.private_match
 	self._page_index = self._save_data.page_index or 1
+	self._quickplay_into_narrative = self._save_data.quickplay_into_narrative
+	self._view_name = context.view_name
 
 	local player = context.player
 
@@ -100,6 +102,7 @@ MissionBoardViewLogic.destroy = function (self)
 	if save_data then
 		save_data.private_match = self._is_private
 		save_data.page_index = self._page_index
+		save_data.quickplay_into_narrative = self._quickplay_into_narrative
 
 		Managers.save:queue_save()
 	end
@@ -529,10 +532,13 @@ MissionBoardViewLogic.start_quickplay_matchmaking = function (self, party_manage
 		return false
 	end
 
+	qp_settings = table.clone(qp_settings)
+	qp_settings.category = self:_get_quickplay_categories(qp_settings.category)
+
 	local qp_string = QPCode.encode(qp_settings)
 
 	Managers.data_service.mission_board:start_mission(party_manager, qp_string, self._is_private, BackendUtilities.prefered_mission_region)
-	Log.info("[MissionBoardViewLogic]", "Requesting qp with key %s.", qp_string)
+	Log.info("MissionBoardViewLogic", "Requesting qp with key %s.", qp_string)
 
 	return true
 end
@@ -543,6 +549,14 @@ end
 
 MissionBoardViewLogic.is_private_match = function (self)
 	return self._is_private
+end
+
+MissionBoardViewLogic.set_quickplay_into_narrative = function (self, value)
+	self._quickplay_into_narrative = value
+end
+
+MissionBoardViewLogic.get_quickplay_into_narrative = function (self)
+	return not not self._quickplay_into_narrative
 end
 
 MissionBoardViewLogic._annotate_pages = function (self)
@@ -631,12 +645,20 @@ MissionBoardViewLogic._get_missions_per_category = function (self, category)
 end
 
 MissionBoardViewLogic._get_quickplay_categories = function (self, categories)
-	local categories = {
+	if categories then
+		return categories
+	end
+
+	local qp_categories = {
 		"common",
-		"story",
+		"event",
 	}
 
-	return categories
+	if self._quickplay_into_narrative then
+		qp_categories[#qp_categories + 1] = "story"
+	end
+
+	return qp_categories
 end
 
 MissionBoardViewLogic.page_is_unlocked = function (self, page_index, page_settings)

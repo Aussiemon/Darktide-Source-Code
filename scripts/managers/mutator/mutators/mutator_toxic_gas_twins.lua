@@ -712,17 +712,15 @@ MutatorToxicGasTwins.update = function (self, dt, t)
 		self._disable_specials_duration = nil
 	end
 
-	for i = 1, #self._active_gas_clouds do
-		local section = self._active_gas_clouds[i]
+	if self._active_gas_clouds then
+		for _, section in pairs(self._active_gas_clouds) do
+			for _, cloud in pairs(section) do
+				if cloud.duration then
+					cloud.duration = cloud.duration - dt
 
-		for j = 1, #section do
-			local cloud = section[j]
-
-			if cloud.duration then
-				cloud.duration = cloud.duration - dt
-
-				if cloud.duration <= 0 then
-					self:_deactivate_cloud(cloud)
+					if cloud.duration <= 0 then
+						self:_deactivate_cloud(cloud)
+					end
 				end
 			end
 		end
@@ -731,30 +729,32 @@ MutatorToxicGasTwins.update = function (self, dt, t)
 	local _, behind_travel_distance = main_path_manager:behind_unit(TARGET_SIDE_ID)
 	local gas_clouds = self._gas_clouds_to_activate
 
-	for i = 1, #gas_clouds do
-		repeat
-			local gas_cloud = gas_clouds[i]
+	if gas_clouds then
+		for i = 1, #gas_clouds do
+			repeat
+				local gas_cloud = gas_clouds[i]
 
-			if gas_cloud.delay then
-				self:_update_delayed_cloud(gas_cloud, dt)
-			end
+				if gas_cloud.delay then
+					self:_update_delayed_cloud(gas_cloud, dt)
+				end
 
-			if not gas_cloud.trigger_clouds or gas_cloud.deactivated then
-				break
-			end
+				if not gas_cloud.trigger_clouds or gas_cloud.deactivated then
+					break
+				end
 
-			local cloud_travel_distance = gas_cloud.travel_distance
-			local ahead_travel_distance_diff = math.abs(ahead_travel_distance - cloud_travel_distance)
-			local behind_travel_distance_diff = math.abs(behind_travel_distance - cloud_travel_distance)
-			local is_between_ahead_and_behind = cloud_travel_distance < ahead_travel_distance and behind_travel_distance < cloud_travel_distance
-			local is_active = gas_cloud.active
-			local dist_check = is_active and CLOUD_DESPAWN_DISTANCE or CLOUD_SPAWN_DISTANCE
-			local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < dist_check or behind_travel_distance_diff < dist_check
+				local cloud_travel_distance = gas_cloud.travel_distance
+				local ahead_travel_distance_diff = math.abs(ahead_travel_distance - cloud_travel_distance)
+				local behind_travel_distance_diff = math.abs(behind_travel_distance - cloud_travel_distance)
+				local is_between_ahead_and_behind = cloud_travel_distance < ahead_travel_distance and behind_travel_distance < cloud_travel_distance
+				local is_active = gas_cloud.active
+				local dist_check = is_active and CLOUD_DESPAWN_DISTANCE or CLOUD_SPAWN_DISTANCE
+				local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < dist_check or behind_travel_distance_diff < dist_check
 
-			if should_activate and not is_active then
-				self:_activate_cloud(gas_cloud, nil, CLOUD_ACTIVE_DELAY)
-			end
-		until true
+				if should_activate and not is_active then
+					self:_activate_cloud(gas_cloud, nil, CLOUD_ACTIVE_DELAY)
+				end
+			until true
+		end
 	end
 end
 

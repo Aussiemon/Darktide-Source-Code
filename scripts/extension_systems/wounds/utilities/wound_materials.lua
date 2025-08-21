@@ -208,7 +208,8 @@ local EMPTY_TABLE, INCLUDE_CHILDREN, DO_NOT_INCLUDE_CHILDREN = {}, true, false
 
 WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slot_items, optional_inverse_root_node_bind_pose)
 	local slot_items = optional_slot_items or EMPTY_TABLE
-	local start_index, end_index = optional_index or 1, optional_index or wounds_data.num_wounds
+	local start_index = optional_index or 1
+	local start_index, end_index = start_index, optional_index or wounds_data.num_wounds
 
 	for wound_index = start_index, end_index do
 		local wound_data = wounds_data[wound_index]

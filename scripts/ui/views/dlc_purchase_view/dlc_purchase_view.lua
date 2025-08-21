@@ -17,7 +17,7 @@ DLCPurchaseView.init = function (self, settings, context)
 end
 
 DLCPurchaseView.on_enter = function (self)
-	self._telemetry_id = self._dlc_settings.telemetry_id
+	self._telemetry_id = self._dlc_settings.dlc_id
 
 	DLCPurchaseView.super.on_enter(self)
 

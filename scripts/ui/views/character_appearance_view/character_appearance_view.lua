@@ -989,7 +989,7 @@ CharacterAppearanceView._get_pages = function (self)
 		end,
 		update = function ()
 			if self._is_barber_appearance then
-				local no_modifications = true
+				local is_disabled = true
 				local profile = self._character_create and self._character_create:profile()
 				local loadout = profile and profile.loadout
 
@@ -1005,11 +1005,13 @@ CharacterAppearanceView._get_pages = function (self)
 						slot_body_skin_color = loadout.slot_body_skin_color,
 						slot_body_eye_color = loadout.slot_body_eye_color,
 					}
+					local slots_modified = self:_filter_changed_items(items)
+					local height_modified = self._original_height and (self._original_height < self._character_create:height() - 0.001 or self._original_height > self._character_create:height() + 0.001)
 
-					no_modifications = not self:_filter_changed_items(items)
+					is_disabled = not slots_modified and not height_modified
 				end
 
-				self:_update_continue_button("slot_modifications", no_modifications)
+				self:_update_continue_button("slot_modifications", is_disabled)
 			end
 		end,
 		grids = {
