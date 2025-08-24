@@ -342,6 +342,12 @@ function _catapult(attacked_unit_data_extension, catapulting_settings, force_loo
 
 	velocity.z = catapult_z_force
 
+	local buff_extension = ScriptUnit.extension(attacked_unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local velocity_multiplier = stat_buffs.catapult_force_multiplier or 1
+
+	velocity = velocity * velocity_multiplier
+
 	local catapulted_state_input = attacked_unit_data_extension:write_component("catapulted_state_input")
 
 	Catapulted.apply(catapulted_state_input, velocity)

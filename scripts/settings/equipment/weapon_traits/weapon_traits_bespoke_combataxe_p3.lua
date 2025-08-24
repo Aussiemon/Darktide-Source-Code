@@ -243,7 +243,7 @@ templates.weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 				buff_template_name = "weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina",
 				find_value_type = "trait_override",
 				path = {
-					"conditional_switch_stat_buffs",
+					"conditional_stat_buffs",
 					stat_buffs.melee_power_level_modifier,
 				},
 			},
@@ -252,22 +252,22 @@ templates.weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 	buffs = {
 		weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 			{
-				conditional_switch_stat_buffs = {
+				conditional_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.05,
 				},
 			},
 			{
-				conditional_switch_stat_buffs = {
+				conditional_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.06,
 				},
 			},
 			{
-				conditional_switch_stat_buffs = {
+				conditional_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.07,
 				},
 			},
 			{
-				conditional_switch_stat_buffs = {
+				conditional_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.08,
 				},
 			},

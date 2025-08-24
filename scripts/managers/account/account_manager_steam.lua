@@ -68,7 +68,7 @@ end
 
 AccountManagerSteam.is_owner_of = function (self, app_id)
 	return Promise.resolved({
-		is_owner = Steam.is_subscribed(app_id),
+		is_owner = Steam.is_installed(app_id),
 	})
 end
 

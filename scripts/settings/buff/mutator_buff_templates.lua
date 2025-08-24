@@ -2,12 +2,15 @@
 
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
+local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
@@ -1017,6 +1020,36 @@ templates.drop_pickup_on_death = {
 		local pickup_system = Managers.state.extension:system("pickup_system")
 
 		pickup_system:spawn_pickup("skulls_01_pickup", position, rotation, nil, nil, nil, nil, "skull_reward")
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+}
+templates.increased_catapult_force = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.player_only,
+	stat_buffs = {
+		[buff_stat_buffs.catapult_force_multiplier] = 1.5,
+	},
+}
+templates.drop_shocktrooper_grenade_on_death = {
+	class_name = "buff",
+	predicted = false,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local position = Unit.world_position(unit, 1)
+		local projectile_template = ProjectileTemplates.renegade_frag_grenade
+
+		SharedBuffFunctions.spawn_grenade_at_position(nil, "villains", projectile_template.item_name, projectile_template, position, Vector3.down(), 0)
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		local unit = template_context.unit

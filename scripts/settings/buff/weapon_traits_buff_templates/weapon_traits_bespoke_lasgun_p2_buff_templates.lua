@@ -57,6 +57,13 @@ templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_atta
 	end,
 }
 templates.weapon_trait_bespoke_lasgun_p2_targets_receive_rending_debuff_on_charged_shots = table.clone(BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff_on_charged_shots)
-templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = table.clone(BaseWeaponTraitBuffTemplates.target_hit_mass_reduction_on_weakspot_hits)
+templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = {
+	class_name = "buff",
+	predicted = false,
+	conditional_stat_buffs = {
+		[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.5,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
 
 return templates

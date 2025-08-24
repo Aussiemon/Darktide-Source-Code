@@ -116,6 +116,7 @@ SaveData.default_character_data = {
 	mission_board = {
 		page = 1,
 		private_match = false,
+		quickplay_into_narrative = true,
 	},
 }
 

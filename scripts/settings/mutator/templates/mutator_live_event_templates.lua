@@ -1,6 +1,24 @@
 ﻿-- chunkname: @scripts/settings/mutator/templates/mutator_live_event_templates.lua
 
 local mutator_templates = {
+	mutator_drop_shocktrooper_grenade_on_death = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+		random_spawn_buff_templates = {
+			buffs = {
+				"drop_shocktrooper_grenade_on_death",
+			},
+			breed_chances = {
+				cultist_shocktrooper = 0.8,
+				renegade_shocktrooper = 0.8,
+			},
+		},
+	},
+	mutator_increased_catapult_force = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+		buff_templates = {
+			"increased_catapult_force",
+		},
+	},
 	mutator_drop_pickup_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {

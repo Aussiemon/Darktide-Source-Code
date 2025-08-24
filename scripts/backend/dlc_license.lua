@@ -47,14 +47,28 @@ DLCLicense.licensed_products_update = function (account_id, product_ids, challen
 	request_body.productIds = product_ids
 	request_body.platform = platform_id
 
-	return Managers.backend.interfaces.external_payment:get_platform_token():next(function (platform_token)
+	return Managers.backend.interfaces.external_payment:get_platform_token():catch(function (error)
+		Log.exception("DLCLicense", "Error querying platform token '%s'", error)
+
+		return Promise.rejected({
+			error_code = "failed_dlc_license_check_engine",
+			error = error,
+		})
+	end):next(function (platform_token)
 		local headers = {}
 
 		if platform_token then
 			headers["platform-token"] = platform_token
 		end
 
-		return Managers.backend.interfaces.external_payment:query_license_token(product_ids, challenge_string):next(function (license_token)
+		return Managers.backend.interfaces.external_payment:query_license_token(product_ids, challenge_string):catch(function (error)
+			Log.exception("DLCLicense", "Error querying license token '0x%x'", error.error_code)
+
+			return Promise.rejected({
+				error_code = "failed_dlc_license_check_engine",
+				error = error,
+			})
+		end):next(function (license_token)
 			if license_token then
 				request_body.licenseToken = license_token
 			end
@@ -63,31 +77,17 @@ DLCLicense.licensed_products_update = function (account_id, product_ids, challen
 				method = "POST",
 				body = request_body,
 				headers = headers,
-			}):next(function (response)
-				return response.body
-			end):catch(function (error)
-				Log.error("DLCLicense", "Error updating license", tostring(error))
+			}):catch(function (error)
+				Log.exception("DLCLicense", "Error updating license '%s'", tostring(error))
 
 				return Promise.rejected({
 					error_code = "failed_dlc_license_check_backend",
 					error = error,
 				})
+			end):next(function (response)
+				return response.body
 			end)
-		end):catch(function (error)
-			Log.error("DLCLicense", "Error querying license token", tostring(error))
-
-			return Promise.rejected({
-				error_code = "failed_dlc_license_check_engine",
-				error = error,
-			})
 		end)
-	end):catch(function (error)
-		Log.error("DLCLicense", "Error querying platform token", tostring(error))
-
-		return Promise.rejected({
-			error_code = "failed_dlc_license_check_engine",
-			error = error,
-		})
 	end)
 end
 

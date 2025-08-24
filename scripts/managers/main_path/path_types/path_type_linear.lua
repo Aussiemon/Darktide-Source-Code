@@ -140,7 +140,7 @@ PathTypeLinear.update_progress_on_path = function (self, t)
 							local friendly_latest_position_on_nav_mesh = friendly_navigation_extension:latest_position_on_nav_mesh()
 
 							if friendly_latest_position_on_nav_mesh then
-								group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+								group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, friendly_latest_position_on_nav_mesh)
 							else
 								group_index = previous_frame_group_index_by_unit[friendly_player_unit]
 							end

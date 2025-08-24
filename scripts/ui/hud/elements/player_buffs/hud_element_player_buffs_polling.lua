@@ -21,7 +21,11 @@ HudElementPlayerBuffs.init = function (self, parent, draw_layer, start_scale, de
 	self._player = parent:player()
 	self._active_buffs_data = {}
 	self._active_positive_buffs = 0
+	self._old_active_positive_buffs = 0
 	self._active_negative_buffs = 0
+	self._old_active_negative_buffs = 0
+	self._visible_buffs = 0
+	self._old_visible_buffs = 0
 
 	self:_update_buff_alignments(true, 0)
 end
@@ -119,27 +123,7 @@ end
 
 HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 	local active_buffs_data = self._active_buffs_data
-
-	if #active_buffs_data >= MAX_BUFFS then
-		return
-	end
-
 	local is_negative = buff_instance:is_negative()
-
-	if is_negative then
-		if self._active_negative_buffs >= QUATER_MAX_BUFF then
-			return
-		end
-
-		self._active_negative_buffs = self._active_negative_buffs + 1
-	else
-		if self._active_positive_buffs >= THREE_QUATER_MAX_BUFF then
-			return
-		end
-
-		self._active_positive_buffs = self._active_positive_buffs + 1
-	end
-
 	local buff_template = buff_instance and buff_instance:template()
 	local buff_category = buff_template and buff_template.buff_category or buff_categories.generic
 	local index = #active_buffs_data + 1
@@ -158,13 +142,6 @@ end
 HudElementPlayerBuffs._remove_buff_at_index = function (self, index)
 	local active_buffs_data = self._active_buffs_data
 	local buff_data = active_buffs_data[index]
-	local is_negative = buff_data.is_negative
-
-	if is_negative then
-		self._active_negative_buffs = self._active_negative_buffs - 1
-	else
-		self._active_positive_buffs = self._active_positive_buffs - 1
-	end
 
 	buff_data.remove = true
 end
@@ -392,6 +369,11 @@ end
 
 HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 	local active_buffs_data = self._active_buffs_data
+
+	self._visible_buffs = 0
+	self._active_negative_buffs = 0
+	self._active_positive_buffs = 0
+
 	local show_aura_category = _show_aura_category()
 
 	for i = 1, #active_buffs_data do
@@ -434,12 +416,40 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 			if show then
 				if not widget then
+					if self._old_visible_buffs >= MAX_BUFFS then
+						break
+					end
+
+					if is_negative then
+						if self._old_active_negative_buffs >= QUATER_MAX_BUFF then
+							break
+						end
+
+						self._active_negative_buffs = self._active_negative_buffs + 1
+					else
+						if self._old_active_positive_buffs >= THREE_QUATER_MAX_BUFF then
+							break
+						end
+
+						self._active_positive_buffs = self._active_positive_buffs + 1
+					end
+
 					widget = self:_get_available_widget()
 					buff_data.widget = widget
 					buff_data.activated_time = t
 
 					self:_set_widget_state_colors(widget, is_negative or force_negative_frame, is_active)
 					UIWidget.set_visible(widget, ui_renderer, true)
+
+					self._visible_buffs = self._visible_buffs + 1
+				else
+					if is_negative then
+						self._active_negative_buffs = self._active_negative_buffs + 1
+					else
+						self._active_positive_buffs = self._active_positive_buffs + 1
+					end
+
+					self._visible_buffs = self._visible_buffs + 1
 				end
 			else
 				if widget then
@@ -517,6 +527,10 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 			end
 		until true
 	end
+
+	self._old_visible_buffs = self._visible_buffs
+	self._old_active_negative_buffs = self._active_negative_buffs
+	self._old_active_positive_buffs = self._active_positive_buffs
 
 	table.sort(active_buffs_data, _compare_buffs)
 end

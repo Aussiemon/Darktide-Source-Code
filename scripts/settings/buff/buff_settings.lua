@@ -530,6 +530,7 @@ buff_settings.stat_buff_types = {
 	block_cost_ranged_multiplier = "multiplicative_multiplier",
 	burning_damage = "additive_multiplier",
 	burning_duration = "additive_multiplier",
+	catapult_force_multiplier = "multiplicative_multiplier",
 	chain_lightning_damage = "additive_multiplier",
 	chain_lightning_jump_time_multiplier = "multiplicative_multiplier",
 	chain_lightning_max_angle = "value",

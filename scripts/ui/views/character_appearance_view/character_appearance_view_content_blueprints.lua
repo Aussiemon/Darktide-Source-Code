@@ -1261,9 +1261,9 @@ local blueprints = {
 						6,
 						460,
 					},
-					disabled_color = Color.ui_grey_light(255, true),
-					default_color = Color.ui_brown_light(255, true),
-					hover_color = Color.ui_terminal(255, true),
+					disabled_color = Color.terminal_text_body_dark(255, true),
+					default_color = Color.terminal_corner(255, true),
+					hover_color = Color.terminal_corner_hover(255, true),
 				},
 				change_function = function (content, style)
 					local default_color = style.default_color
@@ -1284,7 +1284,7 @@ local blueprints = {
 				style = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
-					color = Color.ui_terminal(255, true),
+					color = Color.terminal_corner(255, true),
 					offset = {
 						0,
 						-230,
@@ -1303,7 +1303,7 @@ local blueprints = {
 				style = {
 					horizontal_alignment = "center",
 					vertical_alignment = "center",
-					color = Color.ui_terminal(255, true),
+					color = Color.terminal_corner(255, true),
 					offset = {
 						0,
 						230,
@@ -1330,9 +1330,9 @@ local blueprints = {
 						38,
 						38,
 					},
-					disabled_color = Color.ui_grey_light(255, true),
-					default_color = Color.ui_brown_light(255, true),
-					hover_color = Color.ui_terminal(255, true),
+					disabled_color = Color.terminal_text_body_dark(255, true),
+					default_color = Color.terminal_corner(255, true),
+					hover_color = Color.terminal_corner_hover(255, true),
 				},
 				change_function = function (content, style)
 					local size = 460
@@ -1396,7 +1396,7 @@ local blueprints = {
 						38,
 						38,
 					},
-					color = Color.ui_terminal(255, true),
+					color = Color.terminal_corner_hover(255, true),
 				},
 				change_function = function (content, style)
 					local size = 460

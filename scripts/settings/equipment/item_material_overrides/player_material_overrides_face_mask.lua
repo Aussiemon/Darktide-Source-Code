@@ -305,6 +305,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_rebreather_e = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0.65,
+				0,
+			},
+			negative_mask = {
+				0,
+				0.495,
+				0.22,
+				0,
+			},
+		},
+	},
 	mask_face_hide_face = {
 		property_overrides = {
 			positive_mask = {

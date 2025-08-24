@@ -10,6 +10,7 @@ local function _add_live_event(event_name)
 end
 
 _add_live_event("abhuman")
+_add_live_event("barrel_grounds")
 _add_live_event("communication_hack")
 _add_live_event("darkness")
 _add_live_event("ember")

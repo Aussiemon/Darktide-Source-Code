@@ -2789,7 +2789,7 @@ StoreItemDetailView._cb_show_dlc_information_popup = function (self, purchase_it
 		},
 	}
 
-	Managers.telemetry_events:dlc_popup_opened(archetype.dlc_settings.telemetry_id)
+	Managers.telemetry_events:dlc_popup_opened(archetype.dlc_settings.dlc_id)
 	Managers.event:trigger("event_show_ui_popup", context, function (id)
 		self._dlc_info_popup_id = id
 	end)

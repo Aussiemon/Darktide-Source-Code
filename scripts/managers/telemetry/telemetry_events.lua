@@ -1251,6 +1251,18 @@ TelemetryEvents.memory_usage = function (self, tag)
 		usage[key] = string.format("%d", value)
 	end
 
+	local allocators
+	local to_track = Managers.telemetry:allocators_to_track()
+
+	if to_track then
+		allocators = Application.memory_telemetry(to_track)
+
+		for _, allocator in ipairs(allocators) do
+			allocator.peak = string.format("%d", allocator.peak)
+			allocator.total = string.format("%d", allocator.total)
+		end
+	end
+
 	local event = self:_create_event("memory_usage")
 
 	event:set_data({
@@ -1258,6 +1270,7 @@ TelemetryEvents.memory_usage = function (self, tag)
 		mission_id = mission_id,
 		missions_started = missions_started,
 		usage = usage,
+		allocators = allocators,
 	})
 	self._manager:register_event(event)
 end

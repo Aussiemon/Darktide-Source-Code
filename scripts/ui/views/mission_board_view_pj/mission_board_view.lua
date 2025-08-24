@@ -2039,6 +2039,17 @@ MissionBoardView._callback_open_options = function (self)
 			end,
 			on_activated = callback(self, "_callback_toggle_private_matchmaking"),
 		},
+		{
+			display_name = "loc_narrative_quickplay_name",
+			id = "quickplay_narrative",
+			tooltip_text = "loc_mission_board_view_options_narrative_quickplay_desc",
+			widget_type = "checkbox",
+			start_value = self._mission_board_logic:get_quickplay_into_narrative(),
+			get_function = function ()
+				return self._mission_board_logic:get_quickplay_into_narrative()
+			end,
+			on_activated = callback(self._mission_board_logic, "set_quickplay_into_narrative"),
+		},
 	}
 
 	self._mission_board_options:present(presentation_data)

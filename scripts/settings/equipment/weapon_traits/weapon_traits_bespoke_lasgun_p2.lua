@@ -423,6 +423,9 @@ templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_h
 	format_values = {
 		hit_mass_reduction = {
 			format_type = "percentage",
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits",
 				find_value_type = "trait_override",
@@ -437,17 +440,17 @@ templates.weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_h
 		weapon_trait_bespoke_lasgun_p2_target_hit_mass_reduction_on_weakspot_hits = {
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.2,
+					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.8,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.3,
+					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.7,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.4,
+					[stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit] = 0.6,
 				},
 			},
 			{

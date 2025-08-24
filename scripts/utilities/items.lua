@@ -765,7 +765,7 @@ Items.obtained_display_name = function (item)
 				end
 			end
 		elseif source_settings.is_live_event then
-			local reward_item_name = item.__master_item and item.__master_item.name or ""
+			local reward_item_name = item.name or item.__master_item and item.__master_item.name or ""
 			local live_event_label_colored
 
 			for _, live_event in pairs(LiveEvents) do

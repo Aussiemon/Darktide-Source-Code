@@ -3,6 +3,7 @@
 local AccountManagerBase = require("scripts/managers/account/account_manager_base")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
+local AccountManagerGDKShared = require("scripts/managers/account/account_manager_gdk_shared")
 local InputDevice = require("scripts/managers/input/input_device")
 local Promise = require("scripts/foundation/utilities/promise")
 local RegionRestrictionsXboxLive = require("scripts/settings/region/region_restrictions_xbox_live")
@@ -26,6 +27,7 @@ AccountManagerXboxLive.init = function (self)
 	self._signin_state = SIGNIN_STATES.idle
 	self._xbox_privileges = XboxPrivileges:new()
 	self._friends = {}
+	self._gdk_shared = AccountManagerGDKShared:new()
 
 	self:_setup_region()
 end
@@ -997,31 +999,7 @@ AccountManagerXboxLive.open_to_store = function (self, product_id)
 end
 
 AccountManagerXboxLive.is_owner_of = function (self, product_id)
-	local async_job, error_code = XboxLive.acquire_license_for_durables_async(product_id)
-
-	if not async_job then
-		return Promise.rejected({
-			message = string.format("acquire_license_for_durables_async returned error_code=0x%x", error_code),
-		})
-	end
-
-	return Promise.until_value_is_true(function ()
-		local result, error_code = XboxLive.acquire_license_for_durables_async_result(async_job)
-
-		if result == nil and error_code == nil then
-			return false
-		end
-
-		if result ~= nil then
-			return {
-				is_owner = result,
-			}
-		end
-
-		return {
-			is_owner = false,
-		}
-	end)
+	return self._gdk_shared:is_owner_of(product_id)
 end
 
 return AccountManagerXboxLive

@@ -820,9 +820,11 @@ function _adamant_mark_enemies_select_unit(template_data, template_context, last
 	local player_position = POSITION_LOOKUP[player_unit]
 	local broadphase_distance = template_data.distance
 
-	for marked_unit, t in pairs(template_data.targets) do
+	for marked_unit, _ in pairs(template_data.targets) do
 		if not ALIVE[marked_unit] then
 			template_data.targets[marked_unit] = nil
+			template_data.deleted_units[marked_unit] = true
+			template_data.deleted_units_t = t + 1
 		else
 			local marked_unit_position = POSITION_LOOKUP[marked_unit]
 			local distance_sq = Vector3.distance_squared(player_position, marked_unit_position)
@@ -834,7 +836,7 @@ function _adamant_mark_enemies_select_unit(template_data, template_context, last
 
 				if dot < 0 then
 					local target_blackboard = BLACKBOARDS[marked_unit]
-					local aggro_state = target_blackboard.perception.aggro_state
+					local aggro_state = target_blackboard and target_blackboard.perception.aggro_state
 
 					if aggro_state ~= PerceptionSettings.aggro_states.aggroed then
 						local unit_id = Managers.state.unit_spawner:game_object_id(marked_unit)
@@ -859,6 +861,12 @@ function _adamant_mark_enemies_select_unit(template_data, template_context, last
 				end
 			end
 		end
+	end
+
+	if template_data.deleted_units_t and t > template_data.deleted_units_t then
+		table.clear(template_data.deleted_units)
+
+		template_data.deleted_units_t = nil
 	end
 
 	local broadphase = template_data.broadphase
@@ -975,6 +983,7 @@ templates.adamant_execution_order = {
 		template_data.broadphase = broadphase
 		template_data.broadphase_results = {}
 		template_data.targets = {}
+		template_data.deleted_units = {}
 
 		local unit = template_context.unit
 		local side_system = Managers.state.extension:system("side_system")
@@ -1026,19 +1035,20 @@ templates.adamant_execution_order = {
 			local kill = params.attack_result == attack_results.died
 
 			if kill then
-				if not template_data.targets[victim_unit] then
+				if not template_data.targets[victim_unit] and not template_data.deleted_units[victim_unit] then
 					return
 				end
 
 				_execution_order_proc(template_data, template_context, t)
 
 				template_data.targets[victim_unit] = nil
+				template_data.deleted_units[victim_unit] = nil
 
 				if template_context.player then
 					Managers.stats:record_private("hook_adamant_killed_enemy_marked_by_execution_order", template_context.player)
 				end
 			elseif CheckProcFunctions.attacker_is_my_companion(params, template_data, template_context) then
-				if template_data.targets[victim_unit] then
+				if template_data.targets[victim_unit] or template_data.deleted_units[victim_unit] then
 					local pounce = params.damage_profile and params.damage_profile.initial_pounce
 
 					if pounce then
@@ -1060,35 +1070,7 @@ templates.adamant_execution_order = {
 			end
 		end,
 		on_minion_death = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return
-			end
-
-			if not template_data.adamant_execution_order_ally_toughness then
-				return
-			end
-
-			local attacker_unit = params.attacking_unit
-
-			if attacker_unit == template_context.unit then
-				return
-			end
-
-			local victim_unit = params.dying_unit
-
-			if not template_data.targets[victim_unit] then
-				return
-			end
-
-			local in_coherency = template_data.coherency_extension:is_unit_in_coherency(attacker_unit)
-
-			if not in_coherency then
-				return
-			end
-
-			_execution_order_proc(template_data, template_context, t)
-
-			template_data.targets[victim_unit] = nil
+			return
 		end,
 	},
 }
