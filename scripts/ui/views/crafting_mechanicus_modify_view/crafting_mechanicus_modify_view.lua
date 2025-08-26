@@ -547,7 +547,7 @@ CraftingMechanicusModifyView.cb_on_favorite_pressed = function (self)
 end
 
 CraftingMechanicusModifyView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 CraftingMechanicusModifyView.ui_renderer = function (self)

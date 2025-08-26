@@ -532,7 +532,7 @@ CraftingModifyView._on_navigation_input_changed = function (self)
 end
 
 CraftingModifyView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 CraftingModifyView.ui_renderer = function (self)

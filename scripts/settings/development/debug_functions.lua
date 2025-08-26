@@ -928,11 +928,11 @@ functions.start_havoc_test_session_voting = {
 			disable_game_world = false,
 			display_name = "loc_mission_voting_view",
 			game_world_blur = 1,
-			load_always = true,
-			load_in_hub = true,
 			name = "mission_voting_view",
 			package = "packages/ui/views/mission_voting_view/mission_voting_view",
 			path = "scripts/ui/views/mission_voting_view/mission_voting_view",
+			preload_in_hub = "always",
+			preload_in_mission = "always",
 			state_bound = true,
 			enter_sound_events = {
 				"wwise/events/ui/play_ui_mission_request",

@@ -22,6 +22,12 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 	self._elements_array = {}
 	self._element_to_pivot = {}
 	self._local_player_id = 1
+	self._start_loading_time = Managers.time:time("main")
+
+	local package_name = settings.package
+
+	self._preloaded_package = not not Managers.package:has_loaded(package_name)
+	self._memory_startup = Memory.usage("B").used_memory
 	self._loading = true
 
 	local view_name = settings.name
@@ -270,6 +276,11 @@ BaseView.on_enter = function (self)
 	end
 
 	Managers.telemetry_events:open_view(self.view_name, self._hub_interaction, self._telemetry_id)
+
+	local load_time = Managers.time:time("main") - self._start_loading_time
+	local memory_increase = Memory.usage("B").used_memory - self._memory_startup
+
+	Managers.telemetry_events:view_load_stats(self.view_name, load_time, self._preloaded_package, memory_increase)
 	Profiler.send_message(string.format("[UIView] on_enter '%s'", self.view_name))
 end
 

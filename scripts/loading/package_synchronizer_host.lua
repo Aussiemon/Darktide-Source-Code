@@ -34,7 +34,7 @@ PackageSynchronizerHost.init = function (self, network_delegate, hosted_synchron
 	self._peer_id = Network.peer_id()
 	self._sync_states = {}
 	self._syncs = {}
-	self._resyncs = {}
+	self._next_sync_change_id = 1
 	self._network_delegate = network_delegate
 	self._hosted_synchronizer_client = hosted_synchronizer_client
 	self._mission_name = nil
@@ -181,34 +181,20 @@ end
 PackageSynchronizerHost.event_updated_player_profile_synced = function (self, peer_id, local_player_id, old_profile)
 	local syncs = self._syncs
 
-	_debug_print("LoadingTimes: Player Profile Synced (peer: %s, player_id: %s)", tostring(peer_id), tostring(local_player_id))
+	_debug_print("LoadingTimes: Player Profile Synced (peer: %s, player_id: %s)", peer_id, local_player_id)
+
+	local old_sync_data
 
 	if syncs[peer_id] and syncs[peer_id][local_player_id] then
-		local resyncs = self._resyncs[peer_id]
+		old_sync_data = syncs[peer_id][local_player_id]
 
-		if not resyncs or not resyncs[local_player_id] then
-			_debug_print("LoadingTimes: Player Profile Needs Resync (peer: %s, player_id: %s)", tostring(peer_id), tostring(local_player_id))
-
-			self._resyncs[peer_id] = self._resyncs[peer_id] or {}
-			self._resyncs[peer_id][local_player_id] = old_profile
-		end
-	else
-		self:_player_profile_changed(peer_id, local_player_id, old_profile)
+		_debug_print("LoadingTimes: Player Profile Interrupt Sync-Change: %i (peer: %s, player_id: %s)", old_sync_data.sync_change_id, peer_id, local_player_id)
 	end
+
+	self:_player_profile_changed(peer_id, local_player_id, old_profile, old_sync_data)
 end
 
-PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, sync_local_player_id, old_profile)
-	local sync_states = self._sync_states
-	local my_peer_id = self._peer_id
-
-	for peer_id, data in pairs(sync_states) do
-		if data.ready and peer_id ~= my_peer_id then
-			local channel_id = data.channel_id
-
-			RPC.rpc_cache_player_profile(channel_id, sync_peer_id, sync_local_player_id)
-		end
-	end
-
+PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, sync_local_player_id, old_profile, old_sync_data)
 	local syncs = self._syncs
 	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
@@ -221,19 +207,47 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 		changed_profile_fields.talents = self:_calculate_changed_talents(old_profile, new_profile)
 	end
 
-	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(sync_peer_id), tostring(sync_local_player_id))
+	if old_sync_data then
+		changed_profile_fields = self:_merge_old_and_new_profile_changes(old_sync_data.changed_profile_fields, changed_profile_fields)
+	end
+
+	local sync_change_id = self._next_sync_change_id
+
+	self._next_sync_change_id = sync_change_id + 1
+
+	_debug_print("LoadingTimes: Player Profile Begin Sync-Change: %i (peer: %s, player_id: %s)", sync_change_id, sync_peer_id, sync_local_player_id)
 
 	syncs[sync_peer_id] = syncs[sync_peer_id] or {}
 
 	local sync_data = {
 		handled_notify_clients = false,
 		handled_profile_changes = false,
+		sync_change_id = sync_change_id,
 		changed_profile_fields = changed_profile_fields,
 	}
 
 	syncs[sync_peer_id][sync_local_player_id] = sync_data
 
-	self:_handle_profile_changes_before_sync(player, sync_data)
+	if old_sync_data then
+		local is_despawned = old_sync_data.changed_profile_fields.player_unit_respawn
+
+		if is_despawned then
+			sync_data.after_sync_spawn_pose_box = old_sync_data.after_sync_spawn_pose_box
+		else
+			local temp_sync_data = {
+				changed_profile_fields = self:_collect_new_changes_between_sync_data(old_sync_data, sync_data),
+				wield_slot_after_sync = old_sync_data.wield_slot_after_sync,
+			}
+
+			self:_handle_profile_changes_before_sync(player, temp_sync_data)
+
+			sync_data.wield_slot_after_sync = temp_sync_data.wield_slot_after_sync
+		end
+	else
+		self:_handle_profile_changes_before_sync(player, sync_data)
+	end
+
+	local sync_states = self._sync_states
 
 	for peer_id, data in pairs(sync_states) do
 		local peer_states = data.peer_states
@@ -247,6 +261,32 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 
 		self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 	end
+end
+
+PackageSynchronizerHost._merge_old_and_new_profile_changes = function (self, old_changed_profile_fields, new_changed_profile_fields)
+	if old_changed_profile_fields.player_unit_respawn then
+		return old_changed_profile_fields
+	end
+
+	if new_changed_profile_fields.player_unit_respawn then
+		return new_changed_profile_fields
+	end
+
+	local merged_profile_fields = table.clone_instance(old_changed_profile_fields)
+	local new_inventory_changes = new_changed_profile_fields.inventory
+	local merged_inventory_changes = merged_profile_fields.inventory
+
+	for slot_name, change in pairs(new_inventory_changes) do
+		merged_inventory_changes[slot_name] = change
+	end
+
+	local new_talent_changes = new_changed_profile_fields.talents
+
+	if new_talent_changes then
+		merged_profile_fields.talents = new_talent_changes
+	end
+
+	return merged_profile_fields
 end
 
 local EMPTY_TABLE = {}
@@ -497,6 +537,7 @@ PackageSynchronizerHost.update = function (self, dt)
 				local is_player_synced_by_all = self:_is_player_synced_by_all(peer_id, local_player_id)
 
 				if is_player_synced_by_all then
+					_debug_print("LoadingTimes: Player Profile Finish Sync-Change: %i (peer: %s, player_id: %s)", sync_data.sync_change_id, peer_id, local_player_id)
 					self:_handle_profile_changes_after_sync(peer_id, local_player_id, sync_data)
 
 					players_data[local_player_id] = nil
@@ -509,16 +550,15 @@ PackageSynchronizerHost.update = function (self, dt)
 				for sync_peer_id, data in pairs(sync_states) do
 					if data.ready then
 						local channel_id = data.channel_id
+						local alias_version = data.peer_states[peer_id].player_states[local_player_id].alias_version
 
 						if channel_id then
-							local alias_version = data.peer_states[peer_id].player_states[local_player_id].alias_version
-
 							RPC.rpc_player_profile_packages_changed(channel_id, peer_id, local_player_id, alias_version)
+						else
+							self._hosted_synchronizer_client:rpc_player_profile_packages_changed(channel_id, peer_id, local_player_id, alias_version)
 						end
 					end
 				end
-
-				self._hosted_synchronizer_client:player_profile_packages_changed(peer_id, local_player_id)
 
 				sync_data.handled_notify_clients = true
 			end
@@ -532,22 +572,29 @@ PackageSynchronizerHost.update = function (self, dt)
 			syncs[peer_id] = nil
 		end
 	end
+end
 
-	local resyncs = self._resyncs
+PackageSynchronizerHost._collect_new_changes_between_sync_data = function (self, old_sync_data, sync_data)
+	if sync_data.changed_profile_fields.player_unit_respawn then
+		return sync_data.changed_profile_fields
+	end
 
-	for peer_id, data in pairs(resyncs) do
-		for local_player_id, previously_loaded_profile in pairs(data) do
-			if not syncs[peer_id] or not syncs[peer_id][local_player_id] then
-				self:_player_profile_changed(peer_id, local_player_id, previously_loaded_profile)
+	local old_changed_profile_fields = old_sync_data.changed_profile_fields
+	local new_changed_profile_fields = table.clone_instance(sync_data.changed_profile_fields)
+	local old_inventory_changes = old_changed_profile_fields.inventory
+	local new_inventory_changes = new_changed_profile_fields.inventory
 
-				data[local_player_id] = nil
-			end
-		end
-
-		if not next(data) then
-			self._resyncs[peer_id] = nil
+	if old_inventory_changes and new_inventory_changes then
+		for slot_name, change in pairs(old_inventory_changes) do
+			new_inventory_changes[slot_name] = nil
 		end
 	end
+
+	if old_changed_profile_fields.talents then
+		new_changed_profile_fields.talents = nil
+	end
+
+	return new_changed_profile_fields
 end
 
 PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, player, sync_data)
@@ -612,6 +659,7 @@ PackageSynchronizerHost._handle_inventory_changes_before_sync = function (self, 
 	local inventory_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
 	local wielded_slot = inventory_component.wielded_slot
 	local unequipped_wielded_slot = false
+	local slot_to_wield_after_sync = wielded_slot
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 	for slot_name, data in pairs(inventory_changes) do
@@ -623,6 +671,12 @@ PackageSynchronizerHost._handle_inventory_changes_before_sync = function (self, 
 					PlayerUnitVisualLoadout.wield_slot("slot_unarmed", player_unit, fixed_t)
 
 					unequipped_wielded_slot = true
+
+					if reason == "item_removed" then
+						_debug_warning("Wielded item was removed and won't be re-equipped. Fallback to wield `slot_primary` after sync.")
+
+						slot_to_wield_after_sync = "slot_primary"
+					end
 				end
 
 				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, fixed_t)
@@ -631,7 +685,7 @@ PackageSynchronizerHost._handle_inventory_changes_before_sync = function (self, 
 	end
 
 	if unequipped_wielded_slot then
-		sync_data.wield_slot_after_sync = wielded_slot
+		sync_data.wield_slot_after_sync = slot_to_wield_after_sync
 	end
 end
 
@@ -662,7 +716,7 @@ PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, pla
 	talent_extension:remove_gameplay_features(fixed_t)
 
 	if unequipped_wielded_slot then
-		sync_data.wield_slot_after_sync = wielded_slot
+		sync_data.wield_slot_after_sync = "slot_primary"
 	end
 end
 
@@ -696,10 +750,6 @@ PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, pee
 	local wield_slot_after_sync = sync_data.wield_slot_after_sync
 
 	if wield_slot_after_sync then
-		if wield_slot_after_sync == "slot_combat_ability" or wield_slot_after_sync == "slot_grenade_ability" then
-			wield_slot_after_sync = "slot_primary"
-		end
-
 		PlayerUnitVisualLoadout.wield_slot(wield_slot_after_sync, player_unit, fixed_t)
 	end
 end
@@ -1136,10 +1186,6 @@ PackageSynchronizerHost.remove_bot = function (self, local_player_id)
 	if self._syncs[peer_id] then
 		self._syncs[peer_id][local_player_id] = nil
 	end
-
-	if self._resyncs[peer_id] then
-		self._resyncs[peer_id][local_player_id] = nil
-	end
 end
 
 PackageSynchronizerHost.ready_peer = function (self, peer_id)
@@ -1178,7 +1224,6 @@ PackageSynchronizerHost.remove_peer = function (self, peer_id)
 	end
 
 	self._syncs[peer_id] = nil
-	self._resyncs[peer_id] = nil
 end
 
 PackageSynchronizerHost.alias_loading_complete = function (self, peer_id, loaded_peer_id, loaded_local_player_id, alias)

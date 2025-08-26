@@ -271,7 +271,7 @@ CraftingMechanicusUpgradeExpertiseView._on_navigation_input_changed = function (
 end
 
 CraftingMechanicusUpgradeExpertiseView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 return CraftingMechanicusUpgradeExpertiseView

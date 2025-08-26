@@ -36,11 +36,13 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	APPLICATION_SETTINGS = Application.settings()
 	BUILD = Application.build()
 	BUILD_IDENTIFIER = Application.build_identifier()
+	IS_TEAMCITY_BUILD = APPLICATION_SETTINGS.teamcity_build_id and APPLICATION_SETTINGS.teamcity_build_id ~= ""
 	PLATFORM = Application.platform()
 	IS_XBS = PLATFORM == "xbs"
 	IS_PLAYSTATION = PLATFORM == "ps5"
 	IS_WINDOWS = PLATFORM == "win32"
 	IS_GDK = Backend.get_auth_method() == Backend.AUTH_METHOD_XBOXLIVE and IS_WINDOWS
+	REAL_PLATFORM = PLATFORM
 
 	if PLATFORM == "win32_server" then
 		PLATFORM = "win32"

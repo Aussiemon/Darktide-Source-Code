@@ -5,10 +5,10 @@ local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_ga
 local view_settings = {
 	class = "MasteriesOverviewView",
 	disable_game_world = true,
-	load_in_hub = true,
 	package = "packages/ui/views/masteries_overview_view/masteries_overview_view",
 	parent_transition_view = "inventory_background_view",
 	path = "scripts/ui/views/masteries_overview_view/masteries_overview_view",
+	preload_in_hub = "not_ps5",
 	state_bound = true,
 	enter_sound_events = {
 		UISoundEvents.default_menu_enter,

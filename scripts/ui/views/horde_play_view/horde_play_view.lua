@@ -790,7 +790,7 @@ HordePlayView._destroy_options_element = function (self)
 end
 
 HordePlayView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 HordePlayView.fetch_regions = function (self)

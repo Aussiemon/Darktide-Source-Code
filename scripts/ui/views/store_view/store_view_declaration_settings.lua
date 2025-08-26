@@ -9,9 +9,9 @@ local view_settings = {
 	killswitch = "show_premium_store",
 	killswitch_unavailable_description = "loc_popup_unavailable_view_premium_store_description",
 	killswitch_unavailable_header = "loc_popup_unavailable_view_premium_store_header",
-	load_in_hub = true,
 	package = "packages/ui/views/store_view/store_view",
 	path = "scripts/ui/views/store_view/store_view",
+	preload_in_hub = "not_ps5",
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
@@ -25,9 +25,6 @@ local view_settings = {
 	},
 	wwise_states = {
 		options = WwiseGameSyncSettings.state_groups.options.credit_store_menu,
-	},
-	testify_flags = {
-		ui_views = false,
 	},
 }
 

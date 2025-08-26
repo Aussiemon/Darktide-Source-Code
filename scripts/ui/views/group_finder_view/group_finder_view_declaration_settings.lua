@@ -9,7 +9,6 @@ local view_settings = {
 	killswitch = "show_group_finder",
 	killswitch_unavailable_description = "loc_popup_unavailable_view_group_finder_description",
 	killswitch_unavailable_header = "loc_action_interaction_unavailable",
-	load_in_hub = true,
 	package = "packages/ui/views/group_finder_view/group_finder_view",
 	path = "scripts/ui/views/group_finder_view/group_finder_view",
 	state_bound = true,
@@ -25,9 +24,6 @@ local view_settings = {
 	},
 	wwise_states = {
 		options = WwiseGameSyncSettings.state_groups.options.ingame_menu,
-	},
-	testify_flags = {
-		ui_views = false,
 	},
 }
 

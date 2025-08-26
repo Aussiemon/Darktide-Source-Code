@@ -5,9 +5,9 @@ local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_ga
 local view_settings = {
 	class = "HavocBackgroundView",
 	disable_game_world = false,
-	load_in_hub = true,
 	package = "packages/ui/views/havoc_background_view/havoc_background_view",
 	path = "scripts/ui/views/havoc_background_view/havoc_background_view",
+	preload_in_hub = "always",
 	state_bound = true,
 	use_transition_ui = true,
 	levels = {
@@ -21,9 +21,6 @@ local view_settings = {
 	},
 	wwise_states = {
 		options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
-	},
-	testify_flags = {
-		ui_views = false,
 	},
 }
 

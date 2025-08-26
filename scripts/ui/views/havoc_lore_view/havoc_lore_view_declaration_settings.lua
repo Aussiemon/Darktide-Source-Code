@@ -4,7 +4,6 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local view_settings = {
 	class = "HavocLoreView",
 	disable_game_world = true,
-	load_in_hub = true,
 	package = "packages/ui/views/havoc_lore_view/havoc_lore_view",
 	path = "scripts/ui/views/havoc_lore_view/havoc_lore_view",
 	state_bound = true,

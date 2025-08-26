@@ -309,9 +309,6 @@ MasteryView._setup_mastery_info = function (self)
 		self._widgets_by_name.header.style.pattern_nameplate.material_values.texture_map = "content/ui/textures/frames/mastery_tree/pattern_nameplate_ranged"
 	end
 
-	local ui_setting_pattern_data = UISettings.weapon_patterns[self._mastery_id]
-
-	self._widgets_by_name.header.style.pattern_icon.material_values.texture_map = ui_setting_pattern_data and ui_setting_pattern_data.overview_icon_texture or "content/ui/textures/icons/weapons/masteries/bolter_p1"
 	self._widgets_by_name.mastery_level.content.mastery_level = string.format(" %d", mastery_level)
 	self._widgets_by_name.mastery_level.content.visible = true
 
@@ -715,6 +712,8 @@ MasteryView._tooltip_update = function (self)
 			rarity_content_size = rarity_title_style.offset[2] + rarity_block_height
 		end
 
+		tooltip_widget.content.warning_message = ""
+
 		if not reached_max_rarity then
 			tooltip_widget.style.divider.offset[2] = rarity_content_size
 
@@ -838,7 +837,6 @@ MasteryView._destroy_forward_gui = function (self)
 end
 
 MasteryView.on_exit = function (self)
-	self:_play_sound(UISoundEvents.default_menu_exit)
 	self:_destroy_forward_gui()
 
 	if self._purchased_traits then

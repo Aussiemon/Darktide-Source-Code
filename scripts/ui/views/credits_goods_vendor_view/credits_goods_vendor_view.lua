@@ -413,7 +413,7 @@ CreditsGoodsVendorView.dialogue_system = function (self)
 		return
 	end
 
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 CreditsGoodsVendorView._update_button_disable_state = function (self)

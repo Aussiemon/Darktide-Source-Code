@@ -19,6 +19,8 @@ BtMoveWithPlatformAction.enter = function (self, unit, breed, blackboard, scratc
 		animation_extension:anim_event(event)
 
 		behavior_component.move_state = "idle"
+
+		Unit.set_local_rotation(unit, 1, Quaternion.identity())
 	end
 
 	scratchpad.behavior_component = behavior_component

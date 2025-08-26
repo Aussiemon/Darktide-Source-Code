@@ -560,7 +560,7 @@ ContractsView._update_task_grid_position = function (self)
 end
 
 ContractsView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 return ContractsView

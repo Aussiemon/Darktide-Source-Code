@@ -958,6 +958,7 @@ UIManager.update = function (self, dt, t)
 		self._update_hotkeys = nil
 	end
 
+	self:release_packages()
 	self:_handle_resolution_modified()
 
 	local allow_view_input = self._ui_constant_elements and not self._ui_constant_elements:using_input()

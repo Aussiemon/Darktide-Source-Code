@@ -249,6 +249,7 @@ local interaction_templates = {
 	},
 	pull_up = {
 		action_text = "loc_action_interaction_help",
+		anim_duration_variable_name_3p = "assist_interaction_duration",
 		description = "loc_pull_up",
 		duration = 3,
 		interaction_class_name = "pull_up",
@@ -274,6 +275,7 @@ local interaction_templates = {
 	},
 	remove_net = {
 		action_text = "loc_action_interaction_help",
+		anim_duration_variable_name_3p = "assist_interaction_duration",
 		description = "loc_remove_net",
 		duration = 1,
 		interaction_class_name = "remove_net",

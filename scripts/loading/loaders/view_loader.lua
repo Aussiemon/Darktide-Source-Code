@@ -23,13 +23,35 @@ ViewLoader.start_loading = function (self, context)
 		local is_hub = mission_settings.is_hub
 		local loading_views = {}
 		local view_loading_count = 0
+		local platform = REAL_PLATFORM
+		local sub_platform = ""
+
+		if platform == "xbs" then
+			if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+				sub_platform = "anaconda"
+			elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+				sub_platform = "lockhart"
+			end
+		end
+
+		local disable_preload = GameParameters.disable_view_preload
+		local preload_policies = {
+			always_even_with_debug = true,
+			always = not disable_preload,
+			not_ps5 = not disable_preload and platform ~= "ps5",
+			not_ps5_nor_lockhart = not disable_preload and platform ~= "ps5" and sub_platform ~= "lockhart",
+		}
 
 		for view_name, view_settings in pairs(Views) do
-			local load_always = view_settings.load_always
-			local load_in_hub = view_settings.load_in_hub
-			local should_load = load_always or is_hub and load_in_hub
+			local view_policy
 
-			if should_load then
+			if is_hub then
+				view_policy = view_settings.preload_in_hub
+			else
+				view_policy = view_settings.preload_in_mission
+			end
+
+			if view_policy and preload_policies[view_policy] then
 				loading_views[view_name] = view_settings
 				view_loading_count = view_loading_count + 1
 			end

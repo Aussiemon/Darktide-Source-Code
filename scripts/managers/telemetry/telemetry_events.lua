@@ -1308,4 +1308,18 @@ TelemetryEvents.player_journey_popup_play_journey = function (self, context, cho
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.view_load_stats = function (self, view_name, load_time, preloaded_package, memory_increase)
+	local mission_name = Managers.state.mission and Managers.state.mission:mission_name()
+	local event = self:_create_event("view_load_stats")
+
+	event:set_data({
+		view_name = view_name,
+		load_time = load_time,
+		preloaded_package = preloaded_package,
+		memory_increase = string.format("%d", memory_increase),
+		mission_name = mission_name,
+	})
+	self._manager:register_event(event)
+end
+
 return TelemetryEvents

@@ -20,7 +20,6 @@ local RPCS = {
 	"rpc_reevaluate_all_profile_packages",
 	"rpc_package_synchronizer_set_mission_name",
 	"rpc_set_alias_version",
-	"rpc_cache_player_profile",
 }
 local PACKAGE_MANAGER_REFERENCE = "PackageSynchronizer"
 
@@ -42,7 +41,6 @@ PackageSynchronizerClient.init = function (self, peer_id, is_host, network_deleg
 	self._enabled_peers_cache = {}
 	self._pending_peers = {}
 	self._player_alias_versions = {}
-	self._player_profile_cache = {}
 	self._unload_delayer = {}
 	self._mission_name = nil
 
@@ -74,25 +72,6 @@ PackageSynchronizerClient.set_mission_name = function (self, mission_name)
 	self._mission_name = mission_name
 end
 
-PackageSynchronizerClient.rpc_cache_player_profile = function (self, channel_id, peer_id, local_player_id)
-	local data = self._packages[peer_id]
-
-	if data then
-		local player_profile_cache = self._player_profile_cache
-		local player = Managers.player:player(peer_id, local_player_id)
-		local profile = player:profile()
-		local profile_clone = table.clone_instance(profile)
-
-		player_profile_cache[peer_id][local_player_id] = profile_clone
-
-		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
-
-		_debug_print("[rpc_cache_player_profile] %s: Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
-	else
-		_debug_print("[rpc_cache_player_profile] No data for player when caching profile, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
-	end
-end
-
 PackageSynchronizerClient.add_peer = function (self, peer_id)
 	if not self._item_definitions then
 		self._pending_peers[#self._pending_peers + 1] = peer_id
@@ -103,21 +82,15 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 	local players = Managers.player:players_at_peer(peer_id)
 	local packages = {}
 
-	self._player_profile_cache[peer_id] = {}
-
 	for local_player_id, player in pairs(players) do
 		local profile = player:profile()
 		local profile_packages = self:resolve_profile_packages(profile)
 
 		packages[local_player_id] = profile_packages
 
-		local profile_clone = table.clone_instance(profile)
-
-		self._player_profile_cache[peer_id][local_player_id] = profile_clone
-
 		local player_string = player:is_human_controlled() and "Player" or "Bot Player"
 
-		_debug_print("%s: Initial Profile Cached, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
+		_debug_print("Add %s, peer_id: %s, local_player_id: %s", player_string, peer_id, local_player_id)
 	end
 
 	local data = {
@@ -143,7 +116,6 @@ PackageSynchronizerClient.remove_peer = function (self, peer_id)
 	self._packages[peer_id] = nil
 	self._pending_peers[peer_id] = nil
 	self._player_alias_versions[peer_id] = nil
-	self._player_profile_cache[peer_id] = nil
 	self._enabled_peers_cache[peer_id] = nil
 end
 
@@ -163,11 +135,7 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 
 		peer_packages[local_player_id] = profile_packages
 
-		local profile_clone = table.clone_instance(profile)
-
-		self._player_profile_cache[peer_id][local_player_id] = profile_clone
-
-		_debug_print("Bot Player: Initial Profile Cached, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
+		_debug_print("Add Bot Player, peer_id: %s, local_player_id: %s", peer_id, local_player_id)
 	end
 end
 
@@ -191,12 +159,6 @@ PackageSynchronizerClient.remove_bot = function (self, peer_id, local_player_id)
 
 	if player_alias_versions then
 		player_alias_versions[local_player_id] = nil
-	end
-
-	local cached_player_profiles = self._player_profile_cache[peer_id]
-
-	if cached_player_profiles then
-		cached_player_profiles[local_player_id] = nil
 	end
 end
 
@@ -596,12 +558,6 @@ PackageSynchronizerClient.reevaluate_all_profiles_packages = function (self)
 			self:player_profile_packages_changed(peer_id, local_player_id)
 		end
 	end
-end
-
-PackageSynchronizerClient.cached_profile = function (self, peer_id, local_player_id)
-	local player_profile_cache = self._player_profile_cache
-
-	return player_profile_cache[peer_id][local_player_id]
 end
 
 PackageSynchronizerClient.player_profile_packages_changed = function (self, peer_id, local_player_id)

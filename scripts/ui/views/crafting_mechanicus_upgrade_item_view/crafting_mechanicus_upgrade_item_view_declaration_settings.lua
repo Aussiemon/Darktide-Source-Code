@@ -5,9 +5,9 @@ local view_settings = {
 	class = "CraftingUpgradeItemView",
 	disable_game_world = true,
 	display_name = "loc_crafting_view_display_name",
-	load_in_hub = true,
 	package = "packages/ui/views/crafting_mechanicus_upgrade_item_view/crafting_mechanicus_upgrade_item_view",
 	path = "scripts/ui/views/crafting_mechanicus_upgrade_item_view/crafting_mechanicus_upgrade_item_view",
+	preload_in_hub = "not_ps5",
 	state_bound = true,
 	levels = {
 		"content/levels/ui/crafting_view_itemization/crafting_view_itemization",

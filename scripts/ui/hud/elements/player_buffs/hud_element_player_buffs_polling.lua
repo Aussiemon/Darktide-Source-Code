@@ -416,12 +416,18 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 			if show then
 				if not widget then
-					if self._old_visible_buffs >= MAX_BUFFS then
+					if self._old_visible_buffs >= MAX_BUFFS or self._visible_buffs >= MAX_BUFFS then
 						break
 					end
 
 					if is_negative then
 						if self._old_active_negative_buffs >= QUATER_MAX_BUFF then
+							break
+						end
+
+						widget = self:_get_available_widget()
+
+						if not widget then
 							break
 						end
 
@@ -431,10 +437,15 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 							break
 						end
 
+						widget = self:_get_available_widget()
+
+						if not widget then
+							break
+						end
+
 						self._active_positive_buffs = self._active_positive_buffs + 1
 					end
 
-					widget = self:_get_available_widget()
 					buff_data.widget = widget
 					buff_data.activated_time = t
 

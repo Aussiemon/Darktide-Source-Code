@@ -164,7 +164,7 @@ CraftingExtractTraitView.cb_on_trait_selected = function (self, widget, config)
 end
 
 CraftingExtractTraitView.dialogue_system = function (self)
-	return self._parent:dialogue_system()
+	return self._parent and self._parent:dialogue_system()
 end
 
 CraftingExtractTraitView._on_navigation_input_changed = function (self)

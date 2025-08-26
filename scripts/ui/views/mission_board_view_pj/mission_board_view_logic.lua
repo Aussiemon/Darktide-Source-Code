@@ -1,12 +1,13 @@
 ﻿-- chunkname: @scripts/ui/views/mission_board_view_pj/mission_board_view_logic.lua
 
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local Danger = require("scripts/utilities/danger")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local MissionTemplates = require("scripts/settings/mission/mission_templates")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local QPCode = require("scripts/utilities/qp_code")
-local Danger = require("scripts/utilities/danger")
+local Settings = require("scripts/ui/views/mission_board_view_pj/mission_board_view_settings")
 local MAX_DISPLAYED_STORY_MISSIONS = 3
 
 local function _filter_backend_missions(missions)
@@ -69,8 +70,9 @@ MissionBoardViewLogic.init = function (self, context)
 	local character_id = player:character_id()
 	local region_promise = self:_setup_regions()
 	local bonus_promise = self:_setup_bonus_config()
+	local progression_promise = self:_fetch_progression_data(account_id, character_id)
 
-	Promise.all(region_promise, bonus_promise):next(callback(self, "_config_success"), callback(self, "_config_failure"))
+	Promise.all(progression_promise, region_promise, bonus_promise):next(callback(self, "_config_success"), callback(self, "_config_failure"))
 
 	self._filtered_missions = {}
 	self._backend_unlock_missions = {}
@@ -78,22 +80,13 @@ MissionBoardViewLogic.init = function (self, context)
 	self._config_done = false
 end
 
+MissionBoardViewLogic._fetch_progression_data = function (self, account_id, character_id)
+	return self._promise_container:cancel_on_destroy(Managers.data_service.mission_board:fetch_player_journey_data(account_id, character_id, false))
+end
+
 MissionBoardViewLogic.update = function (self, dt, t)
 	self:_update_page(t)
 	self:_update_backend_data(t)
-
-	local has_cached_progression_data = Managers.data_service.mission_board:has_cached_progression_data()
-
-	if self._has_cached_progression_data ~= has_cached_progression_data then
-		self._has_cached_progression_data = has_cached_progression_data
-
-		if has_cached_progression_data then
-			self._backend_unlock_missions = Managers.data_service.mission_board:get_filtered_missions_data()
-			self._difficulty_progress_data = Managers.data_service.mission_board:get_difficulty_progression_data()
-			self._ordered_story_missions = self:_get_ordered_story_missions(self._backend_unlock_missions.story)
-			self._config_done = true
-		end
-	end
 end
 
 MissionBoardViewLogic.destroy = function (self)
@@ -662,7 +655,8 @@ MissionBoardViewLogic._get_quickplay_categories = function (self, categories)
 end
 
 MissionBoardViewLogic.page_is_unlocked = function (self, page_index, page_settings)
-	local page_settings = page_settings or self._page_settings
+	page_settings = page_settings or self._page_settings
+
 	local page_setting = page_settings[page_index]
 
 	if not page_setting then
@@ -913,7 +907,7 @@ MissionBoardViewLogic._config_failure = function (self, errors)
 
 	self._config_done = false
 
-	Managers.ui:close_view(self.parent_view_name)
+	Managers.ui:close_view(self._view_name)
 end
 
 return MissionBoardViewLogic

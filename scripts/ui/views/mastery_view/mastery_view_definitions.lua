@@ -636,35 +636,6 @@ local widget_definitions = {
 				},
 			},
 		},
-		{
-			pass_type = "texture",
-			style_id = "pattern_icon",
-			value = "content/ui/materials/base/ui_default_base",
-			value_id = "pattern_icon",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "top",
-				size = {
-					178,
-					67,
-				},
-				offset = {
-					25,
-					12,
-					65,
-				},
-				material_values = {},
-				color = {
-					0,
-					0,
-					0,
-					0,
-				},
-			},
-			visibility_function = function (content, style)
-				return not not style.material_values.texture_map
-			end,
-		},
 	}, "screen"),
 	mastery_points = UIWidget.create_definition({
 		{

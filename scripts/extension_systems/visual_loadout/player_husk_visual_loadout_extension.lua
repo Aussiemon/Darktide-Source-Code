@@ -93,11 +93,8 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 	local world = extension_init_context.world
 	local unit_spawner = Managers.state.unit_spawner
 	local extension_manager = Managers.state.extension
-
-	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
-
 	local item_streaming_settings = {
-		package_synchronizer_client = self._package_synchronizer_client,
+		package_synchronizer_client = extension_init_data.package_synchronizer_client,
 		player = self._player,
 	}
 
@@ -339,10 +336,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local equipment = self._equipment
 	local slot = equipment[slot_name]
 	local player = self._player
-	local peer_id = player:peer_id()
-	local local_player_id = player:local_player_id()
-	local package_synchronizer_client = self._package_synchronizer_client
-	local profile = package_synchronizer_client:cached_profile(peer_id, local_player_id)
+	local profile = player:profile()
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
@@ -392,23 +386,18 @@ end
 PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id, debug_item_id)
 	local slot_name = NetworkLookup.player_inventory_slot_names[slot_id]
 	local player = self._player
-	local peer_id = player:peer_id()
-	local local_player_id = player:local_player_id()
-	local package_synchronizer_client = self._package_synchronizer_client
-	local profile = package_synchronizer_client:cached_profile(peer_id, local_player_id)
+	local profile = player:profile()
 	local visual_loadout = profile.visual_loadout
 	local item = visual_loadout[slot_name]
 	local optional_existing_unit_3p
-	local item_name = NetworkLookup.player_item_names[debug_item_id]
+	local debug_item_name = NetworkLookup.player_item_names[debug_item_id]
 	local client_item_name = item and item.name
 
-	if client_item_name ~= item_name then
+	if client_item_name ~= debug_item_name then
 		client_item_name = client_item_name or "N/A"
 
-		Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item cached than server has in player profile.")
-		Log.warning("PlayerHuskVisualLoadoutExtension", "Failed to equip item `%s` in slot `%s`, cached profile item was `%s`", item_name, slot_name, client_item_name)
-
-		return
+		Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item than server has in player profile.")
+		ferror("[PlayerHuskVisualLoadoutExtension] Profile item mismatch. Failed to equip item `%s` in slot `%s`. Client item was `%s`", debug_item_name, slot_name, client_item_name)
 	end
 
 	self:_equip_item_to_slot(slot_name, item, optional_existing_unit_3p)

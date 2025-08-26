@@ -124,7 +124,7 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 
 	if self._slide_character_state_component.was_in_dodge_cooldown then
-		self._dodge_character_state_component.consecutive_dodges_cooldown = t + base_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
+		self._dodge_character_state_component.consecutive_dodges_cooldown = t + base_dodge_template.consecutive_dodges_reset + (weapon_dodge_template and weapon_dodge_template.consecutive_dodges_reset or 0)
 	end
 
 	if next_state == "falling" and movement_state_component.is_crouching and not Crouch.crouch_input(self._input_extension, true, false, true) and Crouch.can_exit(unit) then

@@ -52,7 +52,7 @@ BtCompanionFallAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 		scratchpad.locomotion_extension:set_movement_type("constrained_by_mover")
 		scratchpad.locomotion_extension:set_gravity(nil)
-		scratchpad.locomotion_extension:set_affected_by_gravity(true)
+		scratchpad.locomotion_extension:set_affected_by_gravity(true, 0)
 
 		scratchpad.set_fall = false
 		scratchpad.fall = true

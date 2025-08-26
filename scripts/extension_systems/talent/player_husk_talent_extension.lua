@@ -31,7 +31,6 @@ PlayerHuskTalentExtension.init = function (self, extension_init_context, unit, e
 	local archetype = extension_init_data.archetype
 	local talents = extension_init_data.talents
 
-	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
 	self._archetype = archetype
 	self._talents = talents
 	self._initialized_fixed_frame_t = extension_init_context.fixed_frame_t
@@ -121,9 +120,7 @@ PlayerHuskTalentExtension._update_talents = function (self, talents)
 		local game_mode_settings = Managers.state.game_mode:settings()
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local player = self._player
-		local peer_id = player:peer_id()
-		local local_player_id = player:local_player_id()
-		local profile = self._package_synchronizer_client:cached_profile(peer_id, local_player_id)
+		local profile = player:profile()
 		local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
 		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)

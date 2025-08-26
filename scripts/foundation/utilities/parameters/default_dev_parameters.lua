@@ -3488,10 +3488,6 @@ params.ui_skip_splash_screen = {
 	category = "UI",
 	value = false,
 }
-params.ui_disable_view_loader = {
-	category = "UI",
-	value = false,
-}
 params.ui_view_scale = {
 	category = "UI",
 	num_decimals = 1,

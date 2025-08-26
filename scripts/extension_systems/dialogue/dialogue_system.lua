@@ -716,7 +716,11 @@ DialogueSystem.hot_join_sync = function (self, sender, channel)
 
 			num_dialogue_extensions = num_dialogue_extensions + 1
 			temp_dialogue_extension_unit_ids[num_dialogue_extensions] = unit_spawner_manager:game_object_id(unit)
-			temp_dialogue_extension_profiles[num_dialogue_extensions] = extension:get_profile_name()
+
+			local profile_name = extension:get_profile_name()
+			local voice_profile_id = NetworkLookup.dialogue_voice_profiles[profile_name]
+
+			temp_dialogue_extension_profiles[num_dialogue_extensions] = voice_profile_id
 		until true
 	end
 
@@ -1044,8 +1048,10 @@ DialogueSystem.rpc_dialogue_system_joined = function (self, channel_id, dialogue
 			end
 
 			local extension = unit_to_extension_map[unit]
+			local voice_profile_id = dialogue_extension_profiles[i]
+			local profile_name = NetworkLookup.dialogue_voice_profiles[voice_profile_id]
 
-			extension:set_vo_profile(dialogue_extension_profiles[i])
+			extension:set_vo_profile(profile_name)
 		until true
 	end
 end

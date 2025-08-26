@@ -112,7 +112,7 @@ MissionBoardView.on_enter = function (self)
 	local player = self:_player()
 	local mission_board_logic_context = {
 		player = player,
-		parent_view_name = self.view_name,
+		view_name = self.view_name,
 	}
 
 	self._mission_board_logic = MissionBoardViewLogic:new(mission_board_logic_context)

@@ -431,7 +431,7 @@ BtCompanionLeapAction._advance_leap = function (self, unit, scratchpad, action_d
 			self:_start_wall_jump(scratchpad, action_data, t, hit_normal, new_position, new_wall_jump_velocity)
 		elseif NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, new_position, FALLING_NAV_MESH_ABOVE, FALLING_NAV_MESH_BELOW, FALLING_NAV_MESH_LATERAL, FALLING_NAV_MESH_BORDER_DISTANCE) then
 			locomotion_extension:set_gravity(nil)
-			locomotion_extension:set_affected_by_gravity(true)
+			locomotion_extension:set_affected_by_gravity(true, 0)
 			locomotion_extension:set_movement_type("constrained_by_mover")
 
 			scratchpad.state = "falling"
