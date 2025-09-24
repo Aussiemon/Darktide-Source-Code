@@ -201,7 +201,7 @@ end
 
 SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit, alternate)
 	local target_extension = self._unit_extension_data[target_unit]
-	local template = target_extension:contextual_tag_template(tagger_unit, alternate)
+	local template = target_extension and target_extension:contextual_tag_template(tagger_unit, alternate)
 
 	if template then
 		self:set_tag(template.name, tagger_unit, target_unit, nil)
@@ -226,11 +226,11 @@ SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit, exernal_remova
 	end
 end
 
-SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit, target_unit)
+SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit, target_unit, optional_alternate)
 	local all_tags = self._all_tags
 	local tag = all_tags[tag_id]
 	local target_extension = self._unit_extension_data[target_unit]
-	local template = target_extension and target_extension:contextual_tag_template(interactor_unit)
+	local template = target_extension and target_extension:contextual_tag_template(interactor_unit, optional_alternate)
 	local can_override = template and template.can_override
 
 	if can_override then
@@ -274,18 +274,23 @@ SmartTagSystem.reply_tag = function (self, tag_id, replier_unit, reply_name)
 	end
 end
 
-SmartTagSystem.unit_tagged_by_player_unit = function (self, player_unit)
+SmartTagSystem.unit_tagged_by_player_unit = function (self, player_unit, optional_tag_marker_type)
 	for _, tag in pairs(self._all_tags) do
-		local tagger_unit = tag:tagger_unit()
-		local target_unit = tag:target_unit()
+		local template = tag and tag:template()
+		local marker_type = template.marker_type
 
-		if tagger_unit == player_unit and target_unit then
-			local unit_data = ScriptUnit.has_extension(target_unit, "unit_data_system")
-			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-			local target_breed = unit_data and unit_data:breed()
+		if not optional_tag_marker_type or marker_type == optional_tag_marker_type then
+			local tagger_unit = tag:tagger_unit()
+			local target_unit = tag:target_unit()
 
-			if target_breed and target_breed.tags.minion and buff_extension and not buff_extension:has_keyword("unperceivable") then
-				return target_unit, tag
+			if tagger_unit == player_unit and target_unit then
+				local unit_data = ScriptUnit.has_extension(target_unit, "unit_data_system")
+				local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+				local target_breed = unit_data and unit_data:breed()
+
+				if target_breed and target_breed.tags.minion and buff_extension and not buff_extension:has_keyword("unperceivable") then
+					return target_unit, tag
+				end
 			end
 		end
 	end
@@ -696,7 +701,7 @@ SmartTagSystem.rpc_request_cancel_smart_tag = function (self, channel_id, tag_id
 	local remover_unit = Managers.state.unit_spawner:unit(remover_game_object_id)
 
 	if tag:tagger_unit() ~= remover_unit then
-		_warning("Rejected request from %s to cancel tag, tag is owned by someone else", Network.peer(channel_id))
+		_warning("Rejected request from %s to cancel tag, tag is owned by someone else", Network.peer_id(channel_id))
 
 		return
 	end
@@ -724,7 +729,7 @@ SmartTagSystem.rpc_request_smart_tag_reply = function (self, channel_id, tag_id,
 	end
 
 	if tag:tagger_unit() == replier_unit then
-		_warning("Rejected request from %s to reply to tag, tag is owned by replier", Network.peer(channel_id))
+		_warning("Rejected request from %s to reply to tag, tag is owned by replier", Network.peer_id(channel_id))
 
 		return
 	end

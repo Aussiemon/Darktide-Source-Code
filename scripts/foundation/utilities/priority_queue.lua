@@ -44,18 +44,20 @@ PriorityQueue.pop = function (self)
 
 	self:_swap(1, self._size)
 
-	self._keys[self._size], self._data[self._size] = nil
+	local _keys, _data = self._keys, self._data
+
+	_keys[self._size], _data[self._size] = nil
 	self._size = self._size - 1
 
-	local key, size = self._keys[1], self._size
+	local key, size = _keys[1], self._size
 	local index, child_index = 1, 2
 
 	while child_index <= size do
-		if size >= child_index + 1 and self._keys[child_index + 1] < self._keys[child_index] then
+		if size >= child_index + 1 and _keys[child_index + 1] < _keys[child_index] then
 			child_index = child_index + 1
 		end
 
-		if not (key > self._keys[child_index]) then
+		if not (key > _keys[child_index]) then
 			break
 		end
 
@@ -71,12 +73,13 @@ PriorityQueue.push = function (self, key, data)
 	self._size = self._size + 1
 
 	local index = self._size
+	local _keys, _data = self._keys, self._data
 
-	self._keys[index], self._data[index] = key, data
+	_keys[index], _data[index] = key, data
 
 	local parent_index = _get_parent(index)
 
-	while parent_index > 0 and key < self._keys[parent_index] do
+	while parent_index > 0 and key < _keys[parent_index] do
 		self:_swap(index, parent_index)
 
 		parent_index, index = _get_parent(parent_index), parent_index

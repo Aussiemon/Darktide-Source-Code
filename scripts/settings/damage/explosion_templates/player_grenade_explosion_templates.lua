@@ -251,7 +251,7 @@ local explosion_templates = {
 				min_radius = 5,
 				radius_variable_name = "radius",
 				effects = {
-					"content/fx/particles/explosions/frag_grenade_01",
+					"content/fx/particles/explosions/box_grenade_ogryn",
 				},
 			},
 		},

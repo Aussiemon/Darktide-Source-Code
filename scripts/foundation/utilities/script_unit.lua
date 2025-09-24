@@ -23,12 +23,12 @@ local function _set_extension_script(unit, system_name, extension)
 	unit_extensions[system_name] = extension
 end
 
-local function _unit_in_runtime_loaded_level(unit)
+local function _unit_in_cinematic_level(unit)
 	local level = Unit.level(unit)
 	local result = false
 
 	if level ~= nil then
-		result = Level.get_data(level, "runtime_loaded_level") == true
+		result = Level.get_data(level, "cinematic_level") == true
 	end
 
 	return result
@@ -57,7 +57,7 @@ ScriptUnit.extensions = function (unit)
 	return Entities[unit]
 end
 
-ScriptUnit.unit_in_runtime_loaded_level = _unit_in_runtime_loaded_level
+ScriptUnit.unit_in_cinematic_level = _unit_in_cinematic_level
 ScriptUnit.has_extension = _local_extension
 
 ScriptUnit.set_extension = function (unit, system_name, extension)

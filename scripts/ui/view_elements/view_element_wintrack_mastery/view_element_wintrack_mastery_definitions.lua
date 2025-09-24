@@ -134,12 +134,26 @@ local scenegraph_definition = {
 		parent = "reward_progress_bar",
 		vertical_alignment = "bottom",
 		size = {
-			bar_size[1] + 50,
+			bar_size[1] - 200,
 			reward_size[2] + 150,
 		},
 		position = {
 			0,
-			50,
+			100,
+			1,
+		},
+	},
+	reward_interaction = {
+		horizontal_alignment = "center",
+		parent = "reward_progress_bar",
+		vertical_alignment = "bottom",
+		size = {
+			bar_size[1] - 200,
+			reward_size[2] + 150,
+		},
+		position = {
+			0,
+			100,
 			1,
 		},
 	},
@@ -259,7 +273,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-330,
+			-360,
 			50,
 		},
 	},

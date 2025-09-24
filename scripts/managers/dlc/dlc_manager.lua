@@ -119,7 +119,7 @@ DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callba
 end
 
 DLCManager.open_to_store = function (self, product_id, on_flow_finished_callback)
-	Managers.account:open_to_store(product_id):next(function (result)
+	return Managers.account:open_to_store(product_id):next(function (result)
 		if on_flow_finished_callback then
 			on_flow_finished_callback(result.success)
 		end

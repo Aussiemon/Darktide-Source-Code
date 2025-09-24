@@ -9,6 +9,7 @@ local SigninLoader = require("scripts/loading/loaders/signin_loader")
 local StateMainMenu = require("scripts/game_states/game/state_main_menu")
 local SteamOfflineError = require("scripts/managers/error/errors/steam_offline_error")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local StateTitle = class("StateTitle")
 local STATES = table.enum("idle", "account_signin", "signing_in", "loading_packages", "authenticating_eos", "legal_verification", "name_verification", "done", "error")
 
@@ -368,9 +369,17 @@ end
 
 StateTitle._on_error = function (self)
 	self:_set_state(STATES.error)
-	Managers.error:show_errors():next(function ()
-		self:_reset_state()
-	end)
+
+	if _should_skip(false) then
+		Promise.delay(DevParameters.delay_between_login_attempts):next(function ()
+			Managers.error:clear_errors()
+			self:_reset_state()
+		end)
+	else
+		Managers.error:show_errors():next(function ()
+			self:_reset_state()
+		end)
+	end
 end
 
 StateTitle._reset_state = function (self)
@@ -418,6 +427,10 @@ StateTitle._reset_state = function (self)
 
 	if GameParameters.prod_like_backend then
 		Managers.presence:reset()
+	end
+
+	if _should_skip(false) then
+		self:_continue_cb(nil)
 	end
 end
 
@@ -617,23 +630,16 @@ StateTitle._signin = function (self)
 		self._backend_data_synced = false
 
 		sync_promises:next(function ()
-			local narrative_promise = Promise.resolved()
+			self._backend_promise = Managers.achievements:add_player(local_player)
 
-			if selected_profile then
-				local character_id = selected_profile.character_id
-
-				narrative_promise = Managers.narrative:load_character_narrative(character_id)
-			end
-
-			local achievement_promise = Managers.achievements:add_player(local_player)
-			local all_promise = Promise.all(narrative_promise, achievement_promise)
-
-			self._backend_promise = all_promise
-
-			return all_promise
+			return self._backend_promise
 		end):next(function ()
 			self._backend_promise = nil
 			self._backend_data_synced = true
+
+			if IS_XBS or IS_GDK then
+				XboxLiveUtils.check_premium_currency_discount()
+			end
 		end):catch(function ()
 			Managers.event:trigger("event_add_notification_message", "alert", {
 				text = Localize("loc_popup_description_backend_error"),

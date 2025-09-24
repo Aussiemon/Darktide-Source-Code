@@ -23,6 +23,9 @@ local explosion_templates = {
 			suppression_falloff = true,
 			suppression_value = 20,
 		},
+		radius_stat_buffs = {
+			"overheat_explosion_radius_modifier",
+		},
 		vfx = {
 			"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_large",
 		},
@@ -132,6 +135,70 @@ local explosion_templates = {
 		broadphase_explosion_filter = {
 			"heroes",
 			"villains",
+		},
+	},
+	hordes_buff_critical_kill_explosion = {
+		boss_power_level_modifier = 0.8,
+		close_radius = 2,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_close_radius = 2,
+		min_radius = 3,
+		radius = 3,
+		scalable_radius = true,
+		skip_ragdoll_interaction = true,
+		static_power_level = 240,
+		close_damage_profile = DamageProfileTemplates.close_krak_grenade,
+		close_damage_type = damage_types.plasma,
+		damage_profile = DamageProfileTemplates.krak_grenade,
+		damage_type = damage_types.plasma,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+		},
+		explosion_area_suppression = {
+			distance = 6,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 15,
+		},
+		vfx = {
+			"content/fx/particles/player_buffs/buff_critical_explosion",
+		},
+		sfx = {
+			"wwise/events/player/play_horde_mode_buff_critical_blood_explosion",
+		},
+	},
+	hordes_buff_explosion_on_toughness_broken = {
+		close_radius = 2,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_close_radius = 2,
+		min_radius = 16,
+		radius = 16,
+		scalable_radius = true,
+		skip_ragdoll_interaction = true,
+		static_power_level = 400,
+		close_damage_profile = DamageProfileTemplates.close_ogryn_grenade,
+		close_damage_type = damage_types.grenade_frag,
+		damage_profile = DamageProfileTemplates.ogryn_grenade,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 25,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 25,
+		},
+		vfx = {
+			"content/fx/particles/player_buffs/buff_big_breaking_toughness_explosion_01",
+		},
+		sfx = {
+			"wwise/events/player/play_horde_mode_buff_big_boom",
 		},
 	},
 }

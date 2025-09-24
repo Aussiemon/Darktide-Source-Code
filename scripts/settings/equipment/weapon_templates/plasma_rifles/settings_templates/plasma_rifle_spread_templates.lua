@@ -37,12 +37,6 @@ spread_templates.default_plasma_rifle_bfg = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 8,
@@ -111,12 +105,6 @@ spread_templates.default_plasma_rifle_demolitions = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

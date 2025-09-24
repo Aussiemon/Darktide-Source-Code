@@ -2,14 +2,12 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local Definitions = require("scripts/ui/views/news_view/news_view_definitions")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WidgetSlideBlueprints = require("scripts/ui/views/news_view/news_view_blueprints")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
+local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
 local NewsView = class("NewsView", "BaseView")
 
 NewsView.init = function (self, settings, context)
@@ -48,6 +46,7 @@ local function to_news_view(news_item)
 	local content = news_item.content or {}
 	local backend_contents = news_item.contents
 	local image_url
+	local has_action_button = false
 
 	if backend_contents then
 		for _, content_item in ipairs(backend_contents) do
@@ -81,6 +80,16 @@ local function to_news_view(news_item)
 				})
 			elseif content_item.type == "image" then
 				image_url = content_item.data
+			elseif content_item.type == "button" and not has_action_button then
+				table.insert(content, {
+					widget_type = content_item.style or "terminal_button",
+					size = content_item.size,
+					text = content_item.data,
+					action = content_item.action,
+					target = content_item.target,
+				})
+
+				has_action_button = true
 			end
 		end
 	end
@@ -229,6 +238,11 @@ NewsView._change_slide = function (self, slide_index, ignore_animation)
 	}
 
 	for index, entry in ipairs(slide_content) do
+		if entry.action then
+			entry.input_action = "secondary_action_pressed"
+			entry.callback = callback(NewsActionHandler.handle, entry)
+		end
+
 		layout[#layout + 1] = entry
 	end
 
@@ -554,6 +568,18 @@ NewsView._handle_input = function (self, input_service, dt, t)
 		end
 	end
 
+	local grid_widgets = self._grid and self._grid:widgets()
+
+	if grid_widgets then
+		local did_handle_input = false
+
+		for _, widget in pairs(grid_widgets) do
+			if not did_handle_input and widget.handle_input and widget:handle_input(input_service) then
+				did_handle_input = true
+			end
+		end
+	end
+
 	if self._tutorial_window_open_animation_id and self:_is_animation_completed(self._tutorial_window_open_animation_id) then
 		self._tutorial_window_open_animation_id = nil
 	end
@@ -606,6 +632,10 @@ NewsView._unload_url_textures = function (self)
 	end
 
 	self._url_textures = {}
+end
+
+NewsView.ui_renderer = function (self)
+	return self._ui_renderer
 end
 
 return NewsView

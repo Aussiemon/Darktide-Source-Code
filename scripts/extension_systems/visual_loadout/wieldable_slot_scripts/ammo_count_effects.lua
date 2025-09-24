@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local AmmoCountEffects = class("AmmoCountEffects")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WWISE_PARAMETER_NAME = "weapon_ammo_count"
@@ -29,11 +30,11 @@ end
 
 AmmoCountEffects.update = function (self, unit, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
-	local current_clip = inventory_slot_component.current_ammunition_clip
+	local current_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 
 	if self._last_clip_size ~= current_clip then
 		local muzzle_source, wwise_world = self._fx_extension:sound_source(self._muzzle_fx_source_name), self._wwise_world
-		local max_clip = inventory_slot_component.max_ammunition_clip
+		local max_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 		local ammo_percentage = max_clip > 0 and current_clip / max_clip * 100 or 0
 
 		WwiseWorld.set_global_parameter(wwise_world, WWISE_PARAMETER_NAME, ammo_percentage)

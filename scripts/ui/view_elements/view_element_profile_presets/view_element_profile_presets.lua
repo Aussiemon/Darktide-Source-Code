@@ -349,6 +349,12 @@ ViewElementProfilePresets._sync_profile_buttons_items_status = function (self)
 	end
 end
 
+ViewElementProfilePresets.has_profile_presets = function (self)
+	local profile_presets = ProfileUtils.get_profile_presets()
+
+	return profile_presets and #profile_presets > 0
+end
+
 ViewElementProfilePresets.set_current_profile_loadout_status = function (self, show_warning, show_modified)
 	self._current_profile_loadout_warning = show_warning
 	self._current_profile_loadout_modified = show_modified
@@ -468,8 +474,11 @@ ViewElementProfilePresets._remove_profile_preset = function (self, widget, eleme
 
 	local on_preset_deleted = true
 
-	self:on_profile_preset_index_change(next_widget_index, nil, on_preset_deleted)
-	self:_play_sound(UISoundEvents.remove_profile_preset)
+	self:on_profile_preset_index_change(next_widget_index, nil, on_preset_deleted, true)
+
+	if not new_active_profile_preset_id then
+		self:_play_sound(UISoundEvents.switch_profile_preset)
+	end
 
 	self._costumization_open = false
 
@@ -673,9 +682,16 @@ end
 
 ViewElementProfilePresets.cycle_next_profile_preset = function (self)
 	local profile_buttons_widgets = self._profile_buttons_widgets
-	local active_profile_preset_id = self._active_profile_preset_id
+	local has_profile_presets = self:has_profile_presets()
+	local active_profile_preset_id = self._active_profile_preset_id or has_profile_presets and 0
 
 	if not active_profile_preset_id or not profile_buttons_widgets then
+		return
+	end
+
+	if active_profile_preset_id == 0 then
+		self:on_profile_preset_index_change(1)
+
 		return
 	end
 
@@ -895,26 +911,24 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 				end
 			end
 
-			do
-				local gamepad_active = InputDevice.gamepad_active
+			local gamepad_active = InputDevice.gamepad_active
 
-				if not grid:selected_grid_index() then
-					if gamepad_active and equipped_grid_index then
-						grid:select_grid_index(equipped_grid_index)
-					end
-				elseif not gamepad_active then
-					grid:select_grid_widget(nil)
+			if not grid:selected_grid_index() then
+				if gamepad_active and equipped_grid_index then
+					grid:select_grid_index(equipped_grid_index)
 				end
+			elseif not gamepad_active then
+				grid:select_grid_widget(nil)
+			end
 
-				local selected_grid_index = grid:selected_grid_index()
+			local selected_grid_index = grid:selected_grid_index()
 
-				if selected_grid_index and equipped_grid_index and selected_grid_index ~= equipped_grid_index then
-					local grid_widget = grid_widgets[selected_grid_index]
-					local grid_widget_element = grid_widget and grid_widget.content.element
+			if selected_grid_index and equipped_grid_index and selected_grid_index ~= equipped_grid_index then
+				local grid_widget = grid_widgets[selected_grid_index]
+				local grid_widget_element = grid_widget and grid_widget.content.element
 
-					if grid_widget_element and not grid_widget_element.delete_button then
-						self:cb_on_profile_preset_icon_grid_left_pressed(grid_widget, grid_widget_element)
-					end
+				if grid_widget_element and not grid_widget_element.delete_button then
+					self:cb_on_profile_preset_icon_grid_left_pressed(grid_widget, grid_widget_element)
 				end
 			end
 

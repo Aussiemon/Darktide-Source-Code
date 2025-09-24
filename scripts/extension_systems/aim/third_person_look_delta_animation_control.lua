@@ -23,7 +23,7 @@ end
 
 ThirdPersonLookDeltaAnimationControl.update = function (self, dt, t, game_object_id)
 	local first_person_component = self._first_person_component
-	local look_delta_template = LookDelta.look_delta_template(self._weapon_action_component, self._alternate_fire_component)
+	local look_delta_template = LookDelta.look_delta_template(self._weapon_action_component, self._alternate_fire_component, self._unit)
 	local rotation = first_person_component.rotation
 	local settings, yaw_delta, pitch_delta, previous_rotation
 	local weapon_lock_view_component = self._weapon_lock_view_component

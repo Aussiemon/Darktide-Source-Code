@@ -73,6 +73,7 @@ _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_grenadier_b
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_gunner_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_melee_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_netgunner_breed")
+_create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_plasma_gunner_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_radio_operator_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_rifleman_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_shocktrooper_breed")

@@ -73,7 +73,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 	local world = self._world
 	local weapon_action_component = self._weapon_action_component
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
-	local fire_configuration = action_settings and (action_settings.fire_configurations or action_settings.fire_configuration)
+	local has_fire_configuration = action_settings and (action_settings.fire_configurations or action_settings.fire_configuration)
 	local fx_source_name = self._fx_source_name
 	local spawner_pose = self._fx_extension:vfx_spawner_pose(fx_source_name)
 	local from_pos = Matrix4x4.translation(spawner_pose)
@@ -86,7 +86,7 @@ FlamerGasEffects._update_effects = function (self, dt, t)
 	local direction = Vector3.normalize(from_pos + Vector3.multiply(Quaternion.forward(first_person_rotation), max_length) - from_pos)
 	local rotation = Quaternion.look(direction)
 
-	if fire_configuration then
+	if has_fire_configuration then
 		local effects = action_settings.fx
 		local stream_effect_data = effects.stream_effect
 		local should_play_husk_effect = self._fx_extension:should_play_husk_effect()

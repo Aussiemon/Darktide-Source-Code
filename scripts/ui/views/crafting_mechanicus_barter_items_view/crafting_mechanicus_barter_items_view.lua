@@ -17,7 +17,7 @@ local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_d
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)

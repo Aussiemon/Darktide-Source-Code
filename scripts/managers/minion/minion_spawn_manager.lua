@@ -108,7 +108,13 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	temp_data.random_seed = seed
 	temp_data.optional_aggro_state = temp_data.optional_aggro_state or breed.spawn_aggro_state
 
-	local additional_health_modifier = Managers.state.havoc:minion_health_modifier(breed)
+	local additional_health_modifier
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if havoc_extension then
+		additional_health_modifier = havoc_extension:get_minion_health_modifier(breed)
+	end
+
 	local game_mode_manager = Managers.state.game_mode
 	local game_mode = game_mode_manager:game_mode()
 	local game_mode_name = game_mode:name()

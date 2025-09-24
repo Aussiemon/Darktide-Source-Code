@@ -3,7 +3,6 @@
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local FriendStatus = SocialConstants.FriendStatus
-local OnlineStatus = SocialConstants.OnlineStatus
 local PartyStatus = SocialConstants.PartyStatus
 local Platforms = SocialConstants.Platforms
 local _popup_menu_items = {}

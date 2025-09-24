@@ -27,6 +27,31 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_gen",
 		},
 	},
+	decoy_landmine = {
+		close_radius = 3,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 3,
+		override_friendly_fire = true,
+		radius = 6,
+		scalable_radius = true,
+		static_power_level = 500,
+		close_damage_profile = DamageProfileTemplates.barrel_explosion_close,
+		damage_profile = DamageProfileTemplates.barrel_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		vfx = {
+			"content/fx/particles/explosions/frag_grenade_01",
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_barrel_explosion",
+			"wwise/events/weapon/play_explosion_refl_gen",
+		},
+	},
 	fire_barrel = {
 		close_radius = 0.5,
 		collision_filter = "filter_player_character_explosion",

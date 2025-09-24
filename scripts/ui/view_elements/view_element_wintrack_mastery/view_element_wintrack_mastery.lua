@@ -38,18 +38,24 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 		local reward = rewards[i]
 		local items = reward.items
 		local filtered_items = {}
+		local removed_types = {
+			mark_unlock_2 = true,
+			trait_unlock = true,
+		}
 
 		for ii = 1, #items do
 			local item = items[ii]
 			local type = item.type
 
-			if not type or type and (not string.find(type, "mark_unlock") or type == "mark_unlock") then
+			if not type or type and not removed_types[type] then
 				filtered_items[#filtered_items + 1] = item
 			end
 		end
 
+		local item_index = 1
+
 		if not table.is_empty(filtered_items) then
-			local first_item = filtered_items[1]
+			local first_item = filtered_items[item_index]
 			local index = #item_widgets + 1
 			local reward_item_widget_name = "reward_item_widget_" .. index
 			local required_points = reward.points_required
@@ -70,6 +76,8 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 				icon_color = first_item.icon_color,
 				icon_material_values = first_item.icon_material_values,
 				type = reward.type,
+				item_index = item_index,
+				index = index,
 			}
 			local template = MasteryContentBlueprints[first_item.widget_type]
 			local mastery_item_pass_template = template and template.pass_template
@@ -79,8 +87,6 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 
 			item_widgets[index] = mastery_item_widget
 			mastery_item_widget.type = first_item.widget_type
-
-			local callback_name, secondary_callback_name, double_click_callback
 
 			template.init(self, mastery_item_widget, mastery_item_widget_element)
 
@@ -106,6 +112,72 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 	self._reward_item_widgets = item_widgets
 end
 
+ViewElementWintrackMastery._update_reward_widget = function (self, widget, new_reward_index)
+	local element = widget.content.element
+	local items = element.items
+	local items_size = items and #items
+	local item_index = items_size and math.index_wrapper(new_reward_index, items_size)
+	local new_item = item_index and items and items[item_index]
+	local widget_type = element.item.widget_type
+	local new_widget_type = new_item.widget_type
+	local template = MasteryContentBlueprints[widget_type]
+	local new_template = MasteryContentBlueprints[new_widget_type]
+
+	if template.unload_icon then
+		template.unload_icon(self, widget, element, self._ui_reward_renderer)
+	end
+
+	local index = element.index
+	local item_pass_template = new_template and new_template.pass_template
+
+	if item_pass_template then
+		local reward_item_widget_name = "reward_item_widget_" .. index
+		local content = widget.content
+		local visible = content.visible
+		local visible_last_frame = content.visible_last_frame
+		local render_icon = content.render_icon
+
+		self:_unregister_widget_name(reward_item_widget_name)
+
+		local new_item_widget_definition = UIWidget.create_definition(item_pass_template, "reward_item")
+		local new_item_widget = self:_create_widget(reward_item_widget_name, new_item_widget_definition)
+
+		self._reward_item_widgets[index] = new_item_widget
+		new_item_widget.type = widget_type
+
+		local new_element = table.clone_instance(element)
+
+		new_element.item = new_item
+		new_element.item_index = item_index
+		new_element.icon = new_item.icon
+		new_element.display_name = new_item.display_name
+		new_element.text = new_item.text
+		new_element.icon_size = new_item.icon_size
+		new_element.icon_color = new_item.icon_color
+		new_element.icon_material_values = new_item.icon_material_values
+		new_item_widget.content.element = new_element
+		new_item_widget.content.visible = visible
+		new_item_widget.content.visible_last_frame = visible_last_frame
+		new_item_widget.content.render_icon = render_icon
+
+		if new_item_widget.content.hotspot and widget.content.hotspot then
+			local is_hover = widget.content.hotspot.is_hover
+			local is_selected = widget.content.hotspot.is_selected
+
+			new_item_widget.content.hotspot.is_hover = is_hover
+			new_item_widget.content.hotspot.is_selected = is_selected
+
+			if self._currently_hovered_items and (is_hover or is_selected) then
+				self._currently_hovered_items = new_element.items
+			end
+		end
+
+		local callback_name, secondary_callback_name, double_click_callback
+
+		template.init(self, new_item_widget, new_element)
+	end
+end
+
 ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items, index, widget)
 	index = index or 1
 
@@ -119,6 +191,8 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 	self._currently_hovered_items = items
 	self._currently_hovered_items_index = index
 	self._currently_hovered_widget = widget
+
+	self:_update_reward_input_description()
 
 	local no_tooltip = widget and widget.content.element and widget.content.element.hide_tooltip
 
@@ -185,8 +259,6 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 
 		self:_set_scenegraph_size("tooltip", nil, total_size)
 	end
-
-	self:_update_reward_tooltip_hint()
 end
 
 ViewElementWintrackMastery.tooltip_visible = function (self)
@@ -199,7 +271,7 @@ ViewElementWintrackMastery._on_reward_items_hover_stop = function (self)
 	self._currently_hovered_items_index = nil
 	self._currently_hovered_widget = nil
 
-	self:_update_reward_tooltip_hint()
+	self:_update_reward_input_description()
 
 	self._widgets_by_name.tooltip.content.visible = false
 end

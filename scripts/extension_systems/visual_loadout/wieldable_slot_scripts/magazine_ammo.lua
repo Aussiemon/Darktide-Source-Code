@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazine_ammo.lua
 
 local Action = require("scripts/utilities/action/action")
+local Ammo = require("scripts/utilities/ammo")
 local Component = require("scripts/utilities/component")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
@@ -61,9 +62,9 @@ end
 MagazineAmmo.update = function (self, unit, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
 	local weapon_action_component = self._weapon_action_component
-	local current_ammo_clip = inventory_slot_component.current_ammunition_clip
+	local current_ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 	local current_ammo_reserve = inventory_slot_component.current_ammunition_reserve
-	local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+	local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
 	local action_kind = action_settings and action_settings.kind
 	local is_reloading = action_kind == "reload_state" or action_kind == "reload_shotgun"

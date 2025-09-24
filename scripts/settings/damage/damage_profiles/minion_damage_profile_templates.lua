@@ -934,6 +934,83 @@ damage_templates.renegade_captain_bolt_pistol_kill_explosion = {
 		},
 	},
 }
+damage_templates.renegade_plasma_gunner_shot = {
+	disorientation_type = "heavy",
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_heavy",
+	ragdoll_push_force = 500,
+	stagger_category = "ranged",
+	suppression_value = 10,
+	toughness_multiplier = 3,
+	cleave_distribution = double_cleave,
+	ranges = {
+		max = 40,
+		min = 10,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+	},
+	power_distribution = {
+		attack = 38,
+		impact = 5.5,
+	},
+	damage_type = damage_types.minion_plasma,
+	on_kill_area_suppression = {
+		distance = 8,
+		suppression_value = 12,
+	},
+	push_template = push_templates.renegade_plasma_gunner,
+	ogryn_push_template = push_templates.renegade_plasma_gunner,
+	gibbing_power = gibbing_power.heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.renegade_captain_bolt_pistol_stop_explosion = {
 	ignore_toughness = true,
 	ragdoll_push_force = 500,
@@ -2122,8 +2199,8 @@ damage_templates.renegade_shocktrooper_frag_grenade_close = {
 		},
 	},
 	power_distribution = {
-		attack = 20,
-		impact = 8,
+		attack = 40,
+		impact = 10,
 	},
 	targets = {
 		default_target = {
@@ -2194,8 +2271,8 @@ damage_templates.renegade_shocktrooper_frag_grenade = {
 	},
 	power_distribution_ranged = {
 		attack = {
-			far = 5,
-			near = 10,
+			far = 25,
+			near = 30,
 		},
 		impact = {
 			far = 2,

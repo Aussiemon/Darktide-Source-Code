@@ -1224,8 +1224,8 @@ Styles.difficulty_stepper.frame_bottom = {
 	},
 }
 Styles.difficulty_stepper.difficulty_text = {
-	font_size = 38,
-	font_type = "proxima_nova_bold",
+	font_size = 34,
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",

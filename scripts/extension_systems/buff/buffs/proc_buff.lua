@@ -16,6 +16,7 @@ ProcBuff.init = function (self, context, template, start_time, instance_id, ...)
 
 	self._active_start_time = start_time - (active_duration + cooldown)
 	self._active_vfx = {}
+	self._active_looping_sfx = {}
 	self._num_proc_keywords = template.proc_keywords and #template.proc_keywords
 	self._num_inactive_keywords = template.inactive_keywords and #template.inactive_keywords
 	self._num_off_cooldown_keywords = template.off_cooldown_keywords and #template.off_cooldown_keywords
@@ -390,6 +391,7 @@ ProcBuff._start_proc_active_fx = function (self)
 	local world = template_context.world
 	local wwise_world = template_context.wwise_world
 	local active_vfx = self._active_vfx
+	local active_looping_sfx = self._active_looping_sfx
 	local proc_effects = template.proc_effects
 
 	if proc_effects then
@@ -412,7 +414,13 @@ ProcBuff._start_proc_active_fx = function (self)
 			local player_looping_wwise_start_event = player_effects.looping_wwise_start_event
 
 			if player_looping_wwise_start_event then
-				WwiseWorld.trigger_resource_event(wwise_world, player_looping_wwise_start_event)
+				local playing_id, source_id = WwiseWorld.trigger_resource_event(wwise_world, player_looping_wwise_start_event)
+
+				table.insert(active_looping_sfx, {
+					playing_id = playing_id,
+					source_id = source_id,
+					stop_event = player_effects.looping_wwise_stop_event,
+				})
 			end
 
 			local wwise_state = player_effects.wwise_state
@@ -445,6 +453,18 @@ ProcBuff._stop_proc_active_fx = function (self, t)
 
 	table.clear(active_vfx)
 
+	local active_looping_sfx = self._active_looping_sfx
+
+	for i = 1, #active_looping_sfx do
+		local looping_sfx = active_looping_sfx[i]
+		local source_id = looping_sfx.source_id
+		local stop_event = looping_sfx.stop_event
+
+		WwiseWorld.trigger_resource_event(wwise_world, stop_event, source_id)
+	end
+
+	table.clear(active_looping_sfx)
+
 	local proc_effects = template.proc_effects
 
 	if proc_effects then
@@ -452,12 +472,6 @@ ProcBuff._stop_proc_active_fx = function (self, t)
 		local player_effects = proc_effects.player_effects
 
 		if player_effects and is_local_unit then
-			local player_looping_wwise_stop_event = player_effects.looping_wwise_stop_event
-
-			if player_looping_wwise_stop_event and self:_is_proc_active(t) then
-				WwiseWorld.trigger_resource_event(wwise_world, player_looping_wwise_stop_event)
-			end
-
 			local wwise_state = player_effects.wwise_state
 
 			if wwise_state then

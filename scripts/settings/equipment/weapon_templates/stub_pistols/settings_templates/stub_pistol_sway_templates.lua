@@ -121,18 +121,6 @@ sway_templates.default_stubpistol_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {

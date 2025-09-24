@@ -247,6 +247,12 @@ templates.coherency_toughness_regen = {
 			return 3
 		end
 
+		local buff_extension = template_context.buff_extension
+
+		if buff_extension and buff_extension:has_keyword(keywords.prevent_coherency_toughness_buff) then
+			return 0, 0
+		end
+
 		return 0, nil
 	end,
 }
@@ -303,6 +309,24 @@ templates.player_spawn_grace = {
 	},
 	stat_buffs = {
 		[buff_stat_buffs.damage_taken_multiplier] = 0,
+	},
+}
+templates.knocked_down_damage_immunity_linger = {
+	class_name = "buff",
+	duration = 1,
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_multiplier] = 0,
+	},
+}
+templates.knocked_down_damage_reduction_linger = {
+	class_name = "buff",
+	duration = 3,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_grace_time_hud",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_multiplier] = 0.5,
+		[buff_stat_buffs.toughness_damage_taken_multiplier] = 0.5,
 	},
 }
 templates.player_toughness_node_buff_low_1 = {
@@ -712,6 +736,39 @@ templates.player_warp_charge_node_buff_low_2 = table.clone(templates.player_warp
 templates.player_warp_charge_node_buff_low_3 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_4 = table.clone(templates.player_warp_charge_node_buff_low_1)
 templates.player_warp_charge_node_buff_low_5 = table.clone(templates.player_warp_charge_node_buff_low_1)
+templates.player_warp_charge_node_buff_medium_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.warp_charge_amount] = 0.9,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.warp_charge_amount] = 0.9,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.warp_charge_amount] = 0.8,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.warp_charge_amount] = 0.7,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.warp_charge_amount] = 0.6,
+			},
+		},
+	},
+}
+templates.player_warp_charge_node_buff_medium_2 = table.clone(templates.player_warp_charge_node_buff_medium_1)
+templates.player_warp_charge_node_buff_medium_3 = table.clone(templates.player_warp_charge_node_buff_medium_1)
+templates.player_warp_charge_node_buff_medium_4 = table.clone(templates.player_warp_charge_node_buff_medium_1)
+templates.player_warp_charge_node_buff_medium_5 = table.clone(templates.player_warp_charge_node_buff_medium_1)
 templates.player_health_node_buff_low_1 = {
 	class_name = "buff",
 	predicted = false,
@@ -907,6 +964,39 @@ templates.player_melee_damage_node_buff_medium_2 = table.clone(templates.player_
 templates.player_melee_damage_node_buff_medium_3 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_damage_node_buff_medium_4 = table.clone(templates.player_melee_damage_node_buff_medium_1)
 templates.player_melee_damage_node_buff_medium_5 = table.clone(templates.player_melee_damage_node_buff_medium_1)
+templates.player_melee_damage_node_buff_high_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_damage] = 0.15,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.15,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.3,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.45,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.6,
+			},
+		},
+	},
+}
+templates.player_melee_damage_node_buff_high_2 = table.clone(templates.player_melee_damage_node_buff_high_1)
+templates.player_melee_damage_node_buff_high_3 = table.clone(templates.player_melee_damage_node_buff_high_1)
+templates.player_melee_damage_node_buff_high_4 = table.clone(templates.player_melee_damage_node_buff_high_1)
+templates.player_melee_damage_node_buff_high_5 = table.clone(templates.player_melee_damage_node_buff_high_1)
 templates.player_melee_heavy_damage_node_buff_low_1 = {
 	class_name = "buff",
 	predicted = false,

@@ -22,19 +22,19 @@ ActionHandler.init = function (self, unit, data)
 	self._actions = data.actions
 	self._action_kind_condition_funcs = data.action_kind_condition_funcs
 	self._action_kind_total_time_funcs = data.action_kind_total_time_funcs
-	self._action_kind_with_reversed_timescale = data.action_kind_with_reversed_timescale
+	self._action_kinds_with_inverted_timescale = data.action_kinds_with_inverted_timescale
 	self._conditional_state_functions = data.conditional_state_functions
 	self._registered_components = {}
 	self._unit = unit
 	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
-	self._input_extension = ScriptUnit.extension(unit, "input_system")
-	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
-	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
-	self._exploding_character_state_component = unit_data_extension:read_component("exploding_character_state")
-	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
-	self._inventory_component = unit_data_extension:read_component("inventory")
-	self._targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
+	self._input_extension = ScriptUnit.extension(unit, "input_system")
+	self._action_module_target_finder_component = unit_data_extension:read_component("action_module_target_finder")
+	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+	self._exploding_character_state_component = unit_data_extension:read_component("exploding_character_state")
+	self._inventory_component = unit_data_extension:read_component("inventory")
+	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
+	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 end
 
 ActionHandler.add_component = function (self, component_name)
@@ -56,9 +56,10 @@ ActionHandler.add_component = function (self, component_name)
 	}
 end
 
-ActionHandler.set_tweak_component = function (self, component_name)
+ActionHandler.set_weapon_extension_and_tweak_component = function (self, weapon_extension, component_name)
 	local component = self._unit_data_extension:write_component(component_name)
 
+	self._weapon_extension = weapon_extension
 	self._tweak_component = component
 end
 
@@ -209,6 +210,8 @@ ActionHandler._finish_action = function (self, handler_data, reason, data, t, ne
 	if param_table then
 		param_table.action_name = component.current_action_name
 		param_table.action_settings = action_settings
+		param_table.interrupting_data = data
+		param_table.reason = reason
 
 		if action_settings.charge_template then
 			local action_module_charge_component = self._unit_data_extension:read_component("action_module_charge")
@@ -336,7 +339,7 @@ ActionHandler._create_action = function (self, action_context, action_params, ac
 	return actions[action_kind]:new(action_context, action_params, action_settings)
 end
 
-local wield_actions = {
+local WIELD_ACTION_KINDS = {
 	ranged_wield = true,
 	unwield = true,
 	unwield_to_previous = true,
@@ -345,12 +348,10 @@ local wield_actions = {
 }
 
 ActionHandler._calculate_time_scale = function (self, action_settings)
-	local player_unit = self._unit
 	local time_scale = 1
 
-	if self._tweak_component then
-		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
-		local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
+	if self._weapon_extension then
+		local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
 		local weapon_handling_time_scale = weapon_handling_template.time_scale or 1
 
 		time_scale = time_scale * weapon_handling_time_scale
@@ -359,7 +360,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
 
-	if wield_actions[action_settings.kind] then
+	if WIELD_ACTION_KINDS[action_settings.kind] then
 		local stat_buff_value = stat_buffs[buff_stat_buffs.wield_speed]
 
 		time_scale = time_scale * stat_buff_value
@@ -713,7 +714,7 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 	end
 
 	if not ActionAvailability.allowed_without_smite_target(action_settings) then
-		local target_unit = self._targeting_component.target_unit_1
+		local target_unit = self._action_module_target_finder_component.target_unit_1
 
 		if not target_unit then
 			return false
@@ -846,9 +847,9 @@ ActionHandler._validate_single_chain_action = function (self, chain_action, t, c
 	if time_scale < 1 then
 		local current_action_name = self._action_context.weapon_action_component.current_action_name
 		local current_action = actions[current_action_name]
-		local current_action_has_reversed_timescale = current_action and self._action_kind_with_reversed_timescale[current_action.kind]
+		local current_action_has_inverted_timescale = current_action and self._action_kinds_with_inverted_timescale[current_action.kind]
 
-		if current_action_has_reversed_timescale then
+		if current_action_has_inverted_timescale then
 			chain_time = chain_action.chain_time and chain_action.chain_time * time_scale
 			chain_until = chain_action.chain_until and chain_action.chain_until * time_scale
 		else
@@ -997,8 +998,8 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t, conditio
 	local conditional_states_to_hold = action_settings.conditional_states_to_hold
 
 	if conditional_states_to_hold then
-		for i = 1, #conditional_states_to_hold do
-			local condition_key = conditional_states_to_hold[i]
+		for ii = 1, #conditional_states_to_hold do
+			local condition_key = conditional_states_to_hold[ii]
 			local func = self._conditional_state_functions[condition_key]
 			local remaining_time = component.end_t - t
 
@@ -1115,6 +1116,8 @@ function _get_active_template(component)
 	return template
 end
 
+local DEFAULT_COMBO_RESET_DURATION = 0.2
+
 function _get_reset_combo(component, t)
 	local current_action_name = component.current_action_name
 	local action_end_time = component.end_t
@@ -1122,7 +1125,7 @@ function _get_reset_combo(component, t)
 	local time_since_end = t - action_end_time
 	local is_looping_action = action_end_time == action_start_time and current_action_name ~= nil and current_action_name ~= "none"
 	local template = component.template_name ~= "none" and _get_active_template(component)
-	local combo_reset_duration = template and template.combo_reset_duration or 0.2
+	local combo_reset_duration = template and template.combo_reset_duration or DEFAULT_COMBO_RESET_DURATION
 	local reset_combo = not is_looping_action and combo_reset_duration < time_since_end and component.combo_count > 0
 
 	return reset_combo, time_since_end, combo_reset_duration, is_looping_action

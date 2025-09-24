@@ -129,8 +129,8 @@ MissionBuffsHandler.give_buff_to_player = function (self, player, buff_name, ski
 	end
 end
 
-MissionBuffsHandler.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs)
-	self._persistent_data:set_legendary_buffs_available_for_player(player, legendary_buffs)
+MissionBuffsHandler.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs, buffs_in_pool_already_given_to_player)
+	self._persistent_data:set_legendary_buffs_available_for_player(player, legendary_buffs, buffs_in_pool_already_given_to_player)
 end
 
 MissionBuffsHandler.get_legendary_buffs_available_for_player = function (self, player)

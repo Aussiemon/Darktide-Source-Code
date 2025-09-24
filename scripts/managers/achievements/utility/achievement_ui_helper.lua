@@ -37,7 +37,7 @@ AchievementUIHelper.get_reward_item = function (achievement_definition)
 end
 
 AchievementUIHelper.get_all_reward_items = function (achievement_definition)
-	local reward_item, item_group
+	local reward_item
 	local rewards = achievement_definition and achievement_definition.rewards
 	local rewards_data = {}
 
@@ -49,7 +49,6 @@ AchievementUIHelper.get_all_reward_items = function (achievement_definition)
 
 			local item_type = reward_item and reward_item.item_type
 
-			item_group = item_type and _item_type_group_lookup[item_type]
 			rewards_data[#rewards_data + 1] = {
 				reward_item = reward_item,
 				item_type = item_type,
@@ -179,7 +178,7 @@ AchievementUIHelper.get_achievement_family_order = function (achievement_definit
 	return nil
 end
 
-AchievementUIHelper.add_favorite_achievement = function (id)
+AchievementUIHelper.add_favorite_achievement = function (id, queue_save)
 	local save_data = Managers.save:account_data()
 	local favorite_achievements = save_data.favorite_achievements
 
@@ -193,12 +192,14 @@ AchievementUIHelper.add_favorite_achievement = function (id)
 
 	favorite_achievements[#favorite_achievements + 1] = id
 
-	Managers.save:queue_save()
+	if queue_save ~= false then
+		Managers.save:queue_save()
+	end
 
 	return true
 end
 
-AchievementUIHelper.remove_favorite_achievement = function (id)
+AchievementUIHelper.remove_favorite_achievement = function (id, queue_save)
 	local save_data = Managers.save:account_data()
 	local favorite_achievements = save_data.favorite_achievements
 	local index = table.index_of(favorite_achievements, id)
@@ -208,7 +209,10 @@ AchievementUIHelper.remove_favorite_achievement = function (id)
 	end
 
 	table.remove(favorite_achievements, index)
-	Managers.save:queue_save()
+
+	if queue_save ~= false then
+		Managers.save:queue_save()
+	end
 
 	return true
 end

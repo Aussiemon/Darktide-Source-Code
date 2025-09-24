@@ -20,13 +20,11 @@ MissionBuffsPersistentData.init_player_data = function (self, player)
 	local player_account_id = player:account_id()
 
 	players_data[player_account_id] = {
-		legendary_buffs_initialized = false,
 		num_family_buffs_received = 0,
-		num_legendary_buffs_received = 0,
 		account_id = player_account_id,
+		archetype_based_data = {},
 		priority_family_buffs_available = {},
 		family_buffs_available = {},
-		legendary_buffs_available = {},
 		buffs_received = {},
 		choices_queue = {},
 	}
@@ -49,7 +47,9 @@ MissionBuffsPersistentData.does_player_have_legendary_buffs_pool = function (sel
 		return false
 	end
 
-	return player_data.legendary_buffs_initialized
+	local archetype_based_data = self:_get_or_create_player_archetype_data(player)
+
+	return archetype_based_data.legendary_buffs_initialized or false
 end
 
 MissionBuffsPersistentData.check_player_buff_family_state = function (self, player)
@@ -87,7 +87,8 @@ MissionBuffsPersistentData.get_num_buffs_given_to_player = function (self, playe
 	end
 
 	local num_family_buffs_received = target_player_data.num_family_buffs_received
-	local num_legendary_buffs_received = target_player_data.num_legendary_buffs_received
+	local archetype_based_data = self:_get_or_create_player_archetype_data(player)
+	local num_legendary_buffs_received = archetype_based_data.num_legendary_buffs_received
 
 	return num_family_buffs_received, num_legendary_buffs_received
 end
@@ -128,6 +129,22 @@ MissionBuffsPersistentData._get_or_create_player_data = function (self, player)
 	return players_data[player_account_id] ~= nil and players_data[player_account_id] or self:init_player_data(player)
 end
 
+MissionBuffsPersistentData._get_or_create_player_archetype_data = function (self, player)
+	local player_data = self:_get_or_create_player_data(player)
+	local player_archetype_name = player:archetype_name()
+	local archetype_based_data = player_data.archetype_based_data
+
+	if not archetype_based_data[player_archetype_name] then
+		archetype_based_data[player_archetype_name] = {
+			legendary_buffs_initialized = false,
+			num_legendary_buffs_received = 0,
+			legendary_buffs_available = {},
+		}
+	end
+
+	return archetype_based_data[player_archetype_name]
+end
+
 MissionBuffsPersistentData._add_buff_to_player_data = function (self, player, buff_name)
 	local target_player_data = self:_get_or_create_player_data(player)
 	local player_buffs = target_player_data.buffs_received
@@ -145,7 +162,9 @@ MissionBuffsPersistentData._add_buff_to_player_data = function (self, player, bu
 		if is_family_buff then
 			target_player_data.num_family_buffs_received = target_player_data.num_family_buffs_received + 1
 		else
-			target_player_data.num_legendary_buffs_received = target_player_data.num_legendary_buffs_received + 1
+			local archetype_based_data = self:_get_or_create_player_archetype_data(player)
+
+			archetype_based_data.num_legendary_buffs_received = archetype_based_data.num_legendary_buffs_received + 1
 		end
 	else
 		existing_buff_data.stacks = existing_buff_data.stacks + 1
@@ -162,17 +181,28 @@ MissionBuffsPersistentData._add_buff_index_to_player_data = function (self, play
 	end
 end
 
-MissionBuffsPersistentData.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs)
-	local target_player_data = self:_get_or_create_player_data(player)
+MissionBuffsPersistentData.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs, buffs_in_pool_already_given_to_player)
+	local archetype_based_data = self:_get_or_create_player_archetype_data(player)
 
-	target_player_data.legendary_buffs_available = legendary_buffs
-	target_player_data.legendary_buffs_initialized = true
+	archetype_based_data.legendary_buffs_available = legendary_buffs
+	archetype_based_data.legendary_buffs_initialized = true
+	archetype_based_data.num_legendary_buffs_received = buffs_in_pool_already_given_to_player and #buffs_in_pool_already_given_to_player or 0
+
+	if buffs_in_pool_already_given_to_player then
+		local buff_names = ""
+
+		for _, buff_name in ipairs(buffs_in_pool_already_given_to_player) do
+			buff_names = buff_names .. buff_name .. " || "
+		end
+
+		Log.info("MissionBuffsSelector", "Legendary buffs counted towards Player (PeerID %s) with new archetype [%s]:\n%s", player:peer_id(), player:archetype_name(), buff_names)
+	end
 end
 
 MissionBuffsPersistentData.get_legendary_buffs_available_for_player = function (self, player)
-	local target_player_data = self:_get_or_create_player_data(player)
+	local archetype_based_data = self:_get_or_create_player_archetype_data(player)
 
-	return target_player_data.legendary_buffs_available
+	return archetype_based_data.legendary_buffs_available
 end
 
 MissionBuffsPersistentData.buff_family_choice_initiated = function (self)
@@ -327,14 +357,13 @@ MissionBuffsPersistentData.try_resolve_current_choice_for_player = function (sel
 end
 
 MissionBuffsPersistentData.restore_unselected_legendary_buffs_to_player_pool = function (self, player, buff_options, chosen_option_index)
-	local target_player_data = self:_get_or_create_player_data(player)
-
 	for i = 1, #buff_options do
 		if i ~= chosen_option_index then
 			local buff_name = buff_options[i]
 			local buff_data = HordesBuffsData[buff_name]
 			local buff_filter_category = buff_data.filter_category
-			local target_pool = target_player_data.legendary_buffs_available[buff_filter_category]
+			local archetype_based_data = self:_get_or_create_player_archetype_data(player)
+			local target_pool = archetype_based_data.legendary_buffs_available[buff_filter_category]
 
 			table.insert(target_pool, buff_name)
 		end
@@ -364,20 +393,22 @@ MissionBuffsPersistentData.log_player_data = function (self, player)
 
 	Log.info("MissionBuffsPersistentData", "Buffs Received for Player[%s]:\n%s", player_account_id, buffs_received)
 
-	local player_legendary_buffs_pool = player_data.legendary_buffs_available
+	for archetype_name, archetype_based_data in pairs(player_data.archetype_based_data) do
+		local player_legendary_buffs_pool = archetype_based_data.legendary_buffs_available
 
-	Log.info("MissionBuffsPersistentData", "Legendary Buffs Pool for Player %s", player_account_id)
+		Log.info("MissionBuffsPersistentData", "Legendary Buffs Pool for Player %s and Archetype %s", player_account_id, archetype_name)
 
-	for filter_category, buffs in pairs(player_legendary_buffs_pool) do
-		Log.info("MissionBuffsPersistentData", "Buffs left in category %s", filter_category)
+		for filter_category, buffs in pairs(player_legendary_buffs_pool) do
+			Log.info("MissionBuffsPersistentData", "Buffs left in category %s", filter_category)
 
-		local buff_names = ""
+			local buff_names = ""
 
-		for _, buff_name in pairs(buffs) do
-			buff_names = buff_names .. buff_name .. "||"
+			for _, buff_name in pairs(buffs) do
+				buff_names = buff_names .. buff_name .. "||"
+			end
+
+			Log.info("MissionBuffsPersistentData", "%s", buff_names)
 		end
-
-		Log.info("MissionBuffsPersistentData", "%s", buff_names)
 	end
 
 	local player_current_choice = player_data.current_choice

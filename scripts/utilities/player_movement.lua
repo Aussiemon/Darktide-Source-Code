@@ -2,8 +2,8 @@
 
 local PlayerMovement = {}
 
-PlayerMovement.teleport = function (player, position, rotation)
-	local cb = callback(PlayerMovement._teleport_callback, player.player_unit, Vector3Box(position), rotation and QuaternionBox(rotation) or nil)
+PlayerMovement.teleport = function (player, position, rotation, send_character_state_disruption_event)
+	local cb = callback(PlayerMovement._teleport_callback, player.player_unit, Vector3Box(position), rotation and QuaternionBox(rotation) or nil, send_character_state_disruption_event or false)
 
 	Managers.state.game_mode:register_physics_safe_callback(cb)
 end
@@ -12,13 +12,13 @@ PlayerMovement.teleport_fixed_update = function (player_unit, position, rotation
 	PlayerMovement._teleport(player_unit, position, rotation)
 end
 
-PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation)
+PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation, send_character_state_disruption_event)
 	if ALIVE[player_unit] then
-		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil)
+		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil, send_character_state_disruption_event or false)
 	end
 end
 
-PlayerMovement._teleport = function (player_unit, position, rotation)
+PlayerMovement._teleport = function (player_unit, position, rotation, send_character_state_disruption_event)
 	local mover = Unit.mover(player_unit)
 
 	Mover.set_position(mover, position)
@@ -43,6 +43,12 @@ PlayerMovement._teleport = function (player_unit, position, rotation)
 		local yaw = Quaternion.yaw(rotation)
 
 		player:set_orientation(yaw, pitch, 0)
+	end
+
+	local character_state_machine_extension = ScriptUnit.has_extension(player_unit, "character_state_machine_system")
+
+	if send_character_state_disruption_event and character_state_machine_extension and character_state_machine_extension:current_state_name() == "ledge_hanging" then
+		Managers.event:trigger("player_teleport_disrupt_state_server_event", player_unit, position)
 	end
 
 	local navigation_extension = ScriptUnit.has_extension(player_unit, "navigation_system")

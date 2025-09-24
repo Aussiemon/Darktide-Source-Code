@@ -126,6 +126,19 @@ math.round = function (value)
 	end
 end
 
+math.round_to_closest_multiple = function (value, multiple)
+	multiple = multiple or 1
+
+	local modulo = value % multiple
+	local middle_point = multiple / 2
+
+	if modulo <= middle_point then
+		return value - modulo
+	end
+
+	return value + multiple - modulo
+end
+
 math.smoothstep = function (value, min, max)
 	local x = math_clamp((value - min) / (max - min), 0, 1)
 
@@ -145,7 +158,7 @@ math.random_array_entry = function (array, optional_seed)
 		index = math_random(#array)
 	end
 
-	return array[index], optional_seed
+	return array[index], optional_seed, index
 end
 
 math.mod_two_pi = function (angle)
@@ -516,6 +529,14 @@ end
 
 math.ease_sine = function (t)
 	return 0.5 + 0.5 * math_cos((1 + t) * pi)
+end
+
+math.ease_in_out_quart = function (t)
+	if t < 0.5 then
+		return 8 * t * t * t * t
+	else
+		return 1 - (-2 * t + 2)^4 / 2
+	end
 end
 
 local MAX_SEED = 2147483647

@@ -199,7 +199,7 @@ StoreItemDetailView.on_enter = function (self)
 	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
 
 	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
-	self._wallet_element:_generate_currencies(self._wallet_type, {
+	self._wallet_element:generate_currencies(self._wallet_type, {
 		nil,
 		30,
 	})
@@ -237,10 +237,18 @@ StoreItemDetailView.on_enter = function (self)
 		url_textures[#url_textures + 1] = imageURL
 
 		Managers.url_loader:load_texture(imageURL):next(function (data)
+			if self._destroyed then
+				return
+			end
+
 			self._bundle_image = data
 
 			self:_setup_item_presentation()
 		end):catch(function (error)
+			if self._destroyed then
+				return
+			end
+
 			self:_setup_item_presentation()
 		end)
 	else
@@ -616,7 +624,7 @@ StoreItemDetailView._setup_bundle_button = function (self)
 
 	local localized_string = Localize("loc_premium_store_bundle_items_owned")
 
-	content.owned_items = owned_count > 0 and owned_count < #offer.bundleInfo and string.format(localized_string, owned_count, #offer.bundleInfo) or ""
+	content.owned_items = owned_count > 0 and owned_count < total_count and string.format(localized_string, owned_count, total_count) or ""
 
 	local title_style = style.title
 	local title_max_width = (title_style.size and title_style.size[1] or size[1]) + (title_style.size_addition and title_style.size_addition[1] or 0)
@@ -783,6 +791,7 @@ StoreItemDetailView._setup_item_grid = function (self)
 	for index = 1, #items do
 		local entry = items[index]
 		local item = entry.item
+		local widget, size
 
 		if item then
 			local widget_suffix = "entry_" .. tostring(index)
@@ -3506,22 +3515,22 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 		end
 
 		local player = self:_player()
-		local player_profile = player:profile()
+		local player_profile = player:profile() or {}
+		local archetype = player_profile.archetype
 		local include_skin_item_texts = true
 		local item = item_type == "WEAPON_SKIN" and Items.weapon_skin_preview_item(previewed_item, include_skin_item_texts) or previewed_item
 		local is_item_supported_on_played_character
 		local item_archetypes = item.archetypes
 
 		if item_archetypes and not table.is_empty(item_archetypes) then
-			is_item_supported_on_played_character = table.array_contains(item_archetypes, player_profile.archetype.name)
+			is_item_supported_on_played_character = table.array_contains(item_archetypes, archetype and archetype.name)
 		else
 			is_item_supported_on_played_character = true
 		end
 
 		local gender_name = player_profile.gender
-		local archetype = player_profile.archetype
 		local archetype_name = archetype and archetype.name
-		local breed_name = player_profile.archetype.breed
+		local breed_name = archetype and archetype.breed
 		local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or Items.create_mannequin_profile_by_item(item, gender_name, archetype_name, breed_name)
 
 		context = {

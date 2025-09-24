@@ -29,12 +29,6 @@ spread_templates.default_laspistol_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.2,
@@ -154,18 +148,6 @@ spread_templates.default_laspistol_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {

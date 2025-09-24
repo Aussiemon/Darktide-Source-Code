@@ -13,6 +13,9 @@ local groups = {
 	enemy = {
 		limit = 1,
 	},
+	double_tag_enemy = {
+		limit = 1,
+	},
 	object = {
 		limit = 4,
 	},
@@ -486,7 +489,7 @@ local templates = {
 		can_override = true,
 		companion_order = true,
 		display_name = "loc_smart_tag_type_threat",
-		group = "enemy",
+		group = "double_tag_enemy",
 		lifetime = 25,
 		marker_type = "unit_threat_adamant",
 		target_unit_outline = "adamant_smart_tag",

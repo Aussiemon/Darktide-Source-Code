@@ -24,10 +24,13 @@ end
 
 DestructibleSystem.on_remove_extension = function (self, unit, extension_name)
 	if self._is_server then
-		local is_level_unit, level_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
+		local is_level_unit, level_unit_id, level_hash = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
 		if is_level_unit then
-			self._removed_level_unit_ids[#self._removed_level_unit_ids + 1] = level_unit_id
+			self._removed_level_unit_ids[#self._removed_level_unit_ids + 1] = {
+				unit_id = level_unit_id,
+				level_hash = level_hash,
+			}
 		end
 	end
 
@@ -44,13 +47,25 @@ DestructibleSystem.destroy = function (self, ...)
 	DestructibleSystem.super.destroy(self, ...)
 end
 
+DestructibleSystem.clear_unit_from_removed_level_list = function (self, unit_id)
+	local removed_level_unit_ids = self._removed_level_unit_ids
+
+	for i = #removed_level_unit_ids, 1, -1 do
+		if removed_level_unit_ids[i].unit_id == unit_id and removed_level_unit_ids[i].level_hash ~= NetworkConstants.invalid_level_name_hash then
+			table.remove(removed_level_unit_ids, i)
+
+			break
+		end
+	end
+end
+
 DestructibleSystem.hot_join_sync = function (self, sender, channel)
 	local removed_level_unit_ids = self._removed_level_unit_ids
 
 	for ii = 1, #removed_level_unit_ids do
 		local level_unit_id = removed_level_unit_ids[ii]
 
-		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id)
+		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id.unit_id, level_unit_id.level_hash)
 	end
 
 	local unit_to_extension_map = self._unit_to_extension_map
@@ -60,42 +75,42 @@ DestructibleSystem.hot_join_sync = function (self, sender, channel)
 	end
 end
 
-DestructibleSystem.rpc_destructible_damage_taken = function (self, channel_id, unit_id, is_level_unit)
+DestructibleSystem.rpc_destructible_damage_taken = function (self, channel_id, unit_id, is_level_unit, optional_level_name_hash)
 	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
 
 	if not invalid_id then
-		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit, optional_level_name_hash)
 		local extension = self._unit_to_extension_map[unit]
 
 		extension:rpc_destructible_damage_taken()
 	end
 end
 
-DestructibleSystem.rpc_destructible_last_destruction = function (self, channel_id, unit_id, is_level_unit)
+DestructibleSystem.rpc_destructible_last_destruction = function (self, channel_id, unit_id, is_level_unit, optional_level_name_hash)
 	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
 
 	if not invalid_id then
-		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit, optional_level_name_hash)
 		local extension = self._unit_to_extension_map[unit]
 
 		extension:rpc_destructible_last_destruction()
 	end
 end
 
-DestructibleSystem.rpc_sync_destructible = function (self, channel_id, unit_id, is_level_unit, current_stage, visible, from_hot_join_sync)
+DestructibleSystem.rpc_sync_destructible = function (self, channel_id, unit_id, is_level_unit, current_stage, visible, from_hot_join_sync, optional_level_name_hash)
 	local invalid_id = is_level_unit and unit_id == NetworkConstants.invalid_level_unit_id or unit_id == NetworkConstants.invalid_game_object_id
 
 	if not invalid_id then
-		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+		local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit, optional_level_name_hash)
 		local extension = self._unit_to_extension_map[unit]
 
 		extension:rpc_sync_destructible(current_stage, visible, from_hot_join_sync)
 	end
 end
 
-DestructibleSystem.rpc_destructible_mark_for_deletion = function (self, channel_id, level_unit_id)
+DestructibleSystem.rpc_destructible_mark_for_deletion = function (self, channel_id, level_unit_id, optional_level_name_hash)
 	local is_level_unit = true
-	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
+	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit, optional_level_name_hash)
 
 	Managers.state.unit_spawner:mark_for_deletion(unit)
 end

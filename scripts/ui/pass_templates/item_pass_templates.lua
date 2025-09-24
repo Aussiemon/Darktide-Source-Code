@@ -4404,6 +4404,15 @@ ItemPassTemplates.item_icon = {
 		end,
 	},
 	{
+		pass_type = "text",
+		value = "",
+		style = item_lock_symbol_text_style,
+		visibility_function = function (content, style)
+			return content.locked
+		end,
+		change_function = _symbol_text_change_function,
+	},
+	{
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
@@ -4424,7 +4433,10 @@ ItemPassTemplates.item_icon = {
 			},
 		},
 		visibility_function = function (content, style)
-			return content.has_price_tag
+			local is_locked = content.locked
+			local is_sold = content.has_price_tag and not content.sold
+
+			return is_locked or is_sold
 		end,
 	},
 	{

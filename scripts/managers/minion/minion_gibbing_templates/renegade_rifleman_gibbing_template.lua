@@ -38,7 +38,7 @@ head_sever.scale_node = "j_neck"
 head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + size
 head_sever.material_overrides = {
 	"slot_head",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local head_full = table.clone(head_sever)
@@ -101,7 +101,7 @@ upper_left_arm.condition = {
 }
 upper_left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_right_arm = table.clone(limb_segment)
@@ -124,7 +124,7 @@ upper_right_arm.condition = {
 }
 upper_right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_left_arm_remove = table.clone(upper_left_arm)
@@ -151,7 +151,7 @@ lower_left_arm.stump_settings.stump_attach_node = "j_leftarm"
 lower_left_arm.scale_node = "j_leftforearm"
 lower_left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local lower_right_arm = table.clone(limb_segment)
@@ -170,7 +170,7 @@ lower_right_arm.stump_settings.stump_attach_node = "j_rightarm"
 lower_right_arm.scale_node = "j_rightforearm"
 lower_right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local lower_left_arm_remove = table.clone(lower_left_arm)
@@ -199,7 +199,7 @@ left_arm.extra_hit_zone_actors_to_destroy = {
 }
 left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local right_arm = table.clone(limb_full)
@@ -220,7 +220,7 @@ right_arm.extra_hit_zone_actors_to_destroy = {
 }
 right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_left_arm_warp = table.clone(upper_left_arm)
@@ -307,7 +307,7 @@ upper_left_leg.condition = {
 }
 upper_left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_right_leg = table.clone(limb_segment)
@@ -330,7 +330,7 @@ upper_right_leg.condition = {
 }
 upper_right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_left_leg_remove = table.clone(upper_left_leg)
@@ -358,7 +358,7 @@ lower_left_leg.stump_settings.stump_attach_node = "j_leftupleg"
 lower_left_leg.scale_node = "j_leftleg"
 lower_left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local lower_right_leg = table.clone(limb_segment)
@@ -378,7 +378,7 @@ lower_right_leg.stump_settings.stump_attach_node = "j_rightupleg"
 lower_right_leg.scale_node = "j_rightleg"
 lower_right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local lower_left_leg_remove = table.clone(lower_left_leg)
@@ -407,7 +407,7 @@ left_leg.extra_hit_zone_actors_to_destroy = {
 }
 left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local right_leg = table.clone(limb_full)
@@ -428,7 +428,7 @@ right_leg.extra_hit_zone_actors_to_destroy = {
 }
 right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_left_leg_warp = table.clone(upper_left_leg)
@@ -523,7 +523,7 @@ torso_sever.material_overrides = {
 	"slot_face",
 	"slot_upperbody",
 	"slot_variation_gear",
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local torso_full = table.clone(torso_sever)

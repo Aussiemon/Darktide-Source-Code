@@ -31,10 +31,14 @@ SpecialsPacing.init = function (self, nav_world)
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
-	local add_max_alive_specials = Managers.state.havoc:get_modifier_value("add_max_alive_specials")
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
 
-	if add_max_alive_specials then
-		self._max_alive_specials_bonus = self._max_alive_specials_bonus + add_max_alive_specials
+	if havoc_extension then
+		local add_max_alive_specials = havoc_extension:get_modifier_value("add_max_alive_specials")
+
+		if add_max_alive_specials then
+			self._max_alive_specials_bonus = self._max_alive_specials_bonus + add_max_alive_specials
+		end
 	end
 
 	local first_spawn_timer_modifer = template.first_spawn_timer_modifer
@@ -67,6 +71,15 @@ local MIN_TIMER_DIFF_RANGE = {
 	3,
 	5,
 }
+local RESERVED_BASE = 0.8
+local RESERVED_MULTIPLER = 0.2
+
+local function _interrupter_spawn_multiplier(index)
+	local calculated_multiplier = RESERVED_BASE + index * RESERVED_MULTIPLER
+
+	return calculated_multiplier
+end
+
 local USED_BREEDS = {}
 
 SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
@@ -242,6 +255,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 		return
 	end
 
+	local pacing_manager = Managers.state.pacing
 	local main_path_manager = Managers.state.main_path
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
 	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
@@ -256,7 +270,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local pacing_specials_enabled, reason = Managers.state.pacing:spawn_type_enabled("specials")
 	local specials_allowed = travel_distance_allowed and pacing_specials_enabled and not self._frozen
 
-	if reason and reason == "disabled_by_challenge_rating" and self._ahead_unit_has_no_units_in_coherency then
+	if reason and reason == "disabled_by_challenge_rating" and not Managers.state.pacing:is_using_heat() and self._ahead_unit_has_no_units_in_coherency then
 		specials_allowed = true
 	end
 
@@ -267,7 +281,6 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local move_timer_when_monster_active = template.move_timer_when_monster_active or self._has_move_timer_when_monster_active_mutator
 	local move_timer_when_terror_event_active = template.move_timer_when_terror_event_active
 	local move_timer_override = false
-	local pacing_manager = Managers.state.pacing
 	local move_timer_when_challenge_rating_above = self._override_move_timer_when_challenge_rating_above or template.move_timer_when_challenge_rating_above
 
 	if move_timer_when_challenge_rating_above then
@@ -507,6 +520,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 end
 
 SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_side_id)
+	local template = self._template
 	local breed_name = self:_get_special_slot_breed_name(specials_slot)
 	local optional_prefered_spawn_direction = specials_slot.optional_prefered_spawn_direction
 	local optional_mainpath_offset = specials_slot.optional_mainpath_offset
@@ -596,12 +610,17 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 
 	local slot_target_unit = specials_slot.target_unit
 	local target_unit = ALIVE[slot_target_unit] and slot_target_unit or closest_target_unit
+	local aggro_state = aggro_states.aggroed
 	local minion_spawn_manager = Managers.state.minion_spawn
 	local param_table = minion_spawn_manager:request_param_table()
 
-	param_table.optional_aggro_state = aggro_states.aggroed
+	param_table.optional_aggro_state = aggro_state
 	param_table.optional_target_unit = target_unit
 	param_table.optional_health_modifier = optional_health_modifier
+
+	if template.shield_interrupter_spawn_depleted and template.shield_interrupter_spawn_depleted[breed_name] then
+		param_table.optional_void_shield_start_depleted = true
+	end
 
 	local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, param_table)
 
@@ -670,17 +689,14 @@ end
 
 local ABOVE, BELOW, LATERAL = 1, 1.5, 1
 
-local function _find_travel_distance(nav_world, target_unit, nav_spawn_points)
+local function _find_travel_distance(nav_world, target_unit)
 	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, POSITION_LOOKUP[target_unit], ABOVE, BELOW, LATERAL)
 
 	if not target_navmesh_position then
 		return
 	end
 
-	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
-	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-	local end_index = start_index + 1
-	local _, target_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(target_navmesh_position, start_index, end_index)
+	local target_travel_distance = Managers.state.main_path:travel_distance_from_position(target_navmesh_position)
 
 	if target_travel_distance then
 		return target_travel_distance
@@ -729,7 +745,7 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 			local random_target_unit = target_units[math.random(1, num_target_units)]
 
 			if random_target_unit then
-				travel_distance = _find_travel_distance(nav_world, random_target_unit, self._nav_spawn_points)
+				travel_distance = _find_travel_distance(nav_world, random_target_unit)
 				target_unit = random_target_unit
 			end
 		elseif check_ahead then
@@ -748,7 +764,7 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 
 	if optional_mainpath_offset then
 		if not travel_distance then
-			local target_travel_distance = _find_travel_distance(nav_world, target_unit, self._nav_spawn_points)
+			local target_travel_distance = _find_travel_distance(nav_world, target_unit)
 
 			if target_travel_distance then
 				travel_distance = target_travel_distance
@@ -909,10 +925,7 @@ SpecialsPacing._check_stuck_special = function (self, unit, specials_slot, templ
 			return
 		end
 
-		local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, navmesh_position)
-		local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-		local end_index = start_index + 1
-		local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
+		local enemy_travel_distance = Managers.state.main_path:travel_distance_from_position(navmesh_position)
 
 		if enemy_travel_distance < ahead_travel_distance and behind_travel_distance < enemy_travel_distance then
 			return
@@ -1196,7 +1209,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 	for i = 1, num_breeds do
 		local specials_slot = specials_slots[i]
 
-		if not specials_slot.monster_breed_override then
+		if not specials_slot.reserved_slot or specials_slot.reserved_slot and specials_slot.reserved_slot_allowed_for_coordinated_strike or specials_slot.monster_breed_override then
 			local optional_coordinated_strike = true
 
 			self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
@@ -1257,8 +1270,6 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 		second_ahead_distance = behind_travel_distance
 		second_behind_distance = ahead_travel_distance
 	else
-		local nav_spawn_points = self._nav_spawn_points
-
 		for i = 1, num_target_units do
 			local target_unit = target_units[i]
 
@@ -1267,10 +1278,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 				local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, enemy_position, ABOVE, BELOW, LATERAL)
 
 				if navmesh_position then
-					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, navmesh_position)
-					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-					local end_index = start_index + 1
-					local _, enemy_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(navmesh_position, start_index, end_index)
+					local enemy_travel_distance = Managers.state.main_path:travel_distance_from_position(navmesh_position)
 
 					if second_ahead_distance < enemy_travel_distance then
 						second_ahead_distance = enemy_travel_distance
@@ -1604,7 +1612,7 @@ SpecialsPacing.force_coordinated_strike = function (self, timer, override_num_br
 	for i = 1, num_breeds do
 		local specials_slot = specials_slots[i]
 
-		if not ALIVE[specials_slot.spawned_unit] then
+		if not specials_slot.reserved_slot or specials_slot.reserved_slot and specials_slot.reserved_slot_allowed_for_coordinated_strike or specials_slot.monster_breed_override then
 			local optional_coordinated_strike = true
 
 			self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, timer, nil, optional_coordinated_strike)

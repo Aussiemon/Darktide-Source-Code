@@ -36,15 +36,6 @@ FlowCallbacks.clear_return_value = function ()
 	table.clear(flow_return_table)
 end
 
-FlowCallbacks.anim_callback = function (params)
-	local unit = params.unit
-	local callback_name = params.callback
-	local param1 = params.param1
-	local animation_system = Managers.state.extension:system("animation_system")
-
-	animation_system:anim_callback(unit, callback_name, param1)
-end
-
 FlowCallbacks.call_anim_event = function (params)
 	local is_server = Managers.state.game_session:is_server()
 
@@ -291,14 +282,16 @@ local function _minion_target_unit_armor_type(unit)
 end
 
 FlowCallbacks.minion_fx = function (params)
-	if DEDICATED_SERVER then
+	local unit = params.unit
+	local name = params.name
+	local unit_data_system_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if not unit_data_system_extension or DEDICATED_SERVER then
 		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
 
-	local unit = params.unit
-	local name = params.name
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local sounds = breed.sounds
 	local wwise_events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
@@ -445,14 +438,16 @@ FlowCallbacks.minion_fx = function (params)
 end
 
 FlowCallbacks.minion_material_fx = function (params)
-	if DEDICATED_SERVER then
+	local unit = params.unit
+	local name = params.name
+	local unit_data_system_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	if not unit_data_system_extension or DEDICATED_SERVER then
 		flow_return_table.playing_id, flow_return_table.effect_id = nil
 
 		return flow_return_table
 	end
 
-	local name = params.name
-	local unit = params.unit
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local sounds = breed.sounds
 	local use_proximity_culling = sounds.use_proximity_culling
@@ -819,35 +814,43 @@ FlowCallbacks.player_footstep = function (params)
 	local should_play_fx = _should_play_player_fx("3p only", unit)
 
 	if should_play_fx then
-		local particle_alias = params.particle_gear_alias
-		local sound_alias = params.sound_gear_alias
-		local foot = params.foot
 		local use_cached_material_hit = params.use_cached_material_hit
+		local left_sound_alias = params.left_sound_gear_alias
+		local left_decal_alias = params.left_decal_gear_alias
+		local right_sound_alias = params.right_sound_gear_alias
+		local right_decal_alias = params.right_decal_gear_alias
 		local world = Managers.world:world("level_world")
 		local wwise_world = World.get_data(world, "wwise_world")
 		local physics_world = World.get_data(world, "physics_world")
 
-		MaterialFx.flow_cb_3p_footstep(world, wwise_world, physics_world, unit, sound_alias, foot, use_cached_material_hit)
+		MaterialFx.flow_cb_player_3p_footstep(world, wwise_world, physics_world, unit, left_sound_alias, left_decal_alias, right_sound_alias, right_decal_alias, use_cached_material_hit)
 	end
 
 	return flow_return_table
 end
 
-FlowCallbacks.companion_footstep = function (params)
-	local unit = params.unit
-	local sound_alias = params.sound_gear_alias
-	local unit_node_name = params.unit_node
+local DEFAULT_EXTENTS = {
+	1,
+	1,
+	1,
+}
+local _external_properties = {}
+
+local function _place_companion_footstep(world, wwise_world, physics_world, unit, unit_node_name, sound_alias, decal_alias, use_cached_material_hit)
 	local unit_node = Unit.node(unit, unit_node_name)
-	local query_from = Unit.world_position(unit, unit_node) + Vector3.up() * 0.5
+	local node_pos = Unit.world_position(unit, unit_node)
+	local query_from = node_pos + Vector3.up() * 0.5
 	local query_to = query_from - Vector3.up()
-	local world = Managers.world:world("level_world")
-	local wwise_world = World.get_data(world, "wwise_world")
-	local physics_world = World.get_data(world, "physics_world")
-	local hit, material, _, _ = MaterialQuery.query_material(physics_world, query_from, query_to, "companion_footstep")
+	local decal_direction = Quaternion.forward(Unit.world_rotation(unit, 1))
+	local hit, material, position, normal, _, _ = MaterialQuery.query_material(physics_world, query_from, query_to, "companion_footstep")
 
 	if hit then
 		Unit.set_data(unit, "cache_material", material)
 	end
+
+	table.clear(_external_properties)
+
+	_external_properties.material = material
 
 	local owner_player = Managers.state.player_unit_spawn:owner(unit)
 	local player_unit = owner_player and owner_player.player_unit
@@ -856,7 +859,7 @@ FlowCallbacks.companion_footstep = function (params)
 		local owner_visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
 
 		if owner_visual_loadout_extension then
-			local resolved, event_name, has_husk_events = owner_visual_loadout_extension:resolve_gear_sound(sound_alias, nil)
+			local resolved, event_name, has_husk_events = owner_visual_loadout_extension:resolve_gear_sound(sound_alias, _external_properties)
 
 			if resolved then
 				local source_id = WwiseWorld.make_auto_source(wwise_world, unit, unit_node)
@@ -888,6 +891,59 @@ FlowCallbacks.companion_footstep = function (params)
 		end
 	end
 
+	local owner_visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
+
+	if not owner_visual_loadout_extension then
+		return
+	end
+
+	if hit and decal_alias then
+		local resolved, decal_name, extents = owner_visual_loadout_extension:resolve_gear_decal(decal_alias, _external_properties)
+
+		if resolved then
+			local t = Managers.time:time("gameplay")
+
+			extents = Vector3(unpack(extents or DEFAULT_EXTENTS))
+
+			local rotation = Quaternion.look(normal, decal_direction)
+
+			Managers.state.decal:add_projection_decal(decal_name, position, rotation, normal, extents, nil, nil, t)
+		end
+	end
+end
+
+FlowCallbacks.companion_footstep = function (params)
+	local unit = params.unit
+	local unit_node_name = params.unit_node
+	local use_cached_material_hit = params.use_cached_material_hit
+	local lf_sound_alias = params.front_left_sound_gear_alias
+	local lf_decal_alias = params.front_left_decal_gear_alias
+	local lr_sound_alias = params.front_right_sound_gear_alias
+	local lr_decal_alias = params.front_right_decal_gear_alias
+	local rf_sound_alias = params.rear_left_sound_gear_alias
+	local rf_decal_alias = params.rear_left_decal_gear_alias
+	local rr_sound_alias = params.rear_right_sound_gear_alias
+	local rr_decal_alias = params.rear_right_decal_gear_alias
+	local world = Managers.world:world("level_world")
+	local wwise_world = World.get_data(world, "wwise_world")
+	local physics_world = World.get_data(world, "physics_world")
+
+	if lf_sound_alias or lf_decal_alias then
+		_place_companion_footstep(world, wwise_world, physics_world, unit, unit_node_name, lf_sound_alias, lf_decal_alias, use_cached_material_hit)
+	end
+
+	if lr_sound_alias or lr_decal_alias then
+		_place_companion_footstep(world, wwise_world, physics_world, unit, unit_node_name, lr_sound_alias, lr_decal_alias, use_cached_material_hit)
+	end
+
+	if rf_sound_alias or rf_decal_alias then
+		_place_companion_footstep(world, wwise_world, physics_world, unit, unit_node_name, rf_sound_alias, rf_decal_alias, use_cached_material_hit)
+	end
+
+	if rr_sound_alias or rr_decal_alias then
+		_place_companion_footstep(world, wwise_world, physics_world, unit, unit_node_name, rr_sound_alias, rr_decal_alias, use_cached_material_hit)
+	end
+
 	return flow_return_table
 end
 
@@ -900,14 +956,16 @@ FlowCallbacks.player_material_fx = function (params)
 		local source_id = params.sound_source_id
 		local query_position_object = Unit.node(unit, params.query_position_object)
 		local sound_alias = params.sound_gear_alias
+		local decal_alias = params.decal_gear_alias
 		local world = Managers.world:world("level_world")
 		local wwise_world = World.get_data(world, "wwise_world")
 		local physics_world = World.get_data(world, "physics_world")
 		local unit_pos = Unit.world_position(unit, query_position_object)
 		local query_from = unit_pos + Vector3(0, 0, 0.5)
 		local query_to = query_from + Vector3(0, 0, -1)
+		local decal_direction, flip_decal
 
-		MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter)
+		MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, params.sound_set_speed_parameter, params.sound_set_first_person_parameter, decal_alias, decal_direction, flip_decal)
 	end
 
 	return flow_return_table
@@ -1510,8 +1568,9 @@ FlowCallbacks.trigger_lua_unit_event = function (params)
 end
 
 FlowCallbacks.trigger_lua_level_event = function (params)
+	local flow_level = Application.flow_callback_context_level()
 	local event = params.event
-	local level = params.level
+	local level = params.level or flow_level
 	local event_manager = Managers.event
 
 	if event_manager then
@@ -2153,13 +2212,34 @@ FlowCallbacks.teleport_payload = function (params)
 	end
 end
 
+function get_objective_group_id()
+	local level = Application.flow_callback_context_level()
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	if level then
+		return unit_spawner_manager:index_by_level(level)
+	else
+		local unit = Application.flow_callback_context_unit()
+
+		if unit then
+			level = Unit.level(unit)
+
+			if level then
+				return unit_spawner_manager:index_by_level(level)
+			end
+		end
+	end
+
+	return nil
+end
+
 FlowCallbacks.start_mission_objective = function (params)
 	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_start_mission_objective(params.objective_name)
+		mission_objective_system:flow_callback_start_mission_objective(params.objective_name, get_objective_group_id())
 	end
 end
 
@@ -2169,7 +2249,7 @@ FlowCallbacks.update_mission_objective = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_update_mission_objective(params.objective_name)
+		mission_objective_system:flow_callback_update_mission_objective(params.objective_name, get_objective_group_id())
 	end
 end
 
@@ -2179,7 +2259,7 @@ FlowCallbacks.end_mission_objective = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_end_mission_objective(params.objective_name)
+		mission_objective_system:flow_callback_end_mission_objective(params.objective_name, get_objective_group_id())
 	end
 end
 
@@ -2193,7 +2273,7 @@ FlowCallbacks.start_side_mission_objective = function (params)
 			local objective_name = side_mission.name
 			local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-			mission_objective_system:flow_callback_start_mission_objective(objective_name)
+			mission_objective_system:flow_callback_start_mission_objective(objective_name, get_objective_group_id())
 		else
 			Log.warning("FlowCallbacks", "side_mission(%s) not defined.", tostring(Managers.state.mission:side_mission_name()))
 		end
@@ -2209,7 +2289,7 @@ FlowCallbacks.mission_objective_override_ui_string = function (params)
 		local new_ui_description = params.new_ui_description
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_override_ui_string(objective_name, new_ui_header, new_ui_description)
+		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(), new_ui_header, new_ui_description)
 	end
 end
 
@@ -2220,7 +2300,7 @@ FlowCallbacks.mission_objective_reset_override_ui_string = function (params)
 		local objective_name = params.mission_objective_name
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_override_ui_string(objective_name, "empty_objective_string", "empty_objective_string")
+		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(), "empty_objective_string", "empty_objective_string")
 	end
 end
 
@@ -2232,7 +2312,7 @@ FlowCallbacks.mission_objective_show_ui = function (params)
 		local show = params.show
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_ui(objective_name, show)
+		mission_objective_system:flow_callback_set_objective_show_ui(objective_name, get_objective_group_id(), show)
 	end
 end
 
@@ -2244,7 +2324,7 @@ FlowCallbacks.mission_objective_set_ui_state = function (params)
 		local state = params.state
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_ui_state(objective_name, state)
+		mission_objective_system:flow_callback_set_objective_ui_state(objective_name, get_objective_group_id(), state)
 	end
 end
 
@@ -2256,7 +2336,7 @@ FlowCallbacks.mission_objective_increment = function (params)
 		local amount = params.amount
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:external_update_mission_objective(objective_name, 0, amount)
+		mission_objective_system:external_update_mission_objective(objective_name, get_objective_group_id(), 0, amount)
 	end
 end
 
@@ -2268,7 +2348,7 @@ FlowCallbacks.mission_objective_show_counter = function (params)
 		local show = params.show_counter
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_counter(objective_name, show)
+		mission_objective_system:flow_callback_set_objective_show_counter(objective_name, get_objective_group_id(), show)
 	end
 end
 
@@ -2280,7 +2360,7 @@ FlowCallbacks.mission_objective_show_bar = function (params)
 		local show = params.show_bar
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_bar(objective_name, show)
+		mission_objective_system:flow_callback_set_objective_show_bar(objective_name, get_objective_group_id(), show)
 	end
 end
 
@@ -2292,7 +2372,7 @@ FlowCallbacks.mission_objective_show_timer = function (params)
 		local show = params.show_timer
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_timer(objective_name, show)
+		mission_objective_system:flow_callback_set_objective_show_timer(objective_name, get_objective_group_id(), show)
 	end
 end
 
@@ -2347,8 +2427,9 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 			end
 
 			local target_rotation = Quaternion.look(look_direction_flat_forward, Vector3.up())
+			local send_character_state_disruption_event = true
 
-			PlayerMovement.teleport(player, position, target_rotation)
+			PlayerMovement.teleport(player, position, target_rotation, send_character_state_disruption_event)
 			_teleport_player_companion(player, position)
 
 			local channel_id = player:channel_id()
@@ -3035,6 +3116,10 @@ FlowCallbacks.hordes_mode_start_random_terror_event = function (params)
 
 		terror_event_manager:start_random_event(target_terror_chunk_name)
 	end
+end
+
+FlowCallbacks.hordes_mode_select_random_island = function (params)
+	Managers.event:trigger("hordes_mode_select_random_island")
 end
 
 FlowCallbacks.set_unit_material_scalar = function (params)

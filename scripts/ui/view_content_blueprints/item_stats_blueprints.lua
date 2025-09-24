@@ -132,7 +132,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local grid_width = grid_size[1]
 	local equipped_display_name_style = table.clone(UIFontSettings.header_3)
 
-	equipped_display_name_style.font_size = 24
+	equipped_display_name_style.font_size = 20
 	equipped_display_name_style.offset = {
 		0,
 		5,
@@ -144,7 +144,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	local weapon_display_name_style = table.clone(UIFontSettings.header_3)
 
-	weapon_display_name_style.font_size = 24
+	weapon_display_name_style.font_size = 20
 	weapon_display_name_style.offset = {
 		20,
 		35,
@@ -162,10 +162,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	weapon_sub_display_name_style.offset = {
 		20,
-		37,
+		35,
 		4,
 	}
-	weapon_sub_display_name_style.font_size = 20
+	weapon_sub_display_name_style.font_size = 18
 	weapon_sub_display_name_style.size = {
 		grid_width - 40,
 		500,
@@ -178,7 +178,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	item_display_name_style.offset = {
 		20,
-		15,
+		20,
 		4,
 	}
 
@@ -186,7 +186,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	item_sub_display_name_style.offset = {
 		20,
-		17,
+		22,
 		4,
 	}
 
@@ -361,7 +361,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 	weapon_perk_style.offset = {
 		55,
-		6,
+		0,
 		8,
 	}
 	weapon_perk_style.size = {
@@ -372,21 +372,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_perk_style.text_horizontal_alignment = "left"
 	weapon_perk_style.text_vertical_alignment = "top"
 	weapon_perk_style.text_color = Color.terminal_text_body(255, true)
-
-	local gadget_trait_style = table.clone(UIFontSettings.body)
-
-	gadget_trait_style.offset = {
-		98,
-		0,
-		3,
-	}
-	gadget_trait_style.size = {
-		grid_width - 106,
-	}
-	gadget_trait_style.font_size = 18
-	gadget_trait_style.text_horizontal_alignment = "left"
-	gadget_trait_style.text_vertical_alignment = "center"
-	gadget_trait_style.text_color = Color.terminal_text_header(255, true)
 
 	local weapon_traits_style = table.clone(UIFontSettings.header_3)
 
@@ -434,7 +419,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	description_style.line_spacing = 1.4
 	description_style.text_horizontal_alignment = "center"
 	description_style.text_vertical_alignment = "top"
-	description_style.text_color = Color.terminal_text_body_sub_header(255, true)
+	description_style.text_color = Color.terminal_text_body(255, true)
 
 	local obtained_label_style = table.clone(UIFontSettings.body)
 
@@ -797,7 +782,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					0,
 					0,
 				},
-				color = Color.terminal_frame(50, true),
+				color = Color.terminal_frame(25, true),
 			},
 		}
 	end
@@ -1804,13 +1789,21 @@ local function generate_blueprints_function(grid_size, optional_item)
 				value_id = string.format("text_%i", ii),
 				style = table.merge_recursive(table.clone(weapon_stat_text_style), {
 					horizontal_alignment = "left",
+					line_spacing = 0.8,
+					text_vertical_alignment = "bottom",
+					vertical_alignment = "top",
 					offset = {
 						20 + base_offset_x,
-						10 + base_offset_y,
+						12 + base_offset_y,
 						3,
 					},
 					text_color = Color.terminal_text_body(255, true),
-					preview_color = Color.ui_blue_light(255, true),
+					preview_color = Color.ui_blue_light(25, 55, true),
+					color = Color.red(255, true),
+					size = {
+						weapon_stat_text_style.size[1],
+						30,
+					},
 				}),
 			}
 			pass_templates[#pass_templates + 1] = {
@@ -1819,11 +1812,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style_id = string.format("percentage_%i", ii),
 				value_id = string.format("percentage_%i", ii),
 				style = table.merge_recursive(table.clone(stat_percentage_style), {
-					font_size = 22,
+					font_size = 18,
 					text_horizontal_alignment = "left",
 					offset = {
 						20 + base_offset_x,
-						10 + base_offset_y + 27 + 5,
+						20 + base_offset_y + bar_offset_y + 8,
 						3,
 					},
 					text_color = Color.terminal_text_header(255, true),
@@ -1836,7 +1829,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						22 + base_offset_x + bar_offset,
-						10 + base_offset_y + bar_offset_y,
+						20 + base_offset_y + bar_offset_y,
 						3,
 					},
 					size = {
@@ -1853,7 +1846,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						20 + base_offset_x + bar_offset,
-						10 + base_offset_y + bar_offset_y - 2,
+						20 + base_offset_y + bar_offset_y - 2,
 						2,
 					},
 					size = {
@@ -1870,7 +1863,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						0,
-						10 + base_offset_y + bar_offset_y,
+						20 + base_offset_y + bar_offset_y,
 						6,
 					},
 					size = {
@@ -1887,7 +1880,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						0,
-						10 + base_offset_y + bar_offset_y,
+						20 + base_offset_y + bar_offset_y,
 						6,
 					},
 					size = {
@@ -1905,7 +1898,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						22 + base_offset_x + bar_offset,
-						10 + base_offset_y + bar_offset_y,
+						20 + base_offset_y + bar_offset_y,
 						4,
 					},
 					size = {
@@ -1923,7 +1916,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					horizontal_alignment = "left",
 					offset = {
 						22 + base_offset_x + bar_offset,
-						10 + base_offset_y + bar_offset_y,
+						20 + base_offset_y + bar_offset_y,
 						5,
 					},
 					size = {
@@ -2314,7 +2307,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		weapon_header = {
 			size = {
 				grid_width,
-				135,
+				110,
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2348,7 +2341,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						},
 						offset = {
 							weapon_header_icon_width * 0.5,
-							30,
+							20,
 							3,
 						},
 						color = Color.terminal_icon(nil, true),
@@ -2428,9 +2421,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.icon = item.hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
 
 				local rarity_name_style = style.rarity_name
-				local sub_display_name_text_height = _style_text_height(sub_display_name, weapon_display_name_style, ui_renderer)
+				local height_margin = -2
+				local sub_display_name_text_height = _style_text_height(sub_display_name, weapon_sub_display_name_style, ui_renderer)
 
-				rarity_name_style.offset[2] = rarity_name_style.offset[2] + sub_display_name_text_height
+				rarity_name_style.offset[2] = weapon_sub_display_name_style.offset[2] + sub_display_name_text_height + height_margin
 
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 				local displayed_attacks = weapon_template.displayed_attacks
@@ -2444,8 +2438,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					local rarity_name_text_height = _style_text_height(rarity_name, weapon_rarity_name_style, ui_renderer)
 
-					style.weapon_special_icon.offset[2] = style.weapon_special_icon.offset[2] + sub_display_name_text_height + rarity_name_text_height
-					style.weapon_special_text.offset[2] = style.weapon_special_text.offset[2] + sub_display_name_text_height + rarity_name_text_height
+					style.weapon_special_icon.offset[2] = rarity_name_style.offset[2] + rarity_name_text_height
+					style.weapon_special_text.offset[2] = rarity_name_style.offset[2] + rarity_name_text_height
 				else
 					style.weapon_special_icon.visible = false
 					style.weapon_special_text.visible = false
@@ -2470,7 +2464,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local text = Items.display_name(item) .. "\n" .. Items.sub_display_name(item, nil, true)
 				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
-				local entry_height = math.max(0, text_height + 25)
+				local entry_height = math.max(0, text_height + 40)
 
 				return {
 					grid_width,
@@ -2478,17 +2472,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.black(255, true),
-					},
-				},
 				_generate_background_pass(),
 				{
 					pass_type = "texture",
@@ -2500,23 +2483,26 @@ local function generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "bottom",
 						offset = {
 							0,
-							0,
+							-10,
 							1,
 						},
 						color = Color.terminal_grid_background(255, true),
 					},
 				},
 				{
-					pass_type = "rect",
+					pass_type = "texture",
+					style_id = "background_shadow",
+					value = "content/ui/materials/gradients/gradient_vertical",
+					value_id = "background_shadow",
 					style = {
 						horizontal_alignment = "center",
-						vertical_alignment = "center",
+						vertical_alignment = "bottom",
 						offset = {
 							0,
 							0,
-							2,
+							1,
 						},
-						color = Color.black(140, true),
+						color = Color.black(47, true),
 					},
 				},
 				{
@@ -2554,7 +2540,19 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 					style.gradient_background.color = table.clone(rarity_color_dark)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
+					sub_display_name_style.text_color = table.clone(rarity_color)
+				else
+					style.gradient_background.color = Color.terminal_grid_background(127, true)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
 				end
+
+				style.background.visible = not not element.add_background
+				style.background_shadow.visible = not not element.add_background_shadow
 
 				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
 
@@ -2572,7 +2570,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
 				local text = display_name .. "\n" .. Items.sub_display_name(item)
 				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
-				local entry_height = math.max(0, text_height + 25)
+				local entry_height = math.max(0, text_height + 40)
 
 				return {
 					grid_width,
@@ -2580,17 +2578,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.black(255, true),
-					},
-				},
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "gradient_background",
@@ -2601,10 +2589,26 @@ local function generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "bottom",
 						offset = {
 							0,
-							0,
+							-15,
 							1,
 						},
 						color = Color.terminal_grid_background(255, true),
+					},
+				},
+				{
+					pass_type = "texture",
+					style_id = "background_shadow",
+					value = "content/ui/materials/gradients/gradient_vertical",
+					value_id = "background_shadow",
+					style = {
+						horizontal_alignment = "center",
+						vertical_alignment = "bottom",
+						offset = {
+							0,
+							0,
+							1,
+						},
+						color = Color.black(47, true),
 					},
 				},
 				{
@@ -2631,7 +2635,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local profile = element.profile
 				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
-				local sub_display_name = Items.type_display_name(item)
+				local sub_display_name = Items.sub_display_name(item, nil, true)
 
 				content.display_name = display_name
 				content.sub_display_name = sub_display_name
@@ -2643,8 +2647,19 @@ local function generate_blueprints_function(grid_size, optional_item)
 					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
 					style.gradient_background.color = table.clone(rarity_color_dark)
-					style.display_name.text_color = table.clone(rarity_color)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
+					style.sub_display_name.text_color = table.clone(rarity_color)
+				else
+					style.gradient_background.color = Color.terminal_grid_background(127, true)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
 				end
+
+				style.background.visible = not not element.add_background
+				style.background_shadow.visible = not not element.add_background_shadow
 
 				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
 
@@ -2755,6 +2770,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				350,
 			},
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -2815,6 +2831,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				content.display_name = Items.display_name(item)
 				content.sub_display_name = Items.sub_display_name(item)
+				style.background.visible = not not element.add_background
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -2868,20 +2885,9 @@ local function generate_blueprints_function(grid_size, optional_item)
 		gadget_header = {
 			size = {
 				grid_width,
-				300,
+				250,
 			},
 			pass_template = {
-				{
-					pass_type = "rect",
-					style = {
-						offset = {
-							0,
-							0,
-							0,
-						},
-						color = Color.black(255, true),
-					},
-				},
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -2891,12 +2897,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						vertical_alignment = "center",
 						size = {
-							grid_width,
-							200,
+							grid_width * 0.9,
+							180,
 						},
 						offset = {
 							0,
-							0,
+							30,
 							3,
 						},
 						color = Color.white(255, true),
@@ -2931,62 +2937,33 @@ local function generate_blueprints_function(grid_size, optional_item)
 					visibility_function = _loading_icon_visibility,
 					change_function = _loading_icon_change,
 				},
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
-					style_id = "background",
+					style_id = "gradient_background",
 					value = "content/ui/materials/gradients/gradient_vertical",
-					value_id = "background",
+					value_id = "gradient_background",
 					style = {
 						horizontal_alignment = "center",
-						vertical_alignment = "bottom",
+						vertical_alignment = "top",
+						size = {
+							grid_width,
+							125,
+						},
 						offset = {
 							0,
 							0,
 							1,
 						},
-						color = Color.white(255, true),
-					},
-				},
-				{
-					pass_type = "rect",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "center",
-						offset = {
-							0,
-							0,
-							2,
-						},
-						color = Color.black(140, true),
+						color = Color.terminal_grid_background(255, true),
 					},
 				},
 				{
 					pass_type = "text",
-					style_id = "display_name",
+					style_id = "rarity_name",
 					value = "n/a",
-					value_id = "display_name",
-					style = item_display_name_style,
-				},
-				{
-					pass_type = "text",
-					style_id = "sub_display_name",
-					value = "n/a",
-					value_id = "sub_display_name",
-					style = item_sub_display_name_style,
-				},
-				{
-					pass_type = "text",
-					style_id = "rating_text",
-					value_id = "rating_title",
-					value = Localize("loc_item_information_rating"),
-					style = gear_stat_text_style,
-				},
-				{
-					pass_type = "text",
-					style_id = "rating_value",
-					value = "n/a",
-					value_id = "rating_value",
-					style = gear_value_style,
+					value_id = "rarity_name",
+					style = weapon_rarity_name_style,
 				},
 			},
 			init = function (parent, widget, element, callback_name, _, ui_renderer)
@@ -2994,32 +2971,28 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local style = widget.style
 
 				content.element = element
+				style.background.visible = not not element.add_background
 
 				local item = element.item
 				local display_name = Items.display_name(item)
 				local sub_display_name = Items.sub_display_name(item)
-				local sub_display_name_style = style.sub_display_name
+				local rarity_name_style = style.rarity_name
 
-				content.display_name = display_name
-				content.sub_display_name = sub_display_name
+				content.rarity_name = sub_display_name
 
-				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
-
-				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
-
-				local item_level, has_level = Items.expertise_level(item)
-				local rating_value = item.override_item_rating_string or has_level and item_level or ""
-
-				content.rating_value = rating_value
-
-				local item_rarity = item.rarity
-
-				if item_rarity then
+				if item.rarity then
 					local rarity_color, rarity_color_dark = Items.rarity_color(item)
 
-					style.background.color = table.clone(rarity_color)
-					style.display_name.text_color = table.clone(rarity_color)
-					style.sub_display_name.text_color = table.clone(rarity_color)
+					style.gradient_background.color = table.clone(rarity_color_dark)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
+					rarity_name_style.text_color = table.clone(rarity_color)
+				else
+					style.gradient_background.color = Color.terminal_grid_background(127, true)
+					style.gradient_background.material_values = {
+						invert = 1,
+					}
 				end
 			end,
 			load_icon = function (parent, widget, element)
@@ -3090,6 +3063,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				220,
 			},
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -3146,6 +3120,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				content.element = element
+
+				local style = widget.style
+
+				style.background.visible = not not element.add_background
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -3189,6 +3167,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				220,
 			},
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -3245,6 +3224,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				content.element = element
+
+				local style = widget.style
+
+				style.background.visible = not not element.add_background
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -3288,6 +3271,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				220,
 			},
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "texture",
 					style_id = "icon",
@@ -3344,6 +3328,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				content.element = element
+
+				local style = widget.style
+
+				style.background.visible = not not element.add_background
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -3683,7 +3671,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_rarity = element.perk_rarity
 				local description = Items.trait_description(perk_item, perk_rarity, perk_value)
 				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
-				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 14)
+				local entry_height = math.max(20, text_height)
 
 				return {
 					grid_width,
@@ -3792,7 +3780,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				widget.update_item = template.update_item
 			end,
-			update_item = function (widget, preview_perk)
+			update_item = function (widget, preview_perk, ui_renderer)
 				local content = widget.content
 				local style = widget.style
 				local element = content.element
@@ -3812,6 +3800,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style.description.size[1] = description_size[1] or style.description.size[1]
 					style.description.size[2] = description_size[2] or style.description.size[2]
 				end
+
+				if ui_renderer then
+					local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
+					local entry_height = math.max(20, text_height)
+
+					widget.content.size[2] = entry_height
+				end
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
@@ -3828,7 +3823,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_rarity = element.trait_rarity
 				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
 				local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
-				local entry_height = math.max(68, description_height + 25)
+				local entry_height = math.max(68, description_height + weapon_traits_description_style.offset[2])
 
 				return {
 					grid_width,
@@ -3943,7 +3938,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				widget.update_item = template.update_item
 			end,
-			update_item = function (widget, preview_trait)
+			update_item = function (widget, preview_trait, ui_renderer)
 				local content = widget.content
 				local style = widget.style
 				local element = content.element
@@ -3997,16 +3992,32 @@ local function generate_blueprints_function(grid_size, optional_item)
 						end
 					end
 				end
+
+				if ui_renderer then
+					local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
+					local entry_height = math.max(68, description_height + weapon_traits_description_style.offset[2])
+
+					widget.content.size[2] = entry_height
+				end
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return
 			end,
 		},
 		gadget_trait = {
-			size = {
-				grid_width,
-				54,
-			},
+			size_function = function (parent, element, ui_renderer)
+				local trait_item = element.trait_item
+				local trait_value = element.trait_value or 0
+				local trait_rarity = element.trait_rarity
+				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
+				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
+				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height)
+
+				return {
+					grid_width,
+					entry_height,
+				}
+			end,
 			pass_template = {
 				_generate_background_pass(),
 				{
@@ -4014,13 +4025,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 					value = "content/ui/materials/icons/perks/perk_level_05",
 					value_id = "rank",
 					style = {
-						vertical_alignment = "center",
+						vertical_alignment = "top",
 						size = {
 							20,
 							20,
 						},
 						offset = {
-							42,
+							20,
 							0,
 							8,
 						},
@@ -4031,7 +4042,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					value_id = "text",
-					style = gadget_trait_style,
+					style = weapon_perk_style,
 				},
 			},
 			init = function (parent, widget, element, callback_name)
@@ -4070,6 +4081,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				}
 			end,
 			pass_template = {
+				_generate_background_pass(),
 				{
 					pass_type = "text",
 					value = "n/a",
@@ -4087,6 +4099,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local description_localized = description and Localize(description) or ""
 
 				content.description = description_localized
+
+				local style = widget.style
+
+				style.background.visible = not not element.add_background
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return

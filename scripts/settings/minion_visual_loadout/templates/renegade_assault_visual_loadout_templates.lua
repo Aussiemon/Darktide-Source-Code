@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	renegade_assault = {},
 }
-local basic_renegade_assault_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_upperbody = {
 			use_outline = true,
@@ -98,7 +98,7 @@ local basic_renegade_assault_template = {
 				"content/items/characters/minions/gib_items/traitor_guard_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -114,8 +114,8 @@ local basic_renegade_assault_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_renegade_assault_template)
-local default_2 = table.clone(basic_renegade_assault_template)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(base_visual_loadout_template)
 
 default_2.gib_variations = {
 	"face_02_b",
@@ -129,7 +129,7 @@ default_2.slots.slot_face = {
 	},
 }
 
-local default_3 = table.clone(basic_renegade_assault_template)
+local default_3 = table.clone(base_visual_loadout_template)
 
 default_3.gib_variations = {
 	"face_03_b",
@@ -148,73 +148,69 @@ templates.renegade_assault.default = {
 	default_3,
 }
 
-local foundry_1 = table.clone(basic_renegade_assault_template)
+local tank_foundry_variations = {}
 
-foundry_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.renegade_assault.default) do
+	local tank_foundry_variation = table.clone(default_variation)
 
-local foundry_2 = table.clone(default_2)
+	tank_foundry_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/dirt_02",
+	}
+	tank_foundry_variations[#tank_foundry_variations + 1] = tank_foundry_variation
+end
 
-foundry_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.renegade_assault[zone_ids.tank_foundry] = tank_foundry_variations
 
-local foundry_3 = table.clone(default_3)
+local dust_variations = {}
 
-foundry_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
-templates.renegade_assault[zone_ids.tank_foundry] = {
-	foundry_1,
-	foundry_2,
-	foundry_3,
-}
+for _, default_variation in pairs(templates.renegade_assault.default) do
+	local dust_variation = table.clone(default_variation)
 
-local dust_1 = table.clone(basic_renegade_assault_template)
+	dust_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/sand_02",
+	}
+	dust_variations[#dust_variations + 1] = dust_variation
+end
 
-dust_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
+templates.renegade_assault[zone_ids.dust] = dust_variations
 
-local dust_2 = table.clone(default_2)
+local watertown_variations = {}
 
-dust_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
+for _, default_variation in pairs(templates.renegade_assault.default) do
+	local watertown_variation = table.clone(default_variation)
 
-local dust_3 = table.clone(default_3)
+	watertown_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_02",
+	}
+	watertown_variations[#watertown_variations + 1] = watertown_variation
+end
 
-dust_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-templates.renegade_assault[zone_ids.dust] = {
-	dust_1,
-	dust_2,
-	dust_3,
-}
+templates.renegade_assault[zone_ids.watertown] = watertown_variations
 
-local watertown_1 = table.clone(basic_renegade_assault_template)
+local void_variations = {}
 
-watertown_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
+for _, default_variation in pairs(templates.renegade_assault.default) do
+	local void_variation = table.clone(default_variation)
 
-local watertown_2 = table.clone(default_2)
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
 
-watertown_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
+templates.renegade_assault[zone_ids.void] = void_variations
 
-local watertown_3 = table.clone(default_3)
+local horde_variations = {}
 
-watertown_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-templates.renegade_assault[zone_ids.watertown] = {
-	watertown_1,
-	watertown_2,
-	watertown_3,
-}
+for _, default_variation in pairs(templates.renegade_assault.default) do
+	local horde_variation = table.clone(default_variation)
+
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
+
+templates.renegade_assault[zone_ids.horde] = horde_variations
 
 return templates

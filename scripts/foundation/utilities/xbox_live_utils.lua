@@ -616,4 +616,12 @@ XboxLiveUtils.get_associated_products = function ()
 	end):catch(_handle_error)
 end
 
+XboxLiveUtils.check_premium_currency_discount = function ()
+	XboxLiveUtils.get_associated_products():next(function (products)
+		if products.data["9MWM0GC8CXCZ"] then
+			Managers.telemetry_events:has_premium_currency_discount(products.data["9MWM0GC8CXCZ"].formattedPrice.isOnSale)
+		end
+	end)
+end
+
 return XboxLiveUtils

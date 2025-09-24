@@ -81,21 +81,6 @@ local considerations = {
 			component_field = "has_line_of_sight",
 			is_condition = true,
 		},
-		last_done_time = {
-			component_field = "last_done_time",
-			max_value = 30,
-			time_diff = true,
-			spline = {
-				0,
-				0,
-				0.5,
-				0,
-				0.5001,
-				1,
-				1,
-				1,
-			},
-		},
 	},
 }
 

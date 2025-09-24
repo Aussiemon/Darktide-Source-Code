@@ -326,12 +326,14 @@ weapon_template.actions = {
 			0.15,
 			1.4,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down_left",
-			anchor_point_offset = {
-				0.08,
-				-0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down_left",
+				anchor_point_offset = {
+					0.08,
+					-0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_light_smiter_m1,
@@ -420,12 +422,14 @@ weapon_template.actions = {
 			0.15,
 			1.4,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_up_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_up_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_light_smiter_m1,
@@ -503,12 +507,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/heavy_attack_down_left",
-			anchor_point_offset = {
-				0,
-				-0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/heavy_attack_down_left",
+				anchor_point_offset = {
+					0,
+					-0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_heavy_smiter_m1,
@@ -655,12 +661,14 @@ weapon_template.actions = {
 			0.25,
 			1.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down_left_v01",
-			anchor_point_offset = {
-				0,
-				0.05,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down_left_v01",
+				anchor_point_offset = {
+					0,
+					0.05,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_light_smiter_m1,
@@ -740,12 +748,14 @@ weapon_template.actions = {
 			0.3,
 			1.35,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/heavy_attack_right_diagonal",
-			anchor_point_offset = {
-				0,
-				-0,
-				0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/heavy_attack_right_diagonal",
+				anchor_point_offset = {
+					0,
+					-0,
+					0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_heavy_linesman,
@@ -894,12 +904,14 @@ weapon_template.actions = {
 			0.25,
 			1.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down",
-			anchor_point_offset = {
-				0,
-				0.5,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_down",
+				anchor_point_offset = {
+					0,
+					0.5,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_light_smiter_m1,
@@ -1044,12 +1056,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_left_diagonal",
-			anchor_point_offset = {
-				-0.1,
-				-0.2,
-				-0.13,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/attack_left_diagonal",
+				anchor_point_offset = {
+					-0.1,
+					-0.2,
+					-0.13,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_light_linesman,
@@ -1188,12 +1202,14 @@ weapon_template.actions = {
 			0.25,
 			0.7,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/pushfollow_v02",
-			anchor_point_offset = {
-				0,
-				-0.7,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/pushfollow_v02",
+				anchor_point_offset = {
+					0,
+					-0.7,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_pushfollowup_m1,
@@ -1341,12 +1357,14 @@ weapon_template.actions = {
 			0.4,
 			1.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/special",
-			anchor_point_offset = {
-				0.2,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/2h_axe/special",
+				anchor_point_offset = {
+					0.2,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_pickaxe_blunt,

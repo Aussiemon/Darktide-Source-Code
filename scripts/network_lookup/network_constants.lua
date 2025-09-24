@@ -75,7 +75,6 @@ _check_network_lookup_boundaries("lookup_2bit", "interaction_result")
 _check_network_lookup_boundaries("flicker_configuration_lookup", "light_controller_flicker_settings")
 _check_network_lookup_boundaries("lookup_5bit", "line_effects")
 _check_network_lookup_boundaries("lookup_2bit", "moveable_platform_direction")
-_check_network_lookup_boundaries("lookup_2bit", "minigame_states")
 _check_network_lookup_boundaries("minion_fx_source_name", "minion_fx_source_names")
 _check_network_lookup_boundaries("mission_objective_name_id", "mission_objective_names")
 _check_network_lookup_boundaries("mission_objective_ui_string_id", "mission_objective_ui_strings")
@@ -133,7 +132,7 @@ NetworkConstants.game_object_id = game_object_id
 
 local level_name_hash = Network.type_info("level_name_hash")
 
-NetworkConstants.invalid_level_name_hash = level_name_hash.min
+NetworkConstants.invalid_level_name_hash = 0
 
 local minion_anim_event = Network.type_info("minion_anim_event")
 

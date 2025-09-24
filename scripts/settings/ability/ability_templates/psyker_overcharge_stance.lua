@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/ability/ability_templates/psyker_overcharge_stance.lua
 
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local talent_settings = TalentSettings.overcharge_stance
+local talent_settings = TalentSettings.psyker
 local ability_template = {}
 
 ability_template.action_inputs = {
@@ -24,14 +24,12 @@ ability_template.action_input_hierarchy = {
 ability_template.actions = {
 	action_stance_change = {
 		ability_type = "combat_ability",
-		abort_sprint = true,
 		allowed_during_explode = true,
 		allowed_during_sprint = true,
 		anim = "ability_overcharge",
 		anim_3p = "ability_buff",
 		block_weapon_actions = false,
 		kind = "stance_change",
-		prevent_sprint = true,
 		refill_toughness = false,
 		sprint_ready_up_time = 0,
 		start_input = "stance_pressed",
@@ -39,8 +37,9 @@ ability_template.actions = {
 		uninterruptible = true,
 		use_ability_charge = true,
 		use_charge_at_start = true,
+		vent_warp_charge_special_rule = "psyker_overcharge_stance_quell_peril",
 		vo_tag = "ability_buff_stance",
-		vent_warp_charge = talent_settings.venting,
+		vent_warp_charge = talent_settings.overcharge_stance.venting,
 	},
 }
 ability_template.fx_sources = {}

@@ -84,6 +84,12 @@ push_settings.push_templates = {
 		max_speed_override = 2,
 		speed = 0.5,
 	},
+	renegade_plasma_gunner = {
+		ignore_stun_immunity = true,
+		max_speed_override = 3,
+		push_through_block = true,
+		speed = 5,
+	},
 	renegade_captain = {
 		ignore_stun_immunity = true,
 		max_speed_override = 6,

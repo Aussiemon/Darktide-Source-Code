@@ -37,17 +37,19 @@ local breed_hide_on_dissolve_slots = {
 		slot_head = 0.25,
 	},
 }
+local ignore_toggle_slots = {}
 
 local function get_shape_scale(radius)
 	return 1 / (0.1 * radius) * 0.99
 end
 
-local function toggle_slots(visual_loadout_extension, slots, show_slots)
+local function toggle_slots(visual_loadout_extension, slots, show_slots, breed)
 	for slot_name, _ in pairs(slots) do
 		local has_equipped_slot = visual_loadout_extension:can_unequip_slot(slot_name)
 		local should_toggle = has_equipped_slot and show_slots ~= visual_loadout_extension:is_slot_visible(slot_name)
+		local is_in_ignore_list = breed and ignore_toggle_slots[breed.name] == slot_name
 
-		if should_toggle then
+		if should_toggle and not is_in_ignore_list then
 			visual_loadout_extension:set_slot_visibility(slot_name, show_slots)
 		end
 	end
@@ -92,12 +94,12 @@ MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
 
 	local show_slots = not reverted
 
-	toggle_slots(visual_loadout_extension, hide_on_dissolve_slots, show_slots)
+	toggle_slots(visual_loadout_extension, hide_on_dissolve_slots, show_slots, breed)
 
 	local breed_hide_slots = breed_hide_on_dissolve_slots[breed.name]
 
 	if breed_hide_slots then
-		toggle_slots(visual_loadout_extension, breed_hide_slots, show_slots)
+		toggle_slots(visual_loadout_extension, breed_hide_slots, show_slots, breed)
 	end
 
 	local inventory = breed.inventory.default[1]
@@ -198,6 +200,14 @@ MinionDissolveUtility.inherit_progress = function (old_dissolve_data, new_dissol
 
 	new_dissolve_data.start_t = new_dissolve_data.start_t - duration * new_percentage_done
 	new_dissolve_data.done_t = new_dissolve_data.done_t - duration * new_percentage_done
+end
+
+MinionDissolveUtility.add_ignore_toggle_slots = function (breed_name, slot_name)
+	ignore_toggle_slots[breed_name] = slot_name
+end
+
+MinionDissolveUtility.clear_ignore_toggle_slots = function ()
+	table.clear(ignore_toggle_slots)
 end
 
 return MinionDissolveUtility

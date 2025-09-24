@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/ogryn_thumper_p1_m2.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -17,18 +16,16 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeThumperP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
-local template_types = WeaponTweakTemplateSettings.template_types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
+local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
-local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -95,7 +92,7 @@ weapon_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -594,12 +591,14 @@ weapon_template.actions = {
 			1.5,
 			0.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_left",
-			anchor_point_offset = {
-				0,
-				0.3,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_left",
+				anchor_point_offset = {
+					0,
+					0.3,
+					-0.15,
+				},
 			},
 		},
 		damage_type = damage_types.blunt,
@@ -707,12 +706,14 @@ weapon_template.actions = {
 			1.5,
 			0.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_right",
-			anchor_point_offset = {
-				0,
-				0.3,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_right",
+				anchor_point_offset = {
+					0,
+					0.3,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.ogryn_bullet_bounce,

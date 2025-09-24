@@ -97,6 +97,19 @@ hitscan_templates.autogun_p3_m1_bullet = {
 			damage_profile = DamageProfileTemplates.autogun_p3_m1,
 		},
 	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.035,
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.autogun_p3_m2_bullet = {
 	range = 100,
@@ -105,12 +118,38 @@ hitscan_templates.autogun_p3_m2_bullet = {
 			damage_profile = DamageProfileTemplates.autogun_p3_m2,
 		},
 	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.02,
+			test = "sphere",
+		},
+	},
 }
 hitscan_templates.autogun_p3_m3_bullet = {
 	range = 100,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.autogun_p3_m3,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.03,
+			test = "sphere",
 		},
 	},
 }

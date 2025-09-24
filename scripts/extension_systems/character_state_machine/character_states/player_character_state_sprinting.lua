@@ -17,8 +17,10 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
+local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
 local slot_configuration = PlayerCharacterConstants.slot_configuration
+local SPRINT_START_SLOWDOWN_DURATION = PlayerCharacterConstants.sprint_start_slowdown_duration
 local PlayerCharacterStateSprinting = class("PlayerCharacterStateSprinting", "PlayerCharacterStateBase")
 local _sideways_speed_function, _forward_speed_function, _abort_sprint, _check_input
 
@@ -50,8 +52,6 @@ PlayerCharacterStateSprinting.init = function (self, ...)
 
 	self._archetype_sprint_template = archetype.sprint
 	self._archetype_stamina_template = archetype.stamina
-	self._entered_t = 0
-	self._slowdown_duration = 0
 end
 
 PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -83,15 +83,22 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 
 	if wielded_slot ~= "none" then
 		local slot_type = slot_configuration[wielded_slot].slot_type
+		local ability_template = AbilityTemplate.current_ability_template(self._combat_ability_action_component)
+		local allowed_during_sprint = ability_template and ability_template.allowed_during_sprint
 
-		if slot_type == "ability" and wielded_slot ~= "slot_grenade_ability" then
+		if not allowed_during_sprint and slot_type == "ability" and wielded_slot ~= "slot_grenade_ability" then
 			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
 		end
 	end
 
 	self._previous_velocity_move_speed = nil
-	self._entered_t = t
-	self._slowdown_duration = sprint_character_state_component.use_sprint_start_slowdown and 0.11 or 0
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension and buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_sprint_started, param_table)
+	end
 end
 
 PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
@@ -107,6 +114,13 @@ PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
 	end
 
 	Stamina.set_regeneration_paused(self._stamina_component, false)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension and buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_sprint_ended, param_table)
+	end
 end
 
 local WALK_MOVE_ANIM_THRESHOLD = 0.8
@@ -128,7 +142,7 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local stat_buffs = buff_extension:stat_buffs()
 	local has_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
-	local has_weapon_action_input, weapon_action_input = _check_input(self._action_input_extension, weapon_template, has_sprinting_buff)
+	local has_weapon_action_input, weapon_action_input = _check_input(t, self._action_input_extension, self._weapon_extension, weapon_template, has_sprinting_buff)
 	local wants_sprint = sprint_input and not has_weapon_action_input
 	local sprint_character_state_component = self._sprint_character_state_component
 	local move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
@@ -177,14 +191,6 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local wants_slide = movement_state.is_crouching
 
 	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_weapon_action_input, weapon_action_input, move_direction, move_speed_without_weapon_actions)
-end
-
-PlayerCharacterStateSprinting.entered_t = function (self)
-	return self._entered_t
-end
-
-PlayerCharacterStateSprinting.slowdown_duration = function (self)
-	return self._slowdown_duration
 end
 
 PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_weapon_action_input, weapon_action_input, move_direction, move_speed_without_weapon_actions)
@@ -321,9 +327,8 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local speed_scale = stopped and 0 or math.sqrt(math.min(1, new_x * new_x + new_y * new_y))
 
 	if sprint_character_state_component.use_sprint_start_slowdown then
-		local time_in_sprint = t - self._entered_t
-		local slowdown_duration = self._slowdown_duration
-		local speed_mod = math.clamp(time_in_sprint, 0, slowdown_duration) / slowdown_duration
+		local time_in_sprint = t - self._character_state_component.entered_t
+		local speed_mod = math.clamp(time_in_sprint, 0, SPRINT_START_SLOWDOWN_DURATION) / SPRINT_START_SLOWDOWN_DURATION
 
 		speed_scale = speed_scale * speed_mod
 	end
@@ -373,17 +378,22 @@ local ALLOWED_INPUTS_IN_SPRINT = {
 	wield = true,
 }
 
-function _check_input(action_input_extension, weapon_template, has_hip_fire_buff)
-	local peek = action_input_extension:peek_next_input("weapon_action")
-	local is_allowed = peek and (weapon_template and weapon_template.allowed_inputs_in_sprint or ALLOWED_INPUTS_IN_SPRINT)[peek]
-	local is_hipfire_input = peek and weapon_template and weapon_template.hipfire_inputs and weapon_template.hipfire_inputs[peek]
+function _check_input(t, action_input_extension, weapon_extension, weapon_template, has_hip_fire_buff)
+	local peeked_next_input = action_input_extension:peek_next_input("weapon_action")
+
+	if not peeked_next_input then
+		return false, nil
+	end
+
+	local is_allowed = peeked_next_input and (weapon_template and weapon_template.allowed_inputs_in_sprint or ALLOWED_INPUTS_IN_SPRINT)[peeked_next_input]
+	local is_hipfire_input = peeked_next_input and weapon_template and weapon_template.hipfire_inputs and weapon_template.hipfire_inputs[peeked_next_input]
 	local is_hipfire_allowed_in_sprint = is_hipfire_input and has_hip_fire_buff
 
 	if is_allowed or is_hipfire_allowed_in_sprint then
-		return false
+		return false, nil
 	end
 
-	return peek ~= nil, peek
+	return true, peeked_next_input
 end
 
 function _sideways_speed_function(speed, wanted_speed, acceleration, deceleration, dt)

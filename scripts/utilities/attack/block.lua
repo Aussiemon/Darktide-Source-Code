@@ -42,8 +42,10 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 		return false
 	end
 
+	local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+	local count_as_blocking = buff_extension and buff_extension:has_keyword(buff_keywords.count_as_blocking)
 	local block_component = unit_data_extension:read_component("block")
-	local is_blocking = block_component.is_blocking
+	local is_blocking = block_component.is_blocking or count_as_blocking
 
 	if is_server and not is_blocking then
 		local interaction_component = unit_data_extension:read_component("interaction")
@@ -76,8 +78,7 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 	local can_block = block_types[attack_type]
 
 	if attack_type == attack_types.ranged then
-		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-		local can_block_ranged_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.can_block_ranged)
+		local can_block_ranged_keyword = buff_extension and (buff_extension:has_keyword(buff_keywords.can_block_ranged) or buff_extension:has_keyword(buff_keywords.count_as_blocking_vs_ranged))
 
 		if can_block_ranged_keyword then
 			can_block = true
@@ -208,11 +209,19 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 	local block_broken = stamina_depleted and block_cost > 0
 
 	if block_broken then
-		local weapon_disorientation_type = stamina_template and stamina_template.block_break_disorientation_type or DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE
-		local damage_disorientation_type = damage_profile.block_broken_disorientation_type
-		local disorientation_type = damage_disorientation_type or weapon_disorientation_type
+		local should_stun = true
 
-		Stun.apply(target_unit, disorientation_type, attack_direction, weapon_template, true, false)
+		if buff_extension then
+			should_stun = not buff_extension:has_keyword(buff_keywords.stun_immune_block_broken)
+		end
+
+		if should_stun then
+			local weapon_disorientation_type = stamina_template and stamina_template.block_break_disorientation_type or DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE
+			local damage_disorientation_type = damage_profile.block_broken_disorientation_type
+			local disorientation_type = damage_disorientation_type or weapon_disorientation_type
+
+			Stun.apply(target_unit, disorientation_type, attack_direction, weapon_template, true, false)
+		end
 	end
 
 	local unit_id = Managers.state.unit_spawner:game_object_id(target_unit)
@@ -243,14 +252,18 @@ end
 
 local PERFECT_BLOCK_WINDOW = 0.3
 
-Block.start_block_action = function (t, block_component, skip_update_perfect_blocking)
+Block.start_block_action = function (t, block_component, skip_update_perfect_blocking, stat_buffs)
 	block_component.is_blocking = true
 	block_component.has_blocked = false
 
 	if not skip_update_perfect_blocking then
 		block_component.is_perfect_blocking = true
 
-		return t + PERFECT_BLOCK_WINDOW
+		local perfect_block_window = PERFECT_BLOCK_WINDOW
+
+		perfect_block_window = perfect_block_window + (stat_buffs and stat_buffs.perfect_block_timing or 0)
+
+		return t + perfect_block_window
 	end
 end
 

@@ -27,14 +27,14 @@ ActionSmiteTargeting.init = function (self, action_context, action_params, actio
 
 	self._warp_charge_component = warp_charge_component
 
-	local targeting_component = unit_data_extension:write_component("action_module_targeting")
+	local action_module_target_finder = unit_data_extension:write_component("action_module_target_finder")
 
-	self._targeting_component = targeting_component
+	self._action_module_target_finder = action_module_target_finder
 
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
 	local overload_module_class_name = action_settings.overload_module_class_name
 
-	self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, targeting_component, action_settings)
+	self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, action_module_target_finder, action_settings)
 	self._overload_module = ActionModules[overload_module_class_name]:new(is_server, player_unit, action_settings, inventory_slot_component)
 end
 
@@ -71,11 +71,11 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action, frame
 
 	ActionSmiteTargeting.super.fixed_update(self, dt, t, time_in_action, frame, ignore_charge_module_update)
 
-	local previously_targeted_unit = self._targeting_component.target_unit_1
+	local previously_targeted_unit = self._action_module_target_finder.target_unit_1
 
 	self._targeting_module:fixed_update(dt, t)
 
-	local target_unit = self._targeting_component.target_unit_1
+	local target_unit = self._action_module_target_finder.target_unit_1
 
 	if target_unit and target_unit ~= previously_targeted_unit then
 		if self._is_server then
@@ -161,8 +161,6 @@ ActionSmiteTargeting._calculate_charge_duration_of_target_health = function (sel
 end
 
 ActionSmiteTargeting.finish = function (self, reason, data, t, time_in_action, action_settings, next_action_params)
-	self._should_fade_kill = false
-
 	ActionSmiteTargeting.super.finish(self, reason, data, t, time_in_action, next_action_params)
 	self._targeting_module:finish(reason, data, t)
 	self._overload_module:finish(reason, data, t)

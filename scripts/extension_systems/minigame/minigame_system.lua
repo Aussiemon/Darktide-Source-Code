@@ -6,7 +6,7 @@ require("scripts/extension_systems/minigame/minigame_extension")
 
 local MinigameSystem = class("MinigameSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_minigame_hot_join",
+	"rpc_minigame_extension_sync_active",
 	"rpc_minigame_sync_start",
 	"rpc_minigame_sync_stop",
 	"rpc_minigame_sync_completed",
@@ -73,33 +73,35 @@ MinigameSystem.default_minigame_type = function (self)
 	return self._default_minigame_type
 end
 
-MinigameSystem.rpc_minigame_hot_join = function (self, channel_id, unit_id, is_level_unit, state_id)
+MinigameSystem.rpc_minigame_extension_sync_active = function (self, channel_id, unit_id, is_level_unit, active)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
-	local state = NetworkLookup.minigame_states[state_id]
 
-	extension:rpc_set_minigame_state(state)
+	extension:set_active(active)
 end
 
 MinigameSystem.rpc_minigame_sync_start = function (self, channel_id, unit_id, is_level_unit)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame()
 
-	extension:start()
+	minigame:start()
 end
 
 MinigameSystem.rpc_minigame_sync_stop = function (self, channel_id, unit_id, is_level_unit)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame()
 
-	extension:stop()
+	minigame:stop()
 end
 
 MinigameSystem.rpc_minigame_sync_completed = function (self, channel_id, unit_id, is_level_unit)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame()
 
-	extension:completed()
+	minigame:complete()
 end
 
 MinigameSystem.rpc_minigame_sync_game_state = function (self, channel_id, unit_id, is_level_unit, state_id)
@@ -185,10 +187,23 @@ MinigameSystem.rpc_minigame_sync_drill_set_search = function (self, channel_id, 
 end
 
 MinigameSystem.rpc_minigame_sync_frequency_test_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
-	local peer_id = Network.peer_id(channel_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+
+	if not unit then
+		return
+	end
+
 	local extension = self._unit_to_extension_map[unit]
+
+	if not extension then
+		return
+	end
+
 	local minigame = extension:minigame(MinigameSettings.types.frequency)
+
+	if not minigame then
+		return
+	end
 
 	minigame:test_frequency(frequency_x, frequency_y)
 end

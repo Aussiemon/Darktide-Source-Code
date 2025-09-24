@@ -208,7 +208,7 @@ local explosion_templates = {
 			suppression_value = 4,
 		},
 		vfx = {
-			"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium",
+			"content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_explosion_medium",
 		},
 	},
 	renegade_captain_fire_grenade = {

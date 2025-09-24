@@ -11,9 +11,10 @@ TimedSynchronizer.init = function (self, unit, is_server)
 	if timed_synchronizer_extension then
 		local objective_name = self:get_data(unit, "objective_name")
 		local auto_start = self:get_data(unit, "automatic_start")
+		local global_group = self:get_data(unit, "global_group")
 		local curve_power = self:get_data(unit, "curve_power")
 
-		timed_synchronizer_extension:setup_from_component(objective_name, auto_start, curve_power)
+		timed_synchronizer_extension:setup_from_component(objective_name, global_group, auto_start, curve_power)
 
 		self._timed_synchronizer_extension = timed_synchronizer_extension
 	end
@@ -70,6 +71,11 @@ TimedSynchronizer.component_data = {
 		ui_name = "Objective name",
 		ui_type = "text_box",
 		value = "default",
+	},
+	global_group = {
+		ui_name = "Global Objective",
+		ui_type = "check_box",
+		value = false,
 	},
 	automatic_start = {
 		ui_name = "Automatic Start On Mission Start",

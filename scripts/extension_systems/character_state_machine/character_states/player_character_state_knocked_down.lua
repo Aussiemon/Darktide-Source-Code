@@ -303,6 +303,7 @@ PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)
 end
 
 PlayerCharacterStateKnockedDown._handle_on_exit_buffs = function (self, t, next_state)
+	local constants = self._constants
 	local buff_extension = self._buff_extension
 	local damage_reduction_buff_indexes = self._damage_reduction_buff_indexes
 
@@ -324,6 +325,11 @@ PlayerCharacterStateKnockedDown._handle_on_exit_buffs = function (self, t, next_
 		buff_extension:remove_externally_controlled_buff(local_index, component_index)
 
 		self._damage_tick_buff_indexes = nil
+	end
+
+	if next_state == "walking" then
+		buff_extension:add_internally_controlled_buff(constants.leave_knocked_down_damage_immunity_buff, t)
+		buff_extension:add_internally_controlled_buff(constants.leave_knocked_down_damage_reduction_buff, t)
 	end
 end
 

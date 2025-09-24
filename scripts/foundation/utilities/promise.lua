@@ -242,9 +242,7 @@ function run(promise)
 
 					if BUILD ~= "release" then
 						Log.error("Promise", "%s", err.__fatal_message)
-						Script.do_break()
-
-						local BREAKPOINT = " An error has ocurred inside a promise callback. "
+						Script.do_error_break(err.__fatal_message)
 					end
 				end
 
@@ -425,18 +423,25 @@ local predicates = {}
 Promise._check_predicate = function ()
 	for i = #predicates, 1, -1 do
 		local p = predicates[i]
-		local r = p.result
+		local promise = p.promise
 
-		r[1], r[2] = p.predicate()
+		if not promise:is_pending() then
+			table.swap_delete(predicates, i)
+		else
+			local predicate = p.predicate
+			local is_done, error = predicate()
 
-		if r[1] or r[2] then
-			if r[1] then
-				p.promise:resolve(r[1])
+			if not is_done and not error then
+				-- Nothing
 			else
-				p.promise:reject(r[2])
-			end
+				if is_done then
+					promise:resolve(is_done)
+				else
+					promise:reject(error)
+				end
 
-			table.remove(predicates, i)
+				table.swap_delete(predicates, i)
+			end
 		end
 	end
 end
@@ -469,13 +474,7 @@ Promise.delay = function (delta)
 end
 
 Promise.until_true = function (predicate)
-	return Promise.delay(0):next(function ()
-		if predicate() then
-			return nil
-		else
-			return Promise.until_true(predicate)
-		end
-	end)
+	return Promise.until_value_is_true(predicate)
 end
 
 Promise.until_value_is_true = function (predicate)
@@ -484,7 +483,6 @@ Promise.until_value_is_true = function (predicate)
 	table.insert(predicates, {
 		promise = promise,
 		predicate = predicate,
-		result = {},
 	})
 
 	return promise

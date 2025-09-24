@@ -4,7 +4,6 @@ local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 
 local function _set_component_value(unit, breed, blackboard, scratchpad, action_data, t, args)
 	local component_name = args.component_name

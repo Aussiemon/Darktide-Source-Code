@@ -146,14 +146,26 @@ BtRenegadeCaptainSelectorNode.evaluate = function (self, unit, blackboard, scrat
 	do
 		local node_switch_weapon = children[6]
 		local condition_result
-		local weapon_switch_component = blackboard.weapon_switch
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
-		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
-		if scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name then
-			condition_result = true
-		end
+		repeat
+			local weapon_switch_component = blackboard.weapon_switch
+			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+			local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
+			local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+			local stim_component = blackboard.stim
+
+			if stim_component then
+				local currently_using_stim = stim_component.currently_using_stim
+
+				if currently_using_stim then
+					condition_result = false
+
+					break
+				end
+			end
+
+			condition_result = (scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name) and true or condition_result
+		until true
 
 		if condition_result then
 			new_running_child_nodes[node_identifier] = node_switch_weapon
@@ -163,7 +175,42 @@ BtRenegadeCaptainSelectorNode.evaluate = function (self, unit, blackboard, scrat
 	end
 
 	do
-		local node_renegade_captain_combat = children[7]
+		local node_use_special_action = children[7]
+		local condition_result
+
+		repeat
+			local perception_component = blackboard.perception
+			local has_line_of_sight = perception_component.has_line_of_sight
+			local stim_component = blackboard.stim
+			local can_use_stim = stim_component.can_use_stim
+			local t_til_use = stim_component.t_til_use
+			local t = Managers.time:time("gameplay")
+			local behavior_component = blackboard.behavior
+			local combat_range = behavior_component.combat_range
+
+			if has_line_of_sight and can_use_stim and t_til_use < t and (combat_range == "far" or combat_range == "close" or combat_range == "melee") then
+				condition_result = true
+
+				do break end
+				break
+			end
+
+			condition_result = false and condition_result
+		until true
+
+		if condition_result then
+			local leaf_node = node_use_special_action:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_use_special_action
+
+				return leaf_node
+			end
+		end
+	end
+
+	do
+		local node_renegade_captain_combat = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_renegade_captain_combat
 		local condition_result
 
@@ -215,7 +262,108 @@ BtRenegadeCaptainSelectorNode.evaluate = function (self, unit, blackboard, scrat
 		end
 	end
 
-	local node_idle = children[8]
+	do
+		local node_alerted = children[9]
+		local is_running = last_leaf_node_running and last_running_node == node_alerted
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local perception_component = blackboard.perception
+
+					if not is_running and perception_component.lock_target then
+						condition_result = false
+
+						break
+					end
+
+					local target_unit = perception_component.target_unit
+
+					condition_result = HEALTH_ALIVE[target_unit]
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local has_target_unit = sub_condition_result_01
+
+			if not has_target_unit then
+				condition_result = false
+
+				break
+			end
+
+			local perception_component = blackboard.perception
+			local is_alerted_aggro_state = perception_component.aggro_state == "alerted"
+
+			condition_result = is_alerted_aggro_state
+		until true
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_alerted
+
+			return node_alerted
+		end
+	end
+
+	do
+		local node_patrol = children[10]
+		local is_running = last_leaf_node_running and last_running_node == node_patrol
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local perception_component = blackboard.perception
+
+					if not is_running and perception_component.lock_target then
+						condition_result = false
+
+						break
+					end
+
+					local target_unit = perception_component.target_unit
+
+					condition_result = HEALTH_ALIVE[target_unit]
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local has_target_unit = sub_condition_result_01
+
+			if has_target_unit then
+				condition_result = false
+
+				break
+			end
+
+			local patrol_component = blackboard.patrol
+			local should_patrol = patrol_component.should_patrol
+			local perception_component = blackboard.perception
+			local aggro_state = perception_component.aggro_state
+			local is_passive = aggro_state == "passive"
+
+			condition_result = is_passive and should_patrol
+		until true
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_patrol
+
+			return node_patrol
+		end
+	end
+
+	local node_idle = children[11]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

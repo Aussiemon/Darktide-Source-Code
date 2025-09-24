@@ -13,30 +13,23 @@ local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigge
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PushSettings = require("scripts/settings/damage/push_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokePowermaul2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_2h_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local armor_types = ArmorSettings.types
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
-local armor_types = ArmorSettings.types
-local buff_stat_buffs = BuffSettings.stat_buffs
-local push_templates = PushSettings.push_templates
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
+local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
@@ -266,12 +259,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = light_hitbox,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_light_tank,
@@ -371,12 +366,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = heavy_hitbox,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/heavy_swing_left_down",
-			anchor_point_offset = {
-				0.02,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/heavy_swing_left_down",
+				anchor_point_offset = {
+					0.02,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_heavy_smiter,
@@ -394,6 +391,7 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.vertical_slash_coarse,
 	},
 	action_melee_start_right = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_charge_right_pose",
 		kind = "windup",
@@ -462,6 +460,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_right_down_light = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_right_down",
 		anim_event_3p = "attack_swing_right_diagonal",
@@ -541,12 +540,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = heavy_hitbox,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_right_down",
-			anchor_point_offset = {
-				-0.2,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_right_down",
+				anchor_point_offset = {
+					-0.2,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_light_smiter,
@@ -562,6 +563,7 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.right_45_slash_coarse,
 	},
 	action_right_heavy = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_heavy_right",
 		attack_direction_override = "right",
@@ -647,12 +649,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = heavy_hitbox,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/heavy_swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/heavy_swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_heavy_tank,
@@ -671,6 +675,7 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.horizontal_slash_coarse,
 	},
 	action_melee_start_left_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_charge_left_down",
 		anim_event_3p = "attack_swing_charge_left_down",
@@ -742,6 +747,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_left_light = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_left_diagonal",
 		attack_direction_override = "left",
@@ -821,12 +827,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = light_hitbox,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left_diagonal",
-			anchor_point_offset = {
-				0.3,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left_diagonal",
+				anchor_point_offset = {
+					0.3,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_light_tank,
@@ -841,6 +849,7 @@ weapon_template.actions = {
 		wounds_shape_special_active = wounds_shapes.left_45_slash_coarse,
 	},
 	action_melee_start_right_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_charge_right_pose",
 		kind = "windup",
@@ -909,6 +918,7 @@ weapon_template.actions = {
 		end,
 	},
 	action_right_light = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "attack_swing_right",
 		attack_direction_override = "right",
@@ -992,12 +1002,14 @@ weapon_template.actions = {
 			0.15,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_light_tank,
@@ -1016,6 +1028,7 @@ weapon_template.actions = {
 		anim_end_event = "parry_finished",
 		anim_event = "parry_pose",
 		kind = "block",
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		stop_input = "block_release",
 		total_time = math.huge,
@@ -1135,12 +1148,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left_up",
-			anchor_point_offset = {
-				-0.2,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left_up",
+				anchor_point_offset = {
+					-0.2,
+					0,
+					-0.2,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.thunder_hammer_left_light,
@@ -1681,7 +1696,7 @@ weapon_template.base_stats = {
 			},
 			action_right_heavy = {
 				overrides = {
-					ogryn_powermaul_heavy_tank_active = {
+					powermaul_2h_heavy_tank_active = {
 						damage_trait_templates.default_melee_dps_stat,
 					},
 				},

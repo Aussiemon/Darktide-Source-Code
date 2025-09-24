@@ -33,12 +33,6 @@ spread_templates.default_grenadier_gauntlet_demolitions = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -95,12 +89,6 @@ spread_templates.default_grenadier_gauntlet_bfg = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,

@@ -28,9 +28,6 @@ local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
@@ -490,12 +487,14 @@ weapon_template.actions = {
 		weapon_box = chain_sword_sweep_box,
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_down_left",
-			anchor_point_offset = {
-				0.25,
-				0,
-				0.25,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_down_left",
+				anchor_point_offset = {
+					0.25,
+					0,
+					0.25,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.smiter_light_chainsword_2h,
@@ -589,12 +588,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainsword_2h,
@@ -787,12 +788,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
@@ -881,12 +884,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_down_right",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_down_right",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainsword_2h_smiter,
@@ -1089,12 +1094,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
@@ -1292,12 +1299,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.smiter_light_chainsword_2h,
@@ -1439,12 +1448,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.07,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.07,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
@@ -1593,6 +1604,7 @@ weapon_template.weapon_special_tweak_data = {
 	keep_active_on_sprint = true,
 	keep_active_on_stun = true,
 	keep_active_on_vault = true,
+	keep_buff_ability_active_on_special = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {

@@ -35,12 +35,6 @@ spread_templates.default_shotpistol_shield_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1.1,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -155,12 +149,6 @@ spread_templates.default_shotpistol_shield_ads = {
 						lerp_basic = 0.2,
 						lerp_perfect = 0.01,
 					},
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
 				},
 			},
 			damage_hit = {

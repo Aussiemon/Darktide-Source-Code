@@ -12,10 +12,10 @@ ActionAbilityTargetFinder.init = function (self, action_context, action_params, 
 	local player_unit = self._player_unit
 	local unit_data_extension = action_context.unit_data_extension
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
-	local targeting_component = unit_data_extension:write_component("action_module_targeting")
+	local action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 
-	self._action_module_targeting_component = targeting_component
-	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._is_server, self._physics_world, player_unit, targeting_component, action_settings)
+	self._action_module_target_finder_component = action_module_target_finder_component
+	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._is_server, self._physics_world, player_unit, action_module_target_finder_component, action_settings)
 
 	if action_settings.use_alternate_fire then
 		self._spread_control_component = unit_data_extension:write_component("spread_control")
@@ -33,7 +33,7 @@ ActionAbilityTargetFinder.fixed_update = function (self, dt, t, time_in_action)
 	self._target_finder_module:fixed_update(dt, t)
 
 	if self._is_server then
-		local new_target_unit = self._action_module_targeting_component.target_unit_1
+		local new_target_unit = self._action_module_target_finder_component.target_unit_1
 		local companion_spawner_extension = ScriptUnit.extension(self._player_unit, "companion_spawner_system")
 		local companion_unit = companion_spawner_extension:companion_unit()
 

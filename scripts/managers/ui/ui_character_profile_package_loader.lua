@@ -32,7 +32,7 @@ UICharacterProfilePackageLoader.load_profile = function (self, profile)
 
 		loading_items[slot_id] = item_name
 
-		self:load_slot_item(slot_id, item)
+		self:load_slot_item(slot_id, item, nil)
 	end
 
 	self:_unload_packages(packages_to_unload)
@@ -107,7 +107,11 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 	local packages_to_load = {}
 
 	for package_name, _ in pairs(item_instance_dependencies) do
-		packages_to_load[#packages_to_load + 1] = package_name
+		if not self._package_filter then
+			packages_to_load[#packages_to_load + 1] = package_name
+		elseif self._package_filter(package_name) then
+			packages_to_load[#packages_to_load + 1] = package_name
+		end
 	end
 
 	local item_name = item.name

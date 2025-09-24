@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities.lua
 
 local GameplayRpcs = require("scripts/game_states/game/utilities/gameplay_rpcs")
+local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local SERVER_RPCS = GameplayRpcs.COMMON_SERVER_RPCS
 local CLIENT_RPCS = GameplayRpcs.COMMON_CLIENT_RPCS
 
@@ -10,7 +11,7 @@ end
 
 local MissionCleanupUtilies = {}
 
-MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initialized_steps)
+MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initialized_steps, on_shutdown)
 	if Managers.account:leaving_game() then
 		local ui_manager = Managers.ui
 		local active_views = ui_manager:active_views()
@@ -55,10 +56,12 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initiali
 	end
 
 	if Managers.state.game_mode then
-		Managers.state.game_mode:cleanup_game_mode_dynamic_lavels()
+		Managers.state.game_mode:mission_cleanup(on_shutdown)
 	end
 
 	if world then
+		Managers.state.level_instance:cleanup()
+
 		local level = shared_state.level
 		local themes = shared_state.themes
 
@@ -179,10 +182,6 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 		end
 	end
 
-	if Managers.state.game_mode then
-		Managers.state.game_mode:cleanup_game_mode_units()
-	end
-
 	if extension_manager then
 		local level_units = extension_manager:registered_level_units()
 		local num_level_units = #level_units
@@ -215,7 +214,7 @@ MissionCleanupUtilies._destroy_nav_world = function (shared_state)
 		for i = #nav_data, 1, -1 do
 			local data = nav_data[i]
 
-			GwNavWorld.remove_navdata(data)
+			Navigation.remove_nav_data(data)
 		end
 
 		shared_state.nav_data = nil

@@ -6,6 +6,7 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
+local NavQueries = require("scripts/utilities/nav_queries")
 local Vo = require("scripts/utilities/vo")
 local BtSummonMinionsAction = class("BtSummonMinionsAction", "BtNode")
 local _play_wwise, _has_active_minions_and_refill, _check_player_los
@@ -133,8 +134,9 @@ BtSummonMinionsAction._summon_minions = function (self, unit, breed, blackboard,
 	local success, random_occluded_position, target_direction, spawn_rotation
 	local players_in_los = _check_player_los(scratchpad, side)
 	local should_close_spawn_outside_los = action_data.should_close_spawn_outside_los and not players_in_los
+	local should_spawn_in_los = action_data.should_spawn_in_los
 
-	if should_close_spawn_outside_los then
+	if should_close_spawn_outside_los or should_spawn_in_los then
 		random_occluded_position = POSITION_LOOKUP[unit]
 		spawn_rotation = Quaternion.look(Vector3(0, 0, 0))
 	else
@@ -208,34 +210,46 @@ BtSummonMinionsAction._summon_minions = function (self, unit, breed, blackboard,
 		return
 	end
 
-	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, random_occluded_position, above, below, num_to_spawn, TEMP_FLOOD_FILL_POSITONS)
-	local side_extension = ScriptUnit.extension(unit, "side_system")
-	local side_id = side_extension.side_id
+	local spawn_using_circle_placement = action_data.spawn_using_circle_placement
+	local num_positions
 
-	for i = 1, num_positions do
-		local spawn_position = TEMP_FLOOD_FILL_POSITONS[i]
-		local breed_name = BREEDS_TO_SPAWN[i]
-		local minion_spawn_manager = Managers.state.minion_spawn
-		local param_table = minion_spawn_manager:request_param_table()
+	if spawn_using_circle_placement then
+		local side_extension = ScriptUnit.extension(unit, "side_system")
+		local side_id = side_extension.side_id
 
-		param_table.optional_aggro_state = aggro_state
-		param_table.optional_target_unit = optional_target_unit
+		self:_circle_placement(unit, random_occluded_position, action_data, scratchpad, num_to_spawn, BREEDS_TO_SPAWN, aggro_state, optional_target_unit, side_id)
+	else
+		num_positions = GwNavQueries.flood_fill_from_position(nav_world, random_occluded_position, above, below, num_to_spawn, TEMP_FLOOD_FILL_POSITONS)
 
-		local spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
+		local side_extension = ScriptUnit.extension(unit, "side_system")
+		local side_id = side_extension.side_id
 
-		scratchpad.summoned_minions_extension:add_new_summoned_unit(spawned_unit)
-	end
+		for i = 1, num_positions do
+			local spawn_position = TEMP_FLOOD_FILL_POSITONS[i]
+			local breed_name = BREEDS_TO_SPAWN[i]
+			local minion_spawn_manager = Managers.state.minion_spawn
+			local param_table = minion_spawn_manager:request_param_table()
 
-	table.clear_array(TEMP_FLOOD_FILL_POSITONS, num_positions)
-	table.clear(BREEDS_TO_SPAWN)
+			param_table.optional_aggro_state = aggro_state
+			param_table.optional_target_unit = optional_target_unit
 
-	local perception_extension = scratchpad.perception_extension
-	local unit_aggro_state = perception_extension:aggro_state()
+			local spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 
-	if unit_aggro_state and unit_aggro_state == ("aggroed" or "alerted") then
-		local stinger = action_data.stinger
+			scratchpad.summoned_minions_extension:add_new_summoned_unit(spawned_unit)
+			Log.info("BtSummonMinionsAction", "Spawned summoned minion:  %s. Count:  %.3f /  %.3f", breed_name, i, num_positions)
+		end
 
-		_play_wwise(unit, stinger)
+		table.clear_array(TEMP_FLOOD_FILL_POSITONS, num_positions)
+		table.clear(BREEDS_TO_SPAWN)
+
+		local perception_extension = scratchpad.perception_extension
+		local unit_aggro_state = perception_extension:aggro_state()
+
+		if unit_aggro_state and unit_aggro_state == ("aggroed" or "alerted") then
+			local stinger = action_data.stinger
+
+			_play_wwise(unit, stinger)
+		end
 	end
 end
 
@@ -276,6 +290,96 @@ BtSummonMinionsAction._try_find_occluded_position = function (self, nav_world, s
 	local target_direction = Vector3.normalize(to_target)
 
 	return true, random_occluded_position, target_direction, target_unit
+end
+
+BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_boxed, action_data, scratchpad, num_to_spawn, breeds, aggro_state, optional_target_unit, side_id)
+	local placement_settings = action_data.placement_settings
+	local nav_world = scratchpad.nav_world
+	local ABOVE, BELOW = 2, 3
+	local TWO_PI = math.two_pi
+	local spawned_slots = {}
+	local num_slots = math.random(placement_settings.num_slots[1], placement_settings.num_slots[2])
+	local radians_per_roamer_slot = TWO_PI / num_slots
+	local current_radians = -(radians_per_roamer_slot / 2)
+	local position_offset_range = placement_settings.position_offset_range
+	local circle_radius = placement_settings.circle_radius
+	local half_circle_radius = circle_radius * 0.5
+	local spawn_position = spawn_position_boxed
+	local max_tries = 10
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	local traverse_logic = navigation_extension:traverse_logic()
+
+	for i = 1, num_slots do
+		current_radians = current_radians + radians_per_roamer_slot
+
+		local dir = Vector3(math.sin(current_radians), math.cos(current_radians), 0)
+		local min_range, max_range = position_offset_range[1], position_offset_range[2]
+
+		for j = 1, max_tries do
+			local position_offset = math.random(min_range, max_range)
+			local distance = math.min(position_offset + i % 2 * position_offset + math.random(0, position_offset), half_circle_radius)
+			local pos = spawn_position + dir * distance
+			local position_on_navmesh = NavQueries.position_on_mesh(nav_world, pos, ABOVE, BELOW, traverse_logic)
+
+			if position_on_navmesh then
+				local random_radians = math.random(0, TWO_PI)
+				local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+				local roamer_slot = {
+					position = Vector3Box(position_on_navmesh),
+					rotation = QuaternionBox(Quaternion.look(random_direction)),
+				}
+
+				spawned_slots[#spawned_slots + 1] = roamer_slot
+
+				break
+			end
+		end
+	end
+
+	local spawns_per_location = math.floor(num_to_spawn / #spawned_slots)
+
+	for i = 1, #spawned_slots do
+		local current_spawn_slot = spawned_slots[i]
+		local fx_system = Managers.state.extension:system("fx_system")
+		local vfx_name = "content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"
+
+		fx_system:trigger_vfx(vfx_name, current_spawn_slot.position:unbox(), Unit.local_rotation(unit, 1))
+
+		for ii = 1, spawns_per_location do
+			local random_x = math.random(1, 10)
+			local random_y = math.random(1, 10)
+			local spawn_rotation = Quaternion.look(Vector3(random_x, random_y, 0))
+			local breed_spawn_position = current_spawn_slot.position
+			local breed_name = BREEDS_TO_SPAWN[i]
+			local minion_spawn_manager = Managers.state.minion_spawn
+			local param_table = minion_spawn_manager:request_param_table()
+
+			param_table.optional_aggro_state = aggro_state
+			param_table.optional_target_unit = optional_target_unit
+
+			local unboxed_spawn_location = breed_spawn_position:unbox()
+			local spawn_location = Vector3(unboxed_spawn_location[1], unboxed_spawn_location[2], unboxed_spawn_location[3] - 1)
+			local spawned_unit = minion_spawn_manager:spawn_minion(breed_name, spawn_location, spawn_rotation, side_id, param_table)
+			local blackboard = BLACKBOARDS[spawned_unit]
+			local spawn_component = Blackboard.write_component(blackboard, "spawn")
+
+			spawn_component.is_exiting_spawner = true
+
+			scratchpad.summoned_minions_extension:add_new_summoned_unit(spawned_unit)
+		end
+	end
+
+	table.clear(TEMP_FLOOD_FILL_POSITONS)
+	table.clear(BREEDS_TO_SPAWN)
+
+	local perception_extension = scratchpad.perception_extension
+	local unit_aggro_state = perception_extension:aggro_state()
+
+	if unit_aggro_state and unit_aggro_state == ("aggroed" or "alerted") then
+		local stinger = action_data.stinger
+
+		_play_wwise(unit, stinger)
+	end
 end
 
 function _play_wwise(unit, event)

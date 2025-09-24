@@ -17,7 +17,7 @@ local raw_inputs = {
 	"grenade_ability_pressed",
 	"grenade_ability_hold",
 	"grenade_ability_release",
-	"weapon_reload",
+	"weapon_reload_pressed",
 	"weapon_reload_hold",
 	"wield_scroll_down",
 	"wield_scroll_up",
@@ -1242,10 +1242,6 @@ function _get_current_hierarchy(hierarchy_position, hierarchy, max_hierarchy_dep
 		end
 
 		local found_entry = ActionInputHierarchy.find_hierarchy_entry(current_hierarchy, position)
-
-		if not found_entry then
-			-- Nothing
-		end
 
 		current_hierarchy = found_entry.transition
 

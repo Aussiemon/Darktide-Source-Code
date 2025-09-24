@@ -6,6 +6,10 @@ local function _create_entry(path)
 	local entry_templates = require(path)
 
 	for name, template in upairs(entry_templates) do
+		for buff_name, buff_values in pairs(template.buffs) do
+			local num_levels = #buff_values
+		end
+
 		template.name = name
 		templates[name] = template
 	end
@@ -57,22 +61,15 @@ _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_po
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_shield_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_2h_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p4")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotpistol_shield_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_thunderhammer_2h_p1")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_explosive")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_low_fire_rate")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_medium_fire_rate")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
-_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_perks_melee")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_perks_ranged")
 _create_entry("scripts/settings/equipment/gadget_traits/gadget_traits_common")
 
 return templates

@@ -14,15 +14,19 @@ local FAR_COMBAT = {
 	action_data = action_data.follow,
 }
 local CLOSE_COMBAT = {
-	"BtMeleeFollowTargetAction",
-	condition = "is_aggroed_in_combat_range",
-	name = "assault_follow",
+	"BtRandomUtilityNode",
 	condition_args = {
 		combat_ranges = {
 			close = true,
 		},
 	},
-	action_data = action_data.assault_follow,
+	{
+		"BtMeleeFollowTargetAction",
+		name = "assault_follow",
+		action_data = action_data.assault_follow,
+	},
+	condition = "is_aggroed_in_combat_range",
+	name = "close_melee_combat",
 }
 local MELEE_COMBAT = {
 	"BtRandomUtilityNode",
@@ -65,6 +69,16 @@ local MELEE_COMBAT = {
 	},
 	condition = "is_aggroed_in_combat_range",
 	name = "melee_combat",
+}
+local SPECIAL_ACTION = {
+	"BtSelectorNode",
+	{
+		"BtUseStimAction",
+		name = "use_stim",
+		action_data = action_data.use_stim,
+	},
+	condition = "minion_can_use_special_action",
+	name = "use_special_action",
 }
 local behavior_tree = {
 	"BtSelectorNode",
@@ -120,6 +134,7 @@ local behavior_tree = {
 		condition = "at_smart_object",
 		name = "smart_object",
 	},
+	SPECIAL_ACTION,
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",

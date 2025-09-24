@@ -61,7 +61,7 @@ local talent_settings = {
 				tdr = -0.075,
 			},
 			reload_speed_aura = {
-				reload_speed = 0.075,
+				reload_speed = 0.125,
 			},
 		},
 		blitz_ability = {
@@ -86,8 +86,8 @@ local talent_settings = {
 				range = 3,
 			},
 			whistle = {
-				charges = 3,
-				cooldown = 60,
+				charges = 2,
+				cooldown = 50,
 				damage = 0.5,
 				duration = 8,
 				movement_speed = 0.25,
@@ -107,7 +107,7 @@ local talent_settings = {
 			companion_damage = 1.5,
 			crit_chance = 0.1,
 			crit_damage = 0.25,
-			damage = 0.15,
+			damage = 0.1,
 			damage_taken_vs_monsters = 0.99,
 			damage_vs_monsters = 0.01,
 			monster_damage = -0.25,
@@ -252,7 +252,7 @@ local talent_settings = {
 			tdr = 0.8,
 		},
 		dog_pounces_bleed_nearby = {
-			bleed_stacks = 8,
+			bleed_stacks = 6,
 		},
 		dog_applies_brittleness = {
 			stacks = 6,
@@ -372,7 +372,7 @@ local talent_settings = {
 			strength = 0.02,
 		},
 		stacking_damage = {
-			damage = 0.03,
+			damage = 0.02,
 			duration = 5,
 			stacks = 5,
 		},

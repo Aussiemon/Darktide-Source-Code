@@ -136,7 +136,6 @@ local template_groups = {
 		"powermaul_p1_m1",
 		"powermaul_p1_m2",
 		"powermaul_p2_m1",
-		"powermaul_p2_m2",
 	},
 	{
 		"power_maul_shields",
@@ -152,6 +151,8 @@ local template_groups = {
 		"power_swords",
 		"powersword_p1_m1",
 		"powersword_p1_m2",
+		"powersword_p2_m1",
+		"powersword_p2_m2",
 	},
 	{
 		"thunder_hammers_2h",
@@ -177,10 +178,12 @@ local template_groups = {
 	{
 		"bolters",
 		"bolter_p1_m1",
+		"bolter_p1_m2",
 	},
 	{
 		"bolt_pistols",
 		"boltpistol_p1_m1",
+		"boltpistol_p1_m2",
 	},
 	{
 		"flamers",
@@ -246,7 +249,6 @@ local template_groups = {
 		"shotgun_p2_m1",
 		"shotgun_p4_m1",
 		"shotgun_p4_m2",
-		"shotgun_p4_m3",
 	},
 	{
 		"shotpistol_shield",
@@ -306,6 +308,7 @@ local template_groups = {
 	},
 	{
 		"luggables",
+		"luggable_light",
 		"luggable_mission",
 		"luggable",
 	},

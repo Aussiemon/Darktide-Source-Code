@@ -227,14 +227,28 @@ local button_options_definitions = {
 									visibility_function = function (parent)
 										local active_view = parent._active_view_instance
 										local tutorial_overlay = active_view and active_view._tutorial_overlay
+										local mission_board_options = active_view and active_view._mission_board_options
 
-										return tutorial_overlay and not tutorial_overlay:is_active()
+										return tutorial_overlay and not tutorial_overlay:is_active() and not mission_board_options
+									end,
+								},
+								{
+									alignment = "right_alignment",
+									display_name = "loc_mission_board_view_options_Matchmaking_Location",
+									input_action = "hotkey_menu_special_1",
+									on_pressed_callback = "_callback_open_options",
+									visibility_function = function (parent)
+										local active_view = parent._active_view_instance
+										local tutorial_overlay = active_view and active_view._tutorial_overlay
+										local mission_board_options = active_view and active_view._mission_board_options
+
+										return tutorial_overlay and not tutorial_overlay:is_active() and not mission_board_options
 									end,
 								},
 								{
 									alignment = "right_alignment",
 									display_name = "",
-									input_action = "group_finder_refresh_groups",
+									input_action = "hotkey_item_sort",
 									on_pressed_callback = "_cb_on_mission_revoke_pressed",
 									visibility_function = function (parent, id)
 										local active_view = parent._active_view_instance
@@ -244,9 +258,10 @@ local button_options_definitions = {
 
 										local tutorial_overlay = active_view and active_view._tutorial_overlay
 										local tutorial_overlay_active = tutorial_overlay and tutorial_overlay:is_active()
+										local mission_board_options = active_view and active_view._mission_board_options
 										local show = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and active_view._can_cancel_mission or active_view and (not active_view._ongoing_mission_id or active_view._ongoing_mission_id and not active_view:_ongoing_mission_id())
 
-										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active and show
+										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active and show and not mission_board_options
 									end,
 								},
 							},

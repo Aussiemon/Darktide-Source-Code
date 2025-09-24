@@ -43,7 +43,7 @@ RemoteWaitForJoinState.update = function (self, dt)
 
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if state == "disconnecting" or state == "disconnected" then
 		Log.info("RemoteWaitForJoinState", "Session channel disconnected %s", shared_state.peer_id)
 
 		return "disconnect", {

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/mission_board_view_pj/mission_board_view_settings.lua
 
+local InputDevice = require("scripts/managers/input/input_device")
 local MissionBoardViewSettings = {
 	fetch_retry_cooldown = 5,
 	resource_renderer_enabled = false,
@@ -37,12 +38,17 @@ MissionBoardViewSettings.mission_category_icons = {
 	},
 	event = {
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_event",
-		name = "loc_event_category_label",
+		name = "loc_mission_board_mission_category_event",
+	},
+	horde = {
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_story",
+		name = "loc_horde_title",
 	},
 }
 MissionBoardViewSettings.mission_widgets_size_multipliers = {
 	common = 1,
 	event = 1,
+	horde = 1,
 	maelstrom = 1,
 	story = 1.25,
 }
@@ -138,8 +144,8 @@ MissionBoardViewSettings.dimensions = {
 		82.8,
 	},
 	small_mission_background_size = {
-		187.5,
-		225,
+		170,
+		204.00000000000003,
 	},
 	small_mission_selected_frame_size = {
 		150,
@@ -156,6 +162,18 @@ MissionBoardViewSettings.dimensions = {
 	threat_tooltip_size = {
 		400,
 		90,
+	},
+}
+MissionBoardViewSettings.mission_tile_settings = {
+	mission_tile = {
+		blueprint_name = "small_mission_tile_pass_templates",
+		scenegraph_id = "mission_area",
+		size = MissionBoardViewSettings.dimensions.small_mission_size,
+	},
+	static_tile = {
+		blueprint_name = "static_mission_pass_templates",
+		scenegraph_id = "mission_area",
+		size = MissionBoardViewSettings.dimensions.large_mission_size,
 	},
 }
 MissionBoardViewSettings.page_selector_settings = {
@@ -195,6 +213,114 @@ MissionBoardViewSettings.mission_tile_banner_category_texts = {
 	event = "loc_event_category_label",
 	maelstrom = "loc_mission_board_maelstrom_header",
 	story = "loc_group_finder_category_story",
+}
+MissionBoardViewSettings.view_elements = {
+	mission_list = {
+		class_name = "ViewElementCampaignMissionList",
+		file_path = "scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list",
+		load_on_enter = true,
+		name = "mission_list",
+	},
+	options = {
+		class_name = "ViewElementMissionBoardOptions",
+		file_path = "scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options",
+		name = "options",
+	},
+	input_legend = {
+		class_name = "ViewElementInputLegend",
+		file_path = "scripts/ui/view_elements/view_element_input_legend/view_element_input_legend",
+		load_on_enter = true,
+		name = "input_legend",
+		context = {
+			legend_inputs = {
+				{
+					alignment = "left_alignment",
+					display_name = "loc_settings_menu_close_menu",
+					input_action = "back",
+					on_pressed_callback = "_on_back_pressed",
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_mission_board_switch_tab",
+					input_action = "hotkey_menu_special_2",
+					on_pressed_callback = "_set_next_sidebar_tab",
+					visibility_function = function (parent)
+						return parent:_has_sidebar_tabs()
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_mission_board_view_options",
+					input_action = "hotkey_menu_special_1",
+					on_pressed_callback = "_callback_open_options",
+					visibility_function = function (parent, id)
+						local mission_board_logic = parent._mission_board_logic
+
+						return mission_board_logic._regions_latency and not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_menu_toggle_ui_visibility_off",
+					input_action = "hotkey_toggle_item_tooltip",
+					on_pressed_callback = "_callback_hide_threat_level_tooltip",
+					visibility_function = function (parent, id)
+						return InputDevice.gamepad_active and parent._threat_level_tooltip_visible and parent._threat_level_tooltip_visible == true and not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_menu_toggle_ui_visibility_on",
+					input_action = "hotkey_toggle_item_tooltip",
+					on_pressed_callback = "_callback_show_threat_level_tooltip",
+					visibility_function = function (parent, id)
+						return InputDevice.gamepad_active and (not parent._threat_level_tooltip_visible or parent._threat_level_tooltip_visible == false) and not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_group_finder_menu_title",
+					input_action = "mission_board_group_finder_open",
+					on_pressed_callback = "_on_group_finder_pressed",
+					visibility_function = function (parent, id)
+						return not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_show_mission_list",
+					input_action = "mission_board_show_mission_list",
+					on_pressed_callback = "_callback_open_replay_campaign_missions_view",
+					visibility_function = function (parent, id)
+						local mission_list = parent:_element("mission_list")
+
+						return mission_list and not mission_list:visible() and not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_hide_mission_list",
+					input_action = "mission_board_show_mission_list",
+					on_pressed_callback = "_callback_close_replay_campaign_missions_view",
+					visibility_function = function (parent, id)
+						local mission_list = parent:_element("mission_list")
+
+						return mission_list and mission_list:visible() and not parent._mission_board_options
+					end,
+				},
+				{
+					alignment = "right_alignment",
+					display_name = "loc_play_debrief_video_input",
+					input_action = "mission_board_play_debrief",
+					visibility_function = function (parent, id)
+						local mission_list = parent:_element("mission_list")
+
+						return mission_list and mission_list:visible() and InputDevice.gamepad_active and not parent._mission_board_options
+					end,
+				},
+			},
+		},
+	},
 }
 
 return settings("MissionBoardViewSettings", MissionBoardViewSettings)

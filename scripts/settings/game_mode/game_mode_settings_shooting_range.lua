@@ -46,6 +46,7 @@ local settings = {
 		player_composition = "party",
 	},
 	hotkeys = {
+		hotkey_inventory = "inventory_background_view",
 		hotkey_system = "system_view",
 	},
 	default_init_scripted_scenario = {

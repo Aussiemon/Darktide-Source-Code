@@ -13,7 +13,7 @@ local default_button_content = {
 local title_height = 0
 local edge_padding = 100
 local grid_width = 430
-local grid_height = 800
+local grid_height = 900
 local bottom_chin = 100
 local grid_size = {
 	grid_width - edge_padding,
@@ -88,14 +88,14 @@ local scenegraph_definition = {
 	trait_info_box_contents = {
 		horizontal_alignment = "center",
 		parent = "trait_info_box",
-		vertical_alignment = "top",
+		vertical_alignment = "bottom",
 		size = {
 			grid_width,
 			bottom_chin,
 		},
 		position = {
 			0,
-			0,
+			-30,
 			1,
 		},
 	},

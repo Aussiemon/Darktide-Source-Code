@@ -17,8 +17,16 @@ BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 	scratchpad.locomotion_extension = locomotion_extension
 
-	local spawner_extension = ScriptUnit.extension(spawner_unit, "minion_spawner_system")
-	local spawn_type = spawner_extension:spawn_type()
+	local spawn_type, spawner_extension
+	local has_spawner_extension = ScriptUnit.has_extension(spawner_unit, "minion_spawner_system")
+
+	if has_spawner_extension then
+		spawner_extension = ScriptUnit.extension(spawner_unit, "minion_spawner_system")
+		spawn_type = spawner_extension:spawn_type()
+	else
+		spawn_type = "from_ground"
+	end
+
 	local spawn_type_anim_events = action_data.spawn_type_anim_events and action_data.spawn_type_anim_events[spawn_type]
 	local anim_event
 
@@ -40,10 +48,18 @@ BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad,
 		local spawn_type_anim_lengths = action_data.spawn_type_anim_lengths[spawn_type]
 		local anim_lengths = spawn_type_anim_lengths[anim_event] or spawn_type_anim_lengths.default
 		local spawn_index = spawn_component.spawner_spawn_index
-		local spawn_height = spawner_extension:spawn_height(spawn_index)
+		local spawn_height, spawn_horizontal_length
+
+		if has_spawner_extension then
+			spawn_height = spawner_extension:spawn_height(spawn_index)
+			spawn_horizontal_length = spawner_extension:spawn_horizontal_length(spawn_index)
+		else
+			spawn_height = 1
+			spawn_horizontal_length = 1
+		end
+
 		local anim_vertical_length = anim_lengths.vertical_length
 		local vertical_scale = spawn_height / anim_vertical_length
-		local spawn_horizontal_length = spawner_extension:spawn_horizontal_length(spawn_index)
 		local anim_horizontal_length = anim_lengths.horizontal_length
 		local horizontal_scale = spawn_horizontal_length / anim_horizontal_length
 		local anim_translation_scale_factor = spawn_component.anim_translation_scale_factor
@@ -55,8 +71,10 @@ BtExitSpawnerAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 		scratchpad.anim_driven = true
 		scratchpad.anim_duration = t + anim_driven_anim_event_duration
-	else
+	elseif has_spawner_extension then
 		scratchpad.exit_position = spawner_extension:exit_position_boxed()
+	else
+		scratchpad.exit_position = Vector3Box(POSITION_LOOKUP[unit])
 	end
 
 	scratchpad.spawn_position = Vector3Box(POSITION_LOOKUP[unit])

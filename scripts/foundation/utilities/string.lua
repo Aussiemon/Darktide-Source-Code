@@ -1,11 +1,14 @@
 ﻿-- chunkname: @scripts/foundation/utilities/string.lua
 
+local string = string
+local sub = string.sub
+
 string.starts_with = function (str, start)
-	return str:sub(1, #start) == start
+	return sub(str, 1, #start) == start
 end
 
 string.ends_with = function (str, ending)
-	return ending == "" or str:sub(-#ending) == ending
+	return ending == "" or sub(str, -#ending) == ending
 end
 
 string.split = function (str, sep)
@@ -42,9 +45,10 @@ string.double_dash_split = function (str)
 end
 
 string.trim = function (str)
-	local rltrim = string.match(string.match(str, "%S.*"), ".*%S")
+	local _, first = string.find(str, "^%s*")
+	local last = string.find(str, "%s*$")
 
-	return rltrim
+	return sub(str, first + 1, last - 1)
 end
 
 string.split_and_trim = function (str, sep)
@@ -64,7 +68,7 @@ string.split_by_chunk = function (str, chunk_size)
 	local array = {}
 
 	for i = 1, #str, chunk_size do
-		array[#array + 1] = string.sub(str, i, i + chunk_size - 1)
+		array[#array + 1] = sub(str, i, i + chunk_size - 1)
 	end
 
 	return array

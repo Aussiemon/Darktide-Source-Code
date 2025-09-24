@@ -361,6 +361,16 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 		4,
 		2,
 	}
+	local compared_sorted_stats = {}
+
+	for i = 1, #sort_order do
+		local sorted_i = sort_order[i]
+		local compared_sorted_stat = comparing_stats[sorted_i]
+
+		if compared_sorted_stat then
+			compared_sorted_stats[#compared_sorted_stats + 1] = compared_sorted_stat
+		end
+	end
 
 	if start_value == max_available then
 		layout[#layout + 1] = {
@@ -368,22 +378,25 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 		}
 
 		for i = 1, num_stats do
-			local sorted_i = sort_order[i]
-			local display_name = comparing_stats[sorted_i].display_name
-			local start_stat = start_stats[display_name]
-			local max_stat = max_stats[display_name]
+			local compared_sorted_stat = compared_sorted_stats[i]
 
-			layout[#layout + 1] = {
-				widget_type = "stat_max",
-				start_stat = start_stat,
-				max_stat = max_stat,
-				display_name = display_name,
-			}
+			if compared_sorted_stat then
+				local display_name = compared_sorted_stat.display_name
+				local start_stat = start_stats[display_name]
+				local max_stat = max_stats[display_name]
 
-			if i < num_stats then
 				layout[#layout + 1] = {
-					widget_type = "spacing_vertical_small",
+					widget_type = "stat_max",
+					start_stat = start_stat,
+					max_stat = max_stat,
+					display_name = display_name,
 				}
+
+				if i < num_stats then
+					layout[#layout + 1] = {
+						widget_type = "spacing_vertical_small",
+					}
+				end
 			end
 		end
 	else
@@ -392,24 +405,27 @@ ViewElementCraftingRecipe._add_stats_to_layout = function (self, item, layout, a
 		}
 
 		for i = 1, num_stats do
-			local sorted_i = sort_order[i]
-			local display_name = comparing_stats[sorted_i].display_name
-			local start_stat = start_stats[display_name]
-			local end_stat = end_stats[display_name]
-			local max_stat = max_stats[display_name]
+			local compared_sorted_stat = compared_sorted_stats[i]
 
-			layout[#layout + 1] = {
-				widget_type = "stat",
-				start_stat = start_stat,
-				end_stat = end_stat,
-				max_stat = max_stat,
-				display_name = display_name,
-			}
+			if compared_sorted_stat then
+				local display_name = compared_sorted_stat.display_name
+				local start_stat = start_stats[display_name]
+				local end_stat = end_stats[display_name]
+				local max_stat = max_stats[display_name]
 
-			if i < num_stats then
 				layout[#layout + 1] = {
-					widget_type = "spacing_vertical_small",
+					widget_type = "stat",
+					start_stat = start_stat,
+					end_stat = end_stat,
+					max_stat = max_stat,
+					display_name = display_name,
 				}
+
+				if i < num_stats then
+					layout[#layout + 1] = {
+						widget_type = "spacing_vertical_small",
+					}
+				end
 			end
 		end
 	end

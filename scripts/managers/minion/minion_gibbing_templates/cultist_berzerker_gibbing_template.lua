@@ -42,7 +42,7 @@ head_sever.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 head_sever.scale_node = "j_neck"
 head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + size
 head_sever.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local head_full = table.clone(head_sever)
@@ -77,7 +77,7 @@ limb_segment.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_segment.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_segment.gibbing_threshold = SharedGibbingTemplates.limb_segment.gibbing_threshold + size
 limb_segment.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local limb_full = table.clone(SharedGibbingTemplates.limb_full)
@@ -88,7 +88,7 @@ limb_full.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_full.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_full.gibbing_threshold = SharedGibbingTemplates.limb_full.gibbing_threshold + size
 limb_full.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local upper_left_arm = table.clone(limb_segment)
@@ -479,7 +479,7 @@ torso_sever.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 torso_sever.scale_node = "j_spine"
 torso_sever.gibbing_threshold = SharedGibbingTemplates.torso.gibbing_threshold + size
 torso_sever.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 }
 
 local torso_full = table.clone(torso_sever)
@@ -537,7 +537,7 @@ center_mass_full.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_splatter
 center_mass_full.gibbing_threshold = SharedGibbingTemplates.center_mass.gibbing_threshold + size
 center_mass_full.extra_hit_zone_gibs = SharedGibbingTemplates.center_mass.extra_hit_zone_gibs
 center_mass_full.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_upperbody",
 }
 

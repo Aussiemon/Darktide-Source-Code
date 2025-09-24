@@ -381,9 +381,30 @@ local function get_template_name_from_track_name(str)
 		return
 	end
 
-	local parts = string.split(str, "-")
+	str = string.gsub(str, "-", "_")
 
-	return table.concat(table.slice(parts, 1, #parts - 1), "-")
+	local parts = string.split(str, "_")
+
+	return table.concat(table.slice(parts, 1, #parts - 1), "_")
+end
+
+local function get_template_name(backend_data)
+	local name = backend_data.name
+	local template_name = get_template_name_from_track_name(name)
+
+	if LiveEvents[template_name] then
+		return template_name
+	end
+
+	local category = backend_data.category
+
+	template_name = get_template_name_from_old_category(category)
+
+	if LiveEvents[template_name] then
+		return template_name
+	end
+
+	local id = backend_data.id
 end
 
 LiveEventManager._clear_events = function (self)
@@ -392,29 +413,12 @@ LiveEventManager._clear_events = function (self)
 	table.clear(events)
 end
 
-LiveEventManager._add_event = function (self, backend_data)
+LiveEventManager._add_event = function (self, backend_data, ids)
 	local id = backend_data.id
-	local category = backend_data.category
-	local name = backend_data.name
+	local template_name = get_template_name(backend_data)
 
-	Log.info("LiveEventManager", "Category: %s, name: %s", category, backend_data.name)
-
-	local template_name = get_template_name_from_track_name(name)
-
-	Log.info("LiveEventManager", "template-name: %s", template_name)
-
-	if not LiveEvents[template_name] then
-		template_name = get_template_name_from_old_category(category)
-
-		Log.info("LiveEventManager", "template-name: %s", template_name)
-	end
-
-	if not LiveEvents[template_name] then
-		Log.warning("LiveEventManager", "No template for event '%s' with category '%s'.", id, category)
-
+	if not template_name then
 		return
-	else
-		Log.info("LiveEventManager", "Added live event '%s', id '%s' with category '%s'.", template_name, id, category)
 	end
 
 	local tiers = {}
@@ -443,6 +447,11 @@ LiveEventManager._add_event = function (self, backend_data)
 
 	local starts_at = tonumber(backend_data.validFrom)
 	local ends_at = tonumber(backend_data.validTo)
+
+	if not ids or not ids[id] then
+		Log.info("LiveEventManager", "Adding new event '%s' with template '%s'.", id, template_name)
+	end
+
 	local events = self._events
 
 	events[id] = {
@@ -459,12 +468,14 @@ LiveEventManager._on_refresh_success = function (self, backend_events)
 	self._refresh_promise = nil
 	self._time_since_update = 0
 
+	local ids = table.set(table.keys(self._events or {}))
+
 	self:_clear_events()
 
 	for i = 1, #backend_events do
 		local event_data = backend_events[i]
 
-		self:_add_event(event_data)
+		self:_add_event(event_data, ids)
 	end
 end
 

@@ -2,6 +2,7 @@
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local Vo = require("scripts/utilities/vo")
 local SummonedMinionsExtension = class("SummonedMinionsExtension")
 
 SummonedMinionsExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
@@ -70,7 +71,7 @@ SummonedMinionsExtension._evaluate_summmoned_minions = function (self)
 		else
 			local position = POSITION_LOOKUP[unit]
 
-			self:_wwise_on_death(position)
+			self:_on_death(position)
 			table.remove(summon_minions, i)
 		end
 	end
@@ -79,8 +80,20 @@ SummonedMinionsExtension._evaluate_summmoned_minions = function (self)
 	self._amount = amount
 end
 
-SummonedMinionsExtension._wwise_on_death = function (self)
+SummonedMinionsExtension._on_death = function (self)
 	local template = self._template
+	local vo_event = template.vo_event_death
+
+	if vo_event then
+		local breed = Breed.unit_breed_or_nil(self._unit)
+
+		if breed then
+			local breed_name = breed.name
+
+			Vo.enemy_generic_vo_event(self._unit, vo_event, breed_name)
+		end
+	end
+
 	local wwise_events = template.wwise_on_death_events
 
 	if not wwise_events then
@@ -150,27 +163,25 @@ SummonedMinionsExtension.can_summon_minions = function (self, action_data, is_ru
 		return true
 	end
 
-	if amount ~= 0 then
-		return false
-	end
+	if amount == 0 then
+		if not self._timer then
+			if not self._initial_delay and self._template.initial_delay then
+				self._initial_delay = true
+				self._timer = t + self._template.initial_delay
 
-	if not self._timer then
-		if not self._initial_delay and self._template.initial_delay then
-			self._initial_delay = true
-			self._timer = t + self._template.initial_delay
+				return false
+			else
+				local interval_til_next_summon = self._template.interval_til_next_summon
 
-			return false
-		else
-			local interval_til_next_summon = action_data.interval_til_next_summon
+				self._timer = t + math.random(interval_til_next_summon[1], interval_til_next_summon[2])
 
-			self._timer = t + math.random(interval_til_next_summon[1], interval_til_next_summon[2])
+				return false
+			end
+		elseif t > self._timer then
+			self._timer = nil
 
-			return false
+			return true
 		end
-	elseif t > self._timer then
-		self._timer = nil
-
-		return true
 	end
 
 	return false

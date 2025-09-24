@@ -100,6 +100,19 @@ local ui_settings = {
 		WEAPON_SKIN = "weapon_skin",
 		WEAPON_TRINKET = "weapon_trinket",
 	},
+	inspectable_item_types = {
+		COMPANION_GEAR_FULL = true,
+		EMOTE = true,
+		END_OF_ROUND = true,
+		GEAR_EXTRA_COSMETIC = true,
+		GEAR_HEAD = true,
+		GEAR_LOWERBODY = true,
+		GEAR_UPPERBODY = true,
+		SET = true,
+		WEAPON_MELEE = true,
+		WEAPON_RANGED = true,
+		WEAPON_SKIN = true,
+	},
 	item_variant_localization_lookup = {
 		assault = "loc_item_weapon_variant_assault",
 		bfg = "loc_item_weapon_variant_bfg",
@@ -1002,6 +1015,10 @@ local ui_settings = {
 					item = "content/items/weapons/player/ranged/bolter_p1_m1",
 					name = "bolter_p1_m1",
 				},
+				{
+					item = "content/items/weapons/player/ranged/bolter_p1_m2",
+					name = "bolter_p1_m2",
+				},
 			},
 		},
 		boltpistol_p1 = {
@@ -1013,6 +1030,10 @@ local ui_settings = {
 				{
 					item = "content/items/weapons/player/ranged/boltpistol_p1_m1",
 					name = "boltpistol_p1_m1",
+				},
+				{
+					item = "content/items/weapons/player/ranged/boltpistol_p1_m2",
+					name = "boltpistol_p1_m2",
 				},
 			},
 		},
@@ -1117,6 +1138,22 @@ local ui_settings = {
 				{
 					item = "content/items/weapons/player/melee/powersword_p1_m2",
 					name = "powersword_p1_m2",
+				},
+			},
+		},
+		powersword_p2 = {
+			display_name = "loc_weapon_family_powersword_p2_m1",
+			overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1",
+			overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1_complete",
+			overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1_complete_mask",
+			marks = {
+				{
+					item = "content/items/weapons/player/melee/powersword_p2_m1",
+					name = "powersword_p2_m1",
+				},
+				{
+					item = "content/items/weapons/player/melee/powersword_p2_m2",
+					name = "powersword_p2_m2",
 				},
 			},
 		},

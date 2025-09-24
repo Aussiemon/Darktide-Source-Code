@@ -117,7 +117,9 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 	if next_follow_vo_t and next_follow_vo_t < t then
 		local vo_event = action_data.vo_event
 
-		Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
+		if vo_event then
+			Vo.enemy_generic_vo_event(unit, vo_event, breed.name)
+		end
 
 		scratchpad.next_follow_vo_t = t + action_data.follow_vo_interval_t
 	end

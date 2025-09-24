@@ -37,7 +37,7 @@ end
 
 BehaviorSystem.update = function (self, context, dt, t, ...)
 	BehaviorSystem.super.update(self, context, dt, t, ...)
-	GwNavWorld.kick_async_update(self._nav_world, dt)
+	Managers.state.nav_mesh:kick_async_update(dt)
 end
 
 BehaviorSystem.behavior_tree = function (self, tree_name)

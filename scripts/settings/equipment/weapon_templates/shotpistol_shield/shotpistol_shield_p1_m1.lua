@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotpistol_shield/shotpistol_shield_p1_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
+local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -8,7 +9,6 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
-local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
@@ -36,7 +36,7 @@ local function _crosshair_type_func(condition_func_params)
 	end
 
 	local inventory_slot_component = condition_func_params.inventory_slot_component
-	local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+	local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 
 	if current_ammunition_clip == 0 then
 		return "dot"
@@ -103,7 +103,7 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				hold_input = "action_two_hold",
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -113,7 +113,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -123,7 +123,7 @@ weapon_template.action_inputs = {
 		input_sequence = {
 			{
 				hold_input = "action_two_hold",
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -135,7 +135,7 @@ weapon_template.action_inputs = {
 			{
 				inputs = {
 					{
-						input = "weapon_reload",
+						input = "weapon_reload_pressed",
 						value = false,
 					},
 					{
@@ -581,7 +581,7 @@ weapon_template.actions = {
 			local next_allowed_shoot_action_t = last_shoot_action_t + 0.55
 
 			if next_allowed_shoot_action_t <= t then
-				return condition_func_params.inventory_slot_component.current_ammunition_clip > 0
+				return Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component) > 0
 			end
 
 			return false
@@ -641,7 +641,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -658,7 +658,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -740,7 +740,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -757,7 +757,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -843,7 +843,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -860,7 +860,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -943,7 +943,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -1211,7 +1211,7 @@ weapon_template.actions = {
 			end
 
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 
 			if current_ammunition_clip == 0 then
 				return "to_unaim_braced", "to_unaim_braced"
@@ -1293,7 +1293,7 @@ weapon_template.actions = {
 			},
 		},
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return condition_func_params.inventory_slot_component.current_ammunition_clip <= 0
+			return Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component) <= 0
 		end,
 		block_attack_types = {
 			[attack_types.melee] = true,
@@ -1301,7 +1301,7 @@ weapon_template.actions = {
 		},
 		anim_end_event_func = function (action_settings, condition_func_params)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
 
 			if current_ammunition_reserve == 0 and current_ammunition_clip == 0 then
@@ -1402,12 +1402,14 @@ weapon_template.actions = {
 			0.9,
 			0.5,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_shotpistol/special_attack",
-			anchor_point_offset = {
-				-0.15,
-				0.85,
-				-0.45,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_shotpistol/special_attack",
+				anchor_point_offset = {
+					-0.15,
+					0.85,
+					-0.45,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,

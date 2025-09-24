@@ -130,7 +130,42 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_stagger = children[5]
+		local node_use_special_action = children[5]
+		local condition_result
+
+		repeat
+			local perception_component = blackboard.perception
+			local has_line_of_sight = perception_component.has_line_of_sight
+			local stim_component = blackboard.stim
+			local can_use_stim = stim_component.can_use_stim
+			local t_til_use = stim_component.t_til_use
+			local t = Managers.time:time("gameplay")
+			local behavior_component = blackboard.behavior
+			local combat_range = behavior_component.combat_range
+
+			if has_line_of_sight and can_use_stim and t_til_use < t and (combat_range == "far" or combat_range == "close" or combat_range == "melee") then
+				condition_result = true
+
+				do break end
+				break
+			end
+
+			condition_result = false and condition_result
+		until true
+
+		if condition_result then
+			local leaf_node = node_use_special_action:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_use_special_action
+
+				return leaf_node
+			end
+		end
+	end
+
+	do
+		local node_stagger = children[6]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -143,7 +178,7 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_blocked = children[6]
+		local node_blocked = children[7]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -156,7 +191,7 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_melee_combat = children[7]
+		local node_melee_combat = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
 		local condition_result
 
@@ -209,7 +244,7 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_alerted = children[8]
+		local node_alerted = children[9]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -258,7 +293,7 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_patrol = children[9]
+		local node_patrol = children[10]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -309,7 +344,7 @@ BtChaosOgrynExecutorSelectorNode.evaluate = function (self, unit, blackboard, sc
 		end
 	end
 
-	local node_idle = children[10]
+	local node_idle = children[11]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

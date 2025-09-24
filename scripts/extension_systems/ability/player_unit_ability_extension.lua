@@ -13,6 +13,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
@@ -42,6 +43,7 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 
 	self._first_person_extension = first_person_extension
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
+	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
@@ -58,13 +60,13 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 	self._is_local_unit = is_local_unit
 	self._abilities = {}
 	self._equipped_abilities = {}
-	self._slot_name_lookup = {}
 	self._charge_replenished = {}
 
 	local action_handler = ActionHandler:new(unit, AbilityActionHandlerData)
 
-	action_handler:add_component("combat_ability_action")
-	action_handler:add_component("grenade_ability_action")
+	for i = 1, #ability_types do
+		action_handler:add_component(ability_types[i] .. "_action")
+	end
 
 	self._action_handler = action_handler
 	self._item_definitions = MasterItems.get_cached()
@@ -85,55 +87,47 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 end
 
 PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_extension)
+	local ability_components = {}
 	local equipped_abilities_component = unit_data_extension:write_component("equipped_abilities")
 
-	equipped_abilities_component.combat_ability = "none"
-	equipped_abilities_component.grenade_ability = "none"
+	for i = 1, #ability_types do
+		local ability_type = ability_types[i]
+
+		equipped_abilities_component[ability_type] = "none"
+
+		local ability_component = unit_data_extension:write_component(ability_type)
+
+		ability_component.cooldown = 0
+		ability_component.num_charges = 0
+		ability_component.active = false
+		ability_component.enabled = true
+		ability_component.cooldown_paused = false
+		ability_components[ability_type] = ability_component
+	end
+
 	self._equipped_abilities_component = equipped_abilities_component
-
-	local combat_ability_component = unit_data_extension:write_component("combat_ability")
-	local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-	combat_ability_component.cooldown = 0
-	combat_ability_component.num_charges = 0
-	combat_ability_component.active = false
-	combat_ability_component.enabled = true
-	combat_ability_component.cooldown_paused = false
-	grenade_ability_component.cooldown = 0
-	grenade_ability_component.num_charges = 0
-	grenade_ability_component.active = false
-	grenade_ability_component.enabled = true
-	grenade_ability_component.cooldown_paused = false
-	self._ability_components = {
-		combat_ability = combat_ability_component,
-		grenade_ability = grenade_ability_component,
-	}
+	self._ability_components = ability_components
 end
 
 PlayerUnitAbilityExtension._init_sync_data = function (self, game_object_data)
 	local init_equipped_value = "not_equipped"
-
-	game_object_data.combat_ability_equipped = NetworkLookup.player_abilities[init_equipped_value]
-	game_object_data.grenade_ability_equipped = NetworkLookup.player_abilities[init_equipped_value]
-
-	local init_enabled_value = true
-
-	game_object_data.combat_ability_enabled = init_enabled_value
-	game_object_data.grenade_ability_enabled = init_enabled_value
-
 	local init_max_charges_value = 0
-
-	self._combat_ability_max_charges_sync_value = init_max_charges_value
-	game_object_data.combat_ability_max_charges = init_max_charges_value
-	self._grenade_ability_max_charges_sync_value = init_max_charges_value
-	game_object_data.grenade_ability_max_charges = init_max_charges_value
-
+	local init_enabled_value = true
 	local init_max_cooldown_value = 0
+	local ability_max_charges_sync_value = {}
+	local ability_max_cooldown_sync_value = {}
 
-	self._combat_ability_max_cooldown_sync_value = init_max_cooldown_value
-	game_object_data.combat_ability_max_cooldown = init_max_cooldown_value
-	self._grenade_ability_max_cooldown_sync_value = init_max_cooldown_value
-	game_object_data.grenade_ability_max_cooldown = init_max_cooldown_value
+	for i = 1, #ability_types do
+		local ability_type = ability_types[i]
+
+		game_object_data[ability_type .. "_equipped"] = NetworkLookup.player_abilities[init_equipped_value]
+		game_object_data[ability_type .. "_enabled"] = init_enabled_value
+		ability_max_charges_sync_value[ability_type] = init_max_charges_value
+		ability_max_cooldown_sync_value[ability_type] = init_max_cooldown_value
+	end
+
+	self._ability_max_charges_sync_value = ability_max_charges_sync_value
+	self._ability_max_cooldown_sync_value = ability_max_cooldown_sync_value
 end
 
 PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
@@ -214,6 +208,8 @@ PlayerUnitAbilityExtension.equip_ability = function (self, ability_type, ability
 end
 
 PlayerUnitAbilityExtension.unequip_ability = function (self, ability_type, fixed_t)
+	self._action_input_extension:clear_input_queue_and_sequences_by_ability_type(ability_type)
+
 	local ability = self._equipped_abilities[ability_type]
 
 	self:_unequip_ability(ability_type, ability, fixed_t)
@@ -225,7 +221,6 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 	Log.info("PlayerUnitAbilityExtension", "Equipping ability %q of type %q%s", ability.name, ability_type, from_server_correction and " from server correction" or "")
 
 	self._equipped_abilities[ability_type] = ability
-	self._slot_name_lookup[ability_type] = string.format("slot_%s", ability_type)
 
 	local inventory_item_name = ability.inventory_item_name
 
@@ -238,7 +233,9 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 		if not from_server_correction then
 			PlayerUnitVisualLoadout.equip_item_to_slot(self._unit, item, slot_name, nil, self._initial_fixed_frame_t)
 		end
-	else
+	end
+
+	if ability.ability_template then
 		local component_name = ability_type .. "_action"
 		local ability_template_name = ability.ability_template
 		local ability_template = AbilityTemplates[ability_template_name]
@@ -270,17 +267,9 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 	end
 
 	if self._is_server then
-		local game_object_field
+		local game_object_field = ability_type .. "_equipped"
 
-		if ability_type == "combat_ability" then
-			game_object_field = "combat_ability_equipped"
-		elseif ability_type == "grenade_ability" then
-			game_object_field = "grenade_ability_equipped"
-		end
-
-		if game_object_field then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities[ability.name])
-		end
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities[ability.name])
 	end
 end
 
@@ -297,7 +286,9 @@ PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, abil
 		if not from_server_correction then
 			PlayerUnitVisualLoadout.unequip_item_from_slot(self._unit, slot_name, fixed_t)
 		end
-	else
+	end
+
+	if ability.ability_template then
 		local component_name = ability_type .. "_action"
 
 		if not from_server_correction then
@@ -316,17 +307,9 @@ PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, abil
 	self._equipped_abilities[ability_type] = nil
 
 	if self._is_server then
-		local game_object_field
+		local game_object_field = ability_type .. "_equipped"
 
-		if ability_type == "combat_ability" then
-			game_object_field = "combat_ability_equipped"
-		elseif ability_type == "grenade_ability" then
-			game_object_field = "grenade_ability_equipped"
-		end
-
-		if game_object_field then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities.not_equipped)
-		end
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities.not_equipped)
 	end
 end
 
@@ -368,39 +351,25 @@ PlayerUnitAbilityExtension.post_update = function (self, unit, dt, t, fixed_fram
 end
 
 PlayerUnitAbilityExtension._handle_sync = function (self)
-	if self:ability_is_equipped("grenade_ability") then
-		local max_ability_charges = self:max_ability_charges("grenade_ability")
+	for i = 1, #ability_types do
+		local ability_type = ability_types[i]
 
-		if max_ability_charges ~= self._grenade_ability_max_charges_sync_value then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_charges", max_ability_charges)
+		if self:ability_is_equipped(ability_type) then
+			local max_ability_charges = self:max_ability_charges(ability_type)
 
-			self._grenade_ability_max_charges_sync_value = max_ability_charges
-		end
+			if max_ability_charges ~= self._ability_max_charges_sync_value[ability_type] then
+				GameSession.set_game_object_field(self._game_session, self._game_object_id, ability_type .. "_max_charges", max_ability_charges)
 
-		local max_ability_cooldown = self:max_ability_cooldown("grenade_ability")
+				self._ability_max_charges_sync_value[ability_type] = max_ability_charges
+			end
 
-		if max_ability_cooldown ~= self._grenade_ability_max_cooldown_sync_value then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_cooldown", max_ability_cooldown)
+			local max_ability_cooldown = self:max_ability_cooldown(ability_type)
 
-			self._grenade_ability_max_cooldown_sync_value = max_ability_cooldown
-		end
-	end
+			if max_ability_cooldown ~= self._ability_max_cooldown_sync_value[ability_type] then
+				GameSession.set_game_object_field(self._game_session, self._game_object_id, ability_type .. "_max_cooldown", max_ability_cooldown)
 
-	if self:ability_is_equipped("combat_ability") then
-		local max_ability_charges = self:max_ability_charges("combat_ability")
-
-		if max_ability_charges ~= self._combat_ability_max_charges_sync_value then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_charges", max_ability_charges)
-
-			self._combat_ability_max_charges_sync_value = max_ability_charges
-		end
-
-		local max_ability_cooldown = self:max_ability_cooldown("combat_ability")
-
-		if max_ability_cooldown ~= self._combat_ability_max_cooldown_sync_value then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_cooldown", max_ability_cooldown)
-
-			self._combat_ability_max_cooldown_sync_value = max_ability_cooldown
+				self._ability_max_cooldown_sync_value[ability_type] = max_ability_cooldown
+			end
 		end
 	end
 end
@@ -551,11 +520,14 @@ PlayerUnitAbilityExtension.can_wield = function (self, slot_name, previous_check
 		if ability_slot_name == slot_name then
 			local equipped_abilities = self._equipped_abilities
 			local ability = equipped_abilities[ability_type]
-			local can_be_wielded_when_depleted = ability.can_be_wielded_when_depleted
-			local can_be_previously_wielded_to = not previous_check or ability.can_be_previously_wielded_to
-			local can_use_ability = self:can_use_ability(ability_type)
 
-			return can_use_ability and can_be_previously_wielded_to or can_be_wielded_when_depleted and can_be_previously_wielded_to
+			if ability then
+				local can_be_wielded_when_depleted = ability.can_be_wielded_when_depleted
+				local can_be_previously_wielded_to = not previous_check or ability.can_be_previously_wielded_to
+				local can_use_ability = self:can_use_ability(ability_type)
+
+				return can_use_ability and can_be_previously_wielded_to or can_be_wielded_when_depleted and can_be_previously_wielded_to
+			end
 		end
 	end
 
@@ -587,17 +559,9 @@ PlayerUnitAbilityExtension.set_ability_enabled = function (self, ability_type, e
 	component.enabled = enable
 
 	if self._is_server then
-		local game_object_field
+		local game_object_field = ability_type .. "_enabled"
 
-		if ability_type == "combat_ability" then
-			game_object_field = "combat_ability_enabled"
-		elseif ability_type == "grenade_ability" then
-			game_object_field = "grenade_ability_enabled"
-		end
-
-		if game_object_field then
-			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, enable)
-		end
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, enable)
 	end
 end
 
@@ -718,6 +682,10 @@ PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)
 		local grenade_ability_cooldown_modifier = stat_buffs.grenade_ability_cooldown_modifier or 1
 
 		ability_cooldown_modifier = grenade_ability_cooldown_modifier
+	elseif ability_type == "pocketable_ability" then
+		local pocketable_ability_cooldown_modifier = stat_buffs.pocketable_ability_cooldown_modifier or 1
+
+		ability_cooldown_modifier = pocketable_ability_cooldown_modifier
 	end
 
 	local max_ability_cooldown = math.max(0, base_cooldown * ability_cooldown_modifier - ability_cooldown_flat_reduction)
@@ -823,25 +791,19 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, op
 	local component = ability_components[ability_type]
 	local equipped_abilities_component = self._equipped_abilities_component
 	local ability_name = equipped_abilities_component[ability_type]
+	local reporter = Managers.telemetry_reporters:reporter(ability_type)
 
-	if ability_type == "combat_ability" then
-		local reporter = Managers.telemetry_reporters:reporter("combat_ability")
+	if reporter then
+		reporter:register_event(self._player, ability_name)
+	end
 
-		if reporter then
-			reporter:register_event(self._player, ability_name)
-		end
-	elseif ability_type == "grenade_ability" then
-		local reporter = Managers.telemetry_reporters:reporter("grenade_ability")
+	if ability_type == "grenade_ability" then
 		local param_table = self._buff_extension:request_proc_event_param_table()
 
 		if param_table then
 			param_table.unit = self._player
 
 			self._buff_extension:add_proc_event(proc_events.on_grenade_thrown, param_table)
-		end
-
-		if reporter then
-			reporter:register_event(self._player, ability_name)
 		end
 	end
 
@@ -859,17 +821,23 @@ PlayerUnitAbilityExtension.wanted_character_state_transition = function (self)
 end
 
 PlayerUnitAbilityExtension.get_slot_name = function (self, ability_type)
-	return self._slot_name_lookup[ability_type]
+	return ability_configuration[ability_type]
 end
 
 PlayerUnitAbilityExtension.get_current_ability_cooldown_time = function (self)
-	return self._combat_ability_max_cooldown_sync_value
+	return self._ability_max_cooldown_sync_value.combat_ability
 end
 
 PlayerUnitAbilityExtension.get_current_ability_name = function (self)
 	local name = self._equipped_abilities.combat_ability.name
 
 	return name
+end
+
+PlayerUnitAbilityExtension.ability_pause_cooldown_settings = function (self, ability_type)
+	local ability = self._equipped_abilities[ability_type]
+
+	return ability.pause_cooldown_settings
 end
 
 return PlayerUnitAbilityExtension

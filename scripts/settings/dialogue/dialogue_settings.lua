@@ -264,10 +264,10 @@ DialogueSettings.enemies_distant_distance = 40
 DialogueSettings.dialogue_level_start_delay = 120
 DialogueSettings.story_tickers_intensity_cooldown = 2
 DialogueSettings.story_ticker_enabled = true
-DialogueSettings.story_start_delay = 173
+DialogueSettings.story_start_delay = 77.3
 DialogueSettings.story_tick_time = 13.1
 DialogueSettings.short_story_ticker_enabled = true
-DialogueSettings.short_story_start_delay = 181
+DialogueSettings.short_story_start_delay = 98.1
 DialogueSettings.short_story_tick_time = 2.9
 DialogueSettings.decaying_tension_delay = 3
 DialogueSettings.npc_story_ticker_enabled = true
@@ -314,7 +314,7 @@ DialogueSettings.manual_subtitle_data = {
 	},
 }
 DialogueSettings.backend_vo_groups = table.enum("horde_mode")
-DialogueSettings.horde_mode = table.enum("story_echo_morrow_01_a", "story_echo_morrow_05_a", "story_echo_morrow_09_a", "story_echo_morrow_13_a", "story_echo_morrow_17_a", "story_echo_morrow_21_a", "story_echo_morrow_25_a", "story_echo_morrow_29_a", "story_echo_morrow_33_a", "story_echo_zola_01_a", "story_echo_zola_05_a", "story_echo_zola_09_a", "story_echo_zola_13_a", "story_echo_zola_17_a", "story_echo_zola_21_a", "story_echo_zola_25_a", "story_echo_brahms_00_a", "story_echo_brahms_04_a", "story_echo_brahms_07_a", "story_echo_brahms_11_a", "story_echo_brahms_12_a", "story_echo_brahms_16_a", "story_echo_brahms_20_a", "story_echo_brahms_23a_a", "story_echo_brahms_26_a", "story_echo_brahms_28_a")
+DialogueSettings.horde_mode = table.enum("story_echo_morrow_01_a", "story_echo_morrow_05_a", "story_echo_morrow_09_a", "story_echo_morrow_13_a", "story_echo_morrow_17_a", "story_echo_morrow_21_a", "story_echo_morrow_25_a", "story_echo_morrow_29_a", "story_echo_morrow_33_a", "story_echo_morrow_39_a", "story_echo_morrow_43_a", "story_echo_zola_01_a", "story_echo_zola_05_a", "story_echo_zola_09_a", "story_echo_zola_13_a", "story_echo_zola_17_a", "story_echo_zola_21_a", "story_echo_zola_25_a", "story_echo_zola_31_a", "story_echo_zola_35_a", "story_echo_brahms_00_a", "story_echo_brahms_04_a", "story_echo_brahms_07_a", "story_echo_brahms_11_a", "story_echo_brahms_12_a", "story_echo_brahms_16_a", "story_echo_brahms_20_a", "story_echo_brahms_23a_a", "story_echo_brahms_26_a", "story_echo_brahms_28_a", "story_echo_marshal_01_a", "story_echo_marshal_05_a")
 DialogueSettings.stats = {
 	horde_mode = {
 		story_echo_brahms_00_a = "hook_backstory_brahms_part_1",
@@ -327,6 +327,8 @@ DialogueSettings.stats = {
 		story_echo_brahms_23a_a = "hook_backstory_brahms_part_8",
 		story_echo_brahms_26_a = "hook_backstory_brahms_part_9",
 		story_echo_brahms_28_a = "hook_backstory_brahms_part_10",
+		story_echo_marshal_01_a = "hook_backstory_zorin_part_1",
+		story_echo_marshal_05_a = "hook_backstory_zorin_part_2",
 		story_echo_morrow_01_a = "hook_backstory_morrow_part_1",
 		story_echo_morrow_05_a = "hook_backstory_morrow_part_2",
 		story_echo_morrow_09_a = "hook_backstory_morrow_part_3",
@@ -336,6 +338,8 @@ DialogueSettings.stats = {
 		story_echo_morrow_25_a = "hook_backstory_morrow_part_7",
 		story_echo_morrow_29_a = "hook_backstory_morrow_part_8",
 		story_echo_morrow_33_a = "hook_backstory_morrow_part_9",
+		story_echo_morrow_39_a = "hook_backstory_morrow_part_10",
+		story_echo_morrow_43_a = "hook_backstory_morrow_part_11",
 		story_echo_zola_01_a = "hook_backstory_zola_part_1",
 		story_echo_zola_05_a = "hook_backstory_zola_part_2",
 		story_echo_zola_09_a = "hook_backstory_zola_part_3",
@@ -343,6 +347,8 @@ DialogueSettings.stats = {
 		story_echo_zola_17_a = "hook_backstory_zola_part_5",
 		story_echo_zola_21_a = "hook_backstory_zola_part_6",
 		story_echo_zola_25_a = "hook_backstory_zola_part_7",
+		story_echo_zola_31_a = "hook_backstory_zola_part_8",
+		story_echo_zola_35_a = "hook_backstory_zola_part_9",
 	},
 }
 

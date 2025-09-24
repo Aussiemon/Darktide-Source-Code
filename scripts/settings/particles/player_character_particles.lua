@@ -25,14 +25,13 @@ end
 
 PlayerCharacterParticles.particle_names = particle_names
 
-local DEFAULT_EXTERNAL_PROPERTIES = {}
-
 PlayerCharacterParticles.resolve_particle = function (particle_alias, properties, optional_external_properties)
 	local settings = PlayerCharacterParticles.particle_aliases[particle_alias]
 
 	if settings then
 		local particles = settings.particles
 		local switches = settings.switch
+		local default_switch_properties = settings.default_switch_properties
 		local no_default = settings.no_default
 		local num_switches = #switches
 
@@ -40,9 +39,9 @@ PlayerCharacterParticles.resolve_particle = function (particle_alias, properties
 			return true, particles.default
 		end
 
-		for i = 1, num_switches do
-			local switch_name = switches[i]
-			local switch_property = properties[switch_name] or (optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES)[switch_name]
+		for ii = 1, num_switches do
+			local switch_name = switches[ii]
+			local switch_property = properties[switch_name] or optional_external_properties and optional_external_properties[switch_name] or default_switch_properties and default_switch_properties[switch_name]
 
 			if switch_property and particles[switch_property] then
 				particles = particles[switch_property]
@@ -64,11 +63,11 @@ PlayerCharacterParticles.resolve_particle = function (particle_alias, properties
 end
 
 local function _valid_particles_recursive(particles, relevant_particles)
-	for _, event_or_events in pairs(particles) do
-		if type(event_or_events) == "string" then
-			relevant_particles[event_or_events] = true
+	for _, particle_or_particles in pairs(particles) do
+		if type(particle_or_particles) == "string" then
+			relevant_particles[particle_or_particles] = true
 		else
-			_valid_particles_recursive(event_or_events, relevant_particles)
+			_valid_particles_recursive(particle_or_particles, relevant_particles)
 		end
 	end
 end
@@ -89,8 +88,8 @@ PlayerCharacterParticles.find_relevant_particles = function (profile_properties)
 
 			temp_relevant_particles[resource_name] = true
 		else
-			for i = 1, num_switches do
-				local switch_name = switches[i]
+			for ii = 1, num_switches do
+				local switch_name = switches[ii]
 				local switch_property = profile_properties[switch_name]
 
 				if switch_property then

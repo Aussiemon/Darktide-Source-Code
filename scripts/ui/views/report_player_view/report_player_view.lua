@@ -3,6 +3,7 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/report_player_view/report_player_view_definitions")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local MissionsTemplates = require("scripts/settings/mission/mission_templates")
 local ReportPlayerViewBlueprints = require("scripts/ui/views/report_player_view/report_player_view_blueprints")
 local ReportPlayerViewSettings = require("scripts/ui/views/report_player_view/report_player_view_settings")
@@ -10,6 +11,7 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local ReportPlayerView = class("ReportPlayerView", "BaseView")
 
 ReportPlayerView.init = function (self, settings, context)
@@ -319,17 +321,11 @@ ReportPlayerView._update_report_button_state = function (self)
 end
 
 ReportPlayerView._get_server_type = function (self)
-	local game_mode_manager = Managers.state.game_mode
+	local host_type = Managers.multiplayer_session:host_type()
 
-	if not game_mode_manager then
-		return "none"
-	end
-
-	local game_mode_name = game_mode_manager:game_mode_name()
-
-	if game_mode_name == "hub" then
+	if host_type == HOST_TYPES.hub_server then
 		return "hub"
-	elseif game_mode_name == "coop_complete_objective" then
+	elseif host_type == HOST_TYPES.mission_server then
 		return "mission"
 	end
 

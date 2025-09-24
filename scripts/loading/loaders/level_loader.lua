@@ -28,30 +28,6 @@ LevelLoader.start_loading = function (self, context)
 	local mission_name = context.mission_name
 	local level_editor_level = context.level_name
 	local circumstance_name = context.circumstance_name
-	local level_name = Missions[mission_name].level or level_editor_level
-
-	self._level_name = level_name
-
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-
-	self._theme_tag = circumstance_template.theme_tag
-
-	local item_definitions = MasterItems.get_cached()
-
-	self._load_state = LOAD_STATES.level_load
-
-	local function callback(_pkg_name)
-		self:_level_load_done_callback(item_definitions)
-	end
-
-	self._reference_name = "LevelLoader (" .. tostring(mission_name) .. ")"
-	self._level_package_id = Managers.package:load(level_name, self._reference_name, callback)
-end
-
-LevelLoader.start_loading = function (self, context)
-	local mission_name = context.mission_name
-	local level_editor_level = context.level_name
-	local circumstance_name = context.circumstance_name
 	local havoc_data = context.havoc_data
 	local level_name = Missions[mission_name].level or level_editor_level
 

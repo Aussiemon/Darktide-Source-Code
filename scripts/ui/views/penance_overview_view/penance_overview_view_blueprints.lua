@@ -58,7 +58,6 @@ local function _apply_package_item_icon_cb_func(widget, item)
 
 	widget_content.icon = "content/ui/materials/icons/items/containers/item_container_square"
 
-	local item_slot = ItemUtils.item_slot(item)
 	local material_values = icon_style.material_values
 
 	if item.icon_material and item.icon_material ~= "" then
@@ -430,15 +429,6 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 
 			content.element = element
 			content.text = text
-
-			local size = content.size
-			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
 		end,
 	}
 end
@@ -510,10 +500,6 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 
 				size[2] = math.max(height, size[2])
 			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
 		end,
 	}
 end
@@ -763,10 +749,6 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				color[4] = texture_color[4]
 			end
 		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 			local item = element.item
@@ -888,15 +870,10 @@ local function _setup_blueprint_penance_score(input_size, edge_padding)
 			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
-			local style = widget.style
 			local content = widget.content
 
 			content.element = element
 			content.reward_score = "+" .. element.score
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
 		end,
 	}
 end
@@ -1009,10 +986,6 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 			content.element = element
 			content.text = text
 		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-		end,
 	}
 end
 
@@ -1086,17 +1059,12 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local max_width = size[1] - (40 + math.abs(text_style.offset[1]))
 			local croped_text = UIRenderer.crop_text_width(ui_renderer, text, text_style.font_type, text_style.font_size, max_width)
 
 			content.element = element
 			content.text = croped_text
 			content.value = value
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
 		end,
 	}
 end
@@ -1316,7 +1284,6 @@ local function _setup_blueprint_penance_completed(input_size, edge_padding)
 			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
-			local style = widget.style
 			local content = widget.content
 
 			content.completed = element.completed
@@ -1367,7 +1334,6 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 			if AchievementCategories[achivement_category] then
 				local category_config = AchievementCategories[achivement_category]
 				local parent_name = category_config.parent_name
-				local sort_index = category_config.sort_index
 
 				category = parent_name or achivement_category
 			end
@@ -1690,10 +1656,6 @@ local grid_blueprints = {
 
 			size[2] = height + 0
 		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-		end,
 	},
 	body = {
 		size = {
@@ -1789,10 +1751,6 @@ local grid_blueprints = {
 			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
 
 			size[2] = height + 0
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
 		end,
 	},
 	dynamic_spacing = {
@@ -2190,11 +2148,6 @@ local grid_blueprints = {
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local content = widget.content
-			local element = content.element
-
 			if parent._using_cursor_navigation then
 				widget.content.claim_description = ""
 			else
@@ -2352,8 +2305,7 @@ local grid_blueprints = {
 					local hotspot = content.hotspot
 					local anim_hover_progress = hotspot.anim_hover_progress or 0
 					local anim_select_progress = hotspot.anim_select_progress or 0
-					local anim_focus_progress = hotspot.anim_focus_progres or 0
-					local completed = content.completed or content.can_claim
+					local anim_focus_progress = hotspot.anim_focus_progress or 0
 					local complete_multiplier = 1
 					local default_color = 155 * complete_multiplier
 					local hover_color = anim_hover_progress * 100 * complete_multiplier
@@ -2902,9 +2854,6 @@ local grid_blueprints = {
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-
 			if not parent._using_cursor_navigation then
 				local action = "confirm_pressed"
 				local service_type = "View"
@@ -2916,6 +2865,219 @@ local grid_blueprints = {
 				widget.content.claim_description = Localize("loc_penance_menu_claim_button")
 			end
 		end,
+	},
+	category_button = {
+		pass_template = {
+			{
+				content_id = "hotspot",
+				pass_type = "hotspot",
+				style_id = "hotspot",
+				content = {
+					on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+				},
+				style = {
+					anim_focus_speed = 8,
+					anim_hover_speed = 8,
+					anim_input_speed = 8,
+					anim_select_speed = 8,
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "background",
+				value = "content/ui/materials/backgrounds/default_square",
+				style = {
+					default_color = Color.terminal_background(nil, true),
+					selected_color = Color.terminal_background_selected(nil, true),
+				},
+				change_function = ButtonPassTemplates.terminal_button_change_function,
+			},
+			{
+				pass_type = "texture",
+				style_id = "background_gradient",
+				value = "content/ui/materials/gradients/gradient_vertical",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+					default_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					disabled_color = Color.ui_grey_medium(255, true),
+					offset = {
+						0,
+						0,
+						1,
+					},
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+			},
+			{
+				pass_type = "texture",
+				style_id = "outer_shadow",
+				value = "content/ui/materials/frames/dropshadow_medium",
+				style = {
+					horizontal_alignment = "center",
+					scale_to_material = true,
+					vertical_alignment = "center",
+					color = Color.black(200, true),
+					size_addition = {
+						20,
+						20,
+					},
+					offset = {
+						0,
+						0,
+						3,
+					},
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+					default_color = Color.terminal_frame(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					disabled_color = Color.ui_grey_medium(255, true),
+					offset = {
+						0,
+						0,
+						2,
+					},
+				},
+				change_function = ButtonPassTemplates.terminal_button_change_function,
+			},
+			{
+				pass_type = "texture",
+				style_id = "text_bg",
+				value = "content/ui/materials/backgrounds/default_square",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "bottom",
+					color = Color.black(150, true),
+					size = {
+						68,
+						18,
+					},
+					offset = {
+						0,
+						-1,
+						8,
+					},
+				},
+			},
+			{
+				pass_type = "text",
+				style_id = "text_counter",
+				value = "0/0",
+				value_id = "text_counter",
+				style = {
+					font_size = 16,
+					font_type = "proxima_nova_bold",
+					text_horizontal_alignment = "center",
+					text_vertical_alignment = "bottom",
+					text_color = Color.terminal_text_header(255, true),
+					offset = {
+						0,
+						0,
+						9,
+					},
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "icon",
+				value_id = "icon",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+					default_color = Color.terminal_text_header(255, true),
+					disabled_color = Color.gray(255, true),
+					color = Color.terminal_text_header(255, true),
+					hover_color = Color.terminal_text_header_selected(255, true),
+					size = {
+						72,
+						52,
+					},
+					original_size_addition = {
+						-10,
+						-10,
+					},
+					size_addition = {
+						0,
+						0,
+					},
+					offset = {
+						0,
+						-6,
+						6,
+					},
+				},
+				change_function = function (content, style)
+					local hotspot = content.hotspot
+					local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+					local size_addition = 2 * math.easeInCubic(progress)
+					local style_size_addition = style.size_addition
+					local original_size_addition = style.original_size_addition
+
+					style_size_addition[1] = original_size_addition[1] + size_addition * 2
+					style_size_addition[2] = original_size_addition[1] + size_addition * 2
+
+					ButtonPassTemplates.list_button_label_change_function(content, style)
+				end,
+			},
+			{
+				pass_type = "texture",
+				style_id = "new_indicator",
+				value = "content/ui/materials/symbols/new_item_indicator",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "bottom",
+					size = {
+						90,
+						90,
+					},
+					offset = {
+						23,
+						-5,
+						4,
+					},
+					color = Color.terminal_corner_selected(255, true),
+				},
+				visibility_function = function (content, style)
+					return content.has_unclaimed_penances
+				end,
+			},
+			{
+				pass_type = "texture",
+				style_id = "bookmark",
+				value = "content/ui/materials/icons/generic/bookmark",
+				style = {
+					horizontal_alignment = "right",
+					vertical_alignment = "top",
+					size = {
+						20,
+						20,
+					},
+					offset = {
+						-2,
+						-2,
+						4,
+					},
+					color = Color.terminal_corner_selected(255, true),
+				},
+				visibility_function = function (content, style)
+					return content.has_favorite_penances and not content.has_unclaimed_penances
+				end,
+			},
+		},
 	},
 }
 

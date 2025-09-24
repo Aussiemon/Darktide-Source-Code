@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/player_weapon/hud_element_player_weapon.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
 local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -24,12 +25,11 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._slot_name = self._slot_component.__name
 	self._slot_index = data.index
 	self._ability = data.ability
-	self._ability_type = data.ability_type
 	self._ability_extension = data.ability_extension
 
 	local slot_settings = self._slot_name and ItemSlotSettings[self._slot_name]
 
-	self._wield_input = self._ability_type or slot_settings.wield_input
+	self._wield_input = self._ability and self._ability.ability_type or slot_settings.wield_input
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 
@@ -184,9 +184,9 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 	end
 
 	local clip_information_updated = false
-	local ability_type = self._ability_type
 
-	if ability_type then
+	if self._ability then
+		local ability_type = self._ability.ability_type
 		local ability_extension = self._ability_extension
 		local remaining_ability_charges = ability_extension:remaining_ability_charges(ability_type)
 		local max_ability_charges = ability_extension:max_ability_charges(ability_type)
@@ -205,10 +205,10 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 		if slot_component then
 			if self._uses_ammo or self._uses_overheat then
 				local max_reserve = slot_component.max_ammunition_reserve
-				local max_ammunition_clip = slot_component.max_ammunition_clip
+				local max_ammunition_clip = Ammo.max_ammo_in_clips(slot_component)
 
 				if max_reserve and max_reserve > 0 then
-					local current_ammunition_clip = slot_component.current_ammunition_clip
+					local current_ammunition_clip = Ammo.current_ammo_in_clips(slot_component)
 					local current_reserve = slot_component.current_ammunition_reserve
 					local update_clip = self._current_ammunition_clip ~= current_ammunition_clip
 					local total_ammo = current_ammunition_clip + current_reserve

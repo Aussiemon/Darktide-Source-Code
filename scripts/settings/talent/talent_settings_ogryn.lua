@@ -72,7 +72,7 @@ local talent_settings = {
 			spread_modifier = -0.35,
 		},
 		ogryn_damage_reduction_on_high_stamina = {
-			damage_taken_multiplier = 0.85,
+			damage_taken_multiplier = 0.875,
 			stamina_threshold = 0.75,
 		},
 		ogryn_multiple_staggers_restore_stamina = {
@@ -86,20 +86,20 @@ local talent_settings = {
 			damage_far = 0.15,
 		},
 		ogryn_corruption_resistance = {
-			corruption_taken_multiplier = 0.7,
+			corruption_taken_multiplier = 0.6,
 		},
 		ogryn_carapace_explosion = {
 			stacks = 5,
 			toughness = 0.5,
 		},
 		ogryn_heavy_hitter = {
-			cleave = 0.15,
+			cleave = 0.125,
 			heavy_stacks = 2,
 			max_stacks = 8,
 			melee_damage = 0.03,
 			stacks = 1,
-			stagger = 0.1,
-			tdr = 0.015,
+			stagger = 0.075,
+			tdr = 0.0125,
 			toughness_melee_replenish = 0.15,
 		},
 		toughness_coherency_aura = {
@@ -134,9 +134,9 @@ local talent_settings = {
 			ranged_damage_taken_multiplier = 0.8,
 		},
 		ogryn_melee_improves_ranged = {
-			duration = 8,
-			max_stacks = 6,
-			ranged_damage = 0.025,
+			duration = 10,
+			max_stacks = 5,
+			ranged_damage = 0.03,
 		},
 		ogryn_pushing_applies_brittleness = {
 			stacks = 4,
@@ -153,7 +153,7 @@ local talent_settings = {
 			melee_damage = 0.15,
 		},
 		ogryn_crit_damage_increase = {
-			critical_strike_damage = 0.5,
+			critical_strike_damage = 0.75,
 		},
 		ogryn_block_all_attacks = {
 			duration = 5,
@@ -170,7 +170,7 @@ local talent_settings = {
 		ogryn_damage_taken_by_all_increases_strength_tdr = {
 			duration = 10,
 			max_stacks = 5,
-			power_level_modifier = 0.025,
+			power_level_modifier = 0.02,
 			tdr = 0.85,
 		},
 		ogryn_replenish_rock_on_miss = {
@@ -220,7 +220,7 @@ local talent_settings = {
 			increased_clip_size = 0.25,
 		},
 		offensive_1 = {
-			crit_chance_on_kill = 0.015,
+			crit_chance_on_kill = 0.02,
 			duration = 12,
 			max_stacks = 8,
 		},
@@ -302,7 +302,7 @@ local talent_settings = {
 			melee_heavy_damage = 0.5,
 		},
 		toughness_1 = {
-			toughness_bonus = 0.5,
+			toughness_bonus = 1,
 		},
 		toughness_2 = {
 			on_sweep_finish_proc_chance = 1,
@@ -320,11 +320,11 @@ local talent_settings = {
 		},
 		offensive_2 = {},
 		offensive_3 = {
-			light_stacks = 2,
+			light_stacks = 1,
 			stacks = 4,
 		},
 		coop_1 = {
-			coherency_aura_size_increase = 0.5,
+			coherency_aura_size_increase = 0.75,
 		},
 		coop_2 = {
 			duration = 4,
@@ -350,7 +350,7 @@ local talent_settings = {
 			min = 1,
 		},
 		defensive_3 = {
-			increased_toughness_health_threshold = 0.33,
+			increased_toughness_health_threshold = 0.5,
 			sprinting_cost_multiplier = 0.8,
 			toughness_replenish_modifier = 1,
 		},
@@ -365,7 +365,7 @@ local talent_settings = {
 		},
 		offensive_2_3 = {
 			max_targets = 10,
-			melee_damage = 0.025,
+			melee_damage = 0.03,
 			on_hit_proc_chance = 1,
 			on_sweep_finish_proc_chance = 1,
 		},

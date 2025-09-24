@@ -44,7 +44,7 @@ RemoteWaitForGameObjectSyncState.update = function (self, dt)
 
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if state == "disconnecting" or state == "disconnected" then
 		return "disconnect", {
 			engine_reason = reason,
 		}

@@ -30,6 +30,12 @@ local decal_settings = {
 			"content/fx/units/weapons/small_caliber_cloth_medium_01",
 		},
 	},
+	footstep = {
+		sort_order_base = 500000,
+		units = {
+			"content/fx/units/player/footprints/footprint_snow_01",
+		},
+	},
 }
 
 return settings("DecalSettings", decal_settings)

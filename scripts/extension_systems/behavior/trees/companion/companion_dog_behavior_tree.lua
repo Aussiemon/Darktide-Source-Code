@@ -84,6 +84,61 @@ local IDLE = {
 	},
 	name = "rest",
 }
+local ATTACK = {
+	"BtSelectorNode",
+	{
+		"BtSequenceNode",
+		{
+			"BtCompanionApproachAction",
+			name = "approach_target",
+			action_data = action_data.approach_target,
+		},
+		{
+			"BtCompanionLeapAction",
+			name = "leap",
+			action_data = action_data.leap,
+		},
+		{
+			"BtSelectorNode",
+			{
+				"BtSelectorNode",
+				{
+					"BtCompanionTargetPouncedAction",
+					condition = "is_correct_pounce_action",
+					name = "target_pounced",
+					condition_args = {
+						pounce_action = "human",
+					},
+					action_data = action_data.target_pounced,
+				},
+				{
+					"BtCompanionTargetPounceAndEscapeAction",
+					name = "target_pounced_and_escape",
+					action_data = action_data.target_pounced_and_escape,
+				},
+				condition = "companion_has_pounce_target_and_alive",
+				name = "pounce",
+			},
+			{
+				"BtCompanionFallAction",
+				condition = "companion_has_pounce_target",
+				name = "falling",
+				action_data = action_data.falling,
+			},
+			name = "pounce_or_fall",
+		},
+		condition = "companion_can_pounce",
+		name = "leap_sequence",
+	},
+	{
+		"BtCompanionMoveAroundEnemyAction",
+		name = "move_around_enemy",
+		action_data = action_data.move_around_enemy,
+	},
+	condition = "companion_is_aggroed",
+	leave_hook = "companion_restore_pounce_state",
+	name = "combat",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -133,61 +188,7 @@ local behavior_tree = {
 		condition = "at_smart_object",
 		name = "smart_object",
 	},
-	{
-		"BtSelectorNode",
-		{
-			"BtSequenceNode",
-			{
-				"BtCompanionApproachAction",
-				name = "approach_target",
-				action_data = action_data.approach_target,
-			},
-			{
-				"BtCompanionLeapAction",
-				name = "leap",
-				action_data = action_data.leap,
-			},
-			{
-				"BtSelectorNode",
-				{
-					"BtSelectorNode",
-					{
-						"BtCompanionTargetPouncedAction",
-						condition = "is_correct_pounce_action",
-						name = "target_pounced",
-						condition_args = {
-							pounce_action = "human",
-						},
-						action_data = action_data.target_pounced,
-					},
-					{
-						"BtCompanionTargetPounceAndEscapeAction",
-						name = "target_pounced_and_escape",
-						action_data = action_data.target_pounced_and_escape,
-					},
-					condition = "companion_has_pounce_target_and_alive",
-					name = "pounce",
-				},
-				{
-					"BtCompanionFallAction",
-					condition = "companion_has_pounce_target",
-					name = "falling",
-					action_data = action_data.falling,
-				},
-				name = "pounce_or_fall",
-			},
-			condition = "companion_can_pounce",
-			name = "leap_sequence",
-		},
-		{
-			"BtCompanionMoveAroundEnemyAction",
-			name = "move_around_enemy",
-			action_data = action_data.move_around_enemy,
-		},
-		condition = "companion_is_aggroed",
-		leave_hook = "companion_restore_pounce_state",
-		name = "combat",
-	},
+	ATTACK,
 	FOLLOW,
 	IDLE,
 	name = "companion_dog",

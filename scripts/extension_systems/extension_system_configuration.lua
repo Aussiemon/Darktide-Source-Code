@@ -68,6 +68,7 @@ _system_require("mood", "player_unit_mood_extension")
 _system_require("moveable_platform", "moveable_platform_system")
 _system_require("music_parameter", "player_unit_music_parameter_extension", "player_husk_music_parameter_extension")
 _system_require("nav_block", "nav_block_extension")
+_system_require("nav_box_obstacle", "nav_box_obstacle_extension")
 _system_require("nav_graph", "nav_graph_system")
 _system_require("navigation", "navigation_system")
 _system_require("networked_timer", "networked_timer_system")
@@ -112,7 +113,6 @@ _system_require("weapon", "weapon_system")
 _system_require("weather", "weather_system")
 _system_require("wounds", "wounds_extension")
 
-local enabled_in_runtime_loaded_levels = false
 local systems = {
 	{
 		"side_system",
@@ -121,7 +121,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SideExtension",
 		},
@@ -133,7 +133,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CompanionSpawnerExtension",
 		},
@@ -145,7 +145,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"TokenExtension",
 		},
@@ -157,7 +157,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerSpawnerExtension",
 		},
@@ -169,7 +169,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionGroupExtension",
 			"PlayerGroupExtension",
@@ -182,7 +182,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BotPerceptionExtension",
 			"CompanionPerceptionExtension",
@@ -196,7 +196,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CoverExtension",
 			"CoverUserExtension",
@@ -209,7 +209,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CombatVectorUserExtension",
 		},
@@ -221,7 +221,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BotBehaviorExtension",
 			"CombatRangeUserBehaviorExtension",
@@ -236,7 +236,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitInputExtension",
 		},
@@ -248,7 +248,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitFirstPersonExtension",
 			"PlayerHuskFirstPersonExtension",
@@ -261,7 +261,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitSmartTargetingExtension",
 		},
@@ -273,7 +273,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitTalentExtension",
 			"PlayerHuskTalentExtension",
@@ -286,7 +286,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BroadphaseExtension",
 		},
@@ -298,7 +298,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitBuffExtension",
 			"PlayerHuskBuffExtension",
@@ -313,7 +313,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitActionInputExtension",
 		},
@@ -325,7 +325,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"InteracteeExtension",
 			"PlayerInteracteeExtension",
@@ -338,7 +338,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"InteractorExtension",
 		},
@@ -350,7 +350,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitLedgeFinderExtension",
 		},
@@ -374,7 +374,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CharacterStateMachineExtension",
 		},
@@ -386,7 +386,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionShieldExtension",
 			"MinionHuskShieldExtension",
@@ -400,7 +400,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SummonedMinionsExtension",
 		},
@@ -412,7 +412,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"HealthExtension",
 			"HuskHealthExtension",
@@ -431,7 +431,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"WeakspotExtension",
 		},
@@ -443,7 +443,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitToughnessExtension",
 			"PlayerHuskToughnessExtension",
@@ -459,7 +459,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CompanionVisualLoadoutExtension",
 			"MinionVisualLoadoutExtension",
@@ -474,7 +474,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitAbilityExtension",
 			"PlayerHuskAbilityExtension",
@@ -487,7 +487,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitWeaponExtension",
 			"ProjectileUnitWeaponExtension",
@@ -500,7 +500,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitWeaponSpreadExtension",
 		},
@@ -512,7 +512,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitWeaponRecoilExtension",
 		},
@@ -524,7 +524,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerSuppressionExtension",
 			"MinionSuppressionExtension",
@@ -538,7 +538,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitAttackIntensityExtension",
 			"MinionAttackIntensityExtension",
@@ -551,7 +551,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitMusicParameterExtension",
 			"PlayerHuskMusicParameterExtension",
@@ -564,7 +564,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitGadgetExtension",
 		},
@@ -576,7 +576,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BotNavigationExtension",
 			"MinionNavigationExtension",
@@ -589,7 +589,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MoveablePlatformExtension",
 		},
@@ -601,7 +601,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"NetworkedTimerExtension",
 		},
@@ -613,7 +613,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"DecoderDeviceExtension",
 		},
@@ -625,7 +625,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"LuggableExtension",
 		},
@@ -637,7 +637,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"LuggableSocketExtension",
 		},
@@ -649,7 +649,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"DecoderSynchronizerExtension",
 			"DemolitionSynchronizerExtension",
@@ -667,7 +667,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SplineGroupExtension",
 		},
@@ -679,7 +679,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SplineFollowerExtension",
 		},
@@ -691,7 +691,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ScanningDeviceExtension",
 		},
@@ -703,7 +703,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ServoSkullExtension",
 			"ServoSkullActivatorExtension",
@@ -716,7 +716,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MissionObjectiveTargetExtension",
 		},
@@ -728,7 +728,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionLocomotionExtension",
 			"MinionHuskLocomotionExtension",
@@ -747,7 +747,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ProjectileDamageExtension",
 		},
@@ -759,7 +759,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ScannerDisplayExtension",
 		},
@@ -771,7 +771,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ForceFieldExtension",
 		},
@@ -783,7 +783,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SmokeFogExtension",
 			"SmokeFogHuskExtension",
@@ -796,7 +796,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 	},
 	{
 		"component_system",
@@ -817,7 +817,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"AuthoritativePlayerUnitAnimationExtension",
 			"MinionAnimationExtension",
@@ -833,7 +833,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitAimExtension",
 			"PlayerHuskAimExtension",
@@ -850,7 +850,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitHologramExtension",
 		},
@@ -862,7 +862,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitCameraExtension",
 			"PlayerHuskCameraExtension",
@@ -875,7 +875,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerVisibilityExtension",
 		},
@@ -887,7 +887,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"NavGraphExtension",
 		},
@@ -899,7 +899,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerVolumeEventExtension",
 			"MinionVolumeEventExtension",
@@ -913,9 +913,21 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"NavBlockExtension",
+		},
+	},
+	{
+		"nav_box_obstacle_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"NavBoxObstacleExtension",
 		},
 	},
 	{
@@ -925,7 +937,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"DoorExtension",
 		},
@@ -937,7 +949,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"DoorControlPanelExtension",
 		},
@@ -949,7 +961,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionFxExtension",
 			"PlayerUnitFxExtension",
@@ -963,7 +975,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"WoundsExtension",
 		},
@@ -975,7 +987,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionSpawnerExtension",
 		},
@@ -987,7 +999,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PointOfInterestObserverExtension",
 			"PointOfInterestTargetExtension",
@@ -1021,7 +1033,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionProximityExtension",
 			"PlayerProximityExtension",
@@ -1034,7 +1046,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SideRelationProximityExtension",
 		},
@@ -1046,7 +1058,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"UnitCoherencyExtension",
 			"HuskCoherencyExtension",
@@ -1061,7 +1073,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PickupSpawnerExtension",
 		},
@@ -1073,7 +1085,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PickupAnimationExtension",
 		},
@@ -1085,7 +1097,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SideMissionPickupExtension",
 		},
@@ -1097,7 +1109,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ChestExtension",
 		},
@@ -1109,7 +1121,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MissionObjectiveZoneBaseExtension",
 			"MissionObjectiveZoneCaptureExtension",
@@ -1123,7 +1135,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MissionObjectiveZoneScannableExtension",
 		},
@@ -1135,7 +1147,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PhysicsUnitProximityActorExtension",
 			"PhysicsUnitProximityObserverExtension",
@@ -1148,7 +1160,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 	},
 	{
 		"outline_system",
@@ -1157,7 +1169,7 @@ local systems = {
 		false,
 		false,
 		false,
-		enabled_in_runtime_loaded_levels,
+		false,
 	},
 	{
 		"dissolve_system",
@@ -1166,7 +1178,7 @@ local systems = {
 		false,
 		false,
 		false,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionDissolveExtension",
 		},
@@ -1178,7 +1190,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ShadingEnvironmentExtension",
 		},
@@ -1190,7 +1202,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"PlayerUnitMoodExtension",
 		},
@@ -1202,7 +1214,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"RespawnBeaconExtension",
 		},
@@ -1214,7 +1226,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 	},
 	{
 		"minigame_system",
@@ -1223,7 +1235,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinigameExtension",
 		},
@@ -1235,7 +1247,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"TriggerExtension",
 		},
@@ -1247,7 +1259,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"HealthStationExtension",
 		},
@@ -1259,7 +1271,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"DestructibleExtension",
 		},
@@ -1271,7 +1283,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"HazardPropExtension",
 		},
@@ -1283,7 +1295,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CorruptorExtension",
 		},
@@ -1295,7 +1307,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BossExtension",
 		},
@@ -1332,7 +1344,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"CorruptorArmExtension",
 		},
@@ -1344,7 +1356,7 @@ local systems = {
 		false,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"LiquidAreaExtension",
 			"HuskLiquidAreaExtension",
@@ -1357,7 +1369,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SmartTagExtension",
 		},
@@ -1369,7 +1381,7 @@ local systems = {
 		true,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"ScriptableScenarioDirectionalUnitExtension",
 		},
@@ -1381,7 +1393,7 @@ local systems = {
 		true,
 		true,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"MinionUnitDataExtension",
 			"PlayerUnitDataExtension",
@@ -1396,7 +1408,7 @@ local systems = {
 		false,
 		false,
 		false,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"WeatherExtension",
 		},
@@ -1408,7 +1420,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"SlotExtension",
 			"SlotUserExtension",
@@ -1421,7 +1433,7 @@ local systems = {
 		false,
 		false,
 		true,
-		enabled_in_runtime_loaded_levels,
+		false,
 		{
 			"BlackboardExtension",
 		},

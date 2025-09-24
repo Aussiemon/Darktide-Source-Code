@@ -60,7 +60,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 
 	mutator_stagger_overrides = mutator_stagger_overrides and mutator_stagger_overrides:stagger_overrides()
 
-	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, mutator_stagger_overrides)
+	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, mutator_stagger_overrides, attacking_unit, unit)
 	local accumulative_multiplier = damage_profile.accumulative_stagger_strength_multiplier or DEFAULT_ACCUMULATIVE_MULTIPLIER
 
 	if type(accumulative_multiplier) == "table" then

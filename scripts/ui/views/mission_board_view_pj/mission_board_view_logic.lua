@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/ui/views/mission_board_view_pj/mission_board_view_logic.lua
 
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -42,6 +41,10 @@ local function _character_save_data()
 	local character_data = character_id and save_manager and save_manager:character_data(character_id)
 
 	return character_data
+end
+
+local function _ignore_player_journey()
+	return false
 end
 
 local MissionBoardViewLogic = class("MissionBoardViewLogic")
@@ -174,26 +177,8 @@ MissionBoardViewLogic._setup_bonus_config = function (self)
 end
 
 MissionBoardViewLogic._setup_regions = function (self)
-	local backend_latency = Managers.backend.interfaces.region_latency
-	local region_promise = backend_latency:get_region_latencies()
-
-	return self._promise_container:cancel_on_destroy(region_promise):next(function (regions_data)
-		self._regions_latency = backend_latency:get_reef_info_based_on_region_latencies(regions_data)
-
-		local currently_prefered_region = BackendUtilities.prefered_mission_region
-
-		if currently_prefered_region ~= "" then
-			return currently_prefered_region
-		end
-
-		local fallback_region = regions_data[1].reefs[1]
-
-		return self._promise_container:cancel_on_destroy(backend_latency:get_preferred_reef()):next(function (prefered_region)
-			prefered_region = prefered_region or fallback_region
-			BackendUtilities.prefered_mission_region = prefered_region
-
-			return prefered_region
-		end)
+	return self._promise_container:cancel_on_destroy(Managers.data_service.region_latency:fetch_regions_latency()):next(function (regions_latency)
+		self._regions_latency = regions_latency
 	end)
 end
 
@@ -232,6 +217,20 @@ end
 
 MissionBoardViewLogic.get_filtered_missions = function (self)
 	return self._filtered_missions
+end
+
+MissionBoardViewLogic.get_mission_data_by_id = function (self, mission_id)
+	if self._mission_data then
+		for i = 1, #self._mission_data do
+			local mission = self._mission_data[i]
+
+			if mission.id == mission_id then
+				return mission
+			end
+		end
+	end
+
+	return nil
 end
 
 MissionBoardViewLogic.get_current_page = function (self, page_index)
@@ -304,7 +303,7 @@ MissionBoardViewLogic.get_threat_level_progress = function (self)
 	return_table.progress = current_difficulty_progress
 	return_table.current = current_progress
 	return_table.target = target_progress
-	return_table.current_difficulty = current_difficulty.name and current_difficulty.name or "n/a"
+	return_table.current_difficulty = current_difficulty and current_difficulty.name or "n/a"
 	return_table.next_difficulty = next_difficulty and next_difficulty.name or "n/a"
 
 	return return_table
@@ -510,7 +509,7 @@ MissionBoardViewLogic.get_region_latencies = function (self)
 end
 
 MissionBoardViewLogic.start_mission_matchmaking = function (self, party_manager, selected_mission_id)
-	local prefered_mission_region = BackendUtilities.prefered_mission_region
+	local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
 	Managers.data_service.mission_board:start_mission(party_manager, selected_mission_id, self._is_private, prefered_mission_region)
 
@@ -529,8 +528,9 @@ MissionBoardViewLogic.start_quickplay_matchmaking = function (self, party_manage
 	qp_settings.category = self:_get_quickplay_categories(qp_settings.category)
 
 	local qp_string = QPCode.encode(qp_settings)
+	local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
-	Managers.data_service.mission_board:start_mission(party_manager, qp_string, self._is_private, BackendUtilities.prefered_mission_region)
+	Managers.data_service.mission_board:start_mission(party_manager, qp_string, self._is_private, prefered_mission_region)
 	Log.info("MissionBoardViewLogic", "Requesting qp with key %s.", qp_string)
 
 	return true
@@ -590,10 +590,18 @@ MissionBoardViewLogic.get_quickplay_unlock_status = function (self)
 	return quickplay_unlocked, prerequisites
 end
 
-MissionBoardViewLogic._get_ordered_story_missions = function (self)
+MissionBoardViewLogic._get_ordered_story_missions = function (self, campaign_id)
 	local campaign_ordered_missions = Managers.data_service.mission_board:get_ordered_campaign_missions()
 
-	return campaign_ordered_missions["player-journey"] or {}
+	if campaign_id then
+		if not campaign_ordered_missions[campaign_id] then
+			Log.warning("MissionBoardViewLogic", "No ordered missions found for campaign_id: %s", tostring(campaign_id))
+		end
+
+		return campaign_ordered_missions[campaign_id] or {}
+	else
+		return campaign_ordered_missions["player-journey"] or {}
+	end
 end
 
 MissionBoardViewLogic.get_campaign_mission_display_order = function (self, mission_key, mission_category)
@@ -669,7 +677,6 @@ end
 local function level_matches_unlock(difficulty_data, current_difficulty)
 	local challenge = difficulty_data.challenge
 	local resistance = difficulty_data.resistance
-	local diff_name = difficulty_data.name
 
 	return challenge <= current_difficulty.challenge and resistance <= current_difficulty.resistance
 end
@@ -779,6 +786,29 @@ MissionBoardViewLogic._should_show_mission = function (self, mission)
 	return prerequisites_fullfilled
 end
 
+MissionBoardViewLogic.get_missions_by_filters = function (self, filters)
+	local missions_t = {}
+	local missions = self._mission_data
+
+	if table.is_empty(missions) then
+		return missions_t
+	end
+
+	if not filters or table.is_empty(filters) then
+		return missions_t
+	end
+
+	for _, mission in ipairs(missions) do
+		local id = mission.id
+
+		if self:_mission_passes_all_filters(mission, filters) then
+			missions_t[id] = mission
+		end
+	end
+
+	return missions_t
+end
+
 MissionBoardViewLogic._mission_passes_filter = function (self, mission, filter)
 	if filter.category_blacklist and table.array_contains(filter.category_blacklist, mission.category) then
 		return false
@@ -799,6 +829,10 @@ MissionBoardViewLogic._mission_passes_filter = function (self, mission, filter)
 	local mission_unlock_data = self:get_mission_unlock_data(mission.map, mission.category)
 
 	if not mission_unlock_data then
+		return false
+	end
+
+	if filter.required_campaign and not table.array_contains(filter.required_campaign, mission_unlock_data.campaign) then
 		return false
 	end
 

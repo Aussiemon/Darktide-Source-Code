@@ -205,6 +205,7 @@ templates.prop_in_liquid_fire_burning_movement_slow = {
 	interval = 0.5,
 	is_negative = true,
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = true,
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = -0.25,

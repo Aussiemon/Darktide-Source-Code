@@ -412,12 +412,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = light_sticky,
 		weapon_box = base_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.125,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.125,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword,
@@ -500,12 +502,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = heavy_sticky,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_down_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_down_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_smiter,
@@ -671,12 +675,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = light_sticky,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_right_up",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_right_up",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.uppercut,
@@ -761,12 +767,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.075,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword,
@@ -935,12 +943,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = light_sticky,
 		weapon_box = stab_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_stab",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_stab",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.stab,
@@ -1190,12 +1200,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = light_sticky,
 		weapon_box = stab_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_left_diagonal_up",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_left_diagonal_up",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.uppercut,

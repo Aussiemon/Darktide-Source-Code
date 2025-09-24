@@ -1,8 +1,7 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_xbox_live.lua
 
-local AccountManagerBase = require("scripts/managers/account/account_manager_base")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
-local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
+require("scripts/managers/account/account_manager_base")
+
 local AccountManagerGDKShared = require("scripts/managers/account/account_manager_gdk_shared")
 local InputDevice = require("scripts/managers/input/input_device")
 local Promise = require("scripts/foundation/utilities/promise")

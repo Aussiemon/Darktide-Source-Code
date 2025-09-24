@@ -8,22 +8,20 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
-local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeForcestaffP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local template_types = WeaponTweakTemplateSettings.template_types
-local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_keywords = BuffSettings.keywords
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
+local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
+local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
-local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
 local warp_charge_trait_templates = WeaponTraitTemplates[template_types.warp_charge]
 local weapon_template = {}
 
@@ -685,12 +683,14 @@ weapon_template.actions = {
 			2.4,
 			0.08,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
-			anchor_point_offset = {
-				0.1,
-				1.1,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
+				anchor_point_offset = {
+					0.1,
+					1.1,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.blunt_light,
@@ -782,12 +782,14 @@ weapon_template.actions = {
 			2.75,
 			0.08,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
-			anchor_point_offset = {
-				0.1,
-				1.1,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_stab_sweep_bake",
+				anchor_point_offset = {
+					0.1,
+					1.1,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.blunt_heavy,
@@ -880,12 +882,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_sweep_bake",
-			anchor_point_offset = {
-				0,
-				-0.2,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_sweep_bake",
+				anchor_point_offset = {
+					0,
+					-0.2,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.blunt_light,
@@ -977,12 +981,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_heavy_sweep_bake",
-			anchor_point_offset = {
-				0,
-				-0.2,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/force_staff/attack_special_swipe_heavy_sweep_bake",
+				anchor_point_offset = {
+					0,
+					-0.2,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.blunt_heavy,
@@ -1074,7 +1080,6 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/force_staff"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/force_staff"
-weapon_template.spread_template = "default_force_staff_killshot"
 weapon_template.hud_configuration = {
 	uses_ammunition = false,
 	uses_overheat = false,
@@ -1082,6 +1087,7 @@ weapon_template.hud_configuration = {
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.ammo_template = "no_ammo"
+weapon_template.spread_template = "default_force_staff_killshot"
 weapon_template.fx_sources = {
 	_muzzle = "fx_overheat",
 	_overheat = "fx_overheat",

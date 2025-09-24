@@ -19,7 +19,7 @@ ChainLightningTargetEffects.init = function (self, context, slot, weapon_templat
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
-	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:read_component("action_module_target_finder")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._targeting_effects = {}
 end
@@ -43,9 +43,9 @@ ChainLightningTargetEffects.update = function (self, unit, dt, t)
 	end
 
 	local max_target = targeting_fx.max_targets
-	local target_unit_1 = max_target >= 1 and self._action_module_targeting_component.target_unit_1
-	local target_unit_2 = max_target >= 2 and self._action_module_targeting_component.target_unit_2
-	local target_unit_3 = max_target >= 3 and self._action_module_targeting_component.target_unit_3
+	local target_unit_1 = max_target >= 1 and self._action_module_target_finder_component.target_unit_1
+	local target_unit_2 = max_target >= 2 and self._action_module_target_finder_component.target_unit_2
+	local target_unit_3 = max_target >= 3 and self._action_module_target_finder_component.target_unit_3
 
 	if target_unit_1 then
 		self:_create_effect(target_unit_1, targeting_fx)

@@ -4,6 +4,7 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local buff_proc_events = BuffSettings.proc_events
 local ActionReloadState = class("ActionReloadState", "ActionWeaponBase")

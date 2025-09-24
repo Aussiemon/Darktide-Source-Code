@@ -34,7 +34,8 @@ ActionRangedLoadSpecial.start = function (self, action_settings, t, time_scale, 
 	if Ammo.clip_ammo_is_full(self._player_unit) then
 		local inventory_slot_component = self._inventory_slot_component
 
-		inventory_slot_component.current_ammunition_clip = inventory_slot_component.current_ammunition_clip - 1
+		Ammo.set_current_ammo_in_clips(inventory_slot_component, Ammo.current_ammo_in_clips(inventory_slot_component) - 1)
+
 		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve + 1
 	end
 end
@@ -99,8 +100,8 @@ end
 ActionRangedLoadSpecial.running_action_state = function (self, t, time_in_action)
 	local inventory_slot_component = self._inventory_slot_component
 	local action_reload_component = self._action_reload_component
-	local max_ammo_in_clip = inventory_slot_component.max_ammunition_clip
-	local current_ammo_in_clip = inventory_slot_component.current_ammunition_clip
+	local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
+	local current_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
 
 	if current_ammo_in_clip < max_ammo_in_clip and has_refilled_ammunition then

@@ -28,7 +28,7 @@ ScannerDisplayView.init = function (self, settings, context)
 	self._render_name = class_name .. "_offscreen_ui_renderer"
 	self._no_cursor = true
 	self._auspex_unit = context.auspex_unit
-	self._minigame = ScannerDisplayView.MINIGAMES[context.minigame_type]:new(context)
+	self._minigame = ScannerDisplayView.MINIGAMES[context.minigame_type]:new(context, self._ui_renderer)
 
 	local definitions = ScannerDisplayViewDefinitions[context.minigame_type]
 

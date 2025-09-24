@@ -69,12 +69,6 @@ sway_templates.default_rippergun_braced = {
 					yaw = 1,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.25,
@@ -243,12 +237,6 @@ sway_templates.default_rippergun_assault = {
 				{
 					pitch = 1,
 					yaw = 1,
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
 				},
 			},
 			damage_hit = {

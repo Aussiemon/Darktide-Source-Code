@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/foundation/managers/player/player_manager_fixed_testify.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local RESET_WEAPON_MODIFIERS = {
 	traits = {},
@@ -89,8 +90,10 @@ local PlayerManagerFixedTestify = {
 		local slot_secondary = components.slot_secondary
 
 		for i = 1, #slot_secondary do
-			if slot_secondary[i].max_ammunition_clip > 1 then
-				slot_secondary[i].current_ammunition_clip = slot_secondary[i].max_ammunition_clip - 1
+			local max_ammo_clip = Ammo.max_ammo_in_clips(slot_secondary[i])
+
+			if max_ammo_clip > 1 then
+				Ammo.set_current_ammo_in_clips(slot_secondary[i], max_ammo_clip - 1)
 			end
 		end
 	end,

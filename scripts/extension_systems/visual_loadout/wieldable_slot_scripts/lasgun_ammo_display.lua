@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_ammo_display.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local Component = require("scripts/utilities/component")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local LasgunAmmoDisplay = class("LasgunAmmoDisplay")
@@ -51,8 +52,8 @@ end
 
 LasgunAmmoDisplay.update = function (self, unit, dt, t)
 	local inventory_slot_component = self._inventory_slot_component
-	local current_ammo = inventory_slot_component.current_ammunition_clip
-	local max_ammo = inventory_slot_component.max_ammunition_clip
+	local current_ammo = Ammo.current_ammo_in_clips(inventory_slot_component)
+	local max_ammo = Ammo.max_ammo_in_clips(inventory_slot_component)
 	local critical_threshold = max_ammo * CRITICAL_THRESHOLD_MULTIPLIER
 	local unit_components = self._unit_components
 	local num_displays = #unit_components

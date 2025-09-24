@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/ogryn_heavystubber_p1_m3.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -17,15 +16,14 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsOgrynHeavystubbertP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_heavystubber_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_template = {}
 
@@ -97,7 +95,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -107,7 +105,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -742,12 +740,14 @@ weapon_template.actions = {
 			1.2,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked/attack_special_right",
-			anchor_point_offset = {
-				0.2,
-				0.8,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/heavy_stubber_twin_linked/attack_special_right",
+				anchor_point_offset = {
+					0.2,
+					0.8,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.blunt_heavy,

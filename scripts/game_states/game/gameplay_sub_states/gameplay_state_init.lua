@@ -92,6 +92,12 @@ GameplayStateInit._setup_scene_update_callback = function (self, world, is_serve
 		Managers.world:set_scene_update_callback(world, function ()
 			Managers.state.extension:physics_async_update()
 		end)
+
+		local shared_state = self._shared_state
+
+		Managers.world:set_post_scene_update_callback(world, function ()
+			Managers.state.out_of_bounds:post_update(shared_state)
+		end)
 	end
 end
 

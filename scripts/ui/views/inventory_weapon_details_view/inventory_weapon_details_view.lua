@@ -377,9 +377,18 @@ end
 
 InventoryWeaponDetailsView.on_exit = function (self)
 	self:_destroy_weapon_preview()
-	self:_remove_element("weapon_info")
-	self:_remove_element("weapon_actions_extended")
-	self:_remove_element("attack_patterns")
+
+	if self._weapon_info then
+		self:_remove_element("weapon_info")
+	end
+
+	if self._weapon_actions_extended then
+		self:_remove_element("weapon_actions_extended")
+	end
+
+	if self._attack_patterns then
+		self:_remove_element("attack_patterns")
+	end
 
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
@@ -876,24 +885,27 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 end
 
 InventoryWeaponDetailsView._remove_element = function (self, reference_name)
-	local elements = self._elements
+	local elements = self._elements or {}
 	local element = elements[reference_name]
-	local element_name = element.__class_name
 	local elements_array = self._elements_array
 
-	for i = 1, #elements_array do
-		if elements_array[i] == element then
-			table.remove(elements_array, i)
+	if elements_array and element then
+		local element_name = element.__class_name
 
-			break
+		for i = 1, #elements_array do
+			if elements_array[i] == element then
+				table.remove(elements_array, i)
+
+				break
+			end
 		end
+
+		local ui_renderer = (element_name ~= "ViewElementInventoryWeaponPreview" or element_name ~= "ViewElementInputLegend") and self._ui_default_renderer or self._ui_renderer
+
+		element:destroy(ui_renderer)
+
+		elements[reference_name] = nil
 	end
-
-	local ui_renderer = (element_name ~= "ViewElementInventoryWeaponPreview" or element_name ~= "ViewElementInputLegend") and self._ui_default_renderer or self._ui_renderer
-
-	element:destroy(ui_renderer)
-
-	elements[reference_name] = nil
 end
 
 return InventoryWeaponDetailsView

@@ -4,6 +4,7 @@ local WwiseRoomVolume = component("WwiseRoomVolume")
 
 WwiseRoomVolume.init = function (self, unit)
 	self._wwise_world = Wwise.wwise_world(Unit.world(unit))
+	self._added = false
 
 	if not Unit.has_volume(unit, "room_volume") then
 		return false
@@ -12,6 +13,8 @@ WwiseRoomVolume.init = function (self, unit)
 	local rooms_and_portals_manager = Managers and Managers.state and Managers.state.rooms_and_portals
 
 	if rooms_and_portals_manager then
+		self._added = true
+
 		rooms_and_portals_manager:register_room(self)
 
 		return true
@@ -23,8 +26,8 @@ end
 WwiseRoomVolume.destroy = function (self, unit)
 	local rooms_and_portals_manager = Managers and Managers.state and Managers.state.rooms_and_portals
 
-	if rooms_and_portals_manager then
-		rooms_and_portals_manager:remove_room(self)
+	if rooms_and_portals_manager and self._added then
+		Managers.state.rooms_and_portals:remove_room(self)
 	end
 end
 

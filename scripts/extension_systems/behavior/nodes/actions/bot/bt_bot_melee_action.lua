@@ -506,6 +506,14 @@ local DODGE_RANGE_TEST_DISTANCE = 2.25
 local DODGE_CHECK_FAIL_COOLDOWN = 0.1
 
 BtBotMeleeAction._update_dodge = function (self, unit, scratchpad, target_unit, t)
+	local perception_component = scratchpad.perception_component
+	local target_ally, target_ally_needs_aid = perception_component.target_ally, perception_component.target_ally_needs_aid
+	local bot_group = scratchpad.bot_group
+
+	if target_ally_needs_aid and bot_group:is_prioritized_ally(unit, target_ally) then
+		return
+	end
+
 	local cant_push = scratchpad.cant_push
 	local bot_group_data = scratchpad.bot_group_data
 	local threat_data = bot_group_data.aoe_threat
@@ -699,23 +707,7 @@ BtBotMeleeAction._allow_engage = function (self, self_unit, target_unit, target_
 	local bot_group = scratchpad.bot_group
 
 	if target_ally_needs_aid and bot_group:is_prioritized_ally(self_unit, target_ally) then
-		local perception_extension = scratchpad.perception_extension
-
-		if not perception_extension:within_aid_range(self_unit, perception_component) then
-			return false
-		end
-
-		local force_aid = perception_component.force_aid
-		local health = ScriptUnit.extension(target_ally, "health_system"):current_health_percent()
-		local threat_to_aid = health > 0.3 and self:_is_targeting_me(self_unit, target_unit) and (not force_aid or target_breed.is_bot_aid_threat)
-
-		if not threat_to_aid then
-			return false
-		end
-
-		if Vector3.distance_squared(POSITION_LOOKUP[self_unit], target_position) > IN_PROXIMITY_DISTANCE_SQ then
-			return false
-		end
+		return false
 	end
 
 	local priority_target = perception_component.priority_target_enemy

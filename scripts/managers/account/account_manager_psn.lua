@@ -1,7 +1,8 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_psn.lua
 
-local AccountManagerBase = require("scripts/managers/account/account_manager_base")
-local InputDevice = require("scripts/managers/input/input_device")
+require("scripts/managers/account/account_manager_base")
+
+local ExternalPaymentPlatformPlaystation = require("scripts/backend/platform/external_payment_platform_playstation")
 local PlayerSessionPSN = require("scripts/managers/account/player_session_psn")
 local Promise = require("scripts/foundation/utilities/promise")
 local PsnBlockUsersStatesManager = require("scripts/managers/account/psn_block_users_states_manager")
@@ -9,7 +10,6 @@ local PSNRestrictions = require("scripts/managers/account/psn_restrictions")
 local RegionRestrictionsPSN = require("scripts/settings/region/region_restrictions_psn")
 local ScriptWebApiPsn = require("scripts/managers/account/script_web_api_psn")
 local SoundSettings = require("scripts/settings/options/sound_settings")
-local ExternalPaymentPlatformPlaystation = require("scripts/backend/platform/external_payment_platform_playstation")
 local SIGNIN_STATES = {
 	acquiring_storage = "loc_signin_acquire_storage",
 	deleting_save = "loc_signin_delete_save",

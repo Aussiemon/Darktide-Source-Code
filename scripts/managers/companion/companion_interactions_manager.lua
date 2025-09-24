@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/companion/companion_interactions_manager.lua
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local CompanionHubInteractionsSettings = require("scripts/settings/companion_hub_interactions/companion_hub_interactions_settings")
+local CompanionHubInteractionsSettings = require("scripts/settings/companion/companion_hub_interactions_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local CompanionInteractionsManager = class("CompanionInteractionsManager")
 local SERVER_RPCS = {}

@@ -5,6 +5,7 @@ require("scripts/extension_systems/mission_objective_target/mission_objective_ta
 local MissionObjectiveTargetSystem = class("MissionObjectiveTargetSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_mission_objective_target_set_objective_name",
+	"rpc_mission_objective_target_set_objective_group",
 	"rpc_mission_objective_target_setup",
 }
 
@@ -65,6 +66,14 @@ MissionObjectiveTargetSystem.rpc_mission_objective_target_set_objective_name = f
 	local extension = self._unit_to_extension_map[target_unit]
 
 	extension:set_objective_name(objective_name)
+end
+
+MissionObjectiveTargetSystem.rpc_mission_objective_target_set_objective_group = function (self, channel, target_unit_id, target_unit_is_level_unit, objective_group_id)
+	local unit_spawner_manager = Managers.state.unit_spawner
+	local target_unit = unit_spawner_manager:unit(target_unit_id, target_unit_is_level_unit)
+	local extension = self._unit_to_extension_map[target_unit]
+
+	extension:set_objective_group_id(objective_group_id)
 end
 
 MissionObjectiveTargetSystem.rpc_mission_objective_target_setup = function (self, channel, target_unit_id, target_unit_is_level_unit, objective_name_id, ui_target_type_id, objective_stage, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)

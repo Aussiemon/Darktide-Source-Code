@@ -88,17 +88,24 @@ PocketableInteraction.hud_block_text = function (self, interactor_unit, interact
 		local pocketable_item_name = inventory_component[SLOT_POCKETABLE_NAME]
 		local pocketable_small_item_name = inventory_component[SLOT_POCKETABLE_SMALL_NAME]
 		local wanted_item_name = inventory_item.name
+		local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
+		local wanted_inventory_slot_name = pickup_data.inventory_slot_name
+		local already_equipped = pocketable_item_name == wanted_item_name or pocketable_small_item_name == wanted_item_name
 
-		if pocketable_item_name == wanted_item_name or pocketable_small_item_name == wanted_item_name then
+		if already_equipped then
 			return "loc_action_interaction_inactive_pocketable_equipped"
 		end
 
-		local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
-		local wanted_inventory_slot_name = pickup_data.inventory_slot_name
 		local has_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, wanted_inventory_slot_name, "grimoire")
 
 		if has_grimoire then
 			return "loc_action_interaction_inactive_grimore_equipped"
+		end
+
+		local wielding_undroppable = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, wanted_inventory_slot_name, "undroppable")
+
+		if wielding_undroppable then
+			return "loc_action_interaction_inactive_pocketable_equipped"
 		end
 	end
 

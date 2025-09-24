@@ -37,11 +37,11 @@ HazardProp.destroy = function (self, unit)
 	return
 end
 
-HazardProp.events.add_damage = function (self, damage_amount, hit_actor, attack_direction)
+HazardProp.events.add_damage = function (self, damage_amount, hit_actor, attack_direction, attacking_unit)
 	local hazard_prop_extension = self._hazard_prop_extension
 
 	if self._is_server and hazard_prop_extension then
-		hazard_prop_extension:add_damage(damage_amount, hit_actor, attack_direction)
+		hazard_prop_extension:add_damage(damage_amount, hit_actor, attack_direction, attacking_unit)
 	end
 end
 

@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/backend/matchmaker.lua
 
-local Promise = require("scripts/foundation/utilities/promise")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
+local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"fetch_queue_ticket_hub",
 	"fetch_queue_ticket_mission",

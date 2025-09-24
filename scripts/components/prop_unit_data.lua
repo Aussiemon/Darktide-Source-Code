@@ -28,11 +28,11 @@ PropUnitData.editor_validate = function (self, unit)
 		local hit_zones = breed.hit_zones
 		local num_missing_actor_names = 0
 
-		for i = 1, #hit_zones do
-			local zone_actors = hit_zones[i].actors
+		for ii = 1, #hit_zones do
+			local zone_actors = hit_zones[ii].actors
 
-			for j = 1, #zone_actors do
-				local actor = zone_actors[j]
+			for jj = 1, #zone_actors do
+				local actor = zone_actors[jj]
 
 				if Unit.find_actor(unit, actor) == nil then
 					num_missing_actor_names = num_missing_actor_names + 1

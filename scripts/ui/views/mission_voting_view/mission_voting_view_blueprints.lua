@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/mission_voting_view/mission_voting_view_blueprints.lua
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local Havoc = require("scripts/utilities/havoc")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -384,22 +385,6 @@ local details_widgets_blueprints = {
 	utility_functions = {},
 }
 
-local function get_havoc_mutators(mission_data)
-	local mutators = {}
-
-	for k, _ in pairs(mission_data.flags) do
-		if string.find(k, "havoc%-circ%-") then
-			mutators[#mutators + 1] = k
-		end
-	end
-
-	if #mutators > 0 then
-		return mutators
-	else
-		return nil
-	end
-end
-
 details_widgets_blueprints.utility_functions.prepare_details_data = function (mission_data, include_mission_header)
 	local details_data = {}
 	local has_side_mission = has_side_mission(mission_data)
@@ -438,7 +423,7 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 	end
 
 	do
-		local havoc_mutators = get_havoc_mutators(mission_data)
+		local havoc_mutators = Havoc.get_havoc_mutators(mission_data.flags)
 
 		if havoc_mutators then
 			for _, v in ipairs(havoc_mutators) do

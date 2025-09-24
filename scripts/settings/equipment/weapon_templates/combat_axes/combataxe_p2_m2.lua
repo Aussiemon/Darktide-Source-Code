@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_axes/combataxe_p2_m2.lua
 
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -15,7 +14,6 @@ local WeaponTraitsBespokeCombataxeP2 = require("scripts/settings/equipment/weapo
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
@@ -25,7 +23,6 @@ local template_types = WeaponTweakTemplateSettings.template_types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
@@ -36,19 +33,58 @@ weapon_template.action_inputs.special_action.buffer_time = 0.4
 local combat_axe_p3_action_input_hierarchy = table.clone(MeleeActionInputSetupFast.action_input_hierarchy)
 
 combat_axe_p3_action_input_hierarchy.special_action = {
-	attack_cancel = "base",
-	block = "base",
-	grenade_ability = "base",
-	special_action = "base",
-	wield = "base",
-	start_attack = {
-		attack_cancel = "base",
-		block = "base",
-		grenade_ability = "base",
-		heavy_attack = "base",
-		light_attack = "base",
-		special_action = "base",
-		wield = "base",
+	{
+		input = "attack_cancel",
+		transition = "base",
+	},
+	{
+		input = "start_attack",
+		transition = {
+			{
+				input = "attack_cancel",
+				transition = "base",
+			},
+			{
+				input = "light_attack",
+				transition = "base",
+			},
+			{
+				input = "heavy_attack",
+				transition = "base",
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+			{
+				input = "special_action",
+				transition = "base",
+			},
+			{
+				input = "block",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
+	{
+		input = "block",
+		transition = "base",
+	},
+	{
+		input = "special_action",
+		transition = "base",
 	},
 }
 weapon_template.action_input_hierarchy = combat_axe_p3_action_input_hierarchy
@@ -253,12 +289,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_up_ninja",
-			anchor_point_offset = {
-				-0.155,
-				0,
-				-0.35,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_up_ninja",
+				anchor_point_offset = {
+					-0.155,
+					0,
+					-0.35,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_hatchet,
@@ -327,12 +365,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/heavy_attack_down_left",
-			anchor_point_offset = {
-				0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/heavy_attack_down_left",
+				anchor_point_offset = {
+					0.1,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_hatchet_smiter,
@@ -479,12 +519,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_right_diagonal_down_ninja",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_right_diagonal_down_ninja",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_hatchet,
@@ -559,12 +601,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/heavy_attack_right_up",
-			anchor_point_offset = {
-				0.35,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/heavy_attack_right_up",
+				anchor_point_offset = {
+					0.35,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_hatchet_smiter,
@@ -711,12 +755,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_down_ninja",
-			anchor_point_offset = {
-				0.05,
-				0,
-				-0.4,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_down_ninja",
+				anchor_point_offset = {
+					0.05,
+					0,
+					-0.4,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_hatchet,
@@ -847,12 +893,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_down_ninja",
-			anchor_point_offset = {
-				0.35,
-				0,
-				-0.25,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/attack_left_diagonal_down_ninja",
+				anchor_point_offset = {
+					0.35,
+					0,
+					-0.25,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_hatchet,
@@ -974,12 +1022,14 @@ weapon_template.actions = {
 			1,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_stab",
-			anchor_point_offset = {
-				0,
-				0.55,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_stab",
+				anchor_point_offset = {
+					0,
+					0.55,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_axe_p2_special,
@@ -1040,12 +1090,14 @@ weapon_template.actions = {
 			1,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_stab",
-			anchor_point_offset = {
-				0,
-				0.55,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_stab",
+				anchor_point_offset = {
+					0,
+					0.55,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_axe_p2_special,
@@ -1128,12 +1180,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_backside_down_left",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/hatchet/special_attack_backside_down_left",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_axe_p2_special_2,

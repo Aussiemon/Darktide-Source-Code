@@ -29,12 +29,6 @@ spread_templates.default_autopistol_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -108,108 +102,6 @@ spread_templates.default_autopistol_assault = {
 		},
 	},
 }
-spread_templates.autopistol_assault_p1m2 = {
-	still = {
-		max_spread = {
-			pitch = 8,
-			yaw = 8,
-		},
-		decay = {
-			from_shooting_grace_time = 0.1,
-			shooting = {
-				pitch = 1,
-				yaw = 1,
-			},
-			idle = {
-				pitch = 2.75,
-				yaw = 2.75,
-			},
-		},
-		continuous_spread = {
-			min_pitch = 2.1,
-			min_yaw = 2.35,
-		},
-		immediate_spread = {
-			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
-			damage_hit = {
-				{
-					pitch = 0.4,
-					yaw = 0.4,
-				},
-			},
-			shooting = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-				{
-					pitch = 0.15,
-					yaw = 0.15,
-				},
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-				{
-					pitch = 0.3,
-					yaw = 0.3,
-				},
-				{
-					pitch = 0.275,
-					yaw = 0.275,
-				},
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-				{
-					pitch = 0.225,
-					yaw = 0.225,
-				},
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
-		},
-	},
-	moving = {
-		inherits = {
-			"default_autopistol_assault",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 2.35,
-			min_yaw = 2.75,
-		},
-	},
-	crouch_still = {
-		inherits = {
-			"default_autopistol_assault",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 1.4,
-			min_yaw = 1.6,
-		},
-	},
-	crouch_moving = {
-		inherits = {
-			"default_autopistol_assault",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 1.7,
-			min_yaw = 1.9,
-		},
-	},
-}
 
 local pitch_spread = 0.6
 local yaw_spread = pitch_spread * 1.75
@@ -237,12 +129,6 @@ spread_templates.default_autopistol_spraynpray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.05,
-					yaw = 0.05,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.2,

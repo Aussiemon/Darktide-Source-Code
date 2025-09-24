@@ -49,6 +49,24 @@ hordes_family_buffs_data.hordes_family_unkillable = {
 	sfx = "wwise/events/ui/play_horde_mode_buff_family_unkillable",
 	title = "Panzer",
 }
+hordes_family_buffs_data.hordes_family_critical = {
+	description = "Focuses on critical hits and critical damage",
+	gradient = "content/ui/textures/color_ramps/hordes/horde_buff_family_gradient",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/buff_families/hordes_buff_family_critical",
+	id = "critical",
+	is_family = true,
+	sfx = "wwise/events/ui/play_horde_mode_buff_family_critical",
+	title = "Lucky Roll",
+}
+hordes_family_buffs_data.hordes_family_unstoppable = {
+	description = "Focuses on movement restriction immunities",
+	gradient = "content/ui/textures/color_ramps/hordes/horde_buff_family_gradient",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/buff_families/hordes_buff_family_unstoppable",
+	id = "unstoppable",
+	is_family = true,
+	sfx = "wwise/events/ui/play_horde_mode_buff_family_unstoppable",
+	title = "Bulldozer",
+}
 hordes_family_buffs_data.hordes_buff_burning_on_ranged_hit = {
 	description = "Ranged attacks apply 1 stack of burn",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
@@ -300,7 +318,7 @@ hordes_family_buffs_data.hordes_buff_coherency_damage_taken_close_to_electrocute
 	},
 }
 hordes_family_buffs_data.hordes_buff_extra_toughness_near_burning_shocked_enemies = {
-	description = "For each enemy on fire or shocked in close range, you gain 5 extra toughness",
+	description = "For each enemy on fire or shocked in close range, you gain 8 extra toughness",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_extra_toughness_near_burning_shocked_enemies",
 	title = "hardener",
@@ -308,7 +326,7 @@ hordes_family_buffs_data.hordes_buff_extra_toughness_near_burning_shocked_enemie
 		extra_thoughness = {
 			format_type = "number",
 			prefix = "+",
-			value = 5,
+			value = 8,
 		},
 	},
 }
@@ -320,7 +338,7 @@ hordes_family_buffs_data.hordes_buff_shock_on_blocking_melee_attack = {
 	buff_stats = {
 		time = {
 			format_type = "number",
-			value = 2,
+			value = 3,
 		},
 	},
 }
@@ -443,7 +461,7 @@ hordes_family_buffs_data.hordes_buff_damage_increase_on_toughness_broken = {
 	},
 }
 hordes_family_buffs_data.hordes_buff_damage_increase = {
-	description = "Additional 10% damage from all sources",
+	description = "Additional 25% damage from all sources",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_damage_increase",
 	title = "Force of nature",
@@ -451,7 +469,7 @@ hordes_family_buffs_data.hordes_buff_damage_increase = {
 		damage = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.2,
+			value = 0.25,
 		},
 	},
 }
@@ -476,7 +494,7 @@ hordes_family_buffs_data.hordes_buff_no_ammo_consumption_on_crits = {
 	buff_stats = {},
 }
 hordes_family_buffs_data.hordes_buff_toughness_on_ranged_kill = {
-	description = "Replenish 4% toughness on ranged kill",
+	description = "Replenish 5% toughness on ranged kill",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_toughness_on_ranged_kill",
 	title = "Born into combat",
@@ -488,7 +506,7 @@ hordes_family_buffs_data.hordes_buff_toughness_on_ranged_kill = {
 	},
 }
 hordes_family_buffs_data.hordes_buff_increased_damage_after_reload = {
-	description = "+50% ranged damage for 7s after reload",
+	description = "+80% ranged damage for 5s after reload",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increased_damage_after_reload",
 	title = "It is all about confidence",
@@ -522,14 +540,14 @@ hordes_family_buffs_data.hordes_buff_improved_weapon_reload_on_melee_kill = {
 	},
 }
 hordes_family_buffs_data.hordes_buff_bonus_crit_chance_on_ammo = {
-	description = "The first 20% ammo after a reload has +10% ranged critical hit chance",
+	description = "The first 35% ammo after a reload has +30% ranged critical hit chance",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_bonus_crit_chance_on_ammo",
 	title = "Fresh bullets",
 	buff_stats = {
 		ammo = {
 			format_type = "percentage",
-			value = 0.25,
+			value = 0.35,
 		},
 		crit_chance = {
 			format_type = "percentage",
@@ -556,14 +574,14 @@ hordes_family_buffs_data.hordes_buff_other_slot_damage_increase_on_kill = {
 	},
 }
 hordes_family_buffs_data.hordes_buff_weakspot_ranged_hit_gives_infinite_ammo = {
-	description = "Landing 3 Headshots in a row with a ranged weapon gives 6s of infinite ammo. Has a 10s cooldown.",
+	description = "Landing 2 Headshots in a row with a ranged weapon gives 6s of infinite ammo. Has a 10s cooldown.",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_weakspot_ranged_hit_gives_infinite_ammo",
 	title = "Fast killer",
 	buff_stats = {
 		headshot = {
 			format_type = "number",
-			value = 3,
+			value = 2,
 		},
 		time = {
 			format_type = "number",
@@ -596,6 +614,334 @@ hordes_family_buffs_data.hordes_buff_melee_damage_missing_ammo_in_clip = {
 		dammage = {
 			format_type = "percentage",
 			value = 0.01,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_weakspot_damage_increase = {
+	description = "Increases weakspot damage by 50%.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_weakspot_damage_increase",
+	title = "Weakspot Damage Increase",
+	buff_stats = {
+		damage = {
+			format_type = "percentage",
+			value = 0.5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_melee_critical_damage_increase = {
+	description = "Increases melee critical damage by 70%.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_melee_critical_damage_increase",
+	title = "Melee Crit Damage Increase",
+	buff_stats = {
+		crit_damage = {
+			format_type = "percentage",
+			value = 0.7,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_critical_chance_on_dodge = {
+	description = "Increases critical chance by 30% on successful dodge.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_critical_chance_on_dodge",
+	title = "Crit Chance Increase On Dodge",
+	buff_stats = {
+		crit_chance = {
+			format_type = "percentage",
+			value = 0.2,
+		},
+		time = {
+			value = 3,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_rending_on_ranged_critical_hit = {
+	description = "Increases rending by 60% on ranged critical hit.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_rending_on_ranged_critical_hit",
+	title = "Rending on Ranged Critical Hit",
+	buff_stats = {
+		rending = {
+			format_type = "percentage",
+			value = 0.6,
+		},
+		time = {
+			value = 5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_critical_melee_hit_infinite_cleave = {
+	description = "Critical hits have infinite cleave.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_critical_melee_hit_infinite_cleave",
+	title = "Critical Cleave",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_melee_damage_on_melee_critical_hit = {
+	description = "After a melee critical hit, the next melee hit gets it's damage boosted by 100%.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_melee_damage_on_melee_critical_hit",
+	title = "Lucky Melee",
+	buff_stats = {
+		damage = {
+			format_type = "percentage",
+			value = 1,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_increase_super_armor_impact_on_crit = {
+	description = "Critical hits on Carapaced Armoured enemies gain 65% more Impact..",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increase_super_armor_impact_on_crit",
+	title = "Hunt for the strong",
+	buff_stats = {
+		impact = {
+			format_type = "percentage",
+			value = 0.65,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_stacking_crit_damage_on_critical_hit = {
+	description = "Gain 0.01% critical strike damage after a critical strike. Up to 100%.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_stacking_crit_damage_on_critical_hit",
+	title = "Special treat",
+	buff_stats = {
+		crit_damage = {
+			format_type = "percentage",
+			value = 0.01,
+		},
+		max_crit_damage = {
+			format_type = "percentage",
+			value = 2.5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_damage_reduction_on_critical_hit = {
+	description = "Gain 30% damage reduction after a critical strike for 3sc.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_damage_reduction_on_critical_hit",
+	title = "Critical Armor",
+	buff_stats = {
+		damage_reduction = {
+			format_type = "percentage",
+			value = 0.4,
+		},
+		time = {
+			value = 3,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_explode_enemies_on_critical_kill = {
+	description = "Enemies killed by a critical hit explode.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_explode_enemies_on_critical_kill",
+	title = "Critical Explosion",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit = {
+	description = "When killing an enemy with a Ranged Critical Attack, the next Melee Attack will be a guaranteed Critical Attack.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_guaranteed_next_melee_attack_on_ranged_critical_hit",
+	title = "Melee Crit on Ranged Crit",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit = {
+	description = "When killing an enemy with a Melee Critical Attack, the next Range Attack will be a guaranteed Critical Attack.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_guaranteed_next_ranged_attack_on_melee_critical_hit",
+	title = "Ranged Crit on Melee Crit",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill = {
+	description = "When killing an enemy with a Ranged Critical Attack, gain 60% Melee Crit Chance for 5s.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill",
+	title = "Melee Follow-up",
+	buff_stats = {
+		crit_chance = {
+			format_type = "percentage",
+			value = 0.6,
+		},
+		time = {
+			value = 5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill = {
+	description = "When killing an enemy with a Melee Critical Attack, gain 60% ranged Crit Chance for 5s.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill",
+	title = "Ranged Follow-up",
+	buff_stats = {
+		crit_chance = {
+			format_type = "percentage",
+			value = 0.6,
+		},
+		time = {
+			value = 5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_crit_chance_per_missing_stamina_bar = {
+	description = "Gain 5% Critical Strike Chance per missing stamina bar.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_crit_chance_per_missing_stamina",
+	title = "Critical Stamina Per Bar Version",
+	buff_stats = {
+		crit_chance = {
+			format_type = "percentage",
+			value = 0.04,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_critical_damage_from_consecutive_critical_hits = {
+	description = "Gain 10% Critical Strike Damage after a Critical Strike. Up to 100%. Loses all stacks if 2.5s pass before your next Critical Strike.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_critical_damage_from_consecutive_critical_hits",
+	title = "On a Roll",
+	buff_stats = {
+		crit_damage = {
+			format_type = "percentage",
+			value = 0.1,
+		},
+		max_crit_damage = {
+			format_type = "percentage",
+			value = 1,
+		},
+		time = {
+			format_type = "number",
+			value = 2.5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_dodge_staggers = {
+	description = "Dodging staggers nearby Non Elite/Specialist, human-sized, enemies.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_dodge_staggers",
+	title = "Wrecking Ball",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_sprinting_staggers = {
+	description = "Sprinting staggers nearby Non Elite/Specialist, human-sized, enemies.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_sprinting_staggers",
+	title = "Bulldozer",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_uninterruptible_while_aiming_and_shooting = {
+	description = "Becomes Uninterruptible while aiming or shooting.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_uninterruptible_while_aiming_and_shooting",
+	title = "Relentless Shooting",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_replenish_stamina_from_ranged_or_melee_hit = {
+	description = "Regain 1% stamina per 100 damage dealt with melee or ranged attacks.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_replenish_stamina_from_ranged_or_melee_hit",
+	title = "Shooting & Shmoving",
+	buff_stats = {
+		stamina = {
+			format_type = "percentage",
+			value = 0.009,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_toughness_coherency_regen_increase = {
+	description = "Toughness Regeneration in coherency is increased by 50%",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_toughness_coherency_regen_increase",
+	title = "Comerades",
+	buff_stats = {
+		toughness = {
+			format_type = "percentage",
+			value = 0.5,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_toughness_on_melee_kills = {
+	description = "Replenish an additional 7% toughness from melee kills.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_toughness_on_melee_kills",
+	title = "Melee Survival",
+	buff_stats = {
+		toughness = {
+			format_type = "percentage",
+			value = 0.07,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_movement_bonuses_on_toughness_broken = {
+	description = "Stun immunity, slow immunity for 6sc and restore 50% stamina when your toughness is broken",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_movement_bonuses_on_toughness_broken",
+	title = "Grit",
+	buff_stats = {
+		stamina = {
+			format_type = "percentage",
+			value = 0.5,
+		},
+		time = {
+			format_type = "number",
+			value = 4,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_suppression_immunity = {
+	description = "Gain suppression immunity",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_suppression_immunity",
+	title = "Unfaced",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_windup_is_uninterruptible = {
+	description = "Become uninterruptible while charging heavy attack.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_windup_is_uninterruptible",
+	title = "No stopping me either.",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_no_movement_speed_reduction_on_aim_and_windup = {
+	description = "Remove Movement Speed Penalty from Aiming and Charging Melee Attacks",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_no_movement_speed_reduction_on_aim_and_windup",
+	title = "Speedy Gonazales",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_increase_impact_on_push_attacks = {
+	description = "Doubles staggering strength of Push Attacks",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_increase_impact_on_push_attacks",
+	title = "PUSH PUSH PUSH",
+	buff_stats = {},
+}
+hordes_family_buffs_data.hordes_buff_dodge_incapacitating_attacks = {
+	description = "Automatically nullifies a Netgunner and Chaos Hound incapacitating attack. 30s Cooldown.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_dodge_incapacitating_attacks",
+	title = "Can't Touch This",
+	buff_stats = {
+		cooldown = {
+			format_type = "number",
+			value = 30,
+		},
+	},
+}
+hordes_family_buffs_data.hordes_buff_damage_per_full_stamina_bar = {
+	description = "Gain 2 Stamina. Increase Damage by 5% per full stamina bar.",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/small_buffs/hordes_buff_damage_per_full_stamina_bar",
+	title = "Spinach power",
+	buff_stats = {
+		stamina = {
+			format_type = "number",
+			value = 2,
+		},
+		damage = {
+			format_type = "percentage",
+			value = 0.05,
 		},
 	},
 }

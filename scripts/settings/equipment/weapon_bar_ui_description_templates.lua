@@ -86,6 +86,12 @@ WeaponBarUIDescriptionTemplates.armor_damage_modifiers = {
 	[armor_types.resistant] = {},
 	[armor_types.berserker] = {},
 }
+WeaponBarUIDescriptionTemplates.ammunition_clips = {
+	_array_range = {
+		1,
+		math.huge,
+	},
+}
 WeaponBarUIDescriptionTemplates.all_basic_stats = {
 	display_stats = {
 		__all_basic_stats = true,
@@ -121,7 +127,8 @@ local default_bar_stats = {
 	},
 	ammo = {
 		display_stats = {
-			__all_basic_stats = true,
+			ammunition_clips = WeaponBarUIDescriptionTemplates.ammunition_clips,
+			ammunition_reserve = {},
 		},
 	},
 	dps_damage = {},
@@ -168,6 +175,8 @@ local default_bar_stats = {
 		},
 	},
 }
+
+WeaponBarUIDescriptionTemplates.default_bar_stats = default_bar_stats
 
 WeaponBarUIDescriptionTemplates.create_template = function (bar_stat_type, prefix, postfix, custom_data)
 	local bar_stats = default_bar_stats[bar_stat_type]

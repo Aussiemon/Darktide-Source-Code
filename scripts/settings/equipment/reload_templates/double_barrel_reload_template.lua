@@ -12,11 +12,12 @@ local reload_template = {
 		show_magazine_ammo_time = 1,
 		time = 2.8,
 		anim_1p = function (condition_func_params)
+			local Ammo = require("scripts/utilities/ammo")
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 
 			if inventory_slot_component.current_ammunition_reserve == 1 then
 				return "reload_partial"
-			elseif inventory_slot_component.current_ammunition_clip > 0 then
+			elseif Ammo.current_ammo_in_clips(inventory_slot_component) > 0 then
 				return "reload_partial"
 			else
 				return "reload_start"
@@ -48,9 +49,10 @@ local reload_template = {
 		show_magazine_ammo_time = 0.3,
 		time = 2.3,
 		anim_1p = function (condition_func_params)
+			local Ammo = require("scripts/utilities/ammo")
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 
-			if inventory_slot_component.current_ammunition_clip > 0 or inventory_slot_component.current_ammunition_reserve == 1 then
+			if Ammo.current_ammo_in_clips(inventory_slot_component) > 0 or inventory_slot_component.current_ammunition_reserve == 1 then
 				return "reload_middle_partial"
 			else
 				return "reload_middle"

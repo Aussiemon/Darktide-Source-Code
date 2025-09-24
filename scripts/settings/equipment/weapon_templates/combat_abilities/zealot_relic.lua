@@ -139,7 +139,6 @@ weapon_template.actions = {
 		kind = "zealot_channel",
 		offensive_buff = "zealot_channel_damage",
 		power_level = 500,
-		power_level_time_in_action_multiplier = 0.25,
 		radius = 10,
 		radius_time_in_action_multiplier = 0.1,
 		sprint_requires_press_to_interrupt = true,

@@ -266,13 +266,22 @@ ViewElementWintrack._draw_widgets = function (self, dt, t, input_service, ui_ren
 	end
 end
 
-ViewElementWintrack._is_reward_widget_visible = function (self, widget, extra_margin)
-	local width, height = self:_scenegraph_size("reward_mask")
-	local position = self:scenegraph_world_position("reward_mask")
+ViewElementWintrack._is_reward_widget_interactable = function (self, widget)
+	return self:_is_reward_widget_inside_scenegraph(widget, "reward_interaction")
+end
+
+ViewElementWintrack._is_reward_widget_visible = function (self, widget)
+	return self:_is_reward_widget_inside_scenegraph(widget, "reward_mask")
+end
+
+ViewElementWintrack._is_reward_widget_inside_scenegraph = function (self, widget, scenegraph_id)
+	local width, height = self:_scenegraph_size(scenegraph_id)
+	local parent_width, parent_height = self:_scenegraph_size("reward_progress_bar")
+	local position = self:scenegraph_world_position(scenegraph_id)
 	local scale = self._render_scale or 1
 	local draw_length = width * scale
-	local draw_start_length = 0
-	local draw_end_length = draw_length
+	local draw_start_length = (parent_width - width) * 0.5 * scale
+	local draw_end_length = draw_start_length + draw_length
 	local scenegraph_id = "reward"
 	local reward_width, reward_height = self:_scenegraph_size(scenegraph_id)
 	local start_position_start = widget.offset[1] * scale
@@ -691,22 +700,37 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 
 			local content = widget.content
 			local hotspot = content.hotspot
-			local is_hover = hotspot and hotspot.is_hover
-			local is_selected = hotspot and hotspot.is_selected
 
-			if is_hover or is_selected then
-				local element = content.element
-				local items = element.items
+			if hotspot then
+				local parent_widget = self._reward_widgets[i]
+				local parent_content = parent_widget and parent_widget.content
+				local parent_hotspot = parent_content and parent_content.hotspot
 
-				hovered_items = items
+				if parent_hotspot then
+					parent_hotspot.disabled = not self:_is_reward_widget_interactable(widget)
+				end
 
-				break
+				if not parent_hotspot or not parent_hotspot.disabled then
+					local is_hover = hotspot and hotspot.is_hover
+					local is_selected = hotspot and hotspot.is_selected
+
+					if is_hover or is_selected then
+						local element = content.element
+						local items = element.items
+
+						hovered_items = items
+
+						break
+					end
+				end
 			end
 		end
 
 		if hovered_items then
 			if not self._currently_hovered_item or hovered_items ~= self._currently_hovered_items then
-				self:_on_reward_items_hover_start(hovered_items, nil, widget)
+				local item_index = widget and widget.content and widget.content.element and widget.content.element.item_index
+
+				self:_on_reward_items_hover_start(hovered_items, item_index, widget)
 			end
 		elseif self._currently_hovered_item then
 			self:_on_reward_items_hover_stop()
@@ -786,7 +810,7 @@ end
 
 ViewElementWintrack._on_navigation_input_changed = function (self)
 	ViewElementWintrack.super._on_navigation_input_changed(self)
-	self:_update_reward_tooltip_hint()
+	self:_update_reward_input_description()
 
 	if not self._using_cursor_navigation then
 		self:apply_focus_on_reward()
@@ -798,7 +822,7 @@ ViewElementWintrack._on_navigation_input_changed = function (self)
 	self._widgets_by_name.navigation_arrow_right.content.visible = self._using_cursor_navigation
 end
 
-ViewElementWintrack._update_reward_tooltip_hint = function (self)
+ViewElementWintrack._update_reward_input_description = function (self)
 	local widget = self._widgets_by_name.reward_input_description
 	local content = widget.content
 	local visible = false
@@ -881,6 +905,7 @@ ViewElementWintrack._handle_reward_scroll = function (self, input_service, dt)
 					if wanted_index ~= current_index then
 						self:_play_sound(UISoundEvents.penance_menu_reward_scroll)
 						self:_on_reward_items_hover_start(currently_hovered_hovered_items, wanted_index, self._currently_hovered_widget)
+						self:_update_reward_widget(self._currently_hovered_widget, wanted_index)
 					end
 				end
 			end
@@ -1021,7 +1046,8 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 	for i = 1, amount do
 		local reward = rewards[i]
 		local items = reward.items
-		local first_item = items and items[1]
+		local item_index = 1
+		local first_item = items and items[item_index]
 		local first_item_slots = first_item and first_item.slots
 		local slot_name = first_item_slots and first_item_slots[1]
 		local widget_type = blueprint_widget_type_by_slot and blueprint_widget_type_by_slot[slot_name]
@@ -1048,6 +1074,8 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 					reward_item_width,
 					reward_item_height,
 				},
+				item_index = item_index,
+				index = index,
 			}
 
 			item_widget.content.element = item_widget_element
@@ -1076,6 +1104,71 @@ ViewElementWintrack._create_reward_widgets = function (self, rewards, ui_rendere
 	self._current_reward_page_index = 1
 	self._reward_widgets = widgets
 	self._reward_item_widgets = item_widgets
+end
+
+ViewElementWintrack._update_reward_widget = function (self, widget, new_reward_index)
+	local element = widget.content.element
+	local items = element.items
+	local items_size = items and #items
+	local item_index = items_size and math.index_wrapper(new_reward_index, items_size)
+	local new_item = item_index and items and items[item_index]
+	local item_slots = element.item and element.item.slots
+	local slot_name = item_slots and item_slots[1]
+	local new_item_slots = new_item and new_item.slots
+	local new_slot_name = new_item_slots and new_item_slots[1]
+	local widget_type = self._blueprint_widget_type_by_slot and self._blueprint_widget_type_by_slot[slot_name]
+	local new_widget_type = self._blueprint_widget_type_by_slot and self._blueprint_widget_type_by_slot[new_slot_name]
+	local template = self._content_blueprints[widget_type]
+	local new_template = self._content_blueprints[new_widget_type]
+
+	if template.unload_icon then
+		template.unload_icon(self, widget, element, self._ui_reward_renderer)
+	end
+
+	local index = element.index
+	local item_pass_template = new_template and new_template.pass_template
+
+	if item_pass_template then
+		local reward_item_widget_name = "reward_item_widget_" .. index
+		local content = widget.content
+		local visible = content.visible
+		local visible_last_frame = content.visible_last_frame
+		local render_icon = content.render_icon
+
+		self:_unregister_widget_name(reward_item_widget_name)
+
+		local new_item_widget_definition = UIWidget.create_definition(item_pass_template, "reward_item")
+		local new_item_widget = self:_create_widget(reward_item_widget_name, new_item_widget_definition)
+
+		self._reward_item_widgets[index] = new_item_widget
+		new_item_widget.type = widget_type
+
+		local new_element = table.clone_instance(element)
+
+		new_element.item = new_item
+		new_element.slot = ItemSlotSettings[new_slot_name]
+		new_element.item_index = item_index
+		new_item_widget.content.element = new_element
+		new_item_widget.content.visible = visible
+		new_item_widget.content.visible_last_frame = visible_last_frame
+		new_item_widget.content.render_icon = render_icon
+
+		if new_item_widget.content.hotspot and widget.content.hotspot then
+			local is_hover = widget.content.hotspot.is_hover
+			local is_selected = widget.content.hotspot.is_selected
+
+			new_item_widget.content.hotspot.is_hover = is_hover
+			new_item_widget.content.hotspot.is_selected = is_selected
+
+			if self._currently_hovered_items and (is_hover or is_selected) then
+				self._currently_hovered_items = new_element.items
+			end
+		end
+
+		local callback_name, secondary_callback_name, double_click_callback
+
+		template.init(self, new_item_widget, new_element, callback_name, secondary_callback_name, self._ui_reward_renderer, double_click_callback)
+	end
 end
 
 ViewElementWintrack._get_progress_required_to_page = function (self, index)
@@ -1463,7 +1556,7 @@ ViewElementWintrack._on_reward_items_hover_start = function (self, items, index,
 		self._item_stats:present_item(item, context)
 	end
 
-	self:_update_reward_tooltip_hint()
+	self:_update_reward_input_description()
 end
 
 ViewElementWintrack._on_reward_items_hover_stop = function (self)
@@ -1472,7 +1565,7 @@ ViewElementWintrack._on_reward_items_hover_stop = function (self)
 	self._currently_hovered_items_index = nil
 	self._currently_hovered_widget = nil
 
-	self:_update_reward_tooltip_hint()
+	self:_update_reward_input_description()
 
 	if self._item_stats then
 		self._item_stats:stop_presenting()

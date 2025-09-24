@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/ogryn_power_mauls/ogryn_powermaul_p1_m3.lua
 
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -16,7 +15,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeOgrynPowerMaulP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_powermaul_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
@@ -25,10 +23,8 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
@@ -220,12 +216,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_down_left",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_down_left",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
@@ -293,12 +291,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/heavy_swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/heavy_swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
@@ -440,12 +440,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_up",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_up",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
@@ -512,12 +514,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/heavy_swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/heavy_swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
@@ -659,12 +663,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_left_diagonal",
-			anchor_point_offset = {
-				0.2,
-				-0,
-				-0.4,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_left_diagonal",
+				anchor_point_offset = {
+					0.2,
+					-0,
+					-0.4,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
@@ -800,12 +806,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_right_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_right_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
@@ -941,12 +949,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_right_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/swing_right_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
@@ -1128,12 +1138,14 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority_torso,
 		weapon_box = default_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/push_follow_up",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/power_maul/push_follow_up",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,

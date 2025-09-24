@@ -2,6 +2,7 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
@@ -804,6 +805,18 @@ local action_data = {
 	},
 	exit_spawner = {
 		run_anim_event = "move_fwd",
+	},
+	use_stim = {
+		anim_event = "use_syringe",
+		duration = 1.3333333333333333,
+		exit_state = "to_melee",
+		effect_template = EffectTemplates.minion_stim_effect,
+		stim_buffs = {
+			"ogryn_mutator_stimmed_minion_red",
+			"ogryn_mutator_stimmed_minion_yellow",
+			"ogryn_mutator_stimmed_minion_green",
+			"ogryn_mutator_stimmed_minion_blue",
+		},
 	},
 }
 

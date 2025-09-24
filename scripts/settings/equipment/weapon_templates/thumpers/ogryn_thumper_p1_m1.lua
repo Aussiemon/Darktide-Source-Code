@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thumpers/ogryn_thumper_p1_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -9,28 +8,23 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
-local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeThumperP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
-local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
-local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -97,7 +91,7 @@ weapon_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -584,12 +578,14 @@ weapon_template.actions = {
 			1.5,
 			0.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_left",
-			anchor_point_offset = {
-				0,
-				0.3,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_left",
+				anchor_point_offset = {
+					0,
+					0.3,
+					-0.15,
+				},
 			},
 		},
 		damage_type = damage_types.blunt,
@@ -697,12 +693,14 @@ weapon_template.actions = {
 			1.5,
 			0.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_right",
-			anchor_point_offset = {
-				0,
-				0.3,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/shotgun_grenade/bash_right",
+				anchor_point_offset = {
+					0,
+					0.3,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.ogryn_bullet_bounce,

@@ -479,7 +479,7 @@ local cosmetic_gear_tabs = {}
 local cosmetic_weapon_tabs = {}
 
 for archetype_name, archetype in pairs(Archetypes) do
-	if table.contains(ArchetypeSettings.archetype_cosmetics_whitelist, archetype_name) then
+	if ArchetypeSettings.archetype_cosmetics_whitelist[archetype_name] then
 		local cosmetics_vendor_option_tab = table.clone_instance(cosmetics_vendor_option_tab_definition)
 
 		cosmetic_gear_tabs[#cosmetic_gear_tabs + 1] = cosmetics_vendor_option_tab

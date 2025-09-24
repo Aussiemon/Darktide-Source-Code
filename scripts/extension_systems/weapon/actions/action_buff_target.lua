@@ -2,12 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
-local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
-local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
-local special_rules = SpecialRulesSettings.special_rules
 local ActionBuffTarget = class("ActionBuffTarget", "ActionAbilityBase")
 
 ActionBuffTarget.init = function (self, action_context, action_params, action_setting)
@@ -17,7 +12,7 @@ ActionBuffTarget.init = function (self, action_context, action_params, action_se
 
 	local unit_data_extension = self._unit_data_extension
 
-	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 end
 
 ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -67,8 +62,8 @@ end
 
 ActionBuffTarget._get_target = function (self)
 	local action_settings = self._action_settings
-	local action_module_targeting_component = self._action_module_targeting_component
-	local target_unit = action_module_targeting_component.target_unit_1
+	local action_module_target_finder_component = self._action_module_target_finder_component
+	local target_unit = action_module_target_finder_component.target_unit_1
 	local self_cast = action_settings.self_cast or not target_unit
 	local target = self_cast and self._player_unit or target_unit
 

@@ -54,6 +54,9 @@ StatConfigs.user = {
 	character_id = {
 		default = "none",
 	},
+	account_id = {
+		default = "none",
+	},
 }
 
 return settings("StatConfigs", StatConfigs)

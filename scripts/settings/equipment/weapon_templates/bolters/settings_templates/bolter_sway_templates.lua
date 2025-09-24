@@ -75,12 +75,6 @@ sway_templates.default_bolter_killshot = {
 					yaw = 0.5,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.25,

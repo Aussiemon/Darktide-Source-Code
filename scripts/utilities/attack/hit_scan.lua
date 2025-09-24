@@ -78,6 +78,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local hit_minion = false
 	local hit_weakspot = false
 	local killing_blow = false
+	local hit_result
 	local number_of_units_hit = 0
 	local optional_attacker_data_extension = ScriptUnit.has_extension(attacker_unit, "unit_data_system")
 	local optional_attacker_breed = optional_attacker_data_extension and optional_attacker_data_extension:breed()
@@ -202,7 +203,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 				local hit_any_weakspot = hit_weakspot
 
-				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
+				hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, attacker_unit)
 				target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
 				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, optional_is_critical_strike, attack_type)
 				stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
@@ -217,6 +218,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 						hit_position = _block_position(hit_unit, hit_position, direction)
 					end
 
+					hit_result = attack_result
 					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
 
 					local breed_is_minion = Breed.is_minion(target_breed_or_nil)
@@ -314,7 +316,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 		end
 	end
 
-	return end_position, hit_weakspot, killing_blow, hit_minion, number_of_units_hit
+	return end_position, hit_weakspot, killing_blow, hit_minion, number_of_units_hit, hit_result
 end
 
 HitScan.inside_faded_player = function (breed_or_nil, hit_distance)

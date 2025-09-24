@@ -13,6 +13,12 @@ allowed_buffs.legendary_buffs = {
 		"hordes_buff_aoe_shock_closest_enemy_on_interval",
 		"hordes_buff_staggering_pulse",
 		"hordes_buff_extra_ability_charge",
+		"hordes_buff_random_damage_immunity",
+		"hordes_buff_big_weakspot_damage_increase",
+		"hordes_buff_bleeding_and_burning_on_melee_hit",
+		"hordes_buff_boosted_melee_attack_on_cooldown",
+		"hordes_buff_explosion_on_toughness_broken",
+		"hordes_buff_reflect_melee_damage",
 	},
 }
 
@@ -180,6 +186,8 @@ allowed_buffs.available_family_builds = {
 	"cowboy",
 	"electric",
 	"elementalist",
+	"critical",
+	"unstoppable",
 }
 allowed_buffs.buff_families = {
 	fire = {
@@ -276,6 +284,52 @@ allowed_buffs.buff_families = {
 			"hordes_buff_ranged_attacks_hit_mass_penetration_increased",
 			"hordes_buff_melee_damage_missing_ammo_in_clip",
 			"hordes_buff_weakspot_ranged_hit_gives_infinite_ammo",
+		},
+	},
+	critical = {
+		id = "critical",
+		name = "Critical Build",
+		sfx = "wwise/events/world/play_horde_mode_buff_family_critical",
+		priority_buffs = {
+			"hordes_buff_explode_enemies_on_critical_kill",
+		},
+		buffs = {
+			"hordes_buff_weakspot_damage_increase",
+			"hordes_buff_no_ammo_consumption_on_crits",
+			"hordes_buff_melee_damage_on_melee_critical_hit",
+			"hordes_buff_critical_chance_on_dodge",
+			"hordes_buff_rending_on_ranged_critical_hit",
+			"hordes_buff_critical_melee_hit_infinite_cleave",
+			"hordes_buff_bonus_crit_chance_on_ammo",
+			"hordes_buff_increase_super_armor_impact_on_crit",
+			"hordes_buff_stacking_crit_damage_on_critical_hit",
+			"hordes_buff_melee_critical_damage_increase",
+			"hordes_buff_damage_reduction_on_critical_hit",
+			"hordes_buff_increase_melee_crit_chance_on_ranged_critical_kill",
+			"hordes_buff_increase_ranged_crit_chance_on_melee_critical_kill",
+			"hordes_buff_critical_damage_from_consecutive_critical_hits",
+			"hordes_buff_crit_chance_per_missing_stamina_bar",
+		},
+	},
+	unstoppable = {
+		id = "unstoppable",
+		name = "Unstoppable Build",
+		sfx = "wwise/events/world/play_horde_mode_buff_family_unstoppable",
+		priority_buffs = {
+			"hordes_buff_sprinting_staggers",
+		},
+		buffs = {
+			"hordes_buff_dodge_staggers",
+			"hordes_buff_uninterruptible_while_aiming_and_shooting",
+			"hordes_buff_replenish_stamina_from_ranged_or_melee_hit",
+			"hordes_buff_movement_bonuses_on_toughness_broken",
+			"hordes_buff_suppression_immunity",
+			"hordes_buff_toughness_on_melee_kills",
+			"hordes_buff_windup_is_uninterruptible",
+			"hordes_buff_no_movement_speed_reduction_on_aim_and_windup",
+			"hordes_buff_increase_impact_on_push_attacks",
+			"hordes_buff_dodge_incapacitating_attacks",
+			"hordes_buff_damage_per_full_stamina_bar",
 		},
 	},
 }

@@ -39,6 +39,37 @@ hitscan_templates.default_boltpistol_hitscan = {
 		},
 	},
 }
+hitscan_templates.boltpistol_m2_hitscan = {
+	range = 75,
+	damage = {
+		explosion_arming_distance = 3,
+		impact = {
+			damage_profile = DamageProfileTemplates.boltpistol_m2_damage,
+			hitmass_consumed_explosion = {
+				kill_explosion_template = ExplosionTemplates.boltpistol_m2_shell_kill,
+				stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop,
+			},
+		},
+		penetration = {
+			depth = 0.1,
+			target_index_increase = 2,
+			stop_explosion_template = ExplosionTemplates.boltpistol_m2_shell_stop,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.1,
+			test = "sphere",
+		},
+	},
+}
 
 return {
 	base_templates = hitscan_templates,

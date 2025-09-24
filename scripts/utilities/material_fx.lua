@@ -9,31 +9,40 @@ local FOOTSTEP_EFFECTS = MaterialQuerySettings.footstep_effects
 local FOOT_TO_SOURCE_NAME_LOOKUP = {
 	right = {
 		foot = "right_foot",
+		toe = "right_toe",
 	},
 	left = {
 		foot = "left_foot",
+		toe = "left_toe",
 	},
 }
 local _external_properties = {}
-local _place_flow_3p_cb_footstep, _trigger_footstep_and_foley
+local _place_flow_player_3p_cb_footstep, _trigger_player_footstep_and_foley
 local MaterialFx = {}
 
-MaterialFx.flow_cb_3p_footstep = function (world, wwise_world, physics_world, unit, sound_alias, foot, use_cached_material_hit)
+MaterialFx.flow_cb_player_3p_footstep = function (world, wwise_world, physics_world, unit, left_sound_alias, left_decal_alias, right_sound_alias, right_decal_alias, use_cached_material_hit)
 	local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 
 	if not fx_extension or not ALIVE[unit] then
 		return
 	end
 
-	if foot == "both" then
-		_place_flow_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, sound_alias, "left", use_cached_material_hit)
-		_place_flow_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, sound_alias, "right", use_cached_material_hit)
-	else
-		_place_flow_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, sound_alias, foot, use_cached_material_hit)
+	if left_sound_alias or left_decal_alias then
+		_place_flow_player_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, left_sound_alias, left_decal_alias, "left", use_cached_material_hit)
+	end
+
+	if right_sound_alias or right_decal_alias then
+		_place_flow_player_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, right_sound_alias, right_decal_alias, "right", use_cached_material_hit)
 	end
 end
 
-MaterialFx.trigger_material_fx = function (unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, optional_set_speed_parameter, optional_set_first_person_parameter, use_cached_material_hit)
+local DEFAULT_EXTENTS = {
+	1,
+	1,
+	1,
+}
+
+MaterialFx.trigger_material_fx = function (unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, optional_set_speed_parameter, optional_set_first_person_parameter, optional_decal_alias, optional_decal_direction, use_cached_material_hit)
 	local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 
 	if not fx_extension then
@@ -87,6 +96,26 @@ MaterialFx.trigger_material_fx = function (unit, world, wwise_world, physics_wor
 		fx_extension:trigger_gear_wwise_event(sound_alias, _external_properties, source_id)
 	end
 
+	local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
+
+	if not visual_loadout_extension then
+		return
+	end
+
+	if hit and optional_decal_alias then
+		local resolved, decal_name, extents = visual_loadout_extension:resolve_gear_decal(optional_decal_alias, _external_properties)
+
+		if resolved then
+			local t = Managers.time:time("gameplay")
+
+			extents = Vector3(unpack(extents or DEFAULT_EXTENTS))
+
+			local rotation = Quaternion.look(normal, optional_decal_direction)
+
+			Managers.state.decal:add_projection_decal(decal_name, position, rotation, normal, extents, nil, nil, t)
+		end
+	end
+
 	local world_interaction = FOOTSTEP_EFFECTS.world_interaction[material]
 
 	if world_interaction then
@@ -107,7 +136,7 @@ MaterialFx.update_1p_footsteps = function (t, footstep_time, right_foot_next, pr
 
 	local character_state_name = context.character_state_component.state_name
 	local move_speed_squared = context.locomotion_extension:move_speed_squared()
-	local footstep_sound_alias, foley_sound_alias, can_play_footstep
+	local footstep_sound_alias, foley_sound_alias, footstep_decal_alias, can_play_footstep
 
 	if (character_state_name == "walking" or character_state_name == "sprinting") and (previous_frame_character_state_name == "walking" or previous_frame_character_state_name == "sprinting") then
 		footstep_sound_alias = right_foot_next and "footstep_right" or "footstep_left"
@@ -151,7 +180,7 @@ MaterialFx.update_1p_footsteps = function (t, footstep_time, right_foot_next, pr
 	local footstep_intervals = breed_footstep_intervals and breed_footstep_intervals[context.breed.name] or weapon_template.footstep_intervals
 
 	if footstep_intervals then
-		_trigger_footstep_and_foley(context, footstep_sound_alias, FIRST_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
+		_trigger_player_footstep_and_foley(context, footstep_sound_alias, footstep_decal_alias, FIRST_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
 
 		local is_crouching = context.movement_state_component.is_crouching
 		local alternate_fire_active = context.alternate_fire_component.is_active
@@ -190,12 +219,13 @@ MaterialFx.update_3p_footsteps = function (previous_frame_character_state_name, 
 	if previous_frame_character_state_name ~= "dodging" and character_state_name == "dodging" then
 		local footstep_sound_alias = "sfx_footstep_dodge"
 		local foley_sound_alias = "sfx_foley_upper_body"
+		local footstep_decal_alias
 
-		_trigger_footstep_and_foley(context, footstep_sound_alias, THIRD_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
+		_trigger_player_footstep_and_foley(context, footstep_sound_alias, footstep_decal_alias, THIRD_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
 	end
 end
 
-function _trigger_footstep_and_foley(context, footstep_sound_alias, first_person_mode_parameter, ...)
+function _trigger_player_footstep_and_foley(context, footstep_sound_alias, footstep_decal_alias, first_person_mode_parameter, ...)
 	local world = context.world
 	local physics_world = context.physics_world
 	local wwise_world = context.wwise_world
@@ -204,9 +234,10 @@ function _trigger_footstep_and_foley(context, footstep_sound_alias, first_person
 	local query_to = query_from + Vector3(0, 0, -1)
 	local set_speed_parameter = true
 	local set_first_person_parameter = true
+	local decal_direction
 	local use_cached_material_hit = true
 
-	MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, footstep_sound_alias, context.feet_source_id, query_from, query_to, set_speed_parameter, set_first_person_parameter, use_cached_material_hit)
+	MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, footstep_sound_alias, context.feet_source_id, query_from, query_to, set_speed_parameter, set_first_person_parameter, footstep_decal_alias, decal_direction, use_cached_material_hit)
 
 	local foley_source_id = context.foley_source_id
 
@@ -225,17 +256,21 @@ function _trigger_footstep_and_foley(context, footstep_sound_alias, first_person
 	end
 end
 
-function _place_flow_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, sound_alias, foot, use_cached_material_hit)
+function _place_flow_player_3p_cb_footstep(fx_extension, world, wwise_world, physics_world, unit, sound_alias, decal_alias, foot, use_cached_material_hit)
 	local foot_source = FOOT_TO_SOURCE_NAME_LOOKUP[foot].foot
+	local toe_source = FOOT_TO_SOURCE_NAME_LOOKUP[foot].toe
 	local _, _, foot_unit_3p, foot_node_3p = fx_extension:vfx_spawner_unit_and_node(foot_source)
+	local _, _, toe_unit_3p, toe_node_3p = fx_extension:vfx_spawner_unit_and_node(toe_source)
 	local foot_pos = Unit.world_position(foot_unit_3p, foot_node_3p)
+	local toe_pos = Unit.world_position(toe_unit_3p, toe_node_3p)
 	local query_from = foot_pos + Vector3(0, 0, 0.1)
 	local query_to = query_from + Vector3(0, 0, -0.5)
 	local source_id = fx_extension:sound_source(foot_source)
+	local decal_direction = Vector3.normalize(Vector3.flat(toe_pos - foot_pos))
 	local set_speed_parameter = true
 	local set_first_person_parameter = true
 
-	MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, set_speed_parameter, set_first_person_parameter, use_cached_material_hit)
+	MaterialFx.trigger_material_fx(unit, world, wwise_world, physics_world, sound_alias, source_id, query_from, query_to, set_speed_parameter, set_first_person_parameter, decal_alias, decal_direction, use_cached_material_hit)
 end
 
 return MaterialFx

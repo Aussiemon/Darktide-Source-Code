@@ -592,6 +592,9 @@ damage_templates.plasma_overheat = {
 		attack = 1,
 		impact = 1,
 	},
+	stat_buffs = {
+		"overheat_explosion_damage_modifier",
+	},
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
@@ -907,6 +910,43 @@ damage_templates.sticky_dodge_push = {
 damage_templates.ogryn_dodge_impact = {
 	is_push = true,
 	stagger_category = "explosion",
+	power_distribution = {
+		attack = 0,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0,
+		impact = math.huge,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.light_dodge_impact = {
+	is_push = true,
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
 		impact = 0.5,

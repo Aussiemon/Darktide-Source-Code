@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/player_panel_base/hud_element_player_panel_base.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local HudElementTeamPlayerPanelHubSettings = require("scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub_settings")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -9,6 +10,7 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local WalletSettings = require("scripts/settings/wallet_settings")
 
 local function _apply_color_to_text(text, color)
 	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
@@ -16,10 +18,10 @@ end
 
 local temp_ammo_display_texts = {}
 
-local function convert_number_to_display_texts(amount, max_character, zero_numeral_color, color_zero_values, ignore_coloring)
+local function convert_number_to_display_texts(amount, max_character, zero_numeral_color, color_zero_values, ignore_coloring, optional_total_characters)
 	table.clear(temp_ammo_display_texts)
 
-	max_character = math.min(max_character + 1, 3)
+	max_character = math.min(max_character + 1, optional_total_characters or 3)
 
 	local length = string.len(amount)
 	local num_adds = max_character - length
@@ -412,16 +414,16 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	end
 
 	if supported_features.ammo then
-		local ammo_status, ammo_visible, ammo_hud_icon = self:_get_weapon_ammo_status(player, dead, unit_data_extension, visual_loadout_extension)
+		local uses_ammo, ammo_status, ammo_visible = self:_get_weapon_ammo_status(player, dead, unit_data_extension, visual_loadout_extension)
 
 		ammo_visible = ammo_visible and not dead and not hogtied
 
-		if ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible or ammo_hud_icon ~= self._ammo_hud_icon then
-			self:_update_ammo_representation(ammo_status, ammo_visible, ammo_hud_icon, ui_renderer)
+		if uses_ammo ~= self._uses_ammo or ammo_status ~= self._ammo_status or ammo_visible ~= self._ammo_visible then
+			self:_update_ammo_representation(uses_ammo, ammo_status, ammo_visible, ui_renderer)
 
+			self._uses_ammo = uses_ammo
 			self._ammo_status = ammo_status
 			self._ammo_visible = ammo_visible
-			self._ammo_hud_icon = ammo_hud_icon
 		end
 	end
 
@@ -461,9 +463,9 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 			if supported_features.toughness_text and (bar_fraction ~= self._toughness_fraction or update_max_toughness) then
 				if has_overshield then
-					self:_apply_widget_number_text("toughness_text", max_toughness_visual)
+					self:_apply_widget_number_text("toughness_text", max_toughness_visual, max_toughness)
 				else
-					self:_apply_widget_number_text("toughness_text", toughness_percentage * max_toughness)
+					self:_apply_widget_number_text("toughness_text", toughness_percentage * max_toughness, max_toughness)
 				end
 			end
 
@@ -641,7 +643,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			self:_apply_health_fraction(bar_fraction, bar_ghost_fraction, bar_max_fraction, max_wounds, force_update)
 
 			if supported_features.health_text and (bar_fraction ~= self._health_fraction or update_max_health) then
-				self:_apply_widget_number_text("health_text", bar_fraction * max_health)
+				self:_apply_widget_number_text("health_text", bar_fraction * max_health, max_health)
 			end
 		end
 
@@ -901,36 +903,34 @@ HudElementPlayerPanelBase._get_grenade_ability_status = function (self, player, 
 end
 
 HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, player, dead, unit_data_extension, visual_loadout_extension)
-	local ammo_icon = "content/ui/materials/icons/weapons/hud/small/party_ammo"
-	local no_ammo_icon = "content/ui/materials/icons/weapons/hud/small/party_no_ammo"
 	local max_status = 3
 
 	if not player:is_human_controlled() then
-		return max_status, true, ammo_icon
+		return true, max_status, true
 	end
 
 	if not unit_data_extension then
-		return max_status, false, no_ammo_icon
+		return true, max_status, false
 	end
 
 	local weapon_slots = self._weapon_slots
 	local total_current_ammo = 0
 	local total_max_ammo = 0
-	local has_ammo = false
+	local uses_ammo = false
 
-	for i = 1, #weapon_slots do
-		local slot_id = weapon_slots[i]
+	for ii = 1, #weapon_slots do
+		local slot_id = weapon_slots[ii]
 		local inventory_component = unit_data_extension:read_component(slot_id)
 		local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_id)
 		local hud_configuration = weapon_template and weapon_template.hud_configuration
 		local uses_ammunition = hud_configuration and hud_configuration.uses_ammunition
 
 		if inventory_component and uses_ammunition then
-			has_ammo = true
+			uses_ammo = true
 
-			local max_clip = inventory_component.max_ammunition_clip or 0
+			local max_clip = Ammo.max_ammo_in_clips(inventory_component) or 0
 			local max_reserve = inventory_component.max_ammunition_reserve or 0
-			local current_clip = inventory_component.current_ammunition_clip or 0
+			local current_clip = Ammo.current_ammo_in_clips(inventory_component) or 0
 			local current_reserve = inventory_component.current_ammunition_reserve or 0
 
 			total_current_ammo = total_current_ammo + (current_clip + current_reserve)
@@ -946,9 +946,7 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, player, dead
 		ammo_status = math.ceil(weapon_ammo_fraction / (1 / max_status))
 	end
 
-	local icon = total_max_ammo > 0 and ammo_icon or no_ammo_icon
-
-	return has_ammo and ammo_status or max_status, true, icon
+	return uses_ammo, ammo_status, true
 end
 
 HudElementPlayerPanelBase._update_grenade_ability_presentation = function (self, status, visible, hud_icon, ui_renderer)
@@ -964,7 +962,7 @@ HudElementPlayerPanelBase._update_grenade_ability_presentation = function (self,
 	elseif status <= 2 then
 		color = UIHudSettings.color_tint_ammo_low
 	else
-		color = UIHudSettings.color_tint_main_1
+		color = UIHudSettings.color_tint_ammo_full
 	end
 
 	icon_color[2] = color[2]
@@ -976,7 +974,7 @@ HudElementPlayerPanelBase._update_grenade_ability_presentation = function (self,
 	widget.dirty = true
 end
 
-HudElementPlayerPanelBase._update_ammo_representation = function (self, ammo_status, visible, hud_icon, ui_renderer)
+HudElementPlayerPanelBase._update_ammo_representation = function (self, uses_ammo, ammo_status, visible, ui_renderer)
 	ammo_status = ammo_status or 1
 
 	local widget = self._widgets_by_name.ammo_status
@@ -993,7 +991,7 @@ HudElementPlayerPanelBase._update_ammo_representation = function (self, ammo_sta
 	elseif ammo_status <= 2 then
 		color = UIHudSettings.color_tint_ammo_low
 	else
-		color = UIHudSettings.color_tint_main_1
+		color = UIHudSettings.color_tint_ammo_full
 	end
 
 	icon_color[2] = color[2]
@@ -1469,20 +1467,21 @@ HudElementPlayerPanelBase._apply_health_fraction = function (self, health_fracti
 	end
 end
 
-HudElementPlayerPanelBase._apply_widget_number_text = function (self, widget_id, amount)
+HudElementPlayerPanelBase._apply_widget_number_text = function (self, widget_id, amount, max_amount)
 	local widgets_by_name = self._widgets_by_name
 	local text_widget = widgets_by_name[widget_id]
 
 	if text_widget then
 		local health_value = math.ceil(amount)
+		local override_max_characters = max_amount >= 1000 and string.len(max_amount) or nil
 		local zero_numeral_color = text_widget.style.text_1.dimmed_color or UIHudSettings.color_tint_main_3
 		local ignore_coloring = false
-		local health_texts = convert_number_to_display_texts(health_value, 3, zero_numeral_color, true, ignore_coloring)
+		local health_texts = convert_number_to_display_texts(health_value, 4, zero_numeral_color, true, ignore_coloring, override_max_characters)
 
-		for i = 1, 3 do
+		for i = 1, 4 do
 			local key = "text_" .. i
 
-			text_widget.content[key] = health_texts[i] or ""
+			text_widget.content[key] = health_texts[i] or _apply_color_to_text("", zero_numeral_color)
 		end
 
 		text_widget.dirty = true

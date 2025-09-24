@@ -2,6 +2,7 @@
 
 local circumstance_templates = {
 	default = {
+		is_default = true,
 		theme_tag = "default",
 		wwise_state = "None",
 	},

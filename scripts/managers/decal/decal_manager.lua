@@ -9,16 +9,18 @@ DecalManager.init = function (self, world)
 	local lifetime = Application.user_setting("performance_settings", "decal_lifetime") or GameParameters.default_decal_lifetime
 	local impact_pool_size = Application.user_setting("performance_settings", "max_impact_decals") or GameParameters.default_max_impact_decals
 	local blood_pool_size = Application.user_setting("performance_settings", "max_blood_decals") or GameParameters.default_max_blood_decals
+	local footstep_pool_size = Application.user_setting("performance_settings", "max_footstep_decals") or GameParameters.default_max_footstep_decals
 
-	self:init_settings(lifetime, impact_pool_size, blood_pool_size)
+	self:init_settings(lifetime, impact_pool_size, blood_pool_size, footstep_pool_size)
 
 	self._lifetime = lifetime
 	self._impact_pool_size = impact_pool_size
 	self._blood_pool_size = blood_pool_size
+	self._footstep_pool_size = footstep_pool_size
 	self._decal_unit_id_reference_counts = {}
 end
 
-DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_pool_size)
+DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_pool_size, footstep_pool_size)
 	local decal_system = self._decal_system
 
 	for pool_name, setting in pairs(DecalSettings) do
@@ -28,14 +30,33 @@ DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_p
 			pool_size = impact_pool_size
 		elseif pool_name == "blood" then
 			pool_size = blood_pool_size
+		elseif pool_name == "footstep" then
+			pool_size = footstep_pool_size
 		end
 
 		EngineOptimizedManagers.decal_manager_add_setting(decal_system, pool_name, lifetime, pool_size, setting.sort_order_base, unpack(setting.units))
 	end
 end
 
-DecalManager.delete_units = function (self)
+DecalManager.destroy = function (self)
 	EngineOptimizedManagers.decal_manager_destroy(self._decal_system)
+
+	self._decal_system = nil
+end
+
+DecalManager.delete_units = function (self)
+	local decal_unit_id_reference_counts = self._decal_unit_id_reference_counts
+	local num_decal_unit_ids = table.size(decal_unit_id_reference_counts)
+
+	if num_decal_unit_ids == 0 then
+		return
+	end
+
+	local decal_unit_ids = Script.new_array(num_decal_unit_ids)
+
+	table.keys(decal_unit_id_reference_counts, decal_unit_ids)
+	EngineOptimizedManagers.decal_manager_destroy_decal_ids(self._decal_system, unpack(decal_unit_ids))
+	table.clear(decal_unit_id_reference_counts)
 end
 
 DecalManager.update = function (self, dt, t)
@@ -92,14 +113,16 @@ DecalManager._check_new_user_settings = function (self)
 	local new_lifetime = Application.user_setting("performance_settings", "decal_lifetime") or GameParameters.default_decal_lifetime
 	local new_impact_pool_size = Application.user_setting("performance_settings", "max_impact_decals") or GameParameters.default_max_impact_decals
 	local new_blood_pool_size = Application.user_setting("performance_settings", "max_blood_decals") or GameParameters.default_max_blood_decals
-	local update_settings = self._lifetime ~= new_lifetime or self._impact_pool_size ~= new_impact_pool_size or self._blood_pool_size ~= new_blood_pool_size
+	local new_footstep_pool_size = Application.user_setting("performance_settings", "max_footstep_decals") or GameParameters.default_max_footstep_decals
+	local update_settings = self._lifetime ~= new_lifetime or self._impact_pool_size ~= new_impact_pool_size or self._blood_pool_size ~= new_blood_pool_size or self._footstep_pool_size ~= new_footstep_pool_size
 
 	if update_settings then
-		self:init_settings(new_lifetime, new_impact_pool_size, new_blood_pool_size)
+		self:init_settings(new_lifetime, new_impact_pool_size, new_blood_pool_size, new_footstep_pool_size)
 
 		self._lifetime = new_lifetime
 		self._impact_pool_size = new_impact_pool_size
 		self._blood_pool_size = new_blood_pool_size
+		self._footstep_pool_size = new_footstep_pool_size
 
 		Log.info("DecalManager", "Updating engine decal manager settings")
 	end

@@ -16,7 +16,7 @@ local surface_hit_types = SurfaceMaterialSettings.hit_types
 local PI = math.pi
 local EMPTY_TABLE = {}
 local MATERIAL_QUERY_DISTANCE = 0.1
-local _can_play, _impact_effect_anim_from_direction, _impact_effect_anim_from_direction_with_hit_zones, _impact_fx, _find_surface_impact_fx
+local _can_play, _find_surface_impact_fx, _impact_effect_anim_from_direction, _impact_effect_anim_from_direction_with_hit_zones, _impact_fx
 local ImpactEffect = {}
 local DEFAULT_HIT_REACTS_MIN_DAMAGE = 0
 
@@ -34,7 +34,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 	local will_be_predicted = not not impact_fx_data_or_nil.will_be_predicted
 	local local_only = not not impact_fx_data_or_nil.local_only
 	local armor = Armor.armor_type(attacked_unit, breed_or_nil, hit_zone_name, attack_type)
-	local hit_weakspot = Weakspot.hit_weakspot(breed_or_nil, hit_zone_name)
+	local hit_weakspot = Weakspot.hit_weakspot(breed_or_nil, hit_zone_name, attacking_unit)
 	local did_damage = damage > 0
 	local target_alive = HEALTH_ALIVE[attacked_unit]
 	local impact_fx = _impact_fx(damage_type, breed_or_nil, did_damage, hit_weakspot, armor, attack_was_stopped, attack_result, damage_efficiency, target_alive, hit_zone_name)
@@ -143,7 +143,9 @@ ImpactEffect.play_shotshell_surface_effect = function (physics_world, attacking_
 end
 
 ImpactEffect.surface_impact_fx = function (physics_world, attacking_unit, hit_position, hit_normal, hit_direction, damage_type, hit_type)
-	local hit, material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, hit_position - hit_direction * MATERIAL_QUERY_DISTANCE, hit_position + hit_direction * MATERIAL_QUERY_DISTANCE, "projectile_impact")
+	local start_pos = hit_position - hit_direction * MATERIAL_QUERY_DISTANCE
+	local end_pos = hit_position + hit_direction * MATERIAL_QUERY_DISTANCE
+	local hit, material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, start_pos, end_pos, "projectile_impact")
 	local surface_impact_fx = _find_surface_impact_fx(damage_type, material, hit_type)
 
 	return surface_impact_fx

@@ -45,6 +45,50 @@ local chainsword_sawing = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 	},
 }
+local chainsword_sawing_tick = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_3,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
+local chainsword_sawing_rip = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_25,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_8,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
 local chain_sword_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
@@ -135,7 +179,6 @@ damage_templates.heavy_chainsword = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.armored] = damage_lerp_values.lerp_0_6,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 				},
 				impact = {
@@ -144,8 +187,8 @@ damage_templates.heavy_chainsword = {
 			},
 			power_distribution = {
 				attack = {
-					130,
-					260,
+					135,
+					270,
 				},
 				impact = {
 					9,
@@ -169,8 +212,8 @@ damage_templates.heavy_chainsword = {
 			},
 			power_distribution = {
 				attack = {
-					75,
-					150,
+					80,
+					160,
 				},
 				impact = {
 					8,
@@ -287,6 +330,10 @@ overrides.heavy_chainsword_smiter = {
 			no_cleave,
 		},
 		{
+			"ignore_stagger_reduction",
+			true,
+		},
+		{
 			"targets",
 			1,
 			"power_distribution",
@@ -349,16 +396,6 @@ overrides.heavy_chainsword_active = {
 			"targets",
 			1,
 			"power_distribution",
-			"attack",
-			{
-				100,
-				200,
-			},
-		},
-		{
-			"targets",
-			1,
-			"power_distribution",
 			"impact",
 			{
 				10,
@@ -370,8 +407,8 @@ overrides.heavy_chainsword_active = {
 			1,
 			"power_level_multiplier",
 			{
-				0.5,
-				1.5,
+				0.4,
+				1.2,
 			},
 		},
 		{
@@ -398,12 +435,6 @@ overrides.heavy_chainsword_active = {
 		{
 			"wounds_template",
 			WoundsTemplates.chainsword_sawing,
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
 		},
 		{
 			"weapon_special",
@@ -456,6 +487,7 @@ overrides.heavy_chainsword_sticky = {
 		},
 		{
 			"wounds_template",
+			WoundsTemplates.chainsword_sawing,
 		},
 		{
 			"targets",
@@ -463,8 +495,8 @@ overrides.heavy_chainsword_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				75,
-				150,
+				225,
+				450,
 			},
 		},
 		{
@@ -499,7 +531,7 @@ overrides.heavy_chainsword_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -592,7 +624,7 @@ overrides.heavy_chainsword_sticky_last = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			chainsword_sawing,
+			chainsword_sawing_rip,
 		},
 		{
 			"weapon_special",
@@ -685,7 +717,7 @@ overrides.heavy_chainsword_sticky_last_m2 = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",
@@ -788,6 +820,16 @@ overrides.light_chainsword_up = {
 		{
 			"targets",
 			1,
+			"power_distribution",
+			"attack",
+			{
+				110,
+				220,
+			},
+		},
+		{
+			"targets",
+			1,
 			"power_level_multiplier",
 			{
 				0.7,
@@ -818,6 +860,12 @@ overrides.light_chainsword_smiter = {
 				130,
 				260,
 			},
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			damage_lerp_values.lerp_1_1,
 		},
 		{
 			"cleave_distribution",
@@ -856,16 +904,6 @@ overrides.light_chainsword_active = {
 			"targets",
 			1,
 			"power_distribution",
-			"attack",
-			{
-				30,
-				50,
-			},
-		},
-		{
-			"targets",
-			1,
-			"power_distribution",
 			"impact",
 			{
 				2,
@@ -877,8 +915,8 @@ overrides.light_chainsword_active = {
 			1,
 			"power_level_multiplier",
 			{
-				0.5,
-				1.5,
+				0.4,
+				1.2,
 			},
 		},
 		{
@@ -889,12 +927,6 @@ overrides.light_chainsword_active = {
 				0.2,
 				0.6,
 			},
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
 		},
 		{
 			"cleave_distribution",
@@ -963,8 +995,8 @@ overrides.light_chainsword_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				75,
 				150,
+				300,
 			},
 		},
 		{
@@ -999,7 +1031,7 @@ overrides.light_chainsword_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			chainsword_sawing,
+			chainsword_sawing_tick,
 		},
 		{
 			"weapon_special",
@@ -1064,8 +1096,8 @@ overrides.light_chainsword_sticky_m2 = {
 			"power_distribution",
 			"attack",
 			{
-				100,
 				200,
+				400,
 			},
 		},
 		{
@@ -1100,7 +1132,7 @@ overrides.light_chainsword_sticky_m2 = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			chainsword_sawing,
+			chainsword_sawing_tick,
 		},
 		{
 			"weapon_special",
@@ -1193,7 +1225,7 @@ overrides.light_chainsword_sticky_last = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",
@@ -1286,7 +1318,7 @@ overrides.light_chainsword_sticky_last_m2 = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",
@@ -1302,8 +1334,9 @@ damage_templates.default_light_chainsword_stab = {
 	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 300,
-	stagger_category = "killshot",
+	stagger_category = "uppercut",
 	sticky_attack = false,
+	weakspot_stagger_resistance_modifier = 0.5,
 	crit_mod = chain_sword_crit_mod,
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.sawing,
@@ -1397,20 +1430,10 @@ overrides.light_chainsword_stab_active = {
 		{
 			"targets",
 			1,
-			"power_distribution",
-			"attack",
-			{
-				30,
-				40,
-			},
-		},
-		{
-			"targets",
-			1,
 			"power_level_multiplier",
 			{
-				0.5,
-				1.5,
+				0.4,
+				1.2,
 			},
 		},
 		{
@@ -1489,8 +1512,8 @@ overrides.default_light_chainsword_stab_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				75,
 				150,
+				300,
 			},
 		},
 		{
@@ -1525,7 +1548,7 @@ overrides.default_light_chainsword_stab_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -1614,7 +1637,7 @@ overrides.default_light_chainsword_stab_sticky_last = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",

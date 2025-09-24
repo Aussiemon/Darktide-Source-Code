@@ -3,6 +3,7 @@
 local HudElementMissionObjective = class("HudElementMissionObjective")
 
 HudElementMissionObjective.init = function (self, objective)
+	self._objective = objective
 	self._objective_name = objective:name()
 	self._state = "default"
 	self._header = ""
@@ -40,7 +41,9 @@ HudElementMissionObjective.destroy = function (self)
 	self:_destroy_markers()
 end
 
-HudElementMissionObjective.is_synchronized_with_objective = function (self, objective)
+HudElementMissionObjective.is_synchronized_with_objective = function (self)
+	local objective = self._objective
+
 	if self._stage ~= objective:stage() then
 		return false
 	end
@@ -106,7 +109,9 @@ HudElementMissionObjective.is_synchronized_with_objective = function (self, obje
 	return true
 end
 
-HudElementMissionObjective.synchronize_objective = function (self, objective)
+HudElementMissionObjective.synchronize_objective = function (self)
+	local objective = self._objective
+
 	self._header = objective:header()
 	self._description = objective:description()
 	self._stage = objective:stage()
@@ -207,6 +212,10 @@ end
 
 HudElementMissionObjective.sort_order = function (self)
 	return self._sort_order
+end
+
+HudElementMissionObjective.objective = function (self)
+	return self._objective
 end
 
 HudElementMissionObjective.objective_name = function (self)

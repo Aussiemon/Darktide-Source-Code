@@ -1,8 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/decoder_device/decoder_device_extension.lua
 
-local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local DecoderDeviceExtension = class("DecoderDeviceExtension")
-local minigame_states = MinigameSettings.states
 local VISIBLE_STATES = table.enum("none", "ghost", "main")
 local UNIT_MARKER_STATES = table.enum("shown", "hidden")
 
@@ -77,10 +75,9 @@ DecoderDeviceExtension.update = function (self, unit, dt, t)
 		local minigame_extension = self._minigame_extension
 
 		if minigame_extension then
-			local current_minigame_state = minigame_extension:current_state()
+			local minigame = self._minigame_extension:minigame()
 
-			if current_minigame_state == minigame_states.completed then
-				minigame_extension:stop()
+			if minigame:is_completed() then
 				self._decoder_synchronizer_extension:unblock_decoding_progression()
 			end
 		end
@@ -229,12 +226,10 @@ DecoderDeviceExtension.finished = function (self)
 
 		local minigame_extension = self._minigame_extension
 
-		if minigame_extension then
-			local current_minigame_state = minigame_extension:current_state()
+		if minigame_extension and minigame_extension:is_active() then
+			local minigame = minigame_extension:minigame()
 
-			if current_minigame_state ~= minigame_states.none then
-				minigame_extension:stop()
-			end
+			minigame:complete()
 		end
 	end
 
@@ -270,9 +265,7 @@ DecoderDeviceExtension.is_minigame_active = function (self)
 		return false
 	end
 
-	local current_minigame_state = minigame_extension:current_state()
-
-	return current_minigame_state == minigame_states.active
+	return minigame_extension:is_active()
 end
 
 DecoderDeviceExtension.is_minigame_progressing = function (self)
@@ -289,18 +282,18 @@ end
 
 DecoderDeviceExtension.wait_for_setup = function (self)
 	local minigame_extension = self._minigame_extension
-	local current_minigame_state = minigame_extension and minigame_extension:current_state() or minigame_states.none
+	local minigame_is_active = minigame_extension and minigame_extension:is_active()
 	local decode_interaction = not self._started_decode and not self._is_placed
 
-	return self._unit_is_enabled and decode_interaction and current_minigame_state ~= minigame_states.active
+	return self._unit_is_enabled and decode_interaction and not minigame_is_active
 end
 
 DecoderDeviceExtension.wait_for_restart = function (self)
 	local minigame_extension = self._minigame_extension
-	local current_minigame_state = minigame_extension and minigame_extension:current_state() or minigame_states.none
+	local minigame_is_active = minigame_extension and minigame_extension:is_active()
 	local decode_interaction = self._is_placed and self._started_decode and self._decoding_interrupted
 
-	return self._unit_is_enabled and decode_interaction and current_minigame_state ~= minigame_states.active
+	return self._unit_is_enabled and decode_interaction and not minigame_is_active
 end
 
 DecoderDeviceExtension._play_anim = function (self, anim_event)

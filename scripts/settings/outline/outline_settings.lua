@@ -174,8 +174,6 @@ templates.PlayerUnitOutlineExtension = {
 			"",
 		},
 		visibility_check = function (unit)
-			do return false end
-
 			if not HEALTH_ALIVE[unit] then
 				return false
 			end
@@ -190,8 +188,6 @@ templates.PlayerUnitOutlineExtension = {
 			"player_outline_knocked_down_reversed_depth",
 		},
 		visibility_check = function (unit)
-			do return false end
-
 			if not HEALTH_ALIVE[unit] then
 				return false
 			end

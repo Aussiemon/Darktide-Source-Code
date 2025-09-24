@@ -28,6 +28,10 @@ end
 LocalLoader.QUERY_TIMEOUT_SECONDS = 60
 LocalLoader.QUERY_POLL_INTERVAL_SECONDS = 0.1
 
+if VIRTUAL_MACHINE then
+	LocalLoader.QUERY_TIMEOUT_SECONDS = 120
+end
+
 LocalLoader._wait_for_query = function (query_handle, timeout_s, start_time)
 	start_time = start_time or Managers and Managers.time:time("main") or 0
 
@@ -38,7 +42,7 @@ LocalLoader._wait_for_query = function (query_handle, timeout_s, start_time)
 
 		if timeout_s < now - start_time then
 			Log.error("LocalLoader", "Timed out waiting for RMD data from engine. Query deadlocked?")
-			Application.crash("deadlock")
+			error("Timed out waiting for RMD data from engine. Query deadlocked?")
 		end
 
 		return Promise.delay(LocalLoader.QUERY_POLL_INTERVAL_SECONDS):next(function ()

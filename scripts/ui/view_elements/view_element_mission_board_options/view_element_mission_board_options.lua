@@ -264,7 +264,7 @@ end
 
 ViewElemenMissionBoardOptions._create_offscreen_renderer = function (self)
 	local view_name = self.view_name
-	local world_layer = 123
+	local world_layer = 123 + self._draw_layer
 	local world_name = self.__class_name .. "_ui_mission_board_options_world"
 	local world = Managers.ui:create_world(world_name, world_layer, nil, view_name)
 	local viewport_name = "mission_board_options_viewport"
@@ -287,7 +287,7 @@ ViewElemenMissionBoardOptions._create_default_gui = function (self)
 	local ui_manager = Managers.ui
 	local class_name = self.__class_name
 	local timer_name = "ui"
-	local world_layer = 122
+	local world_layer = 122 + self._draw_layer
 	local world_name = class_name .. "_ui_default_world"
 	local view_name = self.view_name
 
@@ -309,7 +309,7 @@ ViewElemenMissionBoardOptions._create_background_gui = function (self)
 	local ui_manager = Managers.ui
 	local class_name = self.__class_name
 	local timer_name = "ui"
-	local world_layer = 121
+	local world_layer = 121 + self._draw_layer
 	local world_name = class_name .. "_ui_background_world"
 	local view_name = self.view_name
 

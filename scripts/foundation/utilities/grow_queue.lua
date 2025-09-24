@@ -74,4 +74,10 @@ GrowQueue.print_items = function (self, s)
 	print(s)
 end
 
+GrowQueue.clear = function (self)
+	self.first, self.last = 1, 0
+
+	table.clear(self.queue)
+end
+
 return GrowQueue

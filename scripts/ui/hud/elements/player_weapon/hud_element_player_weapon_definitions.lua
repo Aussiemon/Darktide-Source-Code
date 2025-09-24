@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_definitions.lua
 
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
 local HudElementPlayerWeaponSettings = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")

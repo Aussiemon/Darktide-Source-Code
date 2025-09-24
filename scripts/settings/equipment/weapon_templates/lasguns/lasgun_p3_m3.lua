@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/lasguns/lasgun_p3_m3.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -16,19 +15,18 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeLasgunP3 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_lasgun_p3")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -97,7 +95,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -621,7 +619,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.lasgun_elysian
 weapon_template.spread_template = "hip_lasgun_p3_m1"
 weapon_template.recoil_template = "hip_lasgun_p3_m1_recoil"
-weapon_template.suppression_template = "default_autogun_assault"
+weapon_template.suppression_template = "lasgun_p3_m1_suppression_assault"
 weapon_template.look_delta_template = "lasgun_p3_rifle"
 weapon_template.semi_auto_chain_factor = 2
 weapon_template.conditional_state_to_action_input = {
@@ -661,7 +659,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_lasgun_killshot",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "lasgun_p1_m1_suppression_killshot",
 	sway_template = "lasgun_p3_m1_sway",
 	toughness_template = "killshot_zoomed",
 	crosshair = {

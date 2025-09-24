@@ -4,18 +4,10 @@ local PlayerCharacterStateHubCompanionInteraction = class("PlayerCharacterStateH
 local ABORT_ON_MOVEMENT = true
 local ABORT_ON_MOVEMENT_DELAY = 0.5
 
-PlayerCharacterStateHubCompanionInteraction.init = function (self, character_state_init_context, ...)
-	PlayerCharacterStateHubCompanionInteraction.super.init(self, character_state_init_context, ...)
-end
-
 PlayerCharacterStateHubCompanionInteraction.on_enter = function (self, unit, dt, t, previous_state, params)
 	PlayerCharacterStateHubCompanionInteraction.super.on_enter(self, unit, dt, t, previous_state, params)
 
 	self._unit_id = Managers.state.unit_spawner:game_object_id(unit)
-end
-
-PlayerCharacterStateHubCompanionInteraction.on_exit = function (self, unit, t, next_state)
-	PlayerCharacterStateHubCompanionInteraction.super.on_exit(self, unit, t, next_state)
 end
 
 PlayerCharacterStateHubCompanionInteraction.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)

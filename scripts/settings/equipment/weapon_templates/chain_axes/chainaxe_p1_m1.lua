@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_axes/chainaxe_p1_m1.lua
 
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainSpeedTemplates = require("scripts/settings/equipment/chain_speed_templates")
@@ -12,27 +11,22 @@ local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigge
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeChainaxeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainaxe_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
@@ -63,46 +57,6 @@ local _force_abort_breed_tags_special_active = {
 	"special",
 	"monster",
 	"captain",
-}
-local hit_stickyness_settings_heavy = {
-	always_sticky = true,
-	disable_vertical_force_view = true,
-	disallow_chain_actions = true,
-	duration = 0.3,
-	sensitivity_modifier = 0.7,
-	start_anim_event = "attack_hit_stick",
-	stop_anim_event = "yank_out",
-	damage = {
-		instances = 2,
-		damage_profile = DamageProfileTemplates.heavy_chainaxe_sticky,
-		damage_type = damage_types.sawing_stuck,
-		last_damage_profile = DamageProfileTemplates.heavy_chainaxe_sticky_last_quick,
-	},
-	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
-	disallowed_armor_types = melee_sticky_heavy_attack_disallowed_armor_types,
-	movement_curve = {
-		{
-			modifier = 0.3,
-			t = 0.5,
-		},
-		{
-			modifier = 0.45,
-			t = 0.55,
-		},
-		{
-			modifier = 0.5,
-			t = 0.6,
-		},
-		{
-			modifier = 0.6,
-			t = 1,
-		},
-		{
-			modifier = 0.5,
-			t = 1.3,
-		},
-		start_modifier = 0.1,
-	},
 }
 local hit_stickyness_settings_heavy_special = {
 	disallow_chain_actions = true,
@@ -415,12 +369,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_left_down",
-			anchor_point_offset = {
-				-0.15,
-				0,
-				-0.44,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_left_down",
+				anchor_point_offset = {
+					-0.15,
+					0,
+					-0.44,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainaxe_smiter,
@@ -514,8 +470,8 @@ weapon_template.actions = {
 		anim_event = "attack_left_down",
 		anim_event_3p = "attack_swing_left_diagonal",
 		attack_direction_override = "push",
-		damage_window_end = 0.4,
-		damage_window_start = 0.3,
+		damage_window_end = 0.41,
+		damage_window_start = 0.29,
 		first_person_hit_anim = "hit_left_shake",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "hit_stop",
@@ -605,12 +561,14 @@ weapon_template.actions = {
 		hit_stickyness_settings = hit_stickyness_settings_light,
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_left_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.35,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_left_down",
+				anchor_point_offset = {
+					0.1,
+					0,
+					-0.35,
+				},
 			},
 		},
 		damage_profile_on_abort = DamageProfileTemplates.default_light_chainaxe,
@@ -632,8 +590,8 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_left_diagonal_down",
 		anim_event_3p = "attack_swing_heavy_down_left",
-		damage_window_end = 0.44,
-		damage_window_start = 0.22,
+		damage_window_end = 0.39,
+		damage_window_start = 0.25,
 		first_person_hit_anim = "hit_left_shake",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "hit_stop",
@@ -697,12 +655,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_left_diagonal_down",
-			anchor_point_offset = {
-				-0.15,
-				0,
-				-0.44,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_left_diagonal_down",
+				anchor_point_offset = {
+					-0.15,
+					0,
+					-0.44,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainaxe,
@@ -881,12 +841,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_right_down",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_right_down",
+				anchor_point_offset = {
+					0.05,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainaxe,
@@ -904,11 +866,12 @@ weapon_template.actions = {
 		},
 	},
 	action_right_heavy = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_right_diagonal_down",
 		anim_event_3p = "attack_swing_heavy_down_right",
-		damage_window_end = 0.35,
-		damage_window_start = 0.2,
+		damage_window_end = 0.38,
+		damage_window_start = 0.25,
 		first_person_hit_anim = "hit_left_shake",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "hit_stop",
@@ -980,12 +943,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.075,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainaxe,
@@ -1003,6 +968,7 @@ weapon_template.actions = {
 		},
 	},
 	action_melee_start_left_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_charge_left_diagonal_down",
 		anim_event_3p = "attack_swing_charge_left",
@@ -1162,12 +1128,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_left_diagonal",
-			anchor_point_offset = {
-				0,
-				0.2,
-				-0.4,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_left_diagonal",
+				anchor_point_offset = {
+					0,
+					0.2,
+					-0.4,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainaxe,
@@ -1185,6 +1153,7 @@ weapon_template.actions = {
 		},
 	},
 	action_melee_start_right_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_charge_right_diagonal_down",
 		anim_event_3p = "attack_swing_charge_right",
@@ -1374,12 +1343,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_right_down",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/attack_right_down",
+				anchor_point_offset = {
+					0.05,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainaxe,
@@ -1397,11 +1368,12 @@ weapon_template.actions = {
 		},
 	},
 	action_right_heavy_2 = {
+		allowed_during_sprint = true,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_right",
 		anim_event_3p = "attack_swing_heavy_right",
-		damage_window_end = 0.35,
-		damage_window_start = 0.2,
+		damage_window_end = 0.4,
+		damage_window_start = 0.25,
 		first_person_hit_anim = "hit_left_shake",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "hit_stop",
@@ -1410,6 +1382,7 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		range_mod = 1.25,
 		total_time = 1,
+		uninterruptible = true,
 		weapon_handling_template = "time_scale_1",
 		action_movement_curve = {
 			{
@@ -1465,12 +1438,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainaxe,
@@ -1636,12 +1611,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right",
-			anchor_point_offset = {
-				0.2,
-				0,
-				-0.125,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/chain_axe/heavy_attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.225,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_chainaxe_pushfollowup_tank,
@@ -1767,6 +1744,7 @@ weapon_template.weapon_special_tweak_data = {
 	keep_active_on_sprint = true,
 	keep_active_on_stun = true,
 	keep_active_on_vault = true,
+	keep_buff_ability_active_on_special = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {
@@ -1876,6 +1854,9 @@ weapon_template.base_stats = {
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_dps_stat,
 			},
+			action_heavy_special = {
+				damage_trait_templates.default_melee_dps_stat,
+			},
 		},
 	},
 	chainaxe_armor_pierce_stat = {
@@ -1928,6 +1909,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_armor_pierce_stat,
 			},
 			action_right_light_pushfollow = {
+				damage_trait_templates.default_armor_pierce_stat,
+			},
+			action_heavy_special = {
 				damage_trait_templates.default_armor_pierce_stat,
 			},
 		},
@@ -2145,6 +2129,16 @@ weapon_template.base_stats = {
 						damage_trait_templates.default_melee_dps_stat,
 					},
 					light_chainaxe_active_sticky_last = {
+						damage_trait_templates.default_melee_dps_stat,
+					},
+				},
+			},
+			action_heavy_special = {
+				overrides = {
+					heavy_chainaxe_active_sticky = {
+						damage_trait_templates.default_melee_dps_stat,
+					},
+					heavy_chainaxe_active_sticky_last = {
 						damage_trait_templates.default_melee_dps_stat,
 					},
 				},

@@ -37,12 +37,6 @@ spread_templates.default_rippergun_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -115,12 +109,6 @@ spread_templates.default_rippergun_braced = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -209,12 +197,6 @@ spread_templates.rippergun_p1_m2_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -287,12 +269,6 @@ spread_templates.rippergun_p1_m2_braced = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -381,12 +357,6 @@ spread_templates.rippergun_p1_m3_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,

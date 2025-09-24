@@ -30,6 +30,10 @@ BtChaosHoundApproachAction.enter = function (self, unit, breed, blackboard, scra
 
 	navigation_extension:set_enabled(true, speed)
 
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed_name = unit_data_extension:breed().name
+
+	scratchpad.breed_name = breed_name
 	scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
 
 	locomotion_extension:set_rotation_speed(action_data.rotation_speed)
@@ -43,6 +47,20 @@ BtChaosHoundApproachAction.enter = function (self, unit, breed, blackboard, scra
 	scratchpad.check_leap_t = 0
 	scratchpad.num_failed_leap_checks = 0
 	scratchpad.trigger_player_alert_vo_t = 0
+
+	local vo_event = action_data.vo_event
+
+	if vo_event then
+		local summon_component = Blackboard.write_component(blackboard, "summon_unit")
+		local owner_unit = summon_component.owner
+
+		if HEALTH_ALIVE[owner_unit] then
+			local owner_unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+			local owner_breed = owner_unit_data_extension:breed()
+
+			Vo.enemy_generic_vo_event(owner_unit, vo_event, owner_breed.name)
+		end
+	end
 
 	MinionMovement.init_find_ranged_position(scratchpad, action_data)
 end
@@ -370,8 +388,16 @@ BtChaosHoundApproachAction._ray_cast = function (self, physics_world, from, to)
 	return result, hit_position, hit_distance, normal
 end
 
+local cooldown_by_breed = {
+	chaos_armored_hound = "chaos_armored_hound_pounce_fail",
+	chaos_hound = "chaos_hound_pounce_fail",
+	chaos_hound_mutator = "chaos_hound_pounce_fail",
+}
+
 BtChaosHoundApproachAction._set_pounce_cooldown = function (self, unit, breed, scratchpad, target_unit, blackboard, t)
-	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce_fail)
+	local breed_name = scratchpad.breed_name
+	local cooldown_settings = cooldown_by_breed[breed_name]
+	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns[cooldown_settings])
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
 
 	pounce_component.pounce_cooldown = t + cooldown

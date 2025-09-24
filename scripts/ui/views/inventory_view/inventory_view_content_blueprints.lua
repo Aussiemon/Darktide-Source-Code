@@ -1283,7 +1283,7 @@ local blueprints = {
 					end
 				end
 
-				local updated_mark = previous_item and previous_item.gear_id == equipped_item.gear_id and previous_item.name ~= equipped_item.name
+				local updated_mark = previous_item and equipped_item and previous_item.gear_id == equipped_item.gear_id and previous_item.name ~= equipped_item.name
 
 				if updated_mark then
 					content.item = equipped_item

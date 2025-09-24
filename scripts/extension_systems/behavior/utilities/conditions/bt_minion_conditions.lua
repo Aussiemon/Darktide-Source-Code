@@ -1,8 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/behavior/utilities/conditions/bt_minion_conditions.lua
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
-local NavQueries = require("scripts/utilities/nav_queries")
-local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 local conditions = {}
 
 conditions.has_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -112,6 +110,15 @@ conditions.should_switch_weapon = function (unit, blackboard, scratchpad, condit
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
 	local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+	local stim_component = blackboard.stim
+
+	if stim_component then
+		local currently_using_stim = stim_component.currently_using_stim
+
+		if currently_using_stim then
+			return false
+		end
+	end
 
 	if scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name then
 		return true
@@ -122,6 +129,23 @@ conditions.is_exiting_spawner = function (unit, blackboard, scratchpad, conditio
 	local spawn_component = blackboard.spawn
 
 	return spawn_component.is_exiting_spawner
+end
+
+conditions.minion_can_use_special_action = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local has_line_of_sight = perception_component.has_line_of_sight
+	local stim_component = blackboard.stim
+	local can_use_stim = stim_component.can_use_stim
+	local t_til_use = stim_component.t_til_use
+	local t = Managers.time:time("gameplay")
+	local behavior_component = blackboard.behavior
+	local combat_range = behavior_component.combat_range
+
+	if has_line_of_sight and can_use_stim and t_til_use < t and (combat_range == "far" or combat_range == "close" or combat_range == "melee") then
+		return true
+	else
+		return false
+	end
 end
 
 conditions.at_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -517,6 +541,10 @@ conditions.netgunner_hit_target = function (unit, blackboard, scratchpad, condit
 	local hit_target = behavior_component.hit_target
 
 	return hit_target
+end
+
+conditions.netgunner_hit_target_with_alt_conditions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	return false
 end
 
 conditions.daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -1566,9 +1594,9 @@ conditions.should_move_close_to_owner = function (unit, blackboard, scratchpad, 
 		local companion_has_position_around_owner = false
 
 		if is_inside_cone then
-			local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
+			local CompanionFollow = require("scripts/utilities/companion_follow")
 
-			companion_has_position_around_owner = CompanionFollowUtility.companion_has_position_around_owner(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+			companion_has_position_around_owner = CompanionFollow.companion_has_position_around_owner(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 		end
 
 		return companion_has_position_around_owner
@@ -1578,8 +1606,8 @@ conditions.should_move_close_to_owner = function (unit, blackboard, scratchpad, 
 end
 
 conditions.companion_has_move_position = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
-	local companion_has_found_follow_position = CompanionFollowUtility.companion_has_follow_position(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local CompanionFollow = require("scripts/utilities/companion_follow")
+	local companion_has_found_follow_position = CompanionFollow.companion_has_follow_position(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
 	if not companion_has_found_follow_position and is_running then
 		local behavior_component = blackboard.behavior
@@ -1663,11 +1691,9 @@ conditions.companion_is_aggroed = function (unit, blackboard, scratchpad, condit
 
 	local companion_whistle_target
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-	local tag_target, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)
-	local tag_template = tag and tag:template()
-	local tag_type = tag_template and tag_template.marker_type
+	local tag_target, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
 
-	if tag_target and tag_type == "unit_threat_adamant" then
+	if tag_target then
 		local unit_data_extension = ScriptUnit.has_extension(tag_target, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()
 		local daemonhost = breed and breed.tags.witch

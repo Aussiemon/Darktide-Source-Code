@@ -500,8 +500,12 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 	local specific_lines = MissionIntroViewSettings.journey_briefing_lines[circumstance_name]
 	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed, nil, specific_lines)
 
-	self._vo_unit = vo_unit
-	self._last_vo_event = events[#events]
+	if vo_unit then
+		self._vo_unit = vo_unit
+		self._last_vo_event = events[#events]
+	else
+		self.mission_briefing_done = true
+	end
 end
 
 MissionIntroView._set_hologram_briefing_material = function (self, mission_name)

@@ -1,26 +1,21 @@
 ﻿-- chunkname: @scripts/settings/talent/talent_settings_psyker.lua
 
 local talent_settings = {
-	shared = {
-		venting = {
-			vent_to_toughness = 0.5,
-		},
-	},
-	overcharge_stance = {
-		base_damage = 0.1,
-		cooloff_duration = 1.5,
-		crit_chance = 0.2,
-		damage_per_stack = 0.01,
-		finesse_damage_per_stack = 0.01,
-		max_stacks = 30,
-		post_stance_duration = 10,
-		second_per_weakspot = 1,
-		venting = 0.5,
-	},
-	mark_passive = {
-		weakspot_stacks = 3,
-	},
 	psyker = {
+		overcharge_stance = {
+			base_damage = 0.1,
+			cooloff_duration = 1.5,
+			crit_chance = 0.2,
+			damage_per_stack = 0.01,
+			finesse_damage_per_stack = 0.01,
+			max_stacks = 30,
+			post_stance_duration = 10,
+			second_per_weakspot = 1,
+			venting = 0.5,
+		},
+		mark_passive = {
+			weakspot_stacks = 3,
+		},
 		throwing_knives = {
 			charges_restored = 5,
 		},
@@ -37,12 +32,30 @@ local talent_settings = {
 			stacks = 1,
 		},
 		melee_weaving = {
-			duration = 5,
+			duration = 4,
 			vent_percentage = 0.1,
-			warp_generation = 0.75,
+			warp_generation = 0.8,
+		},
+		psyker_cooldown = {
+			cooldown = 1,
+			duration = 3,
+		},
+		coherency_aura_size_increase = {
+			radius = 0.75,
 		},
 		melee_attack_speed = {
 			attack_speed = 0.1,
+		},
+		melee_toughness = {
+			duration = 3,
+			instant_toughness = 0.025,
+			toughness = 0.15,
+		},
+		psyker_crits_regen_toughness_movement_speed = {
+			duration = 4,
+			max_stacks = 3,
+			movement_speed = 0.05,
+			toughness = 0.1,
 		},
 		glass_cannon = {
 			toughness_replenish_multiplier = 0.7,
@@ -50,7 +63,7 @@ local talent_settings = {
 		},
 		warp_attacks_rending = {
 			threshold = 0.75,
-			warp_rending = 0.1,
+			warp_rending = 0.2,
 		},
 		ranged_shots_soulblaze = {
 			proc_chance = 1,
@@ -76,6 +89,39 @@ local talent_settings = {
 		psyker_force_staff_wield_speed = {
 			max = 0.5,
 			min = 0,
+		},
+		psyker_force_staff_both_bonus = {
+			duration = 5,
+			primary_damage = 0.2,
+			secondary_damage = 0.1,
+			secondary_duration = 5,
+		},
+		psyker_damage_to_peril_conversion = {
+			percent = 0.25,
+		},
+		psyker_damage_resistance_stun_immunity = {
+			dr = 0.9,
+			duration = 4,
+		},
+		psyker_damage_vs_ogryns_and_monsters = {
+			damage_vs_ogryn_and_monsters = 0.2,
+		},
+		psyker_stat_mix = {
+			peril_decay = 0.2,
+			stamina = 2,
+			toughness_replenish_modifier = 0.25,
+		},
+		psyker_alternative_peril_explosion = {
+			overload_damage = 1,
+			overload_radius = 0.25,
+		},
+		psyker_discharge_damage_debuff = {
+			damage_reduction = -0.1,
+			damage_taken = 1.1,
+			duration = 8,
+		},
+		psyker_combat_ability_stance = {
+			toughness = 0.025,
 		},
 	},
 	psyker_1 = {
@@ -107,13 +153,7 @@ local talent_settings = {
 		combat_ability = {
 			cooldown = 30,
 			max_charges = 1,
-			max_radius = 8.75,
-			min_radius = 5,
-			override_max_radius = 12.5,
-			override_min_radius = 5,
-			override_radius = 5,
 			power_level = 500,
-			radius = 5,
 			shout_dot = 0.9,
 			shout_range = 30,
 			warpcharge_vent_base = 0.1,
@@ -150,7 +190,7 @@ local talent_settings = {
 			percent_toughness = 0.075,
 		},
 		toughness_3 = {
-			multiplier = 0.5,
+			multiplier = 0.4,
 		},
 		toughness_4 = {
 			multiplier = 0.25,
@@ -184,6 +224,7 @@ local talent_settings = {
 			min_toughness_damage_multiplier = 0.9,
 		},
 		defensive_3 = {
+			reload_decrease_movement_reduction = 0,
 			vent_warp_charge_decrease_movement_reduction = 0,
 		},
 		offensive_2_1 = {
@@ -195,8 +236,8 @@ local talent_settings = {
 			stacks_to_share = 4,
 		},
 		offensive_2_3 = {
-			cooldown = 15,
-			smite_chance = 0.1,
+			cooldown = 12,
+			smite_chance = 1,
 		},
 		combat_ability_1 = {
 			cooldown_reduction_percent = 0.075,
@@ -213,7 +254,8 @@ local talent_settings = {
 	},
 	psyker_3 = {
 		combat_ability = {
-			cooldown = 40,
+			cooldown = 45,
+			cooldown_reduced = 35,
 			damage_cooldown = 0.33,
 			damage_per_hit = 1,
 			duration = 17.5,

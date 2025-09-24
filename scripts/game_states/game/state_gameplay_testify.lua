@@ -10,14 +10,8 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedExplosive = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_explosive")
-local WeaponTraitsRangedHighFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
-local WeaponTraitsRangedOverheat = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
-local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
+local WeaponPerksMelee = require("scripts/settings/equipment/weapon_traits/weapon_perks_melee")
+local WeaponPerksRanged = require("scripts/settings/equipment/weapon_traits/weapon_perks_ranged")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local gibbing_power = GibbingSettings.gibbing_power
 local level_trigger_event = Level.trigger_event
@@ -201,8 +195,16 @@ local StateGameplayTestify = {
 
 		spawner_manager:mark_for_deletion(unit)
 	end,
+	delete_units = function (_, _, units)
+		local spawner_manager = Managers.state.unit_spawner
+
+		for _, unit in pairs(units) do
+			if Unit.alive(unit) then
+				spawner_manager:mark_for_deletion(unit)
+			end
+		end
+	end,
 	fast_forward_end_of_round = function (_, _)
-		local mission = Managers.state.mission:mission_name()
 		local game_mode_name = Managers.state.game_mode:game_mode_name()
 		local is_in_hub = game_mode_name == "hub"
 
@@ -222,37 +224,13 @@ local StateGameplayTestify = {
 			warp_charge_traits = {},
 			explosive_traits = {},
 		}
-		local melee_common_traits = table.ukeys(WeaponTraitsMeleeCommon)
+		local melee_perks = table.ukeys(WeaponPerksMelee)
 
-		table.append(traits.melee_traits, melee_common_traits)
+		table.append(traits.melee_traits, melee_perks)
 
-		local activated_traits = table.ukeys(WeaponTraitsMeleeActivated)
+		local ranged_perks = table.ukeys(WeaponPerksRanged)
 
-		table.append(traits.activated_traits, activated_traits)
-
-		local ranged_common_traits = table.ukeys(WeaponTraitsRangedCommon)
-
-		table.append(traits.ranged_traits, ranged_common_traits)
-
-		local ranged_high_fire_rate_traits = table.ukeys(WeaponTraitsRangedHighFireRate)
-
-		table.append(traits.ranged_traits, ranged_high_fire_rate_traits)
-
-		local aimed_traits = table.ukeys(WeaponTraitsRangedAimed)
-
-		table.append(traits.aimed_traits, aimed_traits)
-
-		local overheat_traits = table.ukeys(WeaponTraitsRangedOverheat)
-
-		table.append(traits.overheat_traits, overheat_traits)
-
-		local warp_charge_traits = table.ukeys(WeaponTraitsRangedWarpCharge)
-
-		table.append(traits.warp_charge_traits, warp_charge_traits)
-
-		local explosive_traits = table.ukeys(WeaponTraitsRangedExplosive)
-
-		table.append(traits.explosive_traits, explosive_traits)
+		table.append(traits.ranged_traits, ranged_perks)
 
 		return traits
 	end,
@@ -482,11 +460,35 @@ local StateGameplayTestify = {
 
 		return unit
 	end,
+	spawn_units = function (_, _, unit_names, position)
+		local spawner_manager = Managers.state.unit_spawner
+		local spawned_units = {}
+
+		for i, unit_name in pairs(unit_names) do
+			spawned_units[i] = spawner_manager:spawn_unit(unit_name, position:unbox())
+		end
+
+		return spawned_units
+	end,
 	spawn_and_destroy_unit = function (_, _, unit_name, position)
 		local world = Managers.world:world("level_world")
 		local unit = World.spawn_unit_ex(world, unit_name, nil, position:unbox())
 
 		World.destroy_unit(world, unit)
+	end,
+	spawn_and_destroy_units = function (_, _, unit_names, position)
+		local world = Managers.world:world("level_world")
+		local spawned_units = {}
+
+		for i, unit_name in pairs(unit_names) do
+			spawned_units[i] = World.spawn_unit_ex(world, unit_name, nil, position:unbox())
+		end
+
+		for _, spawned_unit in pairs(spawned_units) do
+			if Unit.alive(spawned_unit) then
+				World.destroy_unit(world, spawned_unit)
+			end
+		end
 	end,
 	start_measuring_performance = function (state_gameplay, _, values_to_measure)
 		state_gameplay:init_performance_reporter(values_to_measure)

@@ -48,14 +48,13 @@ end
 
 _add_sfx_names_from_explosion_templates(ExplosionTemplates)
 
-local DEFAULT_EXTERNAL_PROPERTIES = {}
-
 PlayerCharacterSounds.resolve_sound = function (sound_alias, properties, optional_external_properties)
 	local settings = PlayerCharacterSounds.events[sound_alias]
 
 	if settings then
 		local events = settings.events
 		local switches = settings.switch
+		local default_switch_properties = settings.default_switch_properties
 		local no_default = settings.no_default
 		local has_husk_events = not not settings.has_husk_events
 		local num_switches = #switches
@@ -66,9 +65,9 @@ PlayerCharacterSounds.resolve_sound = function (sound_alias, properties, optiona
 			return true, event, has_husk_events
 		end
 
-		for i = 1, num_switches do
-			local switch_name = switches[i]
-			local switch_property = properties[switch_name] or (optional_external_properties or DEFAULT_EXTERNAL_PROPERTIES)[switch_name]
+		for ii = 1, num_switches do
+			local switch_name = switches[ii]
+			local switch_property = properties[switch_name] or optional_external_properties and optional_external_properties[switch_name] or default_switch_properties and default_switch_properties[switch_name]
 
 			if switch_property and events[switch_property] then
 				events = events[switch_property]
@@ -120,8 +119,8 @@ PlayerCharacterSounds.find_relevant_events = function (profile_properties)
 
 			sound_alias_relevant_events_temp[resource_name] = true
 		else
-			for i = 1, num_switches do
-				local switch_name = switches[i]
+			for ii = 1, num_switches do
+				local switch_name = switches[ii]
 				local switch_property = profile_properties[switch_name]
 
 				if switch_property then

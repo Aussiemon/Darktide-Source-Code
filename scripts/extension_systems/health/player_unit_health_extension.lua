@@ -7,6 +7,7 @@ local HealthExtensionInterface = require("scripts/extension_systems/health/healt
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
+local NETWORK_CONSTANT_HEALTH_SMALL = NetworkConstants.health_small
 local REPORT_TIME = 1
 local PlayerUnitHealthExtension = class("PlayerUnitHealthExtension")
 
@@ -174,12 +175,13 @@ end
 
 PlayerUnitHealthExtension.max_health = function (self, force_knocked_down_health)
 	local stat_buffs = self._buff_extension:stat_buffs()
-	local health
+	local health, max_health_cap = nil, math.huge
 
 	if self._is_knocked_down or force_knocked_down_health then
 		local knocked_down_health_modifier = stat_buffs.knocked_down_health_modifier or 1
 
 		health = self._knocked_down_health * knocked_down_health_modifier
+		max_health_cap = NETWORK_CONSTANT_HEALTH_SMALL.max
 	else
 		health = self._health
 	end
@@ -188,6 +190,7 @@ PlayerUnitHealthExtension.max_health = function (self, force_knocked_down_health
 	local max_health_modifier = stat_buffs.max_health_modifier
 
 	health = health * (max_health_multiplier * max_health_modifier)
+	health = math.min(health, max_health_cap)
 	health = math.ceil(health)
 
 	return health
@@ -211,14 +214,34 @@ end
 PlayerUnitHealthExtension.add_heal = function (self, heal_amount, heal_type)
 	local damage_taken = self:damage_taken()
 	local permanent_damage_taken = self:permanent_damage_taken()
-	local actual_heal_amount, new_permanent_damage, new_damage
+	local buff_extension = self._buff_extension
+	local actual_heal_amount
+	local has_prevent_healing_keyword = buff_extension:has_keyword(buff_keywords.prevent_all_healing)
+
+	if has_prevent_healing_keyword then
+		return 0
+	end
+
+	local new_permanent_damage, new_damage
 
 	if DamageSettings.permanent_heal_types[heal_type] then
+		local has_prevent_healing_corruption_keyword = buff_extension:has_keyword(buff_keywords.prevent_healing_corruption)
+
+		if has_prevent_healing_corruption_keyword then
+			return 0
+		end
+
 		actual_heal_amount = math.min(permanent_damage_taken, heal_amount)
 		new_permanent_damage = permanent_damage_taken - actual_heal_amount
 		new_damage = damage_taken
 	else
-		local buffs = self._buff_extension:stat_buffs()
+		local has_prevent_healing_health_keyword = buff_extension:has_keyword(buff_keywords.prevent_healing_health)
+
+		if has_prevent_healing_health_keyword then
+			return 0
+		end
+
+		local buffs = buff_extension:stat_buffs()
 		local healing_buff_modifier = buffs.healing_recieved_modifier or 1
 
 		heal_amount = heal_amount * healing_buff_modifier

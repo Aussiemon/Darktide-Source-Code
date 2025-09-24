@@ -295,10 +295,6 @@ local mission_templates = {
 			short_story_ticker_enabled = false,
 			story_ticker_enabled = false,
 		},
-		narrative_story = {
-			chapter = "s1_twins_mission",
-			story = "s1_twins",
-		},
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},

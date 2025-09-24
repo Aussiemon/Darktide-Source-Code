@@ -2,8 +2,8 @@
 
 local HordePacing = require("scripts/managers/pacing/horde_pacing/horde_pacing")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
-local MonsterPacing = require("scripts/managers/pacing/monster_pacing/monster_pacing")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local MonsterPacing = require("scripts/managers/pacing/monster_pacing/monster_pacing")
 local PacingTemplates = require("scripts/managers/pacing/pacing_templates")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local RoamerPacing = require("scripts/managers/pacing/roamer_pacing/roamer_pacing")
@@ -728,6 +728,10 @@ PacingManager.add_aggroed_minion = function (self, unit)
 			self._low_state_entered_t = t
 			self._first_aggro = nil
 		end
+
+		if self._should_send_aggro_event then
+			Managers.event:trigger("minion_aggroed", unit)
+		end
 	end
 end
 
@@ -956,6 +960,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if specials_monster_spawn_config then
 		self._specials_pacing:set_monster_spawn_config(specials_monster_spawn_config)
+	end
+
+	local require_aggro_event = modify_settings.require_aggro_event
+
+	if require_aggro_event then
+		self._should_send_aggro_event = true
 	end
 
 	local num_monsters_override = modify_settings.num_monsters_override

@@ -209,7 +209,7 @@ end
 
 DialogueSystem.destroy = function (self)
 	if self._is_rule_db_enabled then
-		self._tagquery_loader:unload_files()
+		self._tagquery_loader:destroy()
 		self._tagquery_database:destroy()
 	end
 
@@ -1164,37 +1164,39 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 			wwise_route = self._wwise_routes[wwise_route_key]
 		end
 
-		if sound_event then
-			if rule and (rule.pre_wwise_event or rule.post_wwise_event) then
-				dialogue.dialogue_sequence = self:_create_sequence_events_table(rule.pre_wwise_event, wwise_route, sound_event, rule.post_wwise_event)
-				dialogue.currently_playing_event_id = extension:play_event(dialogue.dialogue_sequence[1])
-				is_sequence = true
-			else
-				local vo_event = {
-					type = "vorbis_external",
-					sound_event = sound_event,
-					wwise_route = wwise_route,
-				}
+		if not sound_event then
+			return
+		end
 
-				dialogue.currently_playing_event_id = extension:play_event(vo_event)
-				is_sequence = false
-			end
+		if rule and (rule.pre_wwise_event or rule.post_wwise_event) then
+			dialogue.dialogue_sequence = self:_create_sequence_events_table(rule.pre_wwise_event, wwise_route, sound_event, rule.post_wwise_event)
+			dialogue.currently_playing_event_id = extension:play_event(dialogue.dialogue_sequence[1])
+			is_sequence = true
+		else
+			local vo_event = {
+				type = "vorbis_external",
+				sound_event = sound_event,
+				wwise_route = wwise_route,
+			}
 
-			local concurrent_wwise_event = rule and rule.concurrent_wwise_event
+			dialogue.currently_playing_event_id = extension:play_event(vo_event)
+			is_sequence = false
+		end
 
-			if concurrent_wwise_event then
-				dialogue.concurrent_wwise_event_id = self:play_wwise_event(extension, concurrent_wwise_event)
-			end
+		local concurrent_wwise_event = rule and rule.concurrent_wwise_event
 
-			local distance_culled_wwise_routes = DialogueSettings.distance_culled_wwise_routes
-			local subtitle_distance = distance_culled_wwise_routes[wwise_route_key]
+		if concurrent_wwise_event then
+			dialogue.concurrent_wwise_event_id = self:play_wwise_event(extension, concurrent_wwise_event)
+		end
 
-			if subtitle_distance then
-				dialogue.subtitle_distance = subtitle_distance
-				dialogue.is_audible = self:is_dialogue_audible(dialogue_actor_unit, dialogue)
-			else
-				dialogue.is_audible = true
-			end
+		local distance_culled_wwise_routes = DialogueSettings.distance_culled_wwise_routes
+		local subtitle_distance = distance_culled_wwise_routes[wwise_route_key]
+
+		if subtitle_distance then
+			dialogue.subtitle_distance = subtitle_distance
+			dialogue.is_audible = self:is_dialogue_audible(dialogue_actor_unit, dialogue)
+		else
+			dialogue.is_audible = true
 		end
 
 		local animation_event = "start_talking"
@@ -1709,28 +1711,41 @@ DialogueSystem._trigger_face_animation_event = function (self, unit, animation_e
 	end
 end
 
+DialogueSystem._reload_files_in_player_tracker = function (self)
+	local loaded_player_files_tracker = self._loaded_player_files_tracker
+
+	for loaded_file, _ in pairs(loaded_player_files_tracker) do
+		self:_load_dialogue_resource(loaded_file)
+	end
+end
+
 DialogueSystem._load_player_resource = function (self, profile_name)
 	local player_load_files = DialogueSettings.player_load_files[profile_name]
 
-	if player_load_files then
-		local loaded_player_files_tracker = self._loaded_player_files_tracker
-		local has_loaded = false
+	if not player_load_files then
+		return
+	end
 
-		for i = 1, #player_load_files do
-			local filename = player_load_files[i]
+	local loaded_player_files_tracker = self._loaded_player_files_tracker
+	local load_files = false
 
-			if not loaded_player_files_tracker[filename] then
-				loaded_player_files_tracker[filename] = 1
+	for i = 1, #player_load_files do
+		local rule_group = player_load_files[i]
 
-				self:_load_dialogue_resource(filename)
+		if not loaded_player_files_tracker[rule_group] then
+			loaded_player_files_tracker[rule_group] = 1
+			load_files = true
+		else
+			loaded_player_files_tracker[rule_group] = loaded_player_files_tracker[rule_group] + 1
 
-				has_loaded = true
-			else
-				loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] + 1
-			end
+			self._tagquery_loader:try_remove_invalid_rules_from_group(rule_group)
 		end
+	end
 
-		if has_loaded and self._is_rule_db_enabled then
+	if load_files then
+		self:_reload_files_in_player_tracker()
+
+		if self._is_rule_db_enabled then
 			self._tagquery_database:finalize_rules()
 		end
 	end
@@ -1739,26 +1754,37 @@ end
 DialogueSystem._unload_player_resource = function (self, profile_name)
 	local unload_candidates = DialogueSettings.player_load_files[profile_name]
 
-	if unload_candidates then
-		local loaded_player_files_tracker = self._loaded_player_files_tracker
-		local vo_sources_cache, tagquery_loader = self._vo_sources_cache, self._tagquery_loader
+	if not unload_candidates then
+		return
+	end
 
-		for i = 1, #unload_candidates do
-			local filename = unload_candidates[i]
+	local refresh_rules = false
+	local loaded_player_files_tracker = self._loaded_player_files_tracker
+	local vo_sources_cache, tagquery_loader = self._vo_sources_cache, self._tagquery_loader
 
-			loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] - 1
+	for i = 1, #unload_candidates do
+		local rule_group = unload_candidates[i]
 
-			if loaded_player_files_tracker[filename] == 0 then
-				loaded_player_files_tracker[filename] = nil
+		loaded_player_files_tracker[rule_group] = loaded_player_files_tracker[rule_group] - 1
 
-				vo_sources_cache:remove_rule_file(filename)
+		if loaded_player_files_tracker[rule_group] == 0 then
+			loaded_player_files_tracker[rule_group] = nil
 
-				if self._is_rule_db_enabled then
-					local rule_file_path = DialogueSettings.default_rule_path .. filename
+			vo_sources_cache:remove_rule_file(rule_group)
 
-					tagquery_loader:unload_file(rule_file_path)
-				end
+			if self._is_rule_db_enabled then
+				local rule_file_path = DialogueSettings.default_rule_path .. rule_group
+
+				tagquery_loader:unload_file(rule_file_path, rule_group)
 			end
+
+			refresh_rules = true
+		end
+	end
+
+	if refresh_rules then
+		for rule_group, _ in pairs(loaded_player_files_tracker) do
+			self._tagquery_loader:try_remove_invalid_rules_from_group(rule_group)
 		end
 	end
 end
@@ -1771,14 +1797,14 @@ DialogueSystem._load_dialogue_resources = function (self, file_names)
 	end
 end
 
-DialogueSystem._load_dialogue_resource = function (self, file_name)
-	local rule_file_path = DialogueSettings.default_rule_path .. file_name
+DialogueSystem._load_dialogue_resource = function (self, rule_group_name)
+	local rule_file_path = DialogueSettings.default_rule_path .. rule_group_name
 
 	if Application.can_get_resource("lua", rule_file_path) then
-		self._vo_sources_cache:add_rule_file(file_name)
+		self._vo_sources_cache:add_rule_file(rule_group_name)
 
 		if self._is_rule_db_enabled then
-			self._tagquery_loader:load_file(rule_file_path)
+			self._tagquery_loader:load_file(rule_file_path, rule_group_name)
 		end
 	end
 end

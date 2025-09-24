@@ -1656,11 +1656,11 @@ local horde_pacing_template = {
 			max_active_minions_for_ambush = 50,
 			num_trickle_hordes_active_for_cooldown = 5,
 			time_between_waves = 10,
-			travel_distance_spawning = true,
+			travel_distance_spawning = false,
 			trigger_heard_dialogue = true,
 			horde_timer_range = {
-				130,
-				280,
+				120,
+				220,
 			},
 			first_spawn_timer_modifer = {
 				0.4,
@@ -1675,8 +1675,8 @@ local horde_pacing_template = {
 				far_vector_horde = 3,
 			},
 			travel_distance_required_for_horde = {
-				30,
 				60,
+				80,
 			},
 			horde_templates = {
 				HordeTemplates.far_vector_horde,

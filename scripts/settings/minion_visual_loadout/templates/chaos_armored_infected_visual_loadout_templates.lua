@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	chaos_armored_infected = {},
 }
-local basic_armored_infected_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_face = {
 			items = {
@@ -88,35 +88,35 @@ local basic_armored_infected_template = {
 				"content/items/characters/minions/decal_material_overrides/decal_transit_05",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/environment_overrides/dirt_02",
 			},
 		},
 		skin_color_override = {
-			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/skin_color_overrides/newly_infected_skin_color_01",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_skin_color_02",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_skin_color_03",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_skin_color_04",
 				"content/items/characters/minions/generic_items/empty_minion_item",
+				is_material_override_slot = true,
 			},
 		},
 		grunge_override = {
-			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/skin_color_overrides/newly_infected_grunge_01",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_grunge_02",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_grunge_03",
 				"content/items/characters/minions/skin_color_overrides/newly_infected_grunge_04",
 				"content/items/characters/minions/generic_items/empty_minion_item",
+				is_material_override_slot = true,
 			},
 		},
 	},
 }
-local default_1 = table.clone(basic_armored_infected_template)
+local default_1 = table.clone(base_visual_loadout_template)
 
 default_1.gib_variations = {
 	"lowerbody_b",
@@ -125,31 +125,49 @@ templates.chaos_armored_infected.default = {
 	default_1,
 }
 
-local foundry_1 = table.clone(basic_armored_infected_template)
+local foundry_1 = table.clone(base_visual_loadout_template)
 
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02",
 }
 templates.chaos_armored_infected[zone_ids.tank_foundry] = {
 	foundry_1,
 }
 
-local dust_1 = table.clone(basic_armored_infected_template)
+local dust_1 = table.clone(base_visual_loadout_template)
 
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02",
 }
 templates.chaos_armored_infected[zone_ids.dust] = {
 	dust_1,
 }
 
-local watertown_1 = table.clone(basic_armored_infected_template)
+local watertown_1 = table.clone(base_visual_loadout_template)
 
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02",
 }
 templates.chaos_armored_infected[zone_ids.watertown] = {
 	watertown_1,
+}
+
+local void_1 = table.clone(base_visual_loadout_template)
+
+void_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.chaos_armored_infected[zone_ids.void] = {
+	void_1,
+}
+
+local horde_1 = table.clone(base_visual_loadout_template)
+
+horde_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.chaos_armored_infected[zone_ids.horde] = {
+	horde_1,
 }
 
 return templates

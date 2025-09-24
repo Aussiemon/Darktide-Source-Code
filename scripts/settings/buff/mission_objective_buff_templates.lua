@@ -9,6 +9,7 @@ table.make_unique(templates)
 templates.grimoire_pickup = {
 	class_name = "stepped_stat_buff",
 	max_stacks = 4,
+	max_stacks_cap = 4,
 	predicted = true,
 	keywords = {},
 	stepped_stat_buffs = {

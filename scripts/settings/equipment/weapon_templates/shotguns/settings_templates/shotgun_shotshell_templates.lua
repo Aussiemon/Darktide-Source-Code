@@ -342,68 +342,6 @@ shotshell_templates.shotgun_p4_m1_ads_special = {
 		},
 	},
 }
-shotshell_templates.shotgun_p4_m3_hip_special = {
-	bullseye = true,
-	no_random_roll = true,
-	num_pellets = 13,
-	num_spread_circles = 6,
-	pellets_per_frame = 5,
-	range = 100,
-	roll_offset = 0.25,
-	scatter_range = 0.045,
-	spread_pitch = 6,
-	spread_yaw = 6,
-	min_num_hits = {
-		[armor_types.unarmored] = 4,
-		[armor_types.armored] = 4,
-		[armor_types.resistant] = 11,
-		[armor_types.player] = 1,
-		[armor_types.berserker] = 4,
-		[armor_types.super_armor] = 6,
-		[armor_types.disgustingly_resilient] = 5,
-	},
-	damage = {
-		impact = {
-			buff_to_add = "shotgun_special_stun",
-			max_stack_per_attack = 5,
-			max_stacks = 5,
-			stacks_per_pellet = 0.5,
-			damage_profile = DamageProfileTemplates.shotgun_p4_m3,
-			damage_type = damage_types.pellet_shock,
-		},
-	},
-}
-shotshell_templates.shotgun_p4_m3_ads_special = {
-	bullseye = true,
-	no_random_roll = true,
-	num_pellets = 13,
-	num_spread_circles = 6,
-	pellets_per_frame = 5,
-	range = 100,
-	roll_offset = 0.25,
-	scatter_range = 0.04,
-	spread_pitch = 6,
-	spread_yaw = 6,
-	min_num_hits = {
-		[armor_types.unarmored] = 5,
-		[armor_types.armored] = 5,
-		[armor_types.resistant] = 10,
-		[armor_types.player] = 1,
-		[armor_types.berserker] = 5,
-		[armor_types.super_armor] = 6,
-		[armor_types.disgustingly_resilient] = 6,
-	},
-	damage = {
-		impact = {
-			buff_to_add = "shotgun_special_stun",
-			max_stack_per_attack = 5,
-			max_stacks = 5,
-			stacks_per_pellet = 0.5,
-			damage_profile = DamageProfileTemplates.shotgun_p4_m3,
-			damage_type = damage_types.pellet_shock,
-		},
-	},
-}
 shotshell_templates.default_shotpistol_shield_hip = {
 	bullseye = true,
 	no_random_roll = true,

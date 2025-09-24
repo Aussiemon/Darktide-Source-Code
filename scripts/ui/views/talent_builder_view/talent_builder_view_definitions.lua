@@ -1469,23 +1469,6 @@ local layout_widget_definitions = {
 	layout_background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/talents/talents_bg",
-			style = {
-				color = {
-					255,
-					255,
-					255,
-					255,
-				},
-				offset = {
-					0,
-					0,
-					-1,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
 			value = "content/ui/materials/frames/talents/talent_bg_top_gradient_zealot",
 			value_id = "image",
 			style = {

@@ -22,6 +22,7 @@ local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/tr
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local MinionDissolveUtility = require("scripts/extension_systems/scripted_scenario/minion_dissolve_utility")
 local attack_results = AttackSettings.attack_results
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_types = DamageSettings.damage_types
@@ -2336,9 +2337,13 @@ steps.adamant_companion_targeting_loop = {
 
 		for enemy_breed, targeted_enemy in pairs(enemy_breeds_targeted) do
 			if HEALTH_ALIVE[targeted_enemy.unit] and not targeted_enemy.disolve_triggered and t >= targeted_enemy.disolve_time then
+				MinionDissolveUtility.add_ignore_toggle_slots("cultist_shocktrooper", "slot_ranged_weapon")
+				MinionDissolveUtility.add_ignore_toggle_slots("renegade_sniper", "slot_ranged_weapon")
 				_dissolve_unit(targeted_enemy.unit, t)
 
 				targeted_enemy.disolve_triggered = true
+
+				MinionDissolveUtility.clear_ignore_toggle_slots()
 			end
 		end
 
@@ -4044,14 +4049,14 @@ steps.reviving_spawn_health_station = {
 
 			health_station_extension:spawn_battery()
 
-			local battery_unit = health_station_extension:battery_unit()
+			local battery_unit = health_station_extension:spawned_battery_unit()
 			local battery_pos = Unit.local_position(battery_unit, 1)
 			local wanted_pos = step_data.battery_spawn_data.position:unbox()
 
 			wanted_pos[3] = battery_pos[3]
 
 			Unit.set_local_position(battery_unit, 1, wanted_pos)
-			_add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
+			_add_objective_marker(health_station_extension:spawned_battery_unit(), "training_grounds", false)
 
 			step_data.battery_marked = true
 		end
@@ -4067,14 +4072,14 @@ steps.reviving_spawn_health_station = {
 				step_data.battery_marked = true
 				step_data.station_marked = false
 
-				_add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
+				_add_objective_marker(health_station_extension:spawned_battery_unit(), "training_grounds", false)
 				_remove_objective_marker(socket_unit)
 			elseif carrying_battery and not step_data.station_marked then
 				step_data.battery_marked = false
 				step_data.station_marked = true
 
 				_add_objective_marker(socket_unit, "training_grounds", false)
-				_remove_objective_marker(health_station_extension:battery_unit())
+				_remove_objective_marker(health_station_extension:spawned_battery_unit())
 			end
 
 			return false

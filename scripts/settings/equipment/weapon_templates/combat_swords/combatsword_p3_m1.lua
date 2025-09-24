@@ -8,37 +8,26 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
+local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupFast = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_fast")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeCombatswordP3 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatsword_p3")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local hit_zone_names = HitZone.hit_zone_names
-local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
-local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 local action_inputs = table.clone(MeleeActionInputSetupFast.action_inputs)
 
@@ -102,7 +91,12 @@ weapon_template.actions = {
 				action_name = "action_block",
 			},
 			special_action = {
-				action_name = "action_attack_special",
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 		},
 	},
@@ -166,7 +160,12 @@ weapon_template.actions = {
 				action_name = "action_block",
 			},
 			special_action = {
-				action_name = "action_attack_special",
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -240,8 +239,14 @@ weapon_template.actions = {
 				chain_time = 0,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.4,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.4,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.4,
+				},
 			},
 			combat_ability = {
 				action_name = "combat_ability",
@@ -253,12 +258,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_left_diagonal_down_baked_sweep",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.125,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_left_diagonal_down_baked_sweep",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.125,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_linesman_p3,
@@ -275,8 +282,8 @@ weapon_template.actions = {
 		anim_event = "heavy_attack_stab_left",
 		anim_event_3p = "heavy_attack_stab_left",
 		attack_direction_override = "push",
-		damage_window_end = 0.12,
-		damage_window_start = 0.04,
+		damage_window_end = 0.15,
+		damage_window_start = 0.1,
 		first_person_hit_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
 		hit_stop_anim = "attack_hit_stab",
@@ -322,23 +329,31 @@ weapon_template.actions = {
 				chain_until = 0.1,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.24,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.24,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.24,
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/heavy_attack_stab_01",
-			anchor_point_offset = {
-				0.15,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/heavy_attack_stab_01",
+				anchor_point_offset = {
+					0.15,
+					0,
+					-0.075,
+				},
 			},
 		},
-		damage_profile = DamageProfileTemplates.heavy_combatsword_smiter_stab,
+		damage_profile = DamageProfileTemplates.heavy_combatsword_p3_smiter_stab,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -405,7 +420,12 @@ weapon_template.actions = {
 				action_name = "action_block",
 			},
 			special_action = {
-				action_name = "action_attack_special",
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -483,20 +503,28 @@ weapon_template.actions = {
 				chain_time = 0,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.3,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.3,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.3,
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_up",
-			anchor_point_offset = {
-				0.275,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_up",
+				anchor_point_offset = {
+					0.275,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_linesman_p3,
@@ -559,20 +587,28 @@ weapon_template.actions = {
 				chain_until = 0.05,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.3,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.4,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.4,
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/heavy_attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/heavy_attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_combatsword_linesman_p3,
@@ -642,8 +678,12 @@ weapon_template.actions = {
 				action_name = "action_block",
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.35,
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -717,8 +757,14 @@ weapon_template.actions = {
 				chain_time = 0,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.3,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.4,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.4,
+				},
 			},
 			combat_ability = {
 				action_name = "combat_ability",
@@ -729,12 +775,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_left_diagonal_up",
-			anchor_point_offset = {
-				-0.075,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_left_diagonal_up",
+				anchor_point_offset = {
+					-0.075,
+					0,
+					-0.075,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_linesman_p3,
@@ -804,8 +852,12 @@ weapon_template.actions = {
 				action_name = "action_block",
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.35,
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -883,20 +935,28 @@ weapon_template.actions = {
 				chain_time = 0,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.3,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.5,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.5,
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_down",
-			anchor_point_offset = {
-				-0.05,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_down",
+				anchor_point_offset = {
+					-0.05,
+					0,
+					-0.075,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_linesman_p3,
@@ -957,28 +1017,167 @@ weapon_template.actions = {
 				action_name = "action_push",
 			},
 			special_action = {
-				action_name = "action_attack_special",
+				{
+					action_name = "action_parry_special_psyker",
+				},
+				{
+					action_name = "action_parry_special",
+				},
 			},
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 	},
-	action_attack_special = {
-		allowed_during_sprint = true,
+	action_parry_special = {
+		action_priority = 1,
 		anim_end_event = "attack_finished",
-		anim_event = "attack_special_stab",
-		anim_event_3p = "attack_swing_stab",
-		attack_direction_override = "push",
-		damage_window_end = 0.18333333333333332,
-		damage_window_start = 0.13333333333333333,
-		first_person_hit_anim = "hit_stop",
-		hit_armor_anim = "attack_hit_shield",
-		hit_stop_anim = "attack_hit_stab",
-		kind = "sweep",
-		power_level = 500,
-		range_mod = 1.25,
+		anim_event = "parry_special",
+		anim_event_3p = "parry_pose",
+		ignore_setting_blocked_on_minions = true,
+		kind = "block",
+		parry_block = true,
 		start_input = "special_action",
 		total_time = 1,
 		weapon_handling_template = "time_scale_1",
+		action_movement_curve = {
+			{
+				modifier = 0.5,
+				t = 0.2,
+			},
+			{
+				modifier = 1,
+				t = 0.5,
+			},
+			start_modifier = 0.4,
+		},
+		action_keywords = {
+			"weapon_special",
+		},
+		running_action_state_to_action_input = {
+			has_blocked = {
+				input_name = "parry",
+			},
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			wield = {
+				action_name = "action_unwield",
+			},
+			parry = {
+				action_name = "action_attack_special_riposte",
+				chain_time = 0.3,
+			},
+			start_attack = {
+				action_name = "action_melee_start_right_2",
+				chain_time = 0.4,
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.9,
+			},
+			special_action = {
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.9,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.9,
+				},
+			},
+		},
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			local unit_data_extension = condition_func_params.unit_data_extension
+			local archetype = unit_data_extension:archetype()
+			local is_psyker = archetype.name == "psyker"
+
+			return not is_psyker
+		end,
+	},
+	action_parry_special_psyker = {
+		action_priority = 2,
+		anim_end_event = "attack_finished",
+		anim_event = "parry_special",
+		anim_event_3p = "parry_pose",
+		charge_template = "combatsword_p3_parry_psyker_charge",
+		ignore_setting_blocked_on_minions = true,
+		kind = "block",
+		parry_block = true,
+		start_input = "special_action",
+		total_time = 1,
+		weapon_handling_template = "time_scale_1",
+		action_movement_curve = {
+			{
+				modifier = 0.5,
+				t = 0.2,
+			},
+			{
+				modifier = 1,
+				t = 0.5,
+			},
+			start_modifier = 0.4,
+		},
+		action_keywords = {
+			"weapon_special",
+		},
+		running_action_state_to_action_input = {
+			has_blocked = {
+				input_name = "parry",
+			},
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			wield = {
+				action_name = "action_unwield",
+			},
+			parry = {
+				action_name = "action_attack_special_riposte_psyker",
+				chain_time = 0.3,
+			},
+			start_attack = {
+				action_name = "action_melee_start_right_2",
+				chain_time = 0.4,
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.9,
+			},
+			special_action = {
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.9,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.9,
+				},
+			},
+		},
+		action_condition_func = function (action_settings, condition_func_params, used_input)
+			local unit_data_extension = condition_func_params.unit_data_extension
+			local archetype = unit_data_extension:archetype()
+			local is_psyker = archetype.name == "psyker"
+
+			return is_psyker
+		end,
+	},
+	action_attack_special_riposte = {
+		anim_end_event = "attack_finished",
+		anim_event = "attack_right_diagonal_up",
+		anim_event_3p = "attack_swing_up_right",
+		attack_direction_override = "right",
+		block_duration = 0.2,
+		damage_window_end = 0.2916666666666667,
+		damage_window_start = 0.18333333333333332,
+		kind = "sweep",
+		range_mod = 1.25,
+		total_time = 1,
+		weapon_handling_template = "time_scale_1_3",
 		action_movement_curve = {
 			{
 				modifier = 1,
@@ -997,31 +1196,90 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.3,
+				chain_time = 0.4,
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.65,
-			},
-			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.65,
+				chain_time = 0.45,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_stab_special_01",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_up",
+				anchor_point_offset = {
+					0.275,
+					0,
+					-0.1,
+				},
 			},
 		},
-		damage_profile = DamageProfileTemplates.light_combatsword_p3_stab,
+		damage_profile = DamageProfileTemplates.combatsword_p3_parry_special,
 		damage_type = damage_types.metal_slashing_light,
+		herding_template = HerdingTemplates.stab,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed,
+		},
+	},
+	action_attack_special_riposte_psyker = {
+		anim_end_event = "attack_finished",
+		anim_event = "attack_right_diagonal_up",
+		anim_event_3p = "attack_swing_up_right",
+		attack_direction_override = "right",
+		block_duration = 0.2,
+		damage_window_end = 0.2916666666666667,
+		damage_window_start = 0.18333333333333332,
+		kind = "sweep",
+		power_level = 650,
+		range_mod = 1.25,
+		total_time = 1,
+		weapon_handling_template = "time_scale_1_3",
+		action_movement_curve = {
+			{
+				modifier = 1,
+				t = 0.15,
+			},
+			start_modifier = 1,
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			wield = {
+				action_name = "action_unwield",
+				chain_time = 0.3,
+			},
+			start_attack = {
+				action_name = "action_melee_start_left_2",
+				chain_time = 0.4,
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.45,
+			},
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		weapon_box = default_weapon_box,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_up",
+				anchor_point_offset = {
+					0.275,
+					0,
+					-0.1,
+				},
+			},
+		},
+		damage_profile = DamageProfileTemplates.combatsword_p3_parry_special,
+		damage_type = damage_types.metal_slashing_light,
+		herding_template = HerdingTemplates.stab,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
@@ -1064,20 +1322,28 @@ weapon_template.actions = {
 				chain_time = 0.55,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.4,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.4,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.4,
+				},
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_down_baked_sweep",
-			anchor_point_offset = {
-				0,
-				0,
-				-0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/sabre/attack_right_diagonal_down_baked_sweep",
+				anchor_point_offset = {
+					0,
+					0,
+					-0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combatsword_pushfollowup_linesman_p3,
@@ -1133,8 +1399,14 @@ weapon_template.actions = {
 				chain_time = 0.3,
 			},
 			special_action = {
-				action_name = "action_attack_special",
-				chain_time = 0.45,
+				{
+					action_name = "action_parry_special_psyker",
+					chain_time = 0.45,
+				},
+				{
+					action_name = "action_parry_special",
+					chain_time = 0.45,
+				},
 			},
 		},
 		inner_push_rad = math.pi * 0.1,
@@ -1246,13 +1518,16 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_dps_stat,
 			},
-			action_attack_special = {
-				damage_trait_templates.combatsword_dps_stat,
-			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.combatsword_dps_stat,
 			},
 			action_right_light_2 = {
+				damage_trait_templates.combatsword_dps_stat,
+			},
+			action_attack_special_riposte = {
+				damage_trait_templates.combatsword_dps_stat,
+			},
+			action_attack_special_riposte_psyker = {
 				damage_trait_templates.combatsword_dps_stat,
 			},
 		},
@@ -1296,13 +1571,16 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_finesse_stat,
 			},
-			action_attack_special = {
-				damage_trait_templates.combatsword_finesse_stat,
-			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.combatsword_finesse_stat,
 			},
 			action_right_light_2 = {
+				damage_trait_templates.combatsword_finesse_stat,
+			},
+			action_attack_special_riposte = {
+				damage_trait_templates.combatsword_finesse_stat,
+			},
+			action_attack_special_riposte_psyker = {
 				damage_trait_templates.combatsword_finesse_stat,
 			},
 		},
@@ -1334,13 +1612,16 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				weapon_handling_trait_templates.default_finesse_stat,
 			},
-			action_attack_special = {
-				weapon_handling_trait_templates.default_finesse_stat,
-			},
 			action_right_light_pushfollow = {
 				weapon_handling_trait_templates.default_finesse_stat,
 			},
 			action_right_light_2 = {
+				weapon_handling_trait_templates.default_finesse_stat,
+			},
+			action_attack_special_riposte = {
+				weapon_handling_trait_templates.default_finesse_stat,
+			},
+			action_attack_special_riposte_psyker = {
 				weapon_handling_trait_templates.default_finesse_stat,
 			},
 		},
@@ -1394,7 +1675,10 @@ weapon_template.base_stats = {
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_armor_pierce_stat,
 			},
-			action_attack_special = {
+			action_attack_special_riposte = {
+				damage_trait_templates.default_armor_pierce_stat,
+			},
+			action_attack_special_riposte_psyker = {
 				damage_trait_templates.default_armor_pierce_stat,
 			},
 		},
@@ -1435,13 +1719,16 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_cleave_damage_stat,
 			},
-			action_attack_special = {
-				damage_trait_templates.combatsword_cleave_damage_stat,
-			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.combatsword_cleave_damage_stat,
 			},
 			action_right_light_2 = {
+				damage_trait_templates.combatsword_cleave_damage_stat,
+			},
+			action_attack_special_riposte = {
+				damage_trait_templates.combatsword_cleave_damage_stat,
+			},
+			action_attack_special_riposte_psyker = {
 				damage_trait_templates.combatsword_cleave_damage_stat,
 			},
 		},
@@ -1505,9 +1792,9 @@ weapon_template.displayed_attacks = {
 		},
 	},
 	special = {
-		desc = "loc_stats_special_action_special_attack_combatsword_p3m1_desc",
-		display_name = "loc_weapon_special_special_attack",
-		type = "special_attack",
+		desc = "loc_weapon_special_parry_desc",
+		display_name = "loc_weapon_special_parry",
+		type = "defence",
 	},
 }
 weapon_template.weapon_card_data = {
@@ -1528,6 +1815,6 @@ weapon_template.weapon_card_data = {
 		icon = "special_attack",
 	},
 }
-weapon_template.special_action_name = "action_attack_special"
+weapon_template.special_action_name = "action_attack_special_riposte"
 
 return weapon_template

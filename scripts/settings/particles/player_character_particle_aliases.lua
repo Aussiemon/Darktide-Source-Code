@@ -146,9 +146,6 @@ local particles = {
 			powermaul_p2_m1 = {
 				default = "content/fx/particles/enemies/buff_chainlightning",
 			},
-			powermaul_p2_m2 = {
-				default = "content/fx/particles/enemies/buff_chainlightning",
-			},
 		},
 	},
 	clip_out = {
@@ -270,7 +267,6 @@ local particles = {
 			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			powermaul_p2_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
-			powermaul_p2_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_activate_mesh",
 			powermaul_shield_p1_m1 = "content/fx/particles/weapons/shields/arbites_shield_weapon_special_01",
 			powermaul_shield_p1_m2 = "content/fx/particles/weapons/shields/arbites_shield_weapon_special_01",
 			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh",
@@ -289,6 +285,8 @@ local particles = {
 		particles = {
 			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
 			powersword_2h_p1_m2 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
+			powersword_p2_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
+			powersword_p2_m2 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_decharge_01",
 		},
 	},
 	weapon_special_custom = {
@@ -364,6 +362,19 @@ local particles = {
 			forcesword_2h_p1_m2 = "content/fx/particles/weapons/foce_sword/forcesword_2h_stage2_loop",
 		},
 	},
+	power_weapon_charges_loop = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"state",
+		},
+		particles = {
+			ogryn_powermaul_p1_m1 = {
+				charges_available = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
+				on_cooldown = "content/fx/particles/weapons/power_maul/power_maul_ogryn_special_sparks_smoke",
+			},
+		},
+	},
 	weapon_special_loop = {
 		no_default = true,
 		switch = {
@@ -382,7 +393,6 @@ local particles = {
 			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated",
 			powermaul_2h_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_activated_2hand",
 			powermaul_p2_m1 = "content/fx/particles/weapons/power_maul/power_maul_p2_weapon_special_01",
-			powermaul_p2_m2 = "content/fx/particles/weapons/power_maul/power_maul_p2_weapon_special_01",
 			powermaul_shield_p1_m1 = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_hands_fp",
 			powermaul_shield_p1_m2 = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_hands_fp",
 			powersword_2h_p1_m1 = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_activate_mesh_loop",
@@ -413,6 +423,23 @@ local particles = {
 				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
 				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
 			},
+			powersword_p2_m1 = {
+				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
+				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
+			},
+			powersword_p2_m2 = {
+				critical = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_critical_01",
+				high = "content/fx/particles/weapons/swords/powersword_2h/powersword_2h_overload_01",
+			},
+		},
+	},
+	weapon_special_charges = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+		},
+		particles = {
+			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_ogryn_cooldown_ready_01",
 		},
 	},
 	chain_lightning_hand = {
@@ -504,7 +531,6 @@ local particles = {
 			powermaul_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			powermaul_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			powermaul_p2_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
-			powermaul_p2_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			powermaul_shield_p1_m1 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			powermaul_shield_p1_m2 = "content/fx/particles/weapons/shock_maul/powermaul_1h_looping_mesh",
 			psyker_throwing_knives = "content/fx/particles/abilities/psyker_throwing_knife_idle",

@@ -13,6 +13,12 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 		return
 	end
 
+	local undroppable = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, slot_name, "undroppable")
+
+	if undroppable then
+		return
+	end
+
 	local item_name = inventory_component[slot_name]
 
 	if is_server then

@@ -176,7 +176,7 @@ local function get_max(unit, breed_name)
 	local cutscene_character_extension = ScriptUnit.extension(unit, "cutscene_character_system")
 	local breed = cutscene_character_extension:breed()
 	local z_scale = Unit.local_scale(unit, 1).z
-	local height = Breed.height(unit, breed) * 1.2 * z_scale
+	local height = Breed.height(unit, breed) * 1.3 * z_scale
 
 	return height + pos.z + 0.1
 end

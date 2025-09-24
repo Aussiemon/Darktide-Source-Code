@@ -6,7 +6,7 @@ return {
 	name = "adamant_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 17,
+	version = 18,
 	nodes = {
 		{
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
@@ -102,6 +102,7 @@ return {
 				"node_8abdbb78-a06d-4d97-959a-a46930ab0752",
 				"node_e686dc62-a877-4eef-8a96-52743b1c0fcd",
 				"node_939b77d7-9bd1-48a9-8ae6-66beae3686ec",
+				"node_e992d16b-4372-4874-93ca-7a520cceb74c",
 			},
 			parents = {
 				"node_62deceb2-66cd-4494-b96d-27b9fcc8732b",
@@ -133,6 +134,7 @@ return {
 				"node_446b745a-e92e-4e31-8cc0-0ee5327f5674",
 				"node_9964320a-cf72-40d7-ad57-d4e5bc4a7345",
 				"node_48e362cb-c6b4-4d38-a325-08667444b783",
+				"node_b93d4978-d0c5-4257-8725-9a1b20596f93",
 			},
 			parents = {
 				"node_eea35a28-d324-4f45-b682-edadc7d4c5ef",
@@ -1333,6 +1335,7 @@ return {
 			parents = {
 				"node_021a58e4-4b06-40cb-b978-3823adbd5a15",
 				"node_62deceb2-66cd-4494-b96d-27b9fcc8732b",
+				"node_52c3f35e-7fe4-4321-a04c-2a51eccac74c",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1436,6 +1439,7 @@ return {
 			parents = {
 				"node_eea35a28-d324-4f45-b682-edadc7d4c5ef",
 				"node_5d52392f-6daa-479c-9104-67a901e69a32",
+				"node_65d7f26b-711e-4ef9-ae0e-5bad2ac7a818",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1787,6 +1791,7 @@ return {
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
+				incompatible_talent = "adamant_disable_companion",
 				min_points_spent = 0,
 			},
 		},

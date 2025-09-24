@@ -21,7 +21,6 @@ local LagCompensation = require("scripts/utilities/lag_compensation")
 local MinionDeath = require("scripts/utilities/minion_death")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Stamina = require("scripts/utilities/attack/stamina")
-local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
@@ -36,7 +35,7 @@ local POWERED_WWISE_SWITCH = {
 }
 local _dot
 
-local function _calculate_attack_direction(action_settings, start_rotation, end_rotation, player_rotation, attack_direction_override)
+local function _calculate_attack_direction(action_settings, start_rotation, end_rotation, player_rotation, attack_direction_override, uses_matrix_data)
 	local attack_direction
 
 	if attack_direction_override then
@@ -59,7 +58,7 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 		attack_direction = Quaternion.rotate(player_rotation, direction)
 	else
 		local rotation = Quaternion.lerp(start_rotation, end_rotation, 0.5)
-		local quaternion_axis = (action_settings.attack_direction or action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location) and "forward" or "right"
+		local quaternion_axis = (action_settings.attack_direction or uses_matrix_data) and "forward" or "right"
 
 		attack_direction = Quaternion[quaternion_axis](rotation)
 	end
@@ -100,7 +99,7 @@ local ActionSweep = class("ActionSweep", "ActionWeaponBase")
 ActionSweep.init = function (self, action_context, action_params, action_settings)
 	ActionSweep.super.init(self, action_context, action_params, action_settings)
 
-	self._sweep_splines, self._all_sweeps_aborted_mask, self._hit_units, self._sweep_process_mode = self:_init_splines(action_settings)
+	self._sweep_splines, self._all_sweeps_aborted_mask, self._hit_units, self._sweep_process_mode, self._uses_matrix_data = self:_init_splines(action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
 
@@ -149,48 +148,31 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 end
 
 ActionSweep._init_splines = function (self, action_settings)
-	local multi_sweep = action_settings.multi_sweep
-	local spline_settings = action_settings.spline_settings
+	local sweeps = action_settings.sweeps
 	local sweep_process_mode = action_settings.sweep_process_mode or ActionSweepSettings.multi_sweep_process_mode.shared
 	local hit_units = {
 		{},
 	}
+	local uses_matrix_data = false
+	local all_sweeps_aborted_mask = 1
+	local sweep_splines = {}
 
-	if multi_sweep then
-		local all_sweeps_aborted_mask = 1
-		local sweep_splines = {}
+	for sweep_index = 1, #sweeps do
+		local matrices_data_location = sweeps[sweep_index].matrices_data_location
+		local anchor_point_offset = sweeps[sweep_index].anchor_point_offset
 
-		for sweep_index = 1, #spline_settings do
-			local matrices_data_location = spline_settings[sweep_index].matrices_data_location
-			local anchor_point_offset = spline_settings[sweep_index].anchor_point_offset
+		sweep_splines[sweep_index] = SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset)
+		uses_matrix_data = true
+		all_sweeps_aborted_mask = bit.bor(all_sweeps_aborted_mask, bit.lshift(1, sweep_index - 1))
 
-			sweep_splines[sweep_index] = SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset)
-			all_sweeps_aborted_mask = bit.bor(all_sweeps_aborted_mask, bit.lshift(1, sweep_index - 1))
-
-			if sweep_process_mode == ActionSweepSettings.multi_sweep_process_mode.separate then
-				hit_units[sweep_index] = {}
-			else
-				hit_units[sweep_index] = hit_units[1]
-			end
+		if sweep_process_mode == ActionSweepSettings.multi_sweep_process_mode.separate then
+			hit_units[sweep_index] = {}
+		else
+			hit_units[sweep_index] = hit_units[1]
 		end
-
-		return sweep_splines, all_sweeps_aborted_mask, hit_units, sweep_process_mode
-	else
-		local all_sweeps_aborted_mask = 1
-		local matrices_data_location = action_settings.spline_settings.matrices_data_location
-
-		if matrices_data_location then
-			local anchor_point_offset = action_settings.spline_settings.anchor_point_offset
-
-			return {
-				SweepSplineExported:new(action_settings, matrices_data_location, anchor_point_offset),
-			}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
-		end
-
-		return {
-			SweepSpline:new(action_settings),
-		}, all_sweeps_aborted_mask, hit_units, sweep_process_mode
 	end
+
+	return sweep_splines, all_sweeps_aborted_mask, hit_units, sweep_process_mode, uses_matrix_data
 end
 
 ActionSweep.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -695,7 +677,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 			local attack_direction = action_sweep_component.attack_direction or Vector3.normalize(Vector3.flat(fp_position - hit_world_position))
 
 			if attack_direction_override then
-				attack_direction = _calculate_attack_direction(self._action_settings, nil, nil, player_rotation, attack_direction_override)
+				attack_direction = _calculate_attack_direction(self._action_settings, nil, nil, player_rotation, attack_direction_override, self._uses_matrix_data)
 			end
 
 			local action_settings = self._action_settings
@@ -913,7 +895,7 @@ ActionSweep._do_overlap = function (self, t, start_position, start_rotation, end
 
 	local player_rotation = self._first_person_component.rotation
 	local attack_direction_override = action_settings.attack_direction_override
-	local attack_direction = _calculate_attack_direction(action_settings, start_rotation, end_rotation, player_rotation, attack_direction_override)
+	local attack_direction = _calculate_attack_direction(action_settings, start_rotation, end_rotation, player_rotation, attack_direction_override, self._uses_matrix_data)
 	local should_save_sweeps = self:_should_save_sweeps(action_settings, t, is_final_frame, num_sweep_results, self._num_saved_entries)
 
 	if should_save_sweeps then
@@ -1029,6 +1011,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local unit_best_result, actor_to_unit = self:_pick_best_sweep_result_per_unit(sweep_results, num_sweep_results, hit_units)
 	local ordered_units = self:_order_by_significance(unit_best_result, sweep_results, actor_to_unit, action_settings)
 	local num_ordered_units = #ordered_units
+	local already_partially_aborted = self:_any_sweep_aborted()
 	local abort_attack, armor_aborted_attack = false, false
 
 	for i = 1, num_ordered_units do
@@ -1047,12 +1030,6 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 		abort_attack, armor_aborted_attack = self:_process_hit(t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name, hit_normal)
 
 		if abort_attack then
-			local already_partially_aborted = self:_any_sweep_aborted()
-
-			if not already_partially_aborted then
-				-- Nothing
-			end
-
 			self:_abort_sweep(sweep_index, t, hit_unit, hit_actor)
 
 			break
@@ -1062,9 +1039,9 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
 	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
-	if self:_can_start_stickyness(hit_stickyness_settings, abort_attack, special_active_at_start) then
+	if self:_can_start_stickyness(hit_stickyness_settings, abort_attack or already_partially_aborted, special_active_at_start) then
 		self:_start_hit_stickyness(hit_stickyness_settings, t, attack_direction)
-	else
+	elseif not already_partially_aborted then
 		self:_play_hit_animations(action_settings, abort_attack, armor_aborted_attack, special_active_at_start)
 	end
 end
@@ -1293,7 +1270,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local ignore_armor_aborts_attack = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack_critical_strike) or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack) or use_reduced_hit_mass
 	local attack_type = AttackSettings.attack_types.melee
-	local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
+	local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, player_unit)
 	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, hit_weakspot, is_critical_strike, attack_type)
 	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
 	local action_armor_hit_mass_mod = action_settings.action_armor_hit_mass_mod and action_settings.action_armor_hit_mass_mod[target_armor]
@@ -1434,7 +1411,7 @@ end
 ActionSweep._modify_sweep_position = function (self, position, rotation, weapon_half_extents, action_settings)
 	local dir, distance
 
-	if action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location then
+	if self._uses_matrix_data then
 		distance = weapon_half_extents.z
 		dir = Quaternion.up(rotation)
 	else
@@ -1555,7 +1532,7 @@ ActionSweep._weapon_half_extents = function (self, weapon_template, action_setti
 	local weapon_box = action_settings.weapon_box or weapon_template.weapon_box
 	local _, weapon_half_extents = nil, Vector3(weapon_box[1], weapon_box[2], weapon_box[3])
 
-	if action_settings.multi_sweep or action_settings.spline_settings.matrices_data_location then
+	if self._uses_matrix_data then
 		weapon_half_extents.x = weapon_half_extents.x * width_mod
 		weapon_half_extents.y = weapon_half_extents.y * height_mod
 		weapon_half_extents.z = weapon_half_extents.z * range_mod

@@ -12,8 +12,8 @@ MissionObjectiveCollect.init = function (self)
 	self:set_updated_externally(true)
 end
 
-MissionObjectiveCollect.start_objective = function (self, mission_objective_data, units, synchronizer_unit)
-	MissionObjectiveCollect.super.start_objective(self, mission_objective_data, units, synchronizer_unit)
+MissionObjectiveCollect.start_objective = function (self, mission_objective_data, group_id, units, synchronizer_unit)
+	MissionObjectiveCollect.super.start_objective(self, mission_objective_data, group_id, units, synchronizer_unit)
 
 	self._collect_amount = mission_objective_data.collect_amount
 end

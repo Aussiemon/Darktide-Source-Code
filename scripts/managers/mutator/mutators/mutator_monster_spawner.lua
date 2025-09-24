@@ -8,7 +8,6 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local LoadedDice = require("scripts/utilities/loaded_dice")
 local MutatorMonsterSpawnerSettings = require("scripts/settings/mutator/mutator_monster_spawner_settings")
 local MonsterInjectionTemplates = require("scripts/settings/mutator/mutator_monster_spawner_injection/mutator_monster_spawner_injection_templates")
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local perception_aggro_states = PerceptionSettings.aggro_states
 local MutatorMonsterSpawner = class("MutatorMonsterSpawner", "MutatorBase")
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
@@ -17,7 +16,6 @@ local AGGRO_STATES = {
 	chaos_plague_ogryn = "aggroed",
 	chaos_spawn = "aggroed",
 }
-local _calculate_positions
 local TARGET_SIDE_ID = 1
 
 MutatorMonsterSpawner.init = function (self, is_server, network_event_delegate, mutator_template, nav_world)
@@ -44,8 +42,18 @@ MutatorMonsterSpawner.init = function (self, is_server, network_event_delegate, 
 	local spawn_locations = self._template.spawner_template.spawn_locations or "default_locations"
 
 	self._dirty_spawn_locations = MutatorMonsterSpawnerSettings[spawn_locations][mission_name]
+
+	if not self._dirty_spawn_locations then
+		Log.exception("MutatorMonsterSpawner", "No spawn points defined in MutatorMonsterSpawnerSettings for category %s in mission %s.", spawn_locations, mission_name)
+	end
+
 	self._template_data = self._template.spawner_template
 	self._injection_template = MonsterInjectionTemplates[self._template.spawner_template.injection_template]
+
+	if self._injection_template then
+		self._injection_template = table.clone(self._injection_template)
+	end
+
 	self._spawn_point_sections = {}
 	self._monsters = {}
 	self._valid_spawn_points = 0
@@ -70,21 +78,17 @@ MutatorMonsterSpawner.on_spawn_points_generated = function (self, level, themes)
 	local trigger_distance = self._template_data.trigger_distance
 	local spawn_locations = self._dirty_spawn_locations
 	local nav_world = self._nav_world
+	local num_spawn_locations = spawn_locations and #spawn_locations or 0
 
-	for i = 1, #spawn_locations do
+	for i = 1, num_spawn_locations do
 		local dirty_spawn_data = spawn_locations[i]
 		local nav_mesh_position = NavQueries.position_on_mesh(nav_world, dirty_spawn_data.position:unbox(), NAV_MESH_ABOVE, NAV_MESH_BELOW)
 
 		if nav_mesh_position then
-			local main_path_manager = Managers.state.main_path
-			local nav_spawn_points = main_path_manager:nav_spawn_points()
-			local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, nav_mesh_position)
-			local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-			local end_index = start_index + 1
-			local position, _, travel_distance = _calculate_positions(nav_mesh_position, start_index, end_index)
+			local travel_distance = Managers.state.main_path:travel_distance_from_position(nav_mesh_position)
 			local wanted_distance = travel_distance - trigger_distance
 			local spawn_point = {
-				position = Vector3Box(position),
+				position = Vector3Box(nav_mesh_position),
 				spawn_travel_distance = wanted_distance,
 				spawn_point_travel_distance = travel_distance,
 			}
@@ -137,6 +141,18 @@ MutatorMonsterSpawner.update = function (self, dt, t)
 
 		if spawn_travel_distance <= ahead_travel_distance then
 			if self._injection_template then
+				if self._injection_template.spawn_event_props then
+					local event_props_reference, _, props_idx = math.random_array_entry(self._injection_template.spawn_event_props)
+					local spawn_position = monster.position:unbox()
+					local spawn_rotation = Quaternion.axis_angle(Vector3.up(), math.random() * (math.pi * 2))
+
+					Managers.state.level_instance:spawn_level_instance(event_props_reference, spawn_position, spawn_rotation)
+
+					if #self._injection_template.spawn_event_props > 1 then
+						table.swap_delete(self._injection_template.spawn_event_props, props_idx)
+					end
+				end
+
 				self._injection_template.spawn(self._template_data, monster, ahead_target_unit, 2)
 				table.remove(monsters, i)
 
@@ -149,12 +165,6 @@ MutatorMonsterSpawner.update = function (self, dt, t)
 			end
 		end
 	end
-end
-
-function _calculate_positions(position_on_mesh, start_index, end_index)
-	local path_position, travel_distance = MainPathQueries.closest_position_between_nodes(position_on_mesh, start_index, end_index)
-
-	return position_on_mesh, path_position, travel_distance
 end
 
 MutatorMonsterSpawner._calculate_probabillity = function (self, optional_probabillity_reroll, remove_chance)

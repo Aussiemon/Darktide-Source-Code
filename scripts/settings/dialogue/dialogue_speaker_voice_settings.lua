@@ -828,6 +828,12 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_steelhead_b",
 		subtitles_enabled = true,
 	},
+	past_adamant_officer_a = {
+		full_name = "loc_npc_full_name_adamant_officer_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_adamant_officer_a",
+		subtitles_enabled = true,
+	},
 	past_alpha_a = {
 		full_name = "loc_npc_full_name_past_alpha_a",
 		player_voice = false,
@@ -838,6 +844,18 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_full_name_past_armourer_a",
 		player_voice = false,
 		short_name = "loc_npc_short_name_past_armourer_a",
+		subtitles_enabled = true,
+	},
+	past_auric_female_a = {
+		full_name = "loc_npc_full_name_past_auric_female_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_past_auric_female_a",
+		subtitles_enabled = true,
+	},
+	past_auric_male_a = {
+		full_name = "loc_npc_full_name_past_auric_male_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_past_auric_male_a",
 		subtitles_enabled = true,
 	},
 	past_auspex_operator_a = {
@@ -852,6 +870,12 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_past_brother_a",
 		subtitles_enabled = true,
 	},
+	past_captain_twin_female_a = {
+		full_name = "loc_npc_full_name_past_captain_twin_female_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_past_captain_twin_female_a",
+		subtitles_enabled = true,
+	},
 	past_cartel_tough_a = {
 		full_name = "loc_npc_full_name_past_cartel_tough_a",
 		player_voice = false,
@@ -862,6 +886,18 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_full_name_past_cartel_tough_c",
 		player_voice = false,
 		short_name = "loc_npc_short_name_past_cartel_tough_c",
+		subtitles_enabled = true,
+	},
+	past_commissar_a = {
+		full_name = "loc_npc_full_name_past_commissar_a",
+		player_voice = false,
+		short_name = "loc_npc_short_name_past_commissar_a",
+		subtitles_enabled = true,
+	},
+	past_comms_operator_c = {
+		full_name = "loc_npc_full_name_past_comms_operator_c",
+		player_voice = false,
+		short_name = "loc_npc_short_name_past_comms_operator_c",
 		subtitles_enabled = true,
 	},
 	past_enemy_nemesis_wolfer_a = {

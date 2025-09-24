@@ -15,6 +15,13 @@ local ui_view_progression_requirement = {
 	cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
 }
 
+ViewInteraction.init = function (self, ...)
+	ViewInteraction.super.init(self, ...)
+
+	self._cache_version = nil
+	self._cache = {}
+end
+
 ViewInteraction._ui_interaction = function (self, interactee_unit)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 	local ui_interaction = interactee_extension:ui_interaction()
@@ -22,7 +29,17 @@ ViewInteraction._ui_interaction = function (self, interactee_unit)
 	return ui_interaction
 end
 
-local requirement_context = {}
+ViewInteraction._set_cache = function (self, interactor_unit, interactee_unit, ...)
+	local cache = self._cache
+
+	cache[interactor_unit] = cache[interactor_unit] or {}
+	cache[interactor_unit][interactee_unit] = cache[interactor_unit][interactee_unit] or {}
+	cache[interactor_unit][interactee_unit] = {
+		...,
+	}
+
+	return ...
+end
 
 ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 	local super_blocked, super_block_reason, super_block_context = ViewInteraction.super._is_blocked(self, interactor_unit, interactee_unit)
@@ -31,17 +48,28 @@ ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 		return super_blocked, super_block_reason, super_block_context
 	end
 
+	local current_version = Managers.data_service.mission_board:progression_version()
+
+	if current_version ~= self._cache_version then
+		self._cache = {}
+		self._cache_version = current_version
+	end
+
+	local cache_data = table.nested_get(self, "_cache", interactor_unit, interactee_unit)
+
+	if cache_data then
+		return unpack(cache_data)
+	end
+
 	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
 	local ui_interaction = self:_ui_interaction(interactee_unit)
 	local player_profile = player:profile()
 	local level_requirement = ui_view_level_requirement[ui_interaction]
 
 	if level_requirement and level_requirement > player_profile.current_level then
-		table.clear(requirement_context)
-
-		requirement_context.level = level_requirement
-
-		return true, "loc_requires_level", requirement_context
+		return self:_set_cache(interactor_unit, interactee_unit, true, "loc_requires_level", {
+			level = level_requirement,
+		})
 	end
 
 	local progression_requirement = ui_view_progression_requirement[ui_interaction]
@@ -50,11 +78,11 @@ ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 		local block_reason, block_context = Managers.data_service.mission_board:get_block_reason("hub_facility", progression_requirement)
 
 		if block_reason then
-			return true, block_reason, block_context
+			return self:_set_cache(interactor_unit, interactee_unit, true, block_reason, block_context)
 		end
 	end
 
-	return false
+	return self:_set_cache(interactor_unit, interactee_unit, false)
 end
 
 ViewInteraction._video_template = function (self, hli_settings)

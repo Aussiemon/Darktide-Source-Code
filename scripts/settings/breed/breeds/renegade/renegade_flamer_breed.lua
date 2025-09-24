@@ -21,6 +21,7 @@ local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
+local hit_zone_damage_multiplier = 2
 local breed_name = "renegade_flamer"
 local breed_data = {
 	base_height = 1.9,
@@ -427,17 +428,17 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5,
 		},
 		melee = {
-			[hit_zone_names.head] = 3,
-			[hit_zone_names.torso] = 3,
-			[hit_zone_names.upper_left_arm] = 3,
-			[hit_zone_names.upper_right_arm] = 3,
-			[hit_zone_names.upper_left_leg] = 3,
-			[hit_zone_names.upper_right_leg] = 3,
-			[hit_zone_names.lower_left_arm] = 3,
-			[hit_zone_names.lower_right_arm] = 3,
-			[hit_zone_names.lower_left_leg] = 3,
-			[hit_zone_names.lower_right_leg] = 3,
-			[hit_zone_names.center_mass] = 3,
+			[hit_zone_names.head] = hit_zone_damage_multiplier,
+			[hit_zone_names.torso] = hit_zone_damage_multiplier,
+			[hit_zone_names.upper_left_arm] = hit_zone_damage_multiplier,
+			[hit_zone_names.upper_right_arm] = hit_zone_damage_multiplier,
+			[hit_zone_names.upper_left_leg] = hit_zone_damage_multiplier,
+			[hit_zone_names.upper_right_leg] = hit_zone_damage_multiplier,
+			[hit_zone_names.lower_left_arm] = hit_zone_damage_multiplier,
+			[hit_zone_names.lower_right_arm] = hit_zone_damage_multiplier,
+			[hit_zone_names.lower_left_leg] = hit_zone_damage_multiplier,
+			[hit_zone_names.lower_right_leg] = hit_zone_damage_multiplier,
+			[hit_zone_names.center_mass] = hit_zone_damage_multiplier,
 		},
 	},
 	outline_config = {},

@@ -134,10 +134,8 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 			local health_extension = ScriptUnit.extension(unit, "health_system")
 			local current_wounds = health_extension:num_wounds()
 
-			if not self._psyker_alternative_overload or current_wounds <= 1 then
+			if not self._psyker_alternative_overload then
 				Attack.execute(unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
-			else
-				health_extension:remove_wounds(1)
 			end
 		end
 	end

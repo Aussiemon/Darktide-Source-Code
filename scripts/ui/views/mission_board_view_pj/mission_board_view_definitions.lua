@@ -493,8 +493,8 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 	},
 }, "play_button", nil, nil, {
 	text = {
-		font_size = 16,
-		font_type = "proxima_nova_medium",
+		font_size = 14,
+		font_type = "trim_mono_medium",
 		text_horizontal_alignment = "center",
 		text_vertical_alignment = "center",
 		text_color = Styles.colors.default.text_body,
@@ -1142,58 +1142,6 @@ animations.mission_exit = {
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, mission_board_view)
 			mission_board_view:_remove_mission_widget(widget)
 		end,
-	},
-}
-MissionBoardViewDefinitions.legend_inputs = {
-	{
-		alignment = "left_alignment",
-		display_name = "loc_settings_menu_close_menu",
-		input_action = "back",
-		on_pressed_callback = "_on_back_pressed",
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_mission_board_switch_tab",
-		input_action = "hotkey_menu_special_2",
-		on_pressed_callback = "_set_next_sidebar_tab",
-		visibility_function = function (parent)
-			return parent:_has_sidebar_tabs()
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_mission_board_view_options",
-		input_action = "hotkey_menu_special_1",
-		on_pressed_callback = "_callback_open_options",
-		visibility_function = function (parent, id)
-			local mission_board_logic = parent._mission_board_logic
-
-			return mission_board_logic._regions_latency and not parent._mission_board_options
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_menu_toggle_ui_visibility_off",
-		input_action = "hotkey_toggle_item_tooltip",
-		on_pressed_callback = "_callback_hide_threat_level_tooltip",
-		visibility_function = function (parent, id)
-			return InputDevice.gamepad_active and parent._threat_level_tooltip_visible and parent._threat_level_tooltip_visible == true
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_menu_toggle_ui_visibility_on",
-		input_action = "hotkey_toggle_item_tooltip",
-		on_pressed_callback = "_callback_show_threat_level_tooltip",
-		visibility_function = function (parent, id)
-			return InputDevice.gamepad_active and (not parent._threat_level_tooltip_visible or parent._threat_level_tooltip_visible == false)
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_group_finder_menu_title",
-		input_action = "mission_board_group_finder_open",
-		on_pressed_callback = "_on_group_finder_pressed",
 	},
 }
 

@@ -26,6 +26,14 @@ local action_data = {
 	idle = {
 		anim_events = "idle",
 	},
+	patrol = {
+		anim_events = {
+			"move_fwd_walk",
+		},
+		speeds = {
+			move_fwd_walk = 1.2,
+		},
+	},
 	death = {
 		ignore_hit_during_death_ragdoll = true,
 		instant_ragdoll_chance = 0,
@@ -1820,6 +1828,18 @@ local action_data = {
 		blocked_duration = 0.6666666666666666,
 		blocked_anims = {
 			"blocked",
+		},
+	},
+	use_stim = {
+		anim_event = "use_syringe",
+		duration = 1.6666666666666667,
+		exit_state = "to_melee",
+		effect_template = EffectTemplates.minion_stim_effect,
+		stim_buffs = {
+			"mutator_stimmed_minion_red",
+			"mutator_stimmed_minion_yellow",
+			"mutator_stimmed_minion_green",
+			"mutator_stimmed_minion_blue",
 		},
 	},
 }

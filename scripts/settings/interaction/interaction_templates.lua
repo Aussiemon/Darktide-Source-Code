@@ -150,16 +150,6 @@ local interaction_templates = {
 		ui_interaction_type = "point_of_interest",
 		ui_view_name = "penance_overview_view",
 	},
-	inbox = {
-		action_text = "loc_action_interaction_view",
-		description = "loc_training_ground_view",
-		duration = 0,
-		interaction_class_name = "inbox",
-		interaction_icon = "content/ui/materials/hud/interactions/icons/inbox",
-		interaction_priority = 1,
-		ui_interaction_type = "point_of_interest",
-		ui_view_name = "inbox_view",
-	},
 	body_shop = {
 		action_text = "loc_action_interaction_view",
 		description = "loc_training_ground_view",

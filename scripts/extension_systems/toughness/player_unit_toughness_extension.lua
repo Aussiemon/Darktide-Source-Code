@@ -379,9 +379,45 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 	return toughness_damage_dealt
 end
 
+PlayerUnitToughnessExtension.break_toughness = function (self)
+	local remaining_toughness = self:remaining_toughness()
+
+	self:add_damage(remaining_toughness, nil, nil, attack_types.melee)
+	self:set_toughness_broken_time()
+end
+
 local ABILITIES_ALLOW_RECOVERY_REASONS = {
+	ability_shout = true,
 	ability_stance = true,
+	adamant_buff_drone = true,
+	adamant_charge = true,
+	bull_rush_toughness_talent = true,
+	lunging = true,
+	ogryn_ranged_stance_reload = true,
+	ogryn_ranged_stance_shoot = true,
+	ogryn_taunt_restore_toughness = true,
+	ogryn_taunt_restore_toughness_over_time = true,
+	overcharge_stance = true,
+	psyker_sphere = true,
+	veteran_ranged_stance = true,
 	zealot_channel = true,
+	zealot_stealth = true,
+}
+local COMBAT_ABILITIES_ALLOWED_RECOVERY_REASONS = {
+	ability_shout = true,
+	ability_stance = true,
+	adamant_buff_drone = true,
+	adamant_charge = true,
+	bull_rush_toughness_talent = true,
+	lunging = true,
+	ogryn_ranged_stance_reload = true,
+	ogryn_taunt_restore_toughness = true,
+	ogryn_taunt_restore_toughness_over_time = true,
+	overcharge_stance = true,
+	psyker_sphere = true,
+	veteran_ranged_stance = true,
+	zealot_channel = true,
+	zealot_stealth = true,
 }
 
 PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block, optional_recovery_type, optional_reason)
@@ -396,6 +432,12 @@ PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_
 	local has_prevent_toughness_replenish = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_replenish)
 
 	if has_prevent_toughness_replenish then
+		return true
+	end
+
+	local has_prevent_toughness_replenish_except_all_combat_abilities = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_replenish_except_all_combat_abilities)
+
+	if has_prevent_toughness_replenish_except_all_combat_abilities and not COMBAT_ABILITIES_ALLOWED_RECOVERY_REASONS[optional_reason] then
 		return true
 	end
 

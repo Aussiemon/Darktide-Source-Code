@@ -144,6 +144,10 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 		}
 
 		Managers.telemetry_events:player_knocked_down(self._player, data)
+
+		self._player_has_teleported = false
+
+		Managers.event:register(self, "player_teleport_disrupt_state_server_event", "_player_teleport_disrupt_state_server_event")
 	end
 
 	Vo.player_ledge_hanging_event(unit)
@@ -181,6 +185,9 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 
 			self._entered_state_t = nil
 			self._time_disabled = nil
+			self._player_has_teleported = nil
+
+			Managers.event:unregister(self, "player_teleport_disrupt_state_server_event")
 		end
 	end
 
@@ -227,6 +234,12 @@ PlayerCharacterStateLedgeHanging._check_transition = function (self, unit, t, ne
 		else
 			return health_transition
 		end
+	end
+
+	if self._is_server and self._player_has_teleported then
+		self._player_has_teleported = false
+
+		return "walking"
 	end
 
 	if should_fall_down then
@@ -478,6 +491,12 @@ function _update_hand_ik_to_hanging(boxed_goal_pose, unit, handle_node, transfor
 		end
 
 		Unit.set_local_pose(unit, handle_node, new_pose)
+	end
+end
+
+PlayerCharacterStateLedgeHanging._player_teleport_disrupt_state_server_event = function (self, player_unit, position)
+	if self._unit == player_unit then
+		self._player_has_teleported = true
 	end
 end
 

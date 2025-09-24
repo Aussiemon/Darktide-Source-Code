@@ -10,7 +10,7 @@ MissionObjectiveDecode.update_progression = function (self)
 	local timer_extension = ScriptUnit.extension(self._synchronizer_unit, "networked_timer_system")
 	local progress = timer_extension:progression()
 	local decode_synchronizer_extension = self:synchronizer_extension()
-	local finished = decode_synchronizer_extension:setup_only_finished()
+	local finished = decode_synchronizer_extension:finished()
 
 	if finished then
 		progress = 1

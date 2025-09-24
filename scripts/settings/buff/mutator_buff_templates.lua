@@ -16,6 +16,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
 local buff_targets = BuffSettings.targets
 local buff_stat_buffs = BuffSettings.stat_buffs
+local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local templates = {}
 
@@ -29,60 +30,6 @@ local nurgle_parasite_settings = {
 		},
 		damage_profile = DamageProfileTemplates.havoc_self_gib,
 	},
-	head_parasite_item_overrides = {
-		human = {
-			{
-				items = {
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02",
-				},
-			},
-			{
-				items = {
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
-				},
-			},
-		},
-		ogryn = {
-			{
-				items = {
-					[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_a",
-					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
-				},
-			},
-			{
-				items = {
-					[1] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_01",
-					[2] = "content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02",
-				},
-			},
-		},
-		poxwalker = {
-			{
-				items = {
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
-					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
-				},
-			},
-		},
-	},
-	override_slots = {
-		human = {
-			[1] = "slot_head",
-			[2] = "slot_face",
-		},
-		ogryn = {
-			[1] = "slot_head_attachment",
-			[2] = "slot_head",
-		},
-		poxwalker = {
-			[1] = "slot_head",
-		},
-	},
 }
 
 local function _parasite_head_stop_function(template_data, template_context)
@@ -93,7 +40,7 @@ local function _parasite_head_stop_function(template_data, template_context)
 
 	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 
-	local visual_loadout_extension = template_data.visual_loadout_extension
+	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
 	Attack.execute(unit, DamageProfileTemplates.default, "power_level", 2000, "attack_direction", Vector3.up(), "instakill", true)
 
@@ -130,50 +77,9 @@ templates.headshot_parasite_enemies = {
 		buff_keywords.has_nurgle_parasite,
 	},
 	start_func = function (template_data, template_context)
-		local buff_settings = nurgle_parasite_settings
-		local breed_tags = template_context.breed.tags
-		local time_variation = 2
 		local unit = template_context.unit
-		local override_slot = buff_settings.override_slots.human
-		local item_overrides = buff_settings.head_parasite_item_overrides.human
 
-		template_data.parasite_interval_time = time_variation
 		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
-
-		if breed_tags.ogryn then
-			item_overrides = buff_settings.head_parasite_item_overrides.ogryn
-			override_slot = buff_settings.override_slots.ogryn
-		elseif breed_tags.poxwalker then
-			override_slot = buff_settings.override_slots.poxwalker
-			item_overrides = buff_settings.head_parasite_item_overrides.poxwalker
-		end
-
-		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-
-		for i = 1, #override_slot do
-			if template_context.is_server then
-				local override = override_slot[1]
-				local can_unequip = template_data.visual_loadout_extension:can_unequip_slot(override)
-
-				if can_unequip then
-					template_data.visual_loadout_extension:unequip_slot(override)
-				end
-			end
-		end
-
-		for i = 1, #item_overrides do
-			if not template_context.is_server then
-				local item_slot_data = item_overrides[i]
-				local swapped_slot = override_slot[i]
-				local inventory_slots = template_data.visual_loadout_extension:inventory_slots()
-
-				if inventory_slots[swapped_slot] then
-					inventory_slots[swapped_slot].use_outline = false
-				end
-
-				template_data.visual_loadout_extension:create_slot_entry(unit, item_slot_data)
-			end
-		end
 
 		if not template_context.is_server then
 			return
@@ -276,6 +182,7 @@ templates.mutator_minion_nurgle_blessing_tougher = {
 				0.786,
 				0.22,
 			},
+			priority = minion_effects_priorities.mutators,
 		},
 	},
 }
@@ -375,6 +282,908 @@ templates.mutator_player_enhanced_grenade_abilities = {
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
 		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
+	},
+}
+
+local BLUE_STIM_COLOR = {
+	0,
+	0.75,
+	0.75,
+}
+local GREEN_STIM_COLOR = {
+	0,
+	0.75,
+	0.005,
+}
+local RED_STIM_COLOR = {
+	0.9,
+	0,
+	0.005,
+}
+local YELLOW_STIM_COLOR = {
+	0.7843137254901961,
+	0.8745098039215686,
+	0.0784313725490196,
+}
+local PURPLE_STIM_COLOR = {
+	0.75,
+	0,
+	0.75,
+}
+
+templates.mutator_stimmed_minion_blue = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+		buff_keywords.super_armor_override,
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+
+		local new_hit_mass = hit_mass * 2
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+	end,
+	stat_buffs = {
+		[buff_stat_buffs.unarmored_damage] = -0.8,
+		[buff_stat_buffs.resistant_damage] = -0.8,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.8,
+		[buff_stat_buffs.berserker_damage] = -0.8,
+		[buff_stat_buffs.armored_damage] = -0.6,
+		[buff_stat_buffs.super_armor_damage] = -0.6,
+		[buff_stat_buffs.impact_modifier] = -2,
+	},
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_speed",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = BLUE_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = BLUE_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.mutator_stimmed_minion_green = {
+	class_name = "proc_buff",
+	duration = 100,
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_from_burning] = -0.5,
+		[buff_stat_buffs.damage_taken_from_bleeding] = -0.5,
+		[buff_stat_buffs.damage_taken_from_electrocution] = -0.5,
+		[buff_stat_buffs.warp_damage] = -0.5,
+		[buff_stat_buffs.impact_modifier] = -1,
+	},
+	proc_events = {
+		[buff_proc_events.on_minion_damage_taken] = 1,
+	},
+	start_func = function (template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		if not Managers.state.difficulty then
+			return
+		end
+
+		local heal_multipliers = {
+			0.5,
+			0.6,
+			0.7,
+			0.8,
+			1,
+		}
+		local heal_multiplier_scaled_by_challange = Managers.state.difficulty:get_table_entry_by_challenge(heal_multipliers)
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local max_health = health_extension:max_health()
+
+		template_data.health_pool = max_health * heal_multiplier_scaled_by_challange
+	end,
+	proc_func = function (params, template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		if HEALTH_ALIVE[template_context.unit] then
+			local unit = template_context.unit
+			local health_pool = template_data.health_pool
+			local damage_amount = params.damage_amount
+
+			if health_pool > 0 then
+				local heal_amount = math.min(health_pool, damage_amount)
+				local health_extension = ScriptUnit.extension(unit, "health_system")
+
+				health_extension:add_heal(heal_amount)
+
+				template_data.health_pool = template_data.health_pool - heal_amount
+			end
+		end
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		if template_data.health_pool == 0 then
+			return true
+		else
+			return false
+		end
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_heal",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = GREEN_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = GREEN_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = GREEN_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = GREEN_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = GREEN_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = GREEN_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.mutator_stimmed_minion_red = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.melee_attack_speed] = 0.4,
+		[buff_stat_buffs.stagger_duration_multiplier] = 0.1,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
+
+		if attack_intensity_extension then
+			attack_intensity_extension:set_allow_all_attacks_duration(999)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		return
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_power",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = RED_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = RED_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.mutator_stimmed_minion_yellow = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.weakspot_damage_taken] = 4,
+		[buff_stat_buffs.unarmored_damage] = -0.35,
+		[buff_stat_buffs.resistant_damage] = -0.35,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.35,
+		[buff_stat_buffs.berserker_damage] = -0.35,
+		[buff_stat_buffs.armored_damage] = -0.35,
+		[buff_stat_buffs.super_armor_damage] = -0.35,
+		[buff_stat_buffs.impact_modifier] = -0.5,
+		[buff_stat_buffs.ranged_attack_speed] = 0.3,
+		[buff_stat_buffs.minion_num_shots_modifier] = 5,
+		[buff_stat_buffs.melee_attack_speed] = 0.3,
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+
+		local new_hit_mass = hit_mass * 1.5
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_ability",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = YELLOW_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = YELLOW_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_red = table.clone(templates.mutator_stimmed_minion_red)
+templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_power",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = RED_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = RED_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_green = table.clone(templates.mutator_stimmed_minion_green)
+templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_heal",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = GREEN_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = GREEN_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_blue = table.clone(templates.mutator_stimmed_minion_blue)
+templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_speed",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = BLUE_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = BLUE_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_yellow = table.clone(templates.mutator_stimmed_minion_yellow)
+templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_ability",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = YELLOW_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = YELLOW_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+
+local TWIN_SPLIT_BREED_LIST = {
+	chaos_beast_of_nurgle = "chaos_ogryn_bulwark",
+	chaos_daemonhost = "chaos_spawn",
+	chaos_hound = "chaos_hound_mutator",
+	chaos_ogryn_bulwark = "renegade_berzerker",
+	chaos_ogryn_executor = "renegade_executor",
+	chaos_ogryn_gunner = "renegade_gunner",
+	chaos_plague_ogryn = "chaos_ogryn_executor",
+	chaos_poxwalker_bomber = "renegade_executor",
+	chaos_spawn = "cultist_mutant",
+	cultist_assault = "chaos_newly_infected",
+	cultist_berzerker = "cultist_melee",
+	cultist_flamer = "cultist_shocktrooper",
+	cultist_grenadier = "renegade_gunner",
+	cultist_gunner = "cultist_assault",
+	cultist_melee = "chaos_poxwalker",
+	cultist_mutant = "cultist_berzerker",
+	cultist_shocktrooper = "cultist_assault",
+	renegade_assault = "chaos_newly_infected",
+	renegade_berzerker = "renegade_melee",
+	renegade_captain = "chaos_daemonhost",
+	renegade_executor = "renegade_melee",
+	renegade_flamer = "renegade_shocktrooper",
+	renegade_grenadier = "renegade_gunner",
+	renegade_gunner = "renegade_rifleman",
+	renegade_melee = "chaos_newly_infected",
+	renegade_netgunner = "renegade_berzerker",
+	renegade_rifleman = "chaos_newly_infected",
+	renegade_shocktrooper = "renegade_assault",
+	renegade_sniper = "renegade_gunner",
+}
+
+templates.mutator_stimmed_minion_purple = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+		buff_keywords.despawn_on_death,
+	},
+	start_func = function (template_data, template_context)
+		return
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local blackboard = BLACKBOARDS[unit]
+
+		if blackboard then
+			local breed_name = ScriptUnit.extension(unit, "unit_data_system"):breed_name()
+			local split_breed_name = TWIN_SPLIT_BREED_LIST[breed_name]
+
+			if split_breed_name then
+				for i = 1, 2 do
+					local position = Unit.world_position(unit, 1)
+					local rotation = Unit.local_rotation(unit, 1)
+					local right = Quaternion.right(Unit.local_rotation(unit, 1))
+
+					if i % 2 == 0 then
+						position = position + right
+					else
+						position = position + -right
+					end
+
+					local perception_component = blackboard.perception
+
+					if ALIVE[perception_component.target_unit] then
+						local mutator_manager = Managers.state.mutator
+						local purple_stimmed_mutator = mutator_manager:mutator("mutator_stimmed_minions_purple")
+						local buff_to_add = TWIN_SPLIT_BREED_LIST[split_breed_name] and "mutator_stimmed_minion_purple" or nil
+
+						purple_stimmed_mutator:add_split_spawn(position, rotation, split_breed_name, buff_to_add, perception_component.target_unit)
+
+						local spawn_component = blackboard.spawn
+						local world, physics_world = spawn_component.world, spawn_component.physics_world
+						local impact_normal, charge_level, attack_type = Vector3.up(), 1
+						local power_level = 0
+						local explosion_template = ExplosionTemplates.purple_stimmed_explosion
+
+						Explosion.create_explosion(world, physics_world, POSITION_LOOKUP[unit], impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+					end
+				end
+			end
+		end
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = PURPLE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = PURPLE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = PURPLE_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = PURPLE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = PURPLE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = PURPLE_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+		material_vector = {
+			name = "stimmed_color",
+			value = PURPLE_STIM_COLOR,
+			priority = minion_effects_priorities.mutators,
+		},
 	},
 }
 
@@ -1028,14 +1837,6 @@ templates.drop_pickup_on_death = {
 			return true
 		end
 	end,
-}
-templates.increased_catapult_force = {
-	class_name = "buff",
-	predicted = false,
-	target = buff_targets.player_only,
-	stat_buffs = {
-		[buff_stat_buffs.catapult_force_multiplier] = 1.5,
-	},
 }
 templates.drop_shocktrooper_grenade_on_death = {
 	class_name = "buff",

@@ -41,7 +41,7 @@ breed_terror_event_settings.chaos_ogryn_gunner = {
 	point_cost = 10,
 }
 breed_terror_event_settings.chaos_ogryn_executor = {
-	point_cost = 10,
+	point_cost = 15,
 }
 breed_terror_event_settings.chaos_poxwalker_bomber = {
 	point_cost = 6,
@@ -59,6 +59,9 @@ breed_terror_event_settings.renegade_grenadier = {
 	point_cost = 6,
 }
 breed_terror_event_settings.renegade_gunner = {
+	point_cost = 5,
+}
+breed_terror_event_settings.renegade_plasma_gunner = {
 	point_cost = 5,
 }
 breed_terror_event_settings.renegade_radio_operator = {

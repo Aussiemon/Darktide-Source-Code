@@ -188,11 +188,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 	end
 
 	local settings = Managers.state.difficulty:get_table_entry_by_challenge(RespawnBeaconGuardSettings)
-	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
-	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, spawn_position)
-	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-	local end_index = start_index + 1
-	local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(spawn_position, start_index, end_index)
+	local travel_distance = Managers.state.main_path:travel_distance_from_position(spawn_position)
 	local travel_distance_threshold = settings.travel_distance_threshold
 	local diff = math.max(travel_distance - furthest_travel_distance, 0)
 
@@ -221,7 +217,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 		local wanted_rotation = Quaternion.multiply(beacon_unit_rotation, rotation)
 		local wanted_direction = Quaternion.forward(wanted_rotation)
 		local offseted_position = spawn_position + wanted_direction * position_offset
-		local navmesh_position = NavQueries.position_on_mesh(nav_world, offseted_position, NAV_ABOVE, NAV_BELOW)
+		local navmesh_position = NavQueries.position_on_mesh(self._nav_world, offseted_position, NAV_ABOVE, NAV_BELOW)
 
 		if navmesh_position then
 			local too_close_to_spawn_position = false

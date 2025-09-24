@@ -57,12 +57,11 @@ end
 
 MinigameFrequency.stop = function (self)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
+	MinigameFrequency.super.stop(self)
 
 	if self._is_server then
 		self._current_stage = nil
 	end
-
-	MinigameFrequency.super.stop(self)
 end
 
 MinigameFrequency._get_random_frequency = function (self, seed)
@@ -110,14 +109,8 @@ MinigameFrequency.on_action_pressed = function (self, t)
 		return
 	end
 
-	local is_action_on_target = self:is_visually_on_target()
-
-	if is_action_on_target then
-		if self._is_server then
-			self:test_frequency(self._frequency.x, self._frequency.y)
-		else
-			self:send_rpc_to_server("rpc_minigame_sync_frequency_test_frequency", self._frequency.x, self._frequency.y)
-		end
+	if not self._is_server then
+		self:send_rpc_to_server("rpc_minigame_sync_frequency_test_frequency", self._frequency.x, self._frequency.y)
 	end
 end
 
@@ -257,6 +250,10 @@ MinigameFrequency.target_frequency = function (self)
 end
 
 MinigameFrequency.test_frequency = function (self, x, y)
+	if self._current_state ~= MinigameSettings.game_states.gameplay then
+		return
+	end
+
 	if self:_is_frequency_on_target(x, y) then
 		local stage_amount = self._stage_amount
 

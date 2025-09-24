@@ -82,6 +82,12 @@ HealthStationInteraction.stop = function (self, world, interactor_unit, unit_dat
 			else
 				success = false
 			end
+
+			local player_or_nil = Managers.state.player_unit_spawn:owner(interactor_unit)
+
+			if player_or_nil and success then
+				Managers.stats:record_private("hook_health_station_interaccion_success", player_or_nil)
+			end
 		end
 
 		health_station_extension:stop_healing(success)

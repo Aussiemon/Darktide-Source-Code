@@ -9,23 +9,38 @@ Hordes.init = function (self)
 	return
 end
 
-Hordes._get_deactivated_buffs = function (self)
-	return Managers.backend:title_request(BackendUtilities.url_builder("/data/horde/buffs"):to_string()):next(function (data)
+Hordes._get_horde_settings = function (self)
+	local url = BackendUtilities.url_builder("/data/horde/settings"):to_string()
+
+	return Managers.backend:title_request(url):next(function (data)
 		return data.body
+	end):catch(function (err)
+		Log.info("[Hordes] Error in _get_horde_settings:", err)
+
+		return Promise.rejected(err)
 	end)
 end
 
-Hordes.deactivate_buffs_from_the_backend = function (self)
-	return self:_get_deactivated_buffs():next(function (result)
-		local deactivated_buffs = {}
-		local deactivatedBuffsEnabled = result.deactivatedBuffs.deactivatedBuffsEnabled
+Hordes.get_horde_setting_from_the_backend = function (self)
+	return self:_get_horde_settings():next(function (result)
+		if not result then
+			Log.info("[Hordes] Missing 'settings' from backend.")
 
-		if deactivatedBuffsEnabled then
-			deactivated_buffs = result.deactivatedBuffs.deactivatedBuffsList
+			return {}
 		end
 
-		return deactivated_buffs
+		if result.deactivatedBuffs and result.deactivatedBuffs.deactivatedBuffsList then
+			result.deactivated_buffs = {
+				deactivated_buffs_enabled = result.deactivatedBuffs.deactivatedBuffsEnabled,
+				deactivated_buffs_list = result.deactivatedBuffs.deactivatedBuffsList,
+			}
+			result.deactivatedBuffs = nil
+		end
+
+		return result
 	end):catch(function (err)
+		Log.info("[Hordes] Error fetching settings:", err)
+
 		return Promise.rejected(err)
 	end)
 end

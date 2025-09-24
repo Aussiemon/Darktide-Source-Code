@@ -183,7 +183,8 @@ local mutator_templates = {
 		},
 	},
 	mutator_headshot_parasite_enemies = {
-		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
+		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
+		template_name = "head_parasite",
 		random_spawn_buff_templates = {
 			buffs = {
 				"headshot_parasite_enemies",
@@ -521,6 +522,26 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			is_auric = true,
+		},
+	},
+	mutator_stimmed_minions = {
+		class = "scripts/managers/mutator/mutators/mutator_stimmed_minions",
+		breed_chances = {
+			chaos_ogryn_bulwark = 0.3,
+			chaos_ogryn_executor = 0.3,
+			cultist_assault = 0.5,
+			cultist_berzerker = 0.4,
+			cultist_captain = 0.2,
+			cultist_melee = 0.3,
+			cultist_shocktrooper = 0.3,
+			renegade_assault = 0.3,
+			renegade_berzerker = 0.4,
+			renegade_captain = 0.2,
+			renegade_executor = 0.3,
+			renegade_melee = 0.3,
+			renegade_plasma_gunner = 0.3,
+			renegade_rifleman = 0.5,
+			renegade_shocktrooper = 0.3,
 		},
 	},
 	mutator_havoc_override_horde_pacing_01 = {

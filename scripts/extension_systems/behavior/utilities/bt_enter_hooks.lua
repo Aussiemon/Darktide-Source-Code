@@ -2,9 +2,8 @@
 
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
-local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
 local BtEnterHooks = {}
 
 BtEnterHooks = {
@@ -122,7 +121,7 @@ BtEnterHooks = {
 	end,
 	companion_set_movement_vector = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local follow_component = Blackboard.write_component(blackboard, "follow")
-		local follow_config = CompanionDogSettings[args.follow_config]
+		local follow_config = CompanionDogLocomotionSettings[args.follow_config]
 		local referenced_vector = follow_config.movement_vector(unit, blackboard, scratchpad, action_data)
 
 		follow_component.last_referenced_vector:store(referenced_vector)

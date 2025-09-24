@@ -38,6 +38,7 @@ local function _resolve_backend_game_settings()
 	return Managers.backend.interfaces.game_settings:resolve_backend_game_settings():next(function ()
 		ErrorCodes.apply_backend_game_settings()
 		Managers.telemetry:apply_backend_game_settings()
+		Managers.package:apply_backend_game_settings()
 
 		return nil
 	end)
@@ -62,7 +63,7 @@ AccountService.signin = function (self)
 		if store_account_verified then
 			Log.debug("AccountService", "Store account update")
 			Managers.backend.interfaces.external_payment:update_account_store_status():next(function ()
-				return Managers.backend.interfaces.external_payment:reconcile_pending_txns()
+				return Promise.all(Managers.backend.interfaces.external_payment:reconcile_pending_txns(), Managers.backend.interfaces.external_payment:reconcile_account_entitlements())
 			end):catch(function (error)
 				Log.exception("AccountService", "Failed setting up platform commerce: %s", table.tostring(error, 10))
 			end)
@@ -218,9 +219,7 @@ end
 
 AccountService.has_migrated_commendation_score = function (self)
 	if self._cached_has_migrated_commendation_score then
-		return Promise.resolved(self._cached_has_migrated_commendation_score):next(function (value)
-			return value
-		end)
+		return Promise.resolved(self._cached_has_migrated_commendation_score)
 	end
 
 	return Managers.backend.interfaces.account:get_has_migrated_commendation_score():next(function (value)

@@ -86,6 +86,22 @@ local behavior_tree = {
 				name = "run_away",
 				action_data = action_data.run_away,
 			},
+			condition = "netgunner_hit_target_with_alt_conditions",
+			name = "reload_then_run_sequence_alt_mode",
+		},
+		{
+			"BtSequenceNode",
+			{
+				"BtReloadAction",
+				name = "reload",
+				action_data = action_data.reload,
+			},
+			{
+				"BtRunAwayAction",
+				leave_hook = "netgunner_reset_cooldown",
+				name = "run_away",
+				action_data = action_data.run_away,
+			},
 			condition = "netgunner_hit_target",
 			name = "reload_then_run_sequence",
 		},

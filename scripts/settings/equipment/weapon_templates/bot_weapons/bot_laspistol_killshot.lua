@@ -76,7 +76,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -675,7 +675,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.laspistol
 weapon_template.spread_template = "default_laspistol_assault"
 weapon_template.recoil_template = "default_laspistol_assault"
-weapon_template.suppression_template = "hip_laspistol_killshot"
+weapon_template.suppression_template = "laspistol_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "laspistol"
 weapon_template.ammo_template = "laspistol_p1_m1"
 weapon_template.conditional_state_to_action_input = {
@@ -708,7 +708,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_lasgun_killshot",
 	start_anim_event = "to_reflex",
 	stop_anim_event = "to_unaim_reflex",
-	suppression_template = "default_laspistol_killshot",
+	suppression_template = "laspistol_p1_m1_suppression_killshot",
 	sway_template = "default_laspistol_killshot",
 	toughness_template = "killshot_zoomed",
 	crosshair = {

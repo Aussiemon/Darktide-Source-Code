@@ -137,8 +137,6 @@ dialogue_breed_settings.chaos_armored_infected = {
 		"enemy_chaos_newly_infected_male_g",
 		"enemy_chaos_newly_infected_male_h",
 		"enemy_chaos_newly_infected_male_i",
-		"enemy_chaos_armored_infected_male_a",
-		"enemy_chaos_armored_infected_male_b",
 	},
 }
 dialogue_breed_settings.chaos_daemonhost = {
@@ -860,6 +858,19 @@ dialogue_breed_settings.renegade_shocktrooper = {
 		"enemy_traitor_scout_shocktrooper_a",
 	},
 }
+dialogue_breed_settings.renegade_plasma_gunner = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = true,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = true,
+	vo_class_name = "renegade_plasma_gunner",
+	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = "switch_voice_enemy_traitor_plasma_gunner",
+	wwise_voices = {
+		"enemy_plasma_gunner_a",
+	},
+}
 dialogue_breed_settings.renegade_flamer = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -1252,12 +1263,18 @@ dialogue_breed_settings.past = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"fx",
+		"past_adamant_officer_a",
 		"past_alpha_a",
 		"past_armourer_a",
+		"past_auric_female_a",
+		"past_auric_male_a",
 		"past_auspex_operator_a",
 		"past_brother_a",
+		"past_captain_twin_female_a",
 		"past_cartel_tough_a",
 		"past_cartel_tough_c",
+		"past_commissar_a",
+		"past_comms_operator_c",
 		"past_enemy_nemesis_wolfer_a",
 		"past_enginseer_a",
 		"past_explicator_a",

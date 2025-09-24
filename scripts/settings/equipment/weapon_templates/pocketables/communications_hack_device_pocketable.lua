@@ -318,15 +318,15 @@ weapon_template.action_scan_on_screen_ui_validation = function (wielded_slot_id,
 end
 
 weapon_template.action_can_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	local action_module_targeting_component = condition_func_params.action_module_targeting_component
-	local target_unit = action_module_targeting_component.target_unit_1
+	local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
+	local target_unit = action_module_target_finder_component.target_unit_1
 
 	return not _is_minigame_in_focus(player) and current_action_name == "action_aim_give" and target_unit ~= nil
 end
 
 weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	local action_module_targeting_component = condition_func_params.action_module_targeting_component
-	local target_unit = action_module_targeting_component.target_unit_1
+	local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
+	local target_unit = action_module_target_finder_component.target_unit_1
 
 	return not _is_minigame_in_focus(player) and current_action_name == "action_aim_give" and target_unit == nil
 end

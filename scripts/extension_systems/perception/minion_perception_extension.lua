@@ -4,10 +4,12 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local Vo = require("scripts/utilities/vo")
 local aggro_states = PerceptionSettings.aggro_states
+local buff_keywords = BuffSettings.keywords
 local MINION_BREED_TYPE = BreedSettings.types.minion
 local MinionPerceptionExtension = class("MinionPerceptionExtension")
 
@@ -23,6 +25,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._broadphase_system = extension_manager:system("broadphase_system")
 	self._perception_system = extension_manager:system("perception_system")
 	self._smoke_fog_system = Managers.state.extension:system("smoke_fog_system")
+	self._target_changed_wait_until_t = 0
 
 	local breed = extension_init_data.breed
 
@@ -331,11 +334,11 @@ MinionPerceptionExtension.aggro = function (self)
 	end
 end
 
-MinionPerceptionExtension.alert = function (self, enemy_unit)
+MinionPerceptionExtension.alert = function (self, enemy_unit, force_alert)
 	local perception_component = self._perception_component
 	local aggro_state = perception_component.aggro_state
 
-	if aggro_state == aggro_states.aggroed then
+	if not force_alert and aggro_state == aggro_states.aggroed then
 		return
 	elseif aggro_state == aggro_states.alerted or self._breed.force_aggro then
 		self:aggro()
@@ -361,6 +364,15 @@ MinionPerceptionExtension.alert = function (self, enemy_unit)
 			local vo_event = "alerted_idle"
 
 			Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
+		else
+			local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
+
+			if buff_extension and buff_extension:has_keyword("invisible") then
+				local breed_name = self._breed.name
+				local vo_event = "alerted_idle_invisible"
+
+				Vo.enemy_generic_vo_event(unit, vo_event, breed_name)
+			end
 		end
 	end
 end

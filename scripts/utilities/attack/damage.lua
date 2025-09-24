@@ -7,6 +7,7 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local HudElementPlayerHealthSettings = require("scripts/ui/hud/elements/player_health/hud_element_player_health_settings")
 local MinionDeath = require("scripts/utilities/minion_death")
@@ -133,6 +134,12 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 
 		actual_damage_dealt = health_extension:add_damage(damage, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit_owner_unit)
 
+		if buff_extension and damage_profile.buff_on_damage then
+			local t = FixedFrame.get_latest_fixed_time()
+
+			buff_extension:add_internally_controlled_buff(damage_profile.buff_on_damage, t, "owner_unit", unit)
+		end
+
 		if is_player and not damage_profile.skip_on_hit_proc then
 			local side = ScriptUnit.extension(unit, "side_system").side
 			local player_units = side.valid_player_units
@@ -153,6 +160,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 						param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
 						param_table.permanent_damage = permanent_damage
 						param_table.attack_type = attack_type
+						param_table.will_die = will_die
 
 						player_buff_extension:add_proc_event(proc_events.on_damage_taken, param_table)
 					end
@@ -198,6 +206,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 						param_table.damage_profile_name = damage_profile and damage_profile.name or "none"
 						param_table.permanent_damage = permanent_damage
 						param_table.attack_type = attack_type
+						param_table.will_die = will_die
 
 						player_buff_extension:add_proc_event(proc_events.on_damage_taken, param_table)
 					end

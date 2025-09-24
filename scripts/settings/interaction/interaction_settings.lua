@@ -19,12 +19,14 @@ interaction_settings.duration_buffs = {
 }
 interaction_settings.speed_buffs = {
 	revive = stat_buffs.revive_speed_modifier,
-	pull_up = stat_buffs.assist_speed_modifier,
-	remove_net = stat_buffs.assist_speed_modifier,
+	pull_up = stat_buffs.revive_speed_modifier,
+	remove_net = stat_buffs.revive_speed_modifier,
+	rescue = stat_buffs.revive_speed_modifier,
 }
 interaction_settings.emissive_colors = {
 	used = Vector3Box(Vector3(0, 0, 0)),
 	active = Vector3Box(Vector3(0, 0.5, 1)),
+	blocked = Vector3Box(Vector3(1, 0.5, 0)),
 	inactive = Vector3Box(Vector3(1, 0.01, 0)),
 }
 

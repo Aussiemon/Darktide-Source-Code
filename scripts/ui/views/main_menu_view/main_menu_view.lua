@@ -18,6 +18,7 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
 local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
+local PlayerSurveyView = require("scripts/ui/views/player_survey_view/player_survey_view")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -43,7 +44,7 @@ MainMenuView.on_enter = function (self)
 	self._character_list_grid = nil
 	self._news_list_requested = false
 	self._news_list = self:_reset_news_list()
-	self._news_element = self:_add_element(ViewElementNewsSlide, "news_element", 101)
+	self._news_element = self:_add_element(ViewElementNewsSlide, "news_element", 10)
 
 	self:_create_character_list_renderer()
 	self:_setup_input_legend()
@@ -139,7 +140,7 @@ MainMenuView._destroy_migration_element = function (self)
 end
 
 MainMenuView._create_wallet_element = function (self)
-	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
+	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 10)
 
 	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
 
@@ -150,7 +151,7 @@ MainMenuView._create_wallet_element = function (self)
 		"diamantine",
 	}
 
-	self._wallet_element:_generate_currencies(currencies, {
+	self._wallet_element:generate_currencies(currencies, {
 		150,
 		30,
 	}, #currencies, {
@@ -402,6 +403,19 @@ MainMenuView._populate_news_list = function (self)
 		local slides = table.filter_array(raw_news, function (item)
 			return not item:is_read()
 		end)
+		local show_survey = false
+
+		for _, slide in ipairs(raw_news) do
+			for _, contents in ipairs(slide.contents) do
+				if contents.data == "test_show_survey" then
+					show_survey = true
+				end
+			end
+		end
+
+		if show_survey then
+			Promise.delay(1):next(PlayerSurveyView.open)
+		end
 
 		if #slides > 0 then
 			self._news_list = {
@@ -648,7 +662,7 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 				self._delete_popup_id = nil
 			end),
 			template_options = {
-				start_delay = 2,
+				start_delay = 3,
 				start_input_action = "confirm_pressed",
 				timer = 3,
 			},

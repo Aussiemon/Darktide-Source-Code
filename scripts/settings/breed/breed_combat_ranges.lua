@@ -26,6 +26,7 @@ _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/ren
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_gunner_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_melee_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_netgunner_combat_ranges")
+_create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_plasma_gunner_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_radio_operator_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_rifleman_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_shocktrooper_combat_ranges")

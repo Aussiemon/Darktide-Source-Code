@@ -512,13 +512,13 @@ MissionObjectiveZoneSystem.rpc_mission_objective_zone_scan_add_player_scanned_ob
 	extension:add_scanned_points_to_player(player, scanned_object_points)
 end
 
-MissionObjectiveZoneSystem.rpc_mission_objective_zone_register_scannable_unit = function (self, channel_id, level_unit_id, level_scanable_id)
+MissionObjectiveZoneSystem.rpc_mission_objective_zone_register_scannable_unit = function (self, channel_id, level_unit_id, level_scannable_id)
 	local is_level_unit = true
 	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
-	local scanable_unit = Managers.state.unit_spawner:unit(level_scanable_id, is_level_unit)
+	local scannable_unit = Managers.state.unit_spawner:unit(level_scannable_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:register_scannable_unit(scanable_unit)
+	extension:register_scannable_unit(scannable_unit)
 end
 
 MissionObjectiveZoneSystem.rpc_mission_objective_zone_set_waiting_for_confirmation = function (self, channel_id, level_unit_id)

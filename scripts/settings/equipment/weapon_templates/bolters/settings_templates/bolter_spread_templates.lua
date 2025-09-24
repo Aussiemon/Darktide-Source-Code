@@ -47,12 +47,6 @@ spread_templates.default_bolter_killshot = {
 					yaw = 0,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -185,18 +179,6 @@ spread_templates.default_bolter_spraynpray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -273,6 +255,74 @@ spread_templates.default_bolter_spraynpray = {
 				lerp_basic = 1.5,
 				lerp_perfect = 0.4,
 			},
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"default_bolter_spraynpray",
+			"still",
+		},
+	},
+}
+spread_templates.bolter_p1_m2_spraynpray = {
+	still = {
+		randomized_spread = {
+			first_shot_min_ratio = 0.75,
+			first_shot_random_ratio = 0.25,
+			max_pitch_delta = 0.7,
+			max_yaw_delta = 0.7,
+			min_ratio = 0.2,
+			random_ratio = 0.75,
+		},
+		max_spread = {
+			pitch = 3,
+			yaw = 4,
+		},
+		decay = {
+			from_shooting_grace_time = 0.2,
+			shooting = {
+				pitch = 0.05,
+				yaw = 0.05,
+			},
+			idle = {
+				pitch = 1.5,
+				yaw = 2,
+			},
+		},
+		continuous_spread = {
+			min_pitch = 0.5,
+			min_yaw = 0.5,
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			damage_hit = {
+				{
+					pitch = 0.4,
+					yaw = 0.4,
+				},
+			},
+			shooting = {
+				{
+					pitch = 0.3,
+					yaw = 0.4,
+				},
+			},
+		},
+	},
+	moving = {
+		inherits = {
+			"default_bolter_spraynpray",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 1,
+			min_yaw = 1,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"default_bolter_spraynpray",
+			"still",
 		},
 	},
 	crouch_moving = {

@@ -4,6 +4,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Stagger = require("scripts/utilities/attack/stagger")
+local MinionToughnessTemplates = require("scripts/settings/toughness/minion_toughness_templates")
 local MinionToughnessExtension = class("MinionToughnessExtension")
 
 MinionToughnessExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
@@ -13,6 +14,12 @@ MinionToughnessExtension.init = function (self, extension_init_context, unit, ex
 
 	local breed = extension_init_data.breed
 	local toughness_template = breed.toughness_template
+
+	self._start_depleted = extension_init_data.start_depleted
+
+	if self._start_depleted then
+		toughness_template = MinionToughnessTemplates.twin_captain_one
+	end
 
 	self:_initialize_toughness(unit, toughness_template)
 

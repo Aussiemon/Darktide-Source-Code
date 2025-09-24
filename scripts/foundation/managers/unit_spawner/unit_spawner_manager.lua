@@ -19,6 +19,8 @@ UnitSpawnerManager.DELETION_STATES = DELETION_STATES
 local NUM_ESTIMATED_TEMPLATE_UNITS = 256
 local CLIENT_RPCS = {
 	"rpc_is_fully_hot_join_synced",
+	"rpc_hot_join_sync_dynamic_spawned_level",
+	"rpc_hot_join_sync_next_level_unit_index",
 }
 
 if Managers.state and Managers.state.unit_spawner and Managers.state.unit_spawner._deletion_state ~= DELETION_STATES.default then
@@ -60,10 +62,243 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._network_units = {}
 	self._husk_units = {}
 	self._game_object_ids = {}
+	self._level_unit_array = Script.new_array(NetworkConstants.level_unit_id.max)
+	self._level_unit_index_lookup = {
+		Script.new_map(NetworkConstants.level_unit_id.max),
+	}
+	self._registered_levels = {}
+	self._next_level_unit_index = 1
+	self._has_spawned_dynamic_level = false
+	self._last_level_id = 0
+end
+
+UnitSpawnerManager.next_level_id = function (self)
+	return self._last_level_id + 1
+end
+
+UnitSpawnerManager.current_level_id = function (self)
+	return self._last_level_id
 end
 
 UnitSpawnerManager.hot_join_sync = function (self, sender, channel_id)
-	return
+	for id = 1, #self._registered_levels do
+		local level_data = self._registered_levels[id]
+		local start_index = level_data.start_index
+		local end_index = level_data.end_index
+
+		if level_data.is_spawned and level_data.is_dynamic then
+			RPC.rpc_hot_join_sync_dynamic_spawned_level(channel_id, id, start_index, end_index)
+			_log_info("%s : hotjoin sync dynamic level, id(%i) start index(%i)", sender, id, start_index)
+		else
+			_log_info("%s : NOT syncing dynamic level, id(%i) start index(%i)", sender, id, start_index)
+		end
+	end
+
+	local next_level_unit_index = self._next_level_unit_index
+
+	RPC.rpc_hot_join_sync_next_level_unit_index(channel_id, next_level_unit_index)
+end
+
+UnitSpawnerManager.rpc_hot_join_sync_next_level_unit_index = function (self, channel_id, index)
+	self._next_level_unit_index = index
+
+	_log_info("hotjoin sync level_unit_index (%i)", index)
+end
+
+UnitSpawnerManager.rpc_hot_join_sync_dynamic_spawned_level = function (self, channel_id, level_id, start_index, end_index)
+	self._registered_levels[level_id] = {
+		is_dynamic = true,
+		is_spawned = false,
+		start_index = start_index,
+		end_index = end_index,
+	}
+
+	_log_info("hotjoin sync dynamic level, id(%i) unit start index(%i) unit end index(%i)", level_id, start_index, end_index)
+end
+
+UnitSpawnerManager.unregister_spawned_level = function (self, level)
+	local level_id = Level.get_data(level, "UnitSpawnerManager", "level_id")
+
+	_log_info("Unregister level %q, id: %i", level, tonumber(level_id))
+
+	local level_data = self._registered_levels[level_id]
+
+	level_data.is_spawned = false
+	level_data.level = nil
+
+	local start_index = level_data.start_index
+	local end_index = level_data.end_index
+
+	for i = start_index, end_index - 1 do
+		local unit = self._level_unit_array[i]
+
+		self._level_unit_array[i] = nil
+		self._level_unit_index_lookup[unit] = nil
+	end
+end
+
+UnitSpawnerManager.register_dynamic_level_spawned_units_client = function (self, level, units, server_level_id)
+	local level_data
+
+	if self.is_fully_hot_join_synced then
+		level_data = {
+			is_spawned = false,
+			start_index = self._next_level_unit_index,
+			end_index = self._next_level_unit_index + #units,
+		}
+		self._registered_levels[server_level_id] = level_data
+	else
+		level_data = self._registered_levels[server_level_id]
+
+		if not level_data then
+			table.dump(self._registered_levels, "registered levels", 2)
+			ferror("Trying to spawn dynamic level with id %i that server hasn't synced yet.", server_level_id)
+		end
+	end
+
+	self._has_spawned_dynamic_level = true
+	level_data.level = level
+	level_data.is_spawned = true
+	level_data.is_dynamic = true
+	self._last_level_id = server_level_id
+
+	if self.is_fully_hot_join_synced then
+		self:_register_spawned_units(level, units, server_level_id)
+	else
+		self:_register_spawned_units(level, units, server_level_id, level_data.start_index)
+	end
+end
+
+UnitSpawnerManager.index_by_level = function (self, level)
+	local level_id
+	local sub_level_id = Level.get_data(level, "UnitSpawnerManager", "sub_level_id")
+
+	if sub_level_id then
+		level_id = Level.get_data(level, "UnitSpawnerManager", "parent_level_id")
+	else
+		level_id = Level.get_data(level, "UnitSpawnerManager", "level_id")
+	end
+
+	return level_id, sub_level_id
+end
+
+UnitSpawnerManager.level_by_index = function (self, level_index, sub_level_index)
+	local registered_levels = self._registered_levels
+	local level_data = registered_levels[level_index]
+
+	if level_data then
+		if sub_level_index and sub_level_index ~= -1 then
+			local sub_levels = level_data.sub_levels
+			local sub_level = sub_levels[sub_level_index]
+
+			return sub_level
+		end
+
+		return level_data.level
+	end
+end
+
+UnitSpawnerManager.register_dynamic_level_spawned_units_server = function (self, level, units)
+	self._has_spawned_dynamic_level = true
+
+	local id = self._last_level_id + 1
+
+	self._last_level_id = id
+
+	local assign_sub_level_ids
+
+	function assign_sub_level_ids(current_level, current_index, all_sub_levels)
+		local sub_levels = Level.nested_levels(current_level)
+
+		for i = 1, #sub_levels do
+			local sub_level = sub_levels[i]
+
+			Level.set_data(sub_level, "UnitSpawnerManager", "sub_level_id", current_index)
+			Level.set_data(sub_level, "UnitSpawnerManager", "parent_level_id", id)
+
+			all_sub_levels[current_index] = sub_level
+			current_index = current_index + 1
+
+			assign_sub_level_ids(sub_level, current_index, all_sub_levels)
+		end
+	end
+
+	local all_sub_levels = {}
+
+	assign_sub_level_ids(level, 1, all_sub_levels)
+
+	self._registered_levels[id] = {
+		is_dynamic = true,
+		is_spawned = true,
+		level = level,
+		start_index = self._next_level_unit_index,
+		end_index = self._next_level_unit_index + #units,
+		sub_levels = all_sub_levels,
+	}
+
+	self:_register_spawned_units(level, units, id)
+
+	return id
+end
+
+UnitSpawnerManager.register_static_level_spawned_units = function (self, level, units)
+	local id = self._last_level_id + 1
+
+	self._last_level_id = id
+
+	local assign_sub_level_ids
+
+	function assign_sub_level_ids(current_level, current_index, all_sub_levels)
+		local sub_levels = Level.nested_levels(current_level)
+
+		for i = 1, #sub_levels do
+			local sub_level = sub_levels[i]
+
+			Level.set_data(sub_level, "UnitSpawnerManager", "sub_level_id", current_index)
+			Level.set_data(sub_level, "UnitSpawnerManager", "parent_level_id", id)
+
+			all_sub_levels[current_index] = sub_level
+			current_index = current_index + 1
+
+			assign_sub_level_ids(sub_level, current_index, all_sub_levels)
+		end
+	end
+
+	local all_sub_levels = {}
+
+	assign_sub_level_ids(level, 1, all_sub_levels)
+
+	self._registered_levels[id] = {
+		is_spawned = true,
+		level = level,
+		start_index = self._next_level_unit_index,
+		end_index = self._next_level_unit_index + #units,
+		sub_levels = all_sub_levels,
+	}
+
+	self:_register_spawned_units(level, units, id)
+end
+
+UnitSpawnerManager._register_spawned_units = function (self, level, units, id, override_start_index)
+	local start_index = override_start_index or self._next_level_unit_index
+	local next_index = start_index
+	local unit_array = self._level_unit_array
+	local index_lookup = self._level_unit_index_lookup
+	local unit
+
+	for i = 1, #units do
+		unit = units[i]
+		unit_array[next_index] = unit
+		index_lookup[unit] = next_index
+		next_index = next_index + 1
+	end
+
+	if not override_start_index then
+		self._next_level_unit_index = next_index
+	end
+
+	_log_info("Registered level %q, id: %i", level, id)
+	Level.set_data(level, "UnitSpawnerManager", "level_id", id)
 end
 
 UnitSpawnerManager.is_unit_template = function (self, game_object_type)
@@ -160,6 +395,10 @@ UnitSpawnerManager.mark_for_deletion = function (self, unit)
 	end
 end
 
+UnitSpawnerManager.is_marked_for_deletion = function (self, unit)
+	return self._deletion_queue:contains(unit)
+end
+
 UnitSpawnerManager._remove_units_marked_for_deletion = function (self)
 	if self._deletion_queue:size() == 0 then
 		return 0
@@ -243,11 +482,18 @@ UnitSpawnerManager.unit_index = function (self, unit)
 end
 
 UnitSpawnerManager.level_index = function (self, unit)
+	local unit_index
+
+	unit_index = self._level_unit_index_lookup[unit]
+
+	if unit_index then
+		return self._level_unit_index_lookup[unit], NetworkConstants.invalid_level_name_hash
+	end
+
 	if not Unit.level(unit) then
 		return nil, NetworkConstants.invalid_level_name_hash
 	end
 
-	local unit_index
 	local runtime_loaded_levels = self._runtime_loaded_levels
 
 	for level_name_hash, units in pairs(runtime_loaded_levels) do
@@ -272,11 +518,22 @@ UnitSpawnerManager.level_index = function (self, unit)
 end
 
 UnitSpawnerManager.unit = function (self, game_object_id_or_level_index, is_level_unit_optional, level_name_hash_optional)
-	if level_name_hash_optional and level_name_hash_optional ~= NetworkConstants.invalid_level_name_hash then
+	local hash_ok = level_name_hash_optional and tonumber(level_name_hash_optional) ~= NetworkConstants.invalid_level_name_hash
+
+	if hash_ok then
 		local units_in_runtime_loaded_level = self._runtime_loaded_levels[level_name_hash_optional]
 
 		return units_in_runtime_loaded_level[game_object_id_or_level_index]
 	elseif is_level_unit_optional then
+		local unit = self._level_unit_array[game_object_id_or_level_index]
+
+		if unit then
+			return unit
+		else
+			table.dump(self._level_unit_array)
+			Log.exception("UnitSpawnerManager", "[FEATURE_expanded_level_ids] Level index %i not found in level unit array", game_object_id_or_level_index)
+		end
+
 		return Level._unit_by_index(self._main_level, game_object_id_or_level_index)
 	end
 
@@ -408,8 +665,8 @@ UnitSpawnerManager.spawn_husk_unit = function (self, game_object_id, owner_id)
 	self:_create_unit_extensions(self._world, unit, unit_template.husk_init, unit_template.husk_unit_spawned, session, game_object_id, owner_id)
 end
 
-UnitSpawnerManager.register_runtime_loaded_level = function (self, level)
-	local level_name_hash = Level._name_hash_32(level)
+UnitSpawnerManager.register_runtime_loaded_level = function (self, level, level_hash)
+	local level_name_hash = level_hash or Level._name_hash_32(level)
 
 	self._runtime_loaded_levels[level_name_hash] = self._runtime_loaded_levels[level_name_hash] or {}
 
@@ -423,8 +680,8 @@ UnitSpawnerManager.register_runtime_loaded_level = function (self, level)
 	end
 end
 
-UnitSpawnerManager.unregister_runtime_loaded_level = function (self, level)
-	local level_name_hash = Level._name_hash_32(level)
+UnitSpawnerManager.unregister_runtime_loaded_level = function (self, level, level_hash)
+	local level_name_hash = level_hash or Level._name_hash_32(level)
 
 	self._runtime_loaded_levels[level_name_hash] = nil
 end

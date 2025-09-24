@@ -25,7 +25,7 @@ LocalAwaitConnectionBootedState.update = function (self, dt)
 	local shared_state = self._shared_state
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if state == "disconnecting" or state == "disconnected" then
 		Log.info("LocalAwaitConnectionBootedState", "Connection channel disconnected")
 
 		return "disconnected", {

@@ -1,14 +1,14 @@
 ﻿-- chunkname: @scripts/ui/pass_templates/button_pass_templates.lua
 
+local Colors = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ButtonPassTemplates = {}
-local color_lerp = ColorUtilities.color_lerp
-local color_copy = ColorUtilities.color_copy
+local color_lerp = Colors.color_lerp
+local color_copy = Colors.color_copy
 local math_max = math.max
 local math_lerp = math.lerp
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
@@ -20,29 +20,24 @@ terminal_button_text_style.offset = {
 }
 terminal_button_text_style.text_horizontal_alignment = "center"
 terminal_button_text_style.text_vertical_alignment = "center"
-terminal_button_text_style.text_color = {
-	255,
-	216,
-	229,
-	207,
-}
-terminal_button_text_style.default_color = {
-	255,
-	216,
-	229,
-	207,
-}
+terminal_button_text_style.text_color = Color.terminal_text_header(255, true)
+terminal_button_text_style.default_color = Color.terminal_text_header(255, true)
 
 local terminal_button_small_text_style = table.clone(terminal_button_text_style)
 
 terminal_button_small_text_style.font_size = terminal_button_text_style.font_size - 2
+
+local terminal_button_hold_small_text_style = table.clone(terminal_button_text_style)
+
+terminal_button_hold_small_text_style.hold_color = Color.ui_terminal(255, true)
+terminal_button_hold_small_text_style.disabled_hold_color = Color.ui_grey_medium(255, true)
 
 local function terminal_button_change_function(content, style, optional_hotspot_id)
 	local hotspot = optional_hotspot_id and content[optional_hotspot_id] or content.hotspot
 	local is_selected = hotspot.is_selected
 	local is_focused = hotspot.is_focused
 	local is_hover = hotspot.is_hover
-	local disabled = hotspot.disabled
+	local disabled = hotspot.disabled or (content.start_delay or 0) > 0
 	local default_color = style.default_color
 	local hover_color = style.hover_color
 	local selected_color = style.selected_color
@@ -1589,28 +1584,30 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		pass_type = "text",
 		style_id = "text",
 		value_id = "text",
-		style = terminal_button_small_text_style,
+		style = terminal_button_hold_small_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local disabled = hotspot.disabled or content.start_delay > 0
 			local default_color = disabled and style.disabled_color or style.default_color
+			local hold_color = disabled and style.disabled_hold_color or style.hold_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
 			local gamepad_active = hotspot.gamepad_active
 			local button_text = content.original_text or ""
 			local gamepad_action = content.input_action
+			local timer_text = content.start_delay > 0 and string.format(" (%d)", math.ceil(content.start_delay)) or ""
 
 			if gamepad_active and gamepad_action and not disabled and not content.ignore_gamepad_on_text then
 				local service_type = "View"
 				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
 				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
 
-				content.text = string.format("{#color(226,199,126)}%s %s{#reset()} %s", Localize("loc_input_hold"), input_text, button_text)
+				content.text = string.format("{#color(%d,%d,%d)}%s %s{#reset()} %s%s", hold_color[2], hold_color[3], hold_color[4], Localize("loc_input_hold"), input_text, button_text, timer_text)
 			else
-				content.text = string.format("{#color(226,199,126)}%s{#reset()} %s", Localize("loc_input_hold"), button_text)
+				content.text = string.format("{#color(%d,%d,%d)}%s{#reset()} %s%s", hold_color[2], hold_color[3], hold_color[4], Localize("loc_input_hold"), button_text, timer_text)
 			end
 
-			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+			local progress = not disabled and math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress)) or 0
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end,

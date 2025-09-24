@@ -197,9 +197,6 @@ local function _update_forcesword_wind_slash(template_data, template_context, dt
 	end
 
 	local position = start_position + attack_direction * slash_distance_traveled
-	local owner_unit = template_context.owner_unit
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[owner_unit]
 	local new_time_remaining = template_data.slash_time_remaining - dt
 
 	template_data.slash_time_remaining = new_time_remaining > 0 and new_time_remaining or nil

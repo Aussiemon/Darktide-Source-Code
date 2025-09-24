@@ -328,13 +328,8 @@ local legend_inputs = {
 
 			local previewed_item = parent._previewed_item
 
-			if previewed_item then
-				local item_type = previewed_item.item_type
-				local ITEM_TYPES = UISettings.ITEM_TYPES
-
-				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.COMPANION_GEAR_FULL or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.SET then
-					return true
-				end
+			if previewed_item and UISettings.inspectable_item_types[previewed_item.item_type] then
+				return true
 			end
 
 			return false

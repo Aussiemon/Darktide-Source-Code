@@ -11,9 +11,7 @@ local text_box_size = {
 	300,
 }
 local scenegraph_definition = {
-	screen = {
-		UIWorkspaceSettings.screen,
-	},
+	screen = UIWorkspaceSettings.screen,
 	background = {
 		horizontal_alignment = "center",
 		parent = "screen",

@@ -91,6 +91,9 @@ local sound_events = {
 	"wwise/events/player/play_horde_mode_buff_ammo_refill",
 	"wwise/events/player/play_horde_mode_buff_grenade_refill",
 	"wwise/events/player/play_horde_mode_buff_shield",
+	"wwise/events/player/play_horde_mode_buff_critical_blood_explosion",
+	"wwise/events/player/play_horde_mode_buff_big_boom",
+	"wwise/events/player/play_horde_mode_buff_burn_bleeding_hit",
 	"wwise/events/player/play_pick_up_ammo_01",
 	"wwise/events/player/play_pick_up_ammo_02",
 	"wwise/events/player/play_pick_up_ammopack",
@@ -115,6 +118,8 @@ local sound_events = {
 	"wwise/events/ui/play_ui_item_result_ovelay_tier_3",
 	"wwise/events/weapon/play_bullet_hits_explosive_gen_husk",
 	"wwise/events/weapon/play_bullet_hits_explosive_gen",
+	"wwise/events/weapon/play_bullet_hits_explosive_big_gen",
+	"wwise/events/weapon/play_bullet_hits_explosive_big_gen_husk",
 	"wwise/events/weapon/play_bullet_hits_plasmagun_gen",
 	"wwise/events/weapon/play_captain_ground_impact_gen",
 	"wwise/events/weapon/play_chaos_ogryn_executor_ground_impact_debris",
@@ -195,6 +200,8 @@ local sound_events = {
 	"wwise/events/player/play_player_ability_adamant_dog_explosion",
 	"wwise/events/minions/play_fly_swarm_plague_loop_mutator",
 	"wwise/events/minions/stop_fly_swarm_plague_loop_mutator",
+	"wwise/events/player/play_syringe_power_start",
+	"wwise/events/player/play_syringe_power_stop",
 }
 
 return sound_events

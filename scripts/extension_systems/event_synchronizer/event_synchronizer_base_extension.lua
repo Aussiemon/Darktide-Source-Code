@@ -6,6 +6,7 @@ EventSynchronizerBaseExtension.init = function (self, extension_init_context, un
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
 	self._objective_name = "default"
+	self._group_id = 0
 	self._auto_start = false
 	self._mission_active = false
 	self._finished = false
@@ -16,6 +17,12 @@ EventSynchronizerBaseExtension.init = function (self, extension_init_context, un
 	if self._is_server then
 		self._setup_seed = math.random_seed()
 		self._seed = math.random_seed()
+	end
+
+	local level = Unit.level(unit)
+
+	if level then
+		self._group_id = Managers.state.unit_spawner:index_by_level(level)
 	end
 end
 

@@ -17,10 +17,6 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 	self._pass_draw = true
 	self._definitions = definitions
 	self._settings = settings
-	self._event_list = {}
-	self._elements = {}
-	self._elements_array = {}
-	self._element_to_pivot = {}
 	self._local_player_id = 1
 	self._start_loading_time = Managers.time:time("main")
 
@@ -28,6 +24,14 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 
 	self._preloaded_package = not not Managers.package:has_loaded(package_name)
 	self._memory_startup = Memory.usage("B").used_memory
+	self._ui_scenegraph = {}
+	self._widgets, self._widgets_by_name = {}, {}
+	self._render_settings = {}
+	self._render_scale = 1
+	self._event_list = {}
+	self._elements = {}
+	self._elements_array = {}
+	self._element_to_pivot = {}
 	self._loading = true
 
 	local view_name = settings.name
@@ -102,18 +106,16 @@ BaseView.is_view_requirements_complete = function (self)
 end
 
 BaseView._on_view_requirements_complete = function (self)
-	self._can_close = true
 	self._render_scale = Managers.ui:view_render_scale()
 
 	local definitions = self._definitions
 
 	self._ui_scenegraph = self:_create_scenegraph(definitions)
-	self._widgets, self._widgets_by_name = {}, {}
 
 	self:_create_widgets(definitions, self._widgets, self._widgets_by_name)
 
 	self._ui_sequence_animator = self:_create_sequence_animator(definitions)
-	self._render_settings = {}
+	self._can_close = true
 
 	self:on_enter()
 end
@@ -475,6 +477,10 @@ BaseView.update = function (self, dt, t, input_service)
 		Testify:poll_requests_through_handler(BaseViewTestify, self)
 	end
 
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
+
 	if self._can_close_frame_counter then
 		if self._can_close_frame_counter == 0 then
 			self:set_can_exit(self._next_frame_can_close)
@@ -532,6 +538,10 @@ BaseView.is_using_input = function (self)
 end
 
 BaseView.draw = function (self, dt, t, input_service, layer)
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
+
 	local render_scale = self._render_scale
 	local render_settings = self._render_settings
 	local ui_renderer = self._ui_renderer
@@ -790,6 +800,14 @@ BaseView._player_viewport = function (self)
 	local player = self:_player()
 
 	return player.viewport_name
+end
+
+BaseView.input_enable = function (self)
+	self._input_disabled = false
+end
+
+BaseView.input_disable = function (self)
+	self._input_disabled = true
 end
 
 return BaseView

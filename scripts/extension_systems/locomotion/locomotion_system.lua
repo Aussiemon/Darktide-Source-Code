@@ -18,6 +18,8 @@ local LocomotionSystem = class("LocomotionSystem", "ExtensionSystemBase")
 LocomotionSystem.init = function (self, extension_system_creation_context, ...)
 	LocomotionSystem.super.init(self, extension_system_creation_context, ...)
 
+	self._spawned_deployables = {}
+
 	local game_session = extension_system_creation_context.game_session
 
 	if self._is_server then
@@ -47,6 +49,10 @@ LocomotionSystem.on_remove_extension = function (self, unit, extension_name)
 	end
 
 	LocomotionSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
+LocomotionSystem.register_deployable = function (self, deployable_unit)
+	self._spawned_deployables[deployable_unit] = true
 end
 
 LocomotionSystem.update = function (self, context, dt, t, ...)

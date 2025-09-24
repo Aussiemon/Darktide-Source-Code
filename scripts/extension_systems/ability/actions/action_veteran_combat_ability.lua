@@ -123,9 +123,7 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 		end
 
 		local inventory_slot_secondary_component = self._inventory_slot_secondary_component
-		local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
-		local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
-		local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
+		local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
 
 		Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, missing_ammo_in_clip)
 
@@ -185,7 +183,13 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 
 	if has_stance then
-		buff_extension:add_internally_controlled_buff("veteran_combat_ability_stance_master", t)
+		local increased_duration = talent_extension:has_special_rule(special_rules.veteran_combat_ability_ogryn_outlines)
+
+		if increased_duration then
+			buff_extension:add_internally_controlled_buff("veteran_combat_ability_stance_master_increased_duration", t)
+		else
+			buff_extension:add_internally_controlled_buff("veteran_combat_ability_stance_master", t)
+		end
 	end
 
 	if action_settings then

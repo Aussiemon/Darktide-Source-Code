@@ -7,6 +7,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DodgeSettings = require("scripts/settings/dodge/dodge_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local dodge_types = DodgeSettings.dodge_types
@@ -145,6 +146,13 @@ Dodge.is_dodging = function (unit, attack_type)
 		return true, dodge_types.linger
 	end
 
+	local is_incapacitating_net = attack_type == attack_types.incapacitating_net
+	local is_incapacitating_pounce = attack_type == attack_types.incapacitating_pounce
+
+	if buff_extension and (is_incapacitating_net and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_netgunner) or is_incapacitating_pounce and buff_extension:has_keyword(buff_keywords.count_as_dodge_vs_chaos_hound_pounce)) then
+		return true, dodge_types.buff
+	end
+
 	return false, nil
 end
 
@@ -177,6 +185,7 @@ Dodge.sucessful_dodge = function (dodging_unit, attacking_unit, attack_type, dod
 			param_table.dodging_unit = dodging_unit
 			param_table.attacking_unit = attacking_unit
 			param_table.attack_type = attack_type
+			param_table.dodge_type = dodge_type
 
 			dodging_unit_buff_extension:add_proc_event(proc_events.on_successful_dodge, param_table)
 		end
@@ -211,6 +220,39 @@ Dodge.consecutive_dodges = function (unit)
 	local dodge_character_state_component = unit_data_extension:read_component("dodge_character_state")
 
 	return dodge_character_state_component.consecutive_dodges
+end
+
+Dodge.extra_consecutive_dodges = function (unit, optional_buff_extension)
+	local buff_extension = optional_buff_extension or ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local extra_consecutive_dodges = buff_extension and math.round(stat_buffs.extra_consecutive_dodges or 0)
+
+	return extra_consecutive_dodges
+end
+
+Dodge.num_effective_dodges = function (unit, optional_weapon_extension, optional_buff_extension)
+	local weapon_extension = optional_weapon_extension or ScriptUnit.extension(unit, "weapon_system")
+	local weapon_dodge_template = weapon_extension:dodge_template()
+	local extra_consecutive_dodges = Dodge.extra_consecutive_dodges(unit, optional_buff_extension)
+	local num_effective_dodges = (weapon_dodge_template and weapon_dodge_template.diminishing_return_start or 2) + extra_consecutive_dodges
+
+	return num_effective_dodges
+end
+
+Dodge.effective_dodges_have_reset = function (unit_data_extension)
+	local slide_character_state_component = unit_data_extension:read_component("slide_character_state")
+	local movement_state_component = unit_data_extension:read_component("movement_state")
+	local dodge_character_state_component = unit_data_extension:read_component("dodge_character_state")
+	local is_vaulting = movement_state_component.method == "vaulting"
+	local is_lunging = movement_state_component.method == "lunging"
+	local is_dodging = movement_state_component.is_dodging and not is_vaulting and not is_lunging
+	local is_sliding = movement_state_component.method == "sliding"
+	local was_in_consecutive_dodge_cooldown = slide_character_state_component.was_in_dodge_cooldown
+	local fixed_t = FixedFrame.get_latest_fixed_time()
+	local can_consecutive_dodges_reset = not is_dodging or is_sliding and not was_in_consecutive_dodge_cooldown
+	local effective_dodges_have_reset = can_consecutive_dodges_reset and fixed_t > dodge_character_state_component.consecutive_dodges_cooldown
+
+	return effective_dodges_have_reset
 end
 
 return Dodge

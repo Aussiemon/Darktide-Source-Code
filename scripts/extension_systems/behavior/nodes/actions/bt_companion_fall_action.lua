@@ -4,9 +4,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local NavQueries = require("scripts/utilities/nav_queries")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
 local BtCompanionFallAction = class("BtCompanionFallAction", "BtNode")
-local DogLeapSettings = CompanionDogSettings.dog_leap_settings
 local FALLING_NAV_MESH_ABOVE = 0.5
 local FALLING_NAV_MESH_BELOW = 30
 local FALLING_NAV_MESH_LATERAL = 5

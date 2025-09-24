@@ -16,7 +16,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 
 	self._extension_manager = extension_manager
 	self._network_event_delegate = extension_system_creation_context.network_event_delegate
-	self._run_in_runtime_loaded_level = false
+	self._run_in_cinematic_level = false
 	self._extension_init_context = {
 		fixed_frame = 0,
 		fixed_frame_t = 0,
@@ -308,12 +308,12 @@ ExtensionSystemBase.destroy = function (self)
 	return
 end
 
-ExtensionSystemBase.set_run_in_runtime_loaded_level = function (self, val)
-	self._run_in_runtime_loaded_level = val
+ExtensionSystemBase.set_run_in_cinematic_level = function (self, val)
+	self._run_in_cinematic_level = val
 end
 
-ExtensionSystemBase.run_in_runtime_loaded_level = function (self)
-	return self._run_in_runtime_loaded_level
+ExtensionSystemBase.run_in_cinematic_level = function (self)
+	return self._run_in_cinematic_level
 end
 
 return ExtensionSystemBase

@@ -478,13 +478,14 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 	player:create_input_handler(self.fixed_time_step)
 	Managers.state.unit_spawner:hot_join_sync(peer_id, channel_id)
 	Managers.state.game_mode:hot_join_sync(peer_id, channel_id)
+	Managers.state.level_instance:hot_join_sync(peer_id, channel_id)
 	Managers.state.extension:hot_join_sync(peer_id, channel_id)
 	Managers.state.nav_mesh:hot_join_sync(peer_id, channel_id)
 	Managers.state.network_story:hot_join_sync(peer_id, channel_id)
 	Managers.state.networked_flow_state:hot_join_sync(peer_id, channel_id)
 	Managers.state.mutator:hot_join_sync(peer_id, channel_id)
 	Managers.state.cinematic:hot_join_sync(peer_id, channel_id)
-	Managers.stats:hot_join_sync(peer_id, channel_id)
+	Managers.stats:hot_join_sync(peer_id, channel_id, local_player_id)
 	RPC.rpc_is_fully_hot_join_synced(channel_id)
 	Managers.event:trigger("host_game_session_manager_player_joined", peer_id, player)
 
@@ -543,6 +544,8 @@ GameSessionManager._client_left = function (self, channel_id, peer_id, game_reas
 			if player.input_handler then
 				player:destroy_input_handler()
 			end
+
+			Managers.stats:clear_rpc_queue(player.stat_id)
 		end
 	end
 

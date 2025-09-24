@@ -29,7 +29,7 @@ hordes_legendary_buffs_data.hordes_buff_auto_clip_fill_while_melee = {
 		ammo = {
 			format_type = "percentage",
 			prefix = "+",
-			value = 0.05,
+			value = 0.07,
 		},
 	},
 }
@@ -102,6 +102,105 @@ hordes_legendary_buffs_data.hordes_buff_staggering_pulse = {
 		time = {
 			format_type = "number",
 			value = 10,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_random_damage_immunity = {
+	description = "Gain 10% evasive chance, ignoring any damage taken if triggered",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_random_damage_immunity",
+	title = "Spiky skin",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		chance = {
+			format_type = "percentage",
+			value = 0.15,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_big_weakspot_damage_increase = {
+	description = "Weakspot damage are increase by 175%",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_big_weakspot_damage_increase",
+	title = "Big head",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		damage = {
+			format_type = "percentage",
+			value = 2,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_toughness_coherency_from_enemies_instead_of_players = {
+	description = "You become immune  to allies bonus in coherency every 5  Enemies count as an ally for coherency bonuses",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_toughness_coherency_from_enemies_instead_of_players",
+	title = "Keep your foes close",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		count = {
+			format_type = "number",
+			value = 5,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_bleeding_and_burning_on_melee_hit = {
+	description = "Each melee attack applies + 5 bleeding / 5 burns to ennemies",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_bleeding_and_burning_on_melee_hit",
+	title = "Multitasks",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		burn = {
+			format_type = "number",
+			value = 5,
+		},
+		bleed = {
+			format_type = "number",
+			value = 5,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_boosted_melee_attack_on_cooldown = {
+	description = "Gain enhanced melee attack every 15sc increase damage and stagger by 300%",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_boosted_melee_attack_on_cooldown",
+	title = "Hold my beer",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		time = {
+			format_type = "number",
+			value = 15,
+		},
+		enhanced = {
+			format_type = "percentage",
+			value = 3.5,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_explosion_on_toughness_broken = {
+	description = "Trigger an ogryn big bomba when breaking toughness, 60sc cooldown",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_explosion_on_toughness_broken",
+	title = "Surprise mozard faker",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		time = {
+			format_type = "number",
+			value = 25,
+		},
+	},
+}
+hordes_legendary_buffs_data.hordes_buff_reflect_melee_damage = {
+	description = "Deal damage taken in melee back to the target",
+	gradient = "content/ui/textures/color_ramps/talent_ability",
+	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_reflect_melee_damage",
+	title = "Who is laughing now ?",
+	filter_category = filtering_categories.jackpot,
+	buff_stats = {
+		time = {
+			format_type = "percentage",
+			value = 0.5,
 		},
 	},
 }

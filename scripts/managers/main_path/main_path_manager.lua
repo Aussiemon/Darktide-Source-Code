@@ -131,14 +131,26 @@ end
 
 MainPathManager.destroy = function (self)
 	if self._main_path_version then
+		self._main_path_version = nil
+
 		EngineOptimized.unregister_main_path()
 
 		if self._nav_spawn_points then
 			GwNavSpawnPoints.destroy(self._nav_spawn_points)
+
+			self._nav_spawn_points = nil
+
 			GwNavTriangleGroup.destroy(self._nav_triangle_group)
+
+			self._nav_triangle_group = nil
+
 			GwNavTagLayerCostTable.destroy(self._spawn_point_cost_table)
+
+			self._spawn_point_cost_table = nil
 		end
 	end
+
+	self._path:destroy()
 end
 
 MainPathManager.crossroad_road_id = function (self, crossroads_id)
@@ -199,8 +211,12 @@ MainPathManager.segment_index_by_unit = function (self, unit)
 	return self._path:segment_index_by_unit(unit)
 end
 
-MainPathManager.node_index_by_nav_group_index = function (self, group_index)
-	return self._group_to_main_path_index[group_index]
+MainPathManager.closest_main_path_position = function (self, position, return_on_no_index)
+	return self._path:closest_main_path_position(position, return_on_no_index)
+end
+
+MainPathManager.travel_distance_from_position = function (self, position, return_on_no_index)
+	return self._path:travel_distance_from_position(position, return_on_no_index)
 end
 
 MainPathManager.spawn_point_cost_table = function (self)
@@ -249,9 +265,10 @@ MainPathManager.generate_spawn_points = function (self)
 	local nav_world, triangle_group_distance, triangle_group_cutoff_values = self._nav_world, MainPathSettings.triangle_group_distance, MainPathSettings.triangle_group_cutoff_values
 	local nav_triangle_group, debug_flood_fill_positions, group_to_main_path_index = SpawnPointQueries.generate_nav_triangle_group(nav_world, triangle_group_distance, triangle_group_cutoff_values, nav_triangle_group_cost_table)
 
-	GwNavTagLayerCostTable.destroy(nav_triangle_group_cost_table)
+	self._nav_triangle_group = nav_triangle_group
 
-	self._nav_triangle_group, self._group_to_main_path_index = nav_triangle_group, group_to_main_path_index
+	self._path:generate_spawn_points(nav_triangle_group, group_to_main_path_index)
+	GwNavTagLayerCostTable.destroy(nav_triangle_group_cost_table)
 
 	local spawn_point_cost_table = GwNavTagLayerCostTable.create()
 

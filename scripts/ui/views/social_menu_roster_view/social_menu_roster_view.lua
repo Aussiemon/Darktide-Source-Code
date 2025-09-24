@@ -2,7 +2,7 @@
 
 local Blueprints = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_blueprints")
 local Definitions = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_definitions")
-local MasterItems = require("scripts/backend/master_items")
+local InputUtils = require("scripts/managers/input/input_utils")
 local Popups = require("scripts/utilities/ui/popups")
 local Promise = require("scripts/foundation/utilities/promise")
 local RosterViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
@@ -10,17 +10,14 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
 local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
-local InputUtils = require("scripts/managers/input/input_utils")
-local OnlineStatus = SocialConstants.OnlineStatus
-local PartyStatus = SocialConstants.PartyStatus
 local FriendStatus = SocialConstants.FriendStatus
+local OnlineStatus = SocialConstants.OnlineStatus
 local social_service = Managers.data_service.social
 local SocialMenuRosterView = class("SocialMenuRosterView", "BaseView")
 local POPUP_NAME = "player_social_popup"

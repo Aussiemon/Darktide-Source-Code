@@ -9,6 +9,14 @@ local template = {
 			"event_ascender_trickle_b",
 			1,
 		},
+		km_enforcer_kill_wave = {
+			"km_enforcer_kill_target_wave_1",
+			1,
+			"km_enforcer_kill_target_wave_2",
+			1,
+			"km_enforcer_kill_target_wave_3",
+			1,
+		},
 	},
 	events = {
 		event_pacing_off = {
@@ -479,26 +487,48 @@ local template = {
 				},
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 14,
+				spawner_group = "spawner_enforcer_command_middle",
+				breed_tags = {
+					{
+						"melee",
+						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				"spawner_enforcer_command_right",
+				limit_spawners = 3,
+				points = 8,
+				spawner_group = "spawner_enforcer_command_left",
+				breed_tags = {
+					{
+						"roamer",
+					},
+				},
+			},
+			{
 				"debug_print",
 				duration = 3,
 				text = "Kill event: Target spawned",
 			},
 			{
-				"delay",
-				duration = 5,
-			},
-			{
-				"start_terror_event",
-				start_event_name = "km_enforcer_kill_target_wave",
+				"start_random_terror_event",
+				start_event_name = "km_enforcer_kill_wave",
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 2,
 			},
 			{
 				"start_terror_trickle",
-				delay = 5,
-				spawner_group = "spawner_enforcer_command_middle",
+				"spawner_enforcer_command_right",
+				"spawner_enforcer_command_middle",
+				limit_spawners = 3,
+				spawner_group = "spawner_enforcer_command_left",
 				template_name = "low_melee",
 			},
 			{
@@ -520,55 +550,15 @@ local template = {
 				flow_event_name = "platform_kill_target_dead",
 			},
 		},
-		km_enforcer_kill_target_wave = {
-			{
-				"play_2d_sound",
-				sound_event_name = "wwise/events/minions/play_mid_event_horde_signal",
-			},
+		km_enforcer_kill_target_wave_1 = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
-				spawner_group = "spawner_enforcer_command_middle",
+				points = 10,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_enforcer_command_left",
 				breed_tags = {
 					{
-						"melee",
-						"horde",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 6,
-				spawner_group = "spawner_enforcer_command_right_back",
-				breed_tags = {
-					{
-						"melee",
-						"horde",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 6,
-				spawner_group = "spawner_enforcer_command_left_back",
-				breed_tags = {
-					{
-						"melee",
-						"horde",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 6,
-				spawner_group = "spawner_enforcer_command_right",
-				breed_tags = {
-					{
-						"melee",
 						"elite",
 					},
 				},
@@ -576,92 +566,26 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
-				spawner_group = "spawner_enforcer_command_left",
+				points = 10,
+				spawner_group = "spawner_enforcer_command_middle",
 				breed_tags = {
 					{
-						"far",
 						"roamer",
 					},
 				},
 			},
 			{
 				"delay",
-				duration = 25,
-			},
-			{
-				"continue_when",
-				duration = 40,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end,
+				duration = 2,
 			},
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
-				points = 12,
-				spawner_group = "spawner_enforcer_command_right",
-				breed_tags = {
-					{
-						"special",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 12,
-				spawner_group = "spawner_enforcer_command_left_back",
-				breed_tags = {
-					{
-						"melee",
-						"elite",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
-				points = 18,
-				spawner_group = "spawner_enforcer_command_left",
-				breed_tags = {
-					{
-						"melee",
-						"horde",
-					},
-				},
-			},
-			{
-				"delay",
-				duration = 25,
-			},
-			{
-				"continue_when",
-				duration = 40,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end,
-			},
-			{
-				"try_inject_special_minion",
-				max_breed_amount = 1,
-				points = 12,
-				spawner_group = "spawner_enforcer_command_middle",
-				breed_tags = {
-					{
-						"special",
-					},
-				},
-			},
-			{
-				"spawn_by_points",
-				limit_spawners = 3,
 				points = 12,
 				spawner_group = "spawner_enforcer_command_right_back",
 				breed_tags = {
 					{
-						"close",
-						"elite",
+						"special",
 					},
 				},
 			},
@@ -669,24 +593,99 @@ local template = {
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 14,
+				spawner_group = "spawner_enforcer_command_left_back",
+				breed_tags = {
+					{
+						"melee",
+						"horde",
+					},
+				},
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 5
+				end,
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "km_enforcer_kill_wave",
+			},
+		},
+		km_enforcer_kill_target_wave_2 = {
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 10,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_enforcer_command_right",
 				breed_tags = {
 					{
-						"far",
+						"elite",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 10,
+				spawner_group = "spawner_enforcer_command_middle",
+				breed_tags = {
+					{
 						"roamer",
 					},
 				},
 			},
 			{
 				"delay",
-				duration = 25,
+				duration = 2,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_enforcer_command_left_back",
+				breed_tags = {
+					{
+						"special",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 14,
+				spawner_group = "spawner_enforcer_command_right_back",
+				breed_tags = {
+					{
+						"melee",
+						"horde",
+					},
+				},
 			},
 			{
 				"continue_when",
-				duration = 40,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
+					return TerrorEventQueries.num_alive_minions() < 5
 				end,
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "km_enforcer_kill_wave",
+			},
+		},
+		km_enforcer_kill_target_wave_3 = {
+			{
+				"spawn_by_points",
+				limit_spawners = 3,
+				points = 10,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_enforcer_command_left",
+				breed_tags = {
+					{
+						"elite",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
@@ -702,13 +701,13 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 2,
 			},
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
-				spawner_group = "spawner_enforcer_command_right_back",
+				spawner_group = "spawner_enforcer_command_left_back",
 				breed_tags = {
 					{
 						"special",
@@ -716,59 +715,32 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"spawn_by_points",
-				max_breed_amount = 1,
-				points = 16,
-				spawner_group = "spawner_enforcer_command_middle",
+				"spawner_enforcer_command_right_back",
+				limit_spawners = 3,
+				points = 10,
+				spawner_group = "spawner_enforcer_command_left_back",
 				breed_tags = {
 					{
-						"far",
 						"roamer",
 					},
 				},
 			},
 			{
 				"continue_when",
-				duration = 40,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
+					return TerrorEventQueries.num_alive_minions() < 5
 				end,
 			},
 			{
-				"continue_when",
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
-				end,
-			},
-			{
-				"start_terror_event",
-				start_event_name = "km_enforcer_kill_target_wave",
+				"start_random_terror_event",
+				start_event_name = "km_enforcer_kill_wave",
 			},
 		},
 		km_enforcer_kill_target_guards = {
 			{
-				"debug_print",
-				duration = 3,
-				text = "Kill event: Guards spawned",
-			},
-			{
-				"continue_when",
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() == 0
-				end,
-			},
-			{
-				"debug_print",
-				duration = 3,
-				text = "Kill event: Guards dead",
-			},
-			{
-				"flow_event",
-				flow_event_name = "platform_guards_dead",
+				"delay",
+				duration = 5,
 			},
 		},
 		km_enforcer_kill_target_reinforcements = {

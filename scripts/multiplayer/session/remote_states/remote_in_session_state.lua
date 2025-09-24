@@ -23,7 +23,7 @@ RemoteInSessionState.update = function (self, dt)
 	local shared_state = self._shared_state
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if state ~= "connected" then
 		Log.info("RemoteInSessionState", "Session channel disconnected %s", shared_state.peer_id)
 
 		return "disconnect", {

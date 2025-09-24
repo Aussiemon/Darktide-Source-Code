@@ -37,7 +37,7 @@ local abilities = {
 			"psyker",
 		},
 	},
-	psyker_force_field_increased_charges = {
+	psyker_force_field_improved = {
 		ability_group = "psyker_shield",
 		ability_type = "combat_ability",
 		can_be_previously_wielded_to = false,
@@ -45,8 +45,9 @@ local abilities = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/psyker/psyker_ability_warp_barrier",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		inventory_item_name = "content/items/weapons/player/psyker_shield",
-		max_charges = protectorate_talent_settings.combat_ability_1.max_charges,
-		cooldown = protectorate_talent_settings.combat_ability_1.cooldown,
+		stat_buff = "ability_extra_charges",
+		max_charges = protectorate_talent_settings.combat_ability.max_charges,
+		cooldown = protectorate_talent_settings.combat_ability.cooldown_reduced,
 		archetypes = {
 			"psyker",
 		},

@@ -2,6 +2,7 @@
 
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SLOT_DEVICE_NAME = "slot_device"
+local SLOT_POCKETABLE_NAME = "slot_pocketable"
 local wield_info_passives_templates = {
 	{
 		name = "wield_scanner",

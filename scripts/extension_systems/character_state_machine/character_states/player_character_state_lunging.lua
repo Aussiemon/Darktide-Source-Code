@@ -127,7 +127,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		move_direction = Vector3.flat(move_direction)
 		flat_direction = move_direction
 
-		if Vector3.length_squared(move_direction) == 0 then
+		if Vector3.length_squared(move_direction) == 0 and not lunge_template.direction_requires_input then
 			local forward_direction = Quaternion.forward(rotation)
 
 			flat_direction = forward_direction
@@ -442,6 +442,12 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local has_exit_before_delay = time_in_lunge < add_buff_delay
 
 		if has_exit_before_delay then
+			local add_delayed_buff_special_rule = lunge_template.add_delayed_buff_special_rule
+
+			if add_delayed_buff_special_rule and self._talent_extension:has_special_rule(lunge_template.special_rule) then
+				add_delayed_buff = add_delayed_buff_special_rule
+			end
+
 			if type(add_delayed_buff) == "table" then
 				for _, buff_name in pairs(add_delayed_buff) do
 					buff_extension:add_internally_controlled_buff(buff_name, t)
@@ -490,6 +496,11 @@ PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_sta
 
 		if is_within_trigger_time then
 			local buff_extension = self._buff_extension
+			local add_delayed_buff_special_rule = lunge_template.add_delayed_buff_special_rule
+
+			if add_delayed_buff_special_rule and self._talent_extension:has_special_rule(lunge_template.special_rule) then
+				add_delayed_buff = add_delayed_buff_special_rule
+			end
 
 			if type(add_delayed_buff) == "table" then
 				for _, buff_name in pairs(add_delayed_buff) do

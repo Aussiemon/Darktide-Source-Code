@@ -21,15 +21,14 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
-local Suppression = require("scripts/utilities/attack/suppression")
 local Stamina = require("scripts/utilities/attack/stamina")
+local Suppression = require("scripts/utilities/attack/suppression")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
-local Vo = require("scripts/utilities/vo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
-local buff_keywords = BuffSettings.keywords
 local buff_categories = BuffSettings.buff_categories
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local special_rules = SpecialRulesSettings.special_rules
@@ -94,7 +93,7 @@ templates.ogryn_toughness_regen_aura = {
 	coherency_id = "ogryn_toughness_regen_coherency_aura",
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_stay_close",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	max_stacks = 1,
 	predicted = false,
@@ -129,7 +128,7 @@ templates.ogryn_toughness_restored_aura_tracking_buff = {
 			return
 		end
 
-		local amount = params.amount
+		local amount = params.amount or 0
 
 		amount = amount * toughness_aura_increase
 		template_data.amount = template_data.amount + amount
@@ -214,8 +213,6 @@ templates.ogryn_passive_heavy_hitter = {
 		local buff_extension = template_data.buff_extension
 		local max_stacks = template_data.max_stacks
 		local current_stacks = buff_extension:current_stacks(damage_buff_name)
-		local at_max_stacks = current_stacks == max_stacks
-		local max_stacks_improves_toughness = template_data.max_stacks_improves_toughness
 		local max_stacks_improves_attack_speed = template_data.max_stacks_improves_attack_speed
 		local stacks = is_heavy_hit and talent_settings_shared.ogryn_heavy_hitter.heavy_stacks or talent_settings_shared.ogryn_heavy_hitter.stacks
 
@@ -458,7 +455,7 @@ templates.ogryn_taunt_increased_damage_taken_buff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 1.25,
+		[stat_buffs.damage_taken_multiplier] = 1.2,
 	},
 }
 templates.ogryn_blocking_ranged_taunts = {
@@ -546,7 +543,7 @@ templates.ogryn_bracing_reduces_damage_taken = {
 	hud_priority = 4,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 0.8,
+		[stat_buffs.damage_taken_multiplier] = 0.75,
 	},
 	start_func = function (template_data, template_context)
 		local player_unit = template_context.unit
@@ -571,8 +568,8 @@ templates.ogryn_carapace_armor_child = {
 	refresh_start_time_on_stack = true,
 	stack_offset = -1,
 	stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = 0.025,
-		[stat_buffs.toughness_damage_taken_multiplier] = 0.975,
+		[stat_buffs.toughness_replenish_modifier] = 0.03,
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.97,
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.toughness_replenish_modifier] = 0.025,
@@ -685,7 +682,7 @@ templates.ogryn_carapace_armor_parent = {
 	},
 }
 
-local _toughness_ammount = talent_settings_shared.ogryn_carapace_explosion.toughness
+local _toughness_amount = talent_settings_shared.ogryn_carapace_explosion.toughness
 
 templates.ogryn_carapace_armor_explosion_on_zero_stacks_effect = {
 	class_name = "buff",
@@ -710,7 +707,7 @@ templates.ogryn_carapace_armor_explosion_on_zero_stacks_effect = {
 		local is_health_alive = HEALTH_ALIVE[unit]
 
 		if is_health_alive and not should_or_is_knocked_down then
-			Toughness.replenish_percentage(unit, _toughness_ammount, false, "talent_toughness_2")
+			Toughness.replenish_percentage(unit, _toughness_amount, false, "talent_toughness_2")
 		end
 
 		local physics_world = World.physics_world(world)
@@ -768,7 +765,7 @@ templates.ogryn_recieve_damage_taken_increase_debuff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = 0.15,
+		[stat_buffs.damage_taken_modifier] = 0.1,
 	},
 }
 templates.ogryn_decrease_suppressed_decay = {
@@ -939,15 +936,15 @@ templates.ogryn_charge_trample = {
 }
 templates.ogryn_charge_trample_buff = {
 	class_name = "buff",
-	duration = 8,
+	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_charge_trample",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	max_stacks = 25,
-	max_stacks_cap = 25,
+	max_stacks = 20,
+	max_stacks_cap = 20,
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.02,
+		[stat_buffs.damage] = 0.025,
 	},
 	related_talents = {
 		"ogryn_charge_trample",
@@ -1002,12 +999,6 @@ templates.ogryn_passive_revive = {
 }
 
 local function _stagger_add_stamina(params, template_data, template_context)
-	local stagger_result = params.stagger_result
-
-	if not stagger_result == stagger_results.stagger then
-		return
-	end
-
 	local stamina = talent_settings_2.passive_1.stamina
 
 	Stamina.add_stamina_percent(template_context.unit, stamina)
@@ -1030,6 +1021,19 @@ templates.ogryn_passive_stagger = {
 		[proc_events.on_push_hit] = 1,
 	},
 	cooldown_duration = talent_settings_2.passive_1.cooldown,
+	check_proc_func = function (params, template_data, template_context)
+		local stagger_result = params.stagger_result
+
+		if stagger_result ~= stagger_results.stagger then
+			return false
+		end
+
+		if not params.attack_type or params.attack_type == attack_types.melee then
+			return true
+		end
+
+		return false
+	end,
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
 			_stagger_add_stamina(params, template_data, template_context)
@@ -1304,14 +1308,14 @@ templates.ogryn_coherency_increased_melee_damage = {
 	coherency_id = "ogryn_coherency_aura",
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_intimidating_presence",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	predicted = false,
 	buff_category = buff_categories.aura,
 	max_stacks = talent_settings_2.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = talent_settings_2.coherency.melee_damage,
+		[stat_buffs.melee_damage] = talent_settings_2.coherency.melee_damage,
 	},
 	related_talents = {
 		"ogryn_melee_damage_coherency",
@@ -1322,7 +1326,7 @@ templates.ogryn_melee_damage_coherency_improved = {
 	coherency_id = "ogryn_coherency_aura_improved",
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bonebreakers_aura",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	predicted = false,
 	buff_category = buff_categories.aura,
@@ -1657,6 +1661,7 @@ local breed_name_size = {
 	renegade_gunner = 2,
 	renegade_melee = 1,
 	renegade_netgunner = 2,
+	renegade_plasma_gunner = 2,
 	renegade_radio_operator = 2,
 	renegade_rifleman = 1,
 	renegade_shocktrooper = 2,
@@ -2025,8 +2030,6 @@ templates.ogryn_passive_proc_combat_ability_cooldown_reduction = {
 		[proc_events.on_ammo_consumed] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
-		local talent_extension = template_data.talent_extension
-
 		if params.is_leadbelcher_shot then
 			local t = FixedFrame.get_latest_fixed_time()
 
@@ -2076,7 +2079,7 @@ templates.ogryn_aura_increased_damage_vs_suppressed = {
 	coherency_id = "ogryn_aura_increased_damage_vs_suppressed",
 	coherency_priority = 2,
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_aura_bringing_big_guns",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	max_stacks = 1,
 	predicted = false,
@@ -2365,13 +2368,13 @@ templates.ogryn_ranged_stance_toughness_regen = {
 	},
 	specific_proc_func = {
 		on_shoot = function (params, template_data, template_context)
-			Toughness.replenish_percentage(template_context.unit, 0.02, false, "ogryn_ranged_stance_shoot")
+			Toughness.replenish_percentage(template_context.unit, 0.025, false, "ogryn_ranged_stance_shoot")
 		end,
 		on_shoot_projectile = function (params, template_data, template_context)
-			Toughness.replenish_percentage(template_context.unit, 0.02, false, "ogryn_ranged_stance_shoot")
+			Toughness.replenish_percentage(template_context.unit, 0.025, false, "ogryn_ranged_stance_shoot")
 		end,
 		on_reload = function (params, template_data, template_context)
-			Toughness.replenish_percentage(template_context.unit, 0.1, false, "ogryn_ranged_stance_reload")
+			Toughness.replenish_percentage(template_context.unit, 0.15, false, "ogryn_ranged_stance_reload")
 		end,
 	},
 }
@@ -2566,8 +2569,8 @@ templates.ogryn_windup_increases_power_child = {
 		[proc_events.on_sweep_finish] = 1,
 	},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = 0.1,
-		[stat_buffs.melee_impact_modifier] = 0.1,
+		[stat_buffs.melee_damage] = talent_settings_shared.ogryn_thrust.melee_damage,
+		[stat_buffs.melee_impact_modifier] = talent_settings_shared.ogryn_thrust.melee_impact_modifier,
 	},
 	proc_func = function (params, template_data, template_context)
 		template_data.finish = true
@@ -3110,7 +3113,8 @@ local function dodge_update(template_data, template_context)
 			local damage_profile = DamageProfileTemplates.ogryn_dodge_impact
 			local LUNGE_ATTACK_POWER_LEVEL = 500 * multiplier * distance_multiplier
 			local damage_type = damage_types.ogryn_physical
-			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", hit_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
+
+			Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", hit_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
 
 			hit_enemy_units[hit_unit] = true
 		end
@@ -3228,7 +3232,7 @@ templates.ogryn_staggering_damage_taken_increase = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings_shared.ogryn_staggering_increases_damage_taken.duration,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = talent_settings_shared.ogryn_staggering_increases_damage_taken.damage,
+		[stat_buffs.melee_damage_taken_modifier] = talent_settings_shared.ogryn_staggering_increases_damage_taken.damage,
 	},
 }
 
@@ -3704,8 +3708,22 @@ templates.ogryn_damage_taken_by_all_increases_strength_tdr = {
 	proc_events = {
 		[proc_events.on_damage_taken] = 1,
 	},
-	check_proc_func = function (params)
-		return true
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+	end,
+	check_proc_func = function (params, template_data, template_context)
+		local attacked_unit = params.attacked_unit
+
+		if params.attacked_unit == template_context.unit then
+			return true
+		end
+
+		local coherency_extension = template_data.coherency_extension
+		local is_unit_in_coherency = coherency_extension:is_unit_in_coherency(attacked_unit)
+
+		return is_unit_in_coherency
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("ogryn_damage_taken_by_all_increases_strength_tdr_buff", t)

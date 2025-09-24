@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_ogryn_heavystubber_p2_buff_templates.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
@@ -31,7 +32,7 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p2_toughness_on_continuous_fir
 			return 0
 		end
 
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.05))
 	end,

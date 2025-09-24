@@ -6,23 +6,27 @@ local AchievementCategories = require("scripts/settings/achievements/achievement
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
-local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Breeds = require("scripts/settings/breed/breeds")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
+local LoadingStateData = require("scripts/ui/loading_state_data")
+local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
+local TextUtilities = require("scripts/utilities/ui/text")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local ViewElementWintrackItemRewardOverlay = require("scripts/ui/view_elements/view_element_wintrack_item_reward_overlay/view_element_wintrack_item_reward_overlay")
-local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local ViewElementLoadingOverlay = require("scripts/ui/view_elements/view_element_loading_overlay/view_element_loading_overlay")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWintrack = require("scripts/ui/view_elements/view_element_wintrack/view_element_wintrack")
+local ViewElementWintrackItemRewardOverlay = require("scripts/ui/view_elements/view_element_wintrack_item_reward_overlay/view_element_wintrack_item_reward_overlay")
 local Vo = require("scripts/utilities/vo")
-local UIAnimation = require("scripts/managers/ui/ui_animation")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local MasterItems = require("scripts/backend/master_items")
 
 local function _stats_sort_iterator(stats, stats_sorting)
 	local sort_table = stats_sorting or table.keys(stats)
@@ -35,17 +39,6 @@ local function _stats_sort_iterator(stats, stats_sorting)
 	end
 end
 
-local _format_progress_params = {}
-
-local function _format_progress(current_progress, goal)
-	local params = _format_progress_params
-
-	params.progress = current_progress
-	params.goal = goal
-
-	return Localize("loc_achievement_progress", true, params)
-end
-
 local RESULT_TYPES = table.enum("wintrack", "penance")
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local PenanceOverviewView = class("PenanceOverviewView", "BaseView")
@@ -54,27 +47,26 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._legend_input_ids = nil
 	self._achievements = nil
 	self._categories = nil
-	self._has_achievements = false
-	self._sub_categories = nil
 	self._wintracks_focused = false
-	self._add_penance_claimed_points_callback = nil
-	self._layouts_by_category = {}
+	self._result_overlay_queue = {}
 	self._achievements_by_category = {}
 	self._widget_content_by_category = {}
-	self._category_by_achievement = {}
-	self._ui_animations = {}
+	self._promise_container = PromiseContainer:new()
+	self.animation_alpha_multiplier = 0
+	self._global_alpha_multiplier = 1
+	self._anim_wintrack_reward_hover_progress = 0
 	self._total_score = 0
-	self._score_by_category = {}
+	self._visual_score = 0
+	self._target_score = 0
 	self._is_claiming_rewards = false
 
 	local save_manager = Managers.save
 
 	if save_manager then
 		local account_data = save_manager:account_data()
-		local penance_list_setting_show_list_view = account_data.interface_settings.penance_list_setting_show_list_view
 
-		self._use_large_penance_entries = penance_list_setting_show_list_view or false
-		self._use_large_penance_entries_init_value = self._use_large_penance_entries
+		self._use_large_penance_entries = not not account_data.interface_settings.penance_list_setting_show_list_view
+		self._penance_category_index = account_data.interface_settings.penance_category_index
 	end
 
 	PenanceOverviewView.super.init(self, PenanceOverviewViewDefinitions, settings, context)
@@ -82,6 +74,9 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._pass_input = false
 	self._pass_draw = false
 	self._allow_close_hotkey = true
+
+	self:_setup_penance_filter_options()
+
 	self._current_vo_event = nil
 	self._current_vo_id = nil
 	self._vo_unit = nil
@@ -89,99 +84,137 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._vo_world_spawner = nil
 	self._hub_interaction = context and context.hub_interaction
 
-	Managers.data_service.account:has_migrated_commendation_score():next(function (value)
-		self._has_migrated_commendation_score = value
-	end)
-	self:_fetch_unclaimed_penance_rewards():next(function (rewards)
-		self._penance_to_reward_bundle_map = {}
+	local promises = {}
 
-		for i = 1, #rewards do
-			local reward = rewards[i]
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.account:has_migrated_commendation_score()):next(callback(self, "_on_migration_check_success"))
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.backend.interfaces.player_rewards:get_penance_rewards_by_source()):next(callback(self, "_on_penance_reward_check_success"), callback(self, "_on_penance_reward_check_error"))
+	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID)):next(callback(self, "_on_penance_track_fetched_success"))
 
-			self._penance_to_reward_bundle_map[reward.penance_id] = reward.reward_bundle
-		end
-	end)
-	self._fetch_penance_track():next(function (data)
-		self._track_data = data
-	end)
+	Promise.all(unpack(promises)):next(callback(self, "_fetch_track_state")):next(callback(self, "_on_backend_success")):catch(callback(self, "_on_backend_error"))
 end
 
-PenanceOverviewView._update_commendation_status = function (self)
-	if self._has_migrated_commendation_score == nil then
-		return
-	end
+PenanceOverviewView._on_backend_error = function (self, error)
+	local view_name = self.view_name
 
-	if self._has_migrated_commendation_score or self._fetch_account_state then
-		self._fetch_penance_track_account_state():next(function (response)
-			self._account_state_data = response
-		end)
+	Managers.ui:close_view(view_name)
+end
 
-		self._has_migrated_commendation_score = nil
-	elseif not self._init_commendation_score then
+PenanceOverviewView._on_migration_check_success = function (self, value)
+	if not value then
 		local player = self:_player()
 		local account_id = player:account_id()
 
-		Managers.backend.interfaces.commendations:init_commendation_score(account_id):next(function (response)
-			self._fetch_account_state = true
-		end)
-
-		self._init_commendation_score = true
+		return self._promise_container:cancel_on_destroy(Managers.backend.interfaces.commendations:init_commendation_score(account_id))
 	end
+end
+
+PenanceOverviewView._on_penance_reward_check_success = function (self, rewards)
+	self._penance_to_reward_bundle_map = {}
+
+	for i = 1, #rewards do
+		local reward = rewards[i]
+
+		self._penance_to_reward_bundle_map[reward.penance_id] = reward.reward_bundle
+	end
+end
+
+PenanceOverviewView._on_penance_reward_check_error = function (self, error)
+	Log.warning("PenanceOverviewView", "Error during penance reward check: %s. Not showing rewards.", tostring(error))
+
+	return self:_on_penance_reward_check_success({})
+end
+
+PenanceOverviewView._on_penance_track_fetched_success = function (self, track_data)
+	self._track_data = track_data
+end
+
+PenanceOverviewView._fetch_track_state = function (self)
+	return self._promise_container:cancel_on_destroy(Managers.backend.interfaces.tracks:get_track_state(PENANCE_TRACK_ID)):next(function (track_state)
+		self._account_state_data = track_state
+	end)
+end
+
+PenanceOverviewView._on_backend_success = function (self)
+	self._backend_ready = true
 end
 
 PenanceOverviewView.on_enter = function (self)
 	PenanceOverviewView.super.on_enter(self)
+	self:_setup_input_legend()
+	self:_add_element(ViewElementLoadingOverlay, "loading_overlay", 200)
 
 	if PenanceOverviewViewSettings.background_world_params then
 		self:_setup_background_world(PenanceOverviewViewSettings.background_world_params)
 	end
 
-	self:_setup_input_legend()
-	self:_setup_tooltip_grid({})
-	self._penance_tooltip_grid:set_visibility(false)
-
-	self._penance_tooltip_visible = false
-
 	local rumour_line = math.random() > 0.9
+	local vo_events = {
+		rumour_line and "hub_interact_boon_vendor_rumour_politics_a" or "hub_interact_penance_greeting_a",
+	}
 
-	if rumour_line then
-		local vo_event_rumour = {
-			"hub_interact_boon_vendor_rumour_politics_a",
-		}
-
-		self:play_vo_events(vo_event_rumour, "boon_vendor_a", nil, 0.8)
-	else
-		local vo_event_greeting = {
-			"hub_interact_penance_greeting_a",
-		}
-
-		self:play_vo_events(vo_event_greeting, "boon_vendor_a", nil, 0.8)
-	end
-
+	self:play_vo_events(vo_events, "boon_vendor_a", nil, 0.8)
 	self:_register_event("event_request_achievement_favorite_add", "request_achievement_favorite_add")
 	self:_register_event("event_request_achievement_favorite_remove", "request_achievement_favorite_remove")
 	Managers.telemetry_reporters:start_reporter("penance_view")
 end
 
+PenanceOverviewView._finish_setup = function (self)
+	self._initialized = true
+
+	self:_setup_achievements()
+
+	local track_data = self._track_data
+
+	self:_setup_track_data(track_data)
+
+	local account_state_data = self._account_state_data
+
+	self:_setup_account_state_data(account_state_data)
+	self:_setup_top_panel()
+
+	self._enter_animation_id = self:_start_animation("on_enter")
+end
+
+PenanceOverviewView._change_category_config_value = function (self, achievement_id, value_name, delta)
+	local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
+	local category_id = achievement_definition.category
+	local parent_id = self._category_to_parent[category_id]
+	local parent_config = self._category_button_config_by_id[parent_id]
+
+	parent_config[value_name] = parent_config[value_name] + delta
+
+	return parent_id, parent_config[value_name]
+end
+
 PenanceOverviewView.request_achievement_favorite_add = function (self, achievement_id)
-	local added = AchievementUIHelper.add_favorite_achievement(achievement_id)
+	local added = AchievementUIHelper.add_favorite_achievement(achievement_id, false)
 
 	if added then
-		self._refresh_carousel_entries = true
-
 		Managers.telemetry_reporters:reporter("penance_view"):register_tracking_event(achievement_id, true)
+
+		local parent_id, favorite_count = self:_change_category_config_value(achievement_id, "favorite_count", 1)
+		local content = self._widget_content_by_category[parent_id]
+
+		if content then
+			content.has_favorite_penances = favorite_count > 0
+		end
 	end
 
 	return added
 end
 
 PenanceOverviewView.request_achievement_favorite_remove = function (self, achievement_id)
-	local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id)
+	local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id, false)
 
 	if removed then
-		self._refresh_carousel_entries = true
-
 		Managers.telemetry_reporters:reporter("penance_view"):register_tracking_event(achievement_id, false)
+
+		local parent_id, favorite_count = self:_change_category_config_value(achievement_id, "favorite_count", -1)
+		local content = self._widget_content_by_category[parent_id]
+
+		if content then
+			content.has_favorite_penances = favorite_count > 0
+		end
 	end
 
 	return removed
@@ -246,26 +279,24 @@ PenanceOverviewView._setup_input_legend = function (self)
 	end
 end
 
-PenanceOverviewView._handle_back_pressed = function (self)
+PenanceOverviewView.cb_on_close_pressed = function (self)
+	local can_exit = self:can_exit()
+
+	if not can_exit then
+		return
+	end
+
 	local view_name = self.view_name
 
 	Managers.ui:close_view(view_name)
 end
 
-PenanceOverviewView.cb_on_close_pressed = function (self)
-	if self:can_exit() then
-		self:_handle_back_pressed()
-	end
-end
-
 PenanceOverviewView.cb_on_toggle_penance_appearance = function (self)
 	self._use_large_penance_entries = not self._use_large_penance_entries
 
-	local options = self._penance_category_options
 	local index = self._selected_option_button_index
-	local force_selection = true
 
-	self:on_category_button_pressed(index, options[index], force_selection)
+	self:_select_category(index)
 end
 
 PenanceOverviewView._set_title = function (self, text)
@@ -274,416 +305,257 @@ PenanceOverviewView._set_title = function (self, text)
 	widget.content.text = Localize(text)
 end
 
-PenanceOverviewView._setup_achievements = function (self)
-	local player = self:_player()
+PenanceOverviewView._build_top_category_to_parent_cache = function (self)
+	local category_to_parent = {}
 
-	self:_cache_sub_categories()
-	self:_cache_achievements(player)
+	for category_id, _ in pairs(AchievementCategories) do
+		local parent_id = category_id
 
-	local category_button_config = {}
-	local category_ids_added = {}
-
-	for category_id, category_config in pairs(AchievementCategories) do
-		local parent_name = category_config.parent_name
-		local sort_index = category_config.sort_index
-		local category = parent_name or category_id
-		local parent_category = parent_name and AchievementCategories[parent_name]
-
-		if not category_ids_added[category] then
-			local data = {
-				sort_index = sort_index,
-				category_id = category,
-				parent = parent_name,
-				display_name = parent_category and parent_category.display_name or category_config.display_name,
-				icon = PenanceOverviewViewSettings.category_icons[category] or "content/ui/materials/icons/item_types/upper_bodies",
-				child_categories = {},
-			}
-
-			category_button_config[#category_button_config + 1] = data
-			category_ids_added[category] = data
+		while AchievementCategories[parent_id].parent_name do
+			parent_id = AchievementCategories[parent_id].parent_name
 		end
 
-		if parent_name then
-			local child_categories = category_ids_added[parent_name].child_categories
+		category_to_parent[category_id] = parent_id
+	end
+
+	self._category_to_parent = category_to_parent
+end
+
+PenanceOverviewView._build_category_button_config = function (self)
+	local categories_by_sort_index = table.keys(AchievementCategories)
+	local category_to_parent = self._category_to_parent
+
+	table.sort(categories_by_sort_index, function (a, b)
+		local a_category = AchievementCategories[a]
+		local b_category = AchievementCategories[b]
+
+		return a_category.sort_index < b_category.sort_index
+	end)
+
+	local category_button_config = {}
+	local category_button_config_by_id = {}
+
+	for _, category_id in ipairs(categories_by_sort_index) do
+		local category_config = AchievementCategories[category_id]
+		local parent_name = category_to_parent[category_id]
+
+		if parent_name == category_id then
+			category_button_config[#category_button_config + 1] = {
+				completed_count = 0,
+				favorite_count = 0,
+				total_count = 0,
+				unclaimed_count = 0,
+				category_id = category_id,
+				display_name = category_config.display_name,
+				icon = PenanceOverviewViewSettings.category_icons[category_id] or "content/ui/materials/icons/item_types/upper_bodies",
+				child_categories = {},
+			}
+			category_button_config_by_id[category_id] = category_button_config[#category_button_config]
+		end
+	end
+
+	for _, category_id in ipairs(categories_by_sort_index) do
+		local parent_id = category_to_parent[category_id]
+
+		if parent_id ~= category_id then
+			local child_categories = category_button_config_by_id[parent_id].child_categories
 
 			child_categories[#child_categories + 1] = category_id
 		end
 	end
 
-	for i = 1, #category_button_config do
-		local data = category_button_config[i]
-		local child_categories = data.child_categories
+	local player = self:_player()
+	local achievement_manager = Managers.achievements
+	local achievements_by_category = self._achievements_by_category
 
-		if child_categories then
-			table.sort(child_categories, function (a, b)
-				local a_category = AchievementCategories[a]
-				local b_category = AchievementCategories[b]
+	for _, category_id in ipairs(categories_by_sort_index) do
+		local parent_config = category_button_config_by_id[category_to_parent[category_id]]
+		local category_achievements = achievements_by_category[category_id]
+		local category_achievement_count = category_achievements and #category_achievements or 0
 
-				return a_category.sort_index < b_category.sort_index
-			end)
+		parent_config.total_count = parent_config.total_count + category_achievement_count
+
+		for i = 1, category_achievement_count do
+			local achievement_id = category_achievements[i]
+
+			if achievement_manager:achievement_completed(player, achievement_id) then
+				parent_config.completed_count = parent_config.completed_count + 1
+			end
+
+			if self:_can_claim_achievement_by_id(achievement_id) then
+				parent_config.unclaimed_count = parent_config.unclaimed_count + 1
+			end
+
+			if self:is_favorite_achievement(achievement_id) then
+				parent_config.favorite_count = parent_config.favorite_count + 1
+			end
 		end
 	end
-
-	table.sort(category_button_config, function (a, b)
-		return a.sort_index < b.sort_index
-	end)
 
 	self._category_button_config = category_button_config
-
-	self:_verify_favorite_achievements()
+	self._category_button_config_by_id = category_button_config_by_id
 end
 
-PenanceOverviewView._get_carousel_layouts = function (self, filter_out_ids, numbers_to_add)
+PenanceOverviewView._build_achievements_cache = function (self)
 	local player = self:_player()
+	local total_score = 0
+	local achievements_by_category = {}
+	local achievements_by_recency = {}
+	local achievements_by_progress = {}
+	local achievement_definitions = Managers.achievements:achievement_definitions()
 
-	numbers_to_add = numbers_to_add or math.huge
+	for _, achievement_config in pairs(achievement_definitions) do
+		local achievement_id = achievement_config.id
+		local category = achievement_config.category
+		local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
 
-	local max_amount = math.min(numbers_to_add, PenanceOverviewViewSettings.carousel_max_entries)
-	local carousel_achievement_layouts = {}
+		do
+			local _achievements_by_category = achievements_by_category[category] or {}
 
-	local function can_add_achievement(achievement_id)
-		if Managers.achievements:achievement_definition(achievement_id) == nil then
-			return false
+			_achievements_by_category[#_achievements_by_category + 1] = achievement_id
+			achievements_by_category[category] = _achievements_by_category
 		end
 
-		for i = 1, #carousel_achievement_layouts do
-			if carousel_achievement_layouts[i].achievement_id == achievement_id then
-				return false
-			end
+		if not is_completed then
+			achievements_by_progress[#achievements_by_progress + 1] = achievement_id
 		end
 
-		if filter_out_ids then
-			for i = 1, #filter_out_ids do
-				if filter_out_ids[i] == achievement_id then
-					return false
-				end
-			end
-		end
+		if is_completed then
+			local achievement_score = achievement_config.score or 0
 
-		return true
-	end
-
-	local archetype_name = player:archetype_name()
-	local default_highlight_penances = PenanceOverviewViewSettings.default_highlight_penances
-	local default_highlight_penances_by_archetype = default_highlight_penances[archetype_name]
-
-	if default_highlight_penances_by_archetype then
-		for _, achievement_id in ipairs(default_highlight_penances_by_archetype) do
-			if max_amount <= #carousel_achievement_layouts then
-				break
-			end
-
-			if can_add_achievement(achievement_id) then
-				local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-
-				if not is_complete or self:_can_claim_achievement_by_id(achievement_id) then
-					local layout = self:_get_achievement_card_layout(achievement_id)
-
-					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-					layout.achievement_id = achievement_id
-				end
-			end
+			total_score = total_score + achievement_score
+			achievements_by_recency[#achievements_by_recency + 1] = achievement_id
 		end
 	end
 
-	local account_data = Managers.save:account_data()
-	local favorite_achievements = account_data.favorite_achievements
-
-	for _, achievement_list in pairs(self._achievements_by_category_unsorted) do
-		for _, achievement_id in ipairs(achievement_list) do
-			if max_amount <= #carousel_achievement_layouts then
-				break
-			end
-
-			if can_add_achievement(achievement_id) then
-				local is_tracked = table.find(favorite_achievements, achievement_id)
-				local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-
-				if is_tracked and can_claim then
-					local layout = self:_get_achievement_card_layout(achievement_id)
-
-					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-					layout.achievement_id = achievement_id
-				end
-			end
-		end
-
-		if max_amount <= #carousel_achievement_layouts then
-			break
-		end
+	local function _sort_by_index(a, b)
+		return achievement_definitions[a].index < achievement_definitions[b].index
 	end
 
-	for _, achievement_list in pairs(self._achievements_by_category_unsorted) do
-		for _, achievement_id in ipairs(achievement_list) do
-			if max_amount <= #carousel_achievement_layouts then
-				break
-			end
+	local function _sort_by_recency(a, b)
+		local _, a_completion_time = Managers.achievements:achievement_completed(player, a)
+		local _, b_completion_time = Managers.achievements:achievement_completed(player, b)
 
-			if can_add_achievement(achievement_id) then
-				local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-
-				if can_claim then
-					local layout = self:_get_achievement_card_layout(achievement_id)
-
-					carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-					layout.achievement_id = achievement_id
-				end
-			end
+		if a_completion_time == b_completion_time then
+			return _sort_by_index(a, b)
 		end
 
-		if max_amount <= #carousel_achievement_layouts then
-			break
+		local a_type, b_type = type(a_completion_time), type(b_completion_time)
+
+		if a_type == b_type then
+			return b_completion_time < a_completion_time
 		end
+
+		local a_type_value = a_type == "number" and 2 or a_type == "string" and 1 or 0
+		local b_type_value = b_type == "number" and 2 or b_type == "string" and 1 or 0
+
+		return a_type_value < b_type_value
 	end
 
-	if favorite_achievements then
-		for _, achievement_id in ipairs(favorite_achievements) do
-			if max_amount <= #carousel_achievement_layouts then
-				break
-			end
-
-			if can_add_achievement(achievement_id) then
-				local layout = self:_get_achievement_card_layout(achievement_id)
-
-				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-				layout.achievement_id = achievement_id
-				layout.tracked = true
-			end
-		end
-	end
-
-	local achievements_by_recency = self._achievements_by_recency
-
-	for _, achievement_id in pairs(achievements_by_recency) do
-		if max_amount <= #carousel_achievement_layouts then
-			break
-		end
-
-		if can_add_achievement(achievement_id) then
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-
-			if can_claim then
-				local layout = self:_get_achievement_card_layout(achievement_id)
-
-				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-				layout.achievement_id = achievement_id
-			end
-		end
-	end
-
-	local achievements_by_progress = self._achievements_by_progress
-
-	for _, achievement_id in ipairs(achievements_by_progress) do
-		if max_amount <= #carousel_achievement_layouts then
-			break
-		end
-
-		if can_add_achievement(achievement_id) then
-			local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-			local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
-			local is_meta = achievement_definition.type == "meta"
-
-			if can_claim or not is_complete and not is_meta then
-				local layout = self:_get_achievement_card_layout(achievement_id)
-
-				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-				layout.achievement_id = achievement_id
-			end
-		end
-	end
-
-	for _, achievement_id in ipairs(achievements_by_progress) do
-		if max_amount <= #carousel_achievement_layouts then
-			break
-		end
-
-		if can_add_achievement(achievement_id) then
-			local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-			local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
-			local is_meta = achievement_definition.type == "meta"
-
-			if not is_complete and is_meta then
-				local layout = self:_get_achievement_card_layout(achievement_id)
-
-				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-				layout.achievement_id = achievement_id
-			end
-		end
-	end
-
-	for _, achievement_id in pairs(achievements_by_recency) do
-		if max_amount <= #carousel_achievement_layouts then
-			break
-		end
-
-		if can_add_achievement(achievement_id) then
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-			local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
-
-			if not can_claim and is_completed then
-				local layout = self:_get_achievement_card_layout(achievement_id)
-
-				carousel_achievement_layouts[#carousel_achievement_layouts + 1] = layout
-				layout.achievement_id = achievement_id
-			end
-		end
-	end
-
-	table.sort(carousel_achievement_layouts, function (a, b)
-		local a_achievement_id = a.achievement_id
-		local a_can_claim = self:_can_claim_achievement_by_id(a_achievement_id)
-		local a_tracked = a.tracked
+	local function _sort_by_progress(a, b)
+		local a_achievement_id = a
 		local a_achievement = AchievementUIHelper.achievement_definition_by_id(a_achievement_id)
-		local a_using_progress = self:_draw_progress_bar_for_achievement(a_achievement)
+		local a_using_progress = self:_achievement_should_display_progress_bar(a_achievement)
 		local a_bar_progress = a_using_progress and self:_get_achievement_bar_progress(a_achievement) or 0
-		local b_achievement_id = b.achievement_id
-		local b_can_claim = self:_can_claim_achievement_by_id(b_achievement_id)
-		local b_tracked = b.tracked
+		local b_achievement_id = b
 		local b_achievement = AchievementUIHelper.achievement_definition_by_id(b_achievement_id)
-		local b_using_progress = self:_draw_progress_bar_for_achievement(b_achievement)
+		local b_using_progress = self:_achievement_should_display_progress_bar(b_achievement)
 		local b_bar_progress = b_using_progress and self:_get_achievement_bar_progress(b_achievement) or 0
 
-		if a_can_claim or b_can_claim then
-			if a_can_claim and b_can_claim then
-				return a_tracked
-			else
-				return a_can_claim
-			end
-		elseif a_tracked or b_tracked then
-			if a_tracked and b_tracked then
-				return b_bar_progress < a_bar_progress
-			else
-				return a_tracked
-			end
-		end
-
 		return b_bar_progress < a_bar_progress
-	end)
+	end
 
-	return carousel_achievement_layouts
+	self._achievement_ids = table.keys(achievement_definitions)
+	self._achievements_by_category = achievements_by_category
+	self._achievements_by_recency = achievements_by_recency
+
+	table.sort(achievements_by_recency, _sort_by_recency)
+
+	self._achievements_by_progress = achievements_by_progress
+
+	table.sort(achievements_by_progress, _sort_by_progress)
 end
 
-PenanceOverviewView._fetch_unclaimed_penance_rewards = function (self)
-	local backend_interface = Managers.backend.interfaces
-	local player_rewards = backend_interface.player_rewards
-	local promise = player_rewards:get_penance_rewards_by_source():next(function (items)
-		return items
-	end):catch(function (error)
-		local error_string = tostring(error)
+PenanceOverviewView._setup_achievements = function (self)
+	self:_remove_completed_favorites()
+	self:_build_top_category_to_parent_cache()
+	self:_build_achievements_cache()
+	self:_build_category_button_config()
+end
 
-		Log.error("PenanceOverviewView", "Error fetching reward: %s", error_string)
+local function is_meta_achievement(achievement_id)
+	local achievement = AchievementUIHelper.achievement_definition_by_id(achievement_id)
 
+	return achievement and achievement.type == "meta"
+end
+
+local function inversed_filter(f)
+	return function (...)
+		return not f(...)
+	end
+end
+
+PenanceOverviewView._get_carousel_layouts = function (self, max_amount, blocked_ids)
+	max_amount = math.min(max_amount or PenanceOverviewViewSettings.carousel_max_entries, PenanceOverviewViewSettings.carousel_max_entries)
+
+	if max_amount == 0 then
 		return {}
-	end)
+	end
 
-	return promise:next(function (data)
-		return data
-	end)
-end
+	blocked_ids = blocked_ids or {}
 
-PenanceOverviewView._fetch_penance_track = function (self)
-	local promise = Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID):next(function (data)
-		return data
-	end):catch(function (error)
-		local error_string = tostring(error)
+	local player = self:_player()
+	local favorite_achievements = Managers.save:account_data().favorite_achievements or {}
+	local sources = {}
 
-		Log.error("PenanceOverviewView", "Error fetching penance track: %s", error_string)
+	sources[#sources + 1] = table.filter_array(favorite_achievements, callback(self, "_can_claim_achievement_by_id"))
+	sources[#sources + 1] = table.filter_array(self._achievement_ids, callback(self, "_can_claim_achievement_by_id"))
+	sources[#sources + 1] = favorite_achievements
 
-		return {}
-	end)
+	local archetype_name = player:archetype_name()
+	local default_highlight_penances = PenanceOverviewViewSettings.default_highlight_penances[archetype_name]
 
-	return promise:next(function (data)
-		return data
-	end)
-end
+	if default_highlight_penances then
+		sources[#sources + 1] = table.filter_array(default_highlight_penances, inversed_filter(callback(Managers.achievements, "achievement_completed", player)))
+	end
 
-PenanceOverviewView._fetch_penance_track_account_state = function (self)
-	local backend_interface = Managers.backend.interfaces
-	local penance_track = backend_interface.tracks
-	local promise = penance_track:get_track_state(PENANCE_TRACK_ID):next(function (response)
-		return response
-	end):catch(function (error)
-		local error_string = tostring(error)
+	sources[#sources + 1] = table.filter_array(self._achievements_by_progress, inversed_filter(is_meta_achievement))
+	sources[#sources + 1] = table.filter_array(self._achievements_by_progress, is_meta_achievement)
+	sources[#sources + 1] = self._achievements_by_recency
 
-		Log.error("PenanceOverviewView", "Error fetching penance track for account: %s", error_string)
+	local result_ids = {}
 
-		return {}
-	end)
+	for _, ids in ipairs(sources) do
+		for _, id in ipairs(ids) do
+			if blocked_ids[id] then
+				-- Nothing
+			else
+				local definition = AchievementUIHelper.achievement_definition_by_id(id)
 
-	return promise:next(function (response)
-		return response
-	end)
-end
+				if not definition then
+					-- Nothing
+				elseif definition.flags and definition.flags.hide_from_carousel then
+					-- Nothing
+				else
+					local layout = self:_get_achievement_card_layout(id)
 
-PenanceOverviewView._claim_track_tier = function (self, tier)
-	local backend_interface = Managers.backend.interfaces
-	local penance_track = backend_interface.tracks
-	local promise = penance_track:claim_track_tier(PENANCE_TRACK_ID, tier):next(function (data)
-		return data
-	end):catch(function (error)
-		local error_string = tostring(error)
+					if not layout then
+						-- Nothing
+					else
+						result_ids[#result_ids + 1] = layout
+						blocked_ids[id] = true
 
-		Log.error("PenanceOverviewView", "Error fetching penance track: %s", error_string)
-
-		return {}
-	end)
-
-	return promise:next(function (data)
-		return data
-	end)
-end
-
-PenanceOverviewView._cache_sub_categories = function (self)
-	local sub_categories = {}
-
-	for category_id, category_config in pairs(AchievementCategories) do
-		local parent_name = category_config.parent_name
-
-		if parent_name then
-			local _sub_categories = sub_categories[parent_name] or {}
-
-			_sub_categories[#_sub_categories + 1] = category_id
-			sub_categories[parent_name] = _sub_categories
+						if #result_ids == max_amount then
+							return result_ids
+						end
+					end
+				end
+			end
 		end
 	end
 
-	self._sub_categories = sub_categories
+	return result_ids
 end
-
-local layout_blueprint_names_by_grid = {
-	carousel = {
-		body = "carousel_penance_body",
-		category = "carousel_penance_category",
-		completed = "carousel_penance_completed",
-		dynamic_spacing = "dynamic_spacing",
-		header = "carousel_penance_header",
-		penance_icon = "carousel_penance_icon",
-		penance_icon_and_name = "carousel_penance_icon_and_name",
-		penance_icon_small = "carousel_penance_icon_small",
-		progress_bar = "carousel_penance_progress_bar",
-		score = "carousel_penance_reward",
-		score_and_reward = "carousel_penance_score_and_reward",
-		stat = "carousel_penance_stat",
-		tracked = "carousel_penance_tracked",
-	},
-	tooltip = {
-		body = "tooltip_penance_body",
-		category = "tooltip_penance_category",
-		completed = "tooltip_penance_completed",
-		dynamic_spacing = "dynamic_spacing",
-		header = "tooltip_penance_header",
-		penance_icon = "tooltip_penance_icon",
-		penance_icon_and_name = "tooltip_penance_icon_and_name",
-		penance_icon_small = "tooltip_penance_icon_small",
-		progress_bar = "tooltip_penance_progress_bar",
-		score = "tooltip_penance_reward",
-		score_and_reward = "tooltip_penance_score_and_reward",
-		stat = "tooltip_penance_stat",
-		tracked = "tooltip_penance_tracked",
-	},
-}
 
 PenanceOverviewView._get_achievement_card_layout = function (self, achievement_id, is_tooltip)
 	local player = self:_player()
@@ -694,10 +566,11 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 	local is_favorite = AchievementUIHelper.is_favorite_achievement(achievement_id)
 	local achievement_score = achievement.score or 0
 	local achievement_family_order = AchievementUIHelper.get_achievement_family_order(achievement)
-	local draw_progress_bar = self:_draw_progress_bar_for_achievement(achievement_definition, is_complete)
+	local draw_progress_bar = self:_achievement_should_display_progress_bar(achievement_definition, is_complete)
 	local use_spacing = true
 	local blueprint = PenanceOverviewViewDefinitions.grid_blueprints
 	local layout = {}
+	local layout_blueprint_names_by_grid = PenanceOverviewViewSettings.blueprints_by_page
 	local layout_blueprint_names = is_tooltip and layout_blueprint_names_by_grid.tooltip or layout_blueprint_names_by_grid.carousel
 	local scenegraph_id = is_tooltip and "tooltip_grid" or "carousel_card"
 	local grid_size = self:_get_scenegraph_size(scenegraph_id)
@@ -1136,155 +1009,11 @@ PenanceOverviewView._get_achievement_card_layout = function (self, achievement_i
 		height_used = height_used + reward_layouts_height
 	end
 
+	layout.achievement_id = achievement_id
+	layout.tracked = AchievementUIHelper.is_favorite_achievement(achievement_id)
+
 	return layout
 end
-
-PenanceOverviewView._should_display_achievement = function (self, player, is_complete, achievement_definition)
-	local flags = achievement_definition.flags
-	local hide_missing = flags.hide_missing
-	local previous_id = achievement_definition.previous
-	local next_id = achievement_definition.next
-	local is_last = next_id == nil
-
-	if hide_missing then
-		local next_is_complete = next_id and Managers.achievements:achievement_completed(player, next_id)
-
-		return is_complete and (is_last or not next_is_complete)
-	else
-		local previous_is_complete = not previous_id or Managers.achievements:achievement_completed(player, previous_id)
-
-		return previous_is_complete and (not is_complete or is_last)
-	end
-end
-
-PenanceOverviewView._cache_achievements = function (self, player)
-	local total_score = 0
-	local achievements_by_category = {}
-	local achievements_by_category_unsorted = {}
-	local achievements_by_recency = {}
-	local achievements_by_progress = {}
-	local achievement_definitions = Managers.achievements:achievement_definitions()
-	local score_by_category = {}
-	local completed_score_by_category = {}
-
-	for _, achievement_config in pairs(achievement_definitions) do
-		local achievement_id = achievement_config.id
-		local category = achievement_config.category
-		local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
-		local is_visible = true
-
-		if is_visible then
-			local _achievements_by_category = achievements_by_category[category] or {}
-
-			_achievements_by_category[#_achievements_by_category + 1] = achievement_id
-			achievements_by_category[category] = _achievements_by_category
-
-			local _achievements_by_category_unsorted = achievements_by_category_unsorted[category] or {}
-
-			_achievements_by_category_unsorted[#_achievements_by_category_unsorted + 1] = achievement_id
-			achievements_by_category_unsorted[category] = _achievements_by_category_unsorted
-
-			if not achievement_config.flags.hide_from_carousel or not achievement_config.type == "meta" then
-				achievements_by_progress[#achievements_by_progress + 1] = achievement_id
-			end
-		end
-
-		local should_add_score = not achievement_config.flags.hide_missing or is_completed
-
-		if should_add_score then
-			local achievement_score = achievement_config.score or 0
-
-			score_by_category[category] = (score_by_category[category] or 0) + achievement_score
-
-			if is_completed then
-				total_score = total_score + achievement_score
-				completed_score_by_category[category] = (completed_score_by_category[category] or 0) + achievement_score
-				achievements_by_recency[#achievements_by_recency + 1] = achievement_id
-			end
-		end
-	end
-
-	local function _sort_by_index(a, b)
-		return achievement_definitions[a].index < achievement_definitions[b].index
-	end
-
-	local function _sort_by_recency(a, b)
-		local _, a_completion_time = Managers.achievements:achievement_completed(player, a)
-		local _, b_completion_time = Managers.achievements:achievement_completed(player, b)
-
-		if a_completion_time == b_completion_time then
-			return _sort_by_index(a, b)
-		end
-
-		local a_type, b_type = type(a_completion_time), type(b_completion_time)
-
-		if a_type == b_type then
-			return b_completion_time < a_completion_time
-		end
-
-		local a_type_value = a_type == "number" and 2 or a_type == "string" and 1 or 0
-		local b_type_value = b_type == "number" and 2 or b_type == "string" and 1 or 0
-
-		return a_type_value < b_type_value
-	end
-
-	local function _sort_by_family(a, b)
-		local a_achievement_definition = AchievementUIHelper.achievement_definition_by_id(a)
-		local b_achievement_definition = AchievementUIHelper.achievement_definition_by_id(b)
-
-		if AchievementUIHelper.is_achievements_from_same_family(a_achievement_definition, b_achievement_definition) then
-			local a_achievement_family_order = AchievementUIHelper.get_achievement_family_order(a_achievement_definition)
-			local b_achievement_family_order = AchievementUIHelper.get_achievement_family_order(b_achievement_definition)
-
-			if a_achievement_family_order == b_achievement_family_order then
-				return AchievementUIHelper.localized_title(a_achievement_definition) < AchievementUIHelper.localized_title(b_achievement_definition)
-			else
-				return a_achievement_family_order < b_achievement_family_order
-			end
-		end
-
-		return AchievementUIHelper.localized_title(a_achievement_definition) < AchievementUIHelper.localized_title(b_achievement_definition)
-	end
-
-	self._achievements_by_category = achievements_by_category
-	self._achievements_by_category_unsorted = achievements_by_category_unsorted
-
-	for _, achievements in pairs(achievements_by_category) do
-		table.sort(achievements, _sort_by_recency)
-	end
-
-	for _, achievements in pairs(achievements_by_category_unsorted) do
-		table.sort(achievements, _sort_by_family)
-	end
-
-	self._achievements_by_recency = achievements_by_recency
-
-	table.sort(achievements_by_recency, _sort_by_recency)
-
-	self._achievements_by_progress = achievements_by_progress
-
-	table.sort(achievements_by_progress, function (a, b)
-		local a_achievement_id = a
-		local a_achievement = AchievementUIHelper.achievement_definition_by_id(a_achievement_id)
-		local a_using_progress = self:_draw_progress_bar_for_achievement(a_achievement)
-		local a_bar_progress = a_using_progress and self:_get_achievement_bar_progress(a_achievement) or 0
-		local b_achievement_id = b
-		local b_achievement = AchievementUIHelper.achievement_definition_by_id(b_achievement_id)
-		local b_using_progress = self:_draw_progress_bar_for_achievement(b_achievement)
-		local b_bar_progress = b_using_progress and self:_get_achievement_bar_progress(b_achievement) or 0
-
-		return b_bar_progress < a_bar_progress
-	end)
-
-	self._score_by_category = score_by_category
-	self._completed_score_by_category = completed_score_by_category
-end
-
-local _device_list = {
-	Keyboard,
-	Mouse,
-	Pad1,
-}
 
 PenanceOverviewView._handle_input = function (self, input_service, dt, t)
 	if not self._initialized then
@@ -1294,17 +1023,9 @@ PenanceOverviewView._handle_input = function (self, input_service, dt, t)
 	local wintrack_element = self._wintrack_element
 
 	if wintrack_element then
-		local handle_wintrack_element_input = not self._result_overlay
+		local handle_wintrack_element_input = not self._result_overlay and not self._is_loading
 
 		wintrack_element:set_handle_input(handle_wintrack_element_input)
-
-		if self._draw_carousel then
-			local currently_hovered_item = wintrack_element:currently_hovered_item()
-
-			if not currently_hovered_item and math.abs((self._carousel_target_progress or 0) - (self._carousel_current_progress or 0)) < PenanceOverviewViewSettings.carousel_scroll_input_handle_threshold then
-				self:_handle_carousel_scroll(input_service, dt)
-			end
-		end
 	end
 
 	local any_input_pressed = false
@@ -1323,14 +1044,6 @@ PenanceOverviewView._handle_input = function (self, input_service, dt, t)
 	if any_input_pressed and self:_is_result_presentation_active() then
 		self._close_result_overlay_next_frame = true
 	end
-
-	if self._penance_grid then
-		local selected_grid_index = self._penance_grid:selected_grid_index()
-
-		if selected_grid_index ~= self._selected_grid_penance_index then
-			self:_on_penance_grid_selection_changed(selected_grid_index)
-		end
-	end
 end
 
 PenanceOverviewView.draw = function (self, dt, t, input_service, layer)
@@ -1340,375 +1053,241 @@ PenanceOverviewView.draw = function (self, dt, t, input_service, layer)
 
 	local render_settings = self._render_settings
 	local alpha_multiplier = render_settings.alpha_multiplier
-	local animation_alpha_multiplier = self.animation_alpha_multiplier or 0
+	local animation_alpha_multiplier = self.animation_alpha_multiplier or alpha_multiplier
 
 	render_settings.alpha_multiplier = animation_alpha_multiplier
 
 	PenanceOverviewView.super.draw(self, dt, t, input_service, layer)
 
-	local ui_renderer = self._ui_renderer
-	local carousel_entries = self._carousel_entries
-
-	if carousel_entries then
-		for i = 1, #carousel_entries do
-			local entry = carousel_entries[i]
-			local grid = entry.grid
-			local grid_alpha_multiplier = grid:alpha_multiplier()
-
-			if grid_alpha_multiplier and grid_alpha_multiplier > 0 then
-				grid:draw(dt, t, ui_renderer, render_settings, input_service)
-			end
-		end
+	if self._initialized then
+		self:_draw_current_panel(dt, t, input_service, layer)
 	end
 
 	render_settings.alpha_multiplier = alpha_multiplier
 end
 
-PenanceOverviewView._get_carousel_entry_settings = function (self, index)
-	local carousel_entry_settings = PenanceOverviewViewSettings.carousel_entry_settings
-	local position_index = (index - 1) % #carousel_entry_settings + 1
-	local entry_settings = carousel_entry_settings[position_index]
-
-	return entry_settings
-end
-
 PenanceOverviewView._add_carousel_entry = function (self, index)
-	local current_ids = {}
-
-	for i = 1, #self._carousel_entries do
-		current_ids[#current_ids + 1] = self._carousel_entries[i].achievement_id
-	end
-
+	local carousel_entries = self._carousel_entries
+	local current_ids = table.set(table.map(carousel_entries, function (entry)
+		return entry.achievement_id
+	end))
 	local add_layouts = 1
-	local new_layouts = self:_get_carousel_layouts(current_ids, add_layouts)
+	local new_layouts = self:_get_carousel_layouts(add_layouts, current_ids)
 
-	for i = 1, #new_layouts do
-		local layout = new_layouts[i]
-		local entry = self:_create_carousel_entry(layout)
+	carousel_entries[index] = self:_create_carousel_entry(new_layouts[1])
 
-		self._carousel_entries[index] = entry
-	end
+	return carousel_entries[index]
 end
 
 PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_service)
-	if self._claim_animation_id and not self:_is_animation_completed(self._claim_animation_id) then
-		local entry = self._carousel_entries[self._destroyed_carousel_index]
-		local grid = entry.grid
+	dt = math.min(dt, 0.1)
 
-		if self._claim_animation_new_pivot then
-			grid:set_pivot_offset(grid._pivot_offset[1], self._claim_animation_new_pivot)
-			grid:update(dt, t, input_service)
+	local carousel_entries = self._carousel_entries
+	local carousel_count = #carousel_entries
+	local carousel_target_index = self._carousel_target_index
+	local delta = math.normalize_modulus(carousel_target_index - self._carousel_current_index, carousel_count)
+	local at_target = self._carousel_target_index == self._carousel_current_index
+	local target_speed = (delta > 0 and 1 or -1) * (at_target and 0 or PenanceOverviewViewSettings.carousel_scroll_speed)
+
+	if math.sign(target_speed) ~= math.sign(self._carousel_speed) then
+		self._carousel_speed = PenanceOverviewViewSettings.initial_carousel_factor_speed * target_speed
+
+		if target_speed ~= 0 then
+			self:_play_sound(UISoundEvents.penance_menu_carousel_move_start)
 		end
-
-		return
-	elseif self._claim_animation_id then
-		self._claim_animation_id = nil
-		self._claim_animation_new_pivot = nil
-
-		self:_add_carousel_entry(self._destroyed_carousel_index)
-
-		local entry = self._carousel_entries[self._destroyed_carousel_index]
-		local grid = entry.grid
-
-		if not self._using_cursor_navigation then
-			grid:select()
-		end
-
-		self._destroyed_carousel_index = nil
-
-		return
 	end
 
-	local global_alpha_multiplier = 1 - math.easeOutCubic(self._anim_wintrack_reward_hover_progress or 0)
+	self._carousel_speed = math.lerp(target_speed, self._carousel_speed, PenanceOverviewViewSettings.carousel_acceleration^dt)
 
-	if self._draw_carousel then
-		local carousel_entries = self._carousel_entries
+	local scroll_speed = self._carousel_speed * dt
 
-		if carousel_entries then
-			local carousel_entry_settings = PenanceOverviewViewSettings.carousel_entry_settings
-			local num_visible_entries = #carousel_entry_settings
-			local carousel_start_progress = self._carousel_start_progress or 0
-			local carousel_target_progress = self._carousel_target_progress or 0
-			local carousel_current_progress = self._carousel_current_progress or 0
-			local carousel_target_progress_diff = carousel_target_progress - carousel_start_progress
-			local carousel_scroll_speed_multiplier = self._carousel_scroll_speed_multiplier or 1
-			local step_amount = math.max(dt * 0.6 * carousel_scroll_speed_multiplier, 5e-05)
+	if at_target then
+		-- Nothing
+	elseif math.abs(scroll_speed) > math.abs(delta) then
+		self._carousel_current_index = carousel_target_index
+		self._carousel_speed = 0
 
-			if carousel_target_progress_diff > 0 then
-				self._carousel_current_progress = math.min(carousel_current_progress + step_amount, carousel_target_progress)
-			else
-				self._carousel_current_progress = math.max(carousel_current_progress - step_amount, carousel_target_progress)
+		self:_play_sound(UISoundEvents.penance_menu_carousel_move_stop)
+	else
+		if math.floor(self._carousel_current_index + scroll_speed) ~= math.floor(self._carousel_current_index) then
+			self:_play_sound(UISoundEvents.penance_menu_carousel_move_pass)
+		end
+
+		self._carousel_current_index = math.index_wrapper(self._carousel_current_index + scroll_speed, carousel_count)
+	end
+
+	local global_alpha = self._global_alpha_multiplier
+	local default_position = self:_scenegraph_world_position("carousel_card")
+	local default_size = self:_get_scenegraph_size("carousel_card")
+	local hovered_card_index, hovered_card_layer
+	local carousel_slots = PenanceOverviewViewSettings.carousel_entry_settings
+	local slot_count = #carousel_slots
+	local center_index = math.ceil(slot_count / 2)
+	local index_offset = 0
+
+	if carousel_count < slot_count then
+		index_offset = math.floor((slot_count - carousel_count) / 2)
+	end
+
+	for i = 1, carousel_count do
+		local entry = carousel_entries[i]
+		local grid = entry.grid
+
+		grid:set_visibility(false)
+		grid:set_background_hovered(false)
+
+		local index = index_offset + 1 + (i - self._carousel_current_index + center_index - 1) % carousel_count
+
+		if index < 1 or slot_count < index then
+			-- Nothing
+		else
+			local from_index = math.clamp(math.floor(index), 1, slot_count)
+			local to_index = math.clamp(math.ceil(index), 1, slot_count)
+			local from = carousel_slots[from_index]
+			local to = carousel_slots[to_index]
+			local p = index % 1
+			local center_distance = math.abs(center_index - index)
+			local anim_hover_progress = entry.anim_hover_progress or 0
+			local hover_offset_y = -10 * math.easeCubic(anim_hover_progress)
+			local color_intensity = math.lerp(from.color_intensity, to.color_intensity, p)
+			local alpha = math.lerp(from.alpha, to.alpha, p) * global_alpha
+			local x = default_position[1] + math.lerp(from.position[1], to.position[1], p)
+			local y = default_position[2] + math.lerp(from.position[2], to.position[2], p) + math.clamp(3 * alpha, 0, 1) * hover_offset_y + (default_size[2] - grid:grid_height()) / 2
+			local z = 10 + math.round(20 * (center_index - center_distance))
+
+			grid:set_pivot_offset(x, y)
+			grid:set_grid_interaction_offset(0, -hover_offset_y)
+			grid:set_draw_layer(z)
+			grid:set_alpha_multiplier(alpha)
+			grid:set_color_intensity_multiplier(color_intensity)
+
+			local is_visible = alpha > 0
+
+			grid:set_visibility(is_visible)
+
+			if is_visible then
+				grid:update(dt, t, input_service)
 			end
 
-			if self._carousel_start_progress and self._carousel_current_progress == carousel_target_progress then
-				self._carousel_scroll_speed_multiplier = nil
-				self._carousel_start_progress = nil
-			elseif self._carousel_scroll_speed_multiplier then
-				self._carousel_scroll_speed_multiplier = math.max(self._carousel_scroll_speed_multiplier - PenanceOverviewViewSettings.carousel_scroll_speed_decrease, PenanceOverviewViewSettings.carousel_min_scroll_speed)
-			end
+			local is_hovered = grid:hovered()
+			local is_selected = grid:selected()
 
-			local anim_progress = (self._carousel_current_progress or 0) % 1
-			local num_options = #carousel_entries
-			local progress_per_option = 1 / num_options
-			local entry_move_progress = anim_progress % progress_per_option / progress_per_option
-			local center_index = math.ceil(num_visible_entries / 2)
-			local start_reading_index = math.floor(anim_progress / progress_per_option) + math.floor(num_options * 0.5)
-			local default_position = self:_scenegraph_world_position("carousel_card")
-			local current_progress = self._carousel_current_progress
-			local previous_progress = carousel_current_progress
-			local progress_diff = current_progress >= 0 and current_progress - previous_progress or -(current_progress - previous_progress)
-
-			self._carousel_accumulated_progress = self._carousel_accumulated_progress or 0
-			self._carousel_accumulated_progress = self._carousel_accumulated_progress + progress_diff
-
-			local carousel_state = "inactive"
-
-			if self._carousel_current_progress ~= carousel_current_progress then
-				if not self._carousel_animating then
-					self._carousel_animating = true
-
-					self:_play_sound(UISoundEvents.penance_menu_carousel_move_start)
-
-					carousel_state = "starting"
-				elseif progress_per_option <= self._carousel_accumulated_progress or self._carousel_accumulated_progress <= -progress_per_option then
-					self._carousel_accumulated_progress = 0
-
-					self:_play_sound(UISoundEvents.penance_menu_carousel_move_pass)
-
-					carousel_state = "pass_card"
-				else
-					carousel_state = "in_progress"
-				end
-			elseif self._carousel_animating then
-				self._carousel_animating = false
-				self._carousel_accumulated_progress = 0
-
-				self:_play_sound(UISoundEvents.penance_menu_carousel_move_stop)
-
-				carousel_state = "stopped"
-			end
-
-			for i = 1, #carousel_entries do
-				local entry = carousel_entries[i]
-				local grid = entry.grid
-
-				grid:set_visibility(false)
-				grid:set_background_hovered(false)
-
-				local anim_speed = 5
-				local anim_hover_progress = entry.anim_hover_progress or 0
-
-				if i == self._hovered_carousel_card_index then
-					anim_hover_progress = math.min(anim_hover_progress + dt * anim_speed, 1)
-				else
-					anim_hover_progress = math.max(anim_hover_progress - dt * anim_speed, 0)
-				end
-
-				entry.anim_hover_progress = anim_hover_progress
-			end
-
-			local carousel_entry_anim_progress = self._carousel_entry_anim_progress or 0
-			local hovered_card_index, hovered_card_layer
-			local scroll_to_card_on_pressed = false
-			local favorite_on_right_pressed = false
-			local hovered_carousel_index
-
-			for i = 1, num_visible_entries do
-				local read_index = (start_reading_index + (i - 1)) % num_options + 1
-				local index_diff = i - center_index
-				local index_diff_abs = math.abs(index_diff)
-				local entry_anim_progress = 0.8 + 0.2 * math.clamp(carousel_entry_anim_progress * ((center_index - index_diff_abs) * 0.5), 0, 1)
-				local entry_alpha_anim_progress = math.clamp(carousel_entry_anim_progress * (center_index - index_diff_abs + 1), 0, 1)
-				local entry = carousel_entries[read_index]
-				local grid = entry.grid
-				local entry_settings = self:_get_carousel_entry_settings(i)
-				local entry_position = entry_settings.position
-				local entry_alpha = entry_settings.alpha
-				local entry_color_intensity = entry_settings.color_intensity
-				local previous_entry_settings = self:_get_carousel_entry_settings(i - 1)
-				local previous_entry_position = previous_entry_settings.position
-				local previous_entry_alpha = previous_entry_settings.alpha
-				local previous_entry_color_intensity = previous_entry_settings.color_intensity
-				local index_anim_offset_x = entry_move_progress * (entry_position[1] - previous_entry_position[1])
-				local index_anim_offset_y = entry_move_progress * (entry_position[2] - previous_entry_position[2])
-				local alpha_anim_offset = entry_move_progress * (entry_alpha - previous_entry_alpha)
-				local color_intensity_anim_offset = entry_move_progress * (entry_color_intensity - previous_entry_color_intensity)
-				local anim_hover_progress = entry.anim_select_progress or entry.anim_hover_progress or 0
-				local hover_offset_y = -10 * math.easeCubic(anim_hover_progress)
-				local x = default_position[1] + (entry_position[1] - index_anim_offset_x) * entry_anim_progress
-				local y = default_position[2] + (entry_position[2] - index_anim_offset_y) * entry_anim_progress - (1 - entry_anim_progress) * 100 + hover_offset_y
-				local layer = (center_index - index_diff_abs) * 20
-
-				grid:set_pivot_offset(x, y)
-				grid:set_grid_interaction_offset(0, -hover_offset_y)
-				grid:set_draw_layer(layer + 10)
-
-				local alpha_multiplier = (entry_alpha - alpha_anim_offset) * global_alpha_multiplier * entry_alpha_anim_progress
-				local color_intensity_multiplier = entry_color_intensity - color_intensity_anim_offset
-
-				grid:set_alpha_multiplier(alpha_multiplier)
-				grid:set_color_intensity_multiplier(color_intensity_multiplier)
-				grid:set_visibility(alpha_multiplier > 0)
-
-				if alpha_multiplier > 0 then
-					grid:update(dt, t, input_service)
-				end
-
-				local is_hover = grid:hovered()
-				local is_selected = grid:selected()
-
-				if (is_hover or is_selected) and (not hovered_card_layer or hovered_card_layer < layer) and alpha_multiplier > 0.4 then
-					hovered_card_index = read_index
-					hovered_card_layer = layer
-					hovered_carousel_index = i
-				end
-			end
-
-			local entry = carousel_entries[self._hovered_carousel_card_index]
-
-			if entry then
-				local widgets = entry.grid:widgets()
-
-				for i = 1, #widgets do
-					local widget = widgets[i]
-
-					widget.content.hovered = false
-				end
-			end
-
-			if self._hovered_carousel_card_index ~= hovered_card_index then
-				self:_play_sound(UISoundEvents.penance_menu_carousel_hovered)
-			end
-
-			self._hovered_carousel_card_index = hovered_card_index
-
-			if hovered_card_index then
-				local entry = carousel_entries[hovered_card_index]
-				local grid = entry.grid
-
-				grid:set_background_hovered(true)
-
-				local pressed, right_pressed = grid:pressed()
-
-				if entry then
-					local widgets = entry.grid:widgets()
-
-					for i = 1, #widgets do
-						local widget = widgets[i]
-
-						widget.content.hovered = true
-					end
-				end
-
-				local can_claim = self:_can_claim_achievement_by_id(entry.achievement_id)
-
-				if self._using_cursor_navigation then
-					if pressed then
-						local alpha_multiplier = grid:alpha_multiplier()
-
-						if not can_claim or can_claim and alpha_multiplier < 0.95 then
-							self:_set_carousel_index(hovered_card_index, true)
-						else
-							self:_on_carousel_card_pressed(hovered_card_index, entry)
-						end
-					end
-				elseif pressed then
-					if can_claim then
-						self:_on_carousel_card_pressed(hovered_card_index, entry)
-					end
-				else
-					self:_set_carousel_index(hovered_card_index, true)
-				end
+			if (is_hovered or is_selected) and (not hovered_card_layer or hovered_card_layer < z) and alpha > 0.6 then
+				hovered_card_index = i
+				hovered_card_layer = z
 			end
 		end
 	end
 
-	self._widgets_by_name.carousel_header.content.visible = self._draw_carousel
-	self._widgets_by_name.carousel_footer.content.visible = self._draw_carousel
+	for i = 1, carousel_count do
+		local entry = carousel_entries[i]
+		local is_hovered = i == hovered_card_index
+		local speed = 5
+
+		entry.anim_hover_progress = math.clamp((entry.anim_hover_progress or 0) + dt * (is_hovered and speed or -speed), 0, 1)
+	end
+
+	local changed_hover_entry = self._hovered_carousel_card_index ~= hovered_card_index
+	local previously_hovered_entry = carousel_entries[self._hovered_carousel_card_index]
+
+	if changed_hover_entry ~= hovered_card_index and previously_hovered_entry then
+		local widgets = previously_hovered_entry.grid:widgets()
+
+		for i = 1, #widgets do
+			local widget = widgets[i]
+
+			widget.content.hovered = false
+		end
+	end
+
+	if changed_hover_entry then
+		self:_play_sound(UISoundEvents.penance_menu_carousel_hovered)
+	end
+
+	self._hovered_carousel_card_index = hovered_card_index
+
+	local hovered_entry = carousel_entries[hovered_card_index]
+
+	if hovered_entry then
+		local grid = hovered_entry.grid
+
+		grid:set_background_hovered(true)
+
+		local pressed, right_pressed = grid:pressed()
+		local widgets = hovered_entry.grid:widgets()
+
+		for i = 1, #widgets do
+			local widget = widgets[i]
+
+			widget.content.hovered = true
+		end
+
+		if pressed and not right_pressed then
+			local alpha_multiplier = grid:alpha_multiplier()
+			local allow_claim = alpha_multiplier >= 0.95 or not self._using_cursor_navigation
+
+			self:_on_carousel_card_pressed(hovered_card_index, hovered_entry, allow_claim)
+		end
+	end
 end
 
-PenanceOverviewView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-	PenanceOverviewView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
-end
-
-PenanceOverviewView._set_carousel_index = function (self, index, animate, has_direction_changed)
-	local previous_index = self._current_carousel_index or 1
-
-	self._current_carousel_index = index
+PenanceOverviewView._set_carousel_index = function (self, index, animate)
+	self._carousel_target_index = index
 
 	local num_carousel_entries = #self._carousel_entries
-	local progress_per_index = 1 / num_carousel_entries
-	local start = previous_index - 1
-	local goal = index - 1
-	local clockwise_distance = (goal - start) % num_carousel_entries
-	local counterclockwise_distance = (start - goal) % num_carousel_entries
-	local target_progress
 
-	if clockwise_distance < counterclockwise_distance then
-		target_progress = progress_per_index * clockwise_distance
-	else
-		target_progress = -progress_per_index * counterclockwise_distance
+	self._widgets_by_name.carousel_footer.content.text = string.format("%d / %d", self._carousel_target_index, num_carousel_entries)
+
+	if not self._using_cursor_navigation then
+		self:_focus_on_card(self._carousel_target_index)
 	end
 
-	if has_direction_changed then
-		self._current_scroll_direction = nil
+	if not animate then
+		self._carousel_current_index = index
 	end
-
-	self._carousel_scroll_speed_multiplier = math.min((self._carousel_scroll_speed_multiplier or PenanceOverviewViewSettings.carousel_initial_scroll_speed) + PenanceOverviewViewSettings.carousel_scroll_speed_increase, PenanceOverviewViewSettings.carousel_max_scroll_speed)
-	self._carousel_start_progress = self._carousel_current_progress or self._carousel_target_progress or 0
-	self._carousel_target_progress = (self._carousel_target_progress or 0) + target_progress
-	self._widgets_by_name.carousel_footer.content.text = string.format("%d / %d", self._current_carousel_index, num_carousel_entries)
 end
 
 PenanceOverviewView._handle_carousel_scroll = function (self, input_service, dt)
-	if self._result_overlay then
+	local wintrack_element = self._wintrack_element
+	local is_hovering_item = wintrack_element and wintrack_element:currently_hovered_item() ~= nil
+
+	if self._result_overlay or is_hovering_item then
 		input_service = input_service:null_service()
 	end
 
-	local navigation_value = 0
+	local carousel_count = self._carousel_entries and #self._carousel_entries or 0
+	local delta = math.normalize_modulus(self._carousel_target_index - self._carousel_current_index, carousel_count)
 
-	if not self._using_cursor_navigation then
-		if input_service:get("navigate_left_continuous") then
-			navigation_value = -1
-		elseif input_service:get("navigate_right_continuous") then
-			navigation_value = 1
-		end
-	else
-		local axis = 2
-		local scroll_axis = input_service:get("scroll_axis")
-
-		navigation_value = scroll_axis[axis]
+	if math.abs(delta) > PenanceOverviewViewSettings.carousel_scroll_input_handle_threshold then
+		return
 	end
 
+	local axis_index = self._using_cursor_navigation and 2 or 1
+	local axis_name = self._using_cursor_navigation and "scroll_axis" or "navigate_controller"
+	local scroll_axis = input_service:get(axis_name)
+	local navigation_value = scroll_axis[axis_index]
+
+	if math.abs(navigation_value) < PenanceOverviewViewSettings.carousel_scroll_deadzone then
+		navigation_value = 0
+	end
+
+	if not self._using_cursor_navigation then
+		navigation_value = navigation_value * dt
+	end
+
+	self._accumulated_scroll_value = self._accumulated_scroll_value or 0
+
 	if navigation_value ~= 0 then
-		self._accumulated_scroll_value = self._accumulated_scroll_value or 0
 		self._accumulated_scroll_value = self._accumulated_scroll_value + navigation_value
+	else
+		self._accumulated_scroll_value = self._accumulated_scroll_value * PenanceOverviewViewSettings.carousel_scroll_decay^dt
+	end
 
-		if self._accumulated_scroll_value >= 1 or self._accumulated_scroll_value <= -1 then
-			local previous_scroll_direction = self._current_scroll_direction
-			local current_scroll_direction = navigation_value > 0 and -1 or 1
-			local direction_changed = previous_scroll_direction and previous_scroll_direction ~= current_scroll_direction
+	if math.abs(self._accumulated_scroll_value) > PenanceOverviewViewSettings.carousel_scroll_sensitivity then
+		local new_index = math.index_wrapper(self._carousel_target_index + math.sign(self._accumulated_scroll_value), carousel_count)
 
-			if current_scroll_direction < 0 then
-				local added_value = self._using_cursor_navigation and -1 or 1
-				local index = math.index_wrapper((self._current_carousel_index or 0) + added_value, #self._carousel_entries)
+		self:_set_carousel_index(new_index, true)
 
-				self:_set_carousel_index(index, true, direction_changed)
-			else
-				local added_value = self._using_cursor_navigation and 1 or -1
-				local index = math.index_wrapper((self._current_carousel_index or 0) + added_value, #self._carousel_entries)
-
-				self:_set_carousel_index(index, true, direction_changed)
-			end
-
-			if not self._using_cursor_navigation then
-				self:_focus_on_card(self._current_carousel_index)
-			end
-
-			self._current_scroll_direction = current_scroll_direction
-			self._accumulated_scroll_value = 0
-		end
-	elseif self._accumulated_scroll_value ~= 0 then
 		self._accumulated_scroll_value = 0
 	end
 end
@@ -1716,16 +1295,18 @@ end
 PenanceOverviewView._focus_on_card = function (self, index)
 	local carousel_entries = self._carousel_entries
 
-	if carousel_entries then
-		for i = 1, #carousel_entries do
-			local entry = carousel_entries[i]
-			local grid = entry.grid
+	if not carousel_entries then
+		return
+	end
 
-			if index == i then
-				grid:select()
-			else
-				grid:unselect()
-			end
+	for i = 1, #carousel_entries do
+		local entry = carousel_entries[i]
+		local grid = entry.grid
+
+		if index == i then
+			grid:select()
+		else
+			grid:unselect()
 		end
 	end
 end
@@ -1743,94 +1324,73 @@ PenanceOverviewView._setup_account_state_data = function (self, data)
 		return
 	end
 
-	local wintrack_element = self._wintrack_element
 	local total_penance_points = state.xpTracked
 	local animate = false
-	local force_reward_bar_change = true
 
-	self:_add_points(total_penance_points, animate, force_reward_bar_change)
+	self._total_score = total_penance_points
+
+	self:_add_points(total_penance_points, animate)
 
 	local rewarded_tiers = state.rewarded + 1
 
 	self._rewarded_tiers = rewarded_tiers
+end
 
-	local already_claimed_tiers = data.claims
+PenanceOverviewView._extract_track_rewards = function (self, data)
+	local rewards = {}
+
+	if not data then
+		return rewards
+	end
+
+	local tiers = data.tiers
+
+	if not tiers then
+		return rewards
+	end
+
+	local archetype_name = self:_player():archetype_name()
+
+	for i = 1, #tiers do
+		local tier = tiers[i]
+		local tier_rewards = tier.rewards
+		local xp_limit = tier.xpLimit
+		local items = {}
+
+		for _, reward in pairs(tier_rewards) do
+			if reward.type == "item" then
+				local item_id = reward.id
+				local item = MasterItems.get_item(item_id)
+
+				items[#items + 1] = item
+			end
+		end
+
+		local item_count = #items
+
+		for j = 1, item_count do
+			local archetypes = items[j].archetypes
+			local has_archetype = archetypes and table.array_contains(archetypes, archetype_name)
+
+			if has_archetype then
+				items[1], items[j] = items[j], items[1]
+
+				break
+			end
+		end
+
+		rewards[i] = {
+			points_required = xp_limit,
+			items = items,
+		}
+	end
+
+	return rewards
 end
 
 PenanceOverviewView._setup_track_data = function (self, data)
-	local rewards = {}
+	local rewards = self:_extract_track_rewards(data)
 	local points_per_reward = 100
-
-	if data then
-		local tiers = data.tiers
-
-		if tiers then
-			local archetype_name = self:_player():archetype_name()
-
-			for i = 1, #tiers do
-				local tier = tiers[i]
-				local tier_rewards = tier.rewards
-				local xp_limit = tier.xpLimit
-				local items = {}
-
-				for reward_name, reward in pairs(tier_rewards) do
-					if reward.type == "item" then
-						local item_id = reward.id
-						local item = MasterItems.get_item(item_id)
-
-						if #items > 0 then
-							local first_item_archetypes = items[1].archetypes
-							local first_item_has_matching_archetype = false
-
-							if first_item_archetypes then
-								for j = 1, #first_item_archetypes do
-									local item_archetype = first_item_archetypes[j]
-
-									if item_archetype == archetype_name then
-										first_item_has_matching_archetype = true
-
-										break
-									end
-								end
-							end
-
-							if not first_item_has_matching_archetype then
-								local archetypes = item.archetypes
-								local added_item = false
-
-								if archetypes then
-									for j = 1, #archetypes do
-										local item_archetype = archetypes[j]
-
-										if item_archetype == archetype_name then
-											items[#items + 1] = items[1]
-											items[1] = item
-											added_item = true
-
-											break
-										end
-									end
-								end
-
-								if not added_item then
-									items[#items + 1] = item
-								end
-							else
-								items[#items + 1] = item
-							end
-						else
-							items[#items + 1] = item
-						end
-					end
-				end
-
-				rewards[i] = {
-					points_required = xp_limit,
-					items = items,
-				}
-			end
-		end
-	end
 
 	if #rewards > 0 then
 		self._wintrack_rewards = rewards
@@ -1840,34 +1400,42 @@ PenanceOverviewView._setup_track_data = function (self, data)
 	end
 end
 
-PenanceOverviewView._add_points = function (self, points, animate, force_reward_bar_change)
-	self._total_score = self._total_score + points
+PenanceOverviewView._add_points = function (self, points, animate)
+	self._target_score = self._target_score + points
 
-	if self._wintrack_element then
-		self._wintrack_element:add_points(points, animate, force_reward_bar_change)
-	end
+	self._wintrack_element:add_points(points, animate, true)
 
 	if animate then
 		self:_play_sound(UISoundEvents.penance_menu_penance_complete)
 		self:_start_animation("on_points_added", self._widgets_by_name, self)
+	else
+		self._visual_score = self._target_score
+
+		self:_set_penance_points_presentation(self._visual_score)
 	end
 end
 
-PenanceOverviewView._update_single_animations = function (self, dt, t)
-	local ui_animations = self._ui_animations
-
-	for key, ui_animation in pairs(ui_animations) do
-		UIAnimation.update(ui_animation, dt)
-
-		if UIAnimation.completed(ui_animation) then
-			ui_animations[key] = nil
-		end
+PenanceOverviewView._set_tooltip_alpha = function (self, global_alpha_multiplier)
+	if self._penance_tooltip_grid then
+		self._penance_tooltip_grid:set_alpha_multiplier(global_alpha_multiplier)
 	end
+
+	if self._penance_grid then
+		self._penance_grid:set_alpha_multiplier(global_alpha_multiplier)
+	end
+
+	if self._categories_tab_bar then
+		self._categories_tab_bar:set_alpha_multiplier(global_alpha_multiplier)
+	end
+
+	local widgets_by_name = self._widgets_by_name
+
+	widgets_by_name.page_header.alpha_multiplier = global_alpha_multiplier
+	widgets_by_name.carousel_header.alpha_multiplier = global_alpha_multiplier
+	widgets_by_name.carousel_footer.alpha_multiplier = global_alpha_multiplier
 end
 
-PenanceOverviewView._update_animations = function (self, dt, t)
-	PenanceOverviewView.super._update_animations(self, dt, t)
-
+PenanceOverviewView._update_tooltip_visibility = function (self, dt, t)
 	if not self._initialized then
 		return
 	end
@@ -1890,187 +1458,171 @@ PenanceOverviewView._update_animations = function (self, dt, t)
 	end
 
 	if previous_anim_wintrack_reward_hover_progress ~= anim_wintrack_reward_hover_progress then
-		local global_alpha_multiplier = 1 - math.easeOutCubic(self._anim_wintrack_reward_hover_progress or 0)
+		self._anim_wintrack_reward_hover_progress = anim_wintrack_reward_hover_progress
+		self._global_alpha_multiplier = 1 - math.easeOutCubic(anim_wintrack_reward_hover_progress)
 
-		if self._penance_tooltip_grid then
-			self._penance_tooltip_grid:set_alpha_multiplier(global_alpha_multiplier)
-		end
-
-		if self._penance_grid then
-			self._penance_grid:set_alpha_multiplier(global_alpha_multiplier)
-		end
-
-		if self._categories_tab_bar then
-			self._categories_tab_bar:set_alpha_multiplier(global_alpha_multiplier)
-		end
-
-		local widgets_by_name = self._widgets_by_name
-
-		widgets_by_name.page_header.alpha_multiplier = global_alpha_multiplier
-		widgets_by_name.carousel_header.alpha_multiplier = global_alpha_multiplier
-		widgets_by_name.carousel_footer.alpha_multiplier = global_alpha_multiplier
+		self:_set_tooltip_alpha(self._global_alpha_multiplier)
 	end
-
-	self._anim_wintrack_reward_hover_progress = anim_wintrack_reward_hover_progress
 end
 
 PenanceOverviewView._set_handle_navigation = function (self)
 	local result_active = self:_is_result_presentation_active()
+	local disable_input = result_active or self._wintracks_focused or self._is_loading
+	local penance_grid = self._penance_grid
 
-	if self._penance_grid then
-		local should_disable_navigation = result_active or self._wintracks_focused
-
-		if self._penance_grid:input_disabled() ~= should_disable_navigation then
-			self._penance_grid:disable_input(should_disable_navigation)
-		end
+	if penance_grid and penance_grid:input_disabled() ~= disable_input then
+		penance_grid:disable_input(disable_input)
 	end
 
-	if self._categories_tab_bar then
-		local should_use_navigation = not result_active and self._selected_top_option_key == "browser" and not self._wintracks_focused
+	local penance_tooltip_grid = self._penance_tooltip_grid
 
-		if self._categories_tab_bar:is_handling_navigation_input() ~= should_use_navigation then
-			self._categories_tab_bar:set_is_handling_navigation_input(should_use_navigation)
-		end
+	if penance_tooltip_grid and penance_tooltip_grid:input_disabled() ~= disable_input then
+		penance_tooltip_grid:disable_input(disable_input)
 	end
 
-	if self._top_panel then
-		local should_use_navigation = not result_active and not self._wintracks_focused
+	local categories_tab_bar = self._categories_tab_bar
 
-		if self._top_panel:is_handling_navigation_input() ~= should_use_navigation then
-			self._top_panel:set_is_handling_navigation_input(should_use_navigation)
+	if categories_tab_bar and categories_tab_bar:input_disabled() ~= disable_input then
+		categories_tab_bar:disable_input(disable_input)
+	end
+
+	local top_panel = self._top_panel
+
+	if top_panel and top_panel:input_disabled() ~= disable_input then
+		top_panel:disable_input(disable_input)
+	end
+end
+
+PenanceOverviewView._update_loading = function (self, dt, t)
+	local should_load = self._enter_animation ~= nil and (not self._initialized or self._is_claiming_rewards)
+	local is_loading = self._is_loading
+	local show_loading = is_loading and self._claim_animation_id == nil and not self._enter_animation
+
+	if show_loading then
+		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
+	end
+
+	if should_load and not is_loading then
+		self._is_loading = true
+
+		Managers.event:trigger("event_start_waiting")
+	end
+
+	if not should_load and is_loading then
+		self._is_loading = false
+
+		Managers.event:trigger("event_stop_waiting")
+	end
+end
+
+PenanceOverviewView._update_result_queue = function (self, dt, t)
+	local result_overlay_queue = self._result_overlay_queue
+
+	if not result_overlay_queue then
+		return
+	end
+
+	local result_overlay = self._result_overlay
+	local should_close = result_overlay ~= nil and (self._close_result_overlay_next_frame or result_overlay:presentation_complete())
+
+	if should_close then
+		self:_remove_element("result_overlay")
+
+		self._close_result_overlay_next_frame = false
+		self._result_overlay = nil
+	end
+
+	if not self._result_overlay and #result_overlay_queue > 0 then
+		local result_entry = table.remove(result_overlay_queue, 1)
+
+		self:_setup_result_overlay(result_entry.reward, result_entry.type)
+	end
+
+	return self._result_overlay ~= nil
+end
+
+PenanceOverviewView._update_score = function (self, dt, t)
+	local skip_update = not self._initialized or self._is_claiming_rewards or self._result_overlay
+
+	if skip_update then
+		return
+	end
+
+	if self._target_score < self._total_score then
+		local diff = self._total_score - self._target_score
+
+		self:_add_points(diff, true)
+	end
+
+	local old_visual_score = self._visual_score
+	local wintrack_element = self._wintrack_element
+	local wintrack_points = wintrack_element and wintrack_element:visual_points() or 0
+	local wintrack_max_points = wintrack_element and wintrack_element:max_points() or 1
+
+	if wintrack_points < wintrack_max_points then
+		self._visual_score = wintrack_points
+	elseif self._visual_score < self._target_score then
+		local diff = self._target_score - self._visual_score
+
+		self._visual_score = self._visual_score + math.min(diff, math.ceil(10 * dt * diff))
+	end
+
+	if old_visual_score ~= self._visual_score then
+		self:_set_penance_points_presentation(self._visual_score)
+	end
+end
+
+PenanceOverviewView._update_wintrack = function (self, dt, t)
+	local wintrack_element = self._wintrack_element
+
+	if not wintrack_element then
+		return
+	end
+
+	local reward_index = wintrack_element:ready_to_claim_reward_by_index()
+
+	if reward_index then
+		self:_claim_wintrack_reward(reward_index)
+	end
+
+	if not self._wintrack_initialized and wintrack_element:is_initialized() then
+		self._wintrack_initialized = true
+
+		local rewarded_tiers = self._rewarded_tiers
+
+		for i = 1, rewarded_tiers do
+			wintrack_element:set_index_claimed(i)
 		end
+
+		wintrack_element:set_index_claimed(0)
 	end
 end
 
 PenanceOverviewView.update = function (self, dt, t, input_service)
-	self:_set_handle_navigation()
+	self:_update_loading(dt, t)
+
+	if self._backend_ready and self._entered and not self._initialized then
+		self:_finish_setup()
+	end
+
+	if not self._initialized then
+		local pass_input, pass_draw = PenanceOverviewView.super.update(self, dt, t, input_service)
+
+		return pass_input, pass_draw
+	end
 
 	if self._enter_animation_id and self:_is_animation_completed(self._enter_animation_id) and not self._enter_animation_complete then
 		self._enter_animation_complete = true
 		self._enter_animation_id = nil
 	end
 
-	self:_update_commendation_status()
+	self:_set_handle_navigation()
+	self:_update_current_panel(dt, t, input_service)
 
-	local account_state_data = self._account_state_data
+	local handle_input = not self:_update_result_queue(dt, t)
 
-	if not account_state_data then
-		local pass_input, pass_draw = PenanceOverviewView.super.update(self, dt, t, input_service)
-
-		return pass_input, pass_draw
-	end
-
-	self:_update_carousel_entries(dt, t, input_service)
-
-	local present_achievement_id_tooltip = self._selected_achievement_id
-
-	if present_achievement_id_tooltip and not self._draw_carousel then
-		if present_achievement_id_tooltip ~= self._presented_achievement_id_tooltip then
-			local achievement_id = present_achievement_id_tooltip or nil
-
-			self:_present_achievement_tooltip(achievement_id)
-		end
-	elseif self._penance_tooltip_visible then
-		self._presented_achievement_id_tooltip = nil
-		self._penance_tooltip_visible = true
-
-		self._penance_tooltip_grid:set_visibility(false)
-	end
-
-	if self._add_penance_claimed_points_callback and not self._result_overlay then
-		self._add_penance_claimed_points_callback()
-
-		self._add_penance_claimed_points_callback = nil
-	end
-
-	if self._close_result_overlay_next_frame then
-		self._close_result_overlay_next_frame = nil
-
-		self:_close_result_overlay()
-	end
-
-	local penance_to_reward_bundle_map = self._penance_to_reward_bundle_map
-
-	if penance_to_reward_bundle_map and not self._populated_unclaimed_penances then
-		self:_setup_achievements()
-		self:_setup_penance_category_buttons(self._category_button_config)
-
-		local carousel_achievement_layouts = self:_get_carousel_layouts()
-
-		if #carousel_achievement_layouts > 0 then
-			self:_setup_carousel_entries(carousel_achievement_layouts, self._ui_renderer)
-		end
-
-		self:_setup_top_panel()
-		self:_force_select_panel_index(1)
-
-		self._enter_animation_id = self:_start_animation("on_enter", self._widgets_by_name, self)
-		self._populated_unclaimed_penances = true
-		self._initialized = true
-	end
-
-	local track_data = self._track_data
-
-	if track_data and account_state_data and not self._setup_track_data_done then
-		self:_setup_track_data(track_data)
-		self:_setup_account_state_data(account_state_data)
-
-		self._setup_track_data_done = true
-	end
-
-	local result_overlay = self._result_overlay
-	local handle_input = true
-
-	if result_overlay then
-		if result_overlay:presentation_complete() then
-			self._close_result_overlay_next_frame = true
-		end
-
-		handle_input = false
-	end
-
-	local visual_penance_points = 0
-	local wintrack_element = self._wintrack_element
-
-	if wintrack_element then
-		local reward_index = wintrack_element:ready_to_claim_reward_by_index()
-
-		if reward_index then
-			self:_claim_wintrack_reward(reward_index)
-		end
-
-		if wintrack_element:is_initialized() then
-			local rewarded_tiers = self._rewarded_tiers
-
-			if rewarded_tiers and not self._setup_claimed_track_rewards then
-				for i = 1, rewarded_tiers do
-					self._wintrack_element:set_index_claimed(i)
-				end
-
-				self._setup_claimed_track_rewards = true
-			end
-		end
-
-		visual_penance_points = wintrack_element:visual_points()
-
-		if visual_penance_points >= wintrack_element:max_points() then
-			visual_penance_points = self._total_score
-		end
-	end
-
-	self:_set_penance_points_presentation(visual_penance_points)
-
-	if self._present_reward_overlay then
-		local reward_presentation_item = self._wintrack_reward_items[1]
-		local result_data = {
-			type = "item",
-			item = reward_presentation_item,
-		}
-
-		self:_setup_result_overlay(result_data, RESULT_TYPES.wintrack)
-
-		self._present_reward_overlay = nil
-	end
+	self:_update_wintrack(dt, t)
+	self:_update_score(dt, t)
 
 	local world_spawner = self._world_spawner
 
@@ -2078,7 +1630,7 @@ PenanceOverviewView.update = function (self, dt, t, input_service)
 		world_spawner:update(dt, t)
 	end
 
-	self:_update_single_animations(dt, t)
+	self:_update_tooltip_visibility(dt, t)
 	self:_update_vo(dt, t)
 
 	local pass_input, pass_draw = PenanceOverviewView.super.update(self, dt, t, input_service)
@@ -2086,7 +1638,7 @@ PenanceOverviewView.update = function (self, dt, t, input_service)
 	return handle_input and pass_input, pass_draw
 end
 
-PenanceOverviewView._verify_favorite_achievements = function (self, index)
+PenanceOverviewView._remove_completed_favorites = function (self)
 	local account_data = Managers.save:account_data()
 	local favorite_achievements = account_data.favorite_achievements
 	local player = self:_player()
@@ -2095,81 +1647,97 @@ PenanceOverviewView._verify_favorite_achievements = function (self, index)
 		local achievement_id = favorite_achievements[i]
 		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
 		local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-		local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
+		local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
+		local should_remove = not achievement_definition or not can_claim and is_complete
 
-		if not achievement_definition or is_complete then
-			local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id)
-
-			if removed then
-				Managers.telemetry_reporters:reporter("penance_view"):register_tracking_event(achievement_id, false)
-			end
+		if should_remove then
+			self:request_achievement_favorite_remove(achievement_id)
 		end
 	end
 end
 
+PenanceOverviewView._on_wintrack_claim_success = function (self, index, reward, data)
+	local claimed_rewards = table.nested_get(data, "body", "rewards")
+
+	if not claimed_rewards then
+		Log.warning("PenanceOverviewView", "Failed claiming track, no rewards returned")
+
+		return self:_on_wintrack_claim_failure()
+	end
+
+	self._is_claiming_rewards = false
+
+	for _, claimed_reward in pairs(claimed_rewards) do
+		if claimed_reward.type == "item" then
+			ItemUtils.register_track_reward(claimed_reward)
+		end
+	end
+
+	self._wintrack_element:on_reward_claimed(index)
+	Managers.telemetry_reporters:reporter("penance_view"):register_track_claim_event(index)
+
+	local reward_items = reward.items
+
+	for _, item in ipairs(reward_items) do
+		self._result_overlay_queue[#self._result_overlay_queue + 1] = {
+			reward = {
+				type = "item",
+				item = item,
+			},
+			type = RESULT_TYPES.wintrack,
+		}
+	end
+
+	self:_play_sound(UISoundEvents.penance_menu_wintrack_reward_claim)
+end
+
+PenanceOverviewView._on_wintrack_claim_failure = function (self)
+	Log.warning("PenanceOverviewView", "Failed to claim wintrack reward.")
+
+	self._is_claiming_rewards = false
+end
+
 PenanceOverviewView._claim_wintrack_reward = function (self, index)
+	if self._is_claiming_rewards then
+		return
+	end
+
+	self._is_claiming_rewards = true
+
 	local rewards = self._wintrack_rewards
 	local reward = rewards[index]
 	local points_required = reward.points_required
 	local wintrack_element = self._wintrack_element
 	local current_wintrack_point = wintrack_element:points()
 
-	if points_required <= current_wintrack_point then
-		local backend_tier_index = index - 1
-
-		self:_claim_track_tier(backend_tier_index):next(function (data)
-			local body = data.body
-
-			if not body then
-				Log.warning("PenanceOverviewView", "Failed claiming track, no body returned")
-
-				return
-			end
-
-			local claimed_rewards = body.rewards
-
-			if not claimed_rewards then
-				Log.warning("PenanceOverviewView", "Failed claiming track, no rewards returned")
-
-				return
-			end
-
-			for reward_name, claimed_reward in pairs(claimed_rewards) do
-				if claimed_reward.type == "item" then
-					ItemUtils.register_track_reward(claimed_reward)
-				end
-			end
-
-			self._wintrack_element:on_reward_claimed(index)
-			Managers.telemetry_reporters:reporter("penance_view"):register_track_claim_event(index)
-
-			local reward_items = reward.items
-
-			self._wintrack_reward_items = {}
-
-			for i, item in ipairs(reward_items) do
-				self._wintrack_reward_items[i] = item
-			end
-
-			self._present_reward_overlay = true
-
-			self:_play_sound(UISoundEvents.penance_menu_wintrack_reward_claim)
-		end)
+	if current_wintrack_point < points_required then
+		return
 	end
+
+	local backend_tier_index = index - 1
+
+	self._promise_container:cancel_on_destroy(Managers.backend.interfaces.tracks:claim_track_tier(PENANCE_TRACK_ID, backend_tier_index)):next(callback(self, "_on_wintrack_claim_success", index, reward), callback(self, "_on_wintrack_claim_failure"))
 end
 
 PenanceOverviewView.on_exit = function (self)
 	local save_manager = Managers.save
 
-	if save_manager and self._use_large_penance_entries_init_value ~= self._use_large_penance_entries then
+	if save_manager then
 		local account_data = save_manager:account_data()
 
-		if account_data.interface_settings then
+		if account_data and account_data.interface_settings then
 			account_data.interface_settings.penance_list_setting_show_list_view = self._use_large_penance_entries
-
-			save_manager:queue_save()
 		end
+
+		if account_data and account_data.interface_settings then
+			account_data.interface_settings.penance_category_index = self._penance_category_index
+		end
+
+		save_manager:queue_save()
 	end
+
+	self:_on_panel_option_pressed(nil)
+	self._promise_container:delete()
 
 	if self._world_spawner then
 		self._world_spawner:release_listener()
@@ -2191,16 +1759,15 @@ PenanceOverviewView.on_exit = function (self)
 	end
 
 	local carousel_entries = self._carousel_entries
+	local carousel_count = carousel_entries and #carousel_entries or 0
 
-	if carousel_entries then
-		for i = 1, #carousel_entries do
-			local grid = carousel_entries[i].grid
+	for i = 1, carousel_count do
+		local grid = carousel_entries[i].grid
 
-			grid:destroy()
-		end
-
-		self._carousel_entries = nil
+		grid:destroy()
 	end
+
+	self._carousel_entries = nil
 
 	PenanceOverviewView.super.on_exit(self)
 
@@ -2227,368 +1794,317 @@ PenanceOverviewView._get_scenegraph_size = function (self, scenegraph_id)
 	return grid_scenegraph.size
 end
 
-PenanceOverviewView._setup_tooltip_grid = function (self, layout)
-	local grid_scenegraph_id = "tooltip_grid"
-	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
-
+PenanceOverviewView._delete_tooltip_grid = function (self)
 	if not self._penance_tooltip_grid then
-		local mask_padding_size = 0
-		local grid_settings = {
-			enable_gamepad_scrolling = true,
-			hide_background = false,
-			hide_dividers = false,
-			ignore_divider_height = true,
-			scrollbar_horizontal_offset = -8,
-			scrollbar_width = 7,
-			title_height = 0,
-			use_terminal_background = true,
-			widget_icon_load_margin = 0,
-			grid_spacing = {
-				0,
-				0,
-			},
-			grid_size = grid_size,
-			mask_size = {
-				grid_size[1],
-				grid_size[2] + mask_padding_size,
-			},
-		}
-		local layer = 10
-
-		self._penance_tooltip_grid = self:_add_element(ViewElementGrid, "tooltip_grid", layer, grid_settings, grid_scenegraph_id)
-
-		self:_update_element_position(grid_scenegraph_id, self._penance_tooltip_grid)
-		self._penance_tooltip_grid:set_empty_message("")
-
-		local top_divider_material = "content/ui/materials/frames/item_info_upper_dynamic"
-		local top_divider_size = {
-			grid_size[1] + 6,
-			36,
-		}
-		local top_divider_position = {
-			0,
-			-7,
-			0,
-		}
-		local bottom_divider_material = "content/ui/materials/frames/item_info_lower_dynamic"
-		local bottom_divider_size = {
-			grid_size[1] + 6,
-			36,
-		}
-		local bottom_divider_position = {
-			0,
-			1,
-			0,
-		}
-
-		self._penance_tooltip_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
+		return
 	end
 
+	self:_remove_element("tooltip_grid")
+
+	self._penance_tooltip_grid = nil
+end
+
+PenanceOverviewView._setup_tooltip_grid = function (self)
+	self:_delete_tooltip_grid()
+
+	local grid_scenegraph_id = "tooltip_grid"
+	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
+	local mask_padding_size = 0
+	local grid_settings = {
+		enable_gamepad_scrolling = true,
+		hide_background = false,
+		hide_dividers = false,
+		ignore_divider_height = true,
+		scrollbar_horizontal_offset = -8,
+		scrollbar_width = 7,
+		title_height = 0,
+		use_terminal_background = true,
+		widget_icon_load_margin = 0,
+		grid_spacing = {
+			0,
+			0,
+		},
+		grid_size = grid_size,
+		mask_size = {
+			grid_size[1],
+			grid_size[2] + mask_padding_size,
+		},
+	}
+	local layer = 10
+	local grid = self:_add_element(ViewElementGrid, "tooltip_grid", layer, grid_settings, grid_scenegraph_id)
+
+	self:_update_element_position(grid_scenegraph_id, grid)
+	grid:set_empty_message("")
+
+	local top_divider_material = "content/ui/materials/frames/item_info_upper_dynamic"
+	local top_divider_size = {
+		grid_size[1] + 6,
+		36,
+	}
+	local top_divider_position = {
+		0,
+		-7,
+		0,
+	}
+	local bottom_divider_material = "content/ui/materials/frames/item_info_lower_dynamic"
+	local bottom_divider_size = {
+		grid_size[1] + 6,
+		36,
+	}
+	local bottom_divider_position = {
+		0,
+		1,
+		0,
+	}
+
+	grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
+
+	self._penance_tooltip_grid = grid
+end
+
+PenanceOverviewView._present_tooltip_grid_layout = function (self, layout)
 	local grid = self._penance_tooltip_grid
 
 	grid:present_grid_layout(layout, PenanceOverviewViewDefinitions.grid_blueprints)
 	grid:set_handle_grid_navigation(true)
 end
 
-PenanceOverviewView._setup_penance_grid = function (self, layout, optional_display_name)
+PenanceOverviewView._delete_penance_grid = function (self)
+	if not self._penance_grid then
+		return
+	end
+
+	self:_remove_element("penance_grid")
+
+	self._penance_grid = nil
+end
+
+PenanceOverviewView._setup_penance_grid = function (self)
+	self:_delete_penance_grid()
+
 	local background_scenegraph_id = "penance_grid_background"
 	local background_size = self:_get_scenegraph_size(background_scenegraph_id)
 	local grid_scenegraph_id = "penance_grid"
 	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
+	local mask_padding_size = 0
+	local grid_settings = {
+		enable_gamepad_scrolling = false,
+		hide_background = false,
+		ignore_divider_height = true,
+		scroll_start_margin = 110,
+		scrollbar_horizontal_offset = -8,
+		scrollbar_vertical_alignment = "bottom",
+		scrollbar_vertical_margin = 80,
+		scrollbar_vertical_offset = -28,
+		scrollbar_width = 7,
+		title_height = 30,
+		top_padding = 80,
+		use_terminal_background = true,
+		using_custom_gamepad_navigation = true,
+		widget_icon_load_margin = 0,
+		grid_spacing = PenanceOverviewViewSettings.penance_grid_spacing,
+		grid_size = grid_size,
+		mask_size = {
+			grid_size[1] + 40,
+			grid_size[2] + mask_padding_size,
+		},
+		edge_padding = background_size[1] - grid_size[1],
+		bottom_divider_passes = PenanceOverviewViewDefinitions.bottom_divider_passes,
+	}
+	local layer = 10
+	local grid = self:_add_element(ViewElementGrid, "penance_grid", layer, grid_settings, grid_scenegraph_id)
 
-	if not self._penance_grid then
-		local mask_padding_size = 0
-		local grid_settings = {
-			enable_gamepad_scrolling = false,
-			hide_background = false,
-			ignore_divider_height = true,
-			scroll_start_margin = 110,
-			scrollbar_horizontal_offset = -8,
-			scrollbar_vertical_alignment = "bottom",
-			scrollbar_vertical_margin = 80,
-			scrollbar_vertical_offset = -28,
-			scrollbar_width = 7,
-			title_height = 30,
-			top_padding = 80,
-			use_terminal_background = true,
-			using_custom_gamepad_navigation = true,
-			widget_icon_load_margin = 0,
-			grid_spacing = PenanceOverviewViewSettings.penance_grid_spacing,
-			grid_size = grid_size,
-			mask_size = {
-				grid_size[1] + 40,
-				grid_size[2] + mask_padding_size,
-			},
-			edge_padding = background_size[1] - grid_size[1],
-			bottom_divider_passes = PenanceOverviewViewDefinitions.bottom_divider_passes,
-		}
-		local layer = 10
+	self:_update_element_position(grid_scenegraph_id, grid)
+	grid:set_empty_message("")
 
-		self._penance_grid = self:_add_element(ViewElementGrid, "penance_grid", layer, grid_settings, grid_scenegraph_id)
+	local top_divider_material = "content/ui/materials/frames/achievements/panel_main_top_frame"
+	local top_divider_size = {
+		grid_size[1] + 60,
+		66,
+	}
+	local top_divider_position = {
+		0,
+		0,
+		0,
+	}
+	local bottom_divider_material = "content/ui/materials/frames/achievements/panel_main_lower_frame"
+	local bottom_divider_size = {
+		grid_size[1] + 60,
+		84,
+	}
+	local bottom_divider_position = {
+		0,
+		0,
+		0,
+	}
 
-		self:_update_element_position(grid_scenegraph_id, self._penance_grid)
-		self._penance_grid:set_empty_message("")
+	grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
+	grid:update_dividers_alpha(0, 1)
 
-		local top_divider_material = "content/ui/materials/frames/achievements/panel_main_top_frame"
-		local top_divider_size = {
-			grid_size[1] + 60,
-			66,
-		}
-		local top_divider_position = {
-			0,
-			0,
-			0,
-		}
-		local bottom_divider_material = "content/ui/materials/frames/achievements/panel_main_lower_frame"
-		local bottom_divider_size = {
-			grid_size[1] + 60,
-			84,
-		}
-		local bottom_divider_position = {
-			0,
-			0,
-			0,
-		}
+	self._penance_grid = grid
+end
 
-		self._penance_grid:update_dividers(top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
-		self._penance_grid:update_dividers_alpha(0, 1)
-	else
-		self._selected_grid_penance_index = nil
-
-		self._penance_grid:select_grid_index(nil)
-	end
-
+PenanceOverviewView._present_penance_grid_layout = function (self, layout, optional_display_name)
 	local grid = self._penance_grid
 	local left_click_callback = callback(self, "_cb_on_penance_pressed")
 	local right_click_callback
-	local optional_on_present_callback = callback(function ()
+
+	local function optional_on_present_callback()
 		grid:select_first_index()
-	end)
+	end
 
 	grid:present_grid_layout(layout, PenanceOverviewViewDefinitions.grid_blueprints, left_click_callback, right_click_callback, nil, nil, optional_on_present_callback)
 	grid:set_handle_grid_navigation(true)
 end
 
-PenanceOverviewView._on_penance_grid_selection_changed = function (self, index)
-	self._selected_grid_penance_index = index
+PenanceOverviewView._add_new_item = function (self, master_item)
+	local gear_id, gear = ItemUtils.track_reward_item_to_gear(master_item)
 
-	local selected_achievement_id
-	local penance_grid_widgets = self._penance_grid:widgets()
+	Managers.data_service.gear:on_gear_created(gear_id, gear)
 
-	if penance_grid_widgets then
-		local widget = penance_grid_widgets[index]
+	local item = MasterItems.get_item_instance(gear, gear_id)
 
-		if widget then
-			local content = widget.content
-			local element = content.element
-			local achievement_id = element and element.achievement_id
+	if item then
+		ItemUtils.mark_item_id_as_new(item, false)
+	end
+end
 
-			selected_achievement_id = achievement_id
+PenanceOverviewView._remove_penance_from_unclaimed_count = function (self, achievement_id)
+	local parent_id, unclaimed_count = self:_change_category_config_value(achievement_id, "unclaimed_count", -1)
+	local content = self._widget_content_by_category[parent_id]
+
+	if content then
+		content.has_unclaimed_penances = unclaimed_count > 0
+	end
+end
+
+PenanceOverviewView._on_penance_claim_success = function (self, reward_bundle, backend_data)
+	local rewards = table.nested_get(backend_data, "body", "rewards")
+
+	if not rewards then
+		return self:_on_penance_claim_failed(reward_bundle)
+	end
+
+	local achievement_id = reward_bundle.sourceInfo.sourceIdentifier
+
+	Managers.telemetry_reporters:reporter("penance_view"):register_penance_claim_event(achievement_id)
+	self:request_achievement_favorite_remove(achievement_id)
+	self:_remove_penance_from_unclaimed_count(achievement_id)
+
+	self._penance_to_reward_bundle_map[achievement_id] = nil
+
+	local item_rewards, total_xp_awarded = {}, 0
+
+	for _, reward in pairs(rewards) do
+		local reward_type = reward.type
+
+		if reward_type == "track-xp" then
+			local xp_awarded = reward.xp
+
+			total_xp_awarded = total_xp_awarded + xp_awarded
+		end
+
+		if reward_type == "item" then
+			local master_id = reward.id
+
+			if MasterItems.item_exists(master_id) then
+				local rewarded_master_item = MasterItems.get_item(master_id)
+
+				rewarded_master_item.uuid = reward.gearId
+				rewarded_master_item.masterDataInstance = {
+					id = master_id,
+					overrides = {},
+					slots = rewarded_master_item.slots,
+				}
+
+				self:_add_new_item(rewarded_master_item)
+
+				item_rewards[#item_rewards + 1] = {
+					type = "item",
+					item = rewarded_master_item,
+				}
+			end
 		end
 	end
 
-	self._selected_achievement_id = selected_achievement_id
+	for _, item_reward in ipairs(item_rewards) do
+		self._result_overlay_queue[#self._result_overlay_queue + 1] = {
+			reward = item_reward,
+			type = RESULT_TYPES.penance,
+		}
+	end
+
+	self._total_score = self._total_score + total_xp_awarded
+	self._is_claiming_rewards = false
+
+	return true
+end
+
+PenanceOverviewView._on_penance_claim_failed = function (self, reward_bundle, error)
+	Log.warning("PenanceOverviewView", "Failed to claim penance reward '%s' with error: %s", reward_bundle.id, error or "Unknown error")
+
+	self._is_claiming_rewards = false
+
+	return false
 end
 
 PenanceOverviewView._claim_penance = function (self, reward_bundle)
 	if self._is_claiming_rewards then
-		return
+		return Promise.resolved(false)
 	end
 
 	self._is_claiming_rewards = true
 
 	local backend_interface = Managers.backend.interfaces
 	local player_rewards = backend_interface.player_rewards
-	local promise = player_rewards:claim_bundle_reward(reward_bundle.id):next(function (data)
-		if not data then
-			Log.error("PenanceOverviewView", "Error claiming penance: no data returned")
+	local promise = self._promise_container:cancel_on_destroy(player_rewards:claim_bundle_reward(reward_bundle.id)):next(callback(self, "_on_penance_claim_success", reward_bundle)):catch(callback(self, "_on_penance_claim_failed", reward_bundle))
 
-			return
-		end
-
-		local body = data.body
-
-		if not body then
-			Log.error("PenanceOverviewView", "Error claiming penance: no body returned")
-
-			return
-		end
-
-		local rewards = body.rewards
-
-		if not rewards then
-			Log.error("PenanceOverviewView", "Error claiming penance: no reward returned")
-
-			return
-		end
-
-		local penance_id = reward_bundle.sourceInfo.sourceIdentifier
-
-		self._penance_to_reward_bundle_map[penance_id] = nil
-
-		Managers.telemetry_reporters:reporter("penance_view"):register_penance_claim_event(penance_id)
-
-		self._refresh_carousel_entries = true
-
-		local item_data, total_xp_awarded
-
-		for _, reward in pairs(rewards) do
-			local reward_type = reward.type
-
-			if reward_type == "track-xp" then
-				local xp_awarded = reward.xp
-
-				total_xp_awarded = (total_xp_awarded or 0) + xp_awarded
-			elseif reward_type == "item" then
-				local master_id = reward.id
-
-				if MasterItems.item_exists(master_id) then
-					local rewarded_master_item = MasterItems.get_item(master_id)
-
-					rewarded_master_item.uuid = reward.gearId
-					rewarded_master_item.masterDataInstance = {
-						id = master_id,
-						overrides = {},
-						slots = rewarded_master_item.slots,
-					}
-
-					do
-						local gear_id, gear = ItemUtils.track_reward_item_to_gear(rewarded_master_item)
-
-						Managers.data_service.gear:on_gear_created(gear_id, gear)
-
-						local item = MasterItems.get_item_instance(gear, gear_id)
-
-						if item then
-							ItemUtils.mark_item_id_as_new(item, false)
-						end
-					end
-
-					item_data = {
-						type = "item",
-						item = rewarded_master_item,
-					}
-				end
-			end
-		end
-
-		local selected_option = self._category_by_achievement[penance_id]
-		local num_unclaimed_left = selected_option and self._num_unclaimed_penances_per_category[selected_option] or -1
-
-		if num_unclaimed_left > 0 then
-			num_unclaimed_left = num_unclaimed_left - 1
-
-			local content = self._widget_content_by_category[selected_option]
-
-			if num_unclaimed_left == 0 and content then
-				content.has_unclaimed_penances = false
-			end
-
-			self._num_unclaimed_penances_per_category[selected_option] = num_unclaimed_left
-		end
-
-		if item_data then
-			self:_setup_result_overlay(item_data, RESULT_TYPES.penance)
-		else
-			self:_close_result_overlay()
-		end
-
-		if total_xp_awarded then
-			if self._add_penance_claimed_points_callback then
-				self._add_penance_claimed_points_callback()
-
-				self._add_penance_claimed_points_callback = nil
-			end
-
-			if self._result_overlay then
-				self._add_penance_claimed_points_callback = callback(function ()
-					local animate = true
-					local force_reward_bar_change = true
-
-					self:_add_points(total_xp_awarded, animate, force_reward_bar_change)
-				end)
-			else
-				local animate = true
-				local force_reward_bar_change = true
-
-				self:_add_points(total_xp_awarded, animate, force_reward_bar_change)
-			end
-		end
-	end):catch(function (error)
-		local error_string = tostring(error)
-
-		Log.error("PenanceOverviewView", "Error claiming penance: %s", error_string)
-
-		return {}
-	end)
-
-	return promise:next(function (data)
-		self._is_claiming_rewards = false
-
-		return data
-	end)
+	return promise
 end
 
-PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget, config)
+PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget)
 	local content = widget.content
 	local element = content.element
 	local achievement_id = element.achievement_id
-	local is_currently_favorited = self:is_favorite_achievement(achievement_id)
-	local is_favorited
+	local is_favorite = self:_switch_favorite_status(achievement_id)
 
-	if not is_currently_favorited and not element.completed then
-		is_favorited = self:request_achievement_favorite_add(achievement_id)
-
-		self:_play_sound(UISoundEvents.penance_menu_penance_track)
-	elseif self:request_achievement_favorite_remove(achievement_id) then
-		is_favorited = false
-
-		self:_play_sound(UISoundEvents.penance_menu_penance_untrack)
-	end
-
-	content.tracked = is_favorited
-	element.tracked = is_favorited
+	content.tracked = is_favorite
+	element.tracked = is_favorite
 end
 
 PenanceOverviewView._cb_on_penance_pressed = function (self, widget, config)
-	local should_claim = widget.content.can_claim
-	local can_claim = not self._is_claiming_rewards
+	local claim_requested = widget.content.can_claim and not self._is_claiming_rewards
 
-	if should_claim and can_claim then
-		local achievement_id = widget.content.element.achievement_id
-		local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
-
-		self._penance_claimed_callback = function ()
-			self:request_achievement_favorite_remove(achievement_id)
-
-			widget.content.can_claim = false
-			widget.content.completed = true
-			widget.content.tracked = false
-		end
-
-		if reward_bundle then
-			self:_claim_penance(reward_bundle)
-		else
-			self._penance_claimed_callback()
-
-			self._penance_claimed_callback = nil
-		end
-	elseif not should_claim then
-		self._present_reward = true
-
+	if not claim_requested then
 		local penance_grid = self._penance_grid
 
 		penance_grid:select_grid_widget(widget)
+
+		return
 	end
+
+	local achievement_id = widget.content.element.achievement_id
+	local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
+	local promise = Promise.resolved(true)
+
+	if reward_bundle then
+		promise = self:_claim_penance(reward_bundle)
+	end
+
+	self._panel_promise_container:cancel_on_destroy(promise):next(function (success)
+		if not success then
+			return
+		end
+
+		local content = widget.content
+
+		content.can_claim = false
+		content.completed = true
+		content.tracked = false
+	end)
 end
 
 PenanceOverviewView._setup_result_overlay = function (self, result_data, result_type)
-	if self._result_overlay then
-		self._result_overlay = nil
-
-		self:_remove_element("result_overlay")
-	end
-
 	local reference_name = "result_overlay"
 	local layer = 90
 
@@ -2601,49 +2117,11 @@ PenanceOverviewView._setup_result_overlay = function (self, result_data, result_
 	self._result_overlay:start(result_data)
 end
 
-PenanceOverviewView._close_result_overlay = function (self)
-	if self._result_overlay then
-		self._result_overlay = nil
-
-		self:_remove_element("result_overlay")
-	end
-
-	if self._wintrack_reward_items then
-		table.remove(self._wintrack_reward_items, 1)
-
-		if #self._wintrack_reward_items == 0 then
-			if self._wintrack_reward_claimed_callback then
-				self._wintrack_reward_claimed_callback()
-
-				self._wintrack_reward_claimed_callback = nil
-			end
-		else
-			self._present_reward_overlay = true
-		end
-	end
-
-	if self._carousel_claimed_callback then
-		self._carousel_claimed_callback()
-
-		self._carousel_claimed_callback = nil
-	end
-
-	if self._penance_claimed_callback then
-		self._penance_claimed_callback()
-
-		self._penance_claimed_callback = nil
-	end
-end
-
 PenanceOverviewView._is_result_presentation_active = function (self)
-	if self._result_overlay then
-		return true
-	end
-
-	return false
+	return not not self._result_overlay
 end
 
-PenanceOverviewView._draw_progress_bar_for_achievement = function (self, achievement_definition, is_complete)
+PenanceOverviewView._achievement_should_display_progress_bar = function (self, achievement_definition, is_complete)
 	local achievement_type_name = achievement_definition.type
 	local achievement_type = AchievementTypes[achievement_type_name]
 	local has_progress_bar = achievement_type.get_progress ~= nil
@@ -2653,9 +2131,7 @@ PenanceOverviewView._draw_progress_bar_for_achievement = function (self, achieve
 end
 
 PenanceOverviewView._can_claim_achievement_by_id = function (self, achievement_id)
-	local can_claim = self._penance_to_reward_bundle_map[achievement_id] ~= nil
-
-	return can_claim
+	return self._penance_to_reward_bundle_map[achievement_id] ~= nil
 end
 
 PenanceOverviewView._get_achievement_bar_progress = function (self, achievement_definition)
@@ -2679,7 +2155,7 @@ PenanceOverviewView._get_penance_layout_entry_by_achievement_id = function (self
 	local is_currently_favorited = self:is_favorite_achievement(achievement_id)
 	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 	local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
-	local draw_progress_bar = self:_draw_progress_bar_for_achievement(achievement_definition, is_complete)
+	local draw_progress_bar = self:_achievement_should_display_progress_bar(achievement_definition, is_complete)
 	local bar_progress, progress, goal
 
 	if draw_progress_bar then
@@ -2687,18 +2163,19 @@ PenanceOverviewView._get_penance_layout_entry_by_achievement_id = function (self
 	end
 
 	local title = AchievementUIHelper.localized_title(achievement_definition)
-	local separate_private_discription = true
-	local description = AchievementUIHelper.localized_description(achievement_definition, separate_private_discription)
+	local separate_private_description = true
+	local description = AchievementUIHelper.localized_description(achievement_definition, separate_private_description)
 	local progress_text = progress and (progress > 0 and TextUtilities.apply_color_to_text(tostring(progress), Color.ui_achievement_icon_completed(255, true)) or tostring(progress))
 	local bar_values_text = progress_text and progress_text .. "/" .. tostring(goal)
-	local reward_item, item_group = AchievementUIHelper.get_reward_item(achievement_definition)
+	local reward_item, _ = AchievementUIHelper.get_reward_item(achievement_definition)
 	local reward_type_icon = reward_item and ItemUtils.type_texture(reward_item)
 	local achievement_score = achievement.score or 0
+	local achievement_icon = achievement.icon
 	local widget_type = self._use_large_penance_entries and "penance_large" or "penance"
 
 	return {
 		widget_type = widget_type,
-		texture = achievement.icon,
+		texture = achievement_icon,
 		item = reward_item,
 		reward_icon = reward_type_icon,
 		achievement_score = achievement_score,
@@ -2714,90 +2191,134 @@ PenanceOverviewView._get_penance_layout_entry_by_achievement_id = function (self
 	}
 end
 
-PenanceOverviewView.on_category_button_pressed = function (self, index, option, force_selection)
-	if index == self._selected_option_button_index and not force_selection then
+PenanceOverviewView._penance_comparator = function (self, favorite_comparator, completion_comparator)
+	return function (a_id, b_id)
+		local achievements = Managers.achievements
+		local player = self:_player()
+
+		if favorite_comparator then
+			local a_favorite = self:is_favorite_achievement(a_id)
+			local b_favorite = self:is_favorite_achievement(b_id)
+
+			if a_favorite and not b_favorite then
+				return favorite_comparator == ">"
+			end
+
+			if b_favorite and not a_favorite then
+				return favorite_comparator == "<"
+			end
+		end
+
+		if completion_comparator then
+			local a_completed = achievements:achievement_completed(player, a_id)
+			local b_completed = achievements:achievement_completed(player, b_id)
+
+			if a_completed and not b_completed then
+				return completion_comparator == ">"
+			end
+
+			if b_completed and not a_completed then
+				return completion_comparator == "<"
+			end
+		end
+
+		local a = achievements:achievement_definition(a_id)
+		local b = achievements:achievement_definition(b_id)
+
+		return a.index < b.index
+	end
+end
+
+PenanceOverviewView._add_category_to_penance_grid_layout = function (self, layout, show_header, category_id, comparator)
+	local category = AchievementCategories[category_id]
+
+	if not category then
 		return
 	end
 
-	local category_id = option.category_id
-	local display_name = option.display_name
+	local achievements = self._achievements_by_category[category_id]
+	local filter = self._penance_grid_filters and self._penance_grid_filters[self._current_filter_index].filter
 
-	self:_set_title(display_name)
+	achievements = achievements and (filter and table.filter_array(achievements, filter) or table.shallow_copy_array(achievements))
 
-	local achievements_by_category = self._use_large_penance_entries and self._achievements_by_category or self._achievements_by_category_unsorted
+	local achievement_count = achievements and #achievements or 0
+
+	if achievement_count == 0 then
+		return
+	end
+
 	local grid_scenegraph_id = "penance_grid"
 	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
-	local layout = {}
 
-	if category_id then
-		local achievements = achievements_by_category[category_id]
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10,
+		},
+	}
 
-		if achievements then
-			if #achievements > 0 then
-				layout[#layout + 1] = {
-					widget_type = "dynamic_spacing",
-					size = {
-						grid_size[1],
-						10,
-					},
-				}
-			end
+	local display_name = category.display_name
 
-			for i = 1, #achievements do
-				local achievement_id = achievements[i]
-
-				layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(achievement_id)
-			end
-		end
-
-		local child_categories = option.child_categories
-
-		if child_categories then
-			for i = 1, #child_categories do
-				local child_category_id = child_categories[i]
-				local child_achievements = achievements_by_category[child_category_id]
-				local child_category = AchievementCategories[child_category_id]
-
-				if child_achievements then
-					layout[#layout + 1] = {
-						widget_type = "dynamic_spacing",
-						size = {
-							grid_size[1],
-							10,
-						},
-					}
-					layout[#layout + 1] = {
-						widget_type = "header",
-						text = Localize(child_category.display_name),
-					}
-
-					for j = 1, #child_achievements do
-						local child_achievement_id = child_achievements[j]
-
-						layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(child_achievement_id)
-					end
-
-					layout[#layout + 1] = {
-						widget_type = "dynamic_spacing",
-						size = {
-							grid_size[1],
-							10,
-						},
-					}
-				end
-			end
-		end
-
+	if show_header then
 		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
+			widget_type = "header",
+			text = Localize(display_name),
 		}
 	end
 
-	self:_setup_penance_grid(layout, display_name)
+	table.sort(achievements, comparator)
+
+	for i = 1, achievement_count do
+		local achievement_id = achievements[i]
+
+		layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(achievement_id)
+	end
+
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10,
+		},
+	}
+end
+
+PenanceOverviewView._get_penance_grid_layout = function (self, display_name, category_id, child_categories)
+	self:_set_title(display_name)
+
+	local using_large_penances = self._use_large_penance_entries
+	local comparator = self:_penance_comparator(using_large_penances and ">", using_large_penances and "<")
+	local layout = {}
+
+	self:_add_category_to_penance_grid_layout(layout, false, category_id, comparator)
+
+	local child_count = child_categories and #child_categories or 0
+
+	for i = 1, child_count do
+		local child_category_id = child_categories[i]
+
+		self:_add_category_to_penance_grid_layout(layout, true, child_category_id, comparator)
+	end
+
+	return layout
+end
+
+PenanceOverviewView._select_category = function (self, index)
+	local option = self._category_button_config[index]
+
+	if not option then
+		return
+	end
+
+	self._penance_category_index = index
+
+	local category_id = option.category_id
+	local display_name = option.display_name
+	local child_categories = option.child_categories
+	local layout = self:_get_penance_grid_layout(display_name, category_id, child_categories)
+
+	self:_present_penance_grid_layout(layout, display_name)
 
 	self._selected_option_button_index = index
 
@@ -2806,6 +2327,14 @@ PenanceOverviewView.on_category_button_pressed = function (self, index, option, 
 	if not self._using_cursor_navigation then
 		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 	end
+end
+
+PenanceOverviewView.on_category_button_pressed = function (self, index)
+	if index == self._selected_option_button_index then
+		return
+	end
+
+	self:_select_category(index)
 end
 
 PenanceOverviewView.ui_renderer = function (self)
@@ -2878,118 +2407,178 @@ PenanceOverviewView._create_carousel_entry = function (self, layout)
 	}
 end
 
-PenanceOverviewView._setup_carousel_entries = function (self, achievement_layouts, ui_renderer)
-	local carousel_entries = self._carousel_entries
+PenanceOverviewView._delete_carousel_entries = function (self)
+	local entries = self._carousel_entries
+	local entry_count = entries and #entries or 0
 
-	if carousel_entries then
-		for i = 1, #carousel_entries do
-			local grid = carousel_entries[i].grid
-
-			grid:destroy()
-		end
-
-		self._carousel_entries = nil
+	for i = 1, entry_count do
+		entries[i].grid:delete()
 	end
 
-	carousel_entries = {}
-
-	if not self._carousel_entries then
-		for i = 1, #achievement_layouts do
-			local layout = achievement_layouts[i]
-
-			carousel_entries[#carousel_entries + 1] = self:_create_carousel_entry(layout)
-		end
-
-		self._carousel_entries = carousel_entries
-	end
-
-	self._carousel_current_progress = nil
-	self._carousel_target_progress = nil
-	self._carousel_start_progress = nil
-	self._current_carousel_index = nil
-
-	local animate = false
-
-	self:_set_carousel_index(1, animate)
+	self._carousel_entries = nil
 end
 
-PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry)
-	local achievement_id = entry.achievement_id
-	local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
+PenanceOverviewView._setup_carousel_entries = function (self, achievement_layouts)
+	self:_delete_carousel_entries()
 
-	self._carousel_claimed_callback = function ()
-		local grid = entry.grid
-		local widgets = grid:widgets()
+	local carousel_entries = {}
 
-		self:request_achievement_favorite_remove(entry.achievement_id)
+	for i = 1, #achievement_layouts do
+		local layout = achievement_layouts[i]
 
-		for i = 1, #widgets do
-			widgets[i].content.can_claim = false
-			widgets[i].content.completed = true
-			widgets[i].content.tracked = false
-		end
-
-		if self._penance_grid then
-			local option = self._category_button_config[self._selected_option_button_index]
-
-			self:on_category_button_pressed(self._selected_option_button_index, option, true)
-		end
-
-		local additional_widgets = {
-			divider_top = grid._widgets_by_name.grid_divider_top,
-			divider_bottom = grid._widgets_by_name.grid_divider_bottom,
-			background = grid._widgets_by_name.grid_background,
-		}
-		local start_height = grid:grid_height()
-		local start_pivot_offset = grid._pivot_offset[2]
-
-		self._claim_animation_id = self:_start_animation("on_carousel_claimed", widgets, {
-			parent = self,
-			additional_widgets = additional_widgets,
-			grid = grid,
-			start_height = start_height,
-			start_pivot_offset = start_pivot_offset,
-		})
-		self._destroyed_carousel_index = index
+		carousel_entries[#carousel_entries + 1] = self:_create_carousel_entry(layout)
 	end
+
+	self._carousel_entries = carousel_entries
+	self._accumulated_scroll_value = 0
+	self._carousel_current_index = 1
+	self._carousel_target_index = 1
+	self._carousel_speed = 0
+
+	self:_set_carousel_index(1, false)
+end
+
+PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry, allow_claim)
+	allow_claim = allow_claim ~= false
+
+	local achievement_id = entry.achievement_id
+	local claim_requested = allow_claim and not self._destroyed_carousel_index and self:_can_claim_achievement_by_id(achievement_id)
+
+	if not claim_requested then
+		self:_set_carousel_index(index, true)
+
+		return
+	end
+
+	local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
 
 	if reward_bundle then
 		self:_claim_penance(reward_bundle)
-
-		return true
-	else
-		self._carousel_claimed_callback()
-
-		self._carousel_claimed_callback = nil
-
-		return true
-	end
-end
-
-PenanceOverviewView._on_carousel_card_secondary_pressed = function (self, index, entry)
-	local achievement_id = entry.achievement_id
-	local player = self:_player()
-	local is_currently_favorited = self:is_favorite_achievement(achievement_id)
-	local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-	local is_favorited
-
-	if not is_currently_favorited and not is_complete and not can_claim then
-		is_favorited = self:request_achievement_favorite_add(achievement_id)
-
-		self:_play_sound(UISoundEvents.penance_menu_penance_track)
-	elseif self:request_achievement_favorite_remove(achievement_id) then
-		is_favorited = false
-
-		self:_play_sound(UISoundEvents.penance_menu_penance_untrack)
 	end
 
 	local grid = entry.grid
 	local widgets = grid:widgets()
 
 	for i = 1, #widgets do
-		widgets[i].content.tracked = is_favorited
+		local content = widgets[i].content
+
+		content.can_claim = false
+		content.completed = true
+		content.tracked = false
 	end
+
+	local start_height = grid:grid_height()
+	local start_pivot_offset = grid._pivot_offset[2]
+	local additional_widgets = {
+		divider_top = grid._widgets_by_name.grid_divider_top,
+		divider_bottom = grid._widgets_by_name.grid_divider_bottom,
+		background = grid._widgets_by_name.grid_background,
+	}
+
+	self._claim_animation_id = self:_start_animation("on_carousel_claimed", widgets, {
+		additional_widgets = additional_widgets,
+		grid = grid,
+		start_height = start_height,
+		start_pivot_offset = start_pivot_offset,
+	})
+	self._destroyed_carousel_index = index
+end
+
+PenanceOverviewView._can_switch_favorite_status = function (self, achievement_id)
+	local is_currently_favorite = self:is_favorite_achievement(achievement_id)
+
+	if is_currently_favorite then
+		return true
+	end
+
+	local currently_tracked, can_track = AchievementUIHelper.favorite_achievement_count()
+
+	if can_track <= currently_tracked then
+		return false
+	end
+
+	local player = self:_player()
+	local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
+	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
+
+	return not is_complete and not can_claim
+end
+
+PenanceOverviewView._switch_favorite_status = function (self, achievement_id)
+	local is_currently_favorite = self:is_favorite_achievement(achievement_id)
+	local is_favorite = is_currently_favorite
+	local can_switch = self:_can_switch_favorite_status(achievement_id)
+
+	if not is_currently_favorite and can_switch and self:request_achievement_favorite_add(achievement_id) then
+		is_favorite = true
+
+		self:_play_sound(UISoundEvents.penance_menu_penance_track)
+	end
+
+	if is_currently_favorite and can_switch and self:request_achievement_favorite_remove(achievement_id) then
+		is_favorite = false
+
+		self:_play_sound(UISoundEvents.penance_menu_penance_untrack)
+	end
+
+	return is_favorite
+end
+
+PenanceOverviewView._on_carousel_card_secondary_pressed = function (self, index, entry)
+	local achievement_id = entry.achievement_id
+	local is_favorite = self:_switch_favorite_status(achievement_id)
+	local grid = entry.grid
+	local widgets = grid:widgets()
+
+	for i = 1, #widgets do
+		widgets[i].content.tracked = is_favorite
+	end
+end
+
+PenanceOverviewView.cb_on_filter_changed = function (self)
+	self._current_filter_index = math.index_wrapper(self._current_filter_index + 1, #self._penance_grid_filters)
+
+	local index = self._selected_option_button_index
+
+	self:_select_category(index)
+end
+
+PenanceOverviewView._filter_completed = function (self, achievement_id)
+	local player = self:_player()
+
+	return Managers.achievements:achievement_completed(player, achievement_id)
+end
+
+PenanceOverviewView._filter_uncompleted = function (self, achievement_id)
+	return not self:_filter_completed(achievement_id)
+end
+
+PenanceOverviewView._setup_penance_filter_options = function (self)
+	self._current_filter_index = 1
+	self._penance_grid_filters = {
+		{
+			display_name = "loc_penance_grid_show_all",
+			filter = false,
+		},
+		{
+			display_name = "loc_penance_grid_show_completed",
+			filter = callback(self, "_filter_completed"),
+		},
+		{
+			display_name = "loc_penance_grid_show_uncompleted",
+			filter = callback(self, "_filter_uncompleted"),
+		},
+	}
+end
+
+PenanceOverviewView._delete_penance_category_grid = function (self)
+	if not self._categories_tab_bar then
+		return
+	end
+
+	self:_remove_element("categories_tab_bar")
+
+	self._categories_tab_bar = nil
 end
 
 PenanceOverviewView._setup_penance_category_buttons = function (self, options)
@@ -3003,6 +2592,7 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 		grow_vertically = false,
 		horizontal_alignment = "center",
 		vertical_alignment = "top",
+		wrapped_selection = true,
 		button_size = button_size,
 		button_spacing = button_spacing,
 		input_label_offset = {
@@ -3012,231 +2602,27 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 	}
 	local categories_tab_bar = self:_add_element(ViewElementTabMenu, "categories_tab_bar", 40, settings)
 
-	self._num_unclaimed_penances_per_category = {}
+	self._categories_tab_bar = categories_tab_bar
 
-	local button_template = {
-		{
-			content_id = "hotspot",
-			pass_type = "hotspot",
-			style_id = "hotspot",
-			content = {
-				on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-				on_hover_sound = UISoundEvents.default_mouse_hover,
-			},
-			style = {
-				anim_focus_speed = 8,
-				anim_hover_speed = 8,
-				anim_input_speed = 8,
-				anim_select_speed = 8,
-				on_hover_sound = UISoundEvents.default_mouse_hover,
-				on_pressed_sound = UISoundEvents.default_click,
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = {
-				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true),
-			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/gradients/gradient_vertical",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				default_color = Color.terminal_background_gradient(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				disabled_color = Color.ui_grey_medium(255, true),
-				offset = {
-					0,
-					0,
-					1,
-				},
-			},
-			change_function = function (content, style)
-				ButtonPassTemplates.terminal_button_change_function(content, style)
-				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end,
-		},
-		{
-			pass_type = "texture",
-			style_id = "outer_shadow",
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style = {
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				vertical_alignment = "center",
-				color = Color.black(200, true),
-				size_addition = {
-					20,
-					20,
-				},
-				offset = {
-					0,
-					0,
-					3,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				disabled_color = Color.ui_grey_medium(255, true),
-				offset = {
-					0,
-					0,
-					2,
-				},
-			},
-			change_function = ButtonPassTemplates.terminal_button_change_function,
-		},
-		{
-			pass_type = "texture",
-			style_id = "text_bg",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
-				color = Color.black(150, true),
-				size = {
-					button_size[1] - 2,
-					18,
-				},
-				offset = {
-					0,
-					-1,
-					8,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "text_counter",
-			value = "0/0",
-			value_id = "text_counter",
-			style = {
-				font_size = 16,
-				font_type = "proxima_nova_bold",
-				text_horizontal_alignment = "center",
-				text_vertical_alignment = "bottom",
-				text_color = Color.terminal_text_header(255, true),
-				offset = {
-					0,
-					0,
-					9,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "icon",
-			value_id = "icon",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				default_color = Color.terminal_text_header(255, true),
-				disabled_color = Color.gray(255, true),
-				color = Color.terminal_text_header(255, true),
-				hover_color = Color.terminal_text_header_selected(255, true),
-				size = {
-					72,
-					52,
-				},
-				original_size_addition = {
-					-10,
-					-10,
-				},
-				size_addition = {
-					0,
-					0,
-				},
-				offset = {
-					0,
-					-6,
-					6,
-				},
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-				local size_addition = 2 * math.easeInCubic(progress)
-				local style_size_addition = style.size_addition
-				local original_size_addition = style.original_size_addition
+	local button_template = PenanceOverviewViewDefinitions.grid_blueprints.category_button.pass_template
 
-				style_size_addition[1] = original_size_addition[1] + size_addition * 2
-				style_size_addition[2] = original_size_addition[1] + size_addition * 2
-
-				ButtonPassTemplates.list_button_label_change_function(content, style)
-			end,
-		},
-		{
-			pass_type = "texture",
-			style_id = "new_indicator",
-			value = "content/ui/materials/symbols/new_item_indicator",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
-				size = {
-					90,
-					90,
-				},
-				offset = {
-					23,
-					-5,
-					4,
-				},
-				color = Color.terminal_corner_selected(255, true),
-			},
-			visibility_function = function (content, style)
-				return content.has_unclaimed_penances
-			end,
-		},
-	}
-	local category_button = table.clone(button_template)
-
-	category_button[1].style = {
-		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-	}
+	self._widget_content_by_category = {}
 
 	for i = 1, category_count do
 		local option = options[i]
-		local score_progress
 		local category_id = option.category_id
-		local score, completed_score = self:_category_score(category_id)
-
-		if score and score > 0 then
-			score_progress = completed_score / score
-		end
-
-		local update_function = callback(self, "cb_category_tab_option_update")
 		local display_name = option.display_name
-		local pressed_callback = callback(self, "on_category_button_pressed", i, option)
-		local entry_id = categories_tab_bar:add_entry(display_name, pressed_callback, category_button, option.icon, update_function)
+		local pressed_callback = callback(self, "on_category_button_pressed", i)
+		local entry_id = categories_tab_bar:add_entry(display_name, pressed_callback, button_template, option.icon)
 		local entry_content = categories_tab_bar:content_by_id(entry_id)
+		local num_total_achievements = option.total_count
+		local num_total_achievements_completed = option.completed_count
+		local num_unclaimed_achievements = option.unclaimed_count
+		local num_favorite_achievements = option.favorite_count
 
-		if score_progress then
-			entry_content.score_progress = score_progress
-		end
-
-		local num_total_achievements, num_total_achievements_completed, num_unclaimed_achievements = self:_get_category_option_penance_amount(option)
-
-		if not self._num_unclaimed_penances_per_category[category_id] then
-			self._num_unclaimed_penances_per_category[category_id] = num_unclaimed_achievements
-		end
-
-		entry_content.text_counter = num_total_achievements_completed .. "/" .. num_total_achievements
+		entry_content.text_counter = string.format("%d/%d", num_total_achievements_completed, num_total_achievements)
 		entry_content.has_unclaimed_penances = num_unclaimed_achievements > 0
+		entry_content.has_favorite_penances = num_favorite_achievements > 0
 		self._widget_content_by_category[category_id] = entry_content
 	end
 
@@ -3244,91 +2630,21 @@ PenanceOverviewView._setup_penance_category_buttons = function (self, options)
 	local input_action_right = "navigate_secondary_right_pressed"
 
 	categories_tab_bar:set_input_actions(input_action_left, input_action_right)
-	categories_tab_bar:set_is_handling_navigation_input(false)
+	categories_tab_bar:set_is_handling_navigation_input(true)
 
-	self._categories_tab_bar = categories_tab_bar
+	local index = math.clamp(self._penance_category_index or 1, 1, category_count)
 
-	self:on_category_button_pressed(1, options[1], true)
+	self:_select_category(index)
 	self:_update_categories_tab_bar_position()
 
-	self._penance_category_options = options
-	self._widgets_by_name.page_header.style.top_bar.size[1] = 36 + category_count * (button_size[1] + button_spacing) + button_spacing
-end
-
-PenanceOverviewView._get_category_option_penance_amount = function (self, option)
-	local player = self:_player()
-	local achievement_manager = Managers.achievements
-	local achievements_by_category = self._achievements_by_category
-	local category_id = option.category_id
-	local achievements = achievements_by_category[category_id]
-	local num_total_achievements = achievements and #achievements or 0
-	local num_total_achievements_completed = 0
-	local num_total_unclaimed_achievements = 0
-
-	if achievements then
-		for i = 1, #achievements do
-			local achievement_id = achievements[i]
-
-			if achievement_manager:achievement_completed(player, achievement_id) then
-				num_total_achievements_completed = num_total_achievements_completed + 1
-			end
-
-			local has_unclaimed_penance_in_category = self._penance_to_reward_bundle_map[achievement_id] ~= nil
-
-			if has_unclaimed_penance_in_category then
-				num_total_unclaimed_achievements = num_total_unclaimed_achievements + 1
-				self._category_by_achievement[achievement_id] = category_id
-			end
-		end
-	end
-
-	local child_categories = option.child_categories
-
-	if child_categories then
-		for i = 1, #child_categories do
-			local child_category_id = child_categories[i]
-			local child_achievements = achievements_by_category[child_category_id]
-
-			if child_achievements then
-				num_total_achievements = num_total_achievements + #child_achievements
-
-				for j = 1, #child_achievements do
-					local child_achievement_id = child_achievements[j]
-
-					if achievement_manager:achievement_completed(player, child_achievement_id) then
-						num_total_achievements_completed = num_total_achievements_completed + 1
-					end
-
-					local has_unclaimed_penance_in_category = self._penance_to_reward_bundle_map[child_achievement_id] ~= nil
-
-					if has_unclaimed_penance_in_category then
-						num_total_unclaimed_achievements = num_total_unclaimed_achievements + 1
-						self._category_by_achievement[child_achievement_id] = category_id
-					end
-				end
-			end
-		end
-	end
-
-	return num_total_achievements, num_total_achievements_completed, num_total_unclaimed_achievements
-end
-
-PenanceOverviewView.cb_category_tab_option_update = function (self, content, style)
-	local score_progress = content.score_progress
-
-	if score_progress then
-		-- Nothing
-	end
+	self._widgets_by_name.page_header.style.top_bar.size[1] = 32 + category_count * (button_size[1] + button_spacing) + button_spacing
 end
 
 PenanceOverviewView._carousel_grid_on_resolution_modified = function (self, scale)
 	local carousel_entries = self._carousel_entries
+	local carousel_count = carousel_entries and #carousel_entries or 0
 
-	if not carousel_entries then
-		return
-	end
-
-	for i = 1, #carousel_entries do
+	for i = 1, carousel_count do
 		local entry = carousel_entries[i]
 		local grid = entry.grid
 
@@ -3346,171 +2662,6 @@ PenanceOverviewView._update_categories_tab_bar_position = function (self)
 	self._categories_tab_bar:set_pivot_offset(position[1], position[2])
 end
 
-PenanceOverviewView._category_score = function (self, category_id)
-	local score_by_category = self._score_by_category
-	local completed_score_by_category = self._completed_score_by_category
-	local score = score_by_category[category_id] or 0
-	local completed_score = completed_score_by_category[category_id] or 0
-	local sub_categories = self._sub_categories[category_id]
-	local sub_category_count = sub_categories and #sub_categories or 0
-
-	for i = 1, sub_category_count do
-		local sub_category_id = sub_categories[i]
-		local sub_category_score, sub_category_completed_score = self:_category_score(sub_category_id)
-
-		score = score + sub_category_score
-		completed_score = completed_score + sub_category_completed_score
-	end
-
-	return score, completed_score
-end
-
-PenanceOverviewView._present_achievement_tooltip = function (self, achievement_id)
-	self._presented_achievement_id_tooltip = achievement_id
-
-	local player = self:_player()
-	local achievement = AchievementUIHelper.achievement_definition_by_id(achievement_id)
-	local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
-	local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-	local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
-	local draw_progress_bar = self:_draw_progress_bar_for_achievement(achievement_definition, is_complete)
-	local layout = {}
-	local grid_scenegraph_id = "tooltip_grid"
-	local grid_size = self:_get_scenegraph_size(grid_scenegraph_id)
-
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			grid_size[1],
-			20,
-		},
-	}
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			grid_size[1] - 140,
-			0,
-		},
-	}
-	layout[#layout + 1] = {
-		widget_type = "tooltip_penance",
-		texture = achievement.icon,
-		completed = is_complete,
-		can_claim = can_claim,
-	}
-
-	local title = AchievementUIHelper.localized_title(achievement_definition)
-
-	if title then
-		layout[#layout + 1] = {
-			widget_type = "tooltip_header",
-			text = title,
-		}
-	end
-
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			grid_size[1],
-			10,
-		},
-	}
-
-	if draw_progress_bar then
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				30,
-			},
-		}
-
-		local bar_progress, progress, goal = self:_get_achievement_bar_progress(achievement_definition)
-
-		layout[#layout + 1] = {
-			widget_type = "tooltip_progress_bar",
-			text = tostring(progress) .. "/" .. tostring(goal),
-			progress = bar_progress,
-		}
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
-		}
-	end
-
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			grid_size[1],
-			10,
-		},
-	}
-
-	local description = AchievementUIHelper.localized_description(achievement_definition)
-
-	if description then
-		layout[#layout + 1] = {
-			widget_type = "tooltip_body",
-			text = description,
-		}
-	end
-
-	local stats = achievement_definition.stats
-	local stats_sorting = achievement_definition.stats_sorting
-
-	if stats then
-		local player_id = player.remote and player.stat_id or player:local_player_id()
-
-		for stat_name, stat_settings in _stats_sort_iterator(stats, stats_sorting) do
-			local target = stat_settings.target
-			local value = math.min(Managers.stats:read_user_stat(player_id, stat_name), target)
-			local progress = _format_progress(value, target)
-			local loc_stat_name = string.format("• %s", Localize(StatDefinitions[stat_name].stat_name or "unknown"))
-
-			layout[#layout + 1] = {
-				widget_type = "tooltip_stat",
-				text = loc_stat_name,
-				value = progress,
-			}
-		end
-	end
-
-	local reward_item, item_group = AchievementUIHelper.get_reward_item(achievement_definition)
-
-	if reward_item then
-		layout[#layout + 1] = {
-			text = "Rewards:",
-			widget_type = "tooltip_header",
-			size = {
-				grid_size[1],
-			},
-		}
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
-		}
-		layout[#layout + 1] = {
-			widget_type = "tooltip_reward_item",
-			item = reward_item,
-			item_group = item_group,
-		}
-	end
-
-	local is_tooltip = true
-	local tooltip_layout = self:_get_achievement_card_layout(achievement_id, is_tooltip)
-
-	self:_setup_tooltip_grid(tooltip_layout)
-	self._penance_tooltip_grid:set_visibility(true)
-
-	self._penance_tooltip_visible = true
-end
-
 PenanceOverviewView._setup_top_panel = function (self)
 	local reference_name = "top_panel"
 	local layer = 60
@@ -3520,24 +2671,18 @@ PenanceOverviewView._setup_top_panel = function (self)
 		{
 			display_name = "loc_penance_menu_panel_option_highlights",
 			key = "carousel",
-			update = function (content, style, dt)
-				content.hotspot.disabled = false
-
-				local has_new_items = false
-
-				content.show_alert = has_new_items
-			end,
+			on_enter = callback(self, "_open_carousel_panel"),
+			on_exit = callback(self, "_exit_carousel_panel"),
+			on_update = callback(self, "_update_carousel_panel"),
+			on_draw = callback(self, "_draw_carousel_panel"),
 		},
 		{
 			display_name = "loc_penance_menu_panel_option_browser",
 			key = "browser",
-			update = function (content, style, dt)
-				content.hotspot.disabled = false
-
-				local has_new_items = false
-
-				content.show_alert = has_new_items
-			end,
+			on_enter = callback(self, "_open_browser_panel"),
+			on_exit = callback(self, "_exit_browser_panel"),
+			on_update = callback(self, "_update_browser_panel"),
+			on_draw = callback(self, "_draw_browser_panel"),
 		},
 	}
 
@@ -3545,204 +2690,272 @@ PenanceOverviewView._setup_top_panel = function (self)
 
 	for i = 1, #panel_options do
 		local settings = panel_options[i]
-		local key = settings.key
 		local display_name_loc_key = settings.display_name
+		local cb = callback(self, "_on_panel_option_pressed", i)
 
-		local function entry_callback_function()
-			self:_on_panel_option_pressed(i)
-		end
-
-		local optional_update_function = settings.update
-		local cb = callback(entry_callback_function)
-
-		self._top_panel:add_entry(Localize(display_name_loc_key), cb, optional_update_function)
+		self._top_panel:add_entry(Localize(display_name_loc_key), cb)
 	end
 
 	self._top_panel:set_is_handling_navigation_input(true)
+	self._top_panel:set_selected_panel_index(1, true)
 end
 
-PenanceOverviewView._on_panel_option_pressed = function (self, index)
-	local old_top_panel_selection_index = self._top_panel:selected_index()
+PenanceOverviewView._open_carousel_panel = function (self)
+	self._widgets_by_name.carousel_header.content.visible = true
+	self._widgets_by_name.carousel_footer.content.visible = true
 
-	if index == old_top_panel_selection_index then
+	local carousel_achievement_layouts = self:_get_carousel_layouts()
+
+	self:_setup_carousel_entries(carousel_achievement_layouts)
+end
+
+PenanceOverviewView._update_carousel_panel = function (self, dt, t, input_service)
+	self:_handle_carousel_scroll(input_service, dt)
+	self:_update_carousel_entries(dt, t, input_service)
+
+	local claim_animation_id = self._claim_animation_id
+	local claim_is_animating = claim_animation_id and not self:_is_animation_completed(claim_animation_id)
+
+	if claim_animation_id and not claim_is_animating then
+		self._claim_animation_id = nil
+	end
+
+	local can_update_carousel = not claim_is_animating and not self._is_claiming_rewards
+
+	if not can_update_carousel then
+		return
+	end
+
+	local destroyed_carousel_index = self._destroyed_carousel_index
+
+	if destroyed_carousel_index then
+		local new_entry = self:_add_carousel_entry(destroyed_carousel_index)
+
+		if not self._using_cursor_navigation then
+			new_entry.grid:select()
+		end
+
+		self._destroyed_carousel_index = nil
+	end
+end
+
+PenanceOverviewView._draw_carousel_panel = function (self, dt, t, input_service, layer)
+	local ui_renderer = self._ui_renderer
+	local render_settings = self._render_settings
+	local carousel_entries = self._carousel_entries
+	local carousel_count = carousel_entries and #carousel_entries or 0
+
+	for i = 1, carousel_count do
+		local entry = carousel_entries[i]
+		local grid = entry.grid
+		local grid_alpha_multiplier = grid:alpha_multiplier()
+
+		if grid_alpha_multiplier and grid_alpha_multiplier > 0 then
+			grid:draw(dt, t, ui_renderer, render_settings, input_service)
+		end
+	end
+end
+
+PenanceOverviewView._exit_carousel_panel = function (self)
+	self:_delete_carousel_entries()
+
+	self._destroyed_carousel_index = nil
+
+	if self._claim_animation_id then
+		self:_stop_animation(self._claim_animation_id)
+
+		self._claim_animation_id = nil
+	end
+
+	self._widgets_by_name.carousel_header.content.visible = false
+	self._widgets_by_name.carousel_footer.content.visible = false
+end
+
+PenanceOverviewView._open_browser_panel = function (self)
+	self._widgets_by_name.page_header.content.visible = true
+
+	self:_setup_tooltip_grid()
+	self:_setup_penance_grid()
+	self:_setup_penance_category_buttons(self._category_button_config)
+	self:_set_tooltip_alpha(self._global_alpha_multiplier)
+end
+
+PenanceOverviewView._update_browser_panel = function (self, dt, t, input_service)
+	local selected_widget = self._penance_grid:selected_grid_widget()
+	local selected_achievement_id = selected_widget and selected_widget.content.element.achievement_id
+
+	if selected_achievement_id ~= self._selected_tooltip_id then
+		self._selected_tooltip_id = selected_achievement_id
+
+		local has_achievement_id = selected_achievement_id ~= nil
+		local tooltip_layout = has_achievement_id and self:_get_achievement_card_layout(selected_achievement_id, true) or {}
+
+		self:_present_tooltip_grid_layout(tooltip_layout)
+		self._penance_tooltip_grid:set_visibility(has_achievement_id)
+	end
+end
+
+PenanceOverviewView._draw_browser_panel = function (self, dt, t, input_service, layer)
+	return
+end
+
+PenanceOverviewView._exit_browser_panel = function (self)
+	self._selected_tooltip_id = nil
+	self._widget_content_by_category = {}
+
+	self:_delete_penance_category_grid()
+	self:_delete_penance_grid()
+	self:_delete_tooltip_grid()
+
+	self._widgets_by_name.page_header.content.visible = false
+end
+
+PenanceOverviewView._switch_panel = function (self, index)
+	local old_index = self._selected_top_option_index
+
+	if index == old_index then
 		return
 	end
 
 	local panel_options = self._panel_options
+	local old_option = panel_options[old_index]
+
+	if old_option then
+		self._panel_promise_container:delete()
+	end
+
+	if old_option and old_option.on_exit then
+		old_option.on_exit()
+	end
+
 	local option = panel_options[index]
-	local key = option.key
 
-	self._selected_top_option_key = key
+	self._selected_top_option_index = index
+	self._selected_top_option_key = option and option.key
+	self._panel_promise_container = PromiseContainer:new()
 
-	if key == "carousel" then
-		if self._refresh_carousel_entries then
-			local carousel_achievement_layouts = self:_get_carousel_layouts()
-
-			self:_setup_carousel_entries(carousel_achievement_layouts, self._ui_renderer)
-
-			self._refresh_carousel_entries = nil
-		end
-
-		self._draw_carousel = true
-		self._penance_tooltip_visible = false
-
-		if self._penance_tooltip_grid then
-			self._penance_tooltip_grid:set_visibility(false)
-		end
-
-		if self._penance_grid then
-			self._penance_grid:set_visibility(false)
-		end
-
-		if self._categories_tab_bar then
-			self._categories_tab_bar:set_visibility(false)
-		end
-
-		self._widgets_by_name.page_header.content.visible = false
-
-		self._categories_tab_bar:set_is_handling_navigation_input(false)
-	elseif key == "browser" then
-		self._draw_carousel = false
-		self._carousel_current_progress = self._carousel_target_progress
-
-		if self._penance_tooltip_grid then
-			self._penance_tooltip_grid:set_visibility(true)
-		end
-
-		if self._penance_grid then
-			self._penance_grid:set_visibility(true)
-		end
-
-		if self._categories_tab_bar then
-			self._categories_tab_bar:set_visibility(true)
-		end
-
-		self._widgets_by_name.page_header.content.visible = true
-
-		for i = 1, #self._carousel_entries do
-			local entry = self._carousel_entries[i]
-			local grid = entry.grid
-
-			grid:set_alpha_multiplier(0)
-		end
-
-		self._categories_tab_bar:set_is_handling_navigation_input(true)
+	if option and option.on_enter then
+		option.on_enter()
 	end
 end
 
-PenanceOverviewView._force_select_panel_index = function (self, index)
-	self:_on_panel_option_pressed(index)
-	self._top_panel:set_selected_panel_index(index)
+PenanceOverviewView._on_panel_option_pressed = function (self, index)
+	self._switch_to_panel_index = index
+end
+
+PenanceOverviewView._call_on_current_panel = function (self, name, ...)
+	local selected_index = self._selected_top_option_index
+	local current_option = self._panel_options[selected_index]
+
+	if current_option and current_option[name] then
+		return current_option[name](...)
+	end
+end
+
+PenanceOverviewView._update_current_panel = function (self, ...)
+	if self._switch_to_panel_index then
+		self:_switch_panel(self._switch_to_panel_index)
+
+		self._switch_to_panel_index = nil
+	end
+
+	return self:_call_on_current_panel("on_update", ...)
+end
+
+PenanceOverviewView._draw_current_panel = function (self, ...)
+	return self:_call_on_current_panel("on_draw", ...)
 end
 
 PenanceOverviewView.cb_on_switch_focus = function (self)
-	if not self._using_cursor_navigation and self._wintrack_element then
-		self._wintracks_focused = not self._wintracks_focused
+	if self._using_cursor_navigation then
+		return
+	end
 
-		if self._wintracks_focused then
-			self._wintrack_element:apply_focus_on_reward()
-		else
-			self._wintrack_element:remove_focus_on_reward()
-		end
+	local wintrack_element = self._wintrack_element
+
+	if not wintrack_element then
+		return
+	end
+
+	self._wintracks_focused = not self._wintracks_focused
+
+	if self._wintracks_focused then
+		wintrack_element:apply_focus_on_reward()
+	else
+		wintrack_element:remove_focus_on_reward()
 	end
 end
 
-PenanceOverviewView._cb_favorite_legend_visibility = function (self, add_to_favorite)
-	local using_cursor_navigation = self._using_cursor_navigation
-	local currently_tracked, can_track = AchievementUIHelper.favorite_achievement_count()
-
-	if add_to_favorite and can_track <= currently_tracked then
-		return false
+PenanceOverviewView._get_target = function (self)
+	if self._wintracks_focused then
+		return
 	end
 
-	local is_favorite
-	local can_change = true
-	local player = self:_player()
+	local selected_top_option_key = self._selected_top_option_key
 
-	if self._selected_top_option_key == "carousel" and not self._wintracks_focused then
-		if self._draw_carousel == true and self._hovered_carousel_card_index then
-			local carousel = self._carousel_entries[self._hovered_carousel_card_index]
-			local grid = carousel and carousel.grid
-			local widgets = grid:widgets()
+	if selected_top_option_key == "carousel" then
+		local index = self._hovered_carousel_card_index
+		local entry = self._carousel_entries[index]
+		local achievement_id = entry and entry.achievement_id
 
-			is_favorite = widgets[1].content.tracked
-
-			local achievement_id = carousel.achievement_id
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-			local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-
-			can_change = not is_complete and not can_claim
-		end
-	elseif self._selected_top_option_key == "browser" and not self._wintracks_focused then
+		return index, entry, achievement_id
+	elseif selected_top_option_key == "browser" then
 		local index
 
-		if using_cursor_navigation then
+		if self._using_cursor_navigation then
 			index = self._penance_grid:hovered_grid_index()
 		else
 			index = self._penance_grid:selected_grid_index()
 		end
 
 		local widget = self._penance_grid:widget_by_index(index)
+		local config = widget and widget.content.element
+		local achievement_id = config and config.achievement_id
 
-		is_favorite = widget and widget.content.tracked
+		return index, widget, achievement_id
+	end
+end
 
-		local achievement_id = widget and widget.content.element.achievement_id
+PenanceOverviewView._cb_favorite_legend_visibility = function (self, add_to_favorite)
+	local _, _, achievement_id = self:_get_target()
 
-		if achievement_id then
-			local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-			local is_complete = not can_claim and Managers.achievements:achievement_completed(player, achievement_id)
-
-			can_change = not is_complete and not can_claim
-		end
+	if not achievement_id then
+		return false
 	end
 
-	return is_favorite ~= nil and is_favorite ~= add_to_favorite and can_change
+	local is_favorite = self:is_favorite_achievement(achievement_id)
+	local can_change = self:_can_switch_favorite_status(achievement_id)
+
+	return is_favorite ~= add_to_favorite and can_change
 end
 
 PenanceOverviewView._on_favorite_pressed = function (self)
-	if self._selected_top_option_key == "carousel" then
-		local index = self._hovered_carousel_card_index
-		local entry = self._carousel_entries[index]
+	local index, entry, achievement_id = self:_get_target()
 
-		if entry then
-			self:_on_carousel_card_secondary_pressed(index, entry)
+	if not achievement_id then
+		return
+	end
 
-			if self._penance_grid then
-				local option = self._category_button_config[self._selected_option_button_index]
+	local selected_top_option_key = self._selected_top_option_key
 
-				self:on_category_button_pressed(self._selected_option_button_index, option, true)
-			end
-		end
-	elseif self._selected_top_option_key == "browser" then
-		local widget
-
-		if self._using_cursor_navigation then
-			widget = self._penance_grid:hovered_widget()
-		else
-			local index = self._penance_grid:selected_grid_index()
-
-			widget = self._penance_grid:widget_by_index(index)
-		end
-
-		if widget then
-			local config = widget.element
-
-			self:_cb_on_penance_secondary_pressed(widget, config)
-		end
+	if selected_top_option_key == "carousel" then
+		self:_on_carousel_card_secondary_pressed(index, entry)
+	elseif selected_top_option_key == "browser" then
+		self:_cb_on_penance_secondary_pressed(entry)
 	end
 end
 
 PenanceOverviewView._on_navigation_input_changed = function (self)
 	PenanceOverviewView.super._on_navigation_input_changed(self)
 
-	local setup_track_data_done = self._setup_track_data_done
+	local initialized = self._initialized
 
-	if not setup_track_data_done then
+	if not initialized then
 		return
 	end
 
 	if not self._using_cursor_navigation then
-		self:_focus_on_card(self._current_carousel_index)
+		self:_focus_on_card(self._carousel_target_index)
 	else
 		self:_focus_on_card()
 	end
@@ -3754,47 +2967,132 @@ PenanceOverviewView._on_navigation_input_changed = function (self)
 	end
 end
 
+PenanceOverviewView._currently_hovered_wintrack_item = function (self)
+	return self._wintrack_element and self._wintrack_element:currently_hovered_item() or nil
+end
+
+PenanceOverviewView.cb_on_inspect_pressed = function (self)
+	local previewed_item = self:_currently_hovered_wintrack_item()
+
+	if not previewed_item then
+		return
+	end
+
+	local item_type = previewed_item.item_type
+	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+	local view_name = "cosmetics_inspect_view"
+
+	if is_weapon or item_type == "GADGET" then
+		view_name = "inventory_weapon_details_view"
+	end
+
+	if Managers.ui:view_active(view_name) then
+		return
+	end
+
+	local is_weapon_skin = item_type == "WEAPON_SKIN"
+	local visual_item = is_weapon_skin and ItemUtils.weapon_skin_preview_item(previewed_item, true) or previewed_item
+	local real_profile = self:_player():profile()
+	local player_profile = real_profile and table.clone_instance(real_profile)
+	local player_archetype = player_profile and player_profile.archetype
+	local correct_archetype = visual_item.archetypes == nil or #visual_item.archetypes == 0 or player_archetype ~= nil and table.array_contains(visual_item.archetypes, player_archetype.name)
+	local correct_breed = visual_item.breeds == nil or #visual_item.breeds == 0 or player_archetype ~= nil and table.array_contains(visual_item.breeds, player_archetype.breed)
+	local is_item_supported_on_played_character = correct_archetype and correct_breed
+	local preferred_gender = player_profile and player_profile.gender
+
+	player_profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preferred_gender)
+
+	local context
+
+	if is_weapon_skin then
+		local slots = visual_item.slots
+		local slot_name = slots[1]
+
+		player_profile.loadout[slot_name] = visual_item
+
+		local archetype = player_archetype
+		local breed_name = archetype.breed
+		local breed = Breeds[breed_name]
+		local state_machine = breed.inventory_state_machine
+		local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
+
+		context = {
+			disable_zoom = true,
+			profile = player_profile,
+			state_machine = state_machine,
+			animation_event = animation_event,
+			wield_slot = slot_name,
+			preview_with_gear = is_item_supported_on_played_character,
+			preview_item = visual_item,
+		}
+	else
+		context = {
+			profile = player_profile,
+			preview_with_gear = is_item_supported_on_played_character,
+			preview_item = previewed_item,
+		}
+	end
+
+	Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+end
+
+PenanceOverviewView.can_inspect_item = function (self)
+	local item = self:_currently_hovered_wintrack_item()
+
+	if not item then
+		return false
+	end
+
+	if UISettings.inspectable_item_types[item.item_type] then
+		return true
+	end
+
+	return false
+end
+
 PenanceOverviewView._update_vo = function (self, dt, t)
-	if self._hub_interaction then
-		local queued_vo_event_request = self._queued_vo_event_request
+	if not self._hub_interaction then
+		return
+	end
 
-		if queued_vo_event_request then
-			local delay = queued_vo_event_request.delay
+	local queued_vo_event_request = self._queued_vo_event_request
 
-			if delay <= 0 then
-				local events = queued_vo_event_request.events
-				local voice_profile = queued_vo_event_request.voice_profile
-				local optional_route_key = queued_vo_event_request.optional_route_key
-				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
-				local world_spawner = self._world_spawner
-				local dialogue_system = world_spawner and self:dialogue_system()
+	if queued_vo_event_request then
+		local delay = queued_vo_event_request.delay
 
-				if dialogue_system then
-					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+		if delay <= 0 then
+			local events = queued_vo_event_request.events
+			local voice_profile = queued_vo_event_request.voice_profile
+			local optional_route_key = queued_vo_event_request.optional_route_key
+			local is_opinion_vo = queued_vo_event_request.is_opinion_vo
+			local world_spawner = self._world_spawner
+			local dialogue_system = world_spawner and self:dialogue_system()
 
-					self._queued_vo_event_request = nil
-				else
-					self._queued_vo_event_request = nil
-				end
+			if dialogue_system then
+				self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+
+				self._queued_vo_event_request = nil
 			else
-				queued_vo_event_request.delay = delay - dt
+				self._queued_vo_event_request = nil
 			end
+		else
+			queued_vo_event_request.delay = delay - dt
 		end
+	end
 
-		local current_vo_id = self._current_vo_id
+	local current_vo_id = self._current_vo_id
 
-		if not current_vo_id then
-			return
-		end
+	if not current_vo_id then
+		return
+	end
 
-		local unit = self._vo_unit
-		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
-		local is_playing = dialogue_extension:is_playing(current_vo_id)
+	local unit = self._vo_unit
+	local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+	local is_playing = dialogue_extension:is_playing(current_vo_id)
 
-		if not is_playing then
-			self._current_vo_id = nil
-			self._current_vo_event = nil
-		end
+	if not is_playing then
+		self._current_vo_id = nil
+		self._current_vo_event = nil
 	end
 end
 

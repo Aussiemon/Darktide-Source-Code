@@ -77,9 +77,19 @@ local elements = {
 		},
 	},
 	{
-		class_name = "HudElementBlocking",
-		filename = "scripts/ui/hud/elements/blocking/hud_element_blocking",
+		class_name = "HudElementStamina",
+		filename = "scripts/ui/hud/elements/blocking/hud_element_stamina",
 		package = "packages/ui/hud/blocking/blocking",
+		use_hud_scale = true,
+		visibility_groups = {
+			"alive",
+			"communication_wheel",
+		},
+	},
+	{
+		class_name = "HudElementDodgeCounter",
+		filename = "scripts/ui/hud/elements/dodge_counter/hud_element_dodge_counter",
+		package = "packages/ui/hud/dodge_counter/dodge_counter",
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",

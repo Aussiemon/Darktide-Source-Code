@@ -216,6 +216,7 @@ local monster_pacing_template = {
 		},
 		{
 			allow_witches_spawned_with_monsters = true,
+			force_horde = true,
 			num_spawns = {
 				monsters = {
 					1,
@@ -266,6 +267,17 @@ local monster_pacing_template = {
 				chaos_daemonhost = 65,
 			},
 			spawn_stingers = SPAWN_STINGERS,
+			force_horde_condition = function ()
+				local difficulty_manager = Managers.state.difficulty
+				local resistance = difficulty_manager:get_resistance()
+				local required_resistance = 6
+
+				if resistance == required_resistance then
+					return true
+				else
+					return false
+				end
+			end,
 		},
 	},
 }

@@ -206,7 +206,9 @@ local breed_data = {
 		head = "j_head",
 		hips = "j_hips",
 		left_foot = "j_leftfoot",
+		left_toe = "j_lefttoebase",
 		right_foot = "j_rightfoot",
+		right_toe = "j_righttoebase",
 	},
 	base_unit_fx_sources = {
 		fx_anim_01 = "fx_anim_01",
@@ -230,7 +232,10 @@ local breed_data = {
 		head = "j_head",
 		hips = "j_hips",
 		left_foot = "j_leftfoot",
+		left_toe = "j_lefttoebase",
 		right_foot = "j_rightfoot",
+		right_toe = "j_righttoebase",
+		root = "root_point",
 	},
 	sfx = {
 		footstep = "player_footstep",

@@ -3,6 +3,7 @@
 local GrowQueue = require("scripts/foundation/utilities/grow_queue")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StatConfigParser = require("scripts/managers/stats/utility/stat_config_parser")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
@@ -37,17 +38,7 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._rpc_settings = rpc_settings
 	self._stat_lookup = {}
 
-	local sorted_stat_keys = {}
-
-	for key in pairs(self._definitions) do
-		table.insert(sorted_stat_keys, key)
-	end
-
-	table.sort(sorted_stat_keys)
-
-	for _, key in ipairs(sorted_stat_keys) do
-		local stat = self._definitions[key]
-
+	for key, stat in pairs(self._definitions) do
 		self._stat_lookup[stat.index] = key
 	end
 
@@ -60,7 +51,7 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 		self._event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 	end
 
-	self._next_user = 0
+	self._promise_container = PromiseContainer:new()
 
 	self:clear()
 end
@@ -90,6 +81,8 @@ StatsManager.destroy = function (self)
 	for key, _ in pairs(self._users) do
 		self:remove_user(key)
 	end
+
+	self._promise_container:delete()
 
 	if self._is_client then
 		self._event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -331,6 +324,20 @@ StatsManager.add_user = function (self, key, account_id, rpc_channel, local_play
 	return promise
 end
 
+StatsManager.clear_rpc_queue = function (self, key)
+	local user = self._users[key]
+
+	if not user then
+		Log.warning("StatsManager", "Tried to clear rpc queue for user '%s' but no such user exists.", key)
+
+		return
+	end
+
+	if user.rpc_queue then
+		user.rpc_queue:clear()
+	end
+end
+
 StatsManager.remove_user = function (self, key)
 	local user = self._users[key]
 
@@ -469,6 +476,20 @@ StatsManager.start_session = function (self, session_config)
 	end
 end
 
+StatsManager._all_rpcs_synced = function (self)
+	for _, user in pairs(self._users) do
+		if user.rpc_queue and not user.rpc_queue:empty() then
+			return false
+		end
+	end
+
+	return true
+end
+
+StatsManager.wait_until_rpcs_synced = function (self)
+	return self._promise_container:cancel_on_destroy(Promise.until_true(callback(self, "_all_rpcs_synced")))
+end
+
 StatsManager.stop_session = function (self)
 	local team = self._team
 
@@ -476,7 +497,9 @@ StatsManager.stop_session = function (self)
 
 	team.trigger_queue:clear()
 
-	local promises = {}
+	local promises = {
+		self:wait_until_rpcs_synced(),
+	}
 
 	for _, user in pairs(self._users) do
 		local should_save = user.state == "tracking"
@@ -615,28 +638,27 @@ StatsManager.start_tracking_user = function (self, key, user_config)
 	user.trigger_queue = PriorityQueue:new()
 end
 
-StatsManager.hot_join_sync = function (self, sender, channel)
-	local player = Managers.player:player(sender, 1)
-
-	if self:has_session() then
-		local stat_id = player.stat_id
-
-		if not self:is_tracking_user(stat_id) then
-			local joined_at = 0
-
-			if Managers.state and Managers.state.main_path then
-				joined_at = Managers.state.main_path:furthest_travel_percentage(1)
-			end
-
-			local player_stats_config = {
-				archetype_name = player:archetype_name(),
-				character_id = player:character_id(),
-				joined_at = joined_at,
-			}
-
-			self:start_tracking_user(player.stat_id, player_stats_config)
-		end
+StatsManager.hot_join_sync = function (self, sender, channel, local_player_id)
+	if not self:has_session() then
+		return
 	end
+
+	local player = Managers.player:player(sender, local_player_id)
+	local stat_id = player.stat_id
+	local joined_at = 0
+
+	if Managers.state and Managers.state.main_path then
+		joined_at = Managers.state.main_path:furthest_travel_percentage(1)
+	end
+
+	local player_stats_config = {
+		archetype_name = player:archetype_name(),
+		account_id = player:character_id(),
+		character_id = player:character_id(),
+		joined_at = joined_at,
+	}
+
+	self:start_tracking_user(stat_id, player_stats_config)
 end
 
 StatsManager._parse_backend_value = function (self, x)
@@ -656,8 +678,9 @@ StatsManager.stop_tracking_user = function (self, key)
 	end
 
 	local team = self._team
+	local team_triggers = team.triggers
 
-	for stat_name, triggers in pairs(team.triggers) do
+	for stat_name, triggers in pairs(team_triggers) do
 		local trigger_count = triggers and #triggers or 0
 
 		for i = trigger_count, 1, -1 do
@@ -671,7 +694,7 @@ StatsManager.stop_tracking_user = function (self, key)
 		end
 
 		if trigger_count == 0 then
-			triggers[stat_name] = nil
+			team_triggers[stat_name] = nil
 		end
 	end
 
@@ -796,7 +819,7 @@ StatsManager._detach_listener = function (self, key, listener_id)
 
 		for j = listener_count, 1, -1 do
 			if stat_listeners[j] == listener_id then
-				stat_listeners[i] = stat_listeners[listener_count]
+				stat_listeners[j] = stat_listeners[listener_count]
 				stat_listeners[listener_count] = nil
 				listener_count = listener_count - 1
 			end
@@ -856,9 +879,9 @@ StatsManager._trigger = function (self, user, stat_name, ...)
 
 	local listeners = self._listeners
 	local listener_ids = user.listeners[stat_name]
-	local listenter_count = listener_ids and #listener_ids or 0
+	local listener_count = listener_ids and #listener_ids or 0
 
-	for i = 1, listenter_count do
+	for i = 1, listener_count do
 		local listener_id = listener_ids[i]
 		local listener = listeners[listener_id]
 		local callback_fn = listener.callback_fn
@@ -869,6 +892,7 @@ StatsManager._trigger = function (self, user, stat_name, ...)
 	local last_t = self._last_t
 	local triggers = user.triggers[stat_name]
 	local trigger_count = triggers and #triggers or 0
+	local self_trigger = self._trigger
 
 	for i = 1, trigger_count do
 		local trigger = triggers[i]
@@ -884,9 +908,7 @@ StatsManager._trigger = function (self, user, stat_name, ...)
 				...,
 			})
 		else
-			self._next_user = next_user
-
-			self:_trigger(next_user, trigger_func(trigger_stat, next_user.data, ...))
+			self_trigger(self, next_user, trigger_func(trigger_stat, next_user.data, ...))
 		end
 	end
 end
@@ -907,9 +929,9 @@ StatsManager.rpc_stat_update = function (self, _, local_player_id, stat_index, s
 
 		local listeners = self._listeners
 		local listener_ids = user.listeners[stat_name]
-		local listenter_count = listener_ids and #listener_ids or 0
+		local listener_count = listener_ids and #listener_ids or 0
 
-		for i = 1, listenter_count do
+		for i = 1, listener_count do
 			local listener_id = listener_ids[i]
 			local listener = listeners[listener_id]
 			local callback_fn = listener.callback_fn
@@ -940,14 +962,6 @@ StatsManager.record_team = function (self, stat_name, ...)
 	if self:has_session() then
 		self:_trigger(team, stat_name, ...)
 	end
-end
-
-StatsManager.get_next_user = function (self)
-	return self._next_user
-end
-
-StatsManager.get_stats_config = function (self)
-	return self._session_config
 end
 
 return StatsManager

@@ -31,7 +31,6 @@ local archetype_data = {
 	onboarding_intro_video_template_name = "adamant_intro",
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/adamant_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/adamant",
-	ui_selection_order = 5,
 	toughness = ArchetypeToughnessTemplates.adamant,
 	dodge = ArchetypeDodgeTemplates.adamant,
 	sprint = ArchetypeSprintTemplates.default,

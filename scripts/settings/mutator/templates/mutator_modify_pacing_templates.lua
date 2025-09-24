@@ -725,6 +725,14 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_live_event_plasma_gunner_replacement = {
+		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
+		init_replacement_breed = {
+			breed_replacement = {
+				renegade_gunner = "renegade_plasma_gunner",
+			},
+		},
+	},
 }
 
 return mutator_templates

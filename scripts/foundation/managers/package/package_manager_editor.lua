@@ -111,6 +111,10 @@ for name, value in pairs(PackageManager) do
 	end
 end
 
+PackageManagerEditor.apply_backend_game_settings = function (self)
+	return
+end
+
 implements(PackageManagerEditor, interface)
 
 return PackageManagerEditor

@@ -9,9 +9,7 @@ local objective_tracker_settings = HudElementPrologueTutorialObjectivesTrackerSe
 local background_size = objective_tracker_settings.background_size
 local entry_size = objective_tracker_settings.entry_size
 local scenegraph_definition = {
-	screen = {
-		UIWorkspaceSettings.screen,
-	},
+	screen = UIWorkspaceSettings.screen,
 	background = {
 		horizontal_alignment = "right",
 		parent = "screen",

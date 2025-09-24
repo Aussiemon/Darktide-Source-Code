@@ -126,6 +126,7 @@ local create_notification_message = {
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "center",
+					scale_to_material = true,
 					vertical_alignment = "center",
 					size = icon_size,
 					offset = {

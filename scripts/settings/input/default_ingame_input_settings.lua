@@ -397,7 +397,7 @@ local default_ingame_input_settings = {
 			key_alias = "tactical_overlay_scroll_up",
 			type = "held",
 		},
-		weapon_reload = {
+		weapon_reload_pressed = {
 			key_alias = "weapon_reload",
 			type = "pressed",
 		},

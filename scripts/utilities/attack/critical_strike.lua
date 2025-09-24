@@ -1,16 +1,16 @@
 ﻿-- chunkname: @scripts/utilities/attack/critical_strike.lua
 
-local PseudoRandomDistribution = require("scripts/utilities/pseudo_random_distribution")
 local CriticalStrike = {}
 
 CriticalStrike.is_critical_strike = function (chance, prd_state, seed)
+	local PseudoRandomDistribution = require("scripts/utilities/pseudo_random_distribution")
 	local rounded_chance = math.round_with_precision(chance, 2)
 	local is_critical_strike, new_prd_state, new_seed = PseudoRandomDistribution.flip_coin(rounded_chance, prd_state, seed)
 
 	return is_critical_strike, new_prd_state, new_seed
 end
 
-CriticalStrike.chance = function (player, weapon_handling_template, is_ranged, is_melee)
+CriticalStrike.chance = function (player, weapon_handling_template, is_ranged, is_melee, skip_damage_conversion)
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local base_chance = archetype.base_critical_strike_chance
@@ -30,7 +30,13 @@ CriticalStrike.chance = function (player, weapon_handling_template, is_ranged, i
 		additional_chance = additional_chance + critical_strike.chance_modifier
 	end
 
-	return math.clamp(base_chance + additional_chance, 0, 1)
+	local final_value = math.clamp(base_chance + additional_chance, 0, 1)
+
+	if not skip_damage_conversion then
+		final_value = final_value * (1 - buffs.critical_strike_chance_to_damage_convert)
+	end
+
+	return final_value
 end
 
 return CriticalStrike

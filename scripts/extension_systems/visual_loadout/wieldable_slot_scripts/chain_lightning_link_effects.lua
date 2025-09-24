@@ -27,14 +27,14 @@ local SKIP_LENGTH_VARIABLE = true
 local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
 local JUMP_VALIDATION = ChainLightning.jump_validation_functions
-local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
+local ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
 	"target_unit_3",
 }
 local ROOT_CHAIN_SETTINGS = {
 	max_targets = {
-		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS,
+		num_targets = #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS,
 	},
 }
 local LOOPING_TO_TARGET_VFX_ALIAS = "chain_lightning_to_target"
@@ -251,7 +251,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
-	self._targeting_module_component = unit_data_extension:read_component("action_module_targeting")
+	self._targeting_module_component = unit_data_extension:read_component("action_module_target_finder")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
 	self._first_person_component = unit_data_extension:read_component("first_person")
@@ -301,8 +301,8 @@ ChainLightningLinkEffects._create_chain_root_node = function (self)
 		local use_random = false
 		local chain_root_node = ChainLightningTarget:new(ROOT_CHAIN_SETTINGS, depth, use_random, nil, "unit", self._owner_unit)
 
-		for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
-			local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+		for ii = 1, #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS do
+			local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 
 			chain_root_node:set_value(key, false)
 		end
@@ -317,8 +317,8 @@ end
 ChainLightningLinkEffects._clear_initial_targets = function (self)
 	local chain_root_node = self._chain_root_node
 
-	for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
-		local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+	for ii = 1, #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS do
+		local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 
 		chain_root_node:set_value(key, false)
 	end
@@ -368,12 +368,12 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 
 		func_context.fx_hand = fx_hand
 
-		for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
+		for ii = 1, #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS do
 			if max_targets <= chain_root_node:num_children() then
 				break
 			end
 
-			local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+			local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 			local target_unit = targeting_module_component[key]
 
 			if target_unit and not hit_units[target_unit] and JUMP_VALIDATION.target_alive_and_electrocuted(target_unit) then

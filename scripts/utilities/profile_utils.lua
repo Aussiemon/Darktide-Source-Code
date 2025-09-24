@@ -166,7 +166,6 @@ local function profile_from_backend_data(backend_profile_data)
 	local profile_data = table.clone(backend_profile_data)
 	local character = profile_data.character
 	local archetype_name = character.archetype
-	local specialization = character.career and character.career.specialization or "none"
 	local progression = backend_profile_data.progression
 	local current_level = progression and progression.currentLevel or 1
 	local talent_points = progression and progression.talentPoints or 0
@@ -186,10 +185,10 @@ local function profile_from_backend_data(backend_profile_data)
 		talents = {},
 		current_level = current_level,
 		talent_points = talent_points,
-		specialization = specialization,
 		name = character.name,
 		personal = character.personal,
 		companion = character.companion,
+		narrative = character.narrative,
 	}
 	local items = profile_data.items
 	local loadout_item_data = backend_profile.loadout_item_data
@@ -300,8 +299,8 @@ local function _generate_visual_loadout(visual_items)
 		local hidden_slots = data.item.hide_slots
 
 		if hidden_slots then
-			for i = 1, #hidden_slots do
-				local hidden_slot_name = hidden_slots[i]
+			for ii = 1, #hidden_slots do
+				local hidden_slot_name = hidden_slots[ii]
 
 				structure[hidden_slot_name] = nil
 			end
@@ -312,8 +311,8 @@ local function _generate_visual_loadout(visual_items)
 		local parent_slot_names = entry.parent_slot_names
 
 		if parent_slot_names then
-			for i = 1, #parent_slot_names do
-				local parent_slot_name = parent_slot_names[i]
+			for ii = 1, #parent_slot_names do
+				local parent_slot_name = parent_slot_names[ii]
 				local parent = structure[parent_slot_name]
 
 				if parent then
@@ -563,12 +562,12 @@ ProfileUtils.split_for_network = function (profile_json, chunk_array)
 	local num_chunks = math.ceil(length / max_string_length)
 	local remaining_json = profile_json
 
-	for i = 1, num_chunks do
+	for ii = 1, num_chunks do
 		local remaining_length = #remaining_json
 		local chunk_length = math.min(max_string_length, remaining_length)
 		local chunk = string.sub(remaining_json, 1, chunk_length)
 
-		chunk_array[i] = chunk
+		chunk_array[ii] = chunk
 		remaining_json = string.sub(remaining_json, chunk_length + 1, remaining_length)
 	end
 end
@@ -576,8 +575,8 @@ end
 ProfileUtils.combine_network_chunks = function (chunk_array)
 	local profile_json = ""
 
-	for i = 1, #chunk_array do
-		local profile_chunk = chunk_array[i]
+	for ii = 1, #chunk_array do
+		local profile_chunk = chunk_array[ii]
 
 		profile_json = profile_json .. profile_chunk
 	end
@@ -643,14 +642,12 @@ end
 ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	local archetype_name = character.archetype
 	local archetype = Archetypes[archetype_name]
-	local specialization = character.career and character.career.specialization or "none"
 	local current_level = progression and progression.currentLevel or 1
 	local talent_points = progression and progression.talentPoints or 0
 	local item_ids = character.inventory
 	local profile = {
 		character_id = character.id,
 		archetype = archetype,
-		specialization = specialization,
 		current_level = current_level,
 		talent_points = talent_points,
 		gender = character.gender,
@@ -667,6 +664,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		talents = {},
 		name = character.name,
 		personal = character.personal,
+		narrative = character.narrative,
 	}
 
 	if character.companion then
@@ -923,9 +921,9 @@ ProfileUtils.remove_profile_preset = function (profile_preset_id)
 
 	local profile_presets = ProfileUtils.get_profile_presets()
 
-	for i = 1, #profile_presets do
-		if profile_presets[i].id == profile_preset_id then
-			table.remove(profile_presets, i)
+	for ii = 1, #profile_presets do
+		if profile_presets[ii].id == profile_preset_id then
+			table.remove(profile_presets, ii)
 
 			if profile_preset_id == ProfileUtils.get_active_profile_preset_id() then
 				ProfileUtils.save_active_profile_preset_id(nil)
@@ -1122,8 +1120,8 @@ ProfileUtils.get_profile_preset = function (profile_preset_id)
 
 	local profile_preset
 
-	for i = 1, #profile_presets do
-		local preset = profile_presets[i]
+	for ii = 1, #profile_presets do
+		local preset = profile_presets[ii]
 
 		if preset.id == profile_preset_id then
 			profile_preset = preset
@@ -1155,10 +1153,6 @@ ProfileUtils.get_profile_presets = function ()
 end
 
 ProfileUtils.verify_saved_profile_presets_talents_version = function (character_id, archetype_name)
-	local archetype = Archetypes[archetype_name]
-	local talent_layout_file_path = archetype.talent_layout_file_path
-	local talent_layout = require(talent_layout_file_path)
-	local talent_layout_version = talent_layout.version
 	local save_manager = Managers.save
 	local character_data = character_id and save_manager and save_manager:character_data(character_id)
 
@@ -1167,16 +1161,6 @@ ProfileUtils.verify_saved_profile_presets_talents_version = function (character_
 	end
 
 	local profile_presets = character_data.profile_presets
-
-	if profile_presets then
-		for i = 1, #profile_presets do
-			local preset = profile_presets[i]
-
-			if preset.talents_version and preset.talents_version ~= talent_layout_version then
-				-- Nothing
-			end
-		end
-	end
 
 	return profile_presets
 end

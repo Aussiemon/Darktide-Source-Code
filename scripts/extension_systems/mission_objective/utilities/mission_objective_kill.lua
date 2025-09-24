@@ -36,7 +36,7 @@ MissionObjectiveKill._init_objective_unit = function (self, unit)
 	if mission_objective_target_extension then
 		MissionObjectiveKill.super._init_objective_unit(self, unit)
 	else
-		Managers.state.extension:system("mission_objective_system"):add_marker(self._name, unit)
+		Managers.state.extension:system("mission_objective_system"):add_marker(self._name, nil, unit)
 		self:register_unit(unit)
 	end
 end

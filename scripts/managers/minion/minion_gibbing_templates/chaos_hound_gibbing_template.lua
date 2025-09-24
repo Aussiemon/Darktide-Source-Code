@@ -43,7 +43,7 @@ head_sever.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 head_sever.scale_node = "j_head"
 head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + size
 head_sever.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -107,7 +107,7 @@ upper_left_arm.condition = {
 	already_gibbed = "lower_left_arm",
 }
 upper_left_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -131,7 +131,7 @@ upper_right_arm.condition = {
 	already_gibbed = "lower_right_arm",
 }
 upper_right_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -160,7 +160,7 @@ lower_left_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_hound
 lower_left_arm.stump_settings.stump_attach_node = "j_leftarm"
 lower_left_arm.scale_node = "j_leftforearm"
 lower_left_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -181,7 +181,7 @@ lower_right_arm.stump_settings.stump_unit = "content/characters/enemy/chaos_houn
 lower_right_arm.stump_settings.stump_attach_node = "j_rightarm"
 lower_right_arm.scale_node = "j_rightforearm"
 lower_right_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -212,7 +212,7 @@ left_arm.extra_hit_zone_actors_to_destroy = {
 	"lower_left_arm",
 }
 left_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -235,7 +235,7 @@ right_arm.extra_hit_zone_actors_to_destroy = {
 	"lower_right_arm",
 }
 right_arm.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -323,7 +323,7 @@ upper_left_leg.condition = {
 	already_gibbed = "lower_left_leg",
 }
 upper_left_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -347,7 +347,7 @@ upper_right_leg.condition = {
 	already_gibbed = "lower_right_leg",
 }
 upper_right_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -376,7 +376,7 @@ lower_left_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_hound
 lower_left_leg.stump_settings.stump_attach_node = "j_leftupleg"
 lower_left_leg.scale_node = "j_leftleg"
 lower_left_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -397,7 +397,7 @@ lower_right_leg.stump_settings.stump_unit = "content/characters/enemy/chaos_houn
 lower_right_leg.stump_settings.stump_attach_node = "j_rightupleg"
 lower_right_leg.scale_node = "j_rightleg"
 lower_right_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -428,7 +428,7 @@ left_leg.extra_hit_zone_actors_to_destroy = {
 	"lower_left_leg",
 }
 left_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -451,7 +451,7 @@ right_leg.extra_hit_zone_actors_to_destroy = {
 	"lower_right_leg",
 }
 right_leg.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -544,7 +544,7 @@ torso_sever.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 torso_sever.scale_node = "j_spine2"
 torso_sever.gibbing_threshold = SharedGibbingTemplates.torso.gibbing_threshold + size
 torso_sever.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }
@@ -606,7 +606,7 @@ center_mass_full.stump_settings.vfx = SharedGibbingTemplates.vfx.poxwalker_splat
 center_mass_full.gibbing_threshold = SharedGibbingTemplates.center_mass.gibbing_threshold + size
 center_mass_full.extra_hit_zone_gibs = SharedGibbingTemplates.center_mass.extra_hit_zone_gibs
 center_mass_full.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"slot_body",
 	"skin_color_override",
 }

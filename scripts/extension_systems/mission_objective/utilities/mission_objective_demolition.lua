@@ -12,8 +12,8 @@ MissionObjectiveDemolition.init = function (self)
 	self._resume_timer = 0
 end
 
-MissionObjectiveDemolition.start_objective = function (self, mission_objective_data, registered_units, synchronizer_unit)
-	MissionObjectiveDemolition.super.start_objective(self, mission_objective_data, registered_units, synchronizer_unit)
+MissionObjectiveDemolition.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+	MissionObjectiveDemolition.super.start_objective(self, mission_objective_data, group_id, registered_units, synchronizer_unit)
 
 	local demolition_synchronizer_extension = self:synchronizer_extension()
 	local stages = demolition_synchronizer_extension:setup_stages(registered_units)

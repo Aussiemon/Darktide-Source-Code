@@ -29,14 +29,29 @@ local circumstance_templates = {
 	},
 	mutator_havoc_rotten_armor = {
 		ui = {
-			background = "content/ui/materials/backgrounds/mutators/havoc_mutator_nurgle",
-			description = "loc_havoc_enemies_corrupted_description",
-			display_name = "loc_havoc_enemies_corrupted_name",
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_rotten_armor",
+			description = "loc_havoc_rotten_armor_description",
+			display_name = "loc_havoc_rotten_armor_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",
-			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_rotten_armor",
 		},
 		mutators = {
 			"mutator_rotten_armor",
+			"mutator_live_rotten_armor_trickle_horde",
+			"mutator_only_traitor_guard_faction",
+		},
+		mission_overrides = {},
+	},
+	mutator_stimmed_minions = {
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutators_bg_stimmed_minions",
+			description = "loc_havoc_stimmed_minions_description",
+			display_name = "loc_havoc_stimmed_minions_name",
+			happening_display_name = "loc_happening_nurgle_manifestation",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_stimmed_minions",
+		},
+		mutators = {
+			"mutator_stimmed_minions",
 		},
 		mission_overrides = {},
 	},
@@ -134,7 +149,6 @@ local circumstance_templates = {
 	},
 	mutator_havoc_enraged = {
 		ui = {
-			background = "content/ui/materials/backgrounds/mutators/mutators_bg_the_final_toll",
 			description = "loc_havoc_mutator_enraged_description",
 			display_name = "loc_havoc_mutator_enraged_name",
 			happening_display_name = "loc_happening_nurgle_manifestation",

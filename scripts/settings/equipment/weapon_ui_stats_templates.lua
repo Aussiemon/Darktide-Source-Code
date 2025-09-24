@@ -58,7 +58,8 @@ local default_stats = {
 		template_type = template_types.stamina,
 	},
 	{
-		"ammunition_clip",
+		"ammunition_clips",
+		1,
 		target = "base",
 		ui_identifier = "ammo_clip",
 		template_type = template_types.ammo,

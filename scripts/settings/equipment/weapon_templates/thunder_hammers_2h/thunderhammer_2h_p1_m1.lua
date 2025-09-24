@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/thunder_hammers_2h/thunderhammer_2h_p1_m1.lua
 
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -9,36 +8,20 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PushSettings = require("scripts/settings/damage/push_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeThunderhammerP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_thunderhammer_2h_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
-local armor_types = ArmorSettings.types
-local buff_stat_buffs = BuffSettings.stat_buffs
-local hit_zone_names = HitZone.hit_zone_names
 local push_templates = PushSettings.push_templates
-local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local template_types = WeaponTweakTemplateSettings.template_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
-local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
-local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
@@ -247,12 +230,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_light,
@@ -358,12 +343,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy,
@@ -608,12 +595,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_right_down",
-			anchor_point_offset = {
-				-0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_right_down",
+				anchor_point_offset = {
+					-0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_light,
@@ -720,12 +709,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy,
@@ -897,12 +888,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_light_plus,
@@ -984,12 +977,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy,
@@ -1129,12 +1124,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.4,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_left_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.4,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_pushfollow,
@@ -1376,12 +1373,14 @@ weapon_template.actions = {
 			},
 		},
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left_down",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/heavy_swing_left_down",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy,

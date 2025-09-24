@@ -269,12 +269,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_left",
-			anchor_point_offset = {
-				0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_left",
+				anchor_point_offset = {
+					0.1,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_linesman,
@@ -346,12 +348,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/heavy_attack_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/heavy_attack_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_heavy_smite,
@@ -506,12 +510,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_right_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_right_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
@@ -585,12 +591,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/heavy_attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/heavy_attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_heavy_tank,
@@ -746,12 +754,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_left_down",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_left_down",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
@@ -897,12 +907,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_up_right",
-			anchor_point_offset = {
-				0.15,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_up_right",
+				anchor_point_offset = {
+					0.15,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
@@ -1038,12 +1050,14 @@ weapon_template.actions = {
 			0.25,
 			1.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_up_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_up_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_light_smiter,
@@ -1184,12 +1198,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_special_poke",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/power_maul/attack_special_poke",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.axe_uppercut,

@@ -192,8 +192,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	table.sort(sorted_husk_components)
 
-	for component_i = 1, #sorted_husk_components do
-		local component_name = sorted_husk_components[component_i]
+	for husk_component_index = 1, #sorted_husk_components do
+		local component_name = sorted_husk_components[husk_component_index]
 		local formatted_husk_component = {}
 
 		formatted_husk_config[component_name] = formatted_husk_component
@@ -203,8 +203,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		table.sort(husk_component)
 
-		for field_i = 1, #husk_component do
-			local field_name = husk_component[field_i]
+		for field_index = 1, #husk_component do
+			local field_name = husk_component[field_index]
 
 			formatted_husk_component[field_name] = true
 
@@ -216,8 +216,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 	table.sort(sorted_husk_hud_components)
 
-	for component_i = 1, #sorted_husk_hud_components do
-		local component_name = sorted_husk_hud_components[component_i]
+	for husk_hud_component_index = 1, #sorted_husk_hud_components do
+		local component_name = sorted_husk_hud_components[husk_hud_component_index]
 		local formatted_husk_hud_component = {}
 
 		formatted_husk_hud_config[component_name] = formatted_husk_hud_component
@@ -227,8 +227,8 @@ UnitDataComponentConfigFormatter.format = function (config, gameobject_name, hus
 
 		table.sort(husk_hud_component)
 
-		for field_i = 1, #husk_hud_component do
-			local field_name = husk_hud_component[field_i]
+		for field_index = 1, #husk_hud_component do
+			local field_name = husk_hud_component[field_index]
 			local husk_component = formatted_husk_config[component_name]
 
 			if husk_component then

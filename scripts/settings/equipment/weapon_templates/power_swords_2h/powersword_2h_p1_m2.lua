@@ -2,40 +2,31 @@
 
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigger_templates")
-local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupSlow = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_slow")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PushSettings = require("scripts/settings/damage/push_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokePowesword2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_2h_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
-local armor_types = ArmorSettings.types
-local buff_stat_buffs = BuffSettings.stat_buffs
-local push_templates = PushSettings.push_templates
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local wounds_shapes = WoundsSettings.shapes
+local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
+local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs)
@@ -53,17 +44,6 @@ local hit_zone_priority_torso = {
 }
 
 table.add_missing(hit_zone_priority_torso, default_hit_zone_priority)
-
-local light_hitbox = {
-	0.2,
-	0.15,
-	1.15,
-}
-local heavy_hitbox = {
-	0.4,
-	0.15,
-	1.15,
-}
 
 weapon_template.allowed_inputs_in_sprint = {
 	combat_ability = true,
@@ -394,12 +374,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_down",
-			anchor_point_offset = {
-				0.2,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_down",
+				anchor_point_offset = {
+					0.2,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h_smiter,
@@ -503,12 +485,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powersword_2h_heavy_linesman,
@@ -607,12 +591,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_diagonal_up",
-			anchor_point_offset = {
-				0,
-				0.1,
-				-0.3,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_diagonal_up",
+				anchor_point_offset = {
+					0,
+					0.1,
+					-0.3,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h,
@@ -716,12 +702,14 @@ weapon_template.actions = {
 			0.17,
 			1.22,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_stab",
-			anchor_point_offset = {
-				0.15,
-				0.1,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_stab",
+				anchor_point_offset = {
+					0.15,
+					0.1,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powersword_2h_heavy_stab,
@@ -958,12 +946,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_right_down",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_right_down",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h_smiter,
@@ -1068,12 +1058,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powersword_2h_heavy_linesman,
@@ -1244,12 +1236,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.35,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.35,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h,
@@ -1356,12 +1350,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_left_up",
-			anchor_point_offset = {
-				-0.17,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_left_up",
+				anchor_point_offset = {
+					-0.17,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powersword_2h_heavy_smiter,
@@ -1466,12 +1462,14 @@ weapon_template.actions = {
 			0.3,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_right_down",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/heavy_attack_right_down",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powersword_2h_heavy_smiter,
@@ -1746,12 +1744,14 @@ weapon_template.actions = {
 			0.15,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_right",
-			anchor_point_offset = {
-				-0.2,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_sword/attack_right",
+				anchor_point_offset = {
+					-0.2,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_powersword_2h,
@@ -2125,7 +2125,7 @@ weapon_template.hud_configuration = {
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
-	_special_active = "fx_blade",
+	_special_active = "fx_special_active",
 	_sweep = "fx_sweep",
 }
 weapon_template.crosshair = {

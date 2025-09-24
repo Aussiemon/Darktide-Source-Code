@@ -228,6 +228,39 @@ UIWidget.add_definition_pass = function (destination, pass_info)
 	passes[pass_index] = new_pass_info
 end
 
+local function _handle_alignment(style_data, pass_pos_x, pass_pos_y, width, height, pass_size_x, pass_size_y)
+	local horizontal_alignment = style_data.horizontal_alignment
+
+	if horizontal_alignment == "right" then
+		pass_pos_x = pass_pos_x + pass_size_x - width
+	elseif horizontal_alignment == "center" then
+		pass_pos_x = pass_pos_x + (pass_size_x - width) / 2
+	end
+
+	local vertical_alignment = style_data.vertical_alignment
+
+	if vertical_alignment == "center" then
+		pass_pos_y = pass_pos_y + (pass_size_y - height) / 2
+	elseif vertical_alignment == "bottom" then
+		pass_pos_y = pass_pos_y + pass_size_y - height
+	end
+
+	return pass_pos_x, pass_pos_y
+end
+
+local function _handle_optional_scale(optional_width, optional_height, optional_pos_x, optional_pos_y, widget_optional_scale)
+	if not widget_optional_scale then
+		return optional_width, optional_height, optional_pos_x, optional_pos_y
+	end
+
+	optional_width = optional_width and optional_width * widget_optional_scale
+	optional_height = optional_height and optional_height * widget_optional_scale
+	optional_pos_x = optional_pos_x and optional_pos_x * widget_optional_scale
+	optional_pos_y = optional_pos_y and optional_pos_y * widget_optional_scale
+
+	return optional_width, optional_height, optional_pos_x, optional_pos_y
+end
+
 local temp_render_settings = {}
 
 local function _draw_widget_passes(widget, position, ui_renderer, visible)
@@ -412,51 +445,84 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					pass_pos_z = pass_pos_z + widget_offset[3]
 				end
 
-				local style_data_size_addition = style_data.size_addition
 				local style_data_size = style_data.size
+				local width = style_data_size and style_data_size[1] or pass_size_x
+				local height = style_data_size and style_data_size[2] or pass_size_y
+				local style_data_scale = style_data.scale
 
-				if style_data_size or style_data_size_addition then
-					local width = style_data_size and style_data_size[1] or pass_size_x
-					local height = style_data_size and style_data_size[2] or pass_size_y
-
-					if style_data_size_addition then
-						width = style_data_size_addition[1] and width + style_data_size_addition[1] or width
-						height = style_data_size_addition[2] and height + style_data_size_addition[2] or height
-					end
-
-					local horizontal_alignment = style_data.horizontal_alignment
-
-					if horizontal_alignment == "right" then
-						pass_pos_x = pass_pos_x + pass_size_x - width
-					elseif horizontal_alignment == "center" then
-						pass_pos_x = pass_pos_x + (pass_size_x - width) / 2
-					end
-
-					local vertical_alignment = style_data.vertical_alignment
-
-					if vertical_alignment == "center" then
-						pass_pos_y = pass_pos_y + (pass_size_y - height) / 2
-					elseif vertical_alignment == "bottom" then
-						pass_pos_y = pass_pos_y + pass_size_y - height
-					end
-
-					pass_size_x = width
-					pass_size_y = height
+				if style_data_scale then
+					width = width * (style_data_scale[1] or 1)
+					height = height * (style_data_scale[2] or 1)
 				end
+
+				local style_data_size_addition = style_data.size_addition
+
+				if style_data_size_addition then
+					width = style_data_size_addition[1] and width + style_data_size_addition[1] or width
+					height = style_data_size_addition[2] and height + style_data_size_addition[2] or height
+				end
+
+				local inverse_scale = 1 / scale
+				local w, h = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
+				local w_inverse_scale = w * inverse_scale
+				local h_inverse_scale = h * inverse_scale
+				local scenegraph_scale = style_data.scenegraph_scale
+
+				if not scenegraph_scale then
+					pass_pos_x, pass_pos_y = _handle_alignment(style_data, pass_pos_x, pass_pos_y, width, height, pass_size_x, pass_size_y)
+					width, height, pass_pos_x, pass_pos_y = _handle_optional_scale(width, height, pass_pos_x, pass_pos_y, widget_optional_scale)
+				elseif scenegraph_scale == "fit" or scenegraph_scale == "hud_fit" then
+					width = w_inverse_scale
+					height = h_inverse_scale
+
+					local _
+
+					_, _, pass_pos_x, pass_pos_y = _handle_optional_scale(nil, nil, pass_pos_x, pass_pos_y, widget_optional_scale)
+				elseif scenegraph_scale == "aspect_ratio" then
+					local aspect_ratio = w / h
+					local default_aspect_ratio = width / height
+
+					width = w
+					height = h
+
+					if math.abs(aspect_ratio - default_aspect_ratio) > 0.005 then
+						width = w
+						height = width / default_aspect_ratio
+
+						if h < height then
+							width = h * default_aspect_ratio
+							height = h
+						end
+					end
+
+					width = width * inverse_scale
+					height = height * inverse_scale
+					pass_pos_x, pass_pos_y = _handle_alignment(style_data, 0, 0, width, height, pass_size_x, pass_size_y)
+				elseif scenegraph_scale == "fit_width" then
+					local _
+
+					pass_pos_x = 0
+					width = w_inverse_scale
+					_, pass_pos_y = _handle_alignment(style_data, 0, 0, nil, height, nil, pass_size_y)
+					_, height = _handle_optional_scale(nil, height, nil, nil, widget_optional_scale)
+				elseif scenegraph_scale == "fit_height" then
+					pass_pos_y = 0
+					height = h_inverse_scale
+					pass_pos_x = _handle_alignment(style_data, 0, 0, width, nil, pass_size_x, nil)
+					width = _handle_optional_scale(width, nil, nil, nil, widget_optional_scale)
+				end
+
+				pass_size_x = width
+				pass_size_y = height
 
 				local style_offset = style_data.offset
 
 				if style_offset then
-					pass_pos_x = pass_pos_x + style_offset[1]
-					pass_pos_y = pass_pos_y + style_offset[2]
-					pass_pos_z = pass_pos_z + (style_offset[3] or 0)
-				end
+					local widget_scale = widget_optional_scale or 1
 
-				if widget_optional_scale then
-					pass_size_x = pass_size_x * widget_optional_scale
-					pass_size_y = pass_size_y * widget_optional_scale
-					pass_pos_x = pass_pos_x * widget_optional_scale
-					pass_pos_y = pass_pos_y * widget_optional_scale
+					pass_pos_x = pass_pos_x + style_offset[1] * widget_scale
+					pass_pos_y = pass_pos_y + style_offset[2] * widget_scale
+					pass_pos_z = pass_pos_z + (style_offset[3] or 0)
 				end
 
 				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y))

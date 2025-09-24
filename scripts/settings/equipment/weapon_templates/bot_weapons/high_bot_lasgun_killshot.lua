@@ -12,7 +12,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -21,11 +20,8 @@ local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 
@@ -75,7 +71,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -472,7 +468,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.lasgun
 weapon_template.spread_template = "hip_lasgun_killshot"
 weapon_template.recoil_template = "hip_lasgun_killshot"
-weapon_template.suppression_template = "hip_lasgun_killshot"
+weapon_template.suppression_template = "lasgun_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "lasgun_rifle"
 weapon_template.ammo_template = "lasgun_p1_m1"
 weapon_template.conditional_state_to_action_input = {
@@ -505,7 +501,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_lasgun_killshot",
 	start_anim_event = "to_reflex",
 	stop_anim_event = "to_unaim_reflex",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "lasgun_p1_m1_suppression_killshot",
 	sway_template = "default_lasgun_killshot",
 	toughness_template = "killshot_zoomed",
 	crosshair = {

@@ -212,12 +212,12 @@ HudElementSmartTagging._trigger_smart_tag = function (self, template_name, targe
 	smart_tag_system:set_tag(template_name, player_unit, target_unit, target_location)
 end
 
-HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit)
+HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit, optional_override_tag_name)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit)
+	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit, optional_override_tag_name)
 end
 
 HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, alternate)
@@ -277,18 +277,25 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 			local tag_template = tag and tag:template()
 			local companion_tag = tag_template and tag_template.companion_order
 			local we_already_tagged = tag and tag:tagger_player() == player
+			local other_already_tagged = tag and not we_already_tagged
 
 			if single_tap then
 				if we_already_tagged then
 					if companion_tag then
-						self:_trigger_smart_tag_interaction(tag_id, target_unit)
+						self:_trigger_smart_tag_interaction(tag_id, target_unit, "companion_order")
 					end
 				else
 					self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
 				end
 			elseif double_tap and tag then
-				if we_already_tagged and companion_tag or we_already_tagged and tag_template.group ~= "enemy" then
-					self:_trigger_smart_tag_interaction(tag_id, target_unit)
+				if we_already_tagged then
+					self:_trigger_smart_tag_interaction(tag_id, target_unit, "companion_order")
+				elseif other_already_tagged then
+					if companion_tag then
+						self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
+					else
+						self:_trigger_smart_tag_interaction(tag_id, target_unit, "companion_order")
+					end
 				else
 					self:_trigger_smart_tag_unit_contextual(target_unit, "companion_order")
 				end

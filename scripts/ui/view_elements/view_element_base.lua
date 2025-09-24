@@ -92,13 +92,14 @@ ViewElementBase._is_animation_completed = function (self, animation_id)
 	return self._ui_sequence_animator:is_animation_completed(animation_id)
 end
 
-ViewElementBase._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed)
+ViewElementBase._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed, delay)
 	speed = speed or 1
+	delay = delay or 0
 	widgets = widgets or self._widgets_by_name
 
 	local scenegraph_definition = self._definitions.scenegraph_definition
 	local ui_sequence_animator = self._ui_sequence_animator
-	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed, callback)
+	local animation_id = ui_sequence_animator:start_animation(self, animation_sequence_name, widgets, params, speed, callback, delay)
 
 	return animation_id
 end

@@ -254,12 +254,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_left_down",
-			anchor_point_offset = {
-				0.08,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_left_down",
+				anchor_point_offset = {
+					0.08,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_light_smiter,
@@ -330,12 +332,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_heavy_linesman,
@@ -477,12 +481,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_right_diagonal",
-			anchor_point_offset = {
-				-0.05,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_right_diagonal",
+				anchor_point_offset = {
+					-0.05,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_light_linesman,
@@ -554,12 +560,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_heavy_linesman,
@@ -700,12 +708,14 @@ weapon_template.actions = {
 			0.25,
 			1.1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_stab",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/swing_stab",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_light_smiter_stab,
@@ -837,12 +847,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_left",
-			anchor_point_offset = {
-				0.15,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_left",
+				anchor_point_offset = {
+					0.15,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_light_linesman,
@@ -1035,12 +1047,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_down_left",
-			anchor_point_offset = {
-				0.3,
-				-0.4,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_down_left",
+				anchor_point_offset = {
+					0.3,
+					-0.4,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_heavy_smiter_plus,
@@ -1119,12 +1133,14 @@ weapon_template.actions = {
 			0.35,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/uppercut",
-			anchor_point_offset = {
-				0.2,
-				0.5,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/uppercut",
+				anchor_point_offset = {
+					0.2,
+					0.5,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.uppercut,

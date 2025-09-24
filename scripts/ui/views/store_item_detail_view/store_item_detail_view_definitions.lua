@@ -47,7 +47,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_top_right = {
@@ -61,7 +61,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_bottom_left = {
@@ -75,7 +75,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_bottom_right = {
@@ -89,7 +89,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	left_side = {
@@ -1736,6 +1736,15 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
 			return not parent._aquilas_showing and parent._valid_inspect
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_preview_voice",
+		input_action = "hotkey_item_inspect",
+		on_pressed_callback = "cb_preview_voice",
+		visibility_function = function (parent, id)
+			return not parent._valid_inspect and parent:_can_preview_voice()
 		end,
 	},
 	{

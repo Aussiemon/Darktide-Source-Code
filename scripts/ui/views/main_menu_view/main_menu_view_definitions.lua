@@ -468,7 +468,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-60,
+			0,
 			0,
 		},
 	},
@@ -1000,7 +1000,7 @@ local legend_inputs = {
 		input_action = "navigate_primary_right_pressed",
 		on_pressed_callback = "_news_requested",
 		visibility_function = function (parent)
-			return InputDevice.gamepad_active and not parent._is_main_menu_open and parent:_can_show_news()
+			return InputDevice.gamepad_active and not parent._is_main_menu_open and parent:_can_show_news() and false
 		end,
 	},
 }

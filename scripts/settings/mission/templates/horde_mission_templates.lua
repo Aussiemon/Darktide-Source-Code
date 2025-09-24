@@ -5,7 +5,7 @@ local mission_templates = {
 		coordinates = "loc_mission_coordinates_psykhanium",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "survival",
-		level = "content/levels/horde/missions/mission_psykhanium",
+		level = "content/levels/horde_new_island/missions/mission_psykhanium",
 		mechanism_name = "adventure",
 		mission_description = "loc_horde_mission_breifing_desc",
 		mission_intro_minimum_time = 5,
@@ -40,7 +40,7 @@ local mission_templates = {
 		},
 		pickup_settings = {},
 		terror_event_templates = {
-			"terror_events_psykhanium",
+			"terror_events_psykhanium_new",
 		},
 		health_station = {},
 		mission_brief_vo = {

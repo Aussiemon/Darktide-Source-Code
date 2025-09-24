@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	cultist_berzerker = {},
 }
-local basic_cultist_berzerker_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_upperbody = {
 			use_outline = true,
@@ -81,7 +81,7 @@ local basic_cultist_berzerker_template = {
 				"content/items/characters/minions/gib_items/cultist_berzerker_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -98,8 +98,8 @@ local basic_cultist_berzerker_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_cultist_berzerker_template)
-local default_2 = table.clone(basic_cultist_berzerker_template)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(base_visual_loadout_template)
 
 default_2.gib_variations = {
 	"headgear_01",
@@ -117,13 +117,13 @@ templates.cultist_berzerker.default = {
 
 local foundry_1 = table.clone(default_1)
 
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02",
 }
 
 local foundry_2 = table.clone(default_2)
 
-foundry_2.slots.envrionmental_override.items = {
+foundry_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02",
 }
 templates.cultist_berzerker[zone_ids.tank_foundry] = {
@@ -133,13 +133,13 @@ templates.cultist_berzerker[zone_ids.tank_foundry] = {
 
 local dust_1 = table.clone(default_1)
 
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02",
 }
 
 local dust_2 = table.clone(default_2)
 
-dust_2.slots.envrionmental_override.items = {
+dust_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02",
 }
 templates.cultist_berzerker[zone_ids.dust] = {
@@ -149,18 +149,50 @@ templates.cultist_berzerker[zone_ids.dust] = {
 
 local watertown_1 = table.clone(default_1)
 
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02",
 }
 
 local watertown_2 = table.clone(default_1)
 
-watertown_2.slots.envrionmental_override.items = {
+watertown_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02",
 }
 templates.cultist_berzerker[zone_ids.watertown] = {
 	watertown_1,
 	watertown_2,
+}
+
+local void_1 = table.clone(default_1)
+
+void_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+
+local void_2 = table.clone(default_1)
+
+void_2.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.cultist_berzerker[zone_ids.void] = {
+	void_1,
+	void_2,
+}
+
+local horde_1 = table.clone(default_1)
+
+horde_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+
+local horde_2 = table.clone(default_1)
+
+horde_2.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.cultist_berzerker[zone_ids.horde] = {
+	horde_1,
+	horde_2,
 }
 
 return templates

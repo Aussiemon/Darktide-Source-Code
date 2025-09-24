@@ -26,7 +26,7 @@ local DONT_SYNC_TO_SENDER = true
 local SYNC_TO_CLIENTS = true
 local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
 local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
-local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
+local ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS = {
 	"target_unit_1",
 	"target_unit_2",
 	"target_unit_3",
@@ -80,7 +80,7 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
-	local targeting_module_component = unit_data_extension:write_component("action_module_targeting")
+	local targeting_module_component = unit_data_extension:write_component("action_module_target_finder")
 
 	self._targeting_module_component = targeting_module_component
 	self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, targeting_module_component, action_settings)
@@ -136,13 +136,13 @@ ActionChainLightning._create_chain_root_node = function (self, action_settings)
 		local depth = 0
 		local use_random = false
 		local player_unit = self._player_unit
-		local num_component_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS
+		local num_component_targets = #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS
 		local chain_root_node = ChainLightningTarget:new(chain_settings, depth, use_random, nil, "unit", player_unit)
 
 		chain_root_node:set_max_num_children(num_component_targets)
 
 		for ii = 1, num_component_targets do
-			local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+			local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 
 			chain_root_node:set_value(key, false)
 		end
@@ -156,8 +156,8 @@ end
 ActionChainLightning._clear_initial_targets = function (self)
 	local chain_root_node = self._chain_root_node
 
-	for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
-		local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+	for ii = 1, #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS do
+		local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 
 		chain_root_node:set_value(key, false)
 	end
@@ -398,12 +398,12 @@ ActionChainLightning._find_root_targets = function (self, t, time_in_action)
 	local targeting_module_component = self._targeting_module_component
 	local context = self._func_context
 
-	for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
+	for ii = 1, #ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS do
 		if max_targets <= chain_root_node:num_children() then
 			break
 		end
 
-		local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+		local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 		local target_unit = targeting_module_component[key]
 
 		if target_unit and not hit_units[target_unit] then

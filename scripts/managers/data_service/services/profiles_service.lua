@@ -184,18 +184,22 @@ ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_n
 		return Promise.resolved(names)
 	end):catch(function (error)
 		return Promise.resolved({
-			"Rikard",
-			"Thomas",
-			"Jane",
-			"Niki",
-			"Marie",
-			"Rikard",
-			"Thomas",
-			"Jane",
-			"Niki",
-			"Marie",
-			character = "Alex",
-			companion = "Alex",
+			character = {
+				"Alex",
+				"Rikard",
+				"Thomas",
+				"Jane",
+				"Niki",
+				"Marie",
+			},
+			companion = {
+				"Alex",
+				"Rikard",
+				"Thomas",
+				"Jane",
+				"Niki",
+				"Marie",
+			},
 		})
 	end)
 end

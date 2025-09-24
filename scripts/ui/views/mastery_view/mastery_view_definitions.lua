@@ -602,7 +602,9 @@ local widget_definitions = {
 			value = "",
 			value_id = "pattern_name",
 			style = table.merge_recursive(table.clone(UIFontSettings.header_2), {
+				font_size = 32,
 				horizontal_alignment = "left",
+				line_spacing = 0.8,
 				text_horizontal_alignment = "left",
 				text_vertical_alignment = "center",
 				offset = {
@@ -611,7 +613,7 @@ local widget_definitions = {
 					65,
 				},
 				size = {
-					634,
+					614,
 					50,
 				},
 			}),

@@ -7,6 +7,7 @@ local hordes_mode_settings = {
 	island_names = {
 		"island_void",
 		"island_rooftops",
+		"island_machine",
 	},
 	give_legendary_buffs_at_waves = {
 		3,

@@ -4,6 +4,8 @@ local Definitions = require("scripts/ui/hud/elements/player_ability_handler/hud_
 local HudElementPlayerAbility = require("scripts/ui/hud/elements/player_ability/hud_element_player_ability")
 local HudElementPlayerSlotItemAbility = require("scripts/ui/hud/elements/player_ability/hud_element_player_slot_item_ability")
 local HudElementPlayerAbilityHandlerSettings = require("scripts/ui/hud/elements/player_ability_handler/hud_element_player_ability_handler_settings")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local ability_configuration = PlayerCharacterConstants.ability_configuration
 local HudElementPlayerAbilityHandler = class("HudElementPlayerAbilityHandler", "HudElementBase")
 
 HudElementPlayerAbilityHandler.init = function (self, parent, draw_layer, start_scale)
@@ -48,7 +50,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 
 	if is_player_alive then
 		for ability_id, ability_settings in pairs(equipped_abilities) do
-			local slot_id = "slot_" .. ability_id
+			local slot_id = ability_configuration[ability_id]
 			local setup_settings = setup_settings_by_slot[slot_id]
 			local has_scenegraph = setup_settings ~= nil
 

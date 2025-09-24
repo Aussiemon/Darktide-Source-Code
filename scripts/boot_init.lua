@@ -32,6 +32,10 @@ if cjson.stingray_init then
 	cjson = cjson.stingray_init()
 end
 
+NOP = NOP or function ()
+	return
+end
+
 if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	APPLICATION_SETTINGS = Application.settings()
 	BUILD = Application.build()
@@ -42,6 +46,7 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	IS_PLAYSTATION = PLATFORM == "ps5"
 	IS_WINDOWS = PLATFORM == "win32"
 	IS_GDK = Backend.get_auth_method() == Backend.AUTH_METHOD_XBOXLIVE and IS_WINDOWS
+	IS_FILESERVER_CLIENT = Application.file_client() ~= nil
 	REAL_PLATFORM = PLATFORM
 
 	if PLATFORM == "win32_server" then
@@ -88,8 +93,15 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	ENGINE_FUNCTIONS_OVERRIDDEN = true
 end
 
+if not Application.is_virtual_machine then
+	Application.is_virtual_machine = function ()
+		return false
+	end
+end
+
 HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
+VIRTUAL_MACHINE = Application.is_virtual_machine()
 CLASSES = CLASSES or {}
 SETTINGS = SETTINGS or {}
 
@@ -206,6 +218,16 @@ if not NETWORK_INIT_WRAPPED then
 			end
 
 			return client
+		end
+	end
+
+	if not Network.init_table_cache then
+		Network.init_table_cache = function ()
+			return
+		end
+
+		Network.shutdown_table_cache = function ()
+			return
 		end
 	end
 end

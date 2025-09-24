@@ -14,6 +14,42 @@ local NAV_COST_MAP_MAX_VOLUMES = 1024
 local NAV_COST_MAP_NUM_VOLUMES_GUESS = 16
 local NAV_COST_MAP_RECOMPUTATION_INTERVAL = 0.5
 
+local function _get_array_length(array)
+	local length = 0
+
+	for layer_id, layer_name in pairs(array) do
+		if type(layer_id) == "number" then
+			length = length + 1
+		end
+	end
+
+	return length
+end
+
+local function _get_largest_array_value(array)
+	local highest_layer_id = 0
+
+	for layer_id, layer_name in pairs(array) do
+		if type(layer_id) == "number" and highest_layer_id < layer_id then
+			highest_layer_id = layer_id
+		end
+	end
+
+	return highest_layer_id
+end
+
+local function _get_next_available_array_value(array)
+	local array_length = _get_array_length(array)
+
+	for i = 1, array_length do
+		if not array[i] then
+			return i
+		end
+	end
+
+	return array_length + 1
+end
+
 NavMeshManager.init = function (self, world, nav_world, is_server, network_event_delegate, level_name, dynamic_mesh_spawning)
 	self._world = world
 	self._nav_world = nav_world
@@ -43,6 +79,8 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 
 	self._should_recompute_nav_cost_maps = false
 	self._next_nav_cost_map_recomputation_t = NAV_COST_MAP_RECOMPUTATION_INTERVAL
+	self._async_update_paused = false
+	self._async_update_running = false
 
 	if not is_server then
 		self._network_event_delegate = network_event_delegate
@@ -181,7 +219,7 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 	local layer_id = nav_tag_layer_lookup[layer_name]
 
 	if not layer_id then
-		layer_id = #nav_tag_layer_lookup + 1
+		layer_id = _get_next_available_array_value(nav_tag_layer_lookup)
 		nav_tag_layer_lookup[layer_name] = layer_id
 		nav_tag_layer_lookup[layer_id] = layer_name
 	end
@@ -214,14 +252,41 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 end
 
 NavMeshManager.remove_nav_tag_volume = function (self, nav_tag_volume)
-	local data = self._nav_tag_volume_data[nav_tag_volume]
+	local nav_tag_volume_data = self._nav_tag_volume_data
+	local data = nav_tag_volume_data[nav_tag_volume]
 
 	if data then
-		self._nav_tag_volume_data[nav_tag_volume] = nil
-		self._nav_tag_allowed_layers[data.name] = false
+		nav_tag_volume_data[nav_tag_volume] = nil
+
+		local name = data.name
+		local nav_tag_layer_lookup = self._nav_tag_layer_lookup
+		local layer_id = nav_tag_layer_lookup[name]
+		local can_remove_layer = true
+
+		for _, volume_data in pairs(nav_tag_volume_data) do
+			if volume_data.name == name then
+				can_remove_layer = false
+
+				break
+			end
+		end
+
+		if can_remove_layer then
+			nav_tag_layer_lookup[name] = nil
+			self._nav_tag_allowed_layers[name] = nil
+			nav_tag_layer_lookup[layer_id] = nil
+		end
 	end
 
-	Navigation.destroy_nav_tag_volume(nav_tag_volume)
+	Navigation.remove_nav_tag_volume_from_world(nav_tag_volume)
+end
+
+NavMeshManager.are_nav_volumes_being_added_or_removed = function (self)
+	return GwNavTagVolume.all_integrated(self._nav_world)
+end
+
+NavMeshManager.num_nav_tag_volumes = function (self)
+	return table.size(self._nav_tag_volume_data)
 end
 
 NavMeshManager._setup_nav_cost_map_lookup = function (self)
@@ -275,16 +340,19 @@ NavMeshManager.initialize_nav_tag_cost_table = function (self, cost_table, layer
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local allowed_layers = self._nav_tag_allowed_layers
 
-	for layer_id = 1, #nav_tag_layer_lookup do
+	for layer_id = 1, _get_array_length(nav_tag_layer_lookup) do
 		local layer_name = nav_tag_layer_lookup[layer_id]
-		local layer_cost = layer_costs[layer_name] or 1
 
-		GwNavTagLayerCostTable.set_layer_cost_multiplier(cost_table, layer_id, layer_cost)
+		if layer_name then
+			local layer_cost = layer_costs[layer_name] or 1
 
-		if allowed_layers[layer_name] then
-			GwNavTagLayerCostTable.allow_layer(cost_table, layer_id)
-		else
-			GwNavTagLayerCostTable.forbid_layer(cost_table, layer_id)
+			GwNavTagLayerCostTable.set_layer_cost_multiplier(cost_table, layer_id, layer_cost)
+
+			if allowed_layers[layer_name] then
+				GwNavTagLayerCostTable.allow_layer(cost_table, layer_id)
+			else
+				GwNavTagLayerCostTable.forbid_layer(cost_table, layer_id)
+			end
 		end
 	end
 
@@ -338,8 +406,8 @@ NavMeshManager.destroy = function (self)
 		self._network_event_delegate = nil
 
 		if self._traverse_logic then
-			GwNavTagLayerCostTable.destroy(self._navtag_layer_cost_table)
 			GwNavTraverseLogic.destroy(self._traverse_logic)
+			GwNavTagLayerCostTable.destroy(self._navtag_layer_cost_table)
 		end
 	end
 end
@@ -514,10 +582,20 @@ NavMeshManager._make_sparse_graph_dirty = function (self)
 	if self._sparse_nav_graph_connected then
 		GwNavWorld.disconnect_sparse_graph(self._nav_world, self._sparse_nav_graph_nav_data)
 
+		self._sparse_nav_graph_nav_data = nil
 		self._sparse_nav_graph_connected = false
 	end
 
 	self._sparse_graph_dirty = true
+end
+
+NavMeshManager._disconnect_sparse_graph = function (self)
+	if self._sparse_nav_graph_connected then
+		GwNavWorld.disconnect_sparse_graph(self._nav_world, self._sparse_nav_graph_nav_data)
+
+		self._sparse_nav_graph_nav_data = nil
+		self._sparse_nav_graph_connected = false
+	end
 end
 
 NavMeshManager._connect_sparse_graph = function (self)
@@ -525,7 +603,8 @@ NavMeshManager._connect_sparse_graph = function (self)
 		return
 	end
 
-	local num_nav_tag_layers = #self._nav_tag_layer_lookup
+	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
+	local highest_layer_id = _get_largest_array_value(nav_tag_layer_lookup)
 
 	self._sparse_nav_graph_nav_data = GwNavWorld.connect_sparse_graph(self._nav_world)
 	self._sparse_nav_graph_connected = true
@@ -571,16 +650,43 @@ NavMeshManager.update = function (self, dt, t)
 	end
 end
 
+NavMeshManager.kick_async_update = function (self, dt)
+	if not self._async_update_paused then
+		GwNavWorld.kick_async_update(self._nav_world, dt)
+
+		self._async_update_running = true
+	end
+end
+
+NavMeshManager.join_async_update = function (self)
+	if self._async_update_running then
+		GwNavWorld.join_async_update(self._nav_world)
+
+		self._async_update_running = false
+	end
+end
+
+NavMeshManager.set_async_paused = function (self, paused)
+	if paused then
+		self:join_async_update()
+	end
+
+	self._async_update_paused = not not paused
+end
+
 NavMeshManager.hot_join_sync = function (self, sender, channel)
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local allowed_layers = self._nav_tag_allowed_layers
 
-	for layer_id = 1, #nav_tag_layer_lookup do
+	for layer_id = 1, _get_array_length(nav_tag_layer_lookup) do
 		local layer_name = nav_tag_layer_lookup[layer_id]
-		local allowed = allowed_layers[layer_name]
 
-		if not allowed then
-			RPC.rpc_set_allowed_nav_tag_layer(channel, layer_id, allowed)
+		if layer_name then
+			local allowed = allowed_layers[layer_name]
+
+			if not allowed then
+				RPC.rpc_set_allowed_nav_tag_layer(channel, layer_id, allowed)
+			end
 		end
 	end
 end

@@ -78,6 +78,18 @@ table.shallow_copy = function (t)
 	return copy
 end
 
+table.shallow_copy_array = function (arr, o)
+	local length = #arr
+
+	o = o or Script.new_array(length)
+
+	for i = 1, length do
+		o[i] = arr[i]
+	end
+
+	return o, length
+end
+
 table.crop = function (t, index)
 	local new_table = {}
 	local new_table_size = 0
@@ -432,6 +444,22 @@ table.sorted = function (t, keys, order_func)
 			return keys[i], t[keys[i]]
 		end
 	end
+end
+
+table.insert_sorted = function (t, val)
+	local length = #t
+
+	t[length + 1] = val
+
+	for i = length, 1, -1 do
+		if val < t[i] then
+			t[i], t[i + 1] = val, t[i]
+		else
+			break
+		end
+	end
+
+	return t
 end
 
 table.reverse = function (t)
@@ -926,17 +954,21 @@ local _enum_index_metatable = {
 }
 
 table.enum = function (...)
+	return table.enum_from_array({
+		...,
+	})
+end
+
+table.enum_from_array = function (array)
 	local t = {}
 
-	for i = 1, select("#", ...) do
-		local v = select(i, ...)
+	for i = 1, #array do
+		local value = array[i]
 
-		t[v] = v
+		t[value] = value
 	end
 
-	setmetatable(t, _enum_index_metatable)
-
-	return t
+	return setmetatable(t, _enum_index_metatable)
 end
 
 local _lookup_index_metatable = {
@@ -960,7 +992,7 @@ table.index_lookup_table = function (...)
 	return t
 end
 
-table.make_unique = function (t)
+table.make_unique = function (t, optional_format_string)
 	t.__data = {}
 
 	local metatable = {
@@ -1004,10 +1036,6 @@ table.make_strict_with_interface = function (t, name, interface, optional_contex
 		local field_name = interface[i]
 
 		valid_keys[field_name] = true
-	end
-
-	for field_name, field in pairs(t) do
-		-- Nothing
 	end
 
 	return setmetatable(t, {

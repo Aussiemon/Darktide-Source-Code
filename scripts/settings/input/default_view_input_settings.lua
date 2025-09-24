@@ -525,6 +525,19 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		mission_board_show_mission_list = {
+			"keyboard_m",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			bindable = false,
+			description = "",
+		},
+		mission_board_play_debrief = {
+			"ps4_controller_touch",
+			"xbox_controller_back",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -1049,6 +1062,14 @@ local default_view_input_settings = {
 		},
 		mission_board_group_finder_open = {
 			key_alias = "mission_board_group_finder_open",
+			type = "pressed",
+		},
+		mission_board_show_mission_list = {
+			key_alias = "mission_board_show_mission_list",
+			type = "pressed",
+		},
+		mission_board_play_debrief = {
+			key_alias = "mission_board_play_debrief",
 			type = "pressed",
 		},
 	},

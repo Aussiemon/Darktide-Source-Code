@@ -1128,6 +1128,126 @@ local base_talents = {
 				identifier = "player_melee_damage_node_buff_medium_5",
 			},
 		},
+		base_melee_damage_node_buff_high_1 = {
+			description = "loc_talent_melee_damage_boost_medium_desc",
+			display_name = "loc_talent_melee_damage_boost_medium",
+			name = "[dev] melee_damage bonus",
+			format_values = {
+				melee_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_damage_node_buff_high_1",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_damage_node_buff_high_1",
+				identifier = "player_melee_damage_node_buff_high_1",
+			},
+		},
+		base_melee_damage_node_buff_high_2 = {
+			description = "loc_talent_melee_damage_boost_medium_desc",
+			display_name = "loc_talent_melee_damage_boost_medium",
+			name = "[dev] melee_damage bonus",
+			format_values = {
+				melee_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_damage_node_buff_high_2",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_damage_node_buff_high_2",
+				identifier = "player_melee_damage_node_buff_high_2",
+			},
+		},
+		base_melee_damage_node_buff_high_3 = {
+			description = "loc_talent_melee_damage_boost_medium_desc",
+			display_name = "loc_talent_melee_damage_boost_medium",
+			name = "[dev] melee_damage bonus",
+			format_values = {
+				melee_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_damage_node_buff_high_3",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_damage_node_buff_high_3",
+				identifier = "player_melee_damage_node_buff_high_3",
+			},
+		},
+		base_melee_damage_node_buff_high_4 = {
+			description = "loc_talent_melee_damage_boost_medium_desc",
+			display_name = "loc_talent_melee_damage_boost_medium",
+			name = "[dev] melee_damage bonus",
+			format_values = {
+				melee_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_damage_node_buff_high_4",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_damage_node_buff_high_4",
+				identifier = "player_melee_damage_node_buff_high_4",
+			},
+		},
+		base_melee_damage_node_buff_high_5 = {
+			description = "loc_talent_melee_damage_boost_medium_desc",
+			display_name = "loc_talent_melee_damage_boost_medium",
+			name = "[dev] melee_damage bonus",
+			format_values = {
+				melee_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_damage_node_buff_high_5",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_damage_node_buff_high_5",
+				identifier = "player_melee_damage_node_buff_high_5",
+			},
+		},
 		base_melee_heavy_damage_node_buff_low_1 = {
 			description = "loc_talent_melee_heavy_damage_low_desc",
 			display_name = "loc_talent_melee_heavy_damage_low",
@@ -2941,6 +3061,141 @@ local base_talents = {
 			passive = {
 				buff_template_name = "player_warp_charge_node_buff_low_5",
 				identifier = "player_warp_charge_node_buff_low_5",
+			},
+		},
+		base_warp_charge_node_buff_medium_1 = {
+			description = "loc_talent_warp_charge_low_desc",
+			display_name = "loc_talent_warp_charge_low",
+			name = "[dev] warp_charge bonus",
+			format_values = {
+				warp_charge = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "player_warp_charge_node_buff_medium_1",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_warp_charge_node_buff_medium_1",
+				identifier = "player_warp_charge_node_buff_medium_1",
+			},
+		},
+		base_warp_charge_node_buff_medium_2 = {
+			description = "loc_talent_warp_charge_low_desc",
+			display_name = "loc_talent_warp_charge_low",
+			name = "[dev] warp_charge bonus",
+			format_values = {
+				warp_charge = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "player_warp_charge_node_buff_medium_2",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_warp_charge_node_buff_medium_2",
+				identifier = "player_warp_charge_node_buff_medium_2",
+			},
+		},
+		base_warp_charge_node_buff_medium_3 = {
+			description = "loc_talent_warp_charge_low_desc",
+			display_name = "loc_talent_warp_charge_low",
+			name = "[dev] warp_charge bonus",
+			format_values = {
+				warp_charge = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "player_warp_charge_node_buff_medium_3",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_warp_charge_node_buff_medium_3",
+				identifier = "player_warp_charge_node_buff_medium_3",
+			},
+		},
+		base_warp_charge_node_buff_medium_4 = {
+			description = "loc_talent_warp_charge_low_desc",
+			display_name = "loc_talent_warp_charge_low",
+			name = "[dev] warp_charge bonus",
+			format_values = {
+				warp_charge = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "player_warp_charge_node_buff_medium_4",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_warp_charge_node_buff_medium_4",
+				identifier = "player_warp_charge_node_buff_medium_4",
+			},
+		},
+		base_warp_charge_node_buff_medium_5 = {
+			description = "loc_talent_warp_charge_low_desc",
+			display_name = "loc_talent_warp_charge_low",
+			name = "[dev] warp_charge bonus",
+			format_values = {
+				warp_charge = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "player_warp_charge_node_buff_medium_5",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_charge_amount,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_warp_charge_node_buff_medium_5",
+				identifier = "player_warp_charge_node_buff_medium_5",
 			},
 		},
 		base_wounds_node_buff_1 = {

@@ -1,9 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/event_synchronizer/decoder_synchronizer_extension.lua
 
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
-local FixedFrame = require("scripts/utilities/fixed_frame")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local DecoderSynchronizerExtension = class("DecoderSynchronizerExtension", "EventSynchronizerBaseExtension")
 local STATES = table.enum("none", "activating_devices", "timer_on", "timer_paused", "complete")
 
@@ -47,7 +44,7 @@ DecoderSynchronizerExtension.setup_from_component = function (self, objective_na
 
 	local unit = self._unit
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, unit)
+	self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
 end
 
 DecoderSynchronizerExtension.destroy = function (self)
@@ -109,7 +106,9 @@ DecoderSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 			else
 				local stall = false
 
-				if self._progress_in_minigame == false then
+				if self._stall_once_per_device and #self._used_devices == #self._attached_devices then
+					stall = false
+				elseif self._progress_in_minigame == false then
 					if self._pause_timer < self._time_till_next_stall then
 						self._pause_timer = self._pause_timer + dt
 					else
@@ -223,7 +222,7 @@ DecoderSynchronizerExtension.unblock_decoding_progression = function (self)
 				Unit.flow_event(self._unit, "lua_event_decoding_started")
 				self:_start_network_timer()
 				self:_set_state(STATES.timer_on)
-				self._mission_objective_system:set_objective_ui_state(self._objective_name, "default")
+				self._mission_objective_system:set_objective_ui_state(self._objective_name, self._group_id, "default")
 				self._mission_objective_system:sound_event(MissionSoundEvents.decode_moving)
 			end
 		else
@@ -302,7 +301,7 @@ DecoderSynchronizerExtension.pause_event = function (self)
 		Unit.flow_event(self._unit, "lua_event_paused")
 	end
 
-	self._mission_objective_system:set_objective_ui_state(self._objective_name, "alert")
+	self._mission_objective_system:set_objective_ui_state(self._objective_name, self._group_id, "alert")
 	self._mission_objective_system:sound_event(MissionSoundEvents.decode_blocked)
 	self:_set_state(STATES.timer_paused)
 end
@@ -334,12 +333,8 @@ DecoderSynchronizerExtension.finished_event = function (self)
 	DecoderSynchronizerExtension.super.finished_event(self)
 end
 
-DecoderSynchronizerExtension.setup_only_finished = function (self)
-	if self._setup_only then
-		return self._current_state == STATES.complete
-	end
-
-	return false
+DecoderSynchronizerExtension.finished = function (self)
+	return self._current_state == STATES.complete
 end
 
 DecoderSynchronizerExtension._start_network_timer = function (self)

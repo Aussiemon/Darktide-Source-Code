@@ -29,7 +29,7 @@ PathTypeLinear.init = function (self, world, nav_world, num_sides, is_server, us
 end
 
 PathTypeLinear.destroy = function (self)
-	return
+	self._nav_triangle_group = nil
 end
 
 PathTypeLinear.ahead_unit = function (self, side_id)
@@ -85,6 +85,40 @@ end
 
 PathTypeLinear.segment_index_by_unit = function (self, unit)
 	return self._segment_index_by_unit[unit]
+end
+
+PathTypeLinear.closest_main_path_position = function (self, position, return_on_no_index)
+	local closest_position = self:_information_from_position(position, return_on_no_index)
+
+	return closest_position
+end
+
+PathTypeLinear.travel_distance_from_position = function (self, position, return_on_no_index)
+	local _, travel_distance = self:_information_from_position(position, return_on_no_index)
+
+	return travel_distance
+end
+
+PathTypeLinear._information_from_position = function (self, position, return_on_no_index)
+	local main_path_manager = Managers.state.main_path
+	local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, main_path_manager:nav_spawn_points(), position)
+
+	if return_on_no_index and not spawn_point_group_index then
+		return
+	end
+
+	local start_index = self._group_to_main_path_index[spawn_point_group_index]
+	local end_index = start_index + 1
+
+	return MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+end
+
+PathTypeLinear.node_index_by_nav_group_index = function (self, group_index)
+	return self._group_to_main_path_index[group_index]
+end
+
+PathTypeLinear.generate_spawn_points = function (self, nav_triangle_group, group_to_main_path_index)
+	self._nav_triangle_group, self._group_to_main_path_index = nav_triangle_group, group_to_main_path_index
 end
 
 PathTypeLinear.update_progress_on_path = function (self, t)
@@ -153,7 +187,7 @@ PathTypeLinear.update_progress_on_path = function (self, t)
 				end
 			end
 
-			local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
+			local start_index = self:node_index_by_nav_group_index(group_index)
 			local end_index = start_index + 1
 			local path_position, travel_distance, _, _, segment_index = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
 

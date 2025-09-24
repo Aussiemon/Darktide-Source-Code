@@ -18,16 +18,15 @@ Door.init = function (self, unit, is_server)
 		local allow_closing = self:get_data(unit, "allow_closing")
 		local self_closing_time = self:get_data(unit, "self_closing_time")
 		local blocked_time = self:get_data(unit, "blocked_time")
+		local use_advanced_blocking = self:get_data(unit, "advanced_blocking")
+		local advanced_blocking_time = self:get_data(unit, "advanced_blocking_time")
+		local advanced_unblocking_time = self:get_data(unit, "advanced_unblocking_time")
 		local open_type = self:get_data(unit, "open_type")
 		local control_panel_props = self:_get_non_empty_control_panels(unit)
 		local control_panels_active = self:get_data(unit, "control_panels_active")
 		local ignore_broadphase = self:get_data(unit, "ignore_broadphase")
 
-		if open_type ~= "open_only" and open_type == "close_only" then
-			-- Nothing
-		end
-
-		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 
 		self._door_extension = door_extension
 	end
@@ -175,6 +174,10 @@ end
 Door._unspawn_control_panels = function (self, unit)
 	local world = Unit.world(unit)
 	local control_panel_units = self._control_panel_units
+
+	if not control_panel_units then
+		return
+	end
 
 	for i = 1, #control_panel_units do
 		local control_panel_unit = control_panel_units[i]
@@ -362,6 +365,32 @@ Door.component_data = {
 		min = 0,
 		step = 0.01,
 		ui_name = "Blocked Time (in %)",
+		ui_type = "slider",
+		value = 0.5,
+	},
+	advanced_blocking = {
+		category = "Nav",
+		ui_name = "Use Advanced blocking",
+		ui_type = "check_box",
+		value = false,
+	},
+	advanced_blocking_time = {
+		category = "Nav",
+		decimals = 2,
+		max = 1,
+		min = 0,
+		step = 0.01,
+		ui_name = "Time for when to block nav (in %)",
+		ui_type = "slider",
+		value = 0.5,
+	},
+	advanced_unblocking_time = {
+		category = "Nav",
+		decimals = 2,
+		max = 1,
+		min = 0,
+		step = 0.01,
+		ui_name = "Time for when to unblock nav (in %)",
 		ui_type = "slider",
 		value = 0.5,
 	},

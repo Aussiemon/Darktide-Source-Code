@@ -63,11 +63,6 @@ local base_template = {
 		type = "string",
 		unit = "Unit",
 	},
-	disable = {
-		attacker_unit = "Unit",
-		is_disabled = "boolean",
-		type = "string",
-	},
 }
 
 return base_template

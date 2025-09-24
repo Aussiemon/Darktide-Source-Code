@@ -8,6 +8,7 @@ circumstance_templates.ember_01 = {
 	theme_tag = "ember",
 	wwise_state = "ember_01",
 	ui = {
+		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
 		description = "loc_circumstance_ember_description",
 		display_name = "loc_circumstance_ember_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",

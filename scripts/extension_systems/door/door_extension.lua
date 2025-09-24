@@ -66,13 +66,16 @@ DoorExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._current_state)
 end
 
-DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 	local unit = self._unit
 
 	self._type = door_type
 	self._open_type = open_type
 	self._start_state = start_state
 	self._blocked_time = blocked_time
+	self._use_advanced_blocking = use_advanced_blocking
+	self._advanced_blocking_time = advanced_blocking_time
+	self._advanced_unblocking_time = advanced_unblocking_time
 	self._allow_closing = allow_closing
 	self._self_closing_time = self_closing_time
 
@@ -223,12 +226,19 @@ DoorExtension._should_nav_block = function (self)
 	local closed = current_state == STATES.closed
 	local anim_time = self:_normalized_anim_time()
 	local blocked_time = self._blocked_time
+	local use_advanced_blocking = self._use_advanced_blocking
 	local should_nav_block
 
-	if closed then
-		should_nav_block = blocked_time <= anim_time
+	if not use_advanced_blocking then
+		if closed then
+			should_nav_block = blocked_time <= anim_time
+		else
+			should_nav_block = anim_time <= 1 - blocked_time
+		end
+	elseif closed then
+		should_nav_block = anim_time >= self._advanced_blocking_time
 	else
-		should_nav_block = anim_time <= 1 - blocked_time
+		should_nav_block = not (anim_time >= self._advanced_unblocking_time)
 	end
 
 	return should_nav_block

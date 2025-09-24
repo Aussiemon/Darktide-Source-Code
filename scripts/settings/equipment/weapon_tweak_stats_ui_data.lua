@@ -570,7 +570,7 @@ local stat_descriptions = {
 		diminishing_return_start = {
 			display_name = "loc_weapon_stats_display_effective_dodges",
 			display_type = "default",
-			rounding = math.ceil,
+			rounding = math.floor,
 		},
 	},
 	spread = {
@@ -760,10 +760,17 @@ local stat_descriptions = {
 		},
 	},
 	ammo = {
-		ammunition_clip = {
-			display_name = "loc_weapon_stats_display_clip_size",
-			display_type = "default",
-			rounding = math.floor,
+		ammunition_clips = {
+			{
+				display_name = "loc_weapon_stats_display_clip_size",
+				display_type = "default",
+				rounding = math.floor,
+			},
+			{
+				display_name = "loc_weapon_stats_display_clip_size",
+				display_type = "default",
+				rounding = math.floor,
+			},
 		},
 		ammunition_reserve = {
 			display_name = "loc_weapon_stats_display_reserve_ammo",

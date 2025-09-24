@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/foundation/managers/package/utilities/theme_package.lua
 
-local ThemePackage = {}
+local ThemePackage = {
+	disabled_levels = {},
+}
 
 local function _get_theme_packages(level_name, theme_tag)
 	local file_path = level_name .. "_mission_themes"
@@ -20,6 +22,10 @@ local function _get_theme_packages(level_name, theme_tag)
 end
 
 ThemePackage.level_resource_dependency_packages = function (level_name, theme_tag)
+	if ThemePackage.disabled_levels[level_name] then
+		return {}
+	end
+
 	local theme_packages = _get_theme_packages(level_name, theme_tag)
 
 	if not theme_packages and theme_tag ~= "default" then
@@ -29,6 +35,10 @@ ThemePackage.level_resource_dependency_packages = function (level_name, theme_ta
 	end
 
 	return theme_packages or {}
+end
+
+ThemePackage.level_resource_disable_theme = function (level_name)
+	ThemePackage.disabled_levels[level_name] = true
 end
 
 return ThemePackage

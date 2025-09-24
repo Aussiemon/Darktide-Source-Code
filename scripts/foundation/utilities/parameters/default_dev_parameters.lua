@@ -31,14 +31,16 @@ local categories = {
 	"Damage Interface",
 	"Damage",
 	"Debug Print",
+	"Decals",
 	"Destructibles",
+	"Dev Print",
 	"Dialogue",
 	"Difficulty",
 	"Effects",
 	"Equipment",
 	"Error",
-	"Explosion Rework Testing",
 	"Event",
+	"Explosion Rework Testing",
 	"Feature Info",
 	"FGRL",
 	"Force Field",
@@ -52,8 +54,8 @@ local categories = {
 	"Health Station",
 	"Hit Mass",
 	"Horde Picker",
-	"Hordes",
 	"Hordes Mode",
+	"Hordes",
 	"Hub",
 	"Hud",
 	"Imgui",
@@ -80,6 +82,7 @@ local categories = {
 	"Mood",
 	"Moveable Platform",
 	"Mutant Charger",
+	"Mutators",
 	"Navigation",
 	"Netgunner",
 	"Network",
@@ -112,6 +115,7 @@ local categories = {
 	"Stats",
 	"Stories",
 	"Sweep Spline",
+	"Synchronizers",
 	"Talents",
 	"Terror Event",
 	"Testify",
@@ -119,12 +123,13 @@ local categories = {
 	"Training Grounds",
 	"UI",
 	"Version Info",
+	"Visual Loadout",
 	"Volume",
 	"Weapon Aim Assist",
 	"Weapon Effects",
 	"Weapon Handling",
-	"Weapon Traits",
 	"Weapon Mastery",
+	"Weapon Traits",
 	"Weapon Variables",
 	"Weapon",
 	"Wwise States",
@@ -241,6 +246,10 @@ params.preview_action_input_hierarchy = {
 	category = "Input",
 	value = false,
 }
+params.debug_cursor_stack = {
+	category = "Input",
+	value = false,
+}
 
 local function _debug_text_color_options()
 	local colors = table.clone(Color.list)
@@ -268,6 +277,14 @@ table.array_remove_if(_debug_text_font_options, function (font)
 	return not Application.can_get_resource("slug", font)
 end)
 
+params.dev_print_prefix = {
+	category = "Dev Print",
+	value = "ZZZ",
+}
+params.print_is_dev_print = {
+	category = "Dev Print",
+	value = false,
+}
 params.debug_text_enable = {
 	category = "Debug Print",
 	value = true,
@@ -355,6 +372,14 @@ params.crash_on_account_login_error = {
 	category = "Backend",
 	value = false,
 }
+params.login_attempts_before_crash = {
+	category = "Backend",
+	value = 3,
+}
+params.delay_between_login_attempts = {
+	category = "Backend",
+	value = 10,
+}
 params.enable_stat_reporting = {
 	category = "Backend",
 	value = true,
@@ -408,6 +433,19 @@ params.disable_chat = {
 	category = "Chat",
 	value = false,
 }
+params.debug_draw_footstep_decals = {
+	category = "Decals",
+	value = false,
+}
+params.log_resolve_decal_fallback = {
+	category = "Decals",
+	value = false,
+	options = {
+		false,
+		"all",
+		"debug",
+	},
+}
 params.debug_template_effects = {
 	category = "Effects",
 	value = false,
@@ -417,6 +455,10 @@ params.debug_companion_dog_effects = {
 	value = false,
 }
 params.debug_draw_cultist_ritualist_chanting_effects = {
+	category = "Effects",
+	value = false,
+}
+params.debug_draw_footstep_particles = {
 	category = "Effects",
 	value = false,
 }
@@ -1388,6 +1430,36 @@ params.short_ability_cooldowns = {
 		end
 	end,
 }
+params.no_grenade_ability_charge_use = {
+	category = "Abilities",
+	value = false,
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_no_grenade_ability_charge_use(channel, new_value)
+		end
+	end,
+}
+params.no_pocketable_ability_charge_use = {
+	category = "Abilities",
+	value = false,
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_no_pocketable_ability_charge_use(channel, new_value)
+		end
+	end,
+}
 params.debug_smoke_fog = {
 	category = "Abilities",
 	value = false,
@@ -1425,6 +1497,10 @@ params.disable_bot_follow = {
 	value = false,
 }
 params.disable_bot_abilities = {
+	category = "Bot Character",
+	value = false,
+}
+params.debug_bot_melee_attack = {
 	category = "Bot Character",
 	value = false,
 }
@@ -1514,6 +1590,14 @@ params.debug_boons = {
 	value = false,
 }
 params.disable_buff_screen_space_effects = {
+	category = "Buffs",
+	value = false,
+}
+params.enable_postponed_proc_event_exception = {
+	category = "Buffs",
+	value = false,
+}
+params.debug_log_proc_event_param_table_info = {
 	category = "Buffs",
 	value = false,
 }
@@ -1782,6 +1866,10 @@ params.debug_move_around_target = {
 	category = "Locomotion",
 	value = false,
 }
+params.debug_consecutive_dodges = {
+	category = "Locomotion",
+	value = false,
+}
 params.debug_hub_movement_direction_variable = {
 	category = "Hub",
 	value = false,
@@ -1797,6 +1885,10 @@ params.hub_locomotion_position_mode_override = {
 	},
 }
 params.debug_hub_character_rotation = {
+	category = "Hub",
+	value = false,
+}
+params.debug_hub_companion_interaction = {
 	category = "Hub",
 	value = false,
 }
@@ -2077,6 +2169,10 @@ params.always_validate_weapon_shout_action_condition = {
 	value = false,
 }
 params.debug_draw_action_weapon_shout = {
+	category = "Action",
+	value = false,
+}
+params.debug_log_sprint_dodge_angle = {
 	category = "Action",
 	value = false,
 }
@@ -2408,6 +2504,10 @@ params.show_minion_location = {
 params.show_minion_health = {
 	category = "Minions",
 	value = false,
+}
+params.summoned_minions_allowed = {
+	category = "Minions",
+	value = true,
 }
 params.debug_minion_aiming = {
 	category = "Minions",
@@ -2903,6 +3003,10 @@ params.debug_mutator_monster_pacing = {
 	category = "Monsters",
 	value = false,
 }
+params.mutator_stimmed_enemies_always_stimm = {
+	category = "Mutators",
+	value = false,
+}
 params.debug_pacing = {
 	category = "Pacing",
 	value = false,
@@ -2957,10 +3061,6 @@ params.reconnect_to_ongoing_game_session = {
 }
 params.verbose_party_log = {
 	category = "Party",
-	value = false,
-}
-params.debug_playload = {
-	category = "Payload",
 	value = false,
 }
 params.verbose_presence_log = {
@@ -3200,6 +3300,11 @@ params.show_vo_story_stage_info = {
 params.show_cinematic_active = {
 	category = "Version Info",
 	value = false,
+}
+params.equipped_weapon_scale = {
+	category = "Visual Loadout",
+	num_decimals = 2,
+	value = 1,
 }
 params.render_feature_info = {
 	category = "Feature Info",
@@ -3566,11 +3671,15 @@ params.ui_enable_notifications = {
 		Managers.event:trigger("event_clear_notifications")
 	end,
 }
+params.spawn_next_to_crafting = {
+	category = "UI",
+	value = false,
+}
 params.spawn_next_to_mission_board = {
 	category = "UI",
 	value = false,
 }
-params.spawn_next_to_crafting = {
+params.spawn_next_to_training_grounds = {
 	category = "UI",
 	value = false,
 }
@@ -3822,6 +3931,10 @@ params.dialogue_display_voices_and_lines = {
 	value = false,
 }
 params.dialogue_ruledatabase_debug_all = {
+	category = "Dialogue",
+	value = false,
+}
+params.dialogue_enable_loading_logs = {
 	category = "Dialogue",
 	value = false,
 }
@@ -4519,6 +4632,10 @@ params.show_perfhud_io_loading_screen = {
 	category = "Loading",
 	value = true,
 }
+params.debug_profile_syncing = {
+	category = "Synchronizers",
+	value = false,
+}
 params.debug_language_override = {
 	category = "Localization",
 	name = "Language Override",
@@ -4610,13 +4727,17 @@ params.use_localized_talent_names_in_debug_menu = {
 }
 params.debug_skip_backend_talent_verification = {
 	category = "Talents",
-	value = false,
+	value = true,
 }
 params.talent_tree_no_restrictions = {
 	category = "Talents",
 	value = false,
 }
 params.talent_tree_infinite_points = {
+	category = "Talents",
+	value = false,
+}
+params.debug_log_zealot_toughness_in_melee = {
 	category = "Talents",
 	value = false,
 }
@@ -4764,6 +4885,10 @@ params.debug_draw_forcesword_wind_slash_hit = {
 	category = "Weapon",
 	value = false,
 }
+params.debug_fury_of_faithful_chain_attack = {
+	category = "Weapon",
+	value = false,
+}
 params.debug_aim_assist = {
 	category = "Weapon Aim Assist",
 	value = false,
@@ -4825,6 +4950,10 @@ params.debug_plasmagun_overheat_effects = {
 	value = false,
 }
 params.debug_power_weapon_effects = {
+	category = "Weapon Effects",
+	value = false,
+}
+params.debug_power_weapon_charge_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -5263,6 +5392,15 @@ params.debug_cinematic_scene = {
 	category = "Stories",
 	value = false,
 }
+params.debug_cutscene_force_weapon_slot = {
+	category = "Stories",
+	value = false,
+	options = {
+		false,
+		"slot_primary",
+		"slot_secondary",
+	},
+}
 params.debug_cinematic_fast_track_enable = {
 	category = "Stories",
 	value = false,
@@ -5405,7 +5543,7 @@ params.coherency_log_coherency_events = {
 	category = "Coherency",
 	value = false,
 }
-params.disable_coherency_toughness_effect = {
+params.disable_coherency_toughness_regen = {
 	category = "Coherency",
 	value = false,
 }
@@ -5434,15 +5572,15 @@ params.debug_companion_movement = {
 	category = "Companion",
 	value = false,
 }
+params.debug_companion_movement_direction = {
+	category = "Companion",
+	value = false,
+}
 params.debug_companion_points = {
 	category = "Companion",
 	value = false,
 }
 params.debug_companion_idle_state = {
-	category = "Companion",
-	value = false,
-}
-params.debug_companion_move_around_enemy_action = {
 	category = "Companion",
 	value = false,
 }
@@ -5571,9 +5709,6 @@ params.debug_material_queries = {
 		"succeeded",
 		"failed",
 	},
-}
-params.debug_draw_footstep_decals = {
-	value = false,
 }
 params.networked_flow_state = {
 	value = false,

@@ -3,8 +3,7 @@
 local minigame_settings = {}
 
 minigame_settings.types = table.enum("none", "balance", "decode_symbols", "drill", "frequency")
-minigame_settings.states = table.enum("none", "active", "completed")
-minigame_settings.game_states = table.enum("none", "intro", "gameplay", "transition", "outro")
+minigame_settings.game_states = table.enum("none", "intro", "gameplay", "transition", "outro", "complete")
 minigame_settings.default_minigame_type = minigame_settings.types.decode_symbols
 minigame_settings.balance_move_ratio = 4.2
 minigame_settings.balance_push_ratio = 1.08

@@ -182,34 +182,30 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 end
 
 RoamerPacing.destroy = function (self)
-	if self._nav_tag_cost_table then
-		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
-	end
-
-	if self._traverse_logic then
-		GwNavTraverseLogic.destroy(self._traverse_logic)
-	end
-
 	local patrol_data = self._patrol_data
 
 	if patrol_data then
-		if patrol_data.patrol_nav_tag_cost_table then
-			GwNavTagLayerCostTable.destroy(patrol_data.patrol_nav_tag_cost_table)
+		local astar = patrol_data.astar
+
+		if astar then
+			GwNavAStar.destroy(astar)
 		end
 
 		if patrol_data.patrol_traverse_logic then
 			GwNavTraverseLogic.destroy(patrol_data.patrol_traverse_logic)
 		end
 
-		local astar = patrol_data.astar
-
-		if astar then
-			if not GwNavAStar.processing_finished(astar) then
-				GwNavAStar.cancel(astar)
-			end
-
-			GwNavAStar.destroy(astar)
+		if patrol_data.patrol_nav_tag_cost_table then
+			GwNavTagLayerCostTable.destroy(patrol_data.patrol_nav_tag_cost_table)
 		end
+	end
+
+	if self._traverse_logic then
+		GwNavTraverseLogic.destroy(self._traverse_logic)
+	end
+
+	if self._nav_tag_cost_table then
+		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 	end
 end
 
@@ -402,13 +398,11 @@ RoamerPacing._create_sub_zone_location = function (self, spawn_position, density
 	local roamer_slot_placement_function_name = roamer_slot_placement_functions[self:_random(1, #roamer_slot_placement_functions)]
 	local roamer_slot_placement_settings = density_setting.roamer_slot_placement_settings[roamer_slot_placement_function_name]
 	local roamer_slots = RoamerSlotPlacementFunctions[roamer_slot_placement_function_name](nav_world, spawn_position, roamer_slot_placement_settings, self._traverse_logic, self)
-	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, self._nav_spawn_points, spawn_position:unbox())
 	local sub_zone_location = {
 		position = spawn_position,
 		roamer_slots = roamer_slots,
 		group_id = group_id,
 		shared_aggro_trigger = density_setting.shared_aggro_trigger,
-		spawn_point_group_index = spawn_point_group_index,
 	}
 	local num_roamer_slots = #roamer_slots
 
@@ -580,10 +574,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 					local num_roamer_slots = #roamer_slots
 					local num_to_spawn_in_pack = math.min(num_roamer_slots, roamers_per_sub_zone)
 					local sub_zone_location_position = random_sub_zone_location.position:unbox()
-					local spawn_point_group_index = random_sub_zone_location.spawn_point_group_index
-					local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index)
-					local end_index = start_index + 1
-					local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(sub_zone_location_position, start_index, end_index)
+					local travel_distance = Managers.state.main_path:travel_distance_from_position(sub_zone_location_position)
 					local patrol, patrol_id
 					local spawn_positions = spawn_point_positions[spawn_point_index]
 					local num_spawn_positions = #spawn_positions

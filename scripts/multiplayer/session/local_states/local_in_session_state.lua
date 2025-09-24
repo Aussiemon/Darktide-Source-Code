@@ -26,12 +26,22 @@ local CLOCK_HANDLER_PANIC_TIMER = 20
 LocalInSessionState.update = function (self, dt)
 	local shared_state = self._shared_state
 
-	if not GameSession.in_session(shared_state.engine_gamesession) or Network.channel_state(shared_state.channel_id) ~= "connected" then
+	if not GameSession.in_session(shared_state.engine_gamesession) then
 		Log.info("LocalInSessionState", "Lost game session")
 
 		return "lost_session", {
 			game_reason = "lost_session",
 		}
+	else
+		local state, reason = Network.channel_state(shared_state.channel_id)
+
+		if state ~= "connected" then
+			Log.info("LocalInSessionState", "Lost game session channel")
+
+			return "lost_session", {
+				engine_reason = reason,
+			}
+		end
 	end
 
 	local clock_handler_client = self._clock_handler_client

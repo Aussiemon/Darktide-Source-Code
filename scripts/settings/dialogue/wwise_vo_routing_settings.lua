@@ -349,5 +349,17 @@ wwise_vo_routing_settings[56] = {
 	wwise_event_path = "wwise/events/vo/play_sfx_es_2d_vo",
 	wwise_sound_source = "es_2d_vo",
 }
+wwise_vo_routing_settings[57] = {
+	display_name = "Elite Chaos Ogryn Houndmaster",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_chaos_ogryn_houndmaster_vo",
+	wwise_sound_source = "es_chaos_ogryn_houndmaster_vo",
+}
+wwise_vo_routing_settings[58] = {
+	display_name = "Elite Renegade Plasma Gunner",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_plasma_gunner_vo",
+	wwise_sound_source = "es_traitor_plasma_gunner_vo",
+}
 
 return settings("wwise_vo_routing_settings", wwise_vo_routing_settings)

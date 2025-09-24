@@ -6,7 +6,7 @@ local overrides = {}
 table.make_unique(suppression_templates)
 table.make_unique(overrides)
 
-suppression_templates.default_laspistol_killshot = {
+suppression_templates.laspistol_p1_m1_suppression_killshot = {
 	still = {
 		decay_time = 0.6,
 		delay = 0.2,
@@ -55,24 +55,24 @@ suppression_templates.default_laspistol_killshot = {
 	},
 	moving = {
 		inherits = {
-			"default_laspistol_killshot",
+			"laspistol_p1_m1_suppression_killshot",
 			"still",
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"default_laspistol_killshot",
+			"laspistol_p1_m1_suppression_killshot",
 			"still",
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"default_laspistol_killshot",
+			"laspistol_p1_m1_suppression_killshot",
 			"still",
 		},
 	},
 }
-suppression_templates.hip_laspistol_killshot = {
+suppression_templates.laspistol_p1_m1_suppression_assault = {
 	still = {
 		decay_time = 0.6,
 		delay = 0.2,
@@ -121,19 +121,19 @@ suppression_templates.hip_laspistol_killshot = {
 	},
 	moving = {
 		inherits = {
-			"hip_laspistol_killshot",
+			"laspistol_p1_m1_suppression_assault",
 			"still",
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"hip_laspistol_killshot",
+			"laspistol_p1_m1_suppression_assault",
 			"still",
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"hip_laspistol_killshot",
+			"laspistol_p1_m1_suppression_assault",
 			"still",
 		},
 	},

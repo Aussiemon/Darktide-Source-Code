@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/group_finder_view/group_finder_view.lua
 
 local GroupFinderViewDefinitions = require("scripts/ui/views/group_finder_view/group_finder_view_definitions")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -83,7 +82,6 @@ GroupFinderView.init = function (self, settings, context)
 	}
 	self._initial_party_id = self:party_id()
 	self._promise_container = PromiseContainer:new()
-	self._regions_latency = {}
 	self._show_group_loading = false
 	self._player_request_button_accept_input_action = "confirm_pressed"
 	self._player_request_button_decline_input_action = "hotkey_menu_special_1"
@@ -1640,7 +1638,7 @@ GroupFinderView._cb_on_start_group_button_pressed = function (self)
 		return
 	end
 
-	local region = BackendUtilities.prefered_mission_region
+	local region = Managers.data_service.region_latency:get_prefered_mission_region()
 	local selected_tags = self._selected_tags
 
 	if #selected_tags <= 0 then
@@ -2412,9 +2410,9 @@ GroupFinderView.on_exit = function (self)
 	for i = 1, 4 do
 		local widget_name = "team_member_" .. i
 		local widget = widgets_by_name[widget_name]
-		local content = widget.content
+		local content = widget and widget.content
 
-		if content.slot_filled then
+		if content and content.slot_filled then
 			self:_unload_portrait_icon(widget, ui_renderer)
 		end
 	end
@@ -2788,7 +2786,7 @@ GroupFinderView._start_advertisements_stream = function (self)
 	if not self._search_connection_promise and not self._refresh_promise then
 		Log.info("GroupFinderView", "OPEN STREAM")
 
-		local region = BackendUtilities.prefered_mission_region
+		local region = Managers.data_service.region_latency:get_prefered_mission_region()
 		local tags = self._selected_tags
 		local tags_for_group_search = {}
 
@@ -3575,126 +3573,8 @@ GroupFinderView._update_grids_selection = function (self)
 	end
 end
 
-GroupFinderView._callback_open_options = function (self, region_data)
-	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
-		on_destroy_callback = callback(self, "_callback_close_options"),
-	})
-
-	local regions_latency = self._regions_latency
-	local presentation_data = {
-		{
-			display_name = "loc_mission_board_view_options_Matchmaking_Location",
-			id = "region_matchmaking",
-			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
-			widget_type = "dropdown",
-			validation_function = function ()
-				return
-			end,
-			on_activated = function (value, template)
-				BackendUtilities.prefered_mission_region = value
-			end,
-			get_function = function (template)
-				local options = template.options_function()
-
-				for i = 1, #options do
-					local option = options[i]
-
-					if option.value == BackendUtilities.prefered_mission_region then
-						return option.id
-					end
-				end
-
-				return 1
-			end,
-			options_function = function (template)
-				local options = {}
-
-				for region_name, latency_data in pairs(regions_latency) do
-					local loc_key = RegionLocalizationMappings[region_name]
-					local ignore_localization = true
-					local region_display_name = loc_key and Localize(loc_key) or region_name
-
-					if math.abs(latency_data.min_latency - latency_data.max_latency) < 5 then
-						region_display_name = string.format("%s %dms", region_display_name, latency_data.min_latency)
-					else
-						region_display_name = string.format("%s %d-%dms", region_display_name, latency_data.min_latency, latency_data.max_latency)
-					end
-
-					options[#options + 1] = {
-						id = region_name,
-						display_name = region_display_name,
-						ignore_localization = ignore_localization,
-						value = region_name,
-						latency_order = latency_data.min_latency,
-					}
-				end
-
-				table.sort(options, function (a, b)
-					return a.latency_order < b.latency_order
-				end)
-
-				return options
-			end,
-			on_changed = function (value)
-				BackendUtilities.prefered_mission_region = value
-			end,
-		},
-		{
-			display_name = "loc_private_tag_name",
-			id = "private_match",
-			tooltip_text = "loc_mission_board_view_options_private_game_desc",
-			widget_type = "checkbox",
-			start_value = self._private_match,
-			get_function = function ()
-				return self._private_match
-			end,
-			on_activated = function (value, data)
-				data.changed_callback(value)
-			end,
-			on_changed = function (value)
-				self:_callback_toggle_private_matchmaking()
-			end,
-		},
-	}
-
-	self._mission_board_options:present(presentation_data)
-end
-
-GroupFinderView._callback_close_options = function (self)
-	self:_destroy_options_element()
-end
-
-GroupFinderView._destroy_options_element = function (self)
-	self:_remove_element("mission_board_options_element")
-
-	self._mission_board_options = nil
-end
-
 GroupFinderView.fetch_regions = function (self)
-	local region_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
-
-	self._region_promise = region_promise
-
-	self._promise_container:cancel_on_destroy(region_promise):next(function (regions_data)
-		local prefered_region_promise
-
-		if BackendUtilities.prefered_mission_region == "" then
-			prefered_region_promise = self._promise_container:cancel_on_destroy(Managers.backend.interfaces.region_latency:get_preferred_reef())
-		else
-			prefered_region_promise = Promise.resolved()
-		end
-
-		prefered_region_promise:next(function (prefered_region)
-			BackendUtilities.prefered_mission_region = BackendUtilities.prefered_mission_region ~= "" and BackendUtilities.prefered_mission_region or prefered_region or regions_data[1].reefs[1]
-
-			local regions_latency = Managers.backend.interfaces.region_latency:get_reef_info_based_on_region_latencies(regions_data)
-
-			self._regions_latency = regions_latency
-			self._region_promise = nil
-		end)
-	end)
-
-	return region_promise
+	return self._promise_container:cancel_on_destroy(Managers.data_service.region_latency:fetch_regions_latency())
 end
 
 GroupFinderView.get_havoc_order_metadata = function (self)

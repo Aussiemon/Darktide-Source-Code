@@ -484,6 +484,47 @@ damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 		},
 	},
 }
+damage_templates.hordes_buff_damage_reflection_hit = {
+	is_push = true,
+	shield_override_stagger_strength = 20,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0.5,
+		impact = {
+			5,
+			9,
+		},
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1.25,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.5,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 0,
+		},
+	},
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.hordes_buff_damage_reflection_push_hit = table.clone(damage_templates.hordes_buff_damage_reflection_hit)
+damage_templates.hordes_buff_damage_reflection_push_hit.power_distribution.attack = 0
+damage_templates.hordes_buff_high_damage_reflection_hit = table.clone(damage_templates.hordes_buff_damage_reflection_hit)
+damage_templates.hordes_buff_high_damage_reflection_hit.power_distribution.attack = 120
 
 return {
 	base_templates = damage_templates,

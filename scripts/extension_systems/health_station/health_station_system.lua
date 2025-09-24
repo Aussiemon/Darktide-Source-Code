@@ -7,7 +7,6 @@ local CLIENT_RPCS = {
 	"rpc_health_station_use",
 	"rpc_health_station_hot_join",
 	"rpc_health_station_on_socket_spawned",
-	"rpc_health_station_on_battery_spawned",
 	"rpc_health_station_sync_charges",
 }
 local DISTRIBUTION_CHARGES_PER_STATION = {
@@ -67,7 +66,7 @@ HealthStationSystem.hot_join_sync = function (self, sender, channel)
 			socket_object_id = unit_spawner_manager:game_object_id(socket_unit)
 		end
 
-		local battery_unit = extension:battery_unit()
+		local battery_unit = extension:spawned_battery_unit()
 
 		if battery_unit then
 			local battery_is_level_unit, battery_id = unit_spawner_manager:game_object_id_or_level_index(battery_unit)
@@ -198,15 +197,6 @@ HealthStationSystem.rpc_health_station_on_socket_spawned = function (self, chann
 	local socket_unit = unit_spawner_manager:unit(socket_object_id, is_level_unit)
 
 	health_station_extension:register_socket_unit(socket_unit)
-end
-
-HealthStationSystem.rpc_health_station_on_battery_spawned = function (self, channel_id, level_unit_id, battery_id, battery_is_level_unit)
-	local unit_spawner_manager = Managers.state.unit_spawner
-	local health_station_unit = unit_spawner_manager:unit(level_unit_id, true)
-	local health_station_extension = self._unit_to_extension_map[health_station_unit]
-	local battery_unit = unit_spawner_manager:unit(battery_id, battery_is_level_unit)
-
-	health_station_extension:register_battery_unit(battery_unit)
 end
 
 HealthStationSystem.rpc_health_station_sync_charges = function (self, channel_id, level_unit_id, charge_amount)

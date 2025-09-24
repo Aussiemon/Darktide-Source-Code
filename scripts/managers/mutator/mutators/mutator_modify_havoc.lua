@@ -15,7 +15,7 @@ MutatorModifyHavoc.init = function (self, is_server, network_event_delegate, mut
 	local init_modify_horde = template.init_modify_horde
 
 	if self._is_server and init_modify_horde then
-		Managers.state.havoc:init_horde_buff(init_modify_horde)
+		Managers.state.game_mode:game_mode():extension("havoc"):init_horde_buff()
 	end
 end
 

@@ -11,7 +11,6 @@ local WeaponStaminaTemplates = require("scripts/settings/stamina/weapon_stamina_
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponToughnessTemplates = require("scripts/settings/toughness/weapon_toughness_templates")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
-local WeaponTweakTemplates = require("scripts/extension_systems/weapon/utilities/weapon_tweak_templates")
 local WeaponAmmoTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_ammo_templates")
 local WeaponBurninatingTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_burninating_templates")
 local WeaponSizeOfFlameTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_size_of_flame_templates")

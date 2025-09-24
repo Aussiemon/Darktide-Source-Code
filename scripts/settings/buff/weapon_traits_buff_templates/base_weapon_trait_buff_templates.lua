@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breeds = require("scripts/settings/breed/breeds")
@@ -1170,8 +1171,10 @@ base_templates.pass_past_armor_on_weapon_special = {
 base_templates.extra_explosion_on_activated_attacks_on_armor = {
 	class_name = "buff",
 	predicted = false,
+	conditional_keywords = {
+		keywords.weapon_special_extra_explosion_on_hit_armor,
+	},
 	conditional_stat_buffs = {
-		[stat_buffs.weapon_special_max_activations] = 1,
 		[stat_buffs.explosion_radius_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active),
@@ -2737,8 +2740,8 @@ base_templates.crit_chance_based_on_ammo_left = {
 		end
 
 		local inventory_slot_component = template_data.inventory_slot_component
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 		local missing_in_clip = max_ammunition_clip - current_ammunition_clip
 
 		if missing_in_clip == max_ammunition_clip then
@@ -2851,8 +2854,8 @@ base_templates.power_scales_with_clip_percentage = {
 
 		if slot_type == "weapon" then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
-			local current_ammunition_clip = slot_inventory_component.current_ammunition_clip
-			local max_ammunition_clip = slot_inventory_component.max_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(slot_inventory_component)
+			local max_ammunition_clip = Ammo.max_ammo_in_clips(slot_inventory_component)
 			local percentage = current_ammunition_clip / max_ammunition_clip
 
 			percentage = 1 - (percentage - 0.1) / 0.9
@@ -2884,15 +2887,17 @@ base_templates.move_ammo_from_reserve_to_clip_on_crit = {
 	end,
 	proc_func = function (params, template_data, template_context)
 		local inventory_slot_component = template_data.inventory_slot_component
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+		local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 		local override_data = template_context.template_override_data
 		local total_ammo_to_move = override_data and override_data.num_ammmo_to_move or template_context.template.num_ammmo_to_move
 		local number_of_bullets_missing_from_clip = max_ammunition_clip - current_ammunition_clip
 
 		total_ammo_to_move = math.min(total_ammo_to_move, number_of_bullets_missing_from_clip, current_ammunition_reserve)
-		inventory_slot_component.current_ammunition_clip = current_ammunition_clip + total_ammo_to_move
+
+		Ammo.set_current_ammo_in_clips(inventory_slot_component, current_ammunition_clip + total_ammo_to_move)
+
 		inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve - total_ammo_to_move
 	end,
 }

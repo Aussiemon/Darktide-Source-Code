@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/multiplayer/connection_manager.lua
 
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
+local NetworkTableCacheConfig = require("scripts/settings/network/network_table_cache_config")
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManager = class("ConnectionManager")
 
@@ -75,6 +76,10 @@ ConnectionManager.init = function (self, options, event_delegate, approve_channe
 		ferror("Network platform %q not implemented.", tostring(options.network_platform))
 	end
 
+	if self._client then
+		Network.init_table_cache(NetworkTableCacheConfig.rpcs, NetworkTableCacheConfig.game_objects)
+	end
+
 	self._connection_host = nil
 	self._connection_host_event_object = nil
 	self._connection_client = nil
@@ -134,6 +139,8 @@ ConnectionManager.initialize_wan_client = function (self, peer_id)
 
 		self._client_destructor = Network.shutdown_lan_client
 
+		Network.init_table_cache(NetworkTableCacheConfig.rpcs, NetworkTableCacheConfig.game_objects)
+
 		return true
 	else
 		Log.error("ConnectionManager", "Failed initializing wan_client")
@@ -145,6 +152,7 @@ end
 ConnectionManager.destroy_wan_client = function (self)
 	Log.info("ConnectionManager", "Destroying wan_client with peer_id %s", Network.peer_id())
 	self:shutdown_connections("wan_client_destroyed")
+	Network.shutdown_table_cache()
 	self._client_destructor(self._client)
 
 	self._client = nil
@@ -162,6 +170,7 @@ ConnectionManager.destroy = function (self)
 	self:shutdown_connections("connection_manager_destroyed")
 
 	if self._client then
+		Network.shutdown_table_cache()
 		self._client_destructor(self._client)
 
 		self._client = nil
@@ -191,8 +200,12 @@ ConnectionManager.num_members = function (self)
 	return table.size(self._members)
 end
 
-ConnectionManager.member_peers = function (self)
-	return table.keys(self._members)
+ConnectionManager.member_peers = function (self, optional_out)
+	return table.keys(self._members, optional_out)
+end
+
+ConnectionManager.num_connections = function (self)
+	return self._connection_host:num_connections()
 end
 
 ConnectionManager.max_members = function (self)

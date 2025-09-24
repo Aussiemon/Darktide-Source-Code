@@ -88,7 +88,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_bolstering_prayer = {
-			description = "loc_talent_zealot_bolstering_prayer_variant_two_description",
+			description = "loc_talent_zealot_bolstering_prayer_combined_description",
 			display_name = "loc_talent_zealot_bolstering_prayer",
 			large_icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_combat",
 			name = "Bolstering Prayer",
@@ -144,6 +144,10 @@ local archetype_talents = {
 					format_type = "number",
 					value = PlayerAbilities.zealot_relic.cooldown,
 				},
+			},
+			special_rule = {
+				identifier = "zealot_channel_staggers",
+				special_rule_name = special_rules.zealot_channel_staggers,
 			},
 			player_ability = {
 				ability_type = "combat_ability",
@@ -225,7 +229,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_stealth = {
-			description = "loc_ability_zealot_stealth_description",
+			description = "loc_ability_zealot_stealth_rending_description",
 			display_name = "loc_ability_zealot_stealth",
 			large_icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_combat",
 			name = "Zealot Stealth",
@@ -292,6 +296,18 @@ local archetype_talents = {
 						},
 					},
 				},
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "zealot_invisibility",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_rending_multiplier,
+						},
+					},
+				},
 				cooldown = {
 					format_type = "number",
 					value = PlayerAbilities.zealot_invisibility.cooldown,
@@ -337,7 +353,8 @@ local archetype_talents = {
 				},
 				duration = {
 					format_type = "number",
-					value = 4,
+					num_decimals = 0,
+					value = talent_settings.crits_grants_cd.duration,
 				},
 				cooldown_regen = {
 					format_type = "percentage",
@@ -351,7 +368,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_attack_speed_post_ability = {
-			description = "loc_talent_zealot_attack_speed_after_dash_desc",
+			description = "loc_talent_zealot_attack_speed_after_dash_new_desc",
 			display_name = "loc_talent_maniac_attack_speed_after_dash",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_6_2",
 			name = "Gain attack speed after charge",
@@ -360,6 +377,11 @@ local archetype_talents = {
 					format_type = "percentage",
 					prefix = "+",
 					value = talent_settings_2.combat_ability.melee_damage,
+				},
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_2.combat_ability.melee_rending_multiplier,
 				},
 				toughness = {
 					format_type = "percentage",
@@ -382,10 +404,6 @@ local archetype_talents = {
 					format_type = "number",
 					value = PlayerAbilities.zealot_targeted_dash_improved.cooldown,
 				},
-			},
-			passive = {
-				buff_template_name = "zealot_combat_ability_attack_speed_increase",
-				identifier = "zealot_combat_ability_attack_speed_increase",
 			},
 			player_ability = {
 				ability_type = "combat_ability",
@@ -413,7 +431,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_increased_duration = {
-			description = "loc_talent_zealot_increased_stealth_duration_description",
+			description = "loc_talent_zealot_stealth_duration_threat_damage_desc",
 			display_name = "loc_talent_zealot_increased_stealth_duration",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_5_1",
 			name = "Increases duration of Stealth by X seconds.",
@@ -425,20 +443,46 @@ local archetype_talents = {
 				duration = {
 					format_type = "number",
 					find_value = {
-						buff_template_name = "zealot_invisibility",
+						buff_template_name = "zealot_invisibility_increased_duration",
 						find_value_type = "buff_template",
 						path = {
 							"duration",
 						},
 					},
 				},
-				duration_2 = {
+				buff_duration = {
 					format_type = "number",
 					find_value = {
-						buff_template_name = "zealot_invisibility_increased_duration",
+						buff_template_name = "zealot_decrease_threat_increase_backstab_damage",
 						find_value_type = "buff_template",
 						path = {
 							"duration",
+						},
+					},
+				},
+				threat = {
+					format_type = "percentage",
+					prefix = "-",
+					find_value = {
+						buff_template_name = "zealot_decrease_threat_increase_backstab_damage",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.threat_weight_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+				damage = {
+					format_type = "percentage",
+					find_value = {
+						buff_template_name = "zealot_decrease_threat_increase_backstab_damage",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.backstab_damage,
 						},
 					},
 				},
@@ -447,9 +491,13 @@ local archetype_talents = {
 				ability_type = "combat_ability",
 				ability = PlayerAbilities.zealot_invisibility_improved,
 			},
+			special_rule = {
+				identifier = "zealot_increased_duration",
+				special_rule_name = special_rules.zealot_increased_duration,
+			},
 		},
 		zealot_stealth_more_cd_more_damage = {
-			description = "loc_talent_zealot_stealth_increased_damage_description",
+			description = "loc_talent_zealot_stealth_increased_damage_block_desc",
 			display_name = "loc_talent_zealot_stealth_increased_damage",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_5_2",
 			name = "Increase cooldown for Stealth by X00%. Increases damage bonus to Y00%.",
@@ -459,15 +507,18 @@ local archetype_talents = {
 					value = "loc_ability_zealot_stealth",
 				},
 				cooldown = {
-					format_type = "percentage",
+					format_type = "number",
 					find_value = {
 						buff_template_name = "zealot_increase_ability_cooldown_increase_bonus",
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.ability_cooldown_modifier,
+							stat_buffs.ability_cooldown_flat_reduction,
 						},
 					},
+					value_manipulation = function (value)
+						return math.abs(value)
+					end,
 				},
 				damage = {
 					format_type = "percentage",
@@ -496,6 +547,28 @@ local archetype_talents = {
 						},
 					},
 				},
+				duration = {
+					format_type = "number",
+					find_value = {
+						buff_template_name = "zealot_stealth_improved_with_block",
+						find_value_type = "buff_template",
+						path = {
+							"duration",
+						},
+					},
+				},
+				perfect_block_timing = {
+					format_type = "number",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "zealot_stealth_improved_with_block",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.perfect_block_timing,
+						},
+					},
+				},
 			},
 			passive = {
 				buff_template_name = "zealot_increase_ability_cooldown_increase_bonus",
@@ -503,42 +576,23 @@ local archetype_talents = {
 			},
 		},
 		zealot_leaving_stealth_restores_toughness = {
-			description = "loc_talent_zealot_leaving_stealth_restores_toughness_desc",
+			description = "loc_talent_zealot_stealth_toughness_dr_desc",
 			display_name = "loc_talent_zealot_leaving_stealth_restores_toughness",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_3",
 			name = "Leaving Stealth restores toughness over time + reduces damage taken.",
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					find_value = {
-						buff_template_name = "zealot_leaving_stealth_restores_toughness",
-						find_value_type = "buff_template",
-						path = {
-							"total_toughness_restored",
-						},
-					},
+					value = talent_settings.zealot_leave_stealth_toughness_regen.toughness_to_restore,
 				},
-				time = {
+				duration = {
 					format_type = "value",
-					find_value = {
-						buff_template_name = "zealot_leaving_stealth_restores_toughness",
-						find_value_type = "buff_template",
-						path = {
-							"duration",
-						},
-					},
+					value = talent_settings.zealot_leave_stealth_toughness_regen.damage_reduction_duration,
 				},
-				damage = {
+				dr = {
 					format_type = "percentage",
 					prefix = "+",
-					find_value = {
-						buff_template_name = "zealot_leaving_stealth_restores_toughness",
-						find_value_type = "buff_template",
-						path = {
-							"stat_buffs",
-							stat_buffs.damage_taken_multiplier,
-						},
-					},
+					value = talent_settings.zealot_leave_stealth_toughness_regen.damage_reduction_percentage,
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
 					end,
@@ -554,7 +608,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_restore_stealth_cd_on_damage = {
-			description = "loc_talent_zealot_damage_taken_restores_cd_description",
+			description = "loc_talent_zealot_damage_taken_restores_cd_new_description",
 			display_name = "loc_talent_zealot_damage_taken_restores_cd",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_2_3",
 			name = "Taking damage restores ability cooldown based on damage taken",
@@ -563,10 +617,19 @@ local archetype_talents = {
 					format_type = "percentage",
 					value = talent_settings_3.combat_ability_cd_restore_on_damage.damage_taken_to_ability_cd_percentage,
 				},
+				cooldown_regen = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_3.combat_ability_cd_restore_on_damage.cooldown_regen,
+				},
+				current_health = {
+					format_type = "percentage",
+					value = talent_settings_3.combat_ability_cd_restore_on_damage.max_health,
+				},
 			},
 			passive = {
-				buff_template_name = "zealot_ability_cooldown_on_heavy_melee_damage",
-				identifier = "zealot_ability_cooldown_on_heavy_melee_damage",
+				buff_template_name = "zealot_cooldown_based_on_health",
+				identifier = "zealot_cooldown_based_on_health",
 			},
 		},
 		zealot_channel_staggers = {
@@ -773,6 +836,26 @@ local archetype_talents = {
 				priority = 2,
 			},
 		},
+		zealot_stamina_cost_multiplier_aura = {
+			description = "loc_talent_zealot_stamina_cost_multiplier_aura_description",
+			display_name = "loc_talent_zealot_stamina_cost_multiplier_aura",
+			name = "Aura: Always count as in at least 2 coherency",
+			format_values = {
+				stamina_cost_multiplier = {
+					format_type = "percentage",
+					prefix = "-",
+					value = talent_settings.zealot_stamina_cost_multiplier_aura.stamina_cost_multiplier,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
+				},
+			},
+			coherency = {
+				buff_template_name = "zealot_stamina_cost_multiplier_aura",
+				identifier = "zealot_aura",
+				priority = 2,
+			},
+		},
 		zealot_always_in_coherency = {
 			description = "loc_talent_zealot_always_in_coherency_description",
 			display_name = "loc_talent_zealot_always_in_coherency",
@@ -940,8 +1023,28 @@ local archetype_talents = {
 				special_rule_name = special_rules.zealot_quickness_toughness_per_stack,
 			},
 		},
+		zealot_momentum_toughness_replenish = {
+			description = "loc_talent_zealot_momentum_toughness_replenish_desc",
+			display_name = "loc_talent_zealot_quickness_toughness_per_stack",
+			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_3",
+			name = "Replenish toughness per stack on activation",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_quickness",
+				},
+				toughness = {
+					format_type = "percentage",
+					value = talent_settings.zealot_momentum_toughness_replenish.toughness_to_restore,
+				},
+			},
+			special_rule = {
+				identifier = "zealot_momentum_toughness_replenish",
+				special_rule_name = special_rules.zealot_momentum_toughness_replenish,
+			},
+		},
 		zealot_fanatic_rage = {
-			description = "loc_talent_zealot_fanatic_rage_desc",
+			description = "loc_talent_zealot_fanatic_rage_crit_desc",
 			display_name = "loc_talent_zealot_fanatic_rage",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_base_1",
 			name = "Fanatic Rage - Enemies dying grants fury. Gain Crit at max stacks",
@@ -971,6 +1074,10 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "zealot_fanatic_rage",
 				identifier = "zealot_fanatic_rage",
+			},
+			special_rule = {
+				identifier = "zealot_preacher_crits_grants_stack",
+				special_rule_name = special_rules.zealot_preacher_crits_grants_stack,
 			},
 		},
 		zealot_fanatic_rage_improved = {
@@ -1005,7 +1112,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_fanatic_rage_toughness_on_max = {
-			description = "loc_talent_zealot_fanatic_rage_toughness_reduction_desc",
+			description = "loc_talent_zealot_fanatic_rage_toughness_replenish_desc",
 			display_name = "loc_talent_zealot_fanatic_rage_toughness",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_5_3",
 			name = "Fanatic Rage restores toughness on full stacks",
@@ -1017,6 +1124,10 @@ local archetype_talents = {
 				toughness = {
 					format_type = "percentage",
 					value = talent_settings_3.passive_1.toughness_on_max_stacks,
+				},
+				toughness_small = {
+					format_type = "percentage",
+					value = talent_settings_3.passive_1.toughness_on_max_stacks_small,
 				},
 				toughness_damage_reduction = {
 					format_type = "percentage",
@@ -1040,7 +1151,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_shared_fanatic_rage = {
-			description = "loc_talent_zealot_shared_fanatic_rage_desc",
+			description = "loc_talent_zealot_shared_fanatic_rage_new_desc",
 			display_name = "loc_talent_zealot_shared_fanatic_rage",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_2",
 			name = "Allies in coherency gain a lesser version of your fanatic rage",
@@ -1053,7 +1164,7 @@ local archetype_talents = {
 					format_type = "percentage",
 					num_decimals = 0,
 					prefix = "+",
-					value = talent_settings_3.offensive_2.crit_share,
+					value = talent_settings_3.offensive_2.crit_chance,
 				},
 			},
 			special_rule = {
@@ -1086,7 +1197,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_more_damage_when_low_on_stamina = {
-			description = "loc_talent_zealot_increased_damage_on_low_stamina_description",
+			description = "loc_talent_zealot_damage_based_on_stamina_desc",
 			display_name = "loc_talent_zealot_increased_damage_on_low_stamina",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_1_2",
 			name = "Increase melee damage when at low stamina",
@@ -1094,14 +1205,12 @@ local archetype_talents = {
 				damage = {
 					format_type = "percentage",
 					prefix = "+",
-					find_value = {
-						buff_template_name = "zealot_melee_damage_on_stamina_depleted",
-						find_value_type = "buff_template",
-						path = {
-							"proc_stat_buffs",
-							stat_buffs.melee_damage,
-						},
-					},
+					value = talent_settings.zealot_more_damage_when_low_on_stamina.melee_damage,
+				},
+				strength = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_more_damage_when_low_on_stamina.power_level_modifier,
 				},
 				duration = {
 					format_type = "value",
@@ -1115,12 +1224,12 @@ local archetype_talents = {
 				},
 			},
 			passive = {
-				buff_template_name = "zealot_melee_damage_on_stamina_depleted",
+				buff_template_name = "zealot_more_power_when_low_on_stamina",
 				identifier = "zealot_melee_damage_on_stamina_depleted",
 			},
 		},
 		zealot_backstab_kills_restore_cd = {
-			description = "loc_talent_zealot_backstab_kills_restore_cd_description",
+			description = "loc_talent_zealot_cooldown_on_backstab_weakspot_desc",
 			display_name = "loc_talent_zealot_backstab_kills_restore_cd",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_4_2",
 			name = "Backstab kills refunds X% cooldown for Combat ability",
@@ -1129,9 +1238,18 @@ local archetype_talents = {
 					format_type = "percentage",
 					value = talent_settings_3.zealot_backstab_kills_restore_cd.combat_ability_cd_percentage,
 				},
+				cooldown = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_combat_ability_weakspot_backstab_hit_cooldown.cooldown,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_combat_ability_weakspot_backstab_hit_cooldown.duration,
+				},
 			},
 			passive = {
-				buff_template_name = "zealot_ability_cooldown_on_leaving_coherency_on_backstab",
+				buff_template_name = "zealot_combat_ability_weakspot_backstab_hit_cooldown",
 				identifier = "zealot_ability_cooldown_on_leaving_coherency_on_backstab",
 			},
 		},
@@ -1160,7 +1278,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_increased_crit_and_weakspot_damage_after_dodge = {
-			description = "loc_talent_zealot_increased_finesse_post_dodge_description",
+			description = "loc_talent_zealot_duelist_new_desc",
 			display_name = "loc_talent_zealot_increased_finesse_post_dodge",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_tier_1_1",
 			name = "Increase crit and weakspot damage after successful dodge",
@@ -1173,7 +1291,7 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"proc_stat_buffs",
-							stat_buffs.weakspot_damage,
+							stat_buffs.finesse_modifier_bonus,
 						},
 					},
 				},
@@ -1194,7 +1312,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_backstab_damage = {
-			description = "loc_talent_zealot_increased_backstab_damage_description",
+			description = "loc_talent_zealot_backstab_flanking_damage_all_desc",
 			display_name = "loc_talent_zealot_increased_backstab_damage",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_base_1",
 			name = "Your backstab damage increased by X%.",
@@ -1401,7 +1519,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_martyrdom_grants_attack_speed = {
-			description = "loc_talent_zealot_attack_speed_per_martyrdom_desc",
+			description = "loc_talent_zealot_attack_speed_per_martyrdom_upd_desc",
 			display_name = "loc_talent_zealot_attack_speed_per_martyrdom",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_2_3",
 			name = "Martyrdom grants attack speed",
@@ -1520,7 +1638,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_increased_reload_speed_on_melee_kills = {
-			description = "loc_talent_zealot_increased_reload_speed_on_melee_kills_desc",
+			description = "loc_talent_zealot_increased_reload_wield_speed_on_melee_kills_desc",
 			display_name = "loc_talent_zealot_increased_reload_speed_on_melee_kills",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_base_3",
 			name = "Melee Kills increase Reload Speed of next Reload",
@@ -1534,6 +1652,18 @@ local archetype_talents = {
 						path = {
 							"stat_buffs",
 							stat_buffs.reload_speed,
+						},
+					},
+				},
+				wield_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "zealot_improved_weapon_swapping_reload_speed_buff",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.wield_speed,
 						},
 					},
 				},
@@ -1595,11 +1725,976 @@ local archetype_talents = {
 				identifier = "zealot_stacking_melee_damage",
 			},
 		},
+		zealot_cleave_impact_post_push = {
+			description = "loc_talent_zealot_cleave_impact_post_push_desc",
+			display_name = "loc_talent_zealot_cleave_impact_post_push",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased cleave and impact after pushing",
+			format_values = {
+				cleave = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_cleave_impact_post_push.cleave,
+				},
+				impact = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_cleave_impact_post_push.impact_modifier,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_cleave_impact_post_push.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_cleave_impact_post_push",
+				identifier = "zealot_cleave_impact_post_push",
+			},
+		},
+		zealot_damage_after_heavy_attack = {
+			description = "loc_talent_zealot_damage_after_heavy_attack_desc",
+			display_name = "loc_talent_zealot_damage_after_heavy_attack",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased Damage after Successful Melee Heavy Attack",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_damage_after_heavy_attack.damage,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_damage_after_heavy_attack.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_damage_after_heavy_attack",
+				identifier = "zealot_damage_after_heavy_attack",
+			},
+		},
+		zealot_kills_increase_damage_of_next_melee = {
+			description = "loc_talent_zealot_kills_increase_damage_of_next_melee_desc",
+			display_name = "loc_talent_zealot_kills_increase_damage_of_next_melee",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Kills increase damage of your next Melee attack. Stacking.",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_kills_increase_damage_of_next_melee.melee_damage,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_kills_increase_damage_of_next_melee.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_kills_increase_damage_of_next_melee.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_kills_increase_damage_of_next_melee",
+				identifier = "zealot_kills_increase_damage_of_next_melee",
+			},
+		},
+		zealot_multihits_reduce_damage_of_next_attack = {
+			description = "loc_talent_zealot_multihits_reduce_damage_of_next_attack_desc",
+			display_name = "loc_talent_zealot_multihits_reduce_damage_of_next_attack",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Melee Multihits reduce damage taken of the next attack on you ",
+			format_values = {
+				damage_resistance = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_multihits_reduce_damage_of_next_attack.damage_taken_multiplier,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
+				},
+				multi_hit = {
+					format_type = "number",
+					value = talent_settings.zealot_multihits_reduce_damage_of_next_attack.min_hits,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_multihits_reduce_damage_of_next_attack.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_multihits_reduce_damage_of_next_attack",
+				identifier = "zealot_multihits_reduce_damage_of_next_attack",
+			},
+		},
+		zealot_blocking_increases_damage_of_next_melee = {
+			description = "loc_talent_zealot_blocking_increases_damage_of_next_melee_desc",
+			display_name = "loc_talent_zealot_blocking_increases_damage_of_next_melee",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Blocking increases damage of next Melee attack",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_blocking_increases_damage_of_next_melee.melee_damage,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_blocking_increases_damage_of_next_melee.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_blocking_increases_damage_of_next_melee",
+				identifier = "zealot_blocking_increases_damage_of_next_melee",
+			},
+		},
+		zealot_multihits_restore_stamina = {
+			description = "loc_talent_zealot_multihits_restore_stamina_desc",
+			display_name = "loc_talent_zealot_multihits_restore_stamina",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Melee Multihits restore Stamina",
+			format_values = {
+				stamina = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_multihits_restore_stamina.stamina,
+				},
+				multi_hit = {
+					format_type = "number",
+					value = talent_settings.zealot_multihits_restore_stamina.min_hits,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_multihits_restore_stamina",
+				identifier = "zealot_multihits_restore_stamina",
+			},
+		},
+		zealot_crits_rend = {
+			description = "loc_talent_zealot_crits_rend_desc",
+			display_name = "loc_talent_zealot_crits_rend",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Crits have bonus rending ",
+			format_values = {
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_crits_rend.rending_multiplier,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_crits_rend",
+				identifier = "zealot_crits_rend",
+			},
+		},
+		zealot_elite_kills_empowers = {
+			description = "loc_talent_zealot_elite_kills_empowers_desc",
+			display_name = "loc_talent_zealot_elite_kills_empowers",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Elite kills increase damage and restores toughness over time",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_elite_kills_empowers.damage,
+				},
+				toughness = {
+					format_type = "percentage",
+					value = talent_settings.zealot_elite_kills_empowers.toughness,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_elite_kills_empowers.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_elite_kills_empowers",
+				identifier = "zealot_elite_kills_empowers",
+			},
+		},
+		zealot_uninterruptible_no_slow_heavies = {
+			description = "loc_talent_zealot_uninterruptible_no_slow_heavies_desc",
+			display_name = "loc_talent_zealot_uninterruptible_no_slow_heavies",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Gain uninterruptible and no movement speed reduction on melee heavy attacks",
+			format_values = {
+				reduction = {
+					format_type = "percentage",
+					prefix = "+",
+					value = 1 - talent_settings.zealot_uninterruptible_no_slow_heavies.multiplier,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_uninterruptible_no_slow_heavies",
+				identifier = "zealot_uninterruptible_no_slow_heavies",
+			},
+		},
+		zealot_stacking_weakspot_power = {
+			description = "loc_talent_zealot_stacking_weakspot_power_desc",
+			display_name = "loc_talent_zealot_stacking_weakspot_power",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Melee weakspot kills grant stacking melee weakspot power",
+			format_values = {
+				weakspot_power = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_stacking_weakspot_power.melee_weakspot_power_modifier,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_weakspot_power.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_weakspot_power.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_stacking_weakspot_power",
+				identifier = "zealot_stacking_weakspot_power",
+			},
+		},
+		zealot_damage_vs_elites = {
+			description = "loc_talent_zealot_damage_vs_elites_desc",
+			display_name = "loc_talent_zealot_damage_vs_elites",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increase damage vs elites",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_damage_vs_elites.damage_vs_elites,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_damage_vs_elites",
+				identifier = "zealot_damage_vs_elites",
+			},
+		},
+		zealot_weakspot_damage_reduction = {
+			description = "loc_talent_zealot_weakspot_damage_reduction_desc",
+			display_name = "loc_talent_zealot_weakspot_damage_reduction",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Weakspot kills grant damage reduction",
+			format_values = {
+				damage_resistance = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_weakspot_damage_reduction.damage_taken_multiplier,
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_weakspot_damage_reduction.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_weakspot_damage_reduction",
+				identifier = "zealot_weakspot_damage_reduction",
+			},
+		},
+		zealot_stacking_melee_damage_after_dodge = {
+			description = "loc_talent_zealot_stacking_melee_damage_after_dodge_desc",
+			display_name = "loc_talent_zealot_stacking_melee_damage_after_dodge",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased melee damage after successful dodge. Stacking.",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_stacking_melee_damage_after_dodge.melee_damage,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_melee_damage_after_dodge.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_melee_damage_after_dodge.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_stacking_melee_damage_after_dodge",
+				identifier = "zealot_stacking_melee_damage_after_dodge",
+			},
+		},
+		zealot_bled_enemies_take_more_damage = {
+			description = "loc_talent_zealot_bled_enemies_take_more_damage_desc",
+			display_name = "loc_talent_zealot_bled_enemies_take_more_damage",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased melee damage after successful dodge. Stacking.",
+			format_values = {
+				damage_taken = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_bled_enemies_take_more_damage.damage_taken_multiplier,
+					value_manipulation = function (value)
+						return math_round((value - 1) * 100)
+					end,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_bled_enemies_take_more_damage.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_bled_enemies_take_more_damage",
+				identifier = "zealot_bled_enemies_take_more_damage",
+			},
+		},
+		zealot_damage_vs_nonthreat = {
+			description = "loc_talent_zealot_damage_vs_nonthreat_desc",
+			display_name = "loc_talent_zealot_damage_vs_nonthreat",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased melee damage after successful dodge. Stacking.",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_damage_vs_nonthreat.damage_vs_nonthreat,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_damage_vs_nonthreat",
+				identifier = "zealot_damage_vs_nonthreat",
+			},
+		},
+		zealot_dodge_improvements = {
+			description = "loc_talent_zealot_dodge_improvements_desc",
+			display_name = "loc_talent_zealot_dodge_improvements",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				dodge_count = {
+					format_type = "number",
+					value = talent_settings.zealot_dodge_improvements.extra_consecutive_dodges,
+				},
+				dodge_distance = {
+					format_type = "number",
+					value = talent_settings.zealot_dodge_improvements.dodge_distance_modifier,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_dodge_improvements",
+				identifier = "zealot_dodge_improvements",
+			},
+		},
+		zealot_revive_speed = {
+			description = "loc_talent_zealot_revive_speed_desc",
+			display_name = "loc_talent_zealot_revive_speed",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				tdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = 1 - talent_settings.zealot_revive_speed.toughness_damage_taken_multiplier,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_revive_speed.duration,
+				},
+				movement_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_revive_speed.movement_speed,
+				},
+				revive_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_revive_speed.revive_speed_modifier,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_revive_speed",
+				identifier = "zealot_revive_speed",
+			},
+		},
+		zealot_melee_crits_restore_stamina = {
+			description = "loc_talent_zealot_melee_crits_restore_stamina_desc",
+			display_name = "loc_talent_zealot_melee_crits_restore_stamina",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				stamina = {
+					format_type = "percentage",
+					value = talent_settings.zealot_melee_crits_restore_stamina.stamina,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.zealot_melee_crits_restore_stamina.cooldown_duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_melee_crits_restore_stamina",
+				identifier = "zealot_melee_crits_restore_stamina",
+			},
+		},
+		zealot_heavy_multihits_increase_melee_damage = {
+			description = "loc_talent_zealot_heavy_multihits_increase_melee_damage_desc",
+			display_name = "loc_talent_zealot_heavy_multihits_increase_melee_damage",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_heavy_multihits_increase_melee_damage.melee_damage,
+				},
+				multi_hit = {
+					format_type = "number",
+					value = talent_settings.zealot_heavy_multihits_increase_melee_damage.min_hits,
+				},
+				max_stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_heavy_multihits_increase_melee_damage.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_heavy_multihits_increase_melee_damage.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_heavy_multihits_increase_melee_damage",
+				identifier = "zealot_heavy_multihits_increase_melee_damage",
+			},
+		},
+		zealot_backstabs_increase_backstab_damage = {
+			description = "loc_talent_zealot_backstabs_increase_backstab_damage_desc",
+			display_name = "loc_talent_zealot_backstabs_increase_backstab_damage",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_backstabs_increase_backstab_damage.backstab_damage,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_backstabs_increase_backstab_damage.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_backstabs_increase_backstab_damage.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_backstabs_increase_backstab_damage",
+				identifier = "zealot_backstabs_increase_backstab_damage",
+			},
+		},
+		zealot_reduced_threat_after_backstab_kill = {
+			description = "loc_talent_zealot_reduced_threat_after_backstab_kill_desc",
+			display_name = "loc_talent_zealot_reduced_threat_after_backstab_kill",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				threat = {
+					format_type = "percentage",
+					prefix = "-",
+					value = talent_settings.zealot_reduced_threat_after_backstab_kill.threat_weight_multiplier,
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_reduced_threat_after_backstab_kill.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_reduced_threat_after_backstab_kill",
+				identifier = "zealot_reduced_threat_after_backstab_kill",
+			},
+		},
+		zealot_melee_crits_reduce_damage_dealt = {
+			description = "loc_talent_zealot_melee_crits_reduce_damage_dealt_desc",
+			display_name = "loc_talent_zealot_melee_crits_reduce_damage_dealt",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				damage_reduction = {
+					format_type = "percentage",
+					value = talent_settings.zealot_melee_crits_reduce_damage_dealt.damage_multiplier,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_melee_crits_reduce_damage_dealt.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_melee_crits_reduce_damage_dealt",
+				identifier = "zealot_melee_crits_reduce_damage_dealt",
+			},
+		},
+		zealot_quickness_increased_duration = {
+			description = "loc_talent_zealot_quickness_increased_duration_desc",
+			display_name = "loc_talent_zealot_quickness_increased_duration",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				duration = {
+					format_type = "number",
+					value = talent_settings_3.quickness.increased_duration,
+				},
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_quickness",
+				},
+			},
+			special_rule = {
+				identifier = "zealot_quickness_increased_duration",
+				special_rule_name = special_rules.zealot_quickness_increased_duration,
+			},
+		},
+		zealot_stamina_on_block_break = {
+			description = "loc_talent_zealot_stamina_on_block_break_alt_desc",
+			display_name = "loc_talent_zealot_stamina_on_block_break",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				stamina = {
+					format_type = "percentage",
+					value = talent_settings.zealot_stamina_on_block_break.stamina,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.zealot_stamina_on_block_break.cooldown_duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_stamina_on_block_break",
+				identifier = "zealot_stamina_on_block_break",
+			},
+		},
+		zealot_dash_increased_duration = {
+			description = "loc_talent_zealot_dash_increased_duration_desc",
+			display_name = "loc_talent_zealot_dash_increased_duration",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_dash_increased_duration.duration,
+				},
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_2_combat",
+				},
+			},
+			special_rule = {
+				identifier = "zealot_dash_increased_duration",
+				special_rule_name = special_rules.zealot_dash_increased_duration,
+			},
+		},
+		zealot_martyrdom_toughness_modifier = {
+			description = "loc_talent_zealot_martyrdom_toughness_modifier_upd_desc",
+			display_name = "loc_talent_zealot_martyrdom_toughness_modifier",
+			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_2_3",
+			name = "Increased dodge count and dodge distance",
+			format_values = {
+				toughness_modifier = {
+					format_type = "percentage",
+					value = talent_settings.zealot_martyrdom_toughness_modifier.toughness_modifier,
+				},
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_martyrdom",
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_martyrdom_toughness_modifier",
+				identifier = "zealot_martyrdom_toughness_modifier",
+			},
+		},
+		zealot_toughness_reduction_on_high_toughness = {
+			description = "loc_talent_zealot_toughness_reduction_on_high_toughness_desc",
+			display_name = "loc_talent_zealot_stacking_weakspot_power",
+			name = "",
+			format_values = {
+				threshold = {
+					format_type = "percentage",
+					value = talent_settings.zealot_toughness_reduction_on_high_toughness.threshold,
+				},
+				tdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_toughness_reduction_on_high_toughness.tdr,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_toughness_reduction_on_high_toughness",
+				identifier = "zealot_toughness_reduction_on_high_toughness",
+			},
+		},
+		zealot_until_death_ability_cooldown = {
+			description = "loc_talent_zealot_until_death_ability_cooldown_desc",
+			display_name = "loc_talent_zealot_until_death_ability_cooldown",
+			name = "",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_resist_death",
+				},
+			},
+			special_rule = {
+				identifier = "zealot_resist_death_instant_ability",
+				special_rule_name = special_rules.zealot_resist_death_instant_ability,
+			},
+		},
+		zealot_sprint_improvements = {
+			description = "loc_talent_zealot_sprint_improvements_alt_desc",
+			display_name = "loc_talent_zealot_dodge_improvements",
+			name = "",
+			format_values = {
+				sprint_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_sprint_improvements.sprint_speed,
+				},
+				sprint_cost = {
+					format_type = "percentage",
+					prefix = "-",
+					value = talent_settings.zealot_sprint_improvements.sprint_cost,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_sprint_improvements.slowdown_immune_start_t,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_sprint_improvements",
+				identifier = "zealot_sprint_improvements",
+			},
+		},
+		zealot_weakspot_kills_restore_dodge = {
+			description = "loc_talent_zealot_weakspot_kills_restore_dodge_desc",
+			display_name = "loc_talent_zealot_backstabs_increase_backstab_damage",
+			name = "",
+			format_values = {},
+		},
+		zealot_push_attacks_attack_speed = {
+			description = "loc_talent_zealot_push_attacks_attack_speed_desc",
+			display_name = "loc_talent_zealot_damage_after_heavy_attack",
+			name = "",
+			format_values = {
+				attack_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_push_attacks_attack_speed.melee_attack_speed,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_push_attacks_attack_speed.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_push_attacks_attack_speed",
+				identifier = "zealot_push_attacks_attack_speed",
+			},
+		},
+		zealot_stacking_rending = {
+			description = "loc_talent_zealot_stacking_rending_desc",
+			display_name = "loc_talent_zealot_crits_rend",
+			name = "",
+			format_values = {
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_stacking_rending.rending,
+				},
+				max_stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_rending.max_stacks,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_rending.stacks_gain,
+				},
+				remove_stack = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_rending.stacks_lost,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_stacking_rending.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_stacking_rending",
+				identifier = "zealot_stacking_rending",
+			},
+		},
+		zealot_stealth_cooldown_regeneration = {
+			description = "loc_talent_zealot_stealth_cooldown_regeneration_desc",
+			display_name = "loc_talent_zealot_stealth_increased_damage",
+			name = "",
+			format_values = {
+				monster = {
+					format_type = "percentage",
+					value = talent_settings.zealot_stealth_cooldown_regeneration.monster,
+				},
+				ogryn = {
+					format_type = "percentage",
+					value = talent_settings.zealot_stealth_cooldown_regeneration.ogryn,
+				},
+				other = {
+					format_type = "percentage",
+					value = talent_settings.zealot_stealth_cooldown_regeneration.other,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_stealth_cooldown_regeneration",
+				identifier = "zealot_stealth_cooldown_regeneration",
+			},
+		},
+		zealot_sprint_angle_improvements = {
+			description = "loc_talent_zealot_sprint_angle_improvements_desc",
+			display_name = "loc_talent_zealot_sprint_angle_improvements",
+			name = "",
+			format_values = {
+				angle = {
+					format_type = "number",
+					num_decimals = 0,
+					prefix = "+",
+					value = talent_settings.zealot_sprint_angle_improvements.sprint_dodge_reduce_angle_threshold_rad,
+					value_manipulation = function (value)
+						return math_round(math.radians_to_degrees(value))
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_sprint_angle_improvements",
+				identifier = "zealot_sprint_angle_improvements",
+			},
+		},
+		zealot_suppress_on_backstab_kill = {
+			description = "loc_talent_zealot_suppress_on_backstab_kill_desc",
+			display_name = "loc_talent_zealot_suppress_on_backstab_kill",
+			name = "",
+			format_values = {
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.zealot_suppress_on_backstab_kill.cooldown_duration,
+				},
+				range = {
+					format_type = "number",
+					value = talent_settings.zealot_suppress_on_backstab_kill.suppression.distance,
+				},
+				suppression_value = {
+					format_type = "number",
+					value = talent_settings.zealot_suppress_on_backstab_kill.suppression.suppression_value,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_suppress_on_backstab_kill",
+				identifier = "zealot_suppress_on_backstab_kill",
+			},
+		},
+		zealot_fotf_refund_cooldown = {
+			description = "loc_talent_zealot_fotf_refund_cooldown_desc",
+			display_name = "loc_talent_zealot_dash_increased_duration",
+			name = "",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_maniac_attack_speed_after_dash",
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_fotf_refund_cooldown.duration,
+				},
+				cooldown = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_fotf_refund_cooldown.restored_percentage,
+				},
+			},
+			special_rule = {
+				identifier = "zealot_fotf_refund_cooldown",
+				special_rule_name = special_rules.zealot_fotf_refund_cooldown,
+			},
+		},
+		zealot_martyrdom_cdr = {
+			description = "loc_talent_zealot_martyrdom_cdr_desc",
+			display_name = "-",
+			name = "",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_martyrdom",
+				},
+				cdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_martyrdom_cdr.ability_cooldown_regeneration_per_stack,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_martyrdom_cdr",
+				identifier = "zealot_martyrdom_cdr",
+			},
+		},
+		zealot_block_dodging_synergy = {
+			description = "loc_talent_zealot_block_dodging_desc",
+			display_name = "loc_talent_zealot_block_dodging",
+			name = "",
+			format_values = {
+				block_cost = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_block_dodging_synergy.on_dodge_block_cost_multiplier,
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
+				},
+				linger_time = {
+					format_type = "number",
+					value = talent_settings.zealot_block_dodging_synergy.on_dodge_block_cost_multiplier_duration,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.zealot_block_dodging_synergy.on_perfect_blocking_cooldown,
+				},
+				dodges = {
+					format_type = "number",
+					value = talent_settings.zealot_block_dodging_synergy.number_of_restored_dodges,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_block_dodging_synergy",
+				identifier = "zealot_block_dodging_synergy",
+			},
+		},
+		zealot_reload_from_backstab = {
+			description = "loc_talent_zealot_reload_from_backstab_desc",
+			display_name = "loc_talent_zealot_reload_from_backstab",
+			name = "",
+			format_values = {
+				ammo = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_reload_from_backstab.ammo_percentage_for_stack,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_reload_from_backstab.max_stacks,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_reload_from_backstab",
+				identifier = "zealot_reload_from_backstab",
+			},
+		},
+		zealot_backstab_allied_toughness = {
+			description = "loc_talent_zealot_backstab_allied_toughness_desc",
+			display_name = "-",
+			name = "",
+			format_values = {
+				toughness = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_backstab_allied_toughness.toughness_replenish_percentage,
+				},
+				tdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_backstab_allied_toughness.toughness_damage_taken_modifier,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.zealot_backstab_allied_toughness.duration,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_backstab_allied_toughness",
+				identifier = "zealot_backstab_allied_toughness",
+			},
+		},
+		zealot_corruption_resistance_stacking = {
+			description = "loc_talent_zealot_corruption_resistance_stacking_desc",
+			display_name = "loc_talent_zealot_corruption_resistance_stacking",
+			name = "",
+			format_values = {
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_zealot_martyrdom",
+				},
+				corruption_resistance = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_corruption_resistance_stacking.corruption_taken_multiplier_per_stack,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_corruption_resistance_stacking",
+				identifier = "zealot_corruption_resistance_stacking",
+			},
+		},
+		zealot_offensive_vs_many = {
+			description = "loc_talent_zealot_offensive_vs_many_desc",
+			display_name = "loc_talent_zealot_offensive_vs_many",
+			name = "",
+			format_values = {
+				num_enemies = {
+					format_type = "number",
+					value = talent_settings.zealot_offensive_vs_many.initial_number_of_enemies,
+				},
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_offensive_vs_many.damage,
+				},
+				cleave = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_offensive_vs_many.cleave,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.zealot_offensive_vs_many.max_stack,
+				},
+				range = {
+					format_type = "number",
+					value = talent_settings.zealot_offensive_vs_many.range,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_offensive_vs_many",
+				identifier = "zealot_offensive_vs_many",
+			},
+		},
+		zealot_backstab_periodic_damage = {
+			description = "loc_talent_zealot_backstab_periodic_damage_desc",
+			display_name = "loc_talent_zealot_backstab_periodic_damage",
+			name = "",
+			format_values = {
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.zealot_backstab_periodic_damage.cooldown_duration,
+				},
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_backstab_periodic_damage.backstab_damage,
+				},
+			},
+			passive = {
+				buff_template_name = "zealot_backstab_periodic_damage",
+				identifier = "zealot_backstab_periodic_damage",
+			},
+		},
 		zealot_reduced_sprint_cost = {
 			description = "loc_talent_zealot_reduced_sprint_cost_description",
 			display_name = "loc_talent_zealot_reduced_sprint_cost",
 			icon = "content/ui/textures/icons/talents/zealot_1/zealot_1_base_2",
-			name = "Reduced stamina cost  from sprinting",
+			name = "Reduced stamina cost from sprinting",
 			format_values = {
 				cost = {
 					format_type = "percentage",
@@ -1863,6 +2958,9 @@ local archetype_talents = {
 					format_type = "percentage",
 					prefix = "+",
 					value = talent_settings_2.toughness_2.toughness_damage_taken_multiplier,
+					value_manipulation = function (value)
+						return (1 - value) * 100
+					end,
 				},
 				time = {
 					format_type = "number",
@@ -1875,30 +2973,37 @@ local archetype_talents = {
 			},
 		},
 		zealot_toughness_in_melee = {
-			description = "loc_talent_zealot_toughness_regen_in_melee_desc",
+			description = "loc_talent_zealot_toughness_near_enemies_desc",
 			display_name = "loc_talent_zealot_toughness_regen_in_melee",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_4_1",
 			name = "Toughness in Melee",
 			format_values = {
 				toughness = {
 					format_type = "percentage",
-					num_decimals = 1,
-					find_value = {
-						buff_template_name = "zealot_toughness_regen_in_melee",
-						find_value_type = "buff_template",
-						tier = true,
-						path = {
-							"toughness_percentage",
-						},
-					},
+					prefix = "+",
+					value = talent_settings.zealot_toughness_in_melee.initial_percentage_toughness,
+				},
+				more_toughness = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_toughness_in_melee.percentage_toughness_per_enemy,
+				},
+				max = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.zealot_toughness_in_melee.max_percentage_toughness,
 				},
 				range = {
 					format_type = "number",
-					value = talent_settings_2.toughness_3.range,
+					value = talent_settings.zealot_toughness_in_melee.range,
 				},
 				num_enemies = {
 					format_type = "number",
 					value = talent_settings_2.toughness_3.num_enemies,
+				},
+				monster_count = {
+					format_type = "number",
+					value = talent_settings.zealot_toughness_in_melee.monster_count,
 				},
 			},
 			passive = {
@@ -2004,7 +3109,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_martyrdom_grants_toughness = {
-			description = "loc_talent_zealot_martyrdom_grants_toughness_desc",
+			description = "loc_talent_zealot_martyrdom_grants_toughness_upd_desc",
 			display_name = "loc_talent_zealot_martyrdom_grants_toughness",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_3_3",
 			name = "Gain X% toughness damage reduction per Martrydom stack",
@@ -2041,7 +3146,7 @@ local archetype_talents = {
 			description = "loc_talent_zealot_3_tier_4_ability_3_description",
 			display_name = "loc_talent_zealot_3_tier_4_ability_3",
 			icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tier_4_3",
-			name = "Whenever an ally in coherency takes damage, they gain  damage reduction",
+			name = "Whenever an ally in coherency takes damage, they gain damage reduction",
 			format_values = {
 				damage_reduction = {
 					format_type = "percentage",

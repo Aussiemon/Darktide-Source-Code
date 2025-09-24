@@ -68,22 +68,6 @@ local function event_done(event_name)
 	end
 end
 
-local function events_done(event_names)
-	return function ()
-		local narrative_manager = Managers.narrative
-
-		for i = 1, #event_names do
-			local event_name = event_names[i]
-
-			if not narrative_manager:is_event_complete(event_name) then
-				return false
-			end
-		end
-
-		return true
-	end
-end
-
 local function beyond_story_chapter(story_name, chapter_name)
 	return function ()
 		return Managers.narrative:is_chapter_complete(story_name, chapter_name)
@@ -112,18 +96,6 @@ local function on_story_chapter(story_name, chapter_name)
 		end
 
 		return false
-	end
-end
-
-local function complete_current_story_chapter(story_name)
-	return function ()
-		Managers.narrative:complete_current_chapter(story_name)
-	end
-end
-
-local function last_completed_chapter(story_name)
-	return function ()
-		Managers.narrative:last_completed_chapter(story_name)
 	end
 end
 
@@ -511,38 +483,6 @@ local narrative = {
 				},
 				requirement = level_at_least(PlayerProgressionUnlocks.pot_story_final),
 				on_complete = on_path_of_trust_chapter_completion("path_of_trust_6"),
-			},
-		},
-		s1_twins = {
-			{
-				backend_id = 1,
-				name = "s1_twins_prologue",
-				requirement = event_done("onboarding_step_mission_board_introduction"),
-				narrative_mission_requirement = {
-					1,
-					1,
-					1,
-				},
-			},
-			{
-				backend_id = 2,
-				name = "s1_twins_mission",
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_prologue"),
-			},
-			{
-				backend_id = 3,
-				name = "s1_twins_epilogue_1",
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_mission"),
-			},
-			{
-				backend_id = 4,
-				name = "s1_twins_epilogue_2",
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_1"),
-			},
-			{
-				backend_id = 5,
-				name = "s1_twins_epilogue_3",
-				requirement = beyond_story_chapter("s1_twins", "s1_twins_epilogue_2"),
 			},
 		},
 		s1_q3 = {

@@ -735,6 +735,270 @@ local singleshot_random_scale = {
 		},
 	},
 }
+local singleshot_scale_new = {
+	{
+		1,
+		{
+			4.7,
+			0.25,
+		},
+	},
+	{
+		2,
+		{
+			4.9,
+			0.25,
+		},
+	},
+	{
+		3,
+		{
+			4.75,
+			0.35,
+		},
+	},
+	{
+		4,
+		{
+			4.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			4,
+			0.25,
+		},
+	},
+	{
+		6,
+		{
+			4.5,
+			0.45,
+		},
+	},
+}
+local singleshot_random_scale_new = {
+	{
+		1,
+		{
+			1.1,
+			0.05,
+		},
+	},
+	{
+		2,
+		{
+			1.4,
+			0.3,
+		},
+	},
+	{
+		3,
+		{
+			1,
+			0.2,
+		},
+	},
+	{
+		4,
+		{
+			1.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			1,
+			0.15,
+		},
+	},
+	{
+		6,
+		{
+			1,
+			0.35,
+		},
+	},
+}
+local burst_scale_new = {
+	{
+		1,
+		{
+			4.7,
+			0.25,
+		},
+	},
+	{
+		2,
+		{
+			4.9,
+			0.25,
+		},
+	},
+	{
+		3,
+		{
+			4.75,
+			0.35,
+		},
+	},
+	{
+		4,
+		{
+			4.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			4,
+			0.25,
+		},
+	},
+	{
+		6,
+		{
+			4.5,
+			0.45,
+		},
+	},
+}
+local burst_random_scale_new = {
+	{
+		1,
+		{
+			1.1,
+			0.05,
+		},
+	},
+	{
+		2,
+		{
+			1.4,
+			0.3,
+		},
+	},
+	{
+		3,
+		{
+			1,
+			0.2,
+		},
+	},
+	{
+		4,
+		{
+			1.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			1,
+			0.15,
+		},
+	},
+	{
+		6,
+		{
+			1,
+			0.35,
+		},
+	},
+}
+local triple_burst_scale_new = {
+	{
+		1,
+		{
+			4.7,
+			0.25,
+		},
+	},
+	{
+		2,
+		{
+			4.9,
+			0.25,
+		},
+	},
+	{
+		3,
+		{
+			4.75,
+			0.35,
+		},
+	},
+	{
+		4,
+		{
+			4.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			4,
+			0.25,
+		},
+	},
+	{
+		6,
+		{
+			4.5,
+			0.45,
+		},
+	},
+}
+local triple_burst_random_scale_new = {
+	{
+		1,
+		{
+			1.1,
+			0.05,
+		},
+	},
+	{
+		2,
+		{
+			1.4,
+			0.3,
+		},
+	},
+	{
+		3,
+		{
+			1,
+			0.2,
+		},
+	},
+	{
+		4,
+		{
+			1.1,
+			0.15,
+		},
+	},
+	{
+		5,
+		{
+			1,
+			0.15,
+		},
+	},
+	{
+		6,
+		{
+			1,
+			0.35,
+		},
+	},
+}
 local lerp_distance = 0.75
 local assault_offset_range = generate_offset_range(30, 0.015, 0, 0.95, create_scale(assault_scale))
 local assault_random_range = generate_offset_range(30, 0.01, 0.02, 0.95, create_scale(assault_random_scale))
@@ -754,6 +1018,12 @@ local burst_offset_range_moving = generate_offset_range(6, 0.1, 0, 0.95, create_
 local burst_random_range = generate_offset_range(9, 0.01, 0.02, 0.95, create_scale(burst_random_scale))
 local singleshot_offset_range = generate_offset_range(6, 0.0225, 0, 0.8, create_scale(singleshot_scale))
 local singleshot_random_range = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(singleshot_random_scale))
+local singleshot_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(singleshot_scale_new))
+local singleshot_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(singleshot_random_scale_new))
+local burst_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(burst_scale_new))
+local burst_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(burst_random_scale_new))
+local triple_burst_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(triple_burst_scale_new))
+local triple_burst_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(triple_burst_random_scale_new))
 
 recoil_templates.default_autogun_assault = {
 	still = {
@@ -1942,7 +2212,7 @@ recoil_templates.default_autogun_single_shot = {
 		},
 	},
 }
-recoil_templates.ads_autogun_single_shot = {
+recoil_templates.ads_autogun_p3_single_shot = {
 	still = {
 		camera_recoil_percentage = 0.5,
 		decay_grace = 0.1,
@@ -1977,6 +2247,106 @@ recoil_templates.ads_autogun_single_shot = {
 	},
 	moving = {
 		inherits = {
+			"ads_autogun_p3_single_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.55,
+			lerp_perfect = 0.3,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"ads_autogun_p3_single_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.1,
+			lerp_perfect = 0.05,
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"ads_autogun_p3_single_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.4,
+			lerp_perfect = 0.2,
+		},
+	},
+}
+overrides.ads_autogun_single_shot_p3_m2 = {
+	parent_template_name = "ads_autogun_p3_single_shot",
+	overrides = {
+		{
+			"still",
+			"visual_recoil_settings",
+			"intensity",
+			7,
+		},
+		{
+			"still",
+			"visual_recoil_settings",
+			"yaw_intensity",
+			10,
+		},
+	},
+}
+overrides.ads_autogun_single_shot_p3_m3 = {
+	parent_template_name = "ads_autogun_p3_single_shot",
+	overrides = {
+		{
+			"still",
+			"visual_recoil_settings",
+			"intensity",
+			5.25,
+		},
+		{
+			"still",
+			"visual_recoil_settings",
+			"yaw_intensity",
+			6.5,
+		},
+	},
+}
+recoil_templates.ads_autogun_single_shot = {
+	still = {
+		camera_recoil_percentage = 0.75,
+		decay_grace = 0.12,
+		rise_duration = 0.075,
+		rise = {
+			1.3,
+			1.4,
+			1.3,
+			1.4,
+			1.6,
+		},
+		decay = {
+			idle = 2,
+			shooting = 0.15,
+		},
+		offset = singleshot_offset_range_new,
+		offset_random_range = singleshot_random_range_new,
+		offset_limit = {
+			pitch = 1.5,
+			yaw = 1.5,
+		},
+		new_influence_percent = {
+			lerp_basic = 0.45,
+			lerp_perfect = 0.2,
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+		},
+		visual_recoil_settings = {
+			intensity = 6,
+			lerp_scalar = 0.5,
+			yaw_intensity = 6,
+		},
+	},
+	moving = {
+		inherits = {
 			"ads_autogun_single_shot",
 			"still",
 		},
@@ -2006,37 +2376,154 @@ recoil_templates.ads_autogun_single_shot = {
 		},
 	},
 }
-overrides.ads_autogun_single_shot_p3_m2 = {
-	parent_template_name = "ads_autogun_single_shot",
-	overrides = {
-		{
-			"still",
-			"visual_recoil_settings",
-			"intensity",
-			7,
+recoil_templates.ads_autogun_double_shot = {
+	still = {
+		camera_recoil_percentage = 1,
+		decay_grace = 0.1,
+		rise_duration = 0.025,
+		rise = {
+			{
+				lerp_basic = 0.5,
+				lerp_perfect = 0.4,
+			},
+			{
+				lerp_basic = 0.6,
+				lerp_perfect = 0.6,
+			},
+			{
+				lerp_basic = 0.5,
+				lerp_perfect = 0.4,
+			},
+			{
+				lerp_basic = 0.5,
+				lerp_perfect = 0.4,
+			},
+			{
+				lerp_basic = 0.4,
+				lerp_perfect = 0.4,
+			},
+			{
+				lerp_basic = 0.6,
+				lerp_perfect = 0.6,
+			},
 		},
-		{
+		decay = {
+			idle = 1.5,
+			shooting = 1.2,
+		},
+		offset = burst_offset_range_new,
+		offset_random_range = burst_random_range_new,
+		offset_limit = {
+			pitch = 2.4,
+			yaw = 2.4,
+		},
+		new_influence_percent = {
+			lerp_basic = 0.4,
+			lerp_perfect = 0.1,
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 0.5,
+			yaw_intensity = 1,
+		},
+	},
+	moving = {
+		inherits = {
+			"ads_autogun_double_shot",
 			"still",
-			"visual_recoil_settings",
-			"yaw_intensity",
-			10,
+		},
+		new_influence_percent = {
+			lerp_basic = 0.55,
+			lerp_perfect = 0.3,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"ads_autogun_double_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.2,
+			lerp_perfect = 0.05,
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"ads_autogun_double_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.35,
+			lerp_perfect = 0.2,
 		},
 	},
 }
-overrides.ads_autogun_single_shot_p3_m3 = {
-	parent_template_name = "ads_autogun_single_shot",
-	overrides = {
-		{
-			"still",
-			"visual_recoil_settings",
-			"intensity",
-			5.25,
+recoil_templates.ads_autogun_triple_shot = {
+	still = {
+		camera_recoil_percentage = 0.75,
+		decay_grace = 0.01,
+		rise_duration = 0.01,
+		rise = {
+			0.3,
+			0.4,
+			0.4,
+			0.3,
+			0.4,
+			0.4,
 		},
-		{
+		decay = {
+			idle = 1,
+			shooting = 1,
+		},
+		offset = burst_offset_range_new,
+		offset_random_range = triple_burst_random_range_new,
+		offset_limit = {
+			pitch = 1.5,
+			yaw = 1,
+		},
+		new_influence_percent = {
+			lerp_basic = 0.4,
+			lerp_perfect = 0.1,
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1,
+		},
+	},
+	moving = {
+		inherits = {
+			"ads_autogun_triple_shot",
 			"still",
-			"visual_recoil_settings",
-			"yaw_intensity",
-			6.5,
+		},
+		new_influence_percent = {
+			lerp_basic = 0.55,
+			lerp_perfect = 0.3,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"ads_autogun_triple_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.2,
+			lerp_perfect = 0.05,
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"ads_autogun_triple_shot",
+			"still",
+		},
+		new_influence_percent = {
+			lerp_basic = 0.45,
+			lerp_perfect = 0.2,
 		},
 	},
 }

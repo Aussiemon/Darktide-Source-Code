@@ -475,7 +475,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 					local unit_to_damage_data_index = self._unit_to_damage_data_index
 
 					if not unit_to_damage_data_index[hit_unit] then
-						hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
+						hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, player_unit)
 						target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
 						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, is_critical_strike, attack_type_ranged)
 						stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)

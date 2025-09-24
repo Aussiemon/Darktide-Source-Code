@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/vo.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
@@ -40,11 +41,7 @@ Vo.interaction_start_event = function (unit, target_unit, interaction_template_n
 		end
 	end
 
-	if interaction_template_name ~= "remove_net" and false then
-		-- Nothing
-	end
-
-	if ScriptUnit.has_extension(target_unit, "dialogue_context_system") then
+	if (interaction_template_name == "remove_net" or interaction_template_name == "revive" or interaction_template_name == "rescue") and ScriptUnit.has_extension(target_unit, "dialogue_context_system") then
 		local timeset = Managers.time:time("gameplay") + 900
 		local dialogue_extension = ScriptUnit.extension(target_unit, "dialogue_system")
 
@@ -72,8 +69,8 @@ Vo.out_of_ammo_event = function (inventory_slot_component, visual_loadout_extens
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local ammo_reserve = inventory_slot_component.current_ammunition_reserve
-		local clip_capacity = inventory_slot_component.max_ammunition_clip
-		local current_clip_amount = inventory_slot_component.current_ammunition_clip
+		local clip_capacity = Ammo.max_ammo_in_clips(inventory_slot_component)
+		local current_clip_amount = Ammo.current_ammo_in_clips(inventory_slot_component)
 		local full_clip = clip_capacity == current_clip_amount
 		local is_out_of_ammo = ammo_reserve == 0 and not full_clip
 
@@ -955,12 +952,6 @@ Vo.mission_giver_mission_info = function (unit, trigger_id)
 end
 
 Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, trigger_id)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server then
-		-- Nothing
-	end
-
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
 
 	if voice_selection == "rule_based" then
@@ -1002,12 +993,6 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 end
 
 Vo.mission_giver_point_of_interest_vo = function (dialogue_target_filter, look_at_tag, mission_giver_selected_voice, distance)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server then
-		-- Nothing
-	end
-
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
 	local misison_giver_unit
 
@@ -1063,12 +1048,6 @@ Vo.confessional_vo_event = function (unit, category)
 end
 
 Vo.play_npc_interacting_vo_event = function (unit, interactor_unit, vo_event, cooldown_time, play_in)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server then
-		-- Nothing
-	end
-
 	local dialogue_ext_npc = ScriptUnit.has_extension(unit, "dialogue_system")
 	local dialogue_ext_interactor = ScriptUnit.has_extension(interactor_unit, "dialogue_system")
 
@@ -1144,12 +1123,17 @@ Vo.play_npc_story = function (trigger_id)
 end
 
 Vo.play_voice_fx_preset_preview = function (world, voice_fx_preset, sound_event)
+	local voice_over_spawn_manager = Managers.state.voice_over_spawn
+
+	if not voice_over_spawn_manager then
+		return
+	end
+
 	local stop_sound_event = UISoundEvents.character_appearence_stop_voice_preview
 	local voice_fx_preset_rtpc = VoiceFxPresetSettings[voice_fx_preset]
 	local has_voice_fx_preset = voice_fx_preset ~= "voice_fx_rtpc_none"
 
 	if voice_fx_preset_rtpc and has_voice_fx_preset then
-		local voice_over_spawn_manager = Managers.state.voice_over_spawn
 		local voice_profile = "voice_preview"
 		local unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
 		local wwise_world = Managers.world:wwise_world(world)
@@ -1304,11 +1288,11 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 
 				dialogue_extension:play_local_vo_event(rule, wwise_route_key, nil, seed)
 			end
-		else
-			dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed, specific_lines)
-		end
 
-		return vo_unit
+			return vo_unit
+		elseif dialogue_extension:play_local_vo_events(vo_rules, wwise_route_key, on_play_callback, seed, specific_lines) then
+			return vo_unit
+		end
 	else
 		Log.warning("DialogueSystem", "Play Local VO event, no VO unit found for profile %s", voice_profile)
 	end
@@ -1462,16 +1446,6 @@ Vo.spawn_3d_unit = function (breed_name, voice_profile, position)
 
 		return vo_unit
 	end
-end
-
-Vo.is_mission_available = function (mission_name)
-	local available
-
-	if Managers.narrative then
-		available = Managers.narrative:is_mission_available(mission_name)
-	end
-
-	return available
 end
 
 Vo.cutscene_vo_event = function (unit, vo_line_id)

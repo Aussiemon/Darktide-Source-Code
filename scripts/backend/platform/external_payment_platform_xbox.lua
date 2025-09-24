@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/backend/platform/external_payment_platform_xbox.lua
 
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local ExternalPaymentPlatformBase = require("scripts/backend/platform/external_payment_platform_base")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local ExternalPaymentPlatformXbox = class("ExternalPaymentPlatformXbox", "ExternalPaymentPlatformBase")
@@ -193,15 +192,6 @@ ExternalPaymentPlatformXbox.update_account_store_status = function (self)
 	end)
 end
 
-ExternalPaymentPlatformXbox.payment_options = function (self)
-	local language = "en"
-	local builder = BackendUtilities.url_builder():path("/store/payment-options"):query("language", language)
-
-	return Managers.backend:title_request(builder:to_string()):next(function (response)
-		return response.body
-	end)
-end
-
 ExternalPaymentPlatformXbox.reconcile_pending_txns = function (self)
 	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
@@ -219,26 +209,27 @@ ExternalPaymentPlatformXbox.reconcile_pending_txns = function (self)
 	end)
 end
 
-ExternalPaymentPlatformXbox.reconcile_dlc = function (self, store_ids)
+ExternalPaymentPlatformXbox.reconcile_account_entitlements = function (self)
 	return self:get_platform_token():next(function (token)
 		return Managers.backend:authenticate():next(function (account)
-			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/dlc/reconcile"):query("platform", self:get_payment_platform())
+			local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/entitlements/reconcile"):query("platform", self:get_payment_platform())
 
 			return Managers.backend:title_request(builder:to_string(), {
 				method = "POST",
-				headers = {
-					["platform-token"] = token,
-				},
 			}):next(function (response)
 				return response.body
-			end):catch(function (error)
-				Log.error("ExternalPayment", "Failed to reconcile dlc", tostring(error))
-
-				return Promise.rejected({
-					error = error,
-				})
 			end)
 		end)
+	end):catch(function (error)
+		if type(error) == "table" and error.message then
+			error = error.message
+		end
+
+		Log.exception("ExternalPayment", "Failed to reconcile account entitlements, error: %s", tostring(error))
+
+		return Promise.rejected({
+			error,
+		})
 	end)
 end
 
@@ -431,37 +422,8 @@ ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_
 	end
 end
 
-ExternalPaymentPlatformXbox.get_options = function (self)
-	local entitlement_promise
-
-	entitlement_promise = XboxLiveUtils.get_associated_products()
-
-	return entitlement_promise:next(function (platform_entitlements)
-		return self:payment_options():next(function (body)
-			local options = body.options
-
-			for _, v in ipairs(options) do
-				self:_decorate_option(v, platform_entitlements and platform_entitlements.data or {})
-			end
-
-			local result = {
-				offers = options,
-			}
-
-			if body._links.layout then
-				return Managers.backend:title_request(body._links.layout.href):next(function (data)
-					data.body._links = nil
-					result.layout_config = {
-						layout = data.body,
-					}
-
-					return result
-				end)
-			else
-				return result
-			end
-		end)
-	end)
+ExternalPaymentPlatformXbox._get_entitlements = function (self)
+	return XboxLiveUtils.get_associated_products()
 end
 
 ExternalPaymentPlatformXbox.query_license_token = function (self, product_ids, signature_string)

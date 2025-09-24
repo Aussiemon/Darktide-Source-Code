@@ -25,6 +25,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = BuffSettings.targets
+local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
@@ -314,6 +315,7 @@ templates.rending_debuff = {
 	class_name = "buff",
 	duration = 5,
 	max_stacks = 16,
+	max_stacks_cap = 16,
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
@@ -1076,6 +1078,7 @@ templates.taunted = {
 				0.005,
 				0,
 			},
+			priority = minion_effects_priorities.player_effects,
 		},
 	},
 	start_func = function (template_data, template_context)

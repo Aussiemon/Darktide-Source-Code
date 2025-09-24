@@ -566,20 +566,21 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 end
 
 InventoryView._play_voice_preview = function (self, slot_name, item)
+	if slot_name ~= "slot_gear_head" then
+		return
+	end
+
 	local player = self._preview_player
 	local profile = player:profile()
+	local profile_lore = profile and profile.lore
 	local voice_fx_preset = item.voice_fx_preset
 
-	if voice_fx_preset then
-		local profile_lore = profile.lore
+	if profile_lore and voice_fx_preset then
+		local personality_key = profile_lore.backstory.personality
+		local personality_settings = Personalities[personality_key]
+		local sound_event = personality_settings.sample_sound_event
 
-		if slot_name == "slot_gear_head" and profile_lore and Managers.state.voice_over_spawn then
-			local personality_key = profile_lore.backstory.personality
-			local personality_settings = Personalities[personality_key]
-			local sound_event = personality_settings.sample_sound_event
-
-			Vo.play_voice_fx_preset_preview(self._world, voice_fx_preset, sound_event)
-		end
+		Vo.play_voice_fx_preset_preview(self._world, voice_fx_preset, sound_event)
 	end
 end
 

@@ -2,7 +2,7 @@
 
 local weakspot_settings = {}
 local weakspot_types = table.enum("headshot", "weakspot", "protected", "protected_weakspot", "shield", "explosive_backpack")
-local finesse_boost_modifers = {
+local finesse_boost_modifiers = {
 	[weakspot_types.headshot] = function (finesse_boost_amount)
 		return finesse_boost_amount
 	end,
@@ -23,9 +23,9 @@ local finesse_boost_modifers = {
 	end,
 }
 
-table.set_readonly(finesse_boost_modifers)
+table.set_readonly(finesse_boost_modifiers)
 
 weakspot_settings.types = weakspot_types
-weakspot_settings.finesse_boost_modifers = finesse_boost_modifers
+weakspot_settings.finesse_boost_modifiers = finesse_boost_modifiers
 
 return settings("WeakspotSettings", weakspot_settings)

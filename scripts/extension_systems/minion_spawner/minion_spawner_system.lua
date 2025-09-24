@@ -248,13 +248,13 @@ MinionSpawnerSystem.destroy = function (self, ...)
 	self._broadphase = nil
 	self._broadphase_ids = nil
 
-	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
-
-	self._nav_tag_cost_table = nil
-
 	GwNavTraverseLogic.destroy(self._traverse_logic)
 
 	self._traverse_logic = nil
+
+	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
+
+	self._nav_tag_cost_table = nil
 
 	MinionSpawnerSystem.super.destroy(self, ...)
 end

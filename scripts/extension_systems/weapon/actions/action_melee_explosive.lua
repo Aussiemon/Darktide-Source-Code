@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_sweep")
 
+local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local Explosion = require("scripts/utilities/attack/explosion")
@@ -76,9 +77,10 @@ ActionMeleeExplosive._explode = function (self, t)
 
 	if ammunition_usage then
 		local inventory_slot_component = self._inventory_slot_component
-		local new_ammunition = math.max(inventory_slot_component.current_ammunition_clip - ammunition_usage, 0)
+		local new_ammunition = math.max(Ammo.current_ammo_in_clips(inventory_slot_component) - ammunition_usage, 0)
 
-		inventory_slot_component.current_ammunition_clip = new_ammunition
+		Ammo.set_current_ammo_in_clips(inventory_slot_component, new_ammunition)
+
 		inventory_slot_component.last_ammunition_usage = t
 	end
 

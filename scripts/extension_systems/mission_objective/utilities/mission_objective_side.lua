@@ -10,8 +10,8 @@ MissionObjectiveSide.init = function (self)
 	self:set_updated_externally(true)
 end
 
-MissionObjectiveSide.start_objective = function (self, mission_objective_data, units, synchronizer_unit)
-	MissionObjectiveSide.super.start_objective(self, mission_objective_data, units, synchronizer_unit)
+MissionObjectiveSide.start_objective = function (self, mission_objective_data, group_id, units, synchronizer_unit)
+	MissionObjectiveSide.super.start_objective(self, mission_objective_data, group_id, units, synchronizer_unit)
 
 	if mission_objective_data.side_objective_type == SIDE_MISSION_TYPES.collect then
 		self:_set_side_mission_type(SIDE_MISSION_TYPES.collect)

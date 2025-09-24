@@ -8,6 +8,10 @@ DeployableUnitLocomotionExtension.init = function (self, extension_init_context,
 	local placed_on_unit = extension_init_data.placed_on_unit
 
 	DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+
+	if extension_init_context.is_server then
+		Managers.state.extension:system("locomotion_system"):register_deployable(unit)
+	end
 end
 
 DeployableUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)

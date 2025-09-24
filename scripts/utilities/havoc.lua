@@ -25,8 +25,8 @@ Havoc.generate_havoc_data = function (havoc_rank, seed)
 	local circumstances_per_theme = HavocSettings.circumstances_per_theme
 	local use_theme = false
 
-	for i = 1, #forced_themes_ranks do
-		local checked_rank = forced_themes_ranks[i]
+	for ii = 1, #forced_themes_ranks do
+		local checked_rank = forced_themes_ranks[ii]
 
 		if havoc_rank == checked_rank then
 			use_theme = true
@@ -60,11 +60,11 @@ Havoc.generate_havoc_data = function (havoc_rank, seed)
 	local chosen_circumstances = ""
 	local circumstances = table.clone(HavocSettings.circumstances)
 
-	for i = 1, num_circumstances do
+	for ii = 1, num_circumstances do
 		local random_index = _random(1, #circumstances)
 		local circumstance = circumstances[random_index]
 
-		if i == 1 then
+		if ii == 1 then
 			chosen_circumstances = circumstance
 		else
 			chosen_circumstances = chosen_circumstances .. ":" .. circumstance
@@ -157,8 +157,8 @@ Havoc.parse_data = function (data)
 	local split2 = string.split(circumstances, ":")
 	local circumstances_entry = {}
 
-	for i = 1, #split2 do
-		circumstances_entry[#circumstances_entry + 1] = split2[i]
+	for ii = 1, #split2 do
+		circumstances_entry[#circumstances_entry + 1] = split2[ii]
 	end
 
 	parsed_data.circumstances = circumstances_entry
@@ -167,8 +167,8 @@ Havoc.parse_data = function (data)
 	local split3 = string.split(modifiers, ":")
 	local modifiers_entry = {}
 
-	for i = 1, #split3 do
-		local modifier_raw = split3[i]
+	for ii = 1, #split3 do
+		local modifier_raw = split3[ii]
 		local modifier_split = string.split(modifier_raw, ".")
 		local modifier_name = NetworkLookup.havoc_modifiers[tonumber(modifier_split[1])]
 		local modifier_level = tonumber(modifier_split[2])
@@ -190,6 +190,39 @@ Havoc.parse_data = function (data)
 	parsed_data.resistance = tonumber(resistance)
 
 	return parsed_data
+end
+
+Havoc.get_havoc_rank = function (mission_flags)
+	local min_havoc_rank = 1
+	local havoc_settings = Managers.data_service.havoc:get_settings()
+	local max_havoc_rank = havoc_settings and havoc_settings.max_rank or 40
+	local havoc_rank_string = "havoc-rank-"
+
+	for ii = min_havoc_rank, max_havoc_rank do
+		if mission_flags[havoc_rank_string .. tostring(ii)] then
+			return ii
+		end
+	end
+
+	Log.error("Matchmaking Notification Handler", "Unable to get havoc rank")
+
+	return nil
+end
+
+Havoc.get_havoc_mutators = function (mission_flags)
+	local mutators = {}
+
+	for k, _ in pairs(mission_flags) do
+		if string.find(k, "havoc%-circ%-") then
+			mutators[#mutators + 1] = k
+		end
+	end
+
+	if #mutators > 0 then
+		return mutators
+	else
+		return nil
+	end
 end
 
 return Havoc

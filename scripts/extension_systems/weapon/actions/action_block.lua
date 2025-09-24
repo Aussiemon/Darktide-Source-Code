@@ -18,7 +18,9 @@ end
 ActionBlock.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionBlock.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	local perfect_block_ends_at_t = Block.start_block_action(t, self._block_component, action_settings.skip_update_perfect_blocking)
+	local buff_extension = self._buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local perfect_block_ends_at_t = Block.start_block_action(t, self._block_component, action_settings.skip_update_perfect_blocking, stat_buffs)
 
 	self._perfect_block_ends_at_t = perfect_block_ends_at_t or self._perfect_block_ends_at_t
 
@@ -78,6 +80,10 @@ end
 
 ActionBlock.finish = function (self, reason, data, t, time_in_action)
 	ActionBlock.super.finish(self, reason, data, t)
+
+	if self._block_component.has_blocked then
+		self:_pay_warp_charge_cost_immediate(t, nil, true)
+	end
 
 	local stop_blocking = true
 

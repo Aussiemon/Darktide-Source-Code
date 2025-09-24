@@ -3,11 +3,11 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local RegionConstants = require("scripts/settings/region/region_constants")
 local SideColor = require("scripts/utilities/side_color")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
-local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local CLIENT_RPCS = {
 	"rpc_minion_wield_slot",
 	"rpc_minion_unwield_slot",
@@ -105,7 +105,8 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 	local items = item_slot_data.items
 	local num_items = #items
 	local new_seed, item_index = math.next_random(random_seed, 1, num_items)
-	local item_data = item_definitions[items[item_index]]
+	local item_name = items[item_index]
+	local item_data = item_definitions[item_name]
 
 	for i, material_override in pairs(item_data.material_overrides) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, false)

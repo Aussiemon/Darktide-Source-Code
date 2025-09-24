@@ -781,11 +781,8 @@ EquipmentComponent.try_spawn_attachments = function (self, equipment, slot_equip
 	return attachments_was_spawned, _temp_unspawned_attachment_slots
 end
 
-EquipmentComponent.resolve_profile_properties = function (equipment, wielded_slot, archetype_property, selected_voice_property)
-	local properties = {
-		archetype = archetype_property,
-		selected_voice = selected_voice_property,
-	}
+EquipmentComponent.resolve_profile_properties = function (equipment, wielded_slot, static_profile_properties)
+	local properties = table.shallow_copy(static_profile_properties)
 
 	for slot_name, slot in pairs(equipment) do
 		repeat
@@ -810,7 +807,9 @@ EquipmentComponent.resolve_profile_properties = function (equipment, wielded_slo
 			end
 
 			for name, value in pairs(profile_properties) do
-				properties[name] = value
+				if value ~= "" then
+					properties[name] = value
+				end
 			end
 		until true
 	end

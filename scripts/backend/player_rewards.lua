@@ -1,48 +1,24 @@
 ﻿-- chunkname: @scripts/backend/player_rewards.lua
 
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local Promise = require("scripts/foundation/utilities/promise")
 local PlayerRewards = class("PlayerRewards")
 
-PlayerRewards.get_penance_rewards_by_source = function (self, wrapped, promise, all_rewards)
-	if not wrapped then
-		local new_promise = Promise.new()
-
-		self:get_rewards_by_source_paged(100, "commendation"):next(function (w)
-			self:get_penance_rewards_by_source(w, new_promise, {})
-		end):catch(function (error)
-			new_promise:reject(error)
-		end)
-
-		return new_promise
-	else
-		for _, item in pairs(wrapped.items) do
-			local source_info = item.sourceInfo
-			local penance_id = source_info.sourceIdentifier
-
-			all_rewards[#all_rewards + 1] = {
-				penance_id = penance_id,
+PlayerRewards.get_penance_rewards_by_source = function (self)
+	return BackendUtilities.collect_all_paged_data(self:get_rewards_by_source_paged(64, "commendation")):next(function (items)
+		return table.map(items, function (item)
+			return {
+				penance_id = item.sourceInfo.sourceIdentifier,
 				reward_bundle = item,
 			}
-		end
-
-		if wrapped.has_next then
-			wrapped.next_page():next(function (w)
-				self:get_penance_rewards_by_source(w, promise, all_rewards)
-			end)
-		else
-			promise:resolve(all_rewards)
-		end
-	end
+		end)
+	end)
 end
 
 PlayerRewards.get_rewards_by_source_paged = function (self, limit, source)
 	local promise = BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/rewards/"):path(source):query("limit", limit))
 
 	return promise:next(function (data)
-		local result = BackendUtilities.wrap_paged_response(data.body)
-
-		return result
+		return BackendUtilities.wrap_paged_response(data.body)
 	end)
 end
 

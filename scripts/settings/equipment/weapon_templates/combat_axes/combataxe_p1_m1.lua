@@ -242,12 +242,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = combat_axe_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
@@ -320,12 +322,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
@@ -470,12 +474,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
@@ -548,12 +554,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_axe,
@@ -700,12 +708,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_axe,
@@ -839,12 +849,14 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
 		herding_template = HerdingTemplates.linesman_right_heavy,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_axe_tank,
@@ -959,12 +971,14 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
 		herding_template = HerdingTemplates.uppercut,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/special_attack_uppercut",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/special_attack_uppercut",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.axe_uppercut,

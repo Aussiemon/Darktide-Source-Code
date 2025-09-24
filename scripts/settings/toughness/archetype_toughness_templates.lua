@@ -46,7 +46,7 @@ archetype_toughness_templates.psyker = {
 	},
 }
 archetype_toughness_templates.zealot = {
-	max = 70,
+	max = 100,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -84,7 +84,7 @@ archetype_toughness_templates.ogryn = {
 	},
 }
 archetype_toughness_templates.adamant = {
-	max = 100,
+	max = 80,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {

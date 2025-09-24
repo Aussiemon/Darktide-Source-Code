@@ -7,7 +7,7 @@ local variations = MinionVisualLoadoutVariations.chaos_newly_infected
 local templates = {
 	chaos_newly_infected = {},
 }
-local basic_newly_infected_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_body = {
 			use_outline = true,
@@ -88,7 +88,7 @@ local basic_newly_infected_template = {
 				"content/items/characters/minions/decal_material_overrides/decal_transit_05",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/environment_overrides/dirt_02",
@@ -116,7 +116,7 @@ local basic_newly_infected_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_newly_infected_template)
+local default_1 = table.clone(base_visual_loadout_template)
 
 default_1.gib_variations = {
 	"lowerbody_b",
@@ -133,7 +133,7 @@ default_1.slots.slot_lowerbody = {
 	},
 }
 
-local default_2 = table.clone(basic_newly_infected_template)
+local default_2 = table.clone(base_visual_loadout_template)
 
 default_2.gib_variations = {
 	"lowerbody_c",
@@ -150,7 +150,7 @@ default_2.slots.slot_lowerbody = {
 	},
 }
 
-local default_3 = table.clone(basic_newly_infected_template)
+local default_3 = table.clone(base_visual_loadout_template)
 
 default_3.gib_variations = {
 	"upperbody_a",
@@ -185,7 +185,7 @@ default_3.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_4 = table.clone(basic_newly_infected_template)
+local default_4 = table.clone(base_visual_loadout_template)
 
 default_4.gib_variations = {
 	"upperbody_a",
@@ -220,7 +220,7 @@ default_4.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_5 = table.clone(basic_newly_infected_template)
+local default_5 = table.clone(base_visual_loadout_template)
 
 default_5.gib_variations = {
 	"upperbody_b",
@@ -249,7 +249,7 @@ default_5.slots.slot_upperbody = {
 	},
 }
 
-local default_6 = table.clone(basic_newly_infected_template)
+local default_6 = table.clone(base_visual_loadout_template)
 
 default_6.gib_variations = {
 	"upperbody_b",
@@ -278,7 +278,7 @@ default_6.slots.slot_upperbody = {
 	},
 }
 
-local default_7 = table.clone(basic_newly_infected_template)
+local default_7 = table.clone(base_visual_loadout_template)
 
 default_7.gib_variations = {
 	"upperbody_b",
@@ -307,7 +307,7 @@ default_7.slots.slot_upperbody = {
 	},
 }
 
-local default_8 = table.clone(basic_newly_infected_template)
+local default_8 = table.clone(base_visual_loadout_template)
 
 default_8.gib_variations = {
 	"upperbody_c",
@@ -341,7 +341,7 @@ default_8.slots.slot_upperbody = {
 	},
 }
 
-local default_9 = table.clone(basic_newly_infected_template)
+local default_9 = table.clone(base_visual_loadout_template)
 
 default_9.gib_variations = {
 	"upperbody_c",
@@ -375,7 +375,7 @@ default_9.slots.slot_upperbody = {
 	},
 }
 
-local default_10 = table.clone(basic_newly_infected_template)
+local default_10 = table.clone(base_visual_loadout_template)
 
 default_10.gib_variations = {
 	"upperbody_d",
@@ -404,7 +404,7 @@ default_10.slots.slot_upperbody = {
 	},
 }
 
-local default_11 = table.clone(basic_newly_infected_template)
+local default_11 = table.clone(base_visual_loadout_template)
 
 default_11.gib_variations = {
 	"upperbody_d",
@@ -433,7 +433,7 @@ default_11.slots.slot_upperbody = {
 	},
 }
 
-local default_12 = table.clone(basic_newly_infected_template)
+local default_12 = table.clone(base_visual_loadout_template)
 
 default_12.gib_variations = {
 	"upperbody_e",
@@ -468,7 +468,7 @@ default_12.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_13 = table.clone(basic_newly_infected_template)
+local default_13 = table.clone(base_visual_loadout_template)
 
 default_13.gib_variations = {
 	"upperbody_e",
@@ -503,7 +503,7 @@ default_13.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_14 = table.clone(basic_newly_infected_template)
+local default_14 = table.clone(base_visual_loadout_template)
 
 default_14.gib_variations = {
 	"upperbody_f",
@@ -538,7 +538,7 @@ default_14.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_15 = table.clone(basic_newly_infected_template)
+local default_15 = table.clone(base_visual_loadout_template)
 
 default_15.gib_variations = {
 	"upperbody_f",
@@ -573,7 +573,7 @@ default_15.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_16 = table.clone(basic_newly_infected_template)
+local default_16 = table.clone(base_visual_loadout_template)
 
 default_16.gib_variations = {
 	"fullbody_a",
@@ -608,7 +608,7 @@ default_16.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_17 = table.clone(basic_newly_infected_template)
+local default_17 = table.clone(base_visual_loadout_template)
 
 default_17.gib_variations = {
 	"fullbody_a",
@@ -643,7 +643,7 @@ default_17.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_18 = table.clone(basic_newly_infected_template)
+local default_18 = table.clone(base_visual_loadout_template)
 
 default_18.gib_variations = {
 	"fullbody_a",
@@ -1033,7 +1033,7 @@ foundry_1.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_b_var_foundry_04",
 	},
 }
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1048,7 +1048,7 @@ foundry_2.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_foundry_04",
 	},
 }
-foundry_2.slots.envrionmental_override.items = {
+foundry_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1083,7 +1083,7 @@ foundry_3.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_04",
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_05",
 }
-foundry_3.slots.envrionmental_override.items = {
+foundry_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1106,7 +1106,7 @@ foundry_4.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_foundry_04",
 	},
 }
-foundry_4.slots.envrionmental_override.items = {
+foundry_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1129,7 +1129,7 @@ foundry_5.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_foundry_04",
 	},
 }
-foundry_5.slots.envrionmental_override.items = {
+foundry_5.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1144,7 +1144,7 @@ foundry_6.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_b_var_foundry_04",
 	},
 }
-foundry_6.slots.envrionmental_override.items = {
+foundry_6.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1179,7 +1179,7 @@ foundry_7.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_04",
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_05",
 }
-foundry_7.slots.envrionmental_override.items = {
+foundry_7.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1202,7 +1202,7 @@ foundry_8.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_foundry_04",
 	},
 }
-foundry_8.slots.envrionmental_override.items = {
+foundry_8.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1225,7 +1225,7 @@ foundry_9.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_foundry_04",
 	},
 }
-foundry_9.slots.envrionmental_override.items = {
+foundry_9.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -1247,7 +1247,7 @@ foundry_10.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_foundry_04",
 	},
 }
-foundry_10.slots.envrionmental_override.items = {
+foundry_10.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 templates.chaos_newly_infected[zone_ids.tank_foundry] = {
@@ -1284,7 +1284,7 @@ dust_1.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05",
 	},
 }
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1309,7 +1309,7 @@ dust_2.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05",
 	},
 }
-dust_2.slots.envrionmental_override.items = {
+dust_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1334,7 +1334,7 @@ dust_3.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05",
 	},
 }
-dust_3.slots.envrionmental_override.items = {
+dust_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1359,7 +1359,7 @@ dust_4.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05",
 	},
 }
-dust_4.slots.envrionmental_override.items = {
+dust_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1397,7 +1397,7 @@ dust_5.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
 	"content/items/characters/minions/decal_material_overrides/decal_dust_05",
 }
-dust_5.slots.envrionmental_override.items = {
+dust_5.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1422,7 +1422,7 @@ dust_6.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05",
 	},
 }
-dust_6.slots.envrionmental_override.items = {
+dust_6.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1447,7 +1447,7 @@ dust_7.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_dust_05",
 	},
 }
-dust_7.slots.envrionmental_override.items = {
+dust_7.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1472,7 +1472,7 @@ dust_8.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05",
 	},
 }
-dust_8.slots.envrionmental_override.items = {
+dust_8.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1497,7 +1497,7 @@ dust_9.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_dust_05",
 	},
 }
-dust_9.slots.envrionmental_override.items = {
+dust_9.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -1535,7 +1535,7 @@ dust_10.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
 	"content/items/characters/minions/decal_material_overrides/decal_dust_05",
 }
-dust_10.slots.envrionmental_override.items = {
+dust_10.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 templates.chaos_newly_infected[zone_ids.dust] = {
@@ -1566,7 +1566,7 @@ watertown_1.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_b_var_wt_08",
 	},
 }
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1586,7 +1586,7 @@ watertown_2.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_wt_09",
 	},
 }
-watertown_2.slots.envrionmental_override.items = {
+watertown_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1629,7 +1629,7 @@ watertown_3.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_3.slots.envrionmental_override.items = {
+watertown_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1673,7 +1673,7 @@ watertown_4.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_4.slots.envrionmental_override.items = {
+watertown_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1702,7 +1702,7 @@ watertown_5.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_wt_06",
 	},
 }
-watertown_5.slots.envrionmental_override.items = {
+watertown_5.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1732,7 +1732,7 @@ watertown_6.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_wt_06",
 	},
 }
-watertown_6.slots.envrionmental_override.items = {
+watertown_6.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1762,7 +1762,7 @@ watertown_7.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_wt_07",
 	},
 }
-watertown_7.slots.envrionmental_override.items = {
+watertown_7.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1793,7 +1793,7 @@ watertown_8.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_wt_07",
 	},
 }
-watertown_8.slots.envrionmental_override.items = {
+watertown_8.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1822,7 +1822,7 @@ watertown_9.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_wt_06",
 	},
 }
-watertown_9.slots.envrionmental_override.items = {
+watertown_9.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1852,7 +1852,7 @@ watertown_10.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_wt_06",
 	},
 }
-watertown_10.slots.envrionmental_override.items = {
+watertown_10.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1895,7 +1895,7 @@ watertown_11.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_11.slots.envrionmental_override.items = {
+watertown_11.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1938,7 +1938,7 @@ watertown_12.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_12.slots.envrionmental_override.items = {
+watertown_12.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -1980,7 +1980,7 @@ watertown_13.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_13.slots.envrionmental_override.items = {
+watertown_13.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2023,7 +2023,7 @@ watertown_14.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_14.slots.envrionmental_override.items = {
+watertown_14.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2042,7 +2042,7 @@ watertown_15.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_b_var_wt_08",
 	},
 }
-watertown_15.slots.envrionmental_override.items = {
+watertown_15.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2061,7 +2061,7 @@ watertown_16.slots.slot_lowerbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_lowerbody_c_var_wt_09",
 	},
 }
-watertown_16.slots.envrionmental_override.items = {
+watertown_16.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2104,7 +2104,7 @@ watertown_17.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_17.slots.envrionmental_override.items = {
+watertown_17.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2148,7 +2148,7 @@ watertown_18.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_18.slots.envrionmental_override.items = {
+watertown_18.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2177,7 +2177,7 @@ watertown_19.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_wt_06",
 	},
 }
-watertown_19.slots.envrionmental_override.items = {
+watertown_19.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2207,7 +2207,7 @@ watertown_20.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_b_var_wt_06",
 	},
 }
-watertown_20.slots.envrionmental_override.items = {
+watertown_20.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2237,7 +2237,7 @@ watertown_21.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_wt_07",
 	},
 }
-watertown_21.slots.envrionmental_override.items = {
+watertown_21.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2268,7 +2268,7 @@ watertown_22.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_c_var_wt_07",
 	},
 }
-watertown_22.slots.envrionmental_override.items = {
+watertown_22.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2297,7 +2297,7 @@ watertown_23.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_wt_06",
 	},
 }
-watertown_23.slots.envrionmental_override.items = {
+watertown_23.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2327,7 +2327,7 @@ watertown_24.slots.slot_upperbody = {
 		"content/items/characters/minions/chaos_traitor_guard/attachments_gear/newly_infected_upperbody_d_var_wt_06",
 	},
 }
-watertown_24.slots.envrionmental_override.items = {
+watertown_24.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2370,7 +2370,7 @@ watertown_25.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_25.slots.envrionmental_override.items = {
+watertown_25.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2413,7 +2413,7 @@ watertown_26.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_26.slots.envrionmental_override.items = {
+watertown_26.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2455,7 +2455,7 @@ watertown_27.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_27.slots.envrionmental_override.items = {
+watertown_27.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -2498,7 +2498,7 @@ watertown_28.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_28.slots.envrionmental_override.items = {
+watertown_28.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 templates.chaos_newly_infected[zone_ids.watertown] = {
@@ -2871,5 +2871,31 @@ templates.chaos_newly_infected[zone_ids.training_grounds] = {
 	training_grounds_8,
 	training_grounds_9,
 }
+
+local void_variations = {}
+
+for _, tank_foundry_variation in pairs(templates.chaos_newly_infected[zone_ids.tank_foundry]) do
+	local void_variation = table.clone(tank_foundry_variation)
+
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
+
+templates.chaos_newly_infected[zone_ids.void] = void_variations
+
+local horde_variations = {}
+
+for _, tank_foundry_variation in pairs(templates.chaos_newly_infected[zone_ids.tank_foundry]) do
+	local horde_variation = table.clone(tank_foundry_variation)
+
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
+
+templates.chaos_newly_infected[zone_ids.horde] = horde_variations
 
 return templates

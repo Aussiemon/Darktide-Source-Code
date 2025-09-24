@@ -31,6 +31,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._wait_for_character_profile_upload = false
 	self._wait_for_character_profile_delete = false
 	self._wait_for_character_profiles_refresh = false
+	self._wait_for_selected_profile = false
 	self._profiles = {}
 	self._selected_profile = nil
 	self._character_is_syncing = false
@@ -103,11 +104,7 @@ StateMainMenu._unregister_menu_events = function (self)
 end
 
 StateMainMenu.event_request_select_new_profile = function (self, profile)
-	if profile ~= self._selected_profile then
-		_set_player_profile(profile)
-
-		self._selected_profile = profile
-	end
+	self:_set_selected_profile(profile)
 end
 
 StateMainMenu.event_request_delete_character = function (self, character_id)
@@ -177,10 +174,7 @@ StateMainMenu.event_continue_cb = function (self)
 	Log.info("StateMainMenu", "Starting the game with selected character %s", character_id)
 	self:_unregister_menu_events()
 
-	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
-	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
-
-	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
+	self._promise = Managers.data_service.account:set_selected_character_id(character_id)
 
 	self._promise:next(function (_)
 		self:_start_game_or_onboarding()
@@ -219,11 +213,30 @@ StateMainMenu._set_profiles = function (self, profiles)
 end
 
 StateMainMenu._set_selected_profile = function (self, profile)
+	if self._selected_profile == profile then
+		return
+	end
+
 	_set_player_profile(profile)
 
 	self._selected_profile = profile
 
 	Managers.event:trigger("event_main_menu_selected_profile_changed", profile)
+
+	local promises = {}
+
+	if profile then
+		local character_id = profile.character_id
+
+		self._wait_for_selected_profile = true
+		promises[#promises + 1] = Managers.narrative:load_character_narrative(character_id):next(function ()
+			self._wait_for_selected_profile = false
+		end):catch(function (error)
+			self._wait_for_selected_profile = false
+		end)
+	end
+
+	return Promise.all(unpack(promises))
 end
 
 StateMainMenu._create_new_character_start = function (self)
@@ -260,7 +273,7 @@ StateMainMenu.in_character_create_state = function (self)
 end
 
 StateMainMenu._waiting_for_profile_synchronization = function (self)
-	if self._wait_for_character_profile_upload or self._wait_for_character_profile_delete or self._wait_for_character_profiles_refresh then
+	if self._wait_for_character_profile_upload or self._wait_for_character_profile_delete or self._wait_for_character_profiles_refresh or self._wait_for_selected_profile then
 		return true
 	else
 		return false
@@ -332,19 +345,15 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 		Log.info("StateMainMenu", "Time in character creator %s", time)
 
 		local character_id = created_profile.character_id
-
-		self:_set_selected_profile(created_profile)
-
+		local selection_promise = self:_set_selected_profile(created_profile)
 		local promises = {}
 
 		promises[1] = Managers.data_service.account:set_selected_character_id(character_id)
-		promises[2] = Managers.narrative:load_character_narrative(character_id)
+		promises[2] = selection_promise
 
 		if self._force_create_first_character then
 			self._force_create_first_character = nil
-			promises[1] = promises[1]:next(function ()
-				return Managers.data_service.account:set_has_created_first_character()
-			end)
+			promises[3] = Managers.data_service.account:set_has_created_first_character()
 		end
 
 		Promise.all(unpack(promises)):next(function (_)
@@ -611,10 +620,7 @@ StateMainMenu._rejoin_game = function (self)
 	Log.info("StateMainMenu", "Rejoining the game with selected character %s", character_id)
 	self:_unregister_menu_events()
 
-	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
-	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
-
-	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
+	self._promise = Managers.data_service.account:set_selected_character_id(character_id)
 
 	self._promise:next(function (_)
 		self:_start_game()

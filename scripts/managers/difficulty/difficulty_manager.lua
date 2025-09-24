@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/managers/difficulty/difficulty_manager.lua
 
+local Danger = require("scripts/utilities/danger")
 local Havoc = require("scripts/utilities/havoc")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerDifficultySettings = require("scripts/settings/difficulty/player_difficulty_settings")
-local Danger = require("scripts/utilities/danger")
 local DifficultyManager = class("DifficultyManager")
 
 DifficultyManager.init = function (self, is_server, resistance, challenge, havoc_data)

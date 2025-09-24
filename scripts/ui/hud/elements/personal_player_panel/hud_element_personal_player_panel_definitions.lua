@@ -316,6 +316,21 @@ local widget_definitions = {
 	health_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
+			style_id = "text_4",
+			value = "0",
+			value_id = "text_4",
+			style = table.merge_recursive(table.clone(value_text_style), {
+				index = 3,
+				text_color = UIHudSettings.color_tint_main_1,
+				default_color = UIHudSettings.color_tint_main_1,
+				dimmed_color = UIHudSettings.color_tint_main_3,
+				offset = {
+					52,
+				},
+			}),
+		},
+		{
+			pass_type = "text",
 			style_id = "text_3",
 			value = "0",
 			value_id = "text_3",
@@ -361,6 +376,21 @@ local widget_definitions = {
 		},
 	}, "bar"),
 	toughness_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text_4",
+			value = "0",
+			value_id = "text_4",
+			style = table.merge_recursive(table.clone(value_text_style), {
+				index = 3,
+				text_color = UIHudSettings.color_tint_6,
+				default_color = UIHudSettings.color_tint_6,
+				dimmed_color = UIHudSettings.color_tint_7,
+				offset = {
+					52,
+				},
+			}),
+		},
 		{
 			pass_type = "text",
 			style_id = "text_3",

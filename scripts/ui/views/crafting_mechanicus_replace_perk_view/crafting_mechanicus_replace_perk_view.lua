@@ -234,8 +234,8 @@ CraftingMechanicusReplacePerkView._on_perk_selected = function (self, widget, co
 
 	self._ingredients.existing_perk_index = index
 
-	self._weapon_stats:select_perk(index)
 	self._weapon_stats:preview_perk(index)
+	self._weapon_stats:select_perk(index)
 
 	if self._using_cursor_navigation then
 		self._crafting_recipe:select_grid_widget(index and widget or nil)
@@ -253,6 +253,7 @@ CraftingMechanicusReplacePerkView._on_perk_selected = function (self, widget, co
 	local selected = index ~= nil
 
 	if not selected then
+		self._weapon_stats:preview_perk(previous_existing_perk_index)
 		self:remove_ingredient(previous_existing_perk_index)
 	end
 
@@ -345,8 +346,6 @@ CraftingMechanicusReplacePerkView.update = function (self, dt, t, input_service)
 		self._crafting_recipe:refresh_cost(self._can_craft_context)
 		self._crafting_recipe:refresh_can_craft(self._can_craft_context)
 
-		self._resync_can_craft = nil
-
 		if marked_perk_item then
 			local preview_perk = {
 				id = marked_perk_item and marked_perk_item.name,
@@ -358,6 +357,10 @@ CraftingMechanicusReplacePerkView.update = function (self, dt, t, input_service)
 		else
 			self._weapon_stats:preview_perk(self._ingredients.existing_perk_index)
 		end
+
+		self:_update_element_position("weapon_stats_pivot", self._weapon_stats)
+
+		self._resync_can_craft = nil
 	end
 
 	if self._should_perform_crafting then

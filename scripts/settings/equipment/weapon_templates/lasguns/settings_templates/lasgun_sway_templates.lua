@@ -172,58 +172,6 @@ sway_templates.default_lasgun_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.5,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.45,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.75,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -572,58 +520,6 @@ sway_templates.lasgun_p1_m1_killshot = {
 					yaw = {
 						lerp_basic = 1.5,
 						lerp_perfect = 0.5,
-					},
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 1.05,
-						lerp_perfect = 0.15,
-					},
-					yaw = {
-						lerp_basic = 1.1,
-						lerp_perfect = 0.1,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.2,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.8,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 1,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 1,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 0.85,
-						lerp_perfect = 0.3,
 					},
 				},
 			},
@@ -984,58 +880,6 @@ sway_templates.lasgun_p1_m2_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.05,
-						lerp_perfect = 0.03,
-					},
-					yaw = {
-						lerp_basic = 0.1,
-						lerp_perfect = 0.05,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.15,
-						lerp_perfect = 0.05,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -1387,58 +1231,6 @@ sway_templates.lasgun_p1_m3_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.5,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.45,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.75,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -1761,58 +1553,6 @@ sway_templates.lasgun_p2_m1_killshot = {
 					yaw = {
 						lerp_basic = 1,
 						lerp_perfect = 0,
-					},
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.5,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.45,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.75,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
 					},
 				},
 			},
@@ -2141,58 +1881,6 @@ sway_templates.lasgun_p2_m2_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.5,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.45,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.75,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -2511,58 +2199,6 @@ sway_templates.lasgun_p3_m1_sway = {
 					yaw = {
 						lerp_basic = 1.5,
 						lerp_perfect = 0.5,
-					},
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 1.05,
-						lerp_perfect = 0.15,
-					},
-					yaw = {
-						lerp_basic = 1.1,
-						lerp_perfect = 0.1,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.2,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.8,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 1,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 1,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.7,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 1,
-						lerp_perfect = 0.3,
-					},
-					yaw = {
-						lerp_basic = 0.85,
-						lerp_perfect = 0.3,
 					},
 				},
 			},

@@ -958,12 +958,11 @@ ItemGridViewBase.update = function (self, dt, t, input_service)
 		self._synced_grid_index = grid_index
 	end
 
-	if not Managers.ui:using_cursor_navigation() and not self._item_grid:input_disabled() then
-		local item_grid = self._item_grid
-		local selected_grid_widget = item_grid and item_grid:selected_grid_widget()
+	if not Managers.ui:using_cursor_navigation() and item_grid and not item_grid:input_disabled() then
+		local selected_grid_widget = item_grid:selected_grid_widget()
 
 		if not selected_grid_widget then
-			self._item_grid:select_first_index()
+			item_grid:select_first_index()
 
 			selected_grid_widget = item_grid:selected_grid_widget()
 

@@ -531,18 +531,22 @@ local horde_compositions = {
 			},
 		},
 	},
-	havoc_coordinated_blockade_behind = {
+	havoc_renegade_coordinated_blockade_behind = {
 		{
 			breeds = {
 				{
-					name = "chaos_ogryn_bulwark",
+					name = "renegade_gunner",
 					amount = {
 						1,
-						2,
+						1,
 					},
 				},
+			},
+		},
+		{
+			breeds = {
 				{
-					name = "chaos_ogryn_gunner",
+					name = "renegade_gunner",
 					amount = {
 						1,
 						1,
@@ -555,69 +559,72 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						1,
 						2,
-					},
-				},
-				{
-					name = "chaos_ogryn_gunner",
-					amount = {
-						1,
-						2,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						3,
-						6,
-					},
-				},
-				{
-					name = "chaos_ogryn_gunner",
-					amount = {
-						2,
-						3,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						6,
-						7,
-					},
-				},
-				{
-					name = "chaos_ogryn_gunner",
-					amount = {
-						2,
-						3,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						7,
-						8,
-					},
-				},
-				{
-					name = "chaos_ogryn_gunner",
-					amount = {
-						3,
 						4,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						2,
+						3,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						5,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						3,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						3,
+						5,
+					},
+				},
+				{
+					name = "chaos_ogryn_gunner",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "renegade_executor",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "renegade_berzerker",
+					amount = {
+						1,
+						3,
 					},
 				},
 			},
@@ -627,13 +634,6 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						1,
-						2,
-					},
-				},
-				{
 					name = "renegade_gunner",
 					amount = {
 						1,
@@ -644,13 +644,6 @@ local horde_compositions = {
 		},
 		{
 			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						1,
-						2,
-					},
-				},
 				{
 					name = "renegade_gunner",
 					amount = {
@@ -664,24 +657,20 @@ local horde_compositions = {
 			breeds = {
 				{
 					name = "chaos_ogryn_bulwark",
-					amount = {
-						5,
-						6,
-					},
-				},
-				{
-					name = "renegade_gunner",
 					amount = {
 						2,
 						3,
 					},
 				},
-			},
-		},
-		{
-			breeds = {
 				{
-					name = "chaos_ogryn_bulwark",
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_rifleman",
 					amount = {
 						6,
 						7,
@@ -690,8 +679,8 @@ local horde_compositions = {
 				{
 					name = "renegade_gunner",
 					amount = {
-						2,
 						3,
+						4,
 					},
 				},
 			},
@@ -701,8 +690,54 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
 						7,
-						8,
+					},
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						3,
+						4,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
+						7,
 					},
 				},
 				{

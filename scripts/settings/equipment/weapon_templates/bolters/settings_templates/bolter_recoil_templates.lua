@@ -89,6 +89,87 @@ recoil_templates.default_bolter_spraynpray = {
 		},
 	},
 }
+recoil_templates.bolter_p1_m2_spraynpray = {
+	still = {
+		camera_recoil_percentage = 0.5,
+		decay_grace = 0.14,
+		new_influence_percent = 0.5,
+		rise_duration = 0.04,
+		rise = {
+			3.75,
+			1.35,
+			1.3,
+		},
+		decay = {
+			idle = 2.75,
+			shooting = 0.25,
+		},
+		offset = {
+			{
+				pitch = 0.09,
+				yaw = 0,
+			},
+			{
+				pitch = 0.04,
+				yaw = 0,
+			},
+			{
+				pitch = 0.03,
+				yaw = 0,
+			},
+			{
+				pitch = 0.02,
+				yaw = 0,
+			},
+		},
+		offset_random_range = {
+			{
+				pitch = 0.025,
+				yaw = 0.04,
+			},
+			{
+				pitch = 0.025,
+				yaw = 0.05,
+			},
+			{
+				pitch = 0.025,
+				yaw = 0.065,
+			},
+		},
+		offset_limit = {
+			pitch = 2,
+			yaw = 2,
+		},
+		visual_recoil_settings = {
+			intensity = 4,
+			lerp_scalar = 0.5,
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness,
+		},
+	},
+	moving = {
+		new_influence_percent = 0.5,
+		inherits = {
+			"bolter_p1_m2_spraynpray",
+			"still",
+		},
+	},
+	crouch_still = {
+		new_influence_percent = 0.5,
+		inherits = {
+			"bolter_p1_m2_spraynpray",
+			"still",
+		},
+	},
+	crouch_moving = {
+		new_influence_percent = 0.5,
+		inherits = {
+			"bolter_p1_m2_spraynpray",
+			"still",
+		},
+	},
+}
 recoil_templates.default_bolter_killshot = {
 	still = {
 		camera_recoil_percentage = 0.2,

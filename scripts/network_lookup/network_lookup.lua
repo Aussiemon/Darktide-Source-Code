@@ -19,6 +19,7 @@ local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_looku
 local DialogueLookupVoiceProfiles = require("scripts/settings/dialogue/dialogue_lookup_voice_profiles")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FlowEvents = require("scripts/settings/fx/flow_events")
 local HavocSettings = require("scripts/settings/havoc_settings")
 local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_settings")
@@ -49,6 +50,7 @@ local PartyConstants = require("scripts/settings/network/party_constants")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerCharacterDecalNames = require("scripts/settings/decal/player_character_decal_names")
 local PlayerCharacterFxSourceNames = require("scripts/settings/fx/player_character_fx_source_names")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
@@ -153,6 +155,7 @@ NetworkLookup.door_states = {
 	"closed",
 }
 NetworkLookup.effect_templates = _create_lookup({}, EffectTemplates)
+NetworkLookup.explosion_templates = _create_lookup({}, ExplosionTemplates)
 NetworkLookup.emote_slots = {
 	"slot_animation_emote_1",
 	"slot_animation_emote_2",
@@ -183,15 +186,16 @@ NetworkLookup.hit_zones = _create_lookup({}, HitZone.hit_zone_names)
 NetworkLookup.hordes_build_families = {
 	"fire",
 	"electric",
-	"armor_piercing",
 	"elementalist",
 	"unkillable",
-	"grenade",
 	"cowboy",
+	"critical",
+	"unstoppable",
 }
 NetworkLookup.hordes_island_names = {
 	"island_void",
 	"island_rooftops",
+	"island_machine",
 }
 NetworkLookup.host_types = _create_lookup({}, MatchmakingConstants.HOST_TYPES)
 NetworkLookup.impact_fx_names = _create_lookup({}, ImpactEffectSettings.impact_fx_templates)
@@ -232,7 +236,6 @@ NetworkLookup.assist_type_lookup = {
 	"gifted",
 	"stimmed",
 }
-NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
 NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)
 
 local minion_attack_selection_template_names = {}
@@ -299,6 +302,7 @@ NetworkLookup.player_character_particle_variable_names = {
 	"intensity",
 }
 NetworkLookup.player_character_particles = table.clone(PlayerCharacterParticleNames)
+NetworkLookup.player_character_decals = table.clone(PlayerCharacterDecalNames)
 
 local player_character_sounds = {
 	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
@@ -309,11 +313,19 @@ local player_character_sounds = {
 	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/player/play_foley_fall_wind_2D"] = true,
 	["wwise/events/player/play_horde_mode_buff_ammo_refill"] = true,
+	["wwise/events/player/play_horde_mode_buff_avoid_hit"] = true,
+	["wwise/events/player/play_horde_mode_buff_avoid_hit_activated"] = true,
 	["wwise/events/player/play_horde_mode_buff_dublicate"] = true,
 	["wwise/events/player/play_horde_mode_buff_electric_crit"] = true,
 	["wwise/events/player/play_horde_mode_buff_grenade_refill"] = true,
+	["wwise/events/player/play_horde_mode_buff_infinite_ammo_start"] = true,
+	["wwise/events/player/play_horde_mode_buff_infinite_ammo_stop"] = true,
+	["wwise/events/player/play_horde_mode_buff_infinite_cleave_hit"] = true,
+	["wwise/events/player/play_horde_mode_buff_nurgle_trail_loop"] = true,
 	["wwise/events/player/play_horde_mode_buff_rock_charge_finish"] = true,
 	["wwise/events/player/play_horde_mode_buff_rock_charge_loop"] = true,
+	["wwise/events/player/play_horde_mode_buff_self_damage_negated"] = true,
+	["wwise/events/player/play_horde_mode_buff_shield_hit"] = true,
 	["wwise/events/player/play_horde_mode_buff_super_crit"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
@@ -334,6 +346,7 @@ local player_character_sounds = {
 	["wwise/events/player/play_toughness_hits"] = true,
 	["wwise/events/player/play_vault"] = true,
 	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
+	["wwise/events/player/stop_horde_mode_buff_nurgle_trail_loop"] = true,
 	["wwise/events/player/stop_horde_mode_buff_rock_charge_loop"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
 	["wwise/events/ui/play_hud_coherency_on"] = true,
@@ -510,11 +523,6 @@ for i = 1, #HavocSettings.positive_modifiers do
 end
 
 NetworkLookup.havoc_modifiers = _create_lookup({}, hash_table)
-NetworkLookup.havoc_unlock_status = {
-	"locked",
-	"awaiting_maelstrom_completion",
-	"unlocked",
-}
 
 local function _init(name, lookup_table)
 	for index, key in ipairs(lookup_table) do

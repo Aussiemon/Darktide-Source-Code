@@ -28,7 +28,6 @@ local archetype_data = {
 	knocked_down_health = 1000,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/psyker_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/psyker",
-	ui_selection_order = 3,
 	toughness = ArchetypeToughnessTemplates.psyker,
 	dodge = ArchetypeDodgeTemplates.psyker,
 	sprint = ArchetypeSprintTemplates.psyker,

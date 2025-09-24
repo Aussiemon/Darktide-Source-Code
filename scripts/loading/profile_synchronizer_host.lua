@@ -9,7 +9,7 @@ local RPCS = {
 	"rpc_notify_profile_changed",
 }
 local ProfileSynchronizerHost = class("ProfileSynchronizerHost")
-local SYNC_STATES = table.enum("not_synced", "syncing", "syncing_need_resync", "synced")
+local SYNC_STATES = table.enum("not_synced", "syncing", "syncing_need_resync", "initial_synced", "synced")
 
 ProfileSynchronizerHost.init = function (self, event_delegate)
 	self._peer_id = Network.peer_id()
@@ -41,7 +41,7 @@ ProfileSynchronizerHost.sync_player_profile = function (self, channel_id, peer_i
 	local rpc_queue = self._rpc_queues[channel_id]
 	local new_sync_state = self:_update_sync_states(channel_id, peer_id, local_player_id)
 
-	if new_sync_state == SYNC_STATES.syncing_need_resync then
+	if new_sync_state == SYNC_STATES.syncing_need_resync or new_sync_state == SYNC_STATES.initial_synced then
 		return
 	end
 
@@ -54,6 +54,23 @@ ProfileSynchronizerHost.sync_player_profile = function (self, channel_id, peer_i
 	end
 
 	rpc_queue:queue_rpc("rpc_profile_sync_complete", peer_id, local_player_id)
+end
+
+ProfileSynchronizerHost._handle_player_profile_synced = function (self, channel_id, peer_states, profile_peer_id, profile_local_player_id)
+	local current_state = peer_states[profile_peer_id][profile_local_player_id]
+
+	if current_state == SYNC_STATES.syncing_need_resync then
+		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.not_synced
+
+		local profile = self._profile_updates[profile_peer_id][profile_local_player_id]
+		local profile_json = ProfileUtils.pack_profile(profile)
+		local profile_chunks = {}
+
+		ProfileUtils.split_for_network(profile_json, profile_chunks)
+		self:sync_player_profile(channel_id, profile_peer_id, profile_local_player_id, profile_chunks)
+	else
+		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.synced
+	end
 end
 
 ProfileSynchronizerHost._update_sync_states = function (self, channel_id, sync_peer_id, sync_local_player_id)
@@ -71,7 +88,9 @@ ProfileSynchronizerHost._update_sync_states = function (self, channel_id, sync_p
 	local new_sync_state = SYNC_STATES.syncing
 	local player_sync_state = profile_sync_states[peer_id][sync_peer_id][sync_local_player_id]
 
-	if player_sync_state == SYNC_STATES.syncing or player_sync_state == SYNC_STATES.syncing_need_resync then
+	if player_sync_state == SYNC_STATES.initial_synced then
+		new_sync_state = SYNC_STATES.initial_synced
+	elseif player_sync_state == SYNC_STATES.syncing or player_sync_state == SYNC_STATES.syncing_need_resync then
 		new_sync_state = SYNC_STATES.syncing_need_resync
 	end
 
@@ -80,15 +99,15 @@ ProfileSynchronizerHost._update_sync_states = function (self, channel_id, sync_p
 	return new_sync_state
 end
 
-ProfileSynchronizerHost.start_initial_sync = function (self, channel_id, peer_id, local_player_ids)
+ProfileSynchronizerHost.start_initial_sync = function (self, channel_id, profile_peer_id, profile_local_player_ids)
 	local initial_syncs = self._initial_syncs[channel_id] or {}
 
-	initial_syncs[peer_id] = {}
+	initial_syncs[profile_peer_id] = {}
 
-	for i = 1, #local_player_ids do
-		local local_player_id = local_player_ids[i]
+	for i = 1, #profile_local_player_ids do
+		local profile_local_player_id = profile_local_player_ids[i]
 
-		initial_syncs[peer_id][local_player_id] = false
+		initial_syncs[profile_peer_id][profile_local_player_id] = false
 	end
 
 	self._initial_syncs[channel_id] = initial_syncs
@@ -125,22 +144,55 @@ ProfileSynchronizerHost.completed_initial_syncs = function (self)
 
 				if not synced then
 					initial_sync_complete = false
+
+					break
 				end
 			end
 
 			if initial_sync_complete then
-				completed_initial_syncs[channel_id] = completed_initial_syncs[channel_id] or {}
-				completed_initial_syncs[channel_id][peer_id] = true
-				initial_peer_syncs[peer_id] = nil
-
-				if not next(initial_peer_syncs) then
-					initial_syncs[channel_id] = nil
-				end
+				completed_initial_syncs[#completed_initial_syncs + 1] = {
+					channel_id = channel_id,
+					peer_id = peer_id,
+					peer_player_ids = player_ids,
+				}
 			end
 		end
 	end
 
 	return completed_initial_syncs
+end
+
+ProfileSynchronizerHost.finalize_initial_sync = function (self, channel_id, profile_peer_id, profile_local_player_ids)
+	local peer_id = Network.peer_id(channel_id)
+	local peer_states = self._profile_sync_states[peer_id] or {}
+
+	if not peer_states[profile_peer_id] then
+		return
+	end
+
+	local initial_syncs = self._initial_syncs
+	local initial_peer_syncs = initial_syncs[channel_id] or {}
+	local initial_player_syncs = initial_peer_syncs[profile_peer_id]
+
+	if not initial_player_syncs then
+		return
+	end
+
+	for i = 1, #profile_local_player_ids do
+		local profile_local_player_id = profile_local_player_ids[i]
+
+		if self:_is_player_profile_updating(profile_peer_id, profile_local_player_id) then
+			peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.syncing_need_resync
+		end
+
+		self:_handle_player_profile_synced(channel_id, peer_states, profile_peer_id, profile_local_player_id)
+	end
+
+	initial_peer_syncs[profile_peer_id] = nil
+
+	if not next(initial_peer_syncs) then
+		initial_syncs[channel_id] = nil
+	end
 end
 
 ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
@@ -230,16 +282,6 @@ ProfileSynchronizerHost.override_singleplay_profile = function (self, peer_id, l
 
 	profile_updates[local_player_id] = new_profile
 	self._profile_updates[peer_id] = profile_updates
-end
-
-ProfileSynchronizerHost.profile_updates_profile = function (self, peer_id, local_player_id)
-	local profile_updates = self._profile_updates[peer_id]
-
-	if not profile_updates then
-		return nil
-	end
-
-	return profile_updates[local_player_id]
 end
 
 ProfileSynchronizerHost.profiles_synced = function (self, peer_ids, peers_filter_map)
@@ -367,6 +409,16 @@ ProfileSynchronizerHost.is_player_synced_to_peer = function (self, peer_id, play
 	return sync_state == SYNC_STATES.synced
 end
 
+ProfileSynchronizerHost._is_player_profile_updating = function (self, peer_id, local_player_id)
+	local profile_updates = self._profile_updates[peer_id]
+
+	if not profile_updates then
+		return false
+	end
+
+	return profile_updates[local_player_id] ~= nil
+end
+
 ProfileSynchronizerHost.peer_connected = function (self, peer_id, channel_id)
 	self._connected_peers[peer_id] = channel_id
 end
@@ -488,26 +540,16 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 		return
 	end
 
-	local current_state = peer_states[profile_peer_id][profile_local_player_id]
+	local initial_syncs = self._initial_syncs
 
-	if current_state == SYNC_STATES.syncing_need_resync then
-		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.not_synced
+	if initial_syncs[channel_id] and initial_syncs[channel_id][profile_peer_id] then
+		initial_syncs[channel_id][profile_peer_id][profile_local_player_id] = true
+		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.initial_synced
 
-		local profile = self._profile_updates[profile_peer_id][profile_local_player_id]
-		local profile_json = ProfileUtils.pack_profile(profile)
-		local profile_chunks = {}
-
-		ProfileUtils.split_for_network(profile_json, profile_chunks)
-		self:sync_player_profile(channel_id, profile_peer_id, profile_local_player_id, profile_chunks)
-	else
-		peer_states[profile_peer_id][profile_local_player_id] = SYNC_STATES.synced
-
-		local initial_syncs = self._initial_syncs
-
-		if initial_syncs[channel_id] and initial_syncs[channel_id][profile_peer_id] then
-			initial_syncs[channel_id][profile_peer_id][profile_local_player_id] = true
-		end
+		return
 	end
+
+	self:_handle_player_profile_synced(channel_id, peer_states, profile_peer_id, profile_local_player_id)
 end
 
 ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, peer_id, local_player_id)

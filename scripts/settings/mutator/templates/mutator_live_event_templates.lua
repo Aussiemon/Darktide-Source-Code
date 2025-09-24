@@ -13,12 +13,6 @@ local mutator_templates = {
 			},
 		},
 	},
-	mutator_increased_catapult_force = {
-		class = "scripts/managers/mutator/mutators/mutator_base",
-		buff_templates = {
-			"increased_catapult_force",
-		},
-	},
 	mutator_drop_pickup_on_death = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
@@ -57,6 +51,9 @@ local mutator_templates = {
 				renegade_sniper = 0.25,
 			},
 		},
+	},
+	mutator_attack_selection_template_override_plasma = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
 	},
 }
 

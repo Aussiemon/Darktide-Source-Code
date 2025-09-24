@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/animation/utilities/player_unit_animation_state.lua
 
-local PlayerUnitAnimationMachineSettings = require("scripts/settings/animation/player_unit_animation_state_machine_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerUnitAnimationMachineSettings = require("scripts/settings/animation/player_unit_animation_state_machine_settings")
 local PlayerUnitAnimationStateConfig = require("scripts/extension_systems/animation/utilities/player_unit_animation_state_config")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local animation_variables_to_cache = PlayerCharacterConstants.animation_variables_to_cache

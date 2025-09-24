@@ -1210,6 +1210,18 @@ local action_data = {
 	exit_spawner = {
 		run_anim_event = "move_fwd",
 	},
+	use_stim = {
+		anim_event = "use_syringe",
+		duration = 1.6666666666666667,
+		exit_state = "to_riflemen",
+		effect_template = EffectTemplates.minion_stim_effect,
+		stim_buffs = {
+			"mutator_stimmed_minion_red",
+			"mutator_stimmed_minion_yellow",
+			"mutator_stimmed_minion_green",
+			"mutator_stimmed_minion_blue",
+		},
+	},
 }
 
 action_data.shoot_training_grounds_sprint = table.clone_instance(action_data.shoot)

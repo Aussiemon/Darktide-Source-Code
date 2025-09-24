@@ -412,6 +412,7 @@ StateGame.update = function (self, dt)
 	Managers.world_level_despawn:update(dt, t)
 	Managers.stats:update(dt, t)
 	Managers.achievements:update(dt, t)
+	Managers.narrative:update(dt, t)
 
 	if Managers.eac_server then
 		Managers.eac_server:update(dt, t)

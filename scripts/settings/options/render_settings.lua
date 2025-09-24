@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/settings/options/render_settings.lua
 
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
-local OptionsUtilities = require("scripts/utilities/ui/options")
-local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
+local Options = require("scripts/utilities/ui/options")
 local RegionConstants = require("scripts/settings/region/region_constants")
+local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local render_settings = {}
 local SettingsUtilities = {}
 local RENDER_TEMPLATES = {
@@ -2174,7 +2174,7 @@ local RENDER_TEMPLATES = {
 			xbs = true,
 		},
 		validation_function = function ()
-			for _, restriction in ipairs(RegionConstants.restrictions) do
+			for _, restriction in pairs(RegionConstants.restrictions) do
 				if not Managers.account:region_has_restriction(restriction) then
 					return true
 				end
@@ -2369,7 +2369,7 @@ local function create_render_settings_entry(template)
 			on_value_changed_function = change_function,
 		}
 
-		entry = OptionsUtilities.create_value_slider_template(slider_params)
+		entry = Options.create_value_slider_template(slider_params)
 
 		entry.on_activated = function (value, template, startup)
 			SettingsUtilities.verify_and_apply_changes(template, value, startup)
@@ -2532,7 +2532,7 @@ end
 local function _vfov_to_hfov(vfov)
 	local width, height = RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height
 	local aspect_ratio = width / height
-	local hfov = math.round(2 * math.deg(math.atan(math.tan(math.rad(vfov) / 2) * aspect_ratio)))
+	local hfov = math.round(2 * math.deg(math.atan(math.tan(math.rad(vfov) * 0.5) * aspect_ratio)))
 
 	return hfov
 end
@@ -2580,11 +2580,6 @@ render_settings[#render_settings + 1] = {
 		local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or DefaultGameParameters.vertical_fov
 
 		return vertical_fov
-	end,
-	format_value_function = function (value)
-		local number_format = string.format("%%.%sf", 2)
-
-		return string.format(number_format, value)
 	end,
 	explode_function = function (normalized_value, template)
 		local value_range = template.max_value - template.min_value

@@ -194,7 +194,7 @@ local function create_definitions(settings)
 				value = "n/a",
 				value_id = "weapon_display_name",
 				style = table.merge_recursive(table.clone(UIFontSettings.body), {
-					font_size = 24,
+					font_size = 20,
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "center",

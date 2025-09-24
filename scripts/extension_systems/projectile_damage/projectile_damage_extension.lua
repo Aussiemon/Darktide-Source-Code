@@ -52,6 +52,7 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._weapon_item_or_nil = extension_init_data.weapon_item_or_nil
 	self._owner_side_or_nil = extension_init_data.owner_side_or_nil
 	self._fuse_override_time_or_nil = extension_init_data.fuse_override_time_or_nil
+	self._initial_direction_boxed = extension_init_data.initial_direction and Vector3Box(extension_init_data.initial_direction)
 
 	local world = extension_init_context.world
 
@@ -76,6 +77,10 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
 
 	self._fuse_started = fuse_damage_settings and not fuse_damage_settings.impact_triggered and not fuse_damage_settings.proximity_triggered
+
+	if projectile_template.event_settings then
+		self._event_settings = table.clone_instance(projectile_template.event_settings)
+	end
 
 	local hit_mass_budget_attack, hit_mass_budget_impact = self:_calculate_hit_mass()
 
@@ -179,6 +184,23 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local mark_for_deletion = false
 	local new_life_time = life_time + dt
 	local explosion_queue_index
+	local event_settings = self._event_settings
+
+	if event_settings then
+		for _, settings in ipairs(event_settings) do
+			local event_time = settings.event_time
+
+			if not settings.event_triggered and event_time and event_time < new_life_time then
+				local event_name = settings.event_name
+				local direction = self._initial_direction_boxed and self._initial_direction_boxed:unbox()
+
+				settings.event_triggered = true
+
+				Managers.event:trigger(event_name, unit, position, direction)
+			end
+		end
+	end
+
 	local impact_triggered = fuse_damage_settings and fuse_damage_settings.impact_triggered
 	local proximity_triggered = fuse_damage_settings and fuse_damage_settings.proximity_triggered
 	local min_lifetime = fuse_damage_settings.min_lifetime
@@ -447,7 +469,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 					end
 
 					if calculate_hit_mass then
-						local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name)
+						local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name, owner_unit)
 						local hit_mass_override = impact_damage_profile.hit_mass_override
 						local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot, is_critical_strike, attack_type, hit_mass_override)
 

@@ -91,11 +91,9 @@ ability_template.actions = {
 	},
 	action_veteran_combat_ability = {
 		ability_type = "combat_ability",
-		abort_sprint = true,
 		allowed_during_sprint = true,
 		has_husk_sound = true,
 		kind = "veteran_combat_ability",
-		prevent_sprint = true,
 		shout_target_template = "veteran_shout",
 		sprint_ready_up_time = 0,
 		total_time = 1,

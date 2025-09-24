@@ -65,11 +65,11 @@ action_kind_funcs.sweep = function (action_settings, weapon_template)
 	local max_num_saved_entries = action_settings.max_num_saved_entries
 
 	if num_frames_before_process and not max_num_saved_entries then
-		return false, "num_frames_before_process needs \"max_num_saved_entries\" to be defined as well."
+		return false, "\"num_frames_before_process\" needs \"max_num_saved_entries\" to be defined as well."
 	end
 
 	if max_num_saved_entries and not num_frames_before_process then
-		return false, "max_num_saved_entries needs \"num_frames_before_process\" to be defined as well."
+		return false, "\"max_num_saved_entries\" needs \"num_frames_before_process\" to be defined as well."
 	end
 
 	local hit_stickyness_settings = action_settings.hit_stickyness_settings
@@ -78,13 +78,28 @@ action_kind_funcs.sweep = function (action_settings, weapon_template)
 		local duration = hit_stickyness_settings.duration
 
 		if not duration then
-			return false, "hit_stickyness_settings requires \"duration\" specified."
+			return false, "\"hit_stickyness_settings\" requires \"duration\" specified."
 		end
 
 		local sensitivity_modifier = hit_stickyness_settings.sensitivity_modifier
 
 		if not sensitivity_modifier then
-			return false, "hit_stickyness_settings requires \"sensitivity_modifier\" specified."
+			return false, "\"hit_stickyness_settings\" requires \"sensitivity_modifier\" specified."
+		end
+	end
+
+	local sweeps = action_settings.sweeps
+
+	if not sweeps then
+		return false, "no \"sweeps\" table specified."
+	end
+
+	for ii = 1, #sweeps do
+		local sweep = sweeps[ii]
+		local matrices_data_location = sweep.matrices_data_location
+
+		if not matrices_data_location then
+			return false, string.format("sweep #%d has no \"matrices_data_location\" specified.", ii)
 		end
 	end
 
@@ -125,6 +140,22 @@ end
 
 action_kind_funcs.spawn_projectile = function (action_settings, weapon_template)
 	_check_time_scale_buffs(weapon_template, action_settings)
+
+	local projectile_template = action_settings.projectile_template or weapon_template.projectile_template
+
+	if not projectile_template then
+		return false, "missing \"projectile_template\" in action_settings or weapon_template"
+	end
+
+	local projectile_locomotion_template = projectile_template.locomotion_template
+
+	if not projectile_locomotion_template then
+		return false, string.format("missing \"projectile_locomotion_template\" in projectile_template %q", projectile_template.name)
+	end
+
+	if not projectile_locomotion_template.spawn_projectile_parameters then
+		return false, string.format("missing \"spawn_projectile_parameters\" in projectile_locomotion_template %q", projectile_locomotion_template.name)
+	end
 
 	return true
 end

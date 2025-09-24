@@ -25,6 +25,36 @@ NavQueries.position_on_mesh = function (nav_world, position, above, below, trave
 	end
 end
 
+local DEFAULT_HORIZONTAL_SEARCH_DISTANCE = 5
+local DEFAULT_DISTANCE_FROM_OBSTACLE = 0.25
+
+NavQueries.position_on_mesh_guaranteed = function (nav_world, position, above, below, traverse_logic, horizontal_search, distance_from_obstacle)
+	above = above or DEFAULT_NAV_ABOVE
+	below = below or DEFAULT_NAV_BELOW
+	horizontal_search = horizontal_search or DEFAULT_HORIZONTAL_SEARCH_DISTANCE
+	distance_from_obstacle = distance_from_obstacle or DEFAULT_DISTANCE_FROM_OBSTACLE
+
+	local altitude
+
+	if traverse_logic then
+		altitude = GwNavQueries.triangle_from_position(nav_world, position, above, below, traverse_logic)
+	else
+		altitude = GwNavQueries.triangle_from_position(nav_world, position, above, below)
+	end
+
+	if altitude then
+		local projected_position = Vector3(position.x, position.y, altitude)
+
+		return projected_position
+	end
+
+	if traverse_logic then
+		return GwNavQueries.inside_position_from_outside_position(nav_world, position, above, below, horizontal_search, distance_from_obstacle, traverse_logic)
+	end
+
+	return GwNavQueries.inside_position_from_outside_position(nav_world, position, above, below, horizontal_search, distance_from_obstacle)
+end
+
 local DEFAULT_NAV_LATERAL, DEFAULT_DISTANCE_FROM_NAV_MESH = 0.5, 0
 
 NavQueries.position_on_mesh_with_outside_position = function (nav_world, traverse_logic, position, above, below, lateral, distance_from_nav_mesh)

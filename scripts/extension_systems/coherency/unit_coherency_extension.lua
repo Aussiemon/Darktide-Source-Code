@@ -282,16 +282,25 @@ UnitCoherencyExtension._calculate_should_be_active_buffs = function (self, t)
 	table.clear(should_be_active_buffs)
 	table.clear(unique_coherency_buffs)
 
-	for _, coherency_extension in pairs(in_coherence_units) do
-		local inherent_buffs = coherency_extension:buff_template_names()
-		local external_buffs = coherency_extension:external_buff_template_names()
+	for coherency_unit, coherency_extension in pairs(in_coherence_units) do
+		local coherency_unit_owner = Managers.state.player_unit_spawn:owner(coherency_unit)
 
-		for _, buff_name in pairs(inherent_buffs) do
-			_add_buff_to_lists(buff_name, should_be_active_buffs, unique_coherency_buffs)
-		end
+		if coherency_unit_owner then
+			local owner_is_local_player = coherency_unit_owner:is_human_controlled() and coherency_unit_owner:peer_id() == self._player:peer_id()
+			local has_prevent_coherency_buffs_from_other_players_keyword = self._buff_extension:has_keyword(buff_keywords.prevent_coherency_buffs_from_other_players)
 
-		for _, buff_name in pairs(external_buffs) do
-			_add_buff_to_lists(buff_name, should_be_active_buffs, unique_coherency_buffs)
+			if not has_prevent_coherency_buffs_from_other_players_keyword or owner_is_local_player then
+				local inherent_buffs = coherency_extension:buff_template_names()
+				local external_buffs = coherency_extension:external_buff_template_names()
+
+				for _, buff_name in pairs(inherent_buffs) do
+					_add_buff_to_lists(buff_name, should_be_active_buffs, unique_coherency_buffs)
+				end
+
+				for _, buff_name in pairs(external_buffs) do
+					_add_buff_to_lists(buff_name, should_be_active_buffs, unique_coherency_buffs)
+				end
+			end
 		end
 	end
 

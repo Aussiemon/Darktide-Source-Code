@@ -43,17 +43,10 @@ end
 
 BotNavigationExtension.destroy = function (self)
 	GwNavAStar.destroy_live_path(self._live_path)
-
-	local astar = self._astar
-
-	if not GwNavAStar.processing_finished(astar) then
-		GwNavAStar.cancel(astar)
-	end
-
-	GwNavAStar.destroy(astar)
+	GwNavAStar.destroy(self._astar)
+	GwNavTraverseLogic.destroy(self._traverse_logic)
 	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 	GwNavCostMapMultiplierTable.destroy(self._nav_cost_map_multiplier_table)
-	GwNavTraverseLogic.destroy(self._traverse_logic)
 end
 
 BotNavigationExtension.update = function (self, unit, t)

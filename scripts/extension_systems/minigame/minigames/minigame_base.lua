@@ -11,8 +11,10 @@ MinigameBase.init = function (self, unit, is_server, seed, wwise_world)
 	self._seed = seed
 	self._player_session_id = nil
 	self._wwise_world = wwise_world
+	self._client_side = false
 	self._current_stage = nil
 	self._state_started = nil
+	self._action_held = nil
 
 	if is_server then
 		self._fx_extension = nil
@@ -21,7 +23,10 @@ MinigameBase.init = function (self, unit, is_server, seed, wwise_world)
 
 	local unit_spawner_manager = Managers.state.unit_spawner
 
-	self._is_level_unit, self._minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
+	if unit then
+		self._minigame_extension = ScriptUnit.extension(unit, "minigame_system")
+		self._is_level_unit, self._minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
+	end
 end
 
 MinigameBase.setup_game = function (self)
@@ -43,11 +48,19 @@ MinigameBase.hot_join_sync = function (self, sender, channel)
 end
 
 MinigameBase.decode_interrupt = function (self)
-	return
+	self:set_state(MinigameSettings.game_states.intro)
 end
 
-MinigameBase.start = function (self, player_or_nil)
-	self._player_session_id = player_or_nil and player_or_nil:session_id()
+MinigameBase.start = function (self, player)
+	self._player_session_id = player and player:session_id()
+
+	if self._minigame_extension then
+		self._minigame_extension:set_active(true)
+
+		if self._is_server then
+			Managers.state.game_session:send_rpc_clients_except("rpc_minigame_sync_start", player:channel_id(), self._minigame_unit_id, self._is_level_unit)
+		end
+	end
 end
 
 MinigameBase.set_state = function (self, state)
@@ -64,24 +77,88 @@ MinigameBase.handle_state = function (self, state)
 	local states = MinigameSettings.game_states
 
 	if state == states.intro then
-		state = MinigameSettings.game_states.gameplay
+		state = states.gameplay
 	elseif state == states.transition and self:is_completed() then
-		state = MinigameSettings.game_states.outro
+		state = states.outro
 	end
 
 	return state
 end
 
+MinigameBase.complete = function (self)
+	self:set_state(MinigameSettings.game_states.complete)
+
+	if self._minigame_extension then
+		self._minigame_extension:set_active(false)
+
+		if self._is_server then
+			Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_completed", self._minigame_unit_id, self._is_level_unit)
+
+			if self._is_side_mission then
+				self:_update_side_mission_progression()
+			end
+
+			local mutator_on_minigame_complete = self._mutator_on_minigame_complete
+
+			if mutator_on_minigame_complete then
+				local mutator_manager = Managers.state.mutator
+				local communication_hack_mutator = mutator_manager:mutator(mutator_on_minigame_complete)
+
+				if communication_hack_mutator then
+					local player_unit
+					local player_session_id = self._minigame:player_session_id()
+
+					if player_session_id then
+						local player = Managers.player:player_from_session_id(self._minigame._player_session_id)
+
+						player_unit = player.player_unit
+					end
+
+					communication_hack_mutator:spawn_random_from_template(player_unit)
+				end
+			end
+		end
+	end
+end
+
+MinigameBase._update_side_mission_progression = function (self)
+	local mission_objective_target_extension = ScriptUnit.extension(self._minigame_unit, "mission_objective_target_system")
+	local objective_name = mission_objective_target_extension:objective_name()
+	local group_id = mission_objective_target_extension:group_id()
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	if mission_objective_system:is_current_active_objective(objective_name) then
+		local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name, group_id)
+		local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+		local increment_value = 1
+
+		synchronizer_extension:add_progression(increment_value)
+	end
+end
+
+MinigameBase.stop = function (self, player)
+	if self._is_server and self._current_state ~= MinigameSettings.game_states.complete and self:is_completed() then
+		self:complete()
+	end
+
+	self._player_session_id = nil
+	self._action_held = nil
+
+	if self._minigame_extension then
+		self._minigame_extension:set_active(false)
+
+		if self._is_server then
+			if player then
+				Managers.state.game_session:send_rpc_clients_except("rpc_minigame_sync_stop", player:channel_id(), self._minigame_unit_id, self._is_level_unit)
+			else
+				Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_stop", self._minigame_unit_id, self._is_level_unit)
+			end
+		end
+	end
+end
+
 MinigameBase.state = function (self)
 	return self._current_state
-end
-
-MinigameBase.stop = function (self)
-	self._player_session_id = nil
-end
-
-MinigameBase.complete = function (self)
-	return
 end
 
 MinigameBase.player_session_id = function (self)
@@ -89,6 +166,10 @@ MinigameBase.player_session_id = function (self)
 end
 
 MinigameBase.is_completed = function (self)
+	if self._current_state == MinigameSettings.game_states.complete then
+		return true
+	end
+
 	local stage_amount = self._stage_amount
 	local current_stage = self._current_stage
 
@@ -111,8 +192,44 @@ MinigameBase.uses_joystick = function (self)
 	return false
 end
 
+MinigameBase.angle_check = function (self)
+	return self._minigame_unit ~= nil
+end
+
+MinigameBase.unequip_on_exit = function (self)
+	return true
+end
+
+MinigameBase.unit = function (self)
+	return self._minigame_unit
+end
+
 MinigameBase.update = function (self, dt, t)
 	return
+end
+
+MinigameBase.action = function (self, held, t)
+	if self._action_held == nil then
+		if not held then
+			self._action_held = false
+		else
+			return false
+		end
+	end
+
+	if self._action_held ~= held then
+		self._action_held = held
+
+		if held then
+			self:on_action_pressed(t)
+		else
+			self:on_action_released(t)
+		end
+
+		return true
+	end
+
+	return false
 end
 
 MinigameBase.on_action_pressed = function (self, t)
@@ -123,12 +240,18 @@ MinigameBase.on_action_released = function (self, t)
 	return
 end
 
+MinigameBase.escape_action = function (self, held)
+	return held
+end
+
 MinigameBase.on_axis_set = function (self, t, x, y)
 	return
 end
 
 MinigameBase.send_rpc = function (self, rpc_name, ...)
-	Managers.state.game_session:send_rpc_clients(rpc_name, self._minigame_unit_id, self._is_level_unit, ...)
+	if not self._client_side then
+		Managers.state.game_session:send_rpc_clients(rpc_name, self._minigame_unit_id, self._is_level_unit, ...)
+	end
 end
 
 MinigameBase.send_rpc_to_server = function (self, rpc_name, ...)
@@ -136,9 +259,11 @@ MinigameBase.send_rpc_to_server = function (self, rpc_name, ...)
 end
 
 MinigameBase.send_rpc_to_channel = function (self, channel, rpc_name, ...)
-	local rpc = RPC[rpc_name]
+	if not self._client_side then
+		local rpc = RPC[rpc_name]
 
-	rpc(channel, self._minigame_unit_id, self._is_level_unit, ...)
+		rpc(channel, self._minigame_unit_id, self._is_level_unit, ...)
+	end
 end
 
 MinigameBase._setup_sound = function (self, player, fx_source_name)

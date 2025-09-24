@@ -865,21 +865,43 @@ local template = {
 				},
 			},
 			{
+				"spawn_by_points",
+				"spawner_platform_reinforcements_left",
+				limit_spawners = 3,
+				points = 6,
+				spawner_group = "spawner_platform_reinforcements_left",
+				breed_tags = {
+					{
+						"melee",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				"spawner_platform_reinforcements_left",
+				limit_spawners = 3,
+				points = 10,
+				spawner_group = "spawner_platform_reinforcements_right",
+				breed_tags = {
+					{
+						"melee",
+						"horde",
+					},
+				},
+			},
+			{
 				"debug_print",
 				duration = 3,
 				text = "Kill event: Target spawned",
 			},
 			{
 				"delay",
-				duration = 5,
+				duration = 2,
 			},
 			{
 				"start_random_terror_event",
 				start_event_name = "km_station_kill_target_wave",
-			},
-			{
-				"delay",
-				duration = 5,
 			},
 			{
 				"start_terror_trickle",
@@ -903,10 +925,6 @@ local template = {
 		},
 		km_station_kill_target_wave_1 = {
 			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"spawn_by_points",
 				limit_spawners = 3,
 				points = 16,
@@ -920,20 +938,20 @@ local template = {
 				},
 			},
 			{
-				"continue_when",
-				duration = 40,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end,
-			},
-			{
-				"delay",
-				duration = 5,
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
 			},
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 6,
 				spawner_group = "spawner_platform_reinforcements_left",
 				breed_tags = {
 					{
@@ -949,7 +967,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 7,
+				points = 9,
 				spawner_group = "spawner_platform_reinforcements_left",
 				breed_tags = {
 					{
@@ -957,10 +975,6 @@ local template = {
 						"roamer",
 					},
 				},
-			},
-			{
-				"delay",
-				duration = 5,
 			},
 			{
 				"continue_when",
@@ -969,19 +983,11 @@ local template = {
 				end,
 			},
 			{
-				"delay",
-				duration = 8,
-			},
-			{
 				"start_random_terror_event",
 				start_event_name = "km_station_kill_target_wave",
 			},
 		},
 		km_station_kill_target_wave_2 = {
-			{
-				"delay",
-				duration = 5,
-			},
 			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
@@ -1019,13 +1025,6 @@ local template = {
 				},
 			},
 			{
-				"continue_when",
-				duration = 40,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end,
-			},
-			{
 				"delay",
 				duration = 5,
 			},
@@ -1042,18 +1041,10 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 5
 				end,
-			},
-			{
-				"delay",
-				duration = 8,
 			},
 			{
 				"start_random_terror_event",
@@ -1061,10 +1052,6 @@ local template = {
 			},
 		},
 		km_station_kill_target_wave_3 = {
-			{
-				"delay",
-				duration = 5,
-			},
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
@@ -1091,17 +1078,6 @@ local template = {
 				},
 			},
 			{
-				"continue_when",
-				duration = 40,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end,
-			},
-			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
 				points = 12,
@@ -1114,7 +1090,7 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 3,
+				duration = 5,
 			},
 			{
 				"spawn_by_points",
@@ -1129,18 +1105,10 @@ local template = {
 				},
 			},
 			{
-				"delay",
-				duration = 5,
-			},
-			{
 				"continue_when",
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() < 5
 				end,
-			},
-			{
-				"delay",
-				duration = 8,
 			},
 			{
 				"start_random_terror_event",

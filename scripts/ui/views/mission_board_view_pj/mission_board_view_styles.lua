@@ -200,8 +200,8 @@ MissionBoardViewStyles.difficulty_progress_tooltip.frame = {
 	},
 }
 MissionBoardViewStyles.difficulty_progress_tooltip.text = {
-	font_size = 16,
-	font_type = "proxima_nova_medium",
+	font_size = 14,
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -330,7 +330,7 @@ MissionBoardViewStyles.play_button.disabled = {
 }
 MissionBoardViewStyles.play_button.default_text = {
 	font_size = 28,
-	font_type = "proxima_nova_bold",
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -600,8 +600,8 @@ MissionBoardViewStyles.mission_area_info.title_background = {
 	},
 }
 MissionBoardViewStyles.mission_area_info.mission_title = {
-	font_size = 24,
-	font_type = "proxima_nova_bold",
+	font_size = 20,
+	font_type = "trim_mono_bold",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -618,8 +618,8 @@ MissionBoardViewStyles.mission_area_info.mission_title = {
 	},
 }
 MissionBoardViewStyles.mission_area_info.mission_sub_title = {
-	font_size = 18,
-	font_type = "proxima_nova_medium",
+	font_size = 14,
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -714,8 +714,8 @@ MissionBoardViewStyles.mission_area_info.timer.timer_icon = {
 }
 MissionBoardViewStyles.mission_area_info.timer.timer_text = {
 	drop_shadow = true,
-	font_size = 20,
-	font_type = "proxima_nova_bold",
+	font_size = 18,
+	font_type = "trim_mono_bold",
 	horizontal_alignment = "left",
 	text_vertical_alignment = "bottom",
 	vertical_alignment = "top",
@@ -747,8 +747,8 @@ MissionBoardViewStyles.mission_area_info.timer.infinite_symbol = {
 }
 MissionBoardViewStyles.mission_area_info.circumstance = {}
 MissionBoardViewStyles.mission_area_info.circumstance.circumstance_title = {
-	font_size = 24,
-	font_type = "proxima_nova_bold",
+	font_size = 20,
+	font_type = "trim_mono_bold",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
 	size = {
@@ -762,8 +762,8 @@ MissionBoardViewStyles.mission_area_info.circumstance.circumstance_title = {
 	},
 }
 MissionBoardViewStyles.mission_area_info.circumstance.circumstance_description = {
-	font_size = 18,
-	font_type = "proxima_nova_medium",
+	font_size = 14,
+	font_type = "trim_mono_medium",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
 	size = {
@@ -869,8 +869,8 @@ MissionBoardViewStyles.objectives_panel.frame = {
 	color = table.shallow_copy(default_colors.terminal_frame),
 }
 MissionBoardViewStyles.objectives_panel.sub_title = {
-	font_size = 16,
-	font_type = "proxima_nova_medium",
+	font_size = 14,
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -883,8 +883,8 @@ MissionBoardViewStyles.objectives_panel.sub_title = {
 	},
 }
 MissionBoardViewStyles.objectives_panel.title = {
-	font_size = 18,
-	font_type = "proxima_nova_bold",
+	font_size = 16,
+	font_type = "trim_mono_bold",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -946,8 +946,9 @@ MissionBoardViewStyles.mission_objective_info.frame = {
 	color = table.shallow_copy(default_colors.terminal_frame),
 }
 MissionBoardViewStyles.mission_objective_info.objective_description = {
-	font_size = 18,
-	font_type = "proxima_nova_medium",
+	font_size = 16,
+	font_type = "trim_mono_medium",
+	hdr = true,
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
 	text_color = table.shallow_copy(default_colors.text_body),
@@ -992,8 +993,8 @@ MissionBoardViewStyles.mission_objective_info.mission_giver_frame = {
 	color = table.shallow_copy(default_colors.terminal_frame),
 }
 MissionBoardViewStyles.mission_objective_info.mission_giver_name = {
-	font_size = 14,
-	font_type = "proxima_nova_medium",
+	font_size = 12,
+	font_type = "trim_mono_medium",
 	horizontal_alignment = "right",
 	text_horizontal_alignment = "right",
 	text_vertical_alignment = "center",
@@ -1034,8 +1035,8 @@ MissionBoardViewStyles.mission_objective_info.reward.frame = {
 	color = table.shallow_copy(default_colors.terminal_frame),
 }
 MissionBoardViewStyles.mission_objective_info.reward.amount = {
-	font_size = 18,
-	font_type = "proxima_nova_bold",
+	font_size = 16,
+	font_type = "trim_mono_bold",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "center",

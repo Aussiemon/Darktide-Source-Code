@@ -117,6 +117,16 @@ local material_overrides = {
 			},
 		},
 	},
+	traitor_guard_helmet_plasmatrooper_01_emissive_var_01 = {
+		property_overrides = {
+			emissive_color_intensity = {
+				0.056,
+				0.009,
+				0,
+				15,
+			},
+		},
+	},
 	traitor_guard_helmet_01_c_var_01 = {
 		texture_overrides = {
 			bca = {
@@ -2500,6 +2510,26 @@ local material_overrides = {
 				0.042,
 				0.014,
 				0.465,
+			},
+		},
+	},
+	snow_01 = {
+		texture_overrides = {
+			environment_noise_map = {
+				resource = "content/environment/textures/shader_masks/grunge/grunge_mask_02",
+			},
+		},
+		property_overrides = {
+			environment_mask = {
+				5,
+				2.292,
+				0.5,
+			},
+			environment_mask_properties = {
+				0.75,
+				0.9,
+				0.85,
+				0.8,
 			},
 		},
 	},

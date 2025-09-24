@@ -7,6 +7,8 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
+local Explosion = require("scripts/utilities/attack/explosion")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local Health = require("scripts/utilities/health")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDeath = require("scripts/utilities/minion_death")
@@ -15,6 +17,9 @@ local attack_results = AttackSettings.attack_results
 local WeaponSystem = class("WeaponSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_player_blocked_attack",
+}
+local CLIENT_RPCS = {
+	"rpc_trigger_husk_explosion",
 }
 
 WeaponSystem.init = function (self, ...)
@@ -37,6 +42,8 @@ WeaponSystem.init = function (self, ...)
 		self:_preallocate_queued_explosions(1, 1028)
 
 		self._perils_of_the_warp_elite_kills_achievement = {}
+	else
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 end
 
@@ -53,6 +60,11 @@ end
 
 WeaponSystem.destroy = function (self, ...)
 	self._network_event_delegate:unregister_events(unpack(RPCS))
+
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
 	WeaponSystem.super.destroy(self, ...)
 end
 
@@ -384,6 +396,14 @@ WeaponSystem.rpc_player_blocked_attack = function (self, channel_id, unit_id, at
 	local attack_type = NetworkLookup.attack_types[attack_type_id]
 
 	Block.player_blocked_attack(player_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
+end
+
+WeaponSystem.rpc_trigger_husk_explosion = function (self, channel_id, explosion_template_id, position, rotation, radius_variable_value, weapon_charge_level, optional_attacking_owner_unit_id)
+	local attacking_owner_unit_or_nil = optional_attacking_owner_unit_id and Managers.state.unit_spawner:unit(optional_attacking_owner_unit_id) or nil
+	local explosion_template_name = NetworkLookup.explosion_templates[explosion_template_id]
+	local explosion_template = ExplosionTemplates[explosion_template_name]
+
+	Explosion.create_husk_explosion(self._world, self._physics_world, self._wwise_world, attacking_owner_unit_or_nil, explosion_template, position, rotation, radius_variable_value, weapon_charge_level)
 end
 
 WeaponSystem.give_ammo_carryover_percentages = function (self, unit, weapon_slot_configuration)

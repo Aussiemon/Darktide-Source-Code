@@ -256,7 +256,7 @@ local function generate_base_template()
 			track_towards_position = true,
 			uninterruptible = true,
 			use_ability_charge = true,
-			vo_tag = "blitz_nuncio_a",
+			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				auto_chain = {
@@ -295,7 +295,7 @@ local function generate_base_template()
 			track_towards_position = true,
 			uninterruptible = true,
 			use_ability_charge = true,
-			vo_tag = "blitz_nuncio_a",
+			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				auto_chain = {

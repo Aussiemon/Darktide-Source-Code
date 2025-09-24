@@ -117,12 +117,6 @@ sway_templates.ogyn_heavy_stubber_sway = {
 					yaw = 1,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.25,

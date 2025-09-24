@@ -9,6 +9,7 @@ local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Health = require("scripts/utilities/health")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MaterialQuery = require("scripts/utilities/material_query")
+local MinionDeath = require("scripts/utilities/minion_death")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local attack_types = AttackSettings.attack_types
@@ -16,7 +17,7 @@ local proc_events = BuffSettings.proc_events
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
 local Explosion = {}
-local _play_effects
+local _play_effects, _play_husk_effects
 local hit_units = {}
 local broadphase_results = {}
 local destructible_broadphase_results = {}
@@ -48,7 +49,18 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	local radius, close_radius = Explosion.radii(explosion_template, charge_level, lerp_values, attack_type, attacker_owner_stat_buffs, attacker_breed_or_nil)
 	local is_server = Managers.state.game_session:is_server()
 
-	_play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius, predicted, is_server)
+	if is_server then
+		local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
+		local attacking_unit_owner_unit_id = attacking_unit_owner_unit and Managers.state.unit_spawner:game_object_id(attacking_unit_owner_unit) or nil
+
+		Managers.state.game_session:send_rpc_clients("rpc_trigger_husk_explosion", NetworkLookup.explosion_templates[explosion_template.name], source_position, rotation, Vector3(radius, close_radius, radius), charge_level or 1, attacking_unit_owner_unit_id)
+
+		if not DEDICATED_SERVER then
+			local wwise_world = Managers.world:wwise_world(world)
+
+			Explosion.create_husk_explosion(world, physics_world, wwise_world, attacking_unit_owner_unit, explosion_template, source_position, rotation, Vector3(radius, close_radius, radius), charge_level or 1)
+		end
+	end
 
 	if not is_server then
 		return
@@ -318,6 +330,53 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	return queue_index, number_of_attack_units
 end
 
+Explosion.create_husk_explosion = function (world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, position, rotation, radius_variables, charge_level)
+	local explosion_template_name = explosion_template.name
+	local radius = radius_variables.x
+	local close_radius = radius_variables.y
+	local close_radius_squared = close_radius * close_radius
+
+	_play_husk_effects(world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, charge_level, position, rotation, radius)
+
+	local attack_ragdolls_enabled_locally = Application.user_setting("gore_settings", "attack_ragdolls_enabled")
+
+	if attack_ragdolls_enabled_locally and not explosion_template.skip_ragdoll_interaction then
+		table.clear(hit_units)
+
+		local number_of_attack_units = 0
+		local collision_filter = "filter_player_character_husk_explosion"
+		local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
+
+		for i = 1, num_actors do
+			local hit_actor = hit_actors[i]
+			local hit_unit = Actor.unit(hit_actor)
+
+			if not hit_units[hit_unit] then
+				local is_ragdolled = Health.is_ragdolled(hit_unit)
+
+				if is_ragdolled then
+					hit_units[hit_unit] = true
+
+					local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
+					local hit_zone_name_or_nil = hit_zone_or_nil and hit_zone_or_nil.name
+					local hit_actor_position = Actor.position(hit_actor)
+					local hit_distance_squared = Vector3.distance_squared(position, hit_actor_position)
+					local hit_direction = Vector3.normalize(hit_actor_position - position)
+					local close_hit = close_radius > 0 and hit_distance_squared < close_radius_squared
+
+					if close_hit then
+						MinionDeath.attack_ragdoll(hit_unit, hit_direction, explosion_template.close_damage_profile, nil, hit_zone_name_or_nil, nil, nil)
+					else
+						MinionDeath.attack_ragdoll(hit_unit, hit_direction, explosion_template.damage_profile, nil, hit_zone_name_or_nil, nil, nil)
+					end
+
+					number_of_attack_units = number_of_attack_units + 1
+				end
+			end
+		end
+	end
+end
+
 local NO_LERP_VALUES = {}
 
 Explosion.lerp_values = function (attacking_unit, explosion_template_name_or_nil, override_action_name_or_nil)
@@ -518,6 +577,87 @@ function _play_effects(world, physics_world, attacking_unit_owner_unit, explosio
 					fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
 				end
 			end
+		end
+	end
+end
+
+function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, charge_level, position, rotation, radius)
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local source_is_player = attacking_owner_unit_or_nil and player_unit_spawn_manager:is_player_unit(attacking_owner_unit_or_nil)
+	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
+	local scalable_vfx = explosion_template.scalable_vfx
+	local vfx = explosion_template.vfx
+
+	if scalable_vfx then
+		for i = #scalable_vfx, 1, -1 do
+			local vfx_data = scalable_vfx[i]
+			local min_radius = vfx_data.min_radius
+
+			if min_radius < radius then
+				local effects = vfx_data.effects
+				local num_effects = #effects
+
+				for j = 1, num_effects do
+					local effect_name = effects[j]
+					local radius_variable_name = vfx_data.radius_variable_name
+					local particle_id = World.create_particles(world, effect_name, position, rotation)
+
+					if particle_id and radius_variable_name then
+						local variable_index = World.find_particles_variable(world, effect_name, radius_variable_name)
+
+						World.set_particles_variable(world, particle_id, variable_index, Vector3(radius, radius, radius))
+					end
+				end
+
+				break
+			end
+		end
+	elseif vfx then
+		local num_vfx = #explosion_template.vfx
+
+		for i = 1, num_vfx do
+			local effect_name = vfx[i]
+
+			World.create_particles(world, effect_name, position, rotation)
+		end
+	end
+
+	local sfx = explosion_template.sfx
+
+	if sfx then
+		local should_play_husk_effect, surface_material_hit, material_or_nil
+
+		if source_is_player then
+			surface_material_hit, material_or_nil = MaterialQuery.query_material(physics_world, position + Vector3.up() * 0.5, position + Vector3.down() * 0.5)
+
+			local source_player_fx_extension = ScriptUnit.has_extension(attacking_owner_unit_or_nil, "fx_system")
+
+			should_play_husk_effect = source_player_fx_extension and source_player_fx_extension:should_play_husk_effect()
+		end
+
+		local num_sfx = #sfx
+
+		for i = 1, num_sfx do
+			local event_name_or_table = sfx[i]
+			local event_name = event_name_or_table
+
+			if type(event_name_or_table) == "table" then
+				local has_husk_events = event_name_or_table.has_husk_events
+
+				event_name = should_play_husk_effect and has_husk_events and event_name_or_table.event_name .. "_husk" or event_name_or_table.event_name
+			end
+
+			local source_id = WwiseWorld.make_auto_source(wwise_world, position)
+
+			if charge_wwise_parameter_name then
+				WwiseWorld.set_source_parameter(wwise_world, source_id, charge_wwise_parameter_name, charge_level)
+			end
+
+			if material_or_nil then
+				WwiseWorld.set_switch(wwise_world, "surface_material", material_or_nil, source_id)
+			end
+
+			WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
 		end
 	end
 end

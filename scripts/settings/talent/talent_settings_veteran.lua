@@ -31,6 +31,34 @@ local talent_settings = {
 		combat_ability_2 = {},
 		combat_ability_3 = {},
 	},
+	veteran = {
+		veteran_snipers_focus = {
+			duration = 5,
+			max_stacks = 10,
+			max_stacks_talent = 15,
+		},
+		veteran_tag = {
+			damage = 0.05,
+			max_stacks = 4,
+			max_stacks_talent = 6,
+			stack_time = 1.5,
+		},
+		veteran_weapon_swap_keystone = {
+			ranged_attack_speed = 0.02,
+			ranged_duration = 10,
+			reload_speed = 0.02,
+		},
+		veteran_combat_ability_melee_and_ranged_damage_to_coherency = {
+			duration = 8,
+		},
+		veteran_combat_ability_cooldown_reduction_on_elite_kills = {
+			cdr = 1,
+			duration = 3,
+		},
+		clip_size = {
+			clip_size_modifier = 0.15,
+		},
+	},
 	veteran_2 = {
 		combat_ability_base = {
 			ranged_damage = 0.15,
@@ -39,7 +67,9 @@ local talent_settings = {
 		},
 		combat_ability = {
 			cooldown = 30,
+			damage_vs_ogryn_and_monsters = 0.25,
 			duration = 5,
+			duration_increased = 8,
 			fov_multiplier = 0.85,
 			max_charges = 1,
 			max_stacks = 1,
@@ -57,7 +87,7 @@ local talent_settings = {
 			recoil_modifier = -0.24,
 			spread_modifier = -0.38,
 			sway_modifier = 0.4,
-			toughness = 0.6,
+			toughness = 0.1,
 		},
 		grenade = {
 			max_charges = 3,
@@ -92,6 +122,8 @@ local talent_settings = {
 		},
 		offensive_1_1 = {
 			damage_far = 0.2,
+			ranged_damage_max = 0.15,
+			ranged_damage_min = 0.1,
 		},
 		offensive_1_2 = {
 			reload_speed = 0.25,
@@ -116,9 +148,9 @@ local talent_settings = {
 			proc_chance = 0.05,
 		},
 		coop_3 = {
-			damage = 0.2,
+			damage = 0.15,
 			duration = 3,
-			range = 5,
+			range = 8,
 			toughness_percent = 0.15,
 		},
 		offensive_2_1 = {
@@ -154,7 +186,7 @@ local talent_settings = {
 			toughness_replenish_percent = 0.5,
 		},
 		grenade = {
-			max_charges = 2,
+			max_charges = 3,
 		},
 		coherency = {
 			damage = 0.05,
@@ -218,7 +250,8 @@ local talent_settings = {
 		coop_1 = {},
 		coop_2 = {},
 		coop_3 = {
-			percent = 0.15,
+			percent = 0.2,
+			radius = 0.5,
 		},
 		offensive_2_1 = {
 			duration = 10,

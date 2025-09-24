@@ -3,7 +3,7 @@
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local QPCode = require("scripts/utilities/qp_code")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local Danger = {}
 
 Danger.danger_by_qp_code = function (qp_code)
@@ -28,13 +28,13 @@ end
 Danger.calculate_danger = function (challenge, resistance)
 	local danger_by_index = DangerSettings
 
-	for i = 1, #danger_by_index do
-		local danger = danger_by_index[i]
+	for ii = 1, #danger_by_index do
+		local danger = danger_by_index[ii]
 		local correct_challenge = danger.challenge == challenge
 		local correct_resistance = resistance == nil or danger.resistance == resistance
 
 		if correct_challenge and correct_resistance then
-			return i
+			return ii
 		end
 	end
 end
@@ -51,8 +51,8 @@ Danger.text_bars = function (difficulty_index)
 		return nil
 	end
 
-	local pre = TextUtilities.apply_color_to_text(" ", Color.terminal_text_header(255, true))
-	local before = TextUtilities.apply_color_to_text(string.rep("", difficulty_index), difficulty_settings.color)
+	local pre = Text.apply_color_to_text(" ", Color.terminal_text_header(255, true))
+	local before = Text.apply_color_to_text(string.rep("", difficulty_index), difficulty_settings.color)
 	local post = ""
 	local remaining_count = #DangerSettings - difficulty_index
 
@@ -64,11 +64,11 @@ Danger.text_bars = function (difficulty_index)
 end
 
 Danger.index_by_name = function (name)
-	for i = 1, #DangerSettings do
-		local danger = DangerSettings[i]
+	for ii = 1, #DangerSettings do
+		local danger = DangerSettings[ii]
 
 		if danger.name == name then
-			return i
+			return ii
 		end
 	end
 end

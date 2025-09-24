@@ -59,14 +59,9 @@ MechanismHub.failed_fetching_session_report = function (self)
 end
 
 local function _fetch_client_data()
-	local narrative_promise
-
-	if Managers.narrative then
-		narrative_promise = Managers.narrative:_get_missions()
-	end
-
 	local player = Managers.player:local_player(1)
 	local character_id = player:character_id()
+	local narrative_promise = Managers.narrative:load_character_narrative(character_id)
 	local account_id = player:account_id()
 	local contracts_promise, player_journey_promise, campaign_skip_promise
 

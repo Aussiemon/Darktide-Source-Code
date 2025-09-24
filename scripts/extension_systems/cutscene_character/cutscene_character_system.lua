@@ -143,7 +143,9 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 
 	table.shuffle(sorted_player_unique_ids, self._level_seed)
 
-	if template.randomize_equipped_weapon then
+	local randomize_cutscene_weapon = template.randomize_equipped_weapon
+
+	if randomize_cutscene_weapon then
 		for i = 1, num_players do
 			local unique_id = sorted_player_unique_ids[i]
 

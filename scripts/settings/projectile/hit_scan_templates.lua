@@ -225,6 +225,24 @@ hit_scan_templates.renegade_captain_bolt_pistol_boltshell = {
 		},
 	},
 }
+hit_scan_templates.renegade_plasma_gunner = {
+	range = 75,
+	damage = {
+		explosion_arming_distance = 5,
+		impact = {
+			damage_profile = DamageProfileTemplates.renegade_plasma_gunner_shot,
+			hitmass_consumed_explosion = {
+				kill_explosion_template = ExplosionTemplates.renegade_captain_bolt_shell_kill,
+				stop_explosion_template = ExplosionTemplates.renegade_captain_plasma_stop,
+			},
+		},
+		penetration = {
+			depth = 0.75,
+			target_index_increase = 2,
+			stop_explosion_template = ExplosionTemplates.renegade_captain_plasma_stop,
+		},
+	},
+}
 hit_scan_templates.renegade_captain_plasma_pistol_plasma = {
 	range = 50,
 	damage = {

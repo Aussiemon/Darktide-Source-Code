@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/buff/helper_functions/conditional_functions.lua
 
 local Action = require("scripts/utilities/action/action")
+local Ammo = require("scripts/utilities/ammo")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -110,7 +111,7 @@ ConditionalFunctions.has_empty_clip = function (template_data, template_context)
 
 	if slot_type == "weapon" then
 		local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
-		local current_ammunition_clip = slot_inventory_component.current_ammunition_clip
+		local current_ammunition_clip = Ammo.current_ammo_in_clips(slot_inventory_component)
 
 		return current_ammunition_clip <= 0 and not ConditionalFunctions.is_reloading(template_data, template_context)
 	end
@@ -232,6 +233,10 @@ ConditionalFunctions.is_blocking = function (template_data, template_context)
 	local is_blocking = block_component.is_blocking
 
 	return is_blocking
+end
+
+ConditionalFunctions.at_max_stacks = function (template_data, template_context)
+	return (template_context.stack_count or 0) >= (template_context.template.max_stacks or 1)
 end
 
 return ConditionalFunctions

@@ -2,7 +2,9 @@
 
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local PlayerUnitTalentExtension = class("PlayerUnitTalentExtension")
 
 PlayerUnitTalentExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -118,7 +120,7 @@ local class_loadout = {
 PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, fixed_t)
 	local ability_extension = self._ability_extension
 	local buff_extension = self._buff_extension
-	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers
+	local passives, coherency_buffs, special_rules, buff_template_tiers
 	local game_mode_manager = Managers.state.game_mode
 	local game_mode_settings = game_mode_manager:settings()
 
@@ -131,20 +133,19 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
 
-		combat_ability = class_loadout.combat_ability
-		grenade_ability = class_loadout.grenade_ability
 		passives = class_loadout.passives
 		coherency_buffs = class_loadout.coherency
 		special_rules = class_loadout.special_rules
 		buff_template_tiers = class_loadout.buff_template_tiers
-	end
 
-	if combat_ability then
-		ability_extension:equip_ability("combat_ability", combat_ability, fixed_t)
-	end
+		for i = 1, #ability_types do
+			local ability_type = ability_types[i]
+			local ability = class_loadout[ability_type]
 
-	if grenade_ability then
-		ability_extension:equip_ability("grenade_ability", grenade_ability, fixed_t)
+			if ability then
+				ability_extension:equip_ability(ability_type, ability, fixed_t)
+			end
+		end
 	end
 
 	local active_special_rules = self._active_special_rules

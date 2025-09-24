@@ -20,6 +20,7 @@ NodeBuilderViewBase.init = function (self, definitions, settings, context)
 
 	self._player_mode = context and (context.player_mode or context.changeable_context and context.changeable_context.player_mode)
 	self._saved_scenegraph_settings = {}
+	self._render_cache_data = {}
 	self._global_node_offset = {
 		0,
 		0,
@@ -486,8 +487,6 @@ NodeBuilderViewBase._add_node = function (self, x, y)
 	local node = {
 		max_points = 1,
 		type = "default",
-		x_normalized = 0,
-		y_normalized = 0,
 		widget_name = "node_" .. math.uuid(),
 		x = x or 0,
 		y = y or 0,
@@ -1198,21 +1197,6 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 	local left_input_hold = input_service:get("left_hold")
 	local allowed_node_input = self:_allowed_node_input()
 	local input_handled = false
-	local dragging_background = false
-	local is_background_drag_allowed = self:_can_drag_background()
-
-	if is_background_drag_allowed and allowed_node_input then
-		local layout_background_widget = widgets_by_name.layout_background
-		local move_input_prefix = "left"
-		local handled = self:_handle_scenegraph_coordinates(layout_background_widget.name, layout_background_widget.scenegraph_id, input_service, move_input_prefix, render_settings, true)
-
-		if handled then
-			input_handled = true
-			dragging_background = true
-		end
-	end
-
-	self._dragging_background = dragging_background
 
 	if allowed_node_input then
 		local scroll
@@ -1458,9 +1442,11 @@ end
 
 NodeBuilderViewBase._update_scenegraph_positions = function (self)
 	for scenegraph_id, settings in pairs(self._saved_scenegraph_settings) do
-		if settings.x ~= settings.rendered_x or settings.y ~= settings.rendered_y then
-			settings.rendered_x = settings.x
-			settings.rendered_y = settings.y
+		local render_cache = self:_render_cache(settings)
+
+		if settings.x ~= render_cache.rendered_x or settings.y ~= render_cache.rendered_y then
+			render_cache.rendered_x = settings.x
+			render_cache.rendered_y = settings.y
 
 			self:_refresh_coordinates(settings, settings.is_node)
 		end
@@ -1471,15 +1457,24 @@ NodeBuilderViewBase._update_scenegraph_positions = function (self)
 	if active_layout then
 		for i = 1, #active_layout.nodes do
 			local node = active_layout.nodes[i]
+			local render_cache = self:_render_cache(node)
 
-			if node.x ~= node.rendered_x or node.y ~= node.rendered_y then
-				node.rendered_x = node.x
-				node.rendered_y = node.y
+			if node.x ~= render_cache.rendered_x or node.y ~= render_cache.rendered_y then
+				render_cache.rendered_x = node.x
+				render_cache.rendered_y = node.y
 
 				self:_refresh_coordinates(node, true)
 			end
 		end
 	end
+end
+
+NodeBuilderViewBase._render_cache = function (self, node)
+	local cache = self._render_cache_data[node] or {}
+
+	self._render_cache_data[node] = cache
+
+	return cache
 end
 
 NodeBuilderViewBase.draw = function (self, dt, t, input_service, layer)

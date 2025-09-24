@@ -2,7 +2,6 @@
 
 local zones = {
 	dust = {
-		map_node = "dust_01",
 		name = "loc_zone_dust",
 		name_short = "loc_zone_name_dust_short",
 		images = {
@@ -12,7 +11,6 @@ local zones = {
 		},
 	},
 	entertainment = {
-		map_node = "entertainment_01",
 		name = "loc_zone_entertainment",
 		name_short = "loc_zone_name_entertainment_short",
 		images = {
@@ -22,7 +20,6 @@ local zones = {
 		},
 	},
 	operations = {
-		map_node = "operations_01",
 		name = "loc_zone_operations",
 		name_short = "loc_zone_name_operations_short",
 		images = {
@@ -44,7 +41,6 @@ local zones = {
 		not_needed_for_penance = true,
 	},
 	tank_foundry = {
-		map_node = "tank_foundry_01",
 		name = "loc_zone_tank_foundry",
 		name_short = "loc_zone_name_tank_foundry_short",
 		images = {
@@ -58,7 +54,6 @@ local zones = {
 		not_needed_for_penance = true,
 	},
 	throneside = {
-		map_node = "throneside_01",
 		name = "loc_zone_throneside",
 		name_short = "loc_zone_name_throneside_short",
 		images = {
@@ -68,7 +63,6 @@ local zones = {
 		},
 	},
 	transit = {
-		map_node = "transit_01",
 		name = "loc_zone_transit",
 		name_short = "loc_zone_name_transit_short",
 		images = {
@@ -78,7 +72,6 @@ local zones = {
 		},
 	},
 	void = {
-		map_node = "void_01",
 		name = "loc_zone_void",
 		name_short = "loc_zone_name_void_short",
 		images = {
@@ -88,7 +81,6 @@ local zones = {
 		},
 	},
 	horde = {
-		map_node = "horde_01",
 		name = "loc_horde_mission_breifing_zone",
 		name_short = "loc_horde_mission_breifing_zone",
 		images = {
@@ -98,7 +90,6 @@ local zones = {
 		},
 	},
 	watertown = {
-		map_node = "watertown_01",
 		name = "loc_zone_watertown",
 		name_short = "loc_zone_name_watertown_short",
 		images = {

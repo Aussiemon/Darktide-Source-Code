@@ -87,62 +87,9 @@ gadget_traits_common.gadget_health_increase = {
 		},
 	},
 }
-gadget_traits_common.gadget_toughness_damage_reduction = {
-	format_values = {
-		toughness_damage_modifier = {
-			format_type = "percentage",
-			prefix = "+",
-			find_value = {
-				buff_template_name = "gadget_toughness_damage_reduction",
-				find_value_type = "trait_override",
-				path = {
-					"stat_buffs",
-					stat_buffs.toughness_damage_taken_multiplier,
-				},
-			},
-			value_manipulation = function (value)
-				return 100 - value * 100
-			end,
-		},
-	},
-	buffs = {
-		gadget_toughness_damage_reduction = {
-			{
-				stat_buffs = {
-					[stat_buffs.toughness_damage_taken_multiplier] = 0.95,
-				},
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.toughness_damage_taken_multiplier] = 0.9,
-				},
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.toughness_damage_taken_multiplier] = 0.8,
-				},
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.toughness_damage_taken_multiplier] = 0.7,
-				},
-			},
-		},
-	},
-}
 gadget_traits_common.gadget_stamina_increase = {
 	buffs = {
 		gadget_stamina_increase = {
-			{},
-			{},
-			{},
-			{},
-		},
-	},
-}
-gadget_traits_common.gadget_innate_ammo_increase = {
-	buffs = {
-		gadget_innate_ammo_increase = {
 			{},
 			{},
 			{},
@@ -204,24 +151,28 @@ gadget_traits_common.gadget_damage_reduction_vs_flamers = {
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = 0.95,
 					[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = 0.95,
+					[stat_buffs.damage_taken_by_renegade_flamer_mutator_multiplier] = 0.95,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = 0.9,
 					[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = 0.9,
+					[stat_buffs.damage_taken_by_renegade_flamer_mutator_multiplier] = 0.9,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = 0.85,
 					[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = 0.85,
+					[stat_buffs.damage_taken_by_renegade_flamer_mutator_multiplier] = 0.85,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_flamer_multiplier] = 0.8,
 					[stat_buffs.damage_taken_by_renegade_flamer_multiplier] = 0.8,
+					[stat_buffs.damage_taken_by_renegade_flamer_mutator_multiplier] = 0.8,
 				},
 			},
 		},
@@ -340,21 +291,25 @@ gadget_traits_common.gadget_damage_reduction_vs_hounds = {
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.95,
+					[stat_buffs.damage_taken_by_chaos_hound_mutator_multiplier] = 0.95,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.9,
+					[stat_buffs.damage_taken_by_chaos_hound_mutator_multiplier] = 0.9,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.85,
+					[stat_buffs.damage_taken_by_chaos_hound_mutator_multiplier] = 0.85,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.8,
+					[stat_buffs.damage_taken_by_chaos_hound_mutator_multiplier] = 0.8,
 				},
 			},
 		},
@@ -383,21 +338,25 @@ gadget_traits_common.gadget_damage_reduction_vs_mutants = {
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_mutant_multiplier] = 0.95,
+					[stat_buffs.damage_taken_by_cultist_mutant_mutator_multiplier] = 0.95,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_mutant_multiplier] = 0.9,
+					[stat_buffs.damage_taken_by_cultist_mutant_mutator_multiplier] = 0.9,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_mutant_multiplier] = 0.85,
+					[stat_buffs.damage_taken_by_cultist_mutant_mutator_multiplier] = 0.85,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.damage_taken_by_cultist_mutant_multiplier] = 0.8,
+					[stat_buffs.damage_taken_by_cultist_mutant_mutator_multiplier] = 0.8,
 				},
 			},
 		},

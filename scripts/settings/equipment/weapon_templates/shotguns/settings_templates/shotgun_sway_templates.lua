@@ -74,12 +74,6 @@ sway_templates.default_shotgun_killshot = {
 					yaw = 1,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.25,

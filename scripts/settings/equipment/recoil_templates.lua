@@ -330,7 +330,7 @@ recoil_templates.autogun = {
 	},
 }
 
-local pitch_default = 0.02
+local autogun_zoomed_pitch_default = 0.02
 
 recoil_templates.autogun_zoomed = {
 	still = {
@@ -348,8 +348,8 @@ recoil_templates.autogun_zoomed = {
 		offset_range = {
 			{
 				pitch = {
-					pitch_default * 0.95,
-					pitch_default * 1.05,
+					autogun_zoomed_pitch_default * 0.95,
+					autogun_zoomed_pitch_default * 1.05,
 				},
 				yaw = {
 					-0.0075,
@@ -358,8 +358,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.85,
-					pitch_default * 1.15,
+					autogun_zoomed_pitch_default * 0.85,
+					autogun_zoomed_pitch_default * 1.15,
 				},
 				yaw = {
 					-0.0085,
@@ -368,8 +368,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -378,8 +378,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -388,8 +388,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -398,8 +398,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.015,
@@ -408,8 +408,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.02,
@@ -418,8 +418,8 @@ recoil_templates.autogun_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_zoomed_pitch_default * 0.75,
+					autogun_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.025,
@@ -460,7 +460,9 @@ recoil_templates.autogun_zoomed = {
 		},
 	},
 }
-pitch_default = 0.075
+
+local autogun_killshot_zoomed_pitch_default = 0.075
+
 recoil_templates.autogun_killshot_zoomed = {
 	still = {
 		camera_recoil_percentage = 0.5,
@@ -477,8 +479,8 @@ recoil_templates.autogun_killshot_zoomed = {
 		offset_range = {
 			{
 				pitch = {
-					pitch_default * 0.95,
-					pitch_default * 1.05,
+					autogun_killshot_zoomed_pitch_default * 0.95,
+					autogun_killshot_zoomed_pitch_default * 1.05,
 				},
 				yaw = {
 					-0.0075,
@@ -487,8 +489,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.85,
-					pitch_default * 1.15,
+					autogun_killshot_zoomed_pitch_default * 0.85,
+					autogun_killshot_zoomed_pitch_default * 1.15,
 				},
 				yaw = {
 					-0.0085,
@@ -497,8 +499,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -507,8 +509,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -517,8 +519,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -527,8 +529,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.015,
@@ -537,8 +539,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.02,
@@ -547,8 +549,8 @@ recoil_templates.autogun_killshot_zoomed = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_zoomed_pitch_default * 0.75,
+					autogun_killshot_zoomed_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.025,
@@ -589,7 +591,9 @@ recoil_templates.autogun_killshot_zoomed = {
 		},
 	},
 }
-pitch_default = 0.15
+
+local autogun_killshot_hip_pitch_default = 0.15
+
 recoil_templates.autogun_killshot_hip = {
 	still = {
 		camera_recoil_percentage = 0.85,
@@ -606,8 +610,8 @@ recoil_templates.autogun_killshot_hip = {
 		offset_range = {
 			{
 				pitch = {
-					pitch_default * 0.95,
-					pitch_default * 1.05,
+					autogun_killshot_hip_pitch_default * 0.95,
+					autogun_killshot_hip_pitch_default * 1.05,
 				},
 				yaw = {
 					-0.15,
@@ -616,8 +620,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.85,
-					pitch_default * 1.15,
+					autogun_killshot_hip_pitch_default * 0.85,
+					autogun_killshot_hip_pitch_default * 1.15,
 				},
 				yaw = {
 					-0.13,
@@ -626,8 +630,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -636,8 +640,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -646,8 +650,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.01,
@@ -656,8 +660,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.015,
@@ -666,8 +670,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.02,
@@ -676,8 +680,8 @@ recoil_templates.autogun_killshot_hip = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.75,
-					pitch_default * 1.25,
+					autogun_killshot_hip_pitch_default * 0.75,
+					autogun_killshot_hip_pitch_default * 1.25,
 				},
 				yaw = {
 					-0.025,
@@ -1745,7 +1749,7 @@ recoil_templates.lasgun_hip_killshot = {
 	},
 }
 
-local pitch_default = 0.1
+local lasgun_hip_assault_pitch_default = 0.1
 
 recoil_templates.lasgun_hip_assault = {
 	[weapon_movement_states.still] = {
@@ -1762,8 +1766,8 @@ recoil_templates.lasgun_hip_assault = {
 		offset_range = {
 			{
 				pitch = {
-					pitch_default,
-					pitch_default,
+					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default,
 				},
 				yaw = {
 					0,
@@ -1772,8 +1776,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default,
-					pitch_default,
+					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default,
 				},
 				yaw = {
 					0,
@@ -1782,8 +1786,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default,
-					pitch_default,
+					lasgun_hip_assault_pitch_default,
+					lasgun_hip_assault_pitch_default,
 				},
 				yaw = {
 					0,
@@ -1792,8 +1796,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.9,
-					pitch_default * 1.1,
+					lasgun_hip_assault_pitch_default * 0.9,
+					lasgun_hip_assault_pitch_default * 1.1,
 				},
 				yaw = {
 					-0.01,
@@ -1802,8 +1806,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.8,
-					pitch_default * 1.2,
+					lasgun_hip_assault_pitch_default * 0.8,
+					lasgun_hip_assault_pitch_default * 1.2,
 				},
 				yaw = {
 					-0.02,
@@ -1812,8 +1816,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.7,
-					pitch_default * 1.2,
+					lasgun_hip_assault_pitch_default * 0.7,
+					lasgun_hip_assault_pitch_default * 1.2,
 				},
 				yaw = {
 					-0.03,
@@ -1822,8 +1826,8 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.6,
-					pitch_default * 1.3,
+					lasgun_hip_assault_pitch_default * 0.6,
+					lasgun_hip_assault_pitch_default * 1.3,
 				},
 				yaw = {
 					-0.04,
@@ -1832,20 +1836,14 @@ recoil_templates.lasgun_hip_assault = {
 			},
 			{
 				pitch = {
-					pitch_default * 0.5,
-					pitch_default * 1.5,
+					lasgun_hip_assault_pitch_default * 0.5,
+					lasgun_hip_assault_pitch_default * 1.5,
 				},
 				yaw = {
 					-0.05,
 					0.05,
 				},
 			},
-		},
-		hit_offset_multiplier = {
-			afro_hit = 1.05,
-			damage_hit = 1.8,
-			fortitude_hit = 1.2,
-			grace_hit = 1.1,
 		},
 		offset_limit = {
 			pitch = 0.4,

@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/foundation/managers/player/player_manager_testify.lua
 
+local Attack = require("scripts/utilities/attack/attack")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -118,12 +120,22 @@ local PlayerManagerTestify = {
 					local time_interval_since_stored_time = os.time() - stored_time
 
 					if bots_blocked_time_before_teleportation < time_interval_since_stored_time then
+						local locomotion_extension = ScriptUnit.extension(bot.player_unit, "locomotion_system")
+						local parent_unit = locomotion_extension:get_parent_unit()
+						local unit_data_extension = ScriptUnit.has_extension(parent_unit, "unit_data_system")
+
+						if unit_data_extension and unit_data_extension:breed() then
+							local damage_profile = DamageProfileTemplates.default
+
+							Attack.execute(parent_unit, damage_profile, "instakill", true, "hit_world_position", Unit.world_position(parent_unit, 1))
+						end
+
 						local tp_pos = MainPathQueries.position_from_distance(main_path_point)
 
 						if tp_pos then
 							tp_pos.z = tp_pos.z + 1
 
-							Log.info("Testify", "The bot %s has almost not moved since %ss. Teleporting bot to x:%s, y:%s, z:%s", bot:local_player_id(), bots_blocked_time_before_teleportation, tp_pos.x, tp_pos.y, tp_pos.z)
+							Log.info("Testify", "The bot %s has almost not moved since %ss. Teleporting bot from (x:%s, y:%s, z:%s) to (x:%s, y:%s, z:%s)", bot:local_player_id(), bots_blocked_time_before_teleportation, bot_pos.x, bot_pos.y, bot_pos.z, tp_pos.x, tp_pos.y, tp_pos.z)
 							PlayerMovement.teleport(bot, tp_pos, Quaternion.identity())
 						end
 					end
@@ -158,6 +170,16 @@ local PlayerManagerTestify = {
 				local distance = Vector3.distance(target_position, player_position)
 
 				if distance > 0.01 then
+					local locomotion_extension = ScriptUnit.extension(player.player_unit, "locomotion_system")
+					local parent_unit = locomotion_extension:get_parent_unit()
+					local unit_data_extension = ScriptUnit.has_extension(parent_unit, "unit_data_system")
+
+					if unit_data_extension and unit_data_extension:breed() then
+						local damage_profile = DamageProfileTemplates.default
+
+						Attack.execute(parent_unit, damage_profile, "instakill", true, "hit_world_position", Unit.world_position(parent_unit, 1))
+					end
+
 					local rotation = Quaternion.look(target_position - player_position)
 
 					PlayerMovement.teleport(player, target_position, rotation)

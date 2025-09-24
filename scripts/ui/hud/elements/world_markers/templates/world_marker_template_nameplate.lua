@@ -188,7 +188,9 @@ function _create_character_text(marker)
 		rank_promise:next(function (rank)
 			marker.rank_promise = nil
 
-			if rank then
+			local player_deleted = player and player.__deleted
+
+			if rank and not player_deleted then
 				text = string_symbol .. " " .. player:name() .. " - " .. tostring(rank) .. " "
 
 				if title then

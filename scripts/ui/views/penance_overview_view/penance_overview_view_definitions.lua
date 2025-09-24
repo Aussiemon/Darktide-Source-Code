@@ -13,6 +13,20 @@ local penance_grid_size = PenanceOverviewViewSettings.penance_grid_size
 local tooltip_grid_size = PenanceOverviewViewSettings.tooltip_grid_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
+	loading = {
+		horizontal_alignment = "center",
+		scale = "fit",
+		vertical_alignment = "center",
+		size = {
+			1920,
+			1080,
+		},
+		position = {
+			0,
+			0,
+			200,
+		},
+	},
 	corner_top_left = {
 		horizontal_alignment = "left",
 		parent = "screen",
@@ -318,7 +332,9 @@ local widget_definitions = {
 				},
 			},
 		},
-	}, "penance_points_panel"),
+	}, "penance_points_panel", {
+		visible = false,
+	}),
 	background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -412,7 +428,9 @@ local widget_definitions = {
 				},
 			},
 		},
-	}, "screen"),
+	}, "screen", {
+		visible = false,
+	}),
 	page_header = UIWidget.create_definition({
 		{
 			pass_type = "text",
@@ -519,7 +537,9 @@ local widget_definitions = {
 				color = Color.white(nil, true),
 			},
 		},
-	}, "page_header"),
+	}, "page_header", {
+		visible = false,
+	}),
 	carousel_header = UIWidget.create_definition({
 		{
 			pass_type = "text",
@@ -548,7 +568,9 @@ local widget_definitions = {
 				color = Color.terminal_text_body_sub_header(nil, true),
 			},
 		},
-	}, "carousel_header"),
+	}, "carousel_header", {
+		visible = false,
+	}),
 	carousel_footer = UIWidget.create_definition({
 		{
 			pass_type = "text",
@@ -557,7 +579,9 @@ local widget_definitions = {
 			value_id = "text",
 			style = carousel_footer_style,
 		},
-	}, "carousel_footer"),
+	}, "carousel_footer", {
+		visible = false,
+	}),
 	screen = UIWidget.create_definition({
 		{
 			pass_type = "rect",
@@ -567,16 +591,22 @@ local widget_definitions = {
 				color = Color.black(100, true),
 			},
 		},
-	}, "screen"),
+	}, "screen", {
+		visible = false,
+	}),
 }
 local animations = {
 	on_enter = {
 		{
 			end_time = 0,
-			name = "fade_in",
+			name = "hide",
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent._enter_animation = true
 				parent.animation_alpha_multiplier = 0
+				widgets.screen.content.visible = true
+				widgets.background.content.visible = true
+				widgets.penance_points_panel.content.visible = true
 
 				for _, widget in pairs(widgets) do
 					widget.alpha_multiplier = 0
@@ -585,7 +615,7 @@ local animations = {
 		},
 		{
 			end_time = 2,
-			name = "move",
+			name = "fade_in",
 			start_time = 1,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
@@ -598,22 +628,9 @@ local animations = {
 				end
 
 				parent.animation_alpha_multiplier = anim_progress
-
-				local x_anim_distance_max = 50
-				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
 			end,
-		},
-		{
-			end_time = 2,
-			name = "carousel_move",
-			start_time = 1,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				return
-			end,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local anim_progress = math.easeOutCubic(progress)
-
-				parent._carousel_entry_anim_progress = anim_progress
+			on_complete = function (parent)
+				parent._enter_animation = false
 			end,
 		},
 	},
@@ -644,22 +661,11 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
-				local pivot_offset = params.start_pivot_offset or 0
+				local total_height = params.start_height
+				local new_height = math.max(total_height * (1 - anim_progress), 18)
 
-				if progress < 0.99 then
-					local total_height = params.start_height
-
-					if total_height then
-						local half_height = total_height * 0.5
-						local current_half_height = half_height * anim_progress
-
-						params.grid:update_grid_height(total_height - total_height * anim_progress)
-
-						params.parent._claim_animation_new_pivot = pivot_offset + current_half_height
-					end
-				else
-					params.grid:update_grid_height(18)
-				end
+				params.grid:update_grid_height(new_height)
+				params.grid:set_pivot_offset(nil, (total_height - new_height) / 2)
 			end,
 		},
 		{
@@ -674,7 +680,6 @@ local animations = {
 				local divider_top = params.additional_widgets and params.additional_widgets.divider_top
 				local divider_bottom = params.additional_widgets and params.additional_widgets.divider_bottom
 				local background = params.additional_widgets and params.additional_widgets.background
-				local total_height = params.start_height
 
 				if progress < 0.99 then
 					if background then
@@ -799,11 +804,12 @@ local legend_inputs = {
 		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "cb_on_toggle_penance_appearance",
 		visibility_function = function (parent, id)
+			local wintrack_active = parent._anim_wintrack_reward_hover_progress > 0 or parent._wintracks_focused
 			local display_name = parent._use_large_penance_entries and "loc_penance_menu_input_desc_show_grid" or "loc_penance_menu_input_desc_show_list"
 
 			parent._input_legend_element:set_display_name(id, display_name)
 
-			return parent._selected_top_option_key == "browser" and not parent._wintracks_focused and parent._enter_animation_complete
+			return parent._selected_top_option_key == "browser" and not wintrack_active and parent._enter_animation_complete
 		end,
 	},
 	{
@@ -817,6 +823,15 @@ local legend_inputs = {
 			parent._input_legend_element:set_display_name(id, display_name)
 
 			return not parent._using_cursor_navigation and parent._wintrack_element and parent._enter_animation_complete
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_premium_store_inspect_item",
+		input_action = "hotkey_item_inspect",
+		on_pressed_callback = "cb_on_inspect_pressed",
+		visibility_function = function (parent)
+			return parent:can_inspect_item()
 		end,
 	},
 }

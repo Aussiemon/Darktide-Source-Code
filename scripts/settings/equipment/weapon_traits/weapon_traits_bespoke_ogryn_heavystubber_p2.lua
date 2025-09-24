@@ -338,26 +338,26 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p2_increased_suppression_on_co
 		weapon_trait_bespoke_ogryn_heavystubber_p2_increased_suppression_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.suppression_dealt] = 0.2,
+					[stat_buffs.suppression_dealt] = 0.125,
+					[stat_buffs.damage_vs_suppressed] = 0.04,
+				},
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.suppression_dealt] = 0.15,
+					[stat_buffs.damage_vs_suppressed] = 0.05,
+				},
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.suppression_dealt] = 0.175,
 					[stat_buffs.damage_vs_suppressed] = 0.06,
 				},
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.suppression_dealt] = 0.2,
-					[stat_buffs.damage_vs_suppressed] = 0.06,
-				},
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.suppression_dealt] = 0.2,
-					[stat_buffs.damage_vs_suppressed] = 0.06,
-				},
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.suppression_dealt] = 0.2,
-					[stat_buffs.damage_vs_suppressed] = 0.06,
+					[stat_buffs.damage_vs_suppressed] = 0.07,
 				},
 			},
 		},

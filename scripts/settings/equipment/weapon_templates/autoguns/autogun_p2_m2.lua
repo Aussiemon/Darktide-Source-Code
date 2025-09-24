@@ -29,10 +29,6 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -100,7 +96,7 @@ weapon_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -608,12 +604,14 @@ weapon_template.actions = {
 			1,
 			0.7,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
-			anchor_point_offset = {
-				0,
-				1.4,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
+				anchor_point_offset = {
+					0,
+					1.4,
+					-0.1,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -655,7 +653,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.autogun_ak
 weapon_template.spread_template = "autogun_p2_m2_hip"
 weapon_template.recoil_template = "default_autogun_spraynpray"
-weapon_template.suppression_template = "default_autogun_assault"
+weapon_template.suppression_template = "autogun_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "autogun"
 weapon_template.semi_auto_chain_factor = 0.9
 weapon_template.conditional_state_to_action_input = {
@@ -780,10 +778,7 @@ weapon_template.base_stats = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
 				display_data = {
-					display_stats = {
-						ammunition_clip = {},
-						ammunition_reserve = {},
-					},
+					display_stats = WeaponBarUIDescriptionTemplates.default_bar_stats.ammo.display_stats,
 				},
 			},
 		},

@@ -19,6 +19,7 @@ table.make_unique(overrides)
 
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local single_cleave = DamageProfileSettings.single_cleave
+local single_plus_cleave = DamageProfileSettings.single_plus_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local default_shield_override_stagger_strength = 4
 
@@ -419,7 +420,7 @@ damage_templates.autogun_burst_shot = {
 }
 damage_templates.autogun_p3_burst_shot = {
 	ragdoll_push_force = 250,
-	stagger_category = "killshot",
+	stagger_category = "ranged",
 	suppression_value = 1,
 	cleave_distribution = single_cleave,
 	ranges = {
@@ -436,20 +437,20 @@ damage_templates.autogun_p3_burst_shot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_7,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
@@ -458,22 +459,22 @@ damage_templates.autogun_p3_burst_shot = {
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_8,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.armored] = damage_lerp_values.lerp_0_7,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 			},
 			impact = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 			},
 		},
@@ -507,6 +508,7 @@ damage_templates.autogun_p3_burst_shot = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75,
+				[armor_types.armored] = 0.55,
 			},
 			boost_curve_multiplier_finesse = {
 				1,
@@ -699,16 +701,16 @@ overrides.autogun_p3_m1 = {
 			"power_distribution",
 			"attack",
 			{
-				80,
-				160,
+				90,
+				185,
 			},
 		},
 		{
 			"power_distribution",
 			"impact",
 			{
-				5,
-				10,
+				2,
+				4,
 			},
 		},
 		{
@@ -723,9 +725,15 @@ overrides.autogun_p3_m1 = {
 			"default_target",
 			"boost_curve_multiplier_finesse",
 			{
-				1.25,
-				2.5,
+				1.2,
+				2.4,
 			},
+		},
+		{
+			"targets",
+			"default_target",
+			"crit_boost",
+			0.15,
 		},
 	},
 }
@@ -740,8 +748,8 @@ overrides.autogun_p3_m2 = {
 			"power_distribution",
 			"attack",
 			{
-				150,
-				300,
+				160,
+				320,
 			},
 		},
 		{
@@ -764,9 +772,23 @@ overrides.autogun_p3_m2 = {
 			"default_target",
 			"boost_curve_multiplier_finesse",
 			{
-				1.5,
-				3,
+				1.6,
+				2.8,
 			},
+		},
+		{
+			"targets",
+			"default_target",
+			"crit_boost",
+			0.15,
+		},
+		{
+			"cleave_distribution",
+			double_cleave,
+		},
+		{
+			"stagger_category",
+			"killshot",
 		},
 	},
 }
@@ -777,16 +799,16 @@ overrides.autogun_p3_m3 = {
 			"power_distribution",
 			"attack",
 			{
-				90,
-				180,
+				100,
+				220,
 			},
 		},
 		{
 			"power_distribution",
 			"impact",
 			{
-				14,
-				16,
+				2,
+				4,
 			},
 		},
 		{
@@ -801,9 +823,26 @@ overrides.autogun_p3_m3 = {
 			"default_target",
 			"boost_curve_multiplier_finesse",
 			{
-				1.5,
-				3,
+				1.2,
+				2.4,
 			},
+		},
+		{
+			"targets",
+			"default_target",
+			"crit_boost",
+			0.15,
+		},
+		{
+			"cleave_distribution",
+			single_plus_cleave,
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_2,
 		},
 	},
 }

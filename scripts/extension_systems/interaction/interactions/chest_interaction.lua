@@ -15,9 +15,9 @@ end
 
 ChestInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
 	local chest_extension = ScriptUnit.extension(interactee_unit, "chest_system")
-	local chest_interactable = chest_extension:is_interactable()
+	local is_open = chest_extension:is_open()
 
-	return chest_interactable and not self:_interactor_disabled(interactor_unit)
+	return not is_open and not self:_interactor_disabled(interactor_unit)
 end
 
 ChestInteraction.interactee_show_marker_func = function (self, interactor_unit, interactee_unit)

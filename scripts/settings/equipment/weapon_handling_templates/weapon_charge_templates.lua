@@ -95,7 +95,7 @@ local weapon_charge_templates = {
 		warp_charge_percent = 0.00075,
 	},
 	psyker_reload_speed_warp = {
-		warp_charge_percent = 0.25,
+		warp_charge_percent = 0.15,
 	},
 	handgun_push_charge = {
 		warp_charge_percent = 0.1,
@@ -301,10 +301,92 @@ local weapon_charge_templates = {
 			},
 		},
 	},
+	powersword_p2_m1_weapon_special = {
+		overheat_overtime = {
+			charge_duration = 1,
+			charge_on_action_start = true,
+			full_charge_overheat_percent = 0.025,
+			fully_charged_charge_level = 0.525,
+			limit_max_charge_to_ammo_clip = true,
+			min_charge = 0.05,
+			overheat_percent = {
+				lerp_basic = 0.045,
+				lerp_perfect = 0.025,
+			},
+		},
+		overheat_swing = {
+			lockout_enabled = true,
+			use_charge = true,
+			overheat_percent = {
+				lerp_basic = 0.1,
+				lerp_perfect = 0.03,
+			},
+		},
+		overheat_decay = {
+			auto_vent_delay = 1,
+			critical_threshold_decay_rate_modifier = 0.5,
+			high_threshold_decay_rate_modifier = 0.8,
+			low_threshold_decay_rate_modifier = 1.2,
+			vent_duration = 3,
+			vent_interval = 0.25,
+			thresholds = {
+				critical = 0.9,
+				high = 0.7,
+				low = 0.3,
+			},
+			auto_vent_duration = {
+				lerp_basic = 16,
+				lerp_perfect = 11,
+			},
+		},
+	},
+	powersword_p2_m2_weapon_special = {
+		overheat_overtime = {
+			charge_duration = 1,
+			charge_on_action_start = true,
+			full_charge_overheat_percent = 0.025,
+			fully_charged_charge_level = 0.525,
+			limit_max_charge_to_ammo_clip = true,
+			min_charge = 0.05,
+			overheat_percent = {
+				lerp_basic = 0.045,
+				lerp_perfect = 0.025,
+			},
+		},
+		overheat_swing = {
+			lockout_enabled = true,
+			use_charge = true,
+			overheat_percent = {
+				lerp_basic = 0.1,
+				lerp_perfect = 0.03,
+			},
+		},
+		overheat_decay = {
+			auto_vent_delay = 1,
+			critical_threshold_decay_rate_modifier = 0.5,
+			high_threshold_decay_rate_modifier = 0.8,
+			low_threshold_decay_rate_modifier = 1.2,
+			vent_duration = 3,
+			vent_interval = 0.25,
+			thresholds = {
+				critical = 0.9,
+				high = 0.7,
+				low = 0.3,
+			},
+			auto_vent_duration = {
+				lerp_basic = 16,
+				lerp_perfect = 11,
+			},
+		},
+	},
+	combatsword_p3_parry_psyker_charge = {
+		use_charge = false,
+		warp_charge_percent = 0.04,
+	},
 	chain_lightning_ability_spread = {
 		charge_duration = 0.1,
 		charge_on_action_start = true,
-		full_charge_warp_charge_percent = 0.18,
+		full_charge_warp_charge_percent = 0.225,
 		warp_charge_percent = 0.0075,
 	},
 	chain_lightning_ability_activated = {

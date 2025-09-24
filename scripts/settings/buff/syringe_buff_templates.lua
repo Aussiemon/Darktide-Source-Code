@@ -68,7 +68,6 @@ templates.syringe_heal_corruption_buff = {
 		template_data.stimm_provider = buff_extension:get_inherited_buff_owner()
 
 		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 
 		template_data.health_extension = health_extension

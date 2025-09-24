@@ -1105,7 +1105,7 @@ local widget_definitions = {
 		hotspot = {},
 	}),
 	party_finder_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "party_finder_button", {
-		gamepad_action = "secondary_action_pressed",
+		gamepad_action = "mission_board_group_finder_open",
 		original_text = Utf8.upper(Localize("loc_group_finder_menu_title")),
 		hotspot = {},
 	}),

@@ -6,6 +6,7 @@ local Colors = require("scripts/utilities/ui/colors")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local Promise = require("scripts/foundation/utilities/promise")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local Text = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
@@ -15,7 +16,9 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTutorialOverlay = require("scripts/ui/view_elements/view_element_tutorial_overlay/view_element_tutorial_overlay")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
 local Zones = require("scripts/settings/zones/zones")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local HavocPlayView = class("HavocPlayView", "BaseView")
 local havoc_info = Managers.data_service.havoc:get_settings()
 
@@ -23,6 +26,7 @@ HavocPlayView.init = function (self, settings, context)
 	local parent = context and context.parent
 
 	self._parent = parent
+	self._promise_container = PromiseContainer:new()
 	self._play_button_anim_delay = 1
 	self._play_fast_enter_animation = context and context.play_fast_enter_animation
 	self._can_cancel_mission = true
@@ -55,6 +59,8 @@ HavocPlayView.on_enter = function (self)
 	self:_setup_forward_gui()
 
 	self._tutorial_overlay = self:_add_element(ViewElementTutorialOverlay, "tutorial_overlay", 200, {})
+
+	self:_setup_regions()
 end
 
 HavocPlayView._setup_text_positions = function (self)
@@ -477,6 +483,12 @@ HavocPlayView._cb_on_party_finder_pressed = function (self)
 	Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 end
 
+HavocPlayView._setup_regions = function (self)
+	return self._promise_container:cancel_on_destroy(Managers.data_service.region_latency:fetch_regions_latency()):next(function (regions_latency)
+		self._regions_latency = regions_latency
+	end)
+end
+
 HavocPlayView._cb_on_mission_start = function (self)
 	if not self.can_start_mission or self._widgets_by_name.play_button.content.hotspot.disabled then
 		return
@@ -503,8 +515,9 @@ HavocPlayView._cb_on_mission_start = function (self)
 		self:_update_mission_participants(mission.participants)
 
 		local private_match = false
+		local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
-		Managers.party_immaterium:wanted_mission_selected(mission_id, private_match)
+		Managers.party_immaterium:wanted_mission_selected(mission_id, private_match, prefered_mission_region)
 	end):catch(function (error)
 		if error and error.code == 400 and string.find(error.description, "already_has_ongoing_mission") then
 			self:_play_sound(UISoundEvents.havoc_terminal_deny_mission)
@@ -632,6 +645,10 @@ HavocPlayView.on_back_pressed = function (self)
 	if tutorial_overlay and tutorial_overlay:is_active() then
 		tutorial_overlay:force_close()
 
+		return true
+	end
+
+	if self._mission_board_options then
 		return true
 	end
 
@@ -852,6 +869,10 @@ HavocPlayView._update_can_play = function (self)
 end
 
 HavocPlayView._handle_input = function (self, input_service, dt, t)
+	if self._mission_board_options then
+		input_service = input_service:null_service()
+	end
+
 	local tutorial_overlay = self._tutorial_overlay
 
 	if tutorial_overlay and tutorial_overlay:is_active() then
@@ -867,21 +888,17 @@ HavocPlayView._handle_input = function (self, input_service, dt, t)
 			self:_cb_on_mission_start()
 		end
 
-		if input_service:get("secondary_action_pressed") then
+		if input_service:get("mission_board_group_finder_open") then
 			self:_cb_on_party_finder_pressed()
 		end
 	end
 end
 
 HavocPlayView.on_exit = function (self)
+	self._promise_container:delete()
+
 	if self._mission_detail_grid then
 		self._mission_detail_grid:set_visibility(false)
-	end
-
-	if self._mission_promise then
-		self._mission_promise:cancel()
-
-		self._mission_promise = nil
 	end
 
 	if self._enter_animation_id then
@@ -1180,6 +1197,88 @@ HavocPlayView._destroy_forward_gui = function (self)
 		self._forward_viewport_name = nil
 		self._forward_world = nil
 	end
+end
+
+HavocPlayView._callback_open_options = function (self, region_data)
+	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
+		on_destroy_callback = callback(self, "_callback_close_options"),
+	})
+
+	local regions_latency = self._regions_latency
+	local presentation_data = {}
+
+	if regions_latency then
+		presentation_data[#presentation_data + 1] = {
+			display_name = "loc_mission_board_view_options_Matchmaking_Location",
+			id = "region_matchmaking",
+			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
+			widget_type = "dropdown",
+			validation_function = function ()
+				return
+			end,
+			on_activated = function (value, template)
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
+			end,
+			get_function = function (template)
+				local options = template.options_function()
+				local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
+
+				for i = 1, #options do
+					local option = options[i]
+
+					if option.value == prefered_mission_region then
+						return option.id
+					end
+				end
+
+				return 1
+			end,
+			options_function = function (template)
+				local options = {}
+
+				for region_name, latency_data in pairs(regions_latency) do
+					local loc_key = RegionLocalizationMappings[region_name]
+					local ignore_localization = true
+					local region_display_name = loc_key and Localize(loc_key) or region_name
+
+					if math.abs(latency_data.min_latency - latency_data.max_latency) < 5 then
+						region_display_name = string.format("%s %dms", region_display_name, latency_data.min_latency)
+					else
+						region_display_name = string.format("%s %d-%dms", region_display_name, latency_data.min_latency, latency_data.max_latency)
+					end
+
+					options[#options + 1] = {
+						id = region_name,
+						display_name = region_display_name,
+						ignore_localization = ignore_localization,
+						value = region_name,
+						latency_order = latency_data.min_latency,
+					}
+				end
+
+				table.sort(options, function (a, b)
+					return a.latency_order < b.latency_order
+				end)
+
+				return options
+			end,
+			on_changed = function (value)
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
+			end,
+		}
+	end
+
+	self._mission_board_options:present(presentation_data)
+end
+
+HavocPlayView._callback_close_options = function (self)
+	self:_destroy_options_element()
+end
+
+HavocPlayView._destroy_options_element = function (self)
+	self:_remove_element("mission_board_options_element")
+
+	self._mission_board_options = nil
 end
 
 return HavocPlayView

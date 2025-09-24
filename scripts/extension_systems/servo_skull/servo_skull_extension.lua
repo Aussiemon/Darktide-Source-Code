@@ -126,8 +126,8 @@ end
 ServoSkullExtension._zone_has_active_scannables = function (self)
 	local scannable_units = self._scannable_units
 
-	for i = 1, #scannable_units do
-		local scannable_unit = scannable_units[i]
+	for ii = 1, #scannable_units do
+		local scannable_unit = scannable_units[ii]
 		local script = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 
 		if script and script:is_active() then
@@ -170,8 +170,8 @@ ServoSkullExtension.at_end_of_spline = function (self, last_spline)
 			local scannable_units_distance = self._scannable_units_distance
 			local servo_skull_position = POSITION_LOOKUP[self._unit]
 
-			for i = 1, #scannable_units do
-				local scannable_unit = scannable_units[i]
+			for ii = 1, #scannable_units do
+				local scannable_unit = scannable_units[ii]
 
 				scannable_units_distance[scannable_unit] = Vector3.distance(POSITION_LOOKUP[scannable_unit], servo_skull_position)
 			end

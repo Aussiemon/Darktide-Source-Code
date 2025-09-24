@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/first_person/player_unit_first_person_extension.lua
 
 local CameraSettings = require("scripts/settings/camera/camera_settings")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local FirstPersonAnimationVariables = require("scripts/utilities/first_person_animation_variables")
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
@@ -204,20 +205,6 @@ local function _ease_out_quad(t, b, c, d)
 	local res = -c * t * (t - 2) + b
 
 	return res
-end
-
-local function _calculate_player_height(fp_component, t)
-	local time_changing_height = t - fp_component.height_change_start_time
-	local duration = fp_component.height_change_duration
-
-	if time_changing_height < duration then
-		local old_height = fp_component.old_height
-		local new_height = _ease_out_quad(time_changing_height, old_height, fp_component.wanted_height - old_height, duration)
-
-		return new_height
-	else
-		return fp_component.wanted_height
-	end
 end
 
 PlayerUnitFirstPersonExtension.default_height = function (self, state_name)
@@ -480,6 +467,10 @@ PlayerUnitFirstPersonExtension._update_first_person_forced_rotation = function (
 	end
 end
 
+local DEFAULT_VERTICAL_FOV = DefaultGameParameters.vertical_fov
+local BASE_VERTICAL_FOV = DEFAULT_VERTICAL_FOV * math.pi / 180
+local BASE_HORIZONTAL_FOV = BASE_VERTICAL_FOV * 1.7777777777777777
+
 PlayerUnitFirstPersonExtension.is_within_default_view = function (self, position)
 	local first_person = self._first_person_component
 	local pos = first_person.position
@@ -490,8 +481,6 @@ PlayerUnitFirstPersonExtension.is_within_default_view = function (self, position
 	local is_infront = dot > 0
 
 	if is_infront then
-		local base_vertical_fov_rad = CameraSettings.player_first_person._node.vertical_fov * math.pi / 180
-		local base_horizontal_fov_rad = base_vertical_fov_rad * 1.7777777777777777
 		local player_right = Quaternion.right(rot)
 		local player_up = Quaternion.up(rot)
 		local c_x = Vector3.dot(to_pos_dir, player_right)
@@ -507,13 +496,13 @@ PlayerUnitFirstPersonExtension.is_within_default_view = function (self, position
 		local cos_xy = math.clamp(dot_xy / c_to_pos_dir_length_xy, -1, 1)
 		local yaw = math.acos(cos_xy)
 
-		if yaw <= base_horizontal_fov_rad / 2 then
+		if yaw <= BASE_HORIZONTAL_FOV * 0.5 then
 			local dot_uz = c_to_pos_dir_length_xy
 			local to_pos_dir_length_uz = math.sqrt(c_to_pos_dir_length_xy * c_to_pos_dir_length_xy + c_z * c_z)
 			local cos_uz = math.clamp(dot_uz / to_pos_dir_length_uz, -1, 1)
 			local pitch = math.acos(cos_uz)
 
-			if pitch <= base_vertical_fov_rad / 2 then
+			if pitch <= BASE_VERTICAL_FOV * 0.5 then
 				return true
 			end
 

@@ -2,7 +2,6 @@
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local MinionState = require("scripts/utilities/minion_state")
 local proc_events = BuffSettings.proc_events
 local SmokeFogExtension = class("SmokeFogExtension")
 local DEFAULT_INNER_RADIUS = 4.5

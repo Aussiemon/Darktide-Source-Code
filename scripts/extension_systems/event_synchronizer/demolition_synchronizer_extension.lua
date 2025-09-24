@@ -30,7 +30,7 @@ DemolitionSynchronizerExtension.setup_from_component = function (self, objective
 	self._segment_end_delay = segment_end_delay
 	self._auto_start = auto_start
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
+	self._mission_objective_system:register_objective_synchronizer(objective_name, nil, self._unit)
 end
 
 DemolitionSynchronizerExtension.hot_join_sync = function (self, sender, channel)
@@ -259,10 +259,6 @@ DemolitionSynchronizerExtension.set_override_objective_markers = function (self,
 
 		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_demolition_target_override", level_unit_id, override)
 	end
-end
-
-DemolitionSynchronizerExtension.active_objective = function (self)
-	self._mission_objective_system:is_current_active_objective(self._objective_name)
 end
 
 DemolitionSynchronizerExtension.active_stage_unit_num = function (self)

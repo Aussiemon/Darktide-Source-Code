@@ -50,7 +50,7 @@ LocalEacCheckState.update = function (self, dt)
 
 	local channel_state, reason = Network.channel_state(shared_state.channel_id)
 
-	if channel_state == "disconnected" then
+	if channel_state == "disconnecting" or channel_state == "disconnected" then
 		return "disconnected", {
 			engine_reason = reason,
 		}

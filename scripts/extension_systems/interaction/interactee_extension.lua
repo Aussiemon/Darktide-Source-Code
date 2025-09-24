@@ -29,6 +29,7 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 	self._active_interaction_changed = false
 	self._emissive_material_name = nil
 	self._animation_extension = nil
+	self._registered_block_functions = {}
 
 	if is_server then
 		local level_id = Managers.state.unit_spawner:level_index(unit)
@@ -205,7 +206,11 @@ InteracteeExtension.update_light = function (self)
 	if self._used then
 		color_box = emissive_colors.used
 	elseif self._active then
-		color_box = emissive_colors.active
+		if self:block_text(self._interactor_unit) then
+			color_box = emissive_colors.blocked
+		else
+			color_box = emissive_colors.active
+		end
 	else
 		color_box = emissive_colors.inactive
 	end
@@ -452,6 +457,8 @@ InteracteeExtension.set_block_text = function (self, text, block_text_context)
 
 		override_context.block_text = text
 		override_context.block_text_context = block_text_context
+
+		self:update_light()
 	end
 end
 
@@ -460,6 +467,16 @@ InteracteeExtension.block_text = function (self, interactor_unit)
 
 	if not active_interaction_type then
 		return
+	end
+
+	local registered_block_functions = self._registered_block_functions
+
+	for _, registered_block_function in ipairs(registered_block_functions) do
+		local block_text, block_text_context = registered_block_function(self, interactor_unit)
+
+		if block_text then
+			return block_text, block_text_context
+		end
 	end
 
 	local override_context = self._override_contexts[active_interaction_type]
@@ -476,6 +493,12 @@ InteracteeExtension.block_text = function (self, interactor_unit)
 	end
 
 	return block_text, block_text_context
+end
+
+InteracteeExtension.register_block_text_function = function (self, func)
+	local registered_block_functions = self._registered_block_functions
+
+	registered_block_functions[#registered_block_functions + 1] = func
 end
 
 InteracteeExtension.hold_required = function (self)

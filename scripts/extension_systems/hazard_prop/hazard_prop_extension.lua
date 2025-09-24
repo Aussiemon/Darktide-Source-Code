@@ -99,10 +99,6 @@ HazardPropExtension.content = function (self)
 end
 
 HazardPropExtension.set_content = function (self, content)
-	if self._content ~= hazard_content.undefined and self._is_server then
-		Log.error("HazardPropExtension", "[set_content][Unit: %s] Hazard already has content: %s, changed to: %s", Unit.id_string(self._unit), self._content, content)
-	end
-
 	if content == hazard_content.none then
 		Unit.set_material(self._unit, "hazard_paint", hazard_material.empty_paint)
 		Unit.set_material(self._unit, "hazard_il", hazard_material.empty_il)
@@ -244,12 +240,19 @@ HazardPropExtension._update_mesh_visuals = function (self)
 	end
 end
 
-HazardPropExtension.add_damage = function (self, damage_amount, hit_actor, attack_direction)
+HazardPropExtension.add_damage = function (self, damage_amount, hit_actor, attack_direction, attacking_unit)
 	if not self._is_server or self._content == hazard_content.none then
 		return
 	end
 
 	if self._trigger_timer == TRIGGER_TIME then
+		return
+	end
+
+	local player = Managers.state.player_unit_spawn:owner(attacking_unit)
+	local is_bot = player and not player:is_human_controlled()
+
+	if is_bot then
 		return
 	end
 

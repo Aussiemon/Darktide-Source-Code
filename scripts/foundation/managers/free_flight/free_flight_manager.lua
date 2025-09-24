@@ -275,6 +275,8 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 	local toggle_look_input = input:get("toggle_look_input")
 	local projection_mode_swap = input:get("top_down_toggle")
 	local speed_change = input:get("speed_change")
+	local camera_speed_up = input:get("camera_speed_up")
+	local camera_speed_down = input:get("camera_speed_down")
 	local look = input:get("look")
 	local move_right = input:get("move_right")
 	local move_left = input:get("move_left")
@@ -303,9 +305,17 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 
 	Camera.set_projection_type(cam, camera_data.projection_type)
 
+	local target_speed_change = speed_change
+
+	if camera_speed_up then
+		target_speed_change = 1
+	elseif camera_speed_down then
+		target_speed_change = -1
+	end
+
 	local translation_change_speed = camera_data.translation_speed * self.STD_SPEED_CHANGE
 
-	camera_data.translation_speed = camera_data.translation_speed + speed_change * translation_change_speed
+	camera_data.translation_speed = camera_data.translation_speed + target_speed_change * translation_change_speed
 	camera_data.translation_speed = math.clamp(camera_data.translation_speed, self.STD_MINIMUM_SPEED, self.STD_MAXIMUM_SPEED)
 
 	local cm = Camera.local_pose(cam)
@@ -337,10 +347,10 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 		else
 			Matrix4x4.set_translation(cm, Vector3(0, 0, 0))
 
-			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
-			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
+			local q1 = Quaternion(Vector3(0, 0, 1), -Vector3.x(look) * (camera_data.rotation_speed * (using_gamepad and 12 or 1)))
+			local q2 = Quaternion(Matrix4x4.x(cm), -Vector3.y(look) * (camera_data.rotation_speed * (using_gamepad and 12 or 1)))
 			local roll = -roll_left + roll_right
-			local q3 = Quaternion(Matrix4x4.y(cm), roll * (camera_data.rotation_speed * (using_gamepad and 2 or 1)))
+			local q3 = Quaternion(Matrix4x4.y(cm), roll * (camera_data.rotation_speed * (using_gamepad and 12 or 1)))
 			local q = Quaternion.multiply(q1, q2)
 
 			q = Quaternion.multiply(q, q3)

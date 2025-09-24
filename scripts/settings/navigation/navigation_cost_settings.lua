@@ -4,10 +4,12 @@ local IGNORE_NAV_COST_MAP_LAYER = "ignore"
 local default_nav_cost_maps_minions = {
 	daemonhost = 1,
 	fire = 1,
+	obstacle = 1,
 }
 local default_nav_cost_maps_bots = {
 	daemonhost = 1,
 	fire = 1,
+	obstacle = 1,
 }
 local default_nav_tag_layers_minions = {
 	bot_damage_drops = 0,

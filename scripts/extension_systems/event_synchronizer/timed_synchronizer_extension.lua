@@ -9,19 +9,23 @@ TimedSynchronizerExtension.init = function (self, extension_init_context, unit, 
 	self._paused = false
 end
 
-TimedSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start, curve_power)
+TimedSynchronizerExtension.setup_from_component = function (self, objective_name, global_group, auto_start, curve_power)
 	self._objective_name = objective_name
 	self._auto_start = auto_start
 	self._curve_power = curve_power
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
+	if global_group then
+		self._group_id = 0
+	end
+
+	self._mission_objective_system:register_objective_synchronizer(objective_name, global_group and 0 or nil, self._unit)
 end
 
 TimedSynchronizerExtension.objective_started = function (self)
 	TimedSynchronizerExtension.super.objective_started(self)
 
 	if self._is_server then
-		local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
+		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
 
 		if self._paused then
 			mission_objective:pause()
@@ -41,7 +45,7 @@ TimedSynchronizerExtension.start_event = function (self)
 	if self._paused then
 		self._paused = false
 
-		local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
+		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
 
 		mission_objective:resume()
 		Unit.flow_event(self._unit, "lua_event_resumed")
@@ -58,7 +62,7 @@ end
 
 TimedSynchronizerExtension.add_time = function (self, time)
 	if self._is_server then
-		local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
+		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
 
 		mission_objective:add_time(time)
 	end
@@ -71,7 +75,7 @@ TimedSynchronizerExtension.pause_event = function (self)
 		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_paused", unit_id)
 	end
 
-	local mission_objective = self._mission_objective_system:active_objective(self._objective_name)
+	local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
 
 	if mission_objective then
 		mission_objective:pause()

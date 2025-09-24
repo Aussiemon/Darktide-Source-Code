@@ -3,22 +3,12 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local MinionMovement = require("scripts/utilities/minion_movement")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
-local CompanionFollowUtility = require("scripts/utilities/companion_follow_utility")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
+local CompanionFollow = require("scripts/utilities/companion_follow")
 local MinionAttack = require("scripts/utilities/minion_attack")
+local MinionMovement = require("scripts/utilities/minion_movement")
 local BtCompanionMoveToPositionAction = class("BtCompanionMoveToPositionAction", "BtNode")
-
-BtCompanionMoveToPositionAction.TIME_TO_FIRST_EVALUATE = {
-	0.8,
-	1.5,
-}
-BtCompanionMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
-	1,
-	2,
-}
-
-local lean_settings = CompanionDogSettings.leaning
+local lean_settings = CompanionDogLocomotionSettings.leaning
 local ARRIVED_AT_POSITION_THRESHOLD_SQ = 0.1
 
 BtCompanionMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -117,12 +107,6 @@ BtCompanionMoveToPositionAction.leave = function (self, unit, breed, blackboard,
 		scratchpad.navigation_extension:set_enabled(false)
 	end
 
-	if scratchpad.reset_slot_system then
-		local slot_system = Managers.state.extension:system("slot_system")
-
-		slot_system:do_slot_search(unit, true)
-	end
-
 	if action_data.effect_template then
 		local fx_system = Managers.state.extension:system("fx_system")
 
@@ -154,10 +138,10 @@ BtCompanionMoveToPositionAction.run = function (self, unit, breed, blackboard, s
 
 	if action_data.follow_aim then
 		local owner_unit_position = POSITION_LOOKUP[behavior_component.owner_unit]
-		local follow_aim_entry = CompanionFollowUtility.follow_aim_entry(scratchpad, action_data, Vector3.zero())
+		local follow_aim_entry = CompanionFollow.follow_aim_entry(scratchpad, action_data, Vector3.zero())
 		local aim_target_position = follow_aim_entry == "player" and owner_unit_position or move_to_position
 
-		CompanionFollowUtility.set_up_aim_target(unit, scratchpad, aim_target_position)
+		CompanionFollow.set_up_aim_target(unit, scratchpad, aim_target_position)
 	end
 
 	scratchpad.move_to_position = scratchpad.behavior_component.move_to_position
@@ -221,7 +205,7 @@ BtCompanionMoveToPositionAction.run = function (self, unit, breed, blackboard, s
 		local owner_hub_jog_character_state_component = scratchpad.owner_hub_jog_character_state_component
 		local is_crouching = owner_movement_state_component and owner_movement_state_component.is_crouching or false
 		local is_walking_in_hub = self:_is_in_hub() and owner_hub_jog_character_state_component and owner_hub_jog_character_state_component.move_state == "walk" or false
-		local follow_config = CompanionFollowUtility.follow_config(blackboard, action_data)
+		local follow_config = CompanionFollow.follow_config(blackboard, action_data)
 		local adapt_threshold_multiplier
 
 		if is_crouching or is_walking_in_hub then

@@ -8,10 +8,12 @@ local MasterItems = require("scripts/backend/master_items")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local PlayerCharacterSounds = require("scripts/settings/sound/player_character_sounds")
 local PlayerPackageAliases = require("scripts/settings/player/player_package_aliases")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local PackageSynchronizerClient = class("PackageSynchronizerClient")
 local RPCS = {
 	"rpc_set_package_prioritization",
@@ -170,6 +172,7 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 	local profile_packages = {}
 	local sound_dependencies = {}
 	local particle_dependencies = {}
+	local decal_dependencies = {}
 
 	for i = 1, #PlayerPackageAliases do
 		local alias = PlayerPackageAliases[i]
@@ -218,10 +221,11 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 		all_items[slot_name] = item
 	end
 
-	self:_resolve_profile_properties(all_items, archetype, selected_voice, sound_dependencies, particle_dependencies)
-	self:_resolve_archetype_dependencies(archetype, sound_dependencies, particle_dependencies)
+	self:_resolve_profile_properties(all_items, archetype, selected_voice, sound_dependencies, particle_dependencies, decal_dependencies)
+	self:_resolve_archetype_dependencies(archetype, sound_dependencies, particle_dependencies, decal_dependencies)
 	_add_package_chunk("sound_dependencies", sound_dependencies, profile_packages)
 	_add_package_chunk("particle_dependencies", particle_dependencies, profile_packages)
+	_add_package_chunk("decal_dependencies", decal_dependencies, profile_packages)
 
 	return profile_packages
 end
@@ -269,20 +273,19 @@ local temp_abilities_items = {}
 local class_loadout = {}
 
 PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, talents, profile_packages, mission, game_mode_settings, profile)
-	local combat_ability, grenade_ability
 	local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 	local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
 	CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
-
-	combat_ability = class_loadout.combat_ability
-	grenade_ability = class_loadout.grenade_ability
-
 	table.clear(temp_abilities)
 	table.clear(temp_abilities_items)
 
-	temp_abilities[ability_configuration.combat_ability] = combat_ability
-	temp_abilities[ability_configuration.grenade_ability] = grenade_ability
+	for i = 1, #ability_types do
+		local ability_type = ability_types[i]
+		local ability = class_loadout[ability_type]
+
+		temp_abilities[ability_configuration[ability_type]] = ability
+	end
 
 	for slot_name, ability in pairs(temp_abilities) do
 		local ability_dependencies = {}
@@ -310,7 +313,7 @@ PackageSynchronizerClient._resolve_ability_packages = function (self, archetype,
 	return temp_abilities_items
 end
 
-PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, sound_dependencies, particle_dependencies)
+PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, sound_dependencies, particle_dependencies, decal_dependencies)
 	local profile_properties = {}
 
 	profile_properties.archetype = archetype.name
@@ -321,7 +324,9 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 
 		if item_properties and type(item_properties) ~= "userdata" then
 			for name, value in pairs(item_properties) do
-				profile_properties[name] = value
+				if value ~= "" then
+					profile_properties[name] = value
+				end
 			end
 		end
 	end
@@ -352,6 +357,16 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 		end
 	end
 
+	local decal_aliases = PlayerCharacterDecals.decal_aliases
+
+	for decal_alias, _ in pairs(decal_aliases) do
+		local resolved, decal = PlayerCharacterDecals.resolve_decal(decal_alias, profile_properties)
+
+		if resolved then
+			decal_dependencies[decal] = false
+		end
+	end
+
 	for _, item in pairs(items) do
 		local weapon_template = item.weapon_template
 
@@ -360,6 +375,7 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 
 			local relevant_events = PlayerCharacterSounds.find_relevant_events(profile_properties)
 			local relevant_particles = PlayerCharacterParticles.find_relevant_particles(profile_properties)
+			local relevant_decals = PlayerCharacterDecals.find_relevant_decals(profile_properties)
 
 			for event, _ in pairs(relevant_events) do
 				sound_dependencies[event] = false
@@ -368,14 +384,18 @@ PackageSynchronizerClient._resolve_profile_properties = function (self, items, a
 			for particle, _ in pairs(relevant_particles) do
 				particle_dependencies[particle] = false
 			end
+
+			for decal, _ in pairs(relevant_decals) do
+				decal_dependencies[decal] = false
+			end
 		end
 	end
 
 	profile_properties.wielded_weapon_template = nil
 end
 
-PackageSynchronizerClient._resolve_archetype_dependencies = function (self, archetype, sound_dependencies, particle_dependencies)
-	local sound_resources, particle_resources = ArchetypeResourceDependencies.generate(archetype)
+PackageSynchronizerClient._resolve_archetype_dependencies = function (self, archetype, sound_dependencies, particle_dependencies, decal_dependencies)
+	local sound_resources, particle_resources, decal_resources = ArchetypeResourceDependencies.generate(archetype)
 
 	for ii = 1, #sound_resources do
 		sound_dependencies[sound_resources[ii]] = false
@@ -383,6 +403,10 @@ PackageSynchronizerClient._resolve_archetype_dependencies = function (self, arch
 
 	for ii = 1, #particle_resources do
 		particle_dependencies[particle_resources[ii]] = false
+	end
+
+	for ii = 1, #decal_resources do
+		decal_dependencies[decal_resources[ii]] = false
 	end
 end
 

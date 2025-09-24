@@ -32,6 +32,7 @@ local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local special_rules = SpecialRulesSettings.special_rules
 local stat_buffs = BuffSettings.stat_buffs
+local talent_settings = TalentSettings.veteran
 local talent_settings_2 = TalentSettings.veteran_2
 local talent_settings_3 = TalentSettings.veteran_3
 local _can_show_outline, _start_outlines, _update_outlines, _end_outlines, _is_in_weapon_alternate_fire_with_stamina
@@ -168,7 +169,7 @@ templates.veteran_combat_ability_stance_master = {
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.apply_outlines then
 			local unit = template_context.unit
-			local outline_buff = "veteran_combat_ability_outlines"
+			local outline_buff = template_data.show_ogryn_outlines and "veteran_combat_ability_outlines_increased_duration" or "veteran_combat_ability_outlines"
 			local buff_extension = template_data.buff_extension
 
 			buff_extension:add_internally_controlled_buff(outline_buff, t, "owner_unit", unit)
@@ -214,6 +215,8 @@ templates.veteran_combat_ability_stance_master = {
 		"veteran_combat_ability_stance",
 	},
 }
+templates.veteran_combat_ability_stance_master_increased_duration = table.clone(templates.veteran_combat_ability_stance_master)
+templates.veteran_combat_ability_stance_master_increased_duration.duration = talent_settings_2.combat_ability.duration_increased
 templates.veteran_combat_ability_outlines = {
 	class_name = "buff",
 	max_stacks = 1,
@@ -258,6 +261,8 @@ templates.veteran_combat_ability_outlines = {
 		_end_outlines(template_data, template_context)
 	end,
 }
+templates.veteran_combat_ability_outlines_increased_duration = table.clone(templates.veteran_combat_ability_outlines)
+templates.veteran_combat_ability_outlines_increased_duration.duration = talent_settings_2.combat_ability.duration_increased
 templates.veteran_combat_ability_outlines_coherency = table.clone(templates.veteran_combat_ability_outlines)
 templates.veteran_combat_ability_outlines_coherency.duration = talent_settings_2.coop_1.outline_short_duration
 
@@ -317,7 +322,29 @@ templates.veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines =
 
 		template_data.buff_extension = buff_extension
 	end,
-	update_func = function (template_data, template_context)
+	update_func = function (template_data, template_context, dt)
+		template_data.active = template_data.buff_extension:has_keyword(keywords.veteran_combat_ability_stance)
+
+		if template_data.active then
+			local toughness = talent_settings_2.combat_ability.toughness * dt
+
+			Toughness.replenish_percentage(template_context.unit, toughness, false, "veteran_ranged_stance")
+		end
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.active
+	end,
+}
+templates.veteran_combat_ability_increased_damage_vs_ogryn_and_monsters = {
+	class_name = "buff",
+	predicted = false,
+	conditional_stat_buffs = {},
+	start_func = function (template_data, template_context)
+		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+
+		template_data.buff_extension = buff_extension
+	end,
+	update_func = function (template_data, template_context, dt)
 		template_data.active = template_data.buff_extension:has_keyword(keywords.veteran_combat_ability_stance)
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
@@ -357,7 +384,7 @@ function _can_show_outline(breed, template_data)
 		return false
 	end
 
-	local is_ogryn = breed_tags.ogryn
+	local is_ogryn = breed_tags.ogryn or breed_tags.monster or breed_tags.captain or breed_tags.cultist_captain
 
 	if is_ogryn and not show_ogryn_outlines then
 		return false
@@ -510,7 +537,7 @@ templates.veteran_combat_ability_increased_melee_and_ranged_damage = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
 	buff_category = buff_categories.talents_secondary,
-	duration = talent_settings_2.combat_ability.duration,
+	duration = talent_settings.veteran_combat_ability_melee_and_ranged_damage_to_coherency.duration,
 	stat_buffs = {
 		[stat_buffs.melee_damage] = 0.1,
 		[stat_buffs.ranged_damage] = 0.1,
@@ -550,7 +577,7 @@ templates.veteran_bonus_crit_chance_on_ammo = {
 		end
 
 		local slot_component = template_data.slot_component
-		local current_animation_clip, max_ammunition_clip = slot_component.current_ammunition_clip, slot_component.max_ammunition_clip
+		local current_animation_clip, max_ammunition_clip = Ammo.current_ammo_in_clips(slot_component), Ammo.max_ammo_in_clips(slot_component)
 		local current_animation_percentage = current_animation_clip / max_ammunition_clip
 		local ammunition_percentage = template_context.template.ammunition_percentage
 
@@ -584,7 +611,7 @@ templates.veteran_no_ammo_consumption_on_lasweapon_crit = {
 
 		local inventory_slot_component = template_data.inventory_slot_component
 
-		if inventory_slot_component and inventory_slot_component.current_ammunition_clip < 1 then
+		if inventory_slot_component and Ammo.current_ammo_in_clips(inventory_slot_component) < 1 then
 			return false
 		end
 
@@ -620,7 +647,7 @@ templates.veteran_movement_speed_on_toughness_broken = {
 templates.veteran_movement_bonuses_on_toughness_broken = {
 	active_duration = 6,
 	class_name = "proc_buff",
-	cooldown_duration = 30,
+	cooldown_duration = 20,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_movement_speed_on_toughness_broken",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
@@ -692,7 +719,7 @@ templates.veteran_increase_suppression = {
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = 0.5,
+		[stat_buffs.suppression_dealt] = 0.75,
 	},
 }
 templates.veteran_increase_crit_chance = {
@@ -721,26 +748,50 @@ templates.veteran_damage_after_sprinting = {
 
 		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+		local movement_state_component = unit_data_extension:read_component("movement_state")
+
+		template_data.movement_state_component = movement_state_component
 		template_data.sprinting = false
 		template_data.next_buff_t = 0
+		template_data.value = 0
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		local sprint_character_state_component = template_data.sprint_character_state_component
 		local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
+		local is_sliding = template_data.movement_state_component.method == "sliding"
+		local add_buff = is_sprinting or is_sliding
 
-		if is_sprinting then
-			if not template_data.sprinting then
-				template_data.sprinting = true
-				template_data.next_buff_t = t + 1
-			elseif t >= template_data.next_buff_t then
-				template_data.buff_extension:add_internally_controlled_buff("veteran_damage_after_sprinting_buff", t)
-
-				template_data.next_buff_t = template_data.next_buff_t + 1
-			end
+		if add_buff then
+			template_data.value = template_data.value + dt
 		else
-			template_data.sprinting = false
+			template_data.value = 0.5
+		end
+
+		if template_data.value >= 1 then
+			template_data.value = template_data.value - 1
+
+			template_data.buff_extension:add_internally_controlled_buff("veteran_damage_after_sprinting_buff", t)
 		end
 	end,
+}
+templates.veteran_melee_crits_increase_damage = {
+	active_duration = 6,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_crits_apply_rending",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
+	proc_stat_buffs = {
+		[stat_buffs.damage] = 0.2,
+	},
+	related_talents = {
+		"veteran_kill_grants_damage_to_other_slot",
+	},
 }
 templates.veteran_damage_after_sprinting_buff = {
 	class_name = "buff",
@@ -896,11 +947,11 @@ templates.veteran_reduce_swap_time = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.wield_speed] = 0.25,
+		[stat_buffs.wield_speed] = 0.5,
 	},
 }
 templates.veteran_melee_kills_grant_range_damage = {
-	active_duration = 5,
+	active_duration = 6,
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_kill_grants_damage_to_other_slot",
@@ -918,7 +969,7 @@ templates.veteran_melee_kills_grant_range_damage = {
 	},
 }
 templates.veteran_ranged_kills_grant_melee_damage = {
-	active_duration = 5,
+	active_duration = 6,
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_kill_grants_damage_to_other_slot",
@@ -1152,9 +1203,7 @@ templates.veteran_invisibility = {
 		local buff_extension = template_context.buff_extension
 		local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
 
-		if talent_extension:has_special_rule(special_rules.veteran_damage_bonus_leaving_invisibility) then
-			buff_extension:add_internally_controlled_buff("veteran_damage_bonus_leaving_invisibility", t)
-		end
+		buff_extension:add_internally_controlled_buff("veteran_damage_bonus_leaving_invisibility", t)
 
 		if talent_extension:has_special_rule(special_rules.veteran_toughness_bonus_leaving_invisibility) then
 			buff_extension:add_internally_controlled_buff("veteran_toughness_bonus_leaving_invisibility", t)
@@ -1196,7 +1245,7 @@ templates.veteran_invisibility = {
 			local hit_zone_name = "torso"
 			local position = POSITION_LOOKUP[unit]
 			local attack_direction = Vector3.normalize(Vector3.flat(position - player_position))
-			local _, attack_result, _, stagger_result = Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", PowerLevelSettings.default_power_level, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit)
+			local _, _, _, stagger_result = Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", PowerLevelSettings.default_power_level, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit)
 
 			if stagger_result == "stagger" then
 				number_of_enemies_staggered = number_of_enemies_staggered + 1
@@ -1257,7 +1306,7 @@ templates.veteran_improved_grenades = {
 	stat_buffs = {
 		[stat_buffs.frag_damage] = 0.25,
 		[stat_buffs.explosion_radius_modifier_frag] = 0.25,
-		[stat_buffs.krak_damage] = 0.5,
+		[stat_buffs.krak_damage] = 0.75,
 		[stat_buffs.smoke_fog_duration_modifier] = 1,
 	},
 }
@@ -1324,7 +1373,8 @@ templates.veteran_increase_ranged_far_damage = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.damage_far] = talent_settings_2.offensive_1_1.damage_far,
+		[stat_buffs.ranged_damage] = talent_settings_2.offensive_1_1.ranged_damage_min,
+		[stat_buffs.ranged_damage_far] = talent_settings_2.offensive_1_1.ranged_damage_max,
 	},
 }
 templates.veteran_toughness_on_elite_kill = {
@@ -1443,7 +1493,7 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 	always_show_in_hud = true,
 	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_scavengers_base",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	max_stacks = 1,
 	predicted = false,
@@ -1493,7 +1543,7 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 	always_show_in_hud = true,
 	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_aura_scavengers",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	max_stacks = 1,
 	predicted = false,
@@ -1678,6 +1728,7 @@ templates.veteran_ranged_weakspot_toughenss_buff = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
+	refresh_duration_on_remove_stack = true,
 	refresh_duration_on_stack = true,
 	duration = talent_settings_2.toughness_2.duration,
 	max_stacks = talent_settings_2.toughness_2.max_stacks,
@@ -1930,7 +1981,10 @@ templates.veteran_reduced_threat_generation = {
 	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_reduced_threat_when_still",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
+	refresh_duration_on_stack = true,
 	stat_buffs = {
 		[stat_buffs.threat_weight_multiplier] = talent_settings_2.defensive_3.threat_weight_multiplier,
 	},
@@ -1943,7 +1997,10 @@ templates.veteran_increased_close_damage_after_combat_ability = {
 	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_increased_close_damage_after_combat_ability",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
+	refresh_duration_on_stack = true,
 	stat_buffs = {
 		[stat_buffs.damage_near] = 0.15,
 	},
@@ -1956,7 +2013,10 @@ templates.veteran_increased_weakspot_power_after_combat_ability = {
 	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_increased_close_damage_after_combat_ability",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
+	refresh_duration_on_stack = true,
 	stat_buffs = {
 		[stat_buffs.weakspot_power_level_modifier] = 0.2,
 	},
@@ -2036,22 +2096,51 @@ templates.veteran_combat_ability_cooldown_reduction_on_elite_kills = {
 		template_data.cooldown_reduction = talent_settings_3.passive_1.cooldown_reduction
 		template_data.talent_cooldown_reduction = talent_settings_3.passive_1.talent_cooldown_reduction
 	end,
-	proc_func = function (params, template_data, template_context)
-		local unit = template_context.unit
-		local talent_extension = ScriptUnit.extension(unit, "talent_system")
-		local special_rule = special_rules.veteran_squad_leader_increased_cooldown_restore_on_elite_kills
-		local small_reduction = template_data.cooldown_reduction
-		local large_reduction = template_data.talent_cooldown_reduction
-		local cooldown_reduction = talent_extension:has_special_rule(special_rule) and large_reduction or small_reduction
-
-		template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_reduction)
+	proc_func = function (params, template_data, template_context, t)
+		template_context.buff_extension:add_internally_controlled_buff("veteran_combat_ability_cooldown_reduction_on_elite_kills_buff", t)
 	end,
+}
+templates.veteran_combat_ability_cooldown_reduction_on_elite_kills_buff = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_elite_kills_reduce_cooldown",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 1,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	duration = talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.duration,
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
+	end,
+	update_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local t = FixedFrame.get_latest_fixed_time()
+
+		if not template_data.timer then
+			template_data.timer = t + 1
+		end
+
+		if t > template_data.timer then
+			template_data.timer = template_data.timer + 1
+
+			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.cdr)
+		end
+	end,
+	related_talents = {
+		"veteran_elite_kills_reduce_cooldown",
+	},
 }
 templates.veteran_suppression_immunity = {
 	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_supression_immunity",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 1,
 	predicted = false,
 	keywords = {
 		keywords.suppression_immune,
@@ -2197,6 +2286,9 @@ templates.veteran_share_toughness_gained = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_toughness_replenished] = 1,
+	},
+	stat_buffs = {
+		[stat_buffs.coherency_radius_modifier] = talent_settings_3.coop_3.radius,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2552,219 +2644,166 @@ local snipers_focus_max_stacks = 10
 local snipers_focus_max_stacks_talent = 15
 
 local function _snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
-	if previous_stacks < snipers_focus_max_stacks and template_data.stacks >= snipers_focus_max_stacks then
-		if template_data.threat_bonus then
-			template_context.buff_extension:add_internally_controlled_buff("veteran_snipers_focus_threat_buff", t)
+	local current_stacks = template_context.stack_count
 
+	if previous_stacks < snipers_focus_max_stacks and current_stacks >= snipers_focus_max_stacks then
+		if template_data.threat_bonus then
+			local _, id = template_context.buff_extension:add_externally_controlled_buff("veteran_snipers_focus_threat_buff", t)
+
+			template_data.veteran_snipers_focus_threat_buff_id = id
 			template_data.threat_buff_active = true
 		end
 
 		local rending_bonus = template_data.talent_extension:has_special_rule("veteran_snipers_focus_rending_bonus")
 
 		if rending_bonus then
-			template_context.buff_extension:add_internally_controlled_buff("veteran_snipers_focus_rending_buff", t)
+			local _, id = template_context.buff_extension:add_externally_controlled_buff("veteran_snipers_focus_rending_buff", t)
 
+			template_data.veteran_snipers_focus_rending_buff_id = id
 			template_data.rending_buff_active = true
 		end
 
 		template_context.buff_extension:add_internally_controlled_buff("veteran_snipers_focus_effect", t)
-	elseif previous_stacks >= snipers_focus_max_stacks and template_data.stacks < snipers_focus_max_stacks then
-		if template_data.threat_buff_active then
-			template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_threat_buff")
+	elseif previous_stacks >= snipers_focus_max_stacks and current_stacks < snipers_focus_max_stacks then
+		if template_data.threat_buff_active and template_data.veteran_snipers_focus_threat_buff_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_threat_buff_id)
 
 			template_data.threat_buff_active = nil
+			template_data.veteran_snipers_focus_threat_buff_id = nil
 		end
 
-		if template_data.rending_buff_active then
-			template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_rending_buff")
+		if template_data.rending_buff_active and template_data.veteran_snipers_focus_rending_buff_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_rending_buff_id)
 
 			template_data.rending_buff_active = nil
+			template_data.veteran_snipers_focus_rending_buff_id = nil
 		end
+
+		template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_effect")
 	end
 end
 
 local snipers_focus_stacks_per_weakspot_kill = 3
-local sf_sprint_interval = 0.5
-local sf_move_interval = 1
-local sf_still_interval = 0.75
+local snipers_focus_stacks_per_weakspot_hit = 1
 
 templates.veteran_snipers_focus = {
-	always_active = true,
-	always_show_in_hud = true,
 	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_snipers_focus",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
 	predicted = false,
-	use_talent_resource = true,
 	proc_events = {
 		[proc_events.on_hit] = 1,
-		[proc_events.on_slide_start] = 1,
-		[proc_events.on_slide_end] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
 
-		template_data.talent_extension = talent_extension
-		template_data.locomotion_component = unit_data_extension:read_component("locomotion")
-		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
-		template_data.movement_state_component = unit_data_extension:read_component("movement_state")
-		template_data.talent_resource_component = unit_data_extension:write_component("talent_resource")
-		template_data.talent_resource_component.current_resource = 0
-		template_data.evaluate_max_stacks_stat = false
-		template_data.stacks = 0
-		template_data.next_t = 0
-		template_data.safe_t = 0
-		template_data.threat_bonus = talent_extension:has_special_rule("veteran_snipers_focus_threat_bonus")
 		template_data.toughness_bonus = talent_extension:has_special_rule("veteran_snipers_focus_toughness_bonus")
 
 		local increased_stacks_talent = talent_extension:has_special_rule("veteran_snipers_focus_increased_stacks")
 
 		template_data.max_stacks = increased_stacks_talent and snipers_focus_max_stacks_talent or snipers_focus_max_stacks
-		template_data.stat_buff = "veteran_snipers_focus_stat_buff"
-		template_data.toughness_buff = "veteran_snipers_focus_toughness_buff"
+		template_data.buff = increased_stacks_talent and "veteran_snipers_focus_stat_buff_increased_stacks" or "veteran_snipers_focus_stat_buff"
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		if not template_context.is_server then
+			return
+		end
 
-		local t = FixedFrame.get_latest_fixed_time()
-		local _, stat_buff_id = template_context.buff_extension:add_externally_controlled_buff(template_data.stat_buff, t)
+		if not params.hit_weakspot then
+			return
+		end
 
-		template_data.stat_buff_id = stat_buff_id
+		local ranged_kill = params.attack_result == attack_results.died and params.attack_type == attack_types.ranged
 
-		if template_data.toughness_bonus then
-			local _, toughness_buff_id = template_context.buff_extension:add_externally_controlled_buff(template_data.toughness_buff, t)
+		if ranged_kill then
+			template_context.buff_extension:add_internally_controlled_buff_with_stacks(template_data.buff, snipers_focus_stacks_per_weakspot_kill, t)
 
-			template_data.toughness_buff_id = toughness_buff_id
+			if template_data.toughness_bonus then
+				Stamina.add_stamina_percent(template_context.unit, 0.1)
+			end
+		else
+			local current_stacks = template_context.buff_extension:current_stacks(template_data.buff)
+
+			if current_stacks > 0 then
+				template_context.buff_extension:refresh_duration_of_stacking_buff(template_data.buff, t)
+			end
 		end
 	end,
-	specific_proc_func = {
-		on_hit = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return
-			end
-
-			if not params.hit_weakspot then
-				return
-			end
-
-			if params.attack_type ~= attack_types.ranged then
-				return
-			end
-
-			local previous_stacks = template_data.stacks
-			local kill = params.attack_result == attack_results.died
-
-			if kill then
-				template_data.stacks = math.min(template_data.stacks + snipers_focus_stacks_per_weakspot_kill, template_data.max_stacks)
-				template_data.talent_resource_component.current_resource = template_data.stacks
-
-				if template_data.toughness_bonus then
-					Stamina.add_stamina_percent(template_context.unit, 0.1)
-				end
-			end
-
-			_snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
-
-			local safe_time = kill and 6 or 3
-
-			template_data.safe_t = math.max(t + safe_time, template_data.safe_t)
-		end,
-		on_slide_start = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return
-			end
-
-			if t > template_data.safe_t then
-				template_data.stacks = math.max(0, template_data.stacks - 1)
-				template_data.talent_resource_component.current_resource = template_data.stacks
-			end
-
-			template_data.sliding = true
-		end,
-		on_slide_end = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return
-			end
-
-			template_data.sliding = false
-		end,
+	related_talents = {
+		"veteran_snipers_focus",
 	},
+}
+templates.veteran_snipers_focus_stat_buff = {
+	always_active = true,
+	always_show_in_hud = true,
+	class_name = "buff",
+	duration = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_snipers_focus",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	hud_priority = 1,
+	max_stacks_cap = 31,
+	predicted = false,
+	refresh_duration_on_remove_stack = true,
+	refresh_duration_on_stack = true,
+	max_stacks = snipers_focus_max_stacks,
+	stat_buffs = {
+		[stat_buffs.ranged_finesse_modifier_bonus] = 0.075,
+		[stat_buffs.reload_speed] = 0.01,
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.toughness_replenish_modifier] = 0.04,
+	},
+	start_func = function (template_data, template_context)
+		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
+
+		template_data.talent_extension = talent_extension
+		template_data.toughness_bonus = talent_extension:has_special_rule("veteran_snipers_focus_toughness_bonus")
+		template_data.evaluate_max_stacks_stat = false
+		template_data.previous_stacks = 0
+	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
 		end
 
-		if t < template_data.next_t then
-			return
-		end
-
-		local player_velocity = template_data.locomotion_component.velocity_current
-		local is_moving = Vector3.length(player_velocity) > 0.1
-		local is_sprinting = Sprint.is_sprinting(template_data.sprint_character_state_component)
-		local is_crouching = template_data.movement_state_component.is_crouching
-		local previous_stacks = template_data.stacks
-		local max_stacks = template_data.max_stacks
-		local sliding = template_data.sliding
-		local stacks_on_still = template_data.talent_extension:has_special_rule("veteran_snipers_focus_stacks_on_still")
-
-		if template_data.stacks >= snipers_focus_max_stacks and not template_data.evaluate_max_stacks_stat then
+		if template_context.stack_count >= snipers_focus_max_stacks and not template_data.evaluate_max_stacks_stat then
 			Managers.stats:record_private("hook_focus_fire_max_stacks", template_context.player)
 
 			template_data.evaluate_max_stacks_stat = true
-		elseif template_data.stacks ~= 0 and template_data.stacks < snipers_focus_max_stacks and template_data.evaluate_max_stacks_stat then
+		elseif template_context.stack_count ~= 0 and template_context.stack_count < snipers_focus_max_stacks and template_data.evaluate_max_stacks_stat then
 			Managers.stats:record_private("hook_focus_fire_max_reset", template_context.player)
 
 			template_data.evaluate_max_stacks_stat = false
 		end
 
-		if not is_crouching and is_moving and template_data.stacks > 0 then
-			if t > template_data.safe_t then
-				template_data.stacks = math.max(0, template_data.stacks - 1)
+		_snipers_focus_handle_stacks(template_data, template_context, template_data.previous_stacks, t)
 
-				if not is_sprinting then
-					template_data.next_t = t + sf_move_interval
-				else
-					template_data.next_t = t + sf_sprint_interval
-				end
-			end
-		elseif stacks_on_still and (not is_moving or is_crouching and not sliding) then
-			template_data.stacks = math.min(template_data.stacks + 1, max_stacks)
-			template_data.next_t = t + sf_still_interval
-		end
-
-		template_data.talent_resource_component.current_resource = template_data.stacks
-
-		_snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
+		template_data.previous_stacks = template_context.stack_count
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.toughness_bonus
 	end,
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then
 			return
 		end
 
-		template_context.buff_extension:remove_externally_controlled_buff(template_data.stat_buff_id)
-
-		if template_data.toughness_bonus then
-			template_context.buff_extension:remove_externally_controlled_buff(template_data.toughness_buff_id)
-		end
-
-		if template_data.threat_buff_active then
-			template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_threat_buff")
+		if template_data.threat_buff_active and template_data.veteran_snipers_focus_threat_buff_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_threat_buff_id)
 
 			template_data.threat_buff_active = nil
+			template_data.veteran_snipers_focus_threat_buff_id = nil
 		end
 
-		if template_data.rending_buff_active then
-			template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_rending_buff")
+		if template_data.rending_buff_active and template_data.veteran_snipers_focus_rending_buff_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_rending_buff_id)
 
 			template_data.rending_buff_active = nil
+			template_data.veteran_snipers_focus_rending_buff_id = nil
 		end
-
-		template_data.talent_resource_component.current_resource = 0
 	end,
-	related_talents = {
-		"veteran_snipers_focus",
-	},
 }
+templates.veteran_snipers_focus_stat_buff_increased_stacks = table.clone(templates.veteran_snipers_focus_stat_buff)
+templates.veteran_snipers_focus_stat_buff_increased_stacks.max_stacks = snipers_focus_max_stacks_talent
 templates.veteran_snipers_focus_effect = {
 	class_name = "buff",
 	max_stacks = 1,
@@ -2772,58 +2811,8 @@ templates.veteran_snipers_focus_effect = {
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_veteran_snipers_focus",
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-
-		template_data.talent_resource_component = unit_data_extension:read_component("talent_resource")
-	end,
 	conditional_exit_func = function (template_data, template_context)
-		return template_data.talent_resource_component.current_resource < snipers_focus_max_stacks
-	end,
-}
-templates.veteran_snipers_focus_stat_buff = {
-	class_name = "buff",
-	max_stacks = 1,
-	predicted = false,
-	lerped_stat_buffs = {
-		[stat_buffs.ranged_finesse_modifier_bonus] = {
-			min = 0,
-			max = 0.075 * snipers_focus_max_stacks,
-		},
-		[stat_buffs.reload_speed] = {
-			min = 0,
-			max = 0.01 * snipers_focus_max_stacks,
-		},
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-
-		template_data.talent_resource_component = unit_data_extension:read_component("talent_resource")
-	end,
-	lerp_t_func = function (t, start_time, duration, template_data, template_context)
-		return template_data.talent_resource_component.current_resource / snipers_focus_max_stacks
-	end,
-}
-templates.veteran_snipers_focus_toughness_buff = {
-	class_name = "buff",
-	max_stacks = 1,
-	predicted = false,
-	lerped_stat_buffs = {
-		[stat_buffs.toughness_replenish_modifier] = {
-			min = 0,
-			max = 0.05 * snipers_focus_max_stacks,
-		},
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-
-		template_data.talent_resource_component = unit_data_extension:read_component("talent_resource")
-	end,
-	lerp_t_func = function (t, start_time, duration, template_data, template_context)
-		return template_data.talent_resource_component.current_resource / snipers_focus_max_stacks
+		return template_context.stack_count < 1
 	end,
 }
 templates.veteran_snipers_focus_threat_buff = {
@@ -2990,7 +2979,7 @@ templates.veteran_weapon_switch_melee_visual = {
 }
 
 local ammo_replenish_percent = 0.33
-local veteran_weapon_switch_ranged_duration = 5
+local veteran_weapon_switch_ranged_duration = talent_settings.veteran_weapon_swap_keystone.ranged_duration
 
 templates.veteran_weapon_switch_ranged_buff = {
 	class_name = "proc_buff",
@@ -3004,7 +2993,8 @@ templates.veteran_weapon_switch_ranged_buff = {
 		[proc_events.on_kill] = 1,
 	},
 	stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = 0.02,
+		[stat_buffs.ranged_attack_speed] = talent_settings.veteran_weapon_swap_keystone.ranged_attack_speed,
+		[stat_buffs.reload_speed] = talent_settings.veteran_weapon_swap_keystone.reload_speed,
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_critical_strike_chance] = 0.33,
@@ -3043,9 +3033,7 @@ templates.veteran_weapon_switch_ranged_buff = {
 
 		if restore_ammo then
 			local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component
-			local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
-			local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
-			local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
+			local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
 			local amount = math.ceil(missing_ammo_in_clip * ammo_replenish_percent * (template_context.stack_count / max_ranged_stacks))
 
 			Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, amount)
@@ -3156,9 +3144,9 @@ templates.veteran_weapon_switch_melee_stamina_reduction = {
 }
 
 local tag_duration = 25
-local tag_time = 2
-local tag_max_stacks = 5
-local tag_max_stacks_talent = 8
+local tag_time = talent_settings.veteran_tag.stack_time
+local tag_max_stacks = talent_settings.veteran_tag.max_stacks
+local tag_max_stacks_talent = talent_settings.veteran_tag.max_stacks_talent
 local toughness_gain = 0.05
 local stamina_gain = 0.05
 
@@ -3424,10 +3412,10 @@ templates.veteran_improved_tag_effect = {
 }
 templates.veteran_improved_tag_debuff = {
 	class_name = "buff",
-	max_stacks = 8,
 	predicted = false,
+	max_stacks = talent_settings.veteran_tag.max_stacks_talent,
 	stat_buffs = {
-		[stat_buffs.damage_taken_multiplier] = 1.04,
+		[stat_buffs.damage_taken_multiplier] = 1 + talent_settings.veteran_tag.damage,
 	},
 }
 templates.veteran_improved_tag_allied_buff = {
@@ -3440,7 +3428,7 @@ templates.veteran_improved_tag_allied_buff = {
 	buff_category = buff_categories.talents_secondary,
 	max_stacks = tag_max_stacks,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.015,
+		[stat_buffs.damage] = 0.02,
 	},
 	related_talents = {
 		"veteran_improved_tag_dead_bonus",
@@ -3448,5 +3436,22 @@ templates.veteran_improved_tag_allied_buff = {
 }
 templates.veteran_improved_tag_allied_buff_increased_stacks = table.clone(templates.veteran_improved_tag_allied_buff)
 templates.veteran_improved_tag_allied_buff_increased_stacks.max_stacks = tag_max_stacks_talent
+templates.veteran_clip_size = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.clip_size_modifier] = talent_settings.clip_size.clip_size_modifier,
+	},
+}
+templates.veteran_flanking_damage = {
+	class_name = "buff",
+	predicted = false,
+	keywords = {
+		keywords.allow_flanking,
+	},
+	stat_buffs = {
+		[stat_buffs.flanking_damage] = 0.3,
+	},
+}
 
 return templates

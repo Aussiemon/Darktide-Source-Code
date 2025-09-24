@@ -136,7 +136,9 @@ function on_reload(refreshed_resources)
 end
 
 function on_activate(active)
-	print("LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
+	if rawget(_G, "Log") then
+		Log.info("Main", "LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
+	end
 
 	if active and rawget(_G, "Managers") then
 		if Managers.dlc then

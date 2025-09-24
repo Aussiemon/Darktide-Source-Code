@@ -27,8 +27,7 @@ end
 
 local function _update_duration(self, template, template_data, template_context, t, dt)
 	local duration = self:duration()
-	local extra_duration = template_data.extra_duration or 0
-	local total_duration = duration + extra_duration
+	local total_duration = duration
 	local start_time = self._start_time
 
 	self._duration_progress = math.clamp01((total_duration - (t - start_time)) / total_duration)
@@ -58,6 +57,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		is_server = context.is_server,
 		breed = context.breed,
 		template = template,
+		buff = self,
 	}
 	local additional_arguments = {}
 
@@ -310,6 +310,10 @@ Buff.finished = function (self)
 	return self._finished
 end
 
+Buff.request_remove_stack = function (self)
+	self._should_remove_stack = true
+end
+
 Buff.removed_stack_by_request = function (self)
 	self._should_remove_stack = false
 end
@@ -337,6 +341,14 @@ end
 
 Buff.force_predicted_proc = function (self)
 	return false
+end
+
+Buff.skip_send_active_time_rpc = function (self)
+	return false
+end
+
+Buff.remove_on_proc = function (self)
+	return self._template.remove_on_proc
 end
 
 Buff.stack_count = function (self)
@@ -441,10 +453,18 @@ Buff.duration = function (self)
 	if duration and template.duration_per_stack then
 		local stack_count = self:stack_count()
 
-		return duration * stack_count
+		duration = duration * stack_count
+
+		local extra_duration = self._template_data.extra_duration or 0
+
+		duration = duration + extra_duration
 	end
 
 	return duration
+end
+
+Buff.add_duration = function (self, amount)
+	self._template_data.extra_duration = (self._template_data.extra_duration or 0) + amount
 end
 
 Buff.duration_progress = function (self)
@@ -526,6 +546,10 @@ Buff.parent_buff_template = function (self)
 	return self._template_context.parent_buff_template
 end
 
+local function _default_conditional_stat_buff_multiplier(value)
+	return 1
+end
+
 Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
 	if not stat_buffs then
 		return
@@ -534,9 +558,12 @@ Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
 	local stat_buff_stacking_count = self:stat_buff_stacking_count()
 	local template_override_data = self._template_override_data
 	local stat_buff_overrides = template_override_data and template_override_data.stat_buffs
+	local template_data, template_context = self._template_data, self._template_context
+	local conditional_stat_buff_multiplier = self._template.conditional_stat_buff_multiplier or _default_conditional_stat_buff_multiplier
 
 	for key, value in pairs(stat_buffs) do
 		value = stat_buff_overrides and stat_buff_overrides[key] or value
+		value = value * conditional_stat_buff_multiplier(value, template_data, template_context)
 
 		local current_value = current_stat_buffs[key]
 		local stat_buff_type = stat_buff_types[key]

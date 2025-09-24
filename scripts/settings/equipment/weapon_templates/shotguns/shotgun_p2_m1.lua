@@ -1,8 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/shotguns/shotgun_p2_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local Ammo = require("scripts/utilities/ammo")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -18,24 +17,17 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeShotgunP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local DOUBLE_SHOT_AMMO_USAGE = 2
 local weapon_template = {}
 
@@ -97,7 +89,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -300,7 +292,7 @@ weapon_template.actions = {
 		wield_reload_anim_event = "equip_reload",
 		wield_reload_anim_event_func = function (inventory_slot_component)
 			local ignore_state = inventory_slot_component.reload_state == "fit_new_mag"
-			local ammo_empty = inventory_slot_component.current_ammunition_clip == 0
+			local ammo_empty = Ammo.current_ammo_in_clips(inventory_slot_component) == 0
 
 			if ignore_state and not ammo_empty then
 				return "equip_double_barrel"
@@ -490,11 +482,10 @@ weapon_template.actions = {
 		fire_configuration = {
 			same_side_suppression_enabled = false,
 			anim_event_func = function (inventory_slot_component)
-				local current_clip_amount = inventory_slot_component.current_ammunition_clip
-				local max_clip_amount = inventory_slot_component.max_ammunition_clip
+				local current_clip_amount = Ammo.current_ammo_in_clips(inventory_slot_component)
+				local max_clip_amount = Ammo.max_ammo_in_clips(inventory_slot_component)
 				local full_ammo = current_clip_amount == max_clip_amount
 				local anim_1p = full_ammo and "attack_shoot_special" or "attack_shoot_semi"
-				local anim_3p = "attack_shoot_semi"
 
 				return anim_1p
 			end,
@@ -542,7 +533,7 @@ weapon_template.actions = {
 		},
 		action_condition_func = _can_shoot_due_to_reload,
 		haptic_trigger_template_condition_func = function (condition_func_params)
-			local current_ammo_in_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
+			local current_ammo_in_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			if current_ammo_in_clip >= DOUBLE_SHOT_AMMO_USAGE then
 				return HapticTriggerTemplates.ranged.shotgun_p2_double_shot
@@ -576,7 +567,7 @@ weapon_template.actions = {
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault,
 		haptic_trigger_template_condition_func = function (condition_func_params)
-			local current_ammo_in_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
+			local current_ammo_in_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			if current_ammo_in_clip >= DOUBLE_SHOT_AMMO_USAGE then
 				return HapticTriggerTemplates.ranged.shotgun_p2_double_shot
@@ -682,8 +673,8 @@ weapon_template.actions = {
 		},
 		action_condition_func = function (action_settings, condition_func_params, used_input)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
-			local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+			local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 			local can_reload = current_ammunition_clip < max_ammunition_clip
 			local should_cock = inventory_slot_component.reload_state == "cock_weapon"
 
@@ -845,12 +836,14 @@ weapon_template.actions = {
 			1,
 			0.7,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/double_barrel/attack_left_diagonal_up_bash",
-			anchor_point_offset = {
-				0,
-				1.25,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/double_barrel/attack_left_diagonal_up_bash",
+				anchor_point_offset = {
+					0,
+					1.25,
+					-0.1,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -942,12 +935,14 @@ weapon_template.actions = {
 			1.2,
 			0.25,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/double_barrel/attack_stab_bash",
-			anchor_point_offset = {
-				0,
-				1.4,
-				0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/double_barrel/attack_stab_bash",
+				anchor_point_offset = {
+					0,
+					1.4,
+					0.1,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,

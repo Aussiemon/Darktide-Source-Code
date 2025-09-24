@@ -129,7 +129,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_top_right = {
@@ -143,7 +143,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_bottom_left = {
@@ -157,7 +157,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	corner_bottom_right = {
@@ -171,7 +171,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62,
+			12,
 		},
 	},
 	aquila_button = {
@@ -182,7 +182,7 @@ local scenegraph_definition = {
 		position = {
 			-100,
 			5,
-			62,
+			12,
 		},
 	},
 	get_dlc_button = {
@@ -193,7 +193,7 @@ local scenegraph_definition = {
 		position = {
 			100,
 			5,
-			62,
+			12,
 		},
 	},
 	navigation_arrow_left = {

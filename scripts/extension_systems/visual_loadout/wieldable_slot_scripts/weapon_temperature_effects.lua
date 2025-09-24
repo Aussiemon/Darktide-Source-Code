@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects.lua
 
 local Action = require("scripts/utilities/action/action")
+local Ammo = require("scripts/utilities/ammo")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local WeaponTemperatureEffects = class("WeaponTemperatureEffects")
 local FX_SOURCE_NAME = "_muzzle"
@@ -120,7 +121,7 @@ WeaponTemperatureEffects._update_temperature_parameter = function (self, action_
 	local wieldable_slot_component = self._wieldable_slot_component
 	local action_module_charge_component = self._action_module_charge_component
 	local shooting_end_time = shooting_status_component.shooting_end_time
-	local current_ammunition_clip = wieldable_slot_component.current_ammunition_clip
+	local current_ammunition_clip = Ammo.current_ammo_in_clips(wieldable_slot_component)
 	local charge_level = action_module_charge_component.charge_level
 	local increase_rate = INCREASE_RATE
 	local decay_rate = DECAY_RATE

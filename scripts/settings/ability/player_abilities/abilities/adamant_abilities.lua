@@ -71,11 +71,11 @@ local abilities = {
 		ability_type = "combat_ability",
 		can_be_previously_wielded_to = false,
 		can_be_wielded_when_depleted = false,
-		cooldown = 60,
 		hud_icon = "content/ui/textures/icons/abilities/hud/adamant/adamant_ability_area_buff_drone",
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		inventory_item_name = "content/items/weapons/player/drone_area_buff",
 		max_charges = 1,
+		cooldown = adamant_talent_settings.blitz_ability.drone.cooldown,
 		archetypes = {
 			"adamant",
 		},

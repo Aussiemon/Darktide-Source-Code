@@ -81,8 +81,8 @@ end
 ActionReloadShotgun.running_action_state = function (self, t, time_in_action)
 	local inventory_slot_component = self._inventory_slot_component
 	local action_reload_component = self._action_reload_component
-	local max_ammo_in_clip = inventory_slot_component.max_ammunition_clip
-	local current_ammo_in_clip = inventory_slot_component.current_ammunition_clip
+	local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
+	local current_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
 
 	if current_ammo_in_clip < max_ammo_in_clip and has_refilled_ammunition then

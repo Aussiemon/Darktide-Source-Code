@@ -6,9 +6,11 @@ local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_
 local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionAttackSelectionTemplates = require("scripts/settings/minion_attack_selection/minion_attack_selection_templates")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionToughnessTemplates = require("scripts/settings/toughness/minion_toughness_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -18,8 +20,6 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
@@ -32,6 +32,7 @@ local breed_data = {
 	base_unit = "content/characters/enemy/chaos_traitor_guard_captain/third_person/base",
 	bone_lod_radius = 1.3,
 	broadphase_radius = 1,
+	can_patrol = true,
 	challenge_rating = 1,
 	display_name = "loc_breed_display_name_cultist_captain",
 	faction_name = "chaos",
@@ -55,6 +56,7 @@ local breed_data = {
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_captain",
 	sub_faction_name = "cultist",
 	target_stickiness_distance = 1,
+	trigger_boss_health_bar_on_aggro = true,
 	unit_template_name = "minion",
 	use_bone_lod = true,
 	walk_speed = 2.5,
@@ -127,6 +129,7 @@ local breed_data = {
 	animation_variables = {
 		"moving_attack_fwd_speed",
 		"lean",
+		"anim_move_speed",
 	},
 	shoot_offset_anim_event = {
 		pistol_standing = "offset_pistol_standing_shoot_01",
@@ -157,7 +160,7 @@ local breed_data = {
 			},
 		},
 	},
-	target_selection_template = TargetSelectionTemplates.renegade_captain,
+	target_selection_template = TargetSelectionTemplates.ranged,
 	target_selection_weights = TargetSelectionWeights.renegade_captain,
 	threat_config = {
 		max_threat = 50,

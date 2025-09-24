@@ -50,6 +50,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/r
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_gunner_tg_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_melee_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_netgunner_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_plasma_gunner_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_radio_operator_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_rifleman_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_rifleman_tg_behavior_tree")

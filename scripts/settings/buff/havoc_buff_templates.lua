@@ -15,6 +15,7 @@ local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local stat_buff_types = BuffSettings.stat_buff_types
 local stat_buff_base_values = BuffSettings.stat_buff_base_values
+local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local proc_events = BuffSettings.proc_events
 local templates = {}
@@ -102,12 +103,14 @@ local BOLSTERING_MINION_EFFECTS = {
 	material_vector = {
 		name = "stimmed_color",
 		value = BOLSTERING_COLOR,
+		priority = minion_effects_priorities.mutators,
 	},
 }
 local LOW_BOLSTERING_MINION_EFFECTS = {
 	material_vector = {
 		name = "stimmed_color",
 		value = BOLSTERING_COLOR,
+		priority = minion_effects_priorities.mutators,
 	},
 }
 local BOLSTERING_1_MINION_EFFECTS = table.clone(LOW_BOLSTERING_MINION_EFFECTS)
@@ -288,6 +291,7 @@ templates.havoc_bolstering = {
 		_bolstering_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators,
 		stack_material_vectors = {
 			BOLSTERING_1_MINION_EFFECTS.material_vector,
 			BOLSTERING_2_MINION_EFFECTS.material_vector,
@@ -324,7 +328,7 @@ local function _corruption_stop_function(template_context, template_data)
 	local position = POSITION_LOOKUP[unit]
 	local num_results = broadphase.query(broadphase, position, CORRUPTION_RADIUS, DPLUS_RESULTS_2, target_side_names)
 	local current_time = FixedFrame.get_latest_fixed_time()
-	local rank = Managers.state.havoc:get_current_rank()
+	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
 	local threshold = rank * 0.01
 	local t = Managers.time:time("gameplay")
 
@@ -400,6 +404,7 @@ templates.havoc_corrupted_enemies = {
 		_corruption_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -618,7 +623,7 @@ templates.common_minion_on_fire = {
 }
 
 local function _get_damage_reduction_value()
-	local rank = Managers.state.havoc:get_current_rank()
+	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
 	local reduction_rate = 0.1 + 0.01 * rank
 
 	return reduction_rate
@@ -660,6 +665,7 @@ templates.havoc_toughened_skin = {
 		end
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -801,6 +807,10 @@ local function _rotten_armor_stat_reduction(unit, index)
 
 	stat_buffs.ranged_damage_taken_multiplier = value
 	stat_buffs.ranged_damage_taken_multiplier = value
+
+	local current_time = FixedFrame.get_latest_fixed_time()
+
+	buff_extension:_update_stat_buffs_and_keywords(current_time)
 
 	return rotten_armor_data.damage_thresholds[index]
 end
@@ -1058,6 +1068,7 @@ templates.havoc_encroaching_garden = {
 		end
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
@@ -1112,6 +1123,7 @@ templates.blessed_by_the_garden = {
 		return
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_lefteye",
@@ -1506,6 +1518,7 @@ templates.havoc_enraged_enemies = {
 		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
 	end,
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
@@ -1659,6 +1672,7 @@ templates.havoc_green_eyes = {
 		material_vector = {
 			name = "stimmed_color",
 			value = GREEN_STIM_COLOR,
+			priority = minion_effects_priorities.mutators,
 		},
 	},
 }

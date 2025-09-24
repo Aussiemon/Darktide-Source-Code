@@ -138,58 +138,6 @@ sway_templates.default_laspistol_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.05,
-						lerp_perfect = 0.03,
-					},
-					yaw = {
-						lerp_basic = 0.1,
-						lerp_perfect = 0.05,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.15,
-						lerp_perfect = 0.05,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.4,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.5,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.25,
-					},
-				},
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {

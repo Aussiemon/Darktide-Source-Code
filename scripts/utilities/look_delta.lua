@@ -4,12 +4,13 @@ local LookDeltaTemplates = require("scripts/settings/equipment/look_delta_templa
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local LookDelta = {}
 
-LookDelta.look_delta_template = function (weapon_action_component, alternate_fire_component)
+LookDelta.look_delta_template = function (weapon_action_component, alternate_fire_component, unit)
 	local look_delta_template_name
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+	local alternate_fire_settings = weapon_template and weapon_template.alternate_fire_settings
 
 	if alternate_fire_component.is_active then
-		look_delta_template_name = weapon_template and weapon_template.alternate_fire_settings.look_delta_template or "default_aiming"
+		look_delta_template_name = alternate_fire_settings and alternate_fire_settings.look_delta_template or "default_aiming"
 	else
 		look_delta_template_name = weapon_template and weapon_template.look_delta_template or "default"
 	end

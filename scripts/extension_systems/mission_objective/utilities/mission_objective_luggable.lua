@@ -13,8 +13,8 @@ MissionObjectiveLuggable.init = function (self)
 	self:set_updated_externally(true)
 end
 
-MissionObjectiveLuggable.start_objective = function (self, mission_objective_data, registered_units, synchronizer_unit)
-	MissionObjectiveLuggable.super.start_objective(self, mission_objective_data, registered_units, synchronizer_unit)
+MissionObjectiveLuggable.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+	MissionObjectiveLuggable.super.start_objective(self, mission_objective_data, group_id, registered_units, synchronizer_unit)
 
 	local luggable_synchronizer_extension = self:synchronizer_extension()
 	local stages = luggable_synchronizer_extension:setup_stages(registered_units)

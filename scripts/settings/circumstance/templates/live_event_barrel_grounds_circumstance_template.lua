@@ -19,7 +19,6 @@ circumstance_templates.barrel_grounds = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 }
@@ -36,7 +35,6 @@ circumstance_templates.barrel_grounds_hunt_grou = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 	ui = {
@@ -62,7 +60,6 @@ circumstance_templates.barrel_grounds_more_res = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 }
@@ -86,7 +83,6 @@ circumstance_templates.barrel_grounds_darkness = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 }
@@ -101,7 +97,6 @@ circumstance_templates.barrel_grounds_gas = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	ui = {
 		description = "loc_circumstance_barrel_grounds_gas_description",
@@ -130,7 +125,6 @@ circumstance_templates.barrel_grounds_waves_spec = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 }
@@ -152,7 +146,6 @@ circumstance_templates.barrel_grounds_ventilation = {
 		"mutator_poxwalker_bombers",
 		"mutator_headshot_parasite_enemies",
 		"mutator_drop_shocktrooper_grenade_on_death",
-		"mutator_increased_catapult_force",
 	},
 	mission_overrides = MissionOverrides.all_explosive_barrels,
 }

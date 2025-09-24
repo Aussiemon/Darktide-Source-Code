@@ -6,7 +6,7 @@ local overrides = {}
 table.make_unique(spread_templates)
 table.make_unique(overrides)
 
-spread_templates.boltpistol_p1m1_spread_hip = {
+spread_templates.boltpistol_p1_m1_spread_assault = {
 	still = {
 		randomized_spread = {
 			first_shot_min_ratio = 0.45,
@@ -49,18 +49,6 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-					yaw = {
-						lerp_basic = 0.25,
-						lerp_perfect = 0.1,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -89,7 +77,7 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 	},
 	moving = {
 		inherits = {
-			"boltpistol_p1m1_spread_hip",
+			"boltpistol_p1_m1_spread_assault",
 			"still",
 		},
 		continuous_spread = {
@@ -105,7 +93,7 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 	},
 	crouch_still = {
 		inherits = {
-			"boltpistol_p1m1_spread_hip",
+			"boltpistol_p1_m1_spread_assault",
 			"still",
 		},
 		continuous_spread = {
@@ -121,7 +109,7 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 	},
 	crouch_moving = {
 		inherits = {
-			"boltpistol_p1m1_spread_hip",
+			"boltpistol_p1_m1_spread_assault",
 			"still",
 		},
 		continuous_spread = {
@@ -136,7 +124,7 @@ spread_templates.boltpistol_p1m1_spread_hip = {
 		},
 	},
 }
-spread_templates.default_boltpistol_killshot = {
+spread_templates.boltpistol_p1_m1_spread_killshot = {
 	still = {
 		max_spread = {
 			pitch = 2.5,
@@ -177,12 +165,6 @@ spread_templates.default_boltpistol_killshot = {
 					yaw = 0,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -207,7 +189,7 @@ spread_templates.default_boltpistol_killshot = {
 	},
 	moving = {
 		inherits = {
-			"default_boltpistol_killshot",
+			"boltpistol_p1_m1_spread_killshot",
 			"still",
 		},
 		continuous_spread = {
@@ -242,7 +224,7 @@ spread_templates.default_boltpistol_killshot = {
 	},
 	crouch_still = {
 		inherits = {
-			"default_boltpistol_killshot",
+			"boltpistol_p1_m1_spread_killshot",
 			"still",
 		},
 		continuous_spread = {
@@ -267,7 +249,7 @@ spread_templates.default_boltpistol_killshot = {
 			min_yaw = 0,
 		},
 		inherits = {
-			"default_boltpistol_killshot",
+			"boltpistol_p1_m1_spread_killshot",
 			"still",
 		},
 	},
@@ -315,18 +297,6 @@ spread_templates.default_boltpistol_spraynpray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -443,12 +413,6 @@ spread_templates.boltpistol_p1_m2_spraynpray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

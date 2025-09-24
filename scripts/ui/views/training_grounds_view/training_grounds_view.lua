@@ -1,11 +1,8 @@
 ﻿-- chunkname: @scripts/ui/views/training_grounds_view/training_grounds_view.lua
 
+require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
+
 local Definitions = require("scripts/ui/views/training_grounds_view/training_grounds_view_definitions")
-local VendorInteractionViewBase = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
-local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local TrainingGroundsView = class("TrainingGroundsView", "VendorInteractionViewBase")
 
 TrainingGroundsView.init = function (self, settings, context)

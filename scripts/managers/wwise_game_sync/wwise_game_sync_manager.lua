@@ -16,7 +16,6 @@ local WwiseStateGroupSuppressionState = require("scripts/managers/wwise_game_syn
 local WwiseStateGroupZone = require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_zone")
 local WwiseGameSyncManager = class("WwiseGameSyncManager")
 local WWISE_STATE_GROUP_SETTINGS = {
-	ability_state = WwiseStateGroupAbilityState,
 	circumstance = WwiseStateGroupCircumstance,
 	event_category = WwiseStateGroupEventType,
 	event_intensity = WwiseStateGroupEventIntensity,

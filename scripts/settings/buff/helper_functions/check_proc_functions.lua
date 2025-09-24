@@ -6,6 +6,8 @@ local Breeds = require("scripts/settings/breed/breeds")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionState = require("scripts/utilities/minion_state")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local attack_results = AttackSettings.attack_results
 local stagger_results = AttackSettings.stagger_results
 local attack_types = AttackSettings.attack_types
@@ -215,29 +217,6 @@ CheckProcFunctions.on_sticky_kill = function (params, template_data, template_co
 	return true
 end
 
-CheckProcFunctions.on_special_smite_kill = function (params, template_data, template_context, t)
-	local killed = params.attack_result == attack_results.died
-
-	if not killed then
-		return false
-	end
-
-	local sticky = params.sticky_attack
-	local smite = params.damage_type == damage_types.smite
-
-	if not smite and not sticky then
-		return false
-	end
-
-	local is_melee = params.attack_type == attack_types.melee
-
-	if not is_melee then
-		return false
-	end
-
-	return true
-end
-
 CheckProcFunctions.on_smite_attack = function (params, template_data, template_context, t)
 	return params.damage_type == damage_types.smite
 end
@@ -332,6 +311,12 @@ CheckProcFunctions.on_crit_ranged = function (params, template_data, template_co
 	return params.is_critical_strike and is_ranged_attack
 end
 
+CheckProcFunctions.on_crit_melee = function (params, template_data, template_context, t)
+	local is_melee_attack = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
+
+	return params.is_critical_strike and is_melee_attack
+end
+
 CheckProcFunctions.on_crit_kills = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_result == attack_results.died
 end
@@ -416,6 +401,23 @@ CheckProcFunctions.on_heavy_hit = function (params, template_data, template_cont
 	local melee_attack_strength = params.melee_attack_strength
 
 	return melee_attack_strength and melee_attack_strength == "heavy"
+end
+
+CheckProcFunctions.on_heavy_attack_started = function (params, template_data, template_context, t)
+	if params.is_heavy then
+		return true
+	end
+
+	local melee_attack_strength = params.melee_attack_strength
+
+	return melee_attack_strength and melee_attack_strength == "heavy"
+end
+
+CheckProcFunctions.on_sprinting = function (params, template_data, template_context, t)
+	local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+
+	return Sprint.is_sprinting(sprint_character_state_component)
 end
 
 CheckProcFunctions.on_damaging_hit = function (params, template_data, template_context, t)
@@ -592,8 +594,9 @@ CheckProcFunctions.would_die = function (params, template_data, template_context
 	end
 
 	local health_extension = ScriptUnit.extension(unit, "health_system")
+	local damage = params.damage_amount + params.permanent_damage
 	local current_health = health_extension:current_health()
-	local is_going_to_die = current_health <= 1
+	local is_going_to_die = params.will_die or current_health <= 1 and damage > 0
 
 	return is_going_to_die
 end
@@ -661,6 +664,25 @@ CheckProcFunctions.on_item_match = function (params, template_data, template_con
 	local is_match = attacking_item_name == buff_item_name
 
 	return is_match
+end
+
+CheckProcFunctions.at_max_stacks = function (params, template_data, template_context, t)
+	return (template_context.stack_count or 0) >= (template_context.template.max_stacks or 1)
+end
+
+CheckProcFunctions.is_backstab = function (params, template_data, template_context, t)
+	return params.is_backstab
+end
+
+CheckProcFunctions.can_restore_dodges = function (params, template_data, template_context, t)
+	local unit = template_context.unit
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+
+	return not Dodge.effective_dodges_have_reset(unit_data_extension)
+end
+
+CheckProcFunctions.on_bleeding_buff_added = function (params, template_data, template_context, t)
+	return params.template_name == "bleed"
 end
 
 function _is_within_close_distance(params, template_data, template_context, t)

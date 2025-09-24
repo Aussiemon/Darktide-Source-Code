@@ -271,6 +271,7 @@ end
 local PRIORITY_AID_TYPES = {
 	knocked_down = true,
 	ledge = true,
+	netted = true,
 }
 
 BotPerceptionExtension._update_target_ally = function (self, self_unit, self_position, perception_component, side, bot_group, t)

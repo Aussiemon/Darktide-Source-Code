@@ -45,7 +45,7 @@ head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + s
 head_sever.material_overrides = {
 	"slot_head",
 	"slot_beard",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -109,7 +109,7 @@ upper_left_arm.condition = {
 }
 upper_left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -133,7 +133,7 @@ upper_right_arm.condition = {
 }
 upper_right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -161,7 +161,7 @@ lower_left_arm.stump_settings.stump_attach_node = "j_leftarm"
 lower_left_arm.scale_node = "j_leftforearm"
 lower_left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -181,7 +181,7 @@ lower_right_arm.stump_settings.stump_attach_node = "j_rightarm"
 lower_right_arm.scale_node = "j_rightforearm"
 lower_right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -211,7 +211,7 @@ left_arm.extra_hit_zone_actors_to_destroy = {
 }
 left_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -233,7 +233,7 @@ right_arm.extra_hit_zone_actors_to_destroy = {
 }
 right_arm.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -321,7 +321,7 @@ upper_left_leg.condition = {
 }
 upper_left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -345,7 +345,7 @@ upper_right_leg.condition = {
 }
 upper_right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -374,7 +374,7 @@ lower_left_leg.stump_settings.stump_attach_node = "j_leftupleg"
 lower_left_leg.scale_node = "j_leftleg"
 lower_left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -395,7 +395,7 @@ lower_right_leg.stump_settings.stump_attach_node = "j_rightupleg"
 lower_right_leg.scale_node = "j_rightleg"
 lower_right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -425,7 +425,7 @@ left_leg.extra_hit_zone_actors_to_destroy = {
 }
 left_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -447,7 +447,7 @@ right_leg.extra_hit_zone_actors_to_destroy = {
 }
 right_leg.material_overrides = {
 	"slot_lowerbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -540,7 +540,7 @@ torso_sever.scale_node = "j_spine1"
 torso_sever.gibbing_threshold = SharedGibbingTemplates.torso.gibbing_threshold + size
 torso_sever.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -600,7 +600,7 @@ center_mass_full.gibbing_threshold = SharedGibbingTemplates.center_mass.gibbing_
 center_mass_full.extra_hit_zone_gibs = SharedGibbingTemplates.center_mass.extra_hit_zone_gibs
 center_mass_full.material_overrides = {
 	"slot_upperbody",
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 

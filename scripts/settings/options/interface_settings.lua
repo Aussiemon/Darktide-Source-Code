@@ -318,6 +318,77 @@ local settings_definitions = {
 		end,
 	},
 	{
+		default_value = "dynamic",
+		display_name = "loc_interface_setting_stamina_and_dodge_hud_visibility_setting",
+		id = "stamina_and_dodge_visibility_setting",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_stamina_and_dodge_hud_visibility_mouse_over",
+		widget_type = "dropdown",
+		options = {
+			{
+				display_name = "loc_setting_dodge_stamina_hud_both_dynamic",
+				name = "dynamic",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_both_always",
+				name = "always_both",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_always_stamina",
+				name = "always_stamina",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_always_dodge",
+				name = "always_dodge",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_disable_stamina",
+				name = "stamina_disabled",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_disable_dodge",
+				name = "dodge_disabled",
+			},
+			{
+				display_name = "loc_setting_dodge_stamina_hud_disabled_both",
+				name = "both_disabled",
+			},
+		},
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_stamina_and_dodge_hud_visibility_changed", value)
+		end,
+	},
+	{
+		default_value = false,
+		display_name = "loc_interface_setting_stamina_and_dodge_hud_syncronized",
+		id = "stamina_and_dodge_show_together",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_stamina_and_dodge_hud_syncronized", value)
+		end,
+	},
+	{
+		default_value = false,
+		display_name = "loc_interface_setting_show_stamina_with_fixed_dividers",
+		id = "show_stamina_with_fixed_dividers",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_show_stamina_with_fixed_dividers", value)
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_show_stamina_percentage_text",
+		id = "show_stamina_percentage_text",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_show_stamina_percentage_text", value)
+		end,
+	},
+	{
 		default_value = true,
 		display_name = "loc_setting_hit_indicator_enabled",
 		id = "hit_indicator_enabled",
@@ -332,7 +403,7 @@ local settings_definitions = {
 		display_name = "loc_setting_hit_indicator_duration",
 		id = "hit_indicator_duration",
 		max_value = 1.5,
-		min_value = 0.5,
+		min_value = 0.3,
 		num_decimals = 1,
 		save_location = "interface_settings",
 		step_size_value = 0.1,

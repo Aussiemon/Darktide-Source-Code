@@ -13,7 +13,7 @@ local default_button_content = {
 local title_height = 0
 local edge_padding = 40
 local grid_width = 430
-local grid_height = 800
+local grid_height = 900
 local bottom_chin = 0
 local grid_size = {
 	grid_width - edge_padding,

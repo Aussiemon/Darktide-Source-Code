@@ -72,7 +72,6 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
 	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 	self:_register_event("event_change_wield_slot", "event_change_wield_slot")
-	self:_register_event("event_discard_item", "event_discard_item")
 	self:_register_event("event_discard_items", "event_discard_items")
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 	self:_register_event("event_player_talent_node_updated", "event_player_talent_node_updated")
@@ -524,38 +523,6 @@ end
 InventoryBackgroundView.event_change_wield_slot = function (self, slot_name)
 	self:_set_preview_wield_slot_id(slot_name)
 	self:_update_presentation_wield_item()
-end
-
-InventoryBackgroundView.event_discard_item = function (self, item)
-	local gear_id = item.gear_id
-	local local_changes_promise = self:_equip_local_changes()
-	local delete_promise
-
-	if local_changes_promise then
-		delete_promise = local_changes_promise:next(function ()
-			return Managers.data_service.gear:delete_gear(gear_id)
-		end)
-	else
-		delete_promise = Managers.data_service.gear:delete_gear(gear_id)
-	end
-
-	delete_promise:next(function (result)
-		self._inventory_items[gear_id] = nil
-
-		local rewards = result and result.rewards
-
-		if rewards then
-			local credits_amount = rewards[1] and rewards[1].amount or 0
-
-			Managers.event:trigger("event_force_wallet_update")
-			Managers.event:trigger("event_add_notification_message", "currency", {
-				currency = "credits",
-				amount = credits_amount,
-			})
-		end
-
-		self:_update_loadout_validation()
-	end)
 end
 
 InventoryBackgroundView.event_discard_items = function (self, gear_ids)
@@ -1022,23 +989,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		{
 			default_icon = "content/ui/materials/icons/items/gears/head/empty",
 			loadout_slot = true,
-			scenegraph_id = "slot_character_title",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
-			slot_title = "loc_inventory_title_slot_character_title",
-			widget_type = "character_title_item_slot",
-			slot = ItemSlotSettings.slot_character_title,
-			navigation_grid_indices = {
-				4,
-				1,
-			},
-			item_type = ITEM_TYPES.CHARACTER_TITLE,
-			has_new_items_update_callback = function (item_type)
-				return self:has_new_items_by_type(item_type)
-			end,
-		},
-		{
-			default_icon = "content/ui/materials/icons/items/gears/head/empty",
-			loadout_slot = true,
 			scenegraph_id = "slot_gear_head",
 			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
 			slot_title = "loc_inventory_title_slot_gear_head",
@@ -1133,6 +1083,23 @@ InventoryBackgroundView._setup_top_panel = function (self)
 				2,
 			},
 			item_type = ITEM_TYPES.CHARACTER_INSIGNIA,
+			has_new_items_update_callback = function (item_type)
+				return self:has_new_items_by_type(item_type)
+			end,
+		},
+		{
+			default_icon = "content/ui/materials/icons/items/gears/head/empty",
+			loadout_slot = true,
+			scenegraph_id = "slot_character_title",
+			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
+			slot_title = "loc_inventory_title_slot_character_title",
+			widget_type = "character_title_item_slot",
+			slot = ItemSlotSettings.slot_character_title,
+			navigation_grid_indices = {
+				4,
+				1,
+			},
+			item_type = ITEM_TYPES.CHARACTER_TITLE,
 			has_new_items_update_callback = function (item_type)
 				return self:has_new_items_by_type(item_type)
 			end,
@@ -1456,7 +1423,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			end
 
 			content.show_alert = self._has_empty_talent_nodes
-			content.show_warning = self._warning_talent
+			content.show_modified = self._warning_talent
 		end,
 		context = {
 			can_exit = true,
@@ -1638,6 +1605,29 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 	local current_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local current_preset = current_preset_id and ProfileUtils.get_profile_preset(current_preset_id)
 
+	if current_preset then
+		local preset_loadout = current_preset.loadout
+
+		if preset_loadout then
+			for slot_id, item in pairs(self._preview_profile_equipped_items) do
+				local slot = ItemSlotSettings[slot_id]
+
+				if slot.equipped_in_inventory then
+					local preset_item_gear_id = preset_loadout[slot_id]
+					local item_gear_id = item and item.gear_id
+
+					if item_gear_id ~= preset_item_gear_id then
+						self._profile_presets_element:on_profile_preset_index_change()
+
+						current_preset = nil
+
+						break
+					end
+				end
+			end
+		end
+	end
+
 	self:event_on_profile_preset_changed(current_preset)
 end
 
@@ -1740,12 +1730,24 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 
 	if profile_preset and profile_preset.loadout then
+		local equipped_previous_slots = {}
+
+		for slot_id, gear_id in pairs(self._preview_profile_equipped_items) do
+			local slot = ItemSlotSettings[slot_id]
+
+			if slot.equipped_in_inventory and not profile_preset.loadout[slot_id] then
+				equipped_previous_slots[slot_id] = true
+			end
+		end
+
 		for slot_id, gear_id in pairs(profile_preset.loadout) do
 			local item = self:_get_inventory_item_by_id(gear_id)
 
-			if item then
-				self:_equip_slot_item(slot_id, item)
-			end
+			self:_equip_slot_item(slot_id, item, true)
+		end
+
+		for slot_id, _ in pairs(equipped_previous_slots) do
+			self:_equip_slot_item(slot_id, nil, true)
 		end
 	end
 
@@ -1822,7 +1824,7 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 				local preset_talents_version = preset.talents_version
 
 				if not preset_talents_version or active_talent_version ~= preset_talents_version then
-					show_warning = true
+					show_modified = true
 					warning_talent = true
 				end
 
@@ -2118,7 +2120,7 @@ InventoryBackgroundView._check_toggle_companion = function (self)
 			local widget_name = node.widget_name
 			local talent_name = node.talent
 
-			if self._current_profile_equipped_talents and self._current_profile_equipped_talents[widget_name] and self._current_profile_equipped_talents[widget_name] > 0 then
+			if talent_name and self._current_profile_equipped_talents and self._current_profile_equipped_talents[widget_name] and self._current_profile_equipped_talents[widget_name] > 0 then
 				talents_by_talent_name[talent_name] = self._current_profile_equipped_talents[widget_name]
 			end
 		end
@@ -2236,7 +2238,7 @@ end
 InventoryBackgroundView.can_cycle_profile_preset = function (self)
 	local profile_presets_element = self._profile_presets_element
 
-	if profile_presets_element and profile_presets_element:has_active_profile_preset() then
+	if profile_presets_element and profile_presets_element:has_profile_presets() then
 		return true
 	end
 
@@ -2679,9 +2681,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			local item = gear_id and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
 			local fallback_item = MasterItems.find_fallback_item(slot_name)
 
-			if not item and (type(item_data) ~= "table" or not item_data.always_owned) then
-				invalid_slots[slot_name] = true
-			elseif not item and not fallback_item then
+			if not item and (type(item_data) ~= "table" or not item_data.always_owned) and not fallback_item then
 				invalid_slots[slot_name] = true
 			elseif item and not item.always_owned and fallback_item and item.name == fallback_item.name then
 				invalid_slots[slot_name] = true

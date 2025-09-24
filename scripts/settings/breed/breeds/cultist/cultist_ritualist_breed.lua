@@ -3,6 +3,7 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
@@ -13,7 +14,6 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/locomotion/player_unit_locomotion_extension.lua
 
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local DodgeSettings = require("scripts/settings/dodge/dodge_settings")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local ForceTranslation = require("scripts/extension_systems/locomotion/utilities/force_translation")
 local HubMovementLocomotion = require("scripts/extension_systems/locomotion/utilities/hub_movement_locomotion")
@@ -11,6 +12,8 @@ local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitLinker = require("scripts/extension_systems/locomotion/utilities/player_unit_linker")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local Stamina = require("scripts/utilities/attack/stamina")
 local ThirdPersonHubMovementDirectionAnimationControl = require("scripts/extension_systems/locomotion/third_person_hub_movement_direction_animation_control")
 local PlayerUnitLocomotionExtension = class("PlayerUnitLocomotionExtension")
 local Vector3_flat = Vector3.flat
@@ -18,7 +21,9 @@ local Quaternion_forward = Quaternion.forward
 local Vector3_normalize = Vector3.normalize
 local Vector3_dot = Vector3.dot
 local Quaternion_look = Quaternion.look
+local dodge_types = DodgeSettings.dodge_types
 local PLAYER_RENDER_FRAME_POSITIONS = table.enum("interpolate", "extrapolate", "raw")
+local EMPTY_TABLE = {}
 
 PlayerUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_component, game_object_component_or_game_session, game_object_id_or_nil)
 	self._unit = unit
@@ -56,6 +61,8 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._ladder_character_state_component = data_ext:read_component("ladder_character_state")
 	self._hub_jog_character_state_component = data_ext:read_component("hub_jog_character_state")
 	self._movement_state_component = data_ext:write_component("movement_state")
+	self._stamina_component = data_ext:read_component("stamina")
+	self._sprint_character_state_component = data_ext:read_component("sprint_character_state")
 	self._use_drag = true
 	self._collision_filter = "filter_player_mover"
 	self._last_fixed_t = extension_init_context.fixed_frame_t
@@ -116,6 +123,10 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 
 	self._ogryn_dodges = data_ext:archetype_name() == "ogryn"
 	self._script_minion_collision = true
+
+	local archetype = data_ext:archetype()
+
+	self._base_stamina_template = archetype.stamina
 	self._old_position = Vector3Box(pos)
 	self._latest_simulated_position = Vector3Box(pos)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
@@ -336,7 +347,6 @@ end
 PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, unit, dt, t, locomotion_component, steering_component, current_position, calculate_fall_velocity, on_ground, mover)
 	local velocity_current = locomotion_component.velocity_current
 	local velocity_wanted = steering_component.velocity_wanted
-	local is_dodging, _ = Dodge.is_dodging(unit)
 
 	if calculate_fall_velocity then
 		velocity_wanted.z = velocity_current.z
@@ -391,16 +401,12 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 					local minion_unit = BROADPHASE_RESULTS[i]
 					local breed = ScriptUnit.extension(minion_unit, "unit_data_system"):breed()
 					local ignore_collision = false
+					local should_ignore_collision_with_horde_minions = self:_should_ignore_collision_with_horde_minions(unit)
 
-					if self._ogryn_dodges and is_dodging then
-						local consecutive_dodges = Dodge.consecutive_dodges(unit)
-						local first_dodge = consecutive_dodges == 1
+					if should_ignore_collision_with_horde_minions then
+						local valid_breed = not breed or not breed.tags or not breed.tags.elite and not breed.tags.ogryn and not breed.tags.special and not breed.tags.monster
 
-						if first_dodge then
-							local valid_breed = not breed or not breed.tags or not breed.tags.elite and not breed.tags.ogryn and not breed.tags.special and not breed.tags.monster
-
-							ignore_collision = valid_breed
-						end
+						ignore_collision = valid_breed
 					end
 
 					local collide_with_minions = HEALTH_ALIVE[minion_unit] and breed.player_locomotion_constrain_radius ~= nil
@@ -493,6 +499,36 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	end
 
 	return final_position
+end
+
+PlayerUnitLocomotionExtension._should_ignore_collision_with_horde_minions = function (self, unit)
+	local buff_extension = self._buff_extension
+
+	if not buff_extension then
+		return false
+	end
+
+	local is_dodging, dodge_type = Dodge.is_dodging(unit)
+	local is_dodging_not_sliding = is_dodging and dodge_type == dodge_types.dodge
+	local disable_horde_minions_collision_during_dodge = buff_extension:has_keyword("disable_horde_minions_collision_during_dodge")
+
+	if is_dodging_not_sliding and (self._ogryn_dodges or disable_horde_minions_collision_during_dodge) then
+		local consecutive_dodges = Dodge.consecutive_dodges(unit)
+		local first_dodge = consecutive_dodges == 1
+
+		return first_dodge
+	end
+
+	local is_sprinting = Sprint.is_sprinting(self._sprint_character_state_component)
+	local current_stamina, _ = Stamina.current_and_max_value(unit, self._stamina_component, self._base_stamina_template)
+	local is_sprinting_with_stamina = is_sprinting and current_stamina > 0
+	local has_disable_horde_minions_collision_during_sprint_keyword = buff_extension:has_keyword("disable_horde_minions_collision_during_sprint")
+
+	if has_disable_horde_minions_collision_during_sprint_keyword and is_sprinting_with_stamina then
+		return true
+	end
+
+	return false
 end
 
 PlayerUnitLocomotionExtension._update_script_driven_hub_movement = function (self, unit, dt, t, locomotion_component, steering_component, current_position, calculate_fall_velocity, mover)
@@ -921,6 +957,7 @@ end
 PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 
 	local component_system = Managers.state.extension:system("component_system")
 	local components = component_system:get_components(unit, "FootIk")

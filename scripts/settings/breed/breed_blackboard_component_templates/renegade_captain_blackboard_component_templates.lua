@@ -41,8 +41,22 @@ renegade_captain.available_attacks = {
 	shotgun_strafe_shoot = "boolean",
 	void_shield_explosion = "boolean",
 }
+renegade_captain.patrol = {
+	auto_patrol = "boolean",
+	patrol_id = "number",
+	patrol_index = "number",
+	patrol_leader_unit = "Unit",
+	should_patrol = "boolean",
+	walk_position = "Vector3Box",
+}
 renegade_captain.record_state = {
 	has_disabled_player = "boolean",
+}
+renegade_captain.disable = nil
+renegade_captain.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
 }
 
 local templates = {

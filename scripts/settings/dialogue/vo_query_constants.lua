@@ -28,7 +28,6 @@ local vo_query_constants = {
 		smart_tag_vo_pickup_deployed_ammo_crate = "pup_deployed_ammo_crate",
 		smart_tag_vo_pickup_deployed_medical_crate = "pup_deployed_medical_crate",
 		smart_tag_vo_pickup_forge_metal = "pup_forge_metal",
-		smart_tag_vo_pickup_health_booster = "pup_health_booster",
 		smart_tag_vo_pickup_medical_crate = "pup_medical_crate",
 		smart_tag_vo_pickup_platinum = "pup_platinum",
 		smart_tag_vo_pickup_side_mission_consumable = "pup_side_mission_consumable",

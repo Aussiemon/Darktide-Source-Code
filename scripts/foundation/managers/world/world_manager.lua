@@ -9,12 +9,15 @@ WorldManager.init = function (self)
 	self._update_queue = {}
 	self._anim_update_callbacks = {}
 	self._scene_update_callbacks = {}
+	self._post_scene_update_callbacks = {}
 	self._queued_worlds_to_release = {}
 	self._dlss_reset_by_world = {}
 	self._scale = 1
 end
 
 WorldManager.create_world = function (self, name, parameters, ...)
+	Log.debug("WorldManager", "Creating world named %s", name)
+
 	local has_physics_world = true
 	local n_varargs = select("#", ...)
 
@@ -38,6 +41,7 @@ WorldManager.create_world = function (self, name, parameters, ...)
 	World.set_data(world, "wwise_world", Wwise.wwise_world(world))
 	World.set_data(world, "timer_name", parameters.timer_name)
 	World.set_data(world, "levels", {})
+	World.set_data(world, "level_instances", {})
 	World.set_data(world, "spawned_level_count", 0)
 	World.set_data(world, "viewports", {})
 	World.set_data(world, "free_flight_viewports", {})
@@ -77,6 +81,8 @@ WorldManager.destroy_world = function (self, world_or_name)
 		name = World.get_data(world_or_name, "name")
 	end
 
+	Log.debug("WorldManager", "Destroying world named %s", name)
+
 	local world = self._worlds[name]
 
 	if world == nil then
@@ -97,6 +103,7 @@ WorldManager.destroy_world = function (self, world_or_name)
 	self._disabled_worlds[name] = nil
 	self._anim_update_callbacks[world] = nil
 	self._scene_update_callbacks[world] = nil
+	self._post_scene_update_callbacks[world] = nil
 
 	self:_sort_update_queue()
 end
@@ -153,6 +160,12 @@ WorldManager.update = function (self, dt, t)
 			dt = dt * self._scale
 
 			ScriptWorld.update(world, dt, self._anim_update_callbacks[world], self._scene_update_callbacks[world])
+		end
+
+		local post_scene_cb = self._post_scene_update_callbacks[world]
+
+		if post_scene_cb then
+			post_scene_cb()
 		end
 	end
 
@@ -243,6 +256,10 @@ end
 
 WorldManager.set_scene_update_callback = function (self, world, callback)
 	self._scene_update_callbacks[world] = callback
+end
+
+WorldManager.set_post_scene_update_callback = function (self, world, callback)
+	self._post_scene_update_callbacks[world] = callback
 end
 
 return WorldManager

@@ -87,8 +87,8 @@ local function _update_material_layers_color(unit, extension, wanted_outline_col
 		if outline_config then
 			local color_unit = unit
 
-			for i = 1, #material_layers do
-				local material_layer_name = material_layers[i]
+			for ii = 1, #material_layers do
+				local material_layer_name = material_layers[ii]
 				local material_variable_name = "outline_color"
 
 				Unit.set_vector3_for_material(color_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
@@ -101,19 +101,19 @@ local function _update_material_layers_color(unit, extension, wanted_outline_col
 				local slot_unit, attachments = visual_loadout_extension:slot_unit(slot_name)
 
 				if slot.use_outline then
-					for j = 1, #material_layers do
-						local material_layer_name = material_layers[j]
+					for jj = 1, #material_layers do
+						local material_layer_name = material_layers[jj]
 						local material_variable_name = "outline_color"
 
 						Unit.set_vector3_for_material(slot_unit or slot.unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
 					end
 
 					if attachments then
-						for j = 1, #attachments do
-							local attachment_unit = attachments[j]
+						for jj = 1, #attachments do
+							local attachment_unit = attachments[jj]
 
-							for k = 1, #material_layers do
-								local material_layer_name = material_layers[k]
+							for kk = 1, #material_layers do
+								local material_layer_name = material_layers[kk]
 								local material_variable_name = "outline_color"
 
 								Unit.set_vector3_for_material(attachment_unit, material_layer_name, material_variable_name, Vector3(wanted_outline_color[1], wanted_outline_color[2], wanted_outline_color[3]))
@@ -147,9 +147,9 @@ OutlineSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 local function _find_outline(outlines, name)
-	for i = 1, #outlines do
-		if outlines[i].name == name then
-			return i
+	for ii = 1, #outlines do
+		if outlines[ii].name == name then
+			return ii
 		end
 	end
 end

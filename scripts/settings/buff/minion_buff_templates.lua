@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/buff/minion_buff_templates.lua
 
 local Attack = require("scripts/utilities/attack/attack")
+local ActionData = require("scripts/settings/breed/breed_actions")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
@@ -19,6 +20,25 @@ local proc_events = BuffSettings.proc_events
 local templates = {}
 
 table.make_unique(templates)
+
+local function _multiplier_step(value)
+	local difficulty_manager = Managers.state and Managers.state.difficulty
+
+	if not difficulty_manager then
+		return value
+	end
+
+	local multiplier_step = {
+		value * 1.75,
+		value * 1.5,
+		value * 1.35,
+		value * 1.2,
+		value * 1,
+	}
+	local scaled_multiplier_step = difficulty_manager:get_table_entry_by_challenge(multiplier_step)
+
+	return scaled_multiplier_step
+end
 
 templates.cultist_flamer_hit_by_flame = {
 	class_name = "interval_buff",
@@ -44,6 +64,99 @@ templates.cultist_flamer_hit_by_flame = {
 	end,
 	minion_effects = minion_burning_buff_effects.chemfire,
 }
+templates.damage_volume_burning = {
+	class_name = "interval_buff",
+	duration = 1,
+	interval = 0.5,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.damage_volume_burning,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.horde_flame_impact
+			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
+}
+templates.damage_volume_instakill = {
+	class_name = "interval_buff",
+	duration = 5,
+	interval = 0.5,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.damage_volume_instakill,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_profile = DamageProfileTemplates.default
+
+			Attack.execute(unit, damage_profile, "instakill", true)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
+}
+templates.damage_volume_electrical = {
+	class_name = "interval_buff",
+	duration = 1,
+	interval = 0.5,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.damage_volume_electrical,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.horde_flame_impact
+			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
+}
+templates.damage_volume_radioactive = {
+	class_name = "interval_buff",
+	duration = 1,
+	interval = 0.5,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.damage_volume_radioactive,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.horde_flame_impact
+			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
+}
 templates.hit_by_common_enemy_flame = {
 	class_name = "interval_buff",
 	duration = 1,
@@ -51,6 +164,27 @@ templates.hit_by_common_enemy_flame = {
 	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.burning,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.horde_flame_impact
+			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
+}
+templates.hit_by_common_enemy_flame_no_duration = {
+	class_name = "interval_buff",
+	interval = 0.1,
+	predicted = false,
 	keywords = {
 		buff_keywords.burning,
 	},
@@ -89,6 +223,19 @@ templates.hit_by_poxburster_bile = {
 			off_state = "none",
 			on_state = "on",
 		},
+	},
+}
+templates.renegade_plasma_gunner_toughness_reduction = {
+	class_name = "buff",
+	duration = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_plasma_reduced_toughness",
+	is_negative = true,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = _multiplier_step(0.25),
+		[buff_stat_buffs.toughness_replenish_multiplier] = _multiplier_step(0.25),
 	},
 }
 templates.cultist_flamer_liquid_immunity = {

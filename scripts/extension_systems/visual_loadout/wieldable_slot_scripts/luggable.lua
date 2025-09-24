@@ -25,8 +25,9 @@ Luggable.init = function (self, context, slot, weapon_template, fx_sources, item
 
 	local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
 	local objective_name = mission_objective_target_extension:objective_name()
+	local objective_group_id = mission_objective_target_extension:objective_group_id()
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	local objective = mission_objective_system:active_objective(objective_name)
+	local objective = mission_objective_system:active_objective(objective_name, objective_group_id)
 
 	if objective then
 		objective:luggable_picked_up()
@@ -97,7 +98,8 @@ Luggable._handle_objective_markers = function (self, wielding)
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
 	local objective_name = mission_objective_target_extension:objective_name()
-	local objective = mission_objective_system:active_objective(objective_name)
+	local objective_group_id = mission_objective_target_extension:objective_group_id()
+	local objective = mission_objective_system:active_objective(objective_name, objective_group_id)
 
 	if objective then
 		objective:display_socket_markers(wielding)

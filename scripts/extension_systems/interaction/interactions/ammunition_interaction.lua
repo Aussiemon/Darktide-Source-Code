@@ -62,8 +62,8 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 		if inventory_slot_component.max_ammunition_reserve > 0 then
 			local ammo_reserve = inventory_slot_component.current_ammunition_reserve
 			local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-			local ammo_clip = inventory_slot_component.current_ammunition_clip
-			local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+			local ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+			local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)

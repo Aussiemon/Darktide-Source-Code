@@ -565,6 +565,102 @@ local enemy_event_spawner_compositions = {
 			},
 		},
 	},
+	live_event_plasma_smugglers = {
+		renegade = {
+			{
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								2,
+								3,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								2,
+								4,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								3,
+								4,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								3,
+								5,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								4,
+								6,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 }
 
 return enemy_event_spawner_compositions

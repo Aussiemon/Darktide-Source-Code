@@ -10,6 +10,7 @@ local function _create_archetype_entry(archetype_name)
 
 	archetype.name = archetype_name
 	archetype.base_talents = archetype.base_talents or {}
+	archetype.ui_selection_order = ArchetypeSettings.archetype_ui_selection_order[archetype_name]
 
 	local entry = archetype
 

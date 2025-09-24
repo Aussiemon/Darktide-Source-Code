@@ -9,7 +9,7 @@ local MasterItems = require("scripts/backend/master_items")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)

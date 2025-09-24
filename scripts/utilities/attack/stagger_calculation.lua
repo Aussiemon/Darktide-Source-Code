@@ -1,17 +1,19 @@
 ﻿-- chunkname: @scripts/utilities/attack/stagger_calculation.lua
 
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
+local armor_types = ArmorSettings.types
 local attack_types = AttackSettings.attack_types
 local rending_stagger_strength_modifier = StaggerSettings.rending_stagger_strength_modifier
 local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local StaggerCalculation = {}
 local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _calculate_stagger_reduction_buffs
 
-StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, optional_mutator_stagger_overrides)
+StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, optional_mutator_stagger_overrides, attacker_unit_or_nil, target_unit_or_nil)
 	local is_finesse_hit = hit_weakspot
 
 	if target_settings.power_level_multiplier then
@@ -21,7 +23,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 		power_level = power_level * power_level_multiplier
 	end
 
-	local stagger_strength, stagger_power_level = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
+	local stagger_strength, stagger_power_level = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs, attacker_unit_or_nil, target_unit_or_nil)
 	local stagger_reduction = _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type, attacker_stat_buffs, hit_weakspot, is_burning)
 	local armor_damage_modifier = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, lerp_values, armor_type, is_critical_strike, dropoff_scalar)
 
@@ -58,13 +60,13 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	return stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength
 end
 
-function _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
+function _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs, attacker_unit_or_nil, target_unit_or_nil)
 	local stagger_table = stagger_strength_output[armor_type]
 	local min, max = stagger_table.min, stagger_table.max
 	local stagger_strength_range = max - min
 	local charged_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type)
-	local stagger_buff_modifier = _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
+	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type, attacker_unit_or_nil, target_unit_or_nil)
+	local stagger_buff_modifier = _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, armor_type, hit_weakspot, is_critical_strike)
 
 	stagger_power_level = stagger_power_level * stagger_buff_modifier
 
@@ -181,7 +183,7 @@ function _calculate_stagger_length_scale(impact_modifier)
 	return length_scale
 end
 
-function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
+function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, armor_type, hit_weakspot, is_critical_strike)
 	local impact_modifier = attacker_stat_buffs.impact_modifier or 1
 	local target_impact_modifier = target_stat_buffs.impact_modifier or 1
 	local melee_impact_modifier = attack_type == attack_types.melee and attacker_stat_buffs.melee_impact_modifier or 1
@@ -190,7 +192,8 @@ function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_
 	local explosion_impact_modifier = attack_type == attack_types.explosion and attacker_stat_buffs.explosion_impact_modifier or 1
 	local shout_impact_modifier = attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier or 1
 	local melee_weakspot_modifier = attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier or 1
-	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier + push_impact_modifier - 7
+	local super_armor_impact_on_crit = armor_type == armor_types.super_armor and is_critical_strike and attacker_stat_buffs.super_armor_impact_on_crit or 1
+	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier + super_armor_impact_on_crit + push_impact_modifier - 7
 
 	return modifier
 end

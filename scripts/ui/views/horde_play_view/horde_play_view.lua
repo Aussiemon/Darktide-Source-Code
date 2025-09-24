@@ -13,12 +13,12 @@ local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local Zones = require("scripts/settings/zones/zones")
 local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local TextUtils = require("scripts/utilities/ui/text")
 local MissionUtilities = require("scripts/utilities/ui/mission")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local _MISSION_DUMMY_DATA = {
 	{
 		category = "narrative",
@@ -185,6 +185,7 @@ HordePlayView.init = function (self, settings, context)
 	self._parent = parent
 	self._backend_data_expiry_time = -1
 	self._promises = {}
+	self._promise_container = PromiseContainer:new()
 	self._cb_fetch_success = callback(self, "_fetch_success")
 	self._cb_fetch_failure = callback(self, "_fetch_failure")
 	self._play_button_anim_delay = 1
@@ -237,8 +238,9 @@ HordePlayView._cb_on_mission_start = function (self)
 
 	local mission_id = mission.id
 	local private_match = self._private_match
+	local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
-	Managers.party_immaterium:wanted_mission_selected(mission_id, private_match, BackendUtilities.prefered_mission_region)
+	Managers.party_immaterium:wanted_mission_selected(mission_id, private_match, prefered_mission_region)
 end
 
 HordePlayView._update_fetch_missions = function (self, t)
@@ -248,13 +250,9 @@ HordePlayView._update_fetch_missions = function (self, t)
 
 	self._is_fetching_missions = true
 
-	local missions_promise = self:_cancel_promise_on_exit(Managers.data_service.mission_board:fetch(nil, 1))
-
-	self._mission_promise = missions_promise
+	local missions_promise = self._promise_container:cancel_on_destroy(Managers.data_service.mission_board:fetch(nil, 1))
 
 	missions_promise:next(function (mission_data)
-		self._mission_promise = nil
-
 		return Promise.resolved(mission_data)
 	end):next(self._cb_fetch_success):catch(self._cb_fetch_failure)
 end
@@ -342,22 +340,6 @@ HordePlayView._fetch_failure = function (self, error_message)
 
 	self._backend_data_expiry_time = Managers.time:time("main") + fetch_retry_cooldown
 	self._is_fetching_missions = false
-end
-
-HordePlayView._cancel_promise_on_exit = function (self, promise)
-	local promises = self._promises
-
-	if promise:is_pending() and not promises[promise] then
-		promises[promise] = true
-
-		promise:next(function ()
-			self._promises[promise] = nil
-		end, function ()
-			self._promises[promise] = nil
-		end)
-	end
-
-	return promise
 end
 
 HordePlayView._set_selected_option = function (self, index, ignore_sound)
@@ -663,17 +645,7 @@ HordePlayView._handle_input = function (self, input_service, dt, t)
 end
 
 HordePlayView.on_exit = function (self)
-	if self._mission_promise then
-		self._mission_promise:cancel()
-
-		self._mission_promise = nil
-	end
-
-	if self._region_promise then
-		self._region_promise:cancel()
-
-		self._region_promise = nil
-	end
+	self._promise_container:delete()
 
 	if self._enter_animation_id then
 		self:_stop_animation(self._enter_animation_id)
@@ -700,8 +672,10 @@ HordePlayView._callback_open_options = function (self, region_data)
 	})
 
 	local regions_latency = self._regions_latency
-	local presentation_data = {
-		{
+	local presentation_data = {}
+
+	if regions_latency then
+		presentation_data[#presentation_data + 1] = {
 			display_name = "loc_mission_board_view_options_Matchmaking_Location",
 			id = "region_matchmaking",
 			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
@@ -710,15 +684,16 @@ HordePlayView._callback_open_options = function (self, region_data)
 				return
 			end,
 			on_activated = function (value, template)
-				BackendUtilities.prefered_mission_region = value
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
 			end,
 			get_function = function (template)
 				local options = template.options_function()
+				local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
 				for i = 1, #options do
 					local option = options[i]
 
-					if option.value == BackendUtilities.prefered_mission_region then
+					if option.value == prefered_mission_region then
 						return option.id
 					end
 				end
@@ -755,25 +730,26 @@ HordePlayView._callback_open_options = function (self, region_data)
 				return options
 			end,
 			on_changed = function (value)
-				BackendUtilities.prefered_mission_region = value
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
 			end,
-		},
-		{
-			display_name = "loc_private_tag_name",
-			id = "private_match",
-			tooltip_text = "loc_mission_board_view_options_private_game_desc",
-			widget_type = "checkbox",
-			start_value = self._private_match,
-			get_function = function ()
-				return self._private_match
-			end,
-			on_activated = function (value, data)
-				data.changed_callback(value)
-			end,
-			on_changed = function (value)
-				self:_callback_toggle_private_matchmaking()
-			end,
-		},
+		}
+	end
+
+	presentation_data[#presentation_data + 1] = {
+		display_name = "loc_private_tag_name",
+		id = "private_match",
+		tooltip_text = "loc_mission_board_view_options_private_game_desc",
+		widget_type = "checkbox",
+		start_value = self._private_match,
+		get_function = function ()
+			return self._private_match
+		end,
+		on_activated = function (value, data)
+			data.changed_callback(value)
+		end,
+		on_changed = function (value)
+			self:_callback_toggle_private_matchmaking()
+		end,
 	}
 
 	self._mission_board_options:present(presentation_data)
@@ -794,27 +770,8 @@ HordePlayView.dialogue_system = function (self)
 end
 
 HordePlayView.fetch_regions = function (self)
-	local region_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
-
-	self._region_promise = region_promise
-
-	self:_cancel_promise_on_exit(region_promise):next(function (regions_data)
-		local prefered_region_promise
-
-		if BackendUtilities.prefered_mission_region == "" then
-			prefered_region_promise = self:_cancel_promise_on_exit(Managers.backend.interfaces.region_latency:get_preferred_reef())
-		else
-			prefered_region_promise = Promise.resolved()
-		end
-
-		prefered_region_promise:next(function (prefered_region)
-			BackendUtilities.prefered_mission_region = BackendUtilities.prefered_mission_region ~= "" and BackendUtilities.prefered_mission_region or prefered_region or regions_data[1].reefs[1]
-
-			local regions_latency = Managers.backend.interfaces.region_latency:get_reef_info_based_on_region_latencies(regions_data)
-
-			self._regions_latency = regions_latency
-			self._region_promise = nil
-		end)
+	return self._promise_container:cancel_on_destroy(Managers.data_service.region_latency:fetch_regions_latency()):next(function (regions_latency)
+		self._regions_latency = regions_latency
 	end)
 end
 

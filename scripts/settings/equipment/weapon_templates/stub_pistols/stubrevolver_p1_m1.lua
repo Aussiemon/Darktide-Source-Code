@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/stub_pistols/stubrevolver_p1_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local Ammo = require("scripts/utilities/ammo")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -11,26 +11,23 @@ local HapticTriggerTemplates = require("scripts/settings/equipment/haptic_trigge
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeStubrevolverP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local damage_types = DamageSettings.damage_types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
-local wield_inputs = PlayerCharacterConstants.wield_inputs
+local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
-local armor_types = ArmorSettings.types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -91,7 +88,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -460,7 +457,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			return "current_clip", current_ammunition_clip
 		end,
@@ -543,7 +540,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
+			local current_ammunition_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			return "current_clip", current_ammunition_clip
 		end,
@@ -698,12 +695,14 @@ weapon_template.actions = {
 			1.1,
 			0.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip",
-			anchor_point_offset = {
-				0.2,
-				0.8,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip",
+				anchor_point_offset = {
+					0.2,
+					0.8,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -801,12 +800,14 @@ weapon_template.actions = {
 			1.1,
 			0.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip_02",
-			anchor_point_offset = {
-				0.2,
-				0.8,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/stubgun_pistol/pistol_whip_02",
+				anchor_point_offset = {
+					0.2,
+					0.8,
+					0,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -873,7 +874,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_stub_pistol_killshot",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "stub_pistol_p1_m1_suppression_killshot",
 	sway_template = "default_stubpistol_killshot",
 	crosshair = {
 		crosshair_type = "ironsight",

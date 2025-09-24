@@ -106,6 +106,10 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	end
 
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
+	local damage_reduction_debuff = talent_extension:has_special_rule(special_rules.psyker_discharge_damage_debuff)
+
+	self._damage_reduction_debuff = damage_reduction_debuff and "psyker_discharge_damage_debuff"
+
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[player_unit]
 	local target_enemies = action_settings.target_enemies
@@ -168,6 +172,14 @@ ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
 
 			if has_force_strong_stagger_keyword then
 				Stagger.force_stagger(unit, stagger_types.explosion, attack_direction, 4, 1, 4, player_unit)
+			end
+
+			if self._damage_reduction_debuff then
+				local enemy_buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				if enemy_buff_extension then
+					enemy_buff_extension:add_internally_controlled_buff(self._damage_reduction_debuff, t)
+				end
 			end
 
 			total_hits[unit] = nil

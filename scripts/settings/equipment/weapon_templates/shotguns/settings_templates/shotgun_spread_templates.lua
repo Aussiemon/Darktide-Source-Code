@@ -41,12 +41,6 @@ spread_templates.default_shotgun_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -181,12 +175,6 @@ spread_templates.shotgun_p1_m2_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -321,12 +309,6 @@ spread_templates.shotgun_p1_m3_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -467,12 +449,6 @@ spread_templates.default_shotgun_killshot = {
 					yaw = 0,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -597,12 +573,6 @@ spread_templates.default_spread_shotgun_p2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -737,12 +707,6 @@ spread_templates.special_spread_shotgun_p2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -877,12 +841,6 @@ spread_templates.ads_spread_shotgun_p2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1011,12 +969,6 @@ spread_templates.default_spread_shotgun_p4_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1127,12 +1079,6 @@ spread_templates.default_spread_shotgun_p4_ads = {
 					yaw = 0,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -1209,12 +1155,6 @@ spread_templates.default_spread_shotgun_p4_m2_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1.1,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1350,12 +1290,6 @@ spread_templates.default_spread_shotgun_p4_m2_ads = {
 				},
 			},
 			crouching_transition = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
-			suppression_hit = {
 				{
 					pitch = 0,
 					yaw = 0,

@@ -41,12 +41,6 @@ spread_templates.default_thumper_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -109,12 +103,6 @@ spread_templates.thumper_shotgun_hip_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -177,12 +165,6 @@ spread_templates.thumper_shotgun_aim = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -251,12 +233,6 @@ spread_templates.thumper_hip_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -321,12 +297,6 @@ spread_templates.thumper_aim_demolition = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -403,18 +373,6 @@ spread_templates.thumper_m3_aim = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-					yaw = {
-						lerp_basic = 0.35,
-						lerp_perfect = 0.15,
-					},
-				},
-			},
 			damage_hit = {
 				{
 					pitch = {
@@ -514,12 +472,6 @@ spread_templates.thumper_m3_hip = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

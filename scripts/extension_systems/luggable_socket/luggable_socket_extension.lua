@@ -80,7 +80,7 @@ LuggableSocketExtension._retrieve_overlapping_with_luggables = function (self)
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
 
-			if hit_unit ~= self._unit and self:_has_same_mission_objective(hit_unit) then
+			if hit_unit ~= self._unit and self:is_socketable(hit_unit) then
 				self._overlapping_units[hit_unit] = true
 			end
 		end
@@ -107,23 +107,6 @@ LuggableSocketExtension.add_overlapping_unit = function (self, luggable_unit)
 	self._overlapping_units[luggable_unit] = true
 end
 
-LuggableSocketExtension._has_same_mission_objective = function (self, unit)
-	local same_mission_objective = false
-	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
-
-	if mission_objective_target_extension then
-		local socket_objective_target_ext = self._socket_objective_target_ext
-		local socket_objective_name = socket_objective_target_ext:objective_name()
-		local unit_objective_name = mission_objective_target_extension:objective_name()
-
-		if socket_objective_name == unit_objective_name then
-			same_mission_objective = true
-		end
-	end
-
-	return same_mission_objective
-end
-
 LuggableSocketExtension.socket_luggable = function (self, luggable_unit, socket_lock_time)
 	local socket_unit = self._unit
 
@@ -134,6 +117,7 @@ LuggableSocketExtension.socket_luggable = function (self, luggable_unit, socket_
 
 	self:_lock_socket(luggable_unit)
 	Unit.flow_event(socket_unit, "lua_socketed")
+	Managers.state.extension:system("pickup_system"):dropped(luggable_unit)
 
 	local luggable_objective_target_ext = ScriptUnit.has_extension(luggable_unit, "mission_objective_target_system")
 
@@ -219,7 +203,37 @@ LuggableSocketExtension.unlock_socket = function (self)
 end
 
 LuggableSocketExtension.is_socketable = function (self, unit)
-	return self._locked_luggable == nil and self:_has_same_mission_objective(unit)
+	if self._locked_luggable then
+		return false
+	end
+
+	local required_luggable_pickup_type = self._required_luggable_pickup_types
+
+	if required_luggable_pickup_type then
+		local pickup_name = Unit.get_data(unit, "pickup_type")
+
+		if not table.contains(required_luggable_pickup_type, pickup_name) then
+			return false
+		end
+	end
+
+	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+
+	if mission_objective_target_extension then
+		local socket_objective_target_ext = self._socket_objective_target_ext
+		local socket_objective_name = socket_objective_target_ext:objective_name()
+		local unit_objective_name = mission_objective_target_extension:objective_name()
+
+		if socket_objective_name == unit_objective_name and (self._visible or socket_objective_name == "default") then
+			return true
+		end
+	end
+
+	return false
+end
+
+LuggableSocketExtension.set_allowed_luggable_pickup_types = function (self, pickup_types)
+	self._required_luggable_pickup_types = pickup_types
 end
 
 LuggableSocketExtension.is_occupied = function (self)

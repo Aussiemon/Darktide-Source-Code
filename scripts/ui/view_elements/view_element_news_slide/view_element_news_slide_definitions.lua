@@ -1,11 +1,12 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_definitions.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local InputUtils = require("scripts/managers/input/input_utils")
 local Settings = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_settings")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local width, height = Settings.size[1], Settings.size[2]
 local bar_height = Settings.bar_size[2]
 local buffer = Settings.buffer
@@ -36,7 +37,63 @@ local scenegraph_definition = {
 			0,
 		},
 	},
+	input_prompt_left = {
+		horizontal_alignment = "left",
+		parent = "news_area",
+		vertical_alignment = "bottom",
+		offset = {
+			0,
+			height + buffer,
+			10,
+		},
+	},
+	input_prompt_right = {
+		horizontal_alignment = "right",
+		parent = "news_area",
+		vertical_alignment = "bottom",
+		offset = {
+			15,
+			height + buffer,
+			10,
+		},
+	},
+	open_news_button_pivot = {
+		horizontal_alignment = "center",
+		parent = "news_area",
+		vertical_alignment = "bottom",
+		size = {
+			Settings.bar_size[1],
+			Settings.bar_size[2] * 4 + buffer * 2,
+		},
+		offset = {
+			0,
+			Settings.bar_size[2] * 9,
+			4,
+		},
+	},
 }
+
+local function _input_prompt_change_function(content, style)
+	local is_enabled = content.is_enabled
+	local input_action = content.input_action
+
+	if not input_action or not is_enabled then
+		content.text = ""
+
+		return
+	end
+
+	local service_type = "View"
+	local alias_key = Managers.ui:get_input_alias_key(input_action, service_type)
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+
+	content.text = string.format(Localize("loc_input_legend_text_template"), input_text, "")
+end
+
+local function _body_background_visibility_function(content, style)
+	return content.body_number and content.body_number ~= "" or content.body_text and content.body_text ~= ""
+end
+
 local widget_definitions = {
 	news_button = UIWidget.create_definition({
 		{
@@ -119,7 +176,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					20,
+					9,
 				},
 			},
 			change_function = ButtonPassTemplates.terminal_button_change_function,
@@ -138,7 +195,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					21,
+					10,
 				},
 			},
 			change_function = ButtonPassTemplates.terminal_button_change_function,
@@ -160,7 +217,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-10,
-					22,
+					8,
 				},
 			},
 		},
@@ -181,7 +238,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					11,
-					23,
+					9,
 				},
 			},
 		},
@@ -198,7 +255,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					10,
+					5,
 				},
 				uvs = {
 					{
@@ -238,7 +295,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					11,
+					7,
 				},
 			},
 		},
@@ -261,7 +318,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					3,
-					12,
+					7,
 				},
 			}, UIFontSettings.list_button),
 		},
@@ -272,8 +329,8 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
 				size = {
-					nil,
-					0,
+					width - 1 * buffer,
+					height + 5 * buffer,
 				},
 				color = {
 					150,
@@ -284,9 +341,10 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					11,
+					6,
 				},
 			},
+			visibility_function = _body_background_visibility_function,
 		},
 		{
 			pass_type = "texture",
@@ -296,8 +354,8 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",
 				size = {
-					nil,
-					0,
+					width - 1 * buffer,
+					height + 10 * buffer,
 				},
 				color = {
 					150,
@@ -306,11 +364,12 @@ local widget_definitions = {
 					0,
 				},
 				offset = {
+					-width - 1 * buffer,
 					0,
-					0,
-					11,
+					6,
 				},
 			},
+			visibility_function = _body_background_visibility_function,
 		},
 		{
 			pass_type = "text",
@@ -319,19 +378,19 @@ local widget_definitions = {
 			value_id = "body_number",
 			change_function = ButtonPassTemplates.terminal_button_change_function,
 			style = table.add_missing({
-				font_size = 18,
+				font_size = 28,
 				horizontal_alignment = "center",
 				text_horizontal_alignment = "right",
 				text_vertical_alignment = "top",
 				vertical_alignment = "center",
 				size = {
-					width - 2 * buffer,
-					height - 2 * buffer,
+					width - 1 * buffer,
+					height - 1 * buffer,
 				},
 				offset = {
+					-1 * buffer,
 					0,
-					0,
-					12,
+					7,
 				},
 			}, UIFontSettings.list_button),
 		},
@@ -353,12 +412,72 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
+					7,
+				},
+				text_color = Color.terminal_text_body_sub_header(255, true),
+			}, UIFontSettings.list_button),
+			change_function = function (content, style, optional_hotspot_id)
+				style.text_color = content.body_number and content.body_number ~= "" and Color.terminal_text_body_sub_header(255, true) or Color.terminal_text_header(255, true)
+			end,
+		},
+	}, "news_area"),
+	input_prompt_left = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = table.add_missing({
+				font_size = 18,
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				size = {
+					width - 2 * buffer,
+					height - 2 * buffer,
+				},
+				offset = {
+					0,
+					0,
 					12,
 				},
 				text_color = Color.terminal_text_body_sub_header(255, true),
 			}, UIFontSettings.list_button),
+			change_function = _input_prompt_change_function,
 		},
-	}, "news_area"),
+	}, "input_prompt_left"),
+	input_prompt_right = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = table.add_missing({
+				font_size = 18,
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "top",
+				size = {
+					width - 2 * buffer,
+					height - 2 * buffer,
+				},
+				offset = {
+					0,
+					0,
+					12,
+				},
+				text_color = Color.terminal_text_body_sub_header(255, true),
+			}, UIFontSettings.list_button),
+			change_function = _input_prompt_change_function,
+		},
+	}, "input_prompt_right"),
+	open_news_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "open_news_button_pivot", {
+		hotspot = {
+			on_pressed_sound = UISoundEvents.default_click,
+		},
+	}, nil, {
+		text = {
+			font_size = 20,
+		},
+	}),
 }
 local blueprints = {}
 

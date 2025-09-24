@@ -92,15 +92,56 @@ local template = {
 		event_archives_basement_guards_a = {
 			{
 				"spawn_by_points",
+				limit_spawners = 12,
+				max_breed_amount = 12,
+				passive = true,
+				points = 6,
+				spawner_group = "spawner_archives_basement_horde_a",
+				breed_tags = {
+					{
+						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
 				limit_spawners = 16,
 				max_breed_amount = 16,
 				passive = true,
-				points = 16,
+				points = 26,
 				spawner_group = "spawner_archives_basement_guards_a",
 				breed_tags = {
 					{
+						"close",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 10,
+				max_breed_amount = 10,
+				passive = true,
+				points = 12,
+				spawner_group = "spawner_archives_basement_elite_a",
+				breed_tags = {
+					{
 						"melee",
-						"horde",
+						"elite",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				max_breed_amount = 4,
+				passive = true,
+				points = 6,
+				spawner_group = "spawner_archives_basement_guards_ranged_a",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
 					},
 				},
 			},
@@ -110,10 +151,10 @@ local template = {
 				max_breed_amount = 2,
 				passive = true,
 				points = 6,
-				spawner_group = "spawner_archives_basement_elite_a",
+				spawner_group = "spawner_archives_basement_ranged_elite_a",
 				breed_tags = {
 					{
-						"melee",
+						"far",
 						"elite",
 					},
 				},
@@ -122,22 +163,35 @@ local template = {
 		event_archives_basement_guards_b = {
 			{
 				"spawn_by_points",
-				limit_spawners = 16,
-				max_breed_amount = 16,
+				limit_spawners = 12,
+				max_breed_amount = 12,
 				passive = true,
-				points = 16,
-				spawner_group = "spawner_archives_basement_guards_b",
+				points = 6,
+				spawner_group = "spawner_archives_basement_horde_b",
 				breed_tags = {
 					{
-						"melee",
 						"horde",
 					},
 				},
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 17,
+				max_breed_amount = 17,
+				passive = true,
+				points = 28,
+				spawner_group = "spawner_archives_basement_guards_b",
+				breed_tags = {
+					{
+						"close",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 10,
+				max_breed_amount = 10,
 				passive = true,
 				points = 12,
 				spawner_group = "spawner_archives_basement_elite_b",
@@ -148,28 +202,69 @@ local template = {
 					},
 				},
 			},
+			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				max_breed_amount = 4,
+				passive = true,
+				points = 6,
+				spawner_group = "spawner_archives_basement_guards_ranged_b",
+				breed_tags = {
+					{
+						"far",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 2,
+				max_breed_amount = 2,
+				passive = true,
+				points = 6,
+				spawner_group = "spawner_archives_basement_ranged_elite_b",
+				breed_tags = {
+					{
+						"far",
+						"elite",
+					},
+				},
+			},
 		},
 		event_archives_basement_guards_c = {
 			{
 				"spawn_by_points",
-				limit_spawners = 24,
-				max_breed_amount = 24,
+				limit_spawners = 12,
+				max_breed_amount = 12,
 				passive = true,
-				points = 24,
-				spawner_group = "spawner_archives_basement_guards_c",
+				points = 6,
+				spawner_group = "spawner_archives_basement_horde_c",
 				breed_tags = {
 					{
-						"melee",
 						"horde",
 					},
 				},
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				max_breed_amount = 3,
+				limit_spawners = 24,
+				max_breed_amount = 24,
 				passive = true,
-				points = 18,
+				points = 32,
+				spawner_group = "spawner_archives_basement_guards_c",
+				breed_tags = {
+					{
+						"close",
+						"roamer",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 6,
+				max_breed_amount = 6,
+				passive = true,
+				points = 8,
 				spawner_group = "spawner_archives_basement_elite_c",
 				breed_tags = {
 					{
@@ -179,15 +274,42 @@ local template = {
 				},
 			},
 		},
+		event_archives_basement_trickle_a = {
+			{
+				"start_terror_trickle",
+				delay = 4,
+				spawner_group = "spawner_basement_trickle_a",
+				template_name = "standard_melee",
+			},
+		},
+		event_archives_basement_trickle_b = {
+			{
+				"start_terror_trickle",
+				delay = 4,
+				spawner_group = "spawner_basement_trickle_b",
+				template_name = "standard_melee",
+			},
+		},
 		event_archives_basement_a = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				points = 6,
+				spawner_group = "spawner_basement_first_segment",
+				breed_tags = {
+					{
+						"roamer",
 					},
 				},
 			},
@@ -205,7 +327,19 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_first_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -231,8 +365,8 @@ local template = {
 		event_archives_basement_b = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
@@ -242,9 +376,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 12,
-				spawner_group = "spawner_absconditum_west",
+				limit_spawners = 4,
+				points = 6,
+				spawner_group = "spawner_basement_first_segment",
 				breed_tags = {
 					{
 						"elite",
@@ -252,8 +386,32 @@ local template = {
 				},
 			},
 			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_first_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
+			},
+			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_first_segment",
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -279,12 +437,23 @@ local template = {
 		event_archives_basement_c = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				points = 8,
+				spawner_group = "spawner_basement_second_segment",
+				breed_tags = {
+					{
+						"roamer",
 					},
 				},
 			},
@@ -302,7 +471,19 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_second_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -328,8 +509,8 @@ local template = {
 		event_archives_basement_d = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 4,
+				points = 12,
 				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
@@ -339,9 +520,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 12,
-				spawner_group = "spawner_absconditum_west",
+				limit_spawners = 4,
+				points = 8,
+				spawner_group = "spawner_basement_second_segment",
 				breed_tags = {
 					{
 						"elite",
@@ -349,8 +530,32 @@ local template = {
 				},
 			},
 			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_second_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
+			},
+			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_third_segment",
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -376,12 +581,23 @@ local template = {
 		event_archives_basement_e = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 6,
+				points = 14,
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
 						"horde",
+					},
+				},
+			},
+			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				points = 10,
+				spawner_group = "spawner_basement_third_segment",
+				breed_tags = {
+					{
+						"roamer",
 					},
 				},
 			},
@@ -399,7 +615,19 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_third_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -425,8 +653,8 @@ local template = {
 		event_archives_basement_f = {
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 20,
+				limit_spawners = 6,
+				points = 14,
 				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
@@ -436,9 +664,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				limit_spawners = 3,
-				points = 12,
-				spawner_group = "spawner_absconditum_west",
+				limit_spawners = 6,
+				points = 8,
+				spawner_group = "spawner_basement_third_segment",
 				breed_tags = {
 					{
 						"elite",
@@ -446,8 +674,32 @@ local template = {
 				},
 			},
 			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_third_segment",
+				breed_tags = {
+					{
+						"special",
+						"disabler",
+					},
+				},
+			},
+			{
 				"delay",
-				duration = 4,
+				duration = 3,
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				spawner_group = "spawner_basement_third_segment",
+				breed_tags = {
+					{
+						"special",
+						"scrambler",
+					},
+				},
 			},
 			{
 				"start_terror_trickle",
@@ -474,7 +726,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
@@ -490,7 +742,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
@@ -541,7 +793,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
@@ -558,7 +810,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
@@ -608,7 +860,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 18,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
@@ -624,7 +876,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
@@ -674,7 +926,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 18,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
@@ -690,7 +942,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
@@ -741,7 +993,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
@@ -757,7 +1009,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_west",
 				breed_tags = {
 					{
@@ -807,7 +1059,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 16,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
@@ -823,7 +1075,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				spawner_group = "spawner_absconditum_east",
 				breed_tags = {
 					{
@@ -874,7 +1126,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 14,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_absconditum_escape",
 				breed_tags = {
@@ -902,7 +1154,7 @@ local template = {
 			{
 				"spawn_by_points",
 				limit_spawners = 3,
-				points = 12,
+				points = 14,
 				spawner_group = "spawner_absconditum_escape",
 				breed_tags = {
 					{

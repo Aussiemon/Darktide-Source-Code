@@ -150,14 +150,6 @@ CombatVectorSystem.on_gameplay_post_init = function (self, level)
 end
 
 CombatVectorSystem.destroy = function (self, ...)
-	if self._nav_tag_cost_table then
-		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
-	end
-
-	if self._traverse_logic then
-		GwNavTraverseLogic.destroy(self._traverse_logic)
-	end
-
 	local astar_data = self._astar_data
 
 	if astar_data and astar_data.astar then
@@ -172,6 +164,14 @@ CombatVectorSystem.destroy = function (self, ...)
 		end
 	end
 
+	if self._traverse_logic then
+		GwNavTraverseLogic.destroy(self._traverse_logic)
+	end
+
+	if self._nav_tag_cost_table then
+		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
+	end
+
 	CombatVectorSystem.super.destroy(self, ...)
 end
 
@@ -180,13 +180,6 @@ CombatVectorSystem.on_add_extension = function (self, world, unit, extension_nam
 
 	if extension_name == "CombatVectorUserExtension" then
 		self._unit_extension_data[unit] = extension
-
-		local current_update_unit = self._current_update_unit
-		local unit_extension_data = self._unit_extension_data
-
-		if current_update_unit == unit then
-			self._current_update_unit, self._current_update_extension = next(unit_extension_data, current_update_unit)
-		end
 	end
 
 	return extension
@@ -495,7 +488,7 @@ end
 local ABOVE, BELOW, LATERAL, DISTANCE_FROM_OBSTACLE = 4, 4, 4, 0.1
 
 function _generate_combat_vector(nav_world, traverse_logic, astar, segments, node_count, nav_mesh_locations, num_nav_mesh_location_types, num_locations_per_segment_meter, width)
-	local GwNavAStar_node_at_index, Vector3_length, Vector3_normalize = GwNavAStar.node_at_index, Vector3.length, Vector3.normalize
+	local GwNavAStar_node_at_index, Vector3_direction_length = GwNavAStar.node_at_index, Vector3.direction_length
 	local segment_count = 1
 	local node_index = 1
 	local max_segments = CombatVectorSettings.max_segments
@@ -507,22 +500,23 @@ function _generate_combat_vector(nav_world, traverse_logic, astar, segments, nod
 
 		if node_index > 1 then
 			local to_prev_node = prev_node - node
-			local to_prev_node_length = Vector3_length(to_prev_node)
+			local prev_node_direction, to_prev_node_length = Vector3_direction_length(to_prev_node)
 			local num_segments_between_nodes = math.floor(to_prev_node_length / min_segment_length)
-			local prev_node_direction = Vector3_normalize(to_prev_node)
 
-			for i = num_segments_between_nodes, 1, -1 do
-				if segment_count == max_segments then
-					break
+			if num_segments_between_nodes > 0 then
+				local step = to_prev_node / num_segments_between_nodes
+
+				for i = num_segments_between_nodes, 1, -1 do
+					if segment_count == max_segments then
+						break
+					end
+
+					local segment_position = node + i * step
+
+					segment_count = segment_count + 1
+
+					_calculate_segment(nav_world, traverse_logic, segments, segment_position, prev_node_direction, segment_count, width)
 				end
-
-				local percentage = i / num_segments_between_nodes
-				local length = to_prev_node_length * percentage
-				local segment_position = node + prev_node_direction * length
-
-				segment_count = segment_count + 1
-
-				_calculate_segment(nav_world, traverse_logic, segments, segment_position, prev_node_direction, segment_count, width)
 			end
 		else
 			segments[node_index]:store(node)
@@ -738,7 +732,6 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 
 		if character_state_component and PlayerUnitStatus.is_disabled(character_state_component) then
-			local nav_spawn_points = main_path_manager:nav_spawn_points()
 			local side_system = Managers.state.extension:system("side_system")
 			local side = side_system:get_side(target_side_id)
 			local valid_player_units = side.valid_player_units
@@ -760,21 +753,17 @@ function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_ma
 					end
 
 					local player_position = POSITION_LOOKUP[player_unit]
-					local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
+					local travel_distance = main_path_manager:travel_distance_from_position(player_position, true)
 
-					if not group_index then
+					if not travel_distance then
 						local latest_position_on_nav_mesh = ScriptUnit.extension(player_unit, "navigation_system"):latest_position_on_nav_mesh()
 
 						if not latest_position_on_nav_mesh then
 							break
 						end
 
-						group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
+						travel_distance = main_path_manager:travel_distance_from_position(latest_position_on_nav_mesh)
 					end
-
-					local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-					local end_index = start_index + 1
-					local _, travel_distance = MainPathQueries.closest_position_between_nodes(player_position, start_index, end_index)
 
 					if best_travel_distance < travel_distance then
 						best_aggro_unit = player_unit

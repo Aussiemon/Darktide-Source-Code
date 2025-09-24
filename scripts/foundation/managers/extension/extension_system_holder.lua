@@ -61,7 +61,7 @@ ExtensionSystemHolder._init_systems = function (self, extension_system_creation_
 	end
 end
 
-ExtensionSystemHolder._add_system = function (self, context, system_init_data, name, class_name, has_pre_update, has_fixed_update, has_post_update, run_on_dedicated, run_in_runtime_loaded_level, extension_list, extension_list_ignore_on_dedicated)
+ExtensionSystemHolder._add_system = function (self, context, system_init_data, name, class_name, has_pre_update, has_fixed_update, has_post_update, run_on_dedicated, run_in_cinematic_level, extension_list, extension_list_ignore_on_dedicated)
 	local class = CLASSES[class_name]
 
 	if DEDICATED_SERVER and not run_on_dedicated then
@@ -104,7 +104,7 @@ ExtensionSystemHolder._add_system = function (self, context, system_init_data, n
 			end
 		end
 
-		system:set_run_in_runtime_loaded_level(run_in_runtime_loaded_level)
+		system:set_run_in_cinematic_level(run_in_cinematic_level)
 
 		self._num_systems = self._num_systems + 1
 		self._systems[self._num_systems] = system

@@ -132,6 +132,16 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_psyker_smite_charge",
 		},
 	},
+	power_weapon_charges_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_power_weapon_charges_loop",
+		},
+		stop = {
+			event_alias = "stop_power_weapon_charges_loop",
+		},
+	},
 	weapon_special_loop = {
 		exclude_from_unit_data_components = true,
 		has_husk_events = true,
@@ -150,6 +160,16 @@ local PlayerCharacterLoopingSoundAliases = {
 		},
 		stop = {
 			event_alias = "stop_weapon_overload_loop",
+		},
+	},
+	weapon_overload_lockout_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = false,
+		start = {
+			event_alias = "play_weapon_overload_lockout_loop",
+		},
+		stop = {
+			event_alias = "stop_weapon_overload_lockout_loop",
 		},
 	},
 	force_weapon_block_loop = {

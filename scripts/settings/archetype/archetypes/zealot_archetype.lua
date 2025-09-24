@@ -28,7 +28,6 @@ local archetype_data = {
 	knocked_down_health = 1000,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/zealot_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/zealot",
-	ui_selection_order = 2,
 	toughness = ArchetypeToughnessTemplates.zealot,
 	dodge = ArchetypeDodgeTemplates.zealot,
 	sprint = ArchetypeSprintTemplates.default,

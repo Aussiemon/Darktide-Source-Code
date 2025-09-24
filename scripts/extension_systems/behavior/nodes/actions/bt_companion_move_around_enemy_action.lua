@@ -4,10 +4,10 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local BtCompanionMoveAroundEnemyAction = class("BtCompanionMoveAroundEnemyAction", "BtNode")
-local lean_settings = CompanionDogSettings.leaning
+local lean_settings = CompanionDogLocomotionSettings.leaning
 
 BtCompanionMoveAroundEnemyAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")

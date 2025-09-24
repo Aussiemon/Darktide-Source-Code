@@ -287,12 +287,6 @@ recoil_templates.hip_lasgun_assault = {
 				},
 			},
 		},
-		hit_offset_multiplier = {
-			afro_hit = 1.05,
-			damage_hit = 1.8,
-			fortitude_hit = 1.2,
-			grace_hit = 1.1,
-		},
 		offset_limit = {
 			pitch = 0.4,
 			profile = "linear",

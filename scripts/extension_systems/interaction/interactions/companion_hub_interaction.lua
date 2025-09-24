@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/interaction/interactions/companion_hub_interaction.lua
 
 local FixedFrame = require("scripts/utilities/fixed_frame")
-local CompanionHubInteractionsSettings = require("scripts/settings/companion_hub_interactions/companion_hub_interactions_settings")
+local CompanionHubInteractionsSettings = require("scripts/settings/companion/companion_hub_interactions_settings")
 local CompanionHubInteraction = class("CompanionHubInteraction", "BaseInteraction")
 
 CompanionHubInteraction.start = function (self, world, interactor_unit, unit_data_component, t, interactor_is_server)

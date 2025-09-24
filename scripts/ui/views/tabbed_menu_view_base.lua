@@ -61,7 +61,9 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 		self._active_view_on_enter_callback = nil
 	end
 
-	if self._tab_bar_views then
+	local should_process_tab_switches = self._tab_bar_views and not self.closing_view
+
+	if should_process_tab_switches then
 		local next_tab_index = self._next_tab_index
 
 		if next_tab_index then

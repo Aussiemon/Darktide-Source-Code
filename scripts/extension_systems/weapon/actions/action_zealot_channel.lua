@@ -31,6 +31,13 @@ ActionZealotChannel.init = function (self, action_context, action_params, action
 	self._unit_data_extension = unit_data_extension
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
 	self._action_settings = action_settings
+	self._tick_stagger_data = {
+		num_updates_per_frame = 0,
+		power_level = 0,
+		update_index = 1,
+		results = Script.new_array(128),
+		forced_results = Script.new_array(128),
+	}
 end
 
 ActionZealotChannel.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -159,6 +166,8 @@ ActionZealotChannel.fixed_update = function (self, dt, t, time_in_action)
 
 		self._next_vo = nil
 	end
+
+	self:_update_tick_stagger_targets(time_in_action)
 end
 
 local SUPPRESSION_DECAY_DELAY = {
@@ -216,7 +225,7 @@ ActionZealotChannel._on_channel_tick = function (self, dt, in_coherence_units, t
 		local radius = action_settings.radius + time_in_action * radius_time_in_action_multiplier
 		local power_level = time_in_action > 0.5 and action_settings.power_level or 0
 
-		self:_zealot_stagger(radius, power_level)
+		self:_collect_tick_stagger_targets(dt, radius, power_level)
 	end
 
 	if time_in_action > self._add_buff_time then
@@ -258,119 +267,160 @@ end
 
 local _broadphase_results = {}
 local _hit_units = {}
+local TICK_HITS_STRIDE = 2
 
-ActionZealotChannel._zealot_stagger = function (self, radius, power_level)
+ActionZealotChannel._collect_tick_stagger_targets = function (self, dt, radius, power_level)
 	local action_settings = self._action_settings
-	local player_unit = self._player_unit
+	local unit = self._player_unit
+	local tick_stagger_data = self._tick_stagger_data
+	local stagger_results = tick_stagger_data.results
+	local forced_stagger_results = tick_stagger_data.forced_results
 
+	table.clear(stagger_results)
+	table.clear(forced_stagger_results)
 	table.clear(_hit_units)
-	table.clear(_broadphase_results)
 
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[player_unit]
-	local player_position = POSITION_LOOKUP[player_unit]
+	local side = side_system.side_by_unit[unit]
+	local player_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local ai_target_units = side.ai_target_units
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 
-	if radius and radius > 0 then
-		local num_hits = broadphase.query(broadphase, player_position, radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
-		local damage_profile = action_settings.damage_profile
+	table.clear(_broadphase_results)
 
-		for ii = 1, num_hits do
-			repeat
-				local enemy_unit = _broadphase_results[ii]
+	local num_hits = broadphase.query(broadphase, player_position, radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 
-				if not ai_target_units[enemy_unit] then
-					break
-				end
+	for ii = 1, num_hits do
+		repeat
+			local target_unit = _broadphase_results[ii]
 
-				local enemy_breed = ScriptUnit.extension(enemy_unit, "unit_data_system"):breed()
-				local minion_position = POSITION_LOOKUP[enemy_unit]
-				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
+			if not ai_target_units[target_unit] then
+				break
+			end
 
-				if enemy_breed.suppress_config then
-					Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, player_position)
-					Suppression.apply_suppression_decay_delay(enemy_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+			local target_position = POSITION_LOOKUP[target_unit]
+			local attack_direction = Vector3.normalize(Vector3.flat(target_position - player_position))
 
-					_hit_units[enemy_unit] = true
-
-					break
-				end
-
-				if enemy_breed.can_be_blinded and not _hit_units[enemy_unit] then
-					do
-						local blackboard = BLACKBOARDS[enemy_unit]
-						local stagger_component = blackboard.stagger
-						local is_staggered = stagger_component.num_triggered_staggers > 0
-
-						if not is_staggered then
-							local random_duration_range = math.random_range(2.6666666666666665, 4)
-
-							Stagger.force_stagger(enemy_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
-						end
-					end
-
-					break
-				end
-
-				local hit_zone_name = "torso"
-
-				Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit)
-			until true
-		end
+			stagger_results[#stagger_results + 1] = target_unit
+			stagger_results[#stagger_results + 1] = Vector3Box(attack_direction)
+		until true
 	end
-
-	self._num_ticks_done = self._num_ticks_done + 1
 
 	local force_stagger_radius = action_settings.force_stagger_radius
-	local force_stagger_duration = action_settings.force_stagger_duration
 
-	if force_stagger_radius then
-		local num_hits = broadphase.query(broadphase, player_position, force_stagger_radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
+	table.clear(_broadphase_results)
 
-		for ii = 1, num_hits do
-			repeat
-				local enemy_unit = _broadphase_results[ii]
+	local forced_num_hits = broadphase.query(broadphase, player_position, force_stagger_radius, _broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 
-				if not ai_target_units[enemy_unit] then
-					break
-				end
+	for ii = 1, forced_num_hits do
+		repeat
+			local target_unit = _broadphase_results[ii]
 
-				local minion_position = POSITION_LOOKUP[enemy_unit]
-				local enemy_breed = ScriptUnit.extension(enemy_unit, "unit_data_system"):breed()
-				local is_boss = enemy_breed.is_boss
-				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
+			if not ai_target_units[target_unit] then
+				break
+			end
 
-				if is_boss then
-					if self._num_ticks_done == 1 or self._num_ticks_done % 2 == 1 then
-						Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
-					end
+			local target_position = POSITION_LOOKUP[target_unit]
+			local attack_direction = Vector3.normalize(Vector3.flat(target_position - player_position))
 
-					break
-				end
-
-				if not _hit_units[enemy_unit] then
-					if enemy_breed.can_be_blinded then
-						do
-							local blackboard = BLACKBOARDS[enemy_unit]
-							local stagger_component = blackboard.stagger
-							local is_staggered = stagger_component.num_triggered_staggers > 0
-
-							if not is_staggered then
-								Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
-							end
-						end
-
-						break
-					end
-
-					Stagger.force_stagger(enemy_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
-				end
-			until true
-		end
+			forced_stagger_results[#forced_stagger_results + 1] = target_unit
+			forced_stagger_results[#forced_stagger_results + 1] = Vector3Box(attack_direction)
+		until true
 	end
+
+	local num_units_added = #stagger_results / TICK_HITS_STRIDE
+	local num_forced_units_added = #forced_stagger_results / TICK_HITS_STRIDE
+	local num_results_to_update_per_frame = math.min(math.ceil(num_units_added * dt / (TICK_RATE * 0.5)), num_units_added)
+	local num_forced_results_to_update_per_frame = math.min(math.ceil(num_forced_units_added * dt / (TICK_RATE * 0.5)), num_forced_units_added)
+
+	tick_stagger_data.power_level = power_level
+	tick_stagger_data.update_index = 1
+	tick_stagger_data.num_updates_per_frame = math.max(num_results_to_update_per_frame, num_forced_results_to_update_per_frame)
+	self._num_ticks_done = self._num_ticks_done + 1
+end
+
+ActionZealotChannel._update_tick_stagger_targets = function (self, time_in_action)
+	local player_unit = self._player_unit
+	local action_settings = self._action_settings
+	local tick_stagger_data = self._tick_stagger_data
+	local power_level = tick_stagger_data.power_level
+	local num_updates_per_frame = tick_stagger_data.num_updates_per_frame
+	local index = tick_stagger_data.update_index
+	local forced_index = tick_stagger_data.update_index
+	local stagger_results = tick_stagger_data.results
+	local forced_stagger_results = tick_stagger_data.forced_results
+	local player_position = POSITION_LOOKUP[player_unit]
+	local damage_profile = action_settings.damage_profile
+	local counter = 1
+
+	while counter <= num_updates_per_frame do
+		local target_unit = stagger_results[index]
+
+		if target_unit and HEALTH_ALIVE[target_unit] then
+			local attack_direction = stagger_results[index + 1]:unbox()
+			local enemy_breed = ScriptUnit.extension(target_unit, "unit_data_system"):breed()
+
+			if enemy_breed.suppress_config then
+				Suppression.apply_suppression(target_unit, player_unit, damage_profile, player_position)
+				Suppression.apply_suppression_decay_delay(target_unit, math.random_range(SUPPRESSION_DECAY_DELAY[1], SUPPRESSION_DECAY_DELAY[2]))
+
+				_hit_units[target_unit] = true
+			elseif enemy_breed.can_be_blinded and not _hit_units[target_unit] then
+				local blackboard = BLACKBOARDS[target_unit]
+				local stagger_component = blackboard.stagger
+				local is_staggered = stagger_component.num_triggered_staggers > 0
+
+				if not is_staggered then
+					local random_duration_range = math.random_range(2.6666666666666665, 4)
+
+					Stagger.force_stagger(target_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
+				end
+			else
+				Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", "torso", "attacking_unit", player_unit)
+			end
+		end
+
+		index = index + TICK_HITS_STRIDE
+		counter = counter + 1
+	end
+
+	local force_stagger_duration = action_settings.force_stagger_duration
+	local forced_counter = 1
+
+	while forced_counter <= num_updates_per_frame do
+		local target_unit = forced_stagger_results[forced_index]
+
+		if target_unit and HEALTH_ALIVE[target_unit] then
+			local attack_direction = forced_stagger_results[forced_index + 1]:unbox()
+			local enemy_breed = ScriptUnit.extension(target_unit, "unit_data_system"):breed()
+			local is_boss = enemy_breed.is_boss
+
+			if is_boss then
+				if self._num_ticks_done == 1 or self._num_ticks_done % 2 == 1 then
+					Stagger.force_stagger(target_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
+				end
+			elseif not _hit_units[target_unit] then
+				if enemy_breed.can_be_blinded then
+					local blackboard = BLACKBOARDS[target_unit]
+					local stagger_component = blackboard.stagger
+					local is_staggered = stagger_component.num_triggered_staggers > 0
+
+					if not is_staggered then
+						Stagger.force_stagger(target_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
+					end
+				else
+					Stagger.force_stagger(target_unit, "blinding", attack_direction, force_stagger_duration, 1, force_stagger_duration, player_unit)
+				end
+			end
+		end
+
+		forced_index = forced_index + TICK_HITS_STRIDE
+		forced_counter = forced_counter + 1
+	end
+
+	tick_stagger_data.update_index = math.max(index, forced_index)
 end
 
 ActionZealotChannel.finish = function (self, reason, data, t, time_in_action, action_settings)

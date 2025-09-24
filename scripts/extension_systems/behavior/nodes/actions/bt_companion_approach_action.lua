@@ -3,13 +3,12 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
+local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
-local MinionAttack = require("scripts/utilities/minion_attack")
-local Trajectory = require("scripts/utilities/trajectory")
-local DogLeapSettings = CompanionDogSettings.dog_leap_settings
-local lean_settings = CompanionDogSettings.leaning
+local dog_leap_settings = CompanionDogLocomotionSettings.dog_leap_settings
+local lean_settings = CompanionDogLocomotionSettings.leaning
 local BtCompanionApproachAction = class("BtCompanionApproachAction", "BtNode")
 
 BtCompanionApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -168,7 +167,7 @@ local ABOVE, BELOW, LATERAL = 1, 2, 0.3
 local NAV_Z_CORRECTION = 0.1
 
 BtCompanionApproachAction._can_start_leap = function (self, unit, scratchpad, action_data, perception_component, t)
-	local leap_leave_distance = DogLeapSettings.leap_leave_distance
+	local leap_leave_distance = dog_leap_settings.leap_leave_distance
 	local target_distance = perception_component.target_distance
 
 	if leap_leave_distance <= target_distance then
@@ -192,12 +191,12 @@ BtCompanionApproachAction._can_start_leap = function (self, unit, scratchpad, ac
 		return false, false
 	end
 
-	local target_node_name = DogLeapSettings.leap_target_node_name
+	local target_node_name = dog_leap_settings.leap_target_node_name
 	local target_node = Unit.node(target_unit, target_node_name)
-	local leap_target_position = Unit.world_position(target_unit, target_node) + Vector3(0, 0, DogLeapSettings.leap_target_z_offset)
+	local leap_target_position = Unit.world_position(target_unit, target_node) + Vector3(0, 0, dog_leap_settings.leap_target_z_offset)
 	local target_locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local target_velocity = target_locomotion_extension:current_velocity()
-	local leap_start_position = POSITION_LOOKUP[unit] + Vector3(0, 0, DogLeapSettings.leap_target_start_z_offset)
+	local leap_start_position = POSITION_LOOKUP[unit] + Vector3(0, 0, dog_leap_settings.leap_target_start_z_offset)
 	local distance = Vector3.length(Vector3.flat(leap_target_position - leap_start_position))
 	local success = distance < action_data.force_check_leap_distance or self:_check_leap(scratchpad.physics_world, leap_start_position, leap_target_position, target_velocity)
 
@@ -225,8 +224,8 @@ BtCompanionApproachAction._can_start_leap = function (self, unit, scratchpad, ac
 end
 
 BtCompanionApproachAction._check_leap = function (self, physics_world, start_position, target_position, target_velocity)
-	local collision_filter = DogLeapSettings.leap_collision_filter
-	local radius = DogLeapSettings.leap_ray_trace_radius
+	local collision_filter = dog_leap_settings.leap_collision_filter
+	local radius = dog_leap_settings.leap_ray_trace_radius
 	local hit_numbers = 1
 	local has_hit = PhysicsWorld.linear_sphere_sweep(physics_world, start_position, target_position, radius, hit_numbers, "types", "both", "collision_filter", collision_filter)
 

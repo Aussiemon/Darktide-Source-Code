@@ -18,6 +18,7 @@ local Push = require("scripts/extension_systems/character_state_machine/characte
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stagger = require("scripts/utilities/attack/stagger")
 local Stun = require("scripts/utilities/attack/stun")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local stagger_results = AttackSettings.stagger_results
@@ -237,7 +238,11 @@ end
 function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, attacked_unit, interrupt_alternate_fire)
 	local alternate_fire = unit_data_extension:write_component("alternate_fire")
 	local alternate_fire_settings = target_weapon_template and target_weapon_template.alternate_fire_settings
-	local always_interrupt_alternate_fire = alternate_fire_settings and alternate_fire_settings.always_interrupt
+	local always_interrupt_alternate_fire, uninterruptible
+
+	always_interrupt_alternate_fire = alternate_fire_settings and alternate_fire_settings.always_interrupt
+	uninterruptible = alternate_fire_settings and alternate_fire_settings.uninterruptible
+
 	local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 	local has_buff = buff_extension:has_keyword(buff_keywords.stun_immune)
 
@@ -245,7 +250,7 @@ function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, 
 		local weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 		local animation_extension = ScriptUnit.has_extension(attacked_unit, "animation_system")
 
-		if not alternate_fire_settings or not alternate_fire_settings.uninterruptible then
+		if not uninterruptible then
 			local weapon_extension = ScriptUnit.extension(attacked_unit, "weapon_system")
 			local action_settings = weapon_extension:running_action_settings()
 			local hard_stop_alternate_fire = true
@@ -342,12 +347,6 @@ function _catapult(attacked_unit_data_extension, catapulting_settings, force_loo
 
 	velocity.z = catapult_z_force
 
-	local buff_extension = ScriptUnit.extension(attacked_unit, "buff_system")
-	local stat_buffs = buff_extension:stat_buffs()
-	local velocity_multiplier = stat_buffs.catapult_force_multiplier or 1
-
-	velocity = velocity * velocity_multiplier
-
 	local catapulted_state_input = attacked_unit_data_extension:write_component("catapulted_state_input")
 
 	Catapulted.apply(catapulted_state_input, velocity)
@@ -395,6 +394,12 @@ function _drop_luggable(unit, unit_data_extension, attack_type)
 	local t = FixedFrame.get_latest_fixed_time()
 	local inventory_component = unit_data_extension:read_component("inventory")
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local weapon_template = visual_loadout_extension:weapon_template_from_slot("slot_luggable")
+
+	if not weapon_template or weapon_template.retain_luggable_when_damaged then
+		return
+	end
+
 	local enable_physics = true
 
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, enable_physics)

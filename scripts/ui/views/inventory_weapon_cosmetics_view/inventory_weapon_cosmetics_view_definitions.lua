@@ -17,7 +17,7 @@ local equip_button_size = {
 }
 local title_height = 70
 local edge_padding = 44
-local grid_width = 440
+local grid_width = 450
 local grid_height = 860
 local grid_size = {
 	grid_width - edge_padding,
@@ -33,8 +33,8 @@ local mask_size = {
 }
 local grid_settings = {
 	scrollbar_horizontal_offset = -7,
-	scrollbar_vertical_margin = 91,
-	scrollbar_vertical_offset = 48,
+	scrollbar_vertical_margin = 0,
+	scrollbar_vertical_offset = 0,
 	scrollbar_width = 7,
 	use_is_focused_for_navigation = false,
 	use_select_on_focused = true,
@@ -280,6 +280,48 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	side_panel_area = {
+		horizontal_alignment = "left",
+		parent = "canvas",
+		vertical_alignment = "bottom",
+		size = {
+			550,
+			0,
+		},
+		position = {
+			690,
+			-260,
+			3,
+		},
+	},
+	player_panel_pivot = {
+		horizontal_alignment = "center",
+		parent = "canvas",
+		vertical_alignment = "center",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			100,
+			-50,
+			1,
+		},
+	},
+	item_name_pivot = {
+		horizontal_alignment = "right",
+		parent = "canvas",
+		vertical_alignment = "bottom",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			-70,
+			-260,
+			3,
+		},
+	},
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
 
@@ -301,6 +343,47 @@ local description_text_style = table.clone(UIFontSettings.body_small)
 
 description_text_style.text_horizontal_alignment = "left"
 description_text_style.text_vertical_alignment = "top"
+
+local big_header_text_style = table.clone(UIFontSettings.header_3)
+
+big_header_text_style.text_horizontal_alignment = "left"
+big_header_text_style.text_vertical_alignment = "top"
+big_header_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
+local big_body_text_style = table.clone(UIFontSettings.body_medium)
+
+big_body_text_style.text_horizontal_alignment = "left"
+big_body_text_style.text_vertical_alignment = "top"
+big_body_text_style.text_color = Color.terminal_icon(255, true)
+
+local small_header_text_style = table.clone(UIFontSettings.terminal_header_3)
+
+small_header_text_style.text_horizontal_alignment = "left"
+small_header_text_style.horizontal_alignment = "left"
+small_header_text_style.text_vertical_alignment = "top"
+small_header_text_style.vertical_alignment = "top"
+small_header_text_style.offset = {
+	0,
+	0,
+	1,
+}
+small_header_text_style.font_size = 20
+small_header_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+
+local small_body_text_style = table.clone(small_header_text_style)
+
+small_body_text_style.text_color = Color.terminal_text_body(255, true)
+
+local big_details_text_style = table.clone(UIFontSettings.body_medium)
+
+big_details_text_style.text_horizontal_alignment = "left"
+big_details_text_style.text_vertical_alignment = "top"
+big_details_text_style.text_color = {
+	255,
+	116,
+	140,
+	115,
+}
 
 local widget_definitions = {
 	corner_bottom_left = UIWidget.create_definition({
@@ -463,6 +546,26 @@ local legend_inputs = {
 		input_action = "back",
 		on_pressed_callback = "_cb_on_close_pressed",
 	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_weapon_inventory_inspect_button",
+		input_action = "hotkey_item_inspect",
+		on_pressed_callback = "cb_on_inspect_pressed",
+		visibility_function = function (parent)
+			local previewed_item = parent._previewed_item
+
+			if previewed_item then
+				local item_type = previewed_item.item_type
+				local ITEM_TYPES = UISettings.ITEM_TYPES
+
+				if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN then
+					return true
+				end
+			end
+
+			return false
+		end,
+	},
 }
 local animations = {
 	on_enter = {
@@ -507,6 +610,51 @@ local animations = {
 		},
 	},
 }
+local small_header_text_pass = {
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = small_header_text_style,
+	},
+}
+local small_body_text_pass = {
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = small_body_text_style,
+	},
+}
+local big_header_text_pass = {
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = big_header_text_style,
+	},
+}
+local big_body_text_pass = {
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = big_body_text_style,
+	},
+}
+local big_details_text_pass = {
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = big_details_text_style,
+	},
+}
 local always_visible_widget_names = {
 	corner_bottom_left = true,
 	corner_bottom_right = true,
@@ -522,4 +670,9 @@ return {
 	scenegraph_definition = scenegraph_definition,
 	widget_definitions = widget_definitions,
 	animations = animations,
+	small_header_text_pass = small_header_text_pass,
+	small_body_text_pass = small_body_text_pass,
+	big_header_text_pass = big_header_text_pass,
+	big_body_text_pass = big_body_text_pass,
+	big_details_text_pass = big_details_text_pass,
 }

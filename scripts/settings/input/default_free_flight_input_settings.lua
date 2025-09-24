@@ -16,186 +16,281 @@ local default_free_flight_input_settings = {
 		"ps4_controller",
 	},
 	filters = DefaultFreeFlightInputFilters,
-	settings = {
+	aliases = {
 		frustum_toggle = {
-			type = "pressed",
-			raw = {
-				"keyboard_f10",
-				"xbox_controller_x",
-				"ps4_controller_square",
-			},
+			"keyboard_f10",
+			"xbox_controller_x",
+			"ps4_controller_square",
 		},
 		global_toggle = {
-			type = "pressed",
-			raw = {
-				"keyboard_f9",
-				"xbox_controller_left_thumb+xbox_controller_right_thumb",
-				"xbox_controller_right_thumb+xbox_controller_left_thumb",
-				"ps4_controller_l3+ps4_controller_r3",
-				"ps4_controller_r3+ps4_controller_l3",
-			},
+			"keyboard_f9",
+			"xbox_controller_left_thumb+xbox_controller_right_thumb",
+			"xbox_controller_right_thumb+xbox_controller_left_thumb",
+			"ps4_controller_l3+ps4_controller_r3",
+			"ps4_controller_r3+ps4_controller_l3",
 		},
 		toggle_dof = {
-			raw = "keyboard_f",
+			"keyboard_f",
+		},
+		reset_dof = {
+			"keyboard_left ctrl+keyboard_f",
+		},
+		inc_dof_distance = {
+			"keyboard_g",
+		},
+		dec_dof_distance = {
+			"keyboard_b",
+		},
+		look = {
+			"mouse_mouse",
+			"xbox_controller_right",
+			"ps4_controller_right",
+			bindable = false,
+		},
+		toggle_look_input = {
+			"keyboard_tab",
+		},
+		toggle_input_in_free_flight = {
+			"keyboard_left ctrl+keyboard_space",
+		},
+		move_controller = {
+			"xbox_controller_left",
+		},
+		top_down_toggle = {
+			"keyboard_f8",
+		},
+		keyboard_move_left = {
+			"keyboard_a",
+		},
+		keyboard_move_right = {
+			"keyboard_d",
+		},
+		keyboard_move_forward = {
+			"keyboard_w",
+		},
+		keyboard_move_backward = {
+			"keyboard_s",
+		},
+		move_up = {
+			"keyboard_e",
+			"xbox_controller_right_trigger",
+			"ps4_controller_r2",
+		},
+		move_down = {
+			"keyboard_q",
+			"xbox_controller_left_trigger",
+			"ps4_controller_l2",
+		},
+		roll_left = {
+			"xbox_controller_right_shoulder",
+			"ps4_controller_r1",
+		},
+		roll_right = {
+			"xbox_controller_left_shoulder",
+			"ps4_controller_l1",
+		},
+		increase_fov = {
+			"keyboard_numpad plus",
+			"xbox_controller_d_left",
+			"ps4_controller_d_left",
+		},
+		decrease_fov = {
+			"keyboard_num minus",
+			"xbox_controller_d_right",
+			"ps4_controller_d_right",
+		},
+		increase_fov_hold = {
+			"keyboard_left ctrl+keyboard_numpad plus",
+			"xbox_controller_d_down",
+			"ps4_controller_d_down",
+		},
+		decrease_fov_hold = {
+			"keyboard_left ctrl+keyboard_num minus",
+			"xbox_controller_d_up",
+			"ps4_controller_d_up",
+		},
+		pick = {
+			"keyboard_l",
+		},
+		inc_dof_region = {
+			"keyboard_h",
+		},
+		dec_dof_region = {
+			"keyboard_n",
+		},
+		alt_action = {
+			"keyboard_left ctrl",
+		},
+		inc_dof_padding = {
+			"keyboard_j",
+		},
+		dec_dof_padding = {
+			"keyboard_m",
+		},
+		inc_dof_scale = {
+			"keyboard_k",
+		},
+		dec_dof_scale = {
+			"keyboard_oem_comma",
+		},
+		mouse_wheel = {
+			"mouse_wheel-keyboard_left shift",
+			bindable = false,
+		},
+		camera_speed_up = {
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+		},
+		camera_speed_down = {
+			"xbox_controller_a",
+			"ps4_controller_cross",
+		},
+		teleport_player_to_camera = {
+			"keyboard_enter",
+			"xbox_controller_left_trigger+xbox_controller_right_trigger",
+			"ps4_controller_l2+ps4_controller_r2",
+		},
+	},
+	settings = {
+		frustum_toggle = {
+			key_alias = "frustum_toggle",
+			type = "pressed",
+		},
+		global_toggle = {
+			key_alias = "global_toggle",
+			type = "pressed",
+		},
+		toggle_dof = {
+			key_alias = "toggle_dof",
 			type = "pressed",
 		},
 		reset_dof = {
-			raw = "keyboard_left ctrl+keyboard_f",
+			key_alias = "reset_dof",
 			type = "pressed",
 		},
 		inc_dof_distance = {
-			raw = "keyboard_g",
+			key_alias = "inc_dof_distance",
 			type = "pressed",
 		},
 		dec_dof_distance = {
-			raw = "keyboard_b",
+			key_alias = "dec_dof_distance",
 			type = "pressed",
 		},
 		look = {
+			key_alias = "look",
 			type = "axis",
-			raw = {
-				"mouse_mouse",
-				"xbox_controller_right",
-				"ps4_controller_right",
-			},
 		},
 		toggle_look_input = {
-			raw = "keyboard_tab",
+			key_alias = "toggle_look_input",
 			type = "pressed",
 		},
 		toggle_input_in_free_flight = {
-			raw = "keyboard_left ctrl+keyboard_space",
+			key_alias = "toggle_input_in_free_flight",
 			type = "pressed",
 		},
 		move_controller = {
-			raw = "xbox_controller_left",
+			key_alias = "move_controller",
 			type = "axis",
 		},
 		top_down_toggle = {
-			raw = "keyboard_f8",
+			key_alias = "top_down_toggle",
 			type = "pressed",
 		},
 		keyboard_move_left = {
-			raw = "keyboard_a",
+			key_alias = "keyboard_move_left",
 			type = "button",
 		},
 		keyboard_move_right = {
-			raw = "keyboard_d",
+			key_alias = "keyboard_move_right",
 			type = "button",
 		},
 		keyboard_move_forward = {
-			raw = "keyboard_w",
+			key_alias = "keyboard_move_forward",
 			type = "button",
 		},
 		keyboard_move_backward = {
-			raw = "keyboard_s",
+			key_alias = "keyboard_move_backward",
 			type = "button",
 		},
 		move_up = {
+			key_alias = "move_up",
 			type = "button",
-			raw = {
-				"keyboard_e",
-				"xbox_controller_right_trigger",
-				"ps4_controller_r2",
-			},
 		},
 		move_down = {
+			key_alias = "move_down",
 			type = "button",
-			raw = {
-				"keyboard_q",
-				"xbox_controller_left_trigger",
-				"ps4_controller_l2",
-			},
 		},
 		roll_left = {
+			key_alias = "roll_left",
 			type = "button",
-			raw = {
-				"xbox_controller_right_shoulder",
-				"ps4_controller_r1",
-			},
 		},
 		roll_right = {
+			key_alias = "roll_right",
 			type = "button",
-			raw = {
-				"xbox_controller_left_shoulder",
-				"ps4_controller_l1",
-			},
 		},
 		increase_fov = {
+			key_alias = "increase_fov",
 			type = "pressed",
-			raw = {
-				"keyboard_numpad plus",
-				"xbox_controller_d_left",
-				"ps4_controller_d_left",
-			},
 		},
 		decrease_fov = {
+			key_alias = "decrease_fov",
 			type = "pressed",
-			raw = {
-				"keyboard_num minus",
-				"xbox_controller_d_right",
-				"ps4_controller_d_right",
-			},
 		},
 		increase_fov_hold = {
+			key_alias = "increase_fov_hold",
 			type = "held",
-			raw = {
-				"keyboard_left ctrl+keyboard_numpad plus",
-				"xbox_controller_d_down",
-				"ps4_controller_d_down",
-			},
 		},
 		decrease_fov_hold = {
+			key_alias = "decrease_fov_hold",
 			type = "held",
-			raw = {
-				"keyboard_left ctrl+keyboard_num minus",
-				"xbox_controller_d_up",
-				"ps4_controller_d_up",
-			},
 		},
 		pick = {
-			raw = "keyboard_l",
+			key_alias = "pick",
 			type = "pressed",
 		},
 		inc_dof_region = {
-			raw = "keyboard_h",
+			key_alias = "inc_dof_region",
 			type = "pressed",
 		},
 		dec_dof_region = {
-			raw = "keyboard_n",
+			key_alias = "dec_dof_region",
 			type = "pressed",
 		},
 		alt_action = {
-			raw = "keyboard_left ctrl",
+			key_alias = "alt_action",
 			type = "pressed",
 		},
 		inc_dof_padding = {
-			raw = "keyboard_j",
+			key_alias = "inc_dof_padding",
 			type = "pressed",
 		},
 		dec_dof_padding = {
-			raw = "keyboard_m",
+			key_alias = "dec_dof_padding",
 			type = "pressed",
 		},
 		inc_dof_scale = {
-			raw = "keyboard_k",
+			key_alias = "inc_dof_scale",
 			type = "pressed",
 		},
 		dec_dof_scale = {
-			raw = "keyboard_oem_comma",
+			key_alias = "dec_dof_scale",
 			type = "pressed",
 		},
 		mouse_wheel = {
-			raw = "mouse_wheel-keyboard_left shift",
+			key_alias = "mouse_wheel",
 			type = "axis",
 		},
-		teleport_player_to_camera = {
+		camera_speed_up = {
+			key_alias = "camera_speed_up",
 			type = "pressed",
-			raw = {
-				"keyboard_enter",
-				"xbox_controller_left_trigger+xbox_controller_right_trigger",
-				"ps4_controller_l2+ps4_controller_r2",
-			},
+		},
+		camera_speed_down = {
+			key_alias = "camera_speed_down",
+			type = "pressed",
+		},
+		teleport_player_to_camera = {
+			key_alias = "teleport_player_to_camera",
+			type = "pressed",
 		},
 	},
 }

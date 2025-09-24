@@ -8,7 +8,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local group_keywords = BuffSettings.group_keywords
 local group_to_keywords = BuffSettings.group_to_keywords
-local _apply_buffs, _check_if_allow_during_spritning_buff
+local _apply_buffs, _check_if_allow_during_sprinting_buff
 local WeaponActionMovement = class("WeaponActionMovement")
 
 WeaponActionMovement.init = function (self, weapon_extension, unit_data_extension, buff_extension)
@@ -70,6 +70,8 @@ function _apply_buffs(movement_mod, weapon_action_component, buff_extension, spr
 	if movement_mod < 1 then
 		local is_venting = action_kind == "vent_warp_charge"
 		local is_shielding = action_kind == "shield"
+		local is_windup = action_kind == "windup"
+		local is_reload = action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special"
 
 		if is_venting then
 			local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.vent_warp_charge_decrease_movement_reduction] or 1
@@ -85,9 +87,23 @@ function _apply_buffs(movement_mod, weapon_action_component, buff_extension, spr
 			local new_mod = 1 - decreased_reduction
 
 			movement_mod = new_mod
+		elseif is_windup then
+			local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.windup_action_movespeed_reduction_multiplier] or 1
+			local reduction = 1 - movement_mod
+			local decreased_reduction = reduction * decrease_modifier
+			local new_mod = 1 - decreased_reduction
+
+			movement_mod = new_mod
+		elseif is_reload then
+			local decrease_modifier = stat_buffs and stat_buffs[BuffSettings.stat_buffs.reload_decrease_movement_reduction] or 1
+			local reduction = 1 - movement_mod
+			local decreased_reduction = reduction * decrease_modifier
+			local new_mod = 1 - decreased_reduction
+
+			movement_mod = new_mod
 		end
 
-		if Sprint.is_sprinting(sprint_character_state_component) and _check_if_allow_during_spritning_buff(action_settings, buff_extension) then
+		if Sprint.is_sprinting(sprint_character_state_component) and _check_if_allow_during_sprinting_buff(action_settings, buff_extension) then
 			local reduction = 1 - movement_mod
 			local decreased_reduction = reduction * 0.5
 			local new_mod = 1 - decreased_reduction
@@ -106,7 +122,7 @@ function _apply_buffs(movement_mod, weapon_action_component, buff_extension, spr
 	return movement_mod
 end
 
-function _check_if_allow_during_spritning_buff(action_settings, buff_extension)
+function _check_if_allow_during_sprinting_buff(action_settings, buff_extension)
 	local action_buff_keywords = action_settings.buff_keywords
 
 	if not action_buff_keywords or not buff_extension then

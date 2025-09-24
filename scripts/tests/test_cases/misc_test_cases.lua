@@ -561,7 +561,11 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/fx/meshes/shells/lightning_pipe_discharge_tube",
 			"content/fx/meshes/vfx_plane",
 			"content/fx/units/weapons/small_caliber_plastic_large_01",
+			"core/editor_slave/preview/preview_terrain",
 		}
+
+		Deadlock.pause()
+
 		local settings = cjson.decode(case_settings or "{}")
 		local interval = settings.interval or 0
 		local spawn_and_destroy_same_frame = settings.spawn_and_destroy_same_frame == true
@@ -583,22 +587,35 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			include_properties = false,
 		})
 		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_units, i = table.size(units), 1
+		local num_units, i = table.size(units) - #units_to_skip, 1
 
 		TestifySnippets.wait(1)
 
+		local bucket_size = 100
+		local unit_names = {}
+
 		for unit_name, _ in pairs(units) do
 			if not table.array_contains(units_to_skip, unit_name) then
-				if not folder or string.starts_with(unit_name, folder) then
-					Log.info("Testify", "%s/%s Spawning unit %s", i, num_units, unit_name)
+				if (not folder or string.starts_with(unit_name, folder)) and bucket_size > #unit_names then
+					unit_names[#unit_names + 1] = unit_name
 
-					if spawn_and_destroy_same_frame then
-						Testify:make_request("spawn_and_destroy_unit", unit_name, boxed_spawn_position)
-					else
-						local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
+					if i == 15100 then
+						Script.do_break()
+					end
 
-						TestifySnippets.wait(interval)
-						Testify:make_request("delete_unit", unit)
+					if bucket_size <= #unit_names or num_units <= i then
+						Log.info("Testify", "%s/%s Spawning units", i, num_units)
+
+						if spawn_and_destroy_same_frame then
+							Testify:make_request("spawn_and_destroy_units", unit_names, boxed_spawn_position)
+						else
+							local units = Testify:make_request("spawn_units", unit_names, boxed_spawn_position)
+
+							TestifySnippets.wait(interval)
+							Testify:make_request("delete_units", units)
+						end
+
+						unit_names = {}
 					end
 				end
 
@@ -679,6 +696,7 @@ MiscTestCases.equip_all_horde_mode_buffs = function (case_settings)
 			TestifySnippets.wait(2)
 		end
 
+		Log.info("Testify", "Equipped %d buffs", #buffs_to_equip)
 		TestifySnippets.wait(10)
 	end)
 end

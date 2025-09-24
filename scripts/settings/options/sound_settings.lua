@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/options/sound_settings.lua
 
-local OptionsUtilities = require("scripts/utilities/ui/options")
+local Options = require("scripts/utilities/ui/options")
 local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local SettingsUtilities = {}
 
@@ -120,7 +120,7 @@ local master_volume_slider_params = {
 	on_value_changed_function = master_volume_value_change_function,
 	id = master_volume_value_name,
 }
-local master_volume_template = OptionsUtilities.create_percent_slider_template(master_volume_slider_params)
+local master_volume_template = Options.create_percent_slider_template(master_volume_slider_params)
 
 master_volume_template.commit = function (value)
 	Wwise.set_parameter(master_volume_value_name, value)
@@ -149,7 +149,7 @@ local sfx_volume_slider_params = {
 	on_value_changed_function = sfx_volume_value_change_function,
 	id = sfx_volume_value_name,
 }
-local sfx_volume_template = OptionsUtilities.create_percent_slider_template(sfx_volume_slider_params)
+local sfx_volume_template = Options.create_percent_slider_template(sfx_volume_slider_params)
 
 sfx_volume_template.commit = function (value)
 	Wwise.set_parameter(sfx_volume_value_name, value)
@@ -178,7 +178,7 @@ local music_volume_slider_params = {
 	on_value_changed_function = music_volume_value_change_function,
 	id = music_volume_value_name,
 }
-local music_volume_template = OptionsUtilities.create_percent_slider_template(music_volume_slider_params)
+local music_volume_template = Options.create_percent_slider_template(music_volume_slider_params)
 
 music_volume_template.commit = function (value)
 	Wwise.set_parameter(music_volume_value_name, value)
@@ -393,7 +393,7 @@ local dialogue_volume_slider_params = {
 		return string.format("%d dB", value)
 	end,
 }
-local dialogue_volume_template = OptionsUtilities.create_value_slider_template(dialogue_volume_slider_params)
+local dialogue_volume_template = Options.create_value_slider_template(dialogue_volume_slider_params)
 
 dialogue_volume_template.commit = function (value)
 	local setting_value = get_dialogue_wwise_value(value)
@@ -502,8 +502,9 @@ settings[#settings + 1] = {
 
 local chat_volume_value_name = "options_voip_volume_slider_v2"
 local chat_volume_display_name = "loc_settings_audio_voice_chat_volume"
+local chat_volume_tooltip_text = "loc_settings_audio_voice_chat_volume_mouseover"
 
-local function chat_volume_value_change_function(value)
+local function _chat_volume_value_change_function(value)
 	Wwise.set_parameter(chat_volume_value_name, value)
 	Application.set_user_setting("sound_settings", chat_volume_value_name, value)
 	Application.save_user_settings()
@@ -513,18 +514,25 @@ local function chat_volume_value_change_function(value)
 	end
 end
 
-local function chat_volume_value_get_function()
+local function _chat_volume_value_get_function()
 	return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_chat_volume
 end
 
 local chat_volume_slider_params = {
 	apply_on_drag = false,
+	normalized_step_size = 0.005,
 	display_name = chat_volume_display_name,
+	tooltip_text = chat_volume_tooltip_text,
 	default_value = default_sound_chat_volume,
-	value_get_function = chat_volume_value_get_function,
-	on_value_changed_function = chat_volume_value_change_function,
+	value_get_function = _chat_volume_value_get_function,
+	on_value_changed_function = _chat_volume_value_change_function,
+	format_value_function = function (percent_value)
+		local result = string.format("%d %%", percent_value * 2)
+
+		return result
+	end,
 }
-local chat_volume_template = OptionsUtilities.create_percent_slider_template(chat_volume_slider_params)
+local chat_volume_template = Options.create_percent_slider_template(chat_volume_slider_params)
 
 chat_volume_template.commit = function (value)
 	Wwise.set_parameter(chat_volume_value_name, value)

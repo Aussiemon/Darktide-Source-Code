@@ -302,6 +302,13 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 		return
 	end
 
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode_name = game_mode_manager:game_mode_name()
+
+	if game_mode_name == "survival" then
+		return
+	end
+
 	local damage_taken_required
 	local distance = perception_component.target_level_unit_distance
 

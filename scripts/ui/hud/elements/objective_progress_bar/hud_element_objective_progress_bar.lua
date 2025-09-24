@@ -22,7 +22,7 @@ HudElementObjectiveProgressBar.init = function (self, parent, draw_layer, start_
 	if mission_objective_system then
 		local active_objectives = mission_objective_system:active_objectives()
 
-		for _, objective in pairs(active_objectives) do
+		for objective, _ in pairs(active_objectives) do
 			if objective:large_progress_bar() then
 				self:event_objective_progress_bar_open(objective)
 			end

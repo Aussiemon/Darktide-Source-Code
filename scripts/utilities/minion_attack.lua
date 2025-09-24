@@ -24,6 +24,7 @@ local attack_types = AttackSettings.attack_types
 local default_backstab_ranged_dot = MinionBackstabSettings.ranged_backstab_dot
 local default_backstab_ranged_event = MinionBackstabSettings.ranged_backstab_event
 local MINION_BREED_TYPE = BreedSettings.types.minion
+local _apply_debuff
 local MinionAttack = {}
 local IMPACT_FX_DATA = {}
 local BACKSTAB_POSITION_OFFSET_DISTANCE = 2
@@ -241,7 +242,7 @@ local DEFAULT_DAMAGE_FALLOFF = {
 	max_range = 15,
 }
 
-MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier, perception_component)
+MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, optional_spread_multiplier, perception_component, action_data)
 	local toughness_broken_grace_settings = AttackIntensitySettings.toughness_broken_grace
 	local diff_toughness_broken_grace_settings = Managers.state.difficulty:get_table_entry_by_challenge(toughness_broken_grace_settings)
 	local toughness_extension = ScriptUnit.has_extension(target_unit, "toughness_system")
@@ -291,14 +292,16 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 
 	local hits = HitScan.raycast(physics_world, from_position, spread_direction, range, nil, collision_filter)
 	local is_server = true
-	local end_position
+	local end_position, hit_result, _
 
 	if should_hit then
-		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		end_position, _, _, _, _, hit_result = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+
+		_apply_debuff(action_data, hit_result, target_unit)
 	elseif hits then
 		local diff_toughness_broken_grace_power_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(AttackIntensitySettings.toughness_broken_grace_power_multiplier)
 
-		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * diff_toughness_broken_grace_power_multiplier, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		end_position, _, _, _, _, hit_result = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * diff_toughness_broken_grace_power_multiplier, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	end
 
 	end_position = end_position or from_position + spread_direction * range
@@ -611,7 +614,7 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 	local fx_source_name = action_data.fx_source_name
 	local world = scratchpad.world
 	local physics_world = scratchpad.physics_world
-	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, spread_multiplier, perception_component)
+	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, spread_multiplier, perception_component, action_data)
 
 	MinionAttack.trigger_shoot_sfx_and_vfx(unit, scratchpad, action_data, end_position)
 
@@ -816,7 +819,7 @@ MinionAttack.push_friendly_minions = function (unit, scratchpad, action_data, t,
 			local breed = unit_data_extension:breed()
 			local tags = breed.tags
 
-			if not tags.monster then
+			if not tags.monster or not tags.interrupter then
 				pushed_minions[hit_unit] = true
 
 				Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
@@ -1030,6 +1033,7 @@ local MELEE_DOGPILE_POWER_LEVEL_MODIFIER = {
 	0.65,
 	0.5,
 }
+local _CONSTANT_ATTACK_TYPE_MELEE = "melee"
 
 function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_position, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, offtarget_hit_or_nil)
 	local side_system = Managers.state.extension:system("side_system")
@@ -1088,9 +1092,13 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		power_level = power_level * action_data.bot_power_level_modifier
 	end
 
-	local power_level_modifier = Managers.state.havoc:get_power_level_modifier(attack_type)
+	if attack_type == _CONSTANT_ATTACK_TYPE_MELEE then
+		local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
 
-	power_level = power_level * power_level_modifier
+		if havoc_extension then
+			power_level = power_level * havoc_extension:get_power_level_modifier()
+		end
+	end
 
 	if is_player_character then
 		local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
@@ -1127,7 +1135,25 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		blocked_component.is_blocked = true
 	end
 
+	_apply_debuff(action_data, result, target_unit)
+
 	return result
+end
+
+function _apply_debuff(action_data, result, target_unit)
+	local should_apply_debuff = action_data.apply_buff_to_target_unit and (result and result ~= "blocked" or action_data.ignore_blocked)
+
+	if should_apply_debuff then
+		local buff_data = action_data.apply_buff_to_target_unit
+		local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+		local t = Managers.time:time("gameplay")
+		local buff_keyword = buff_data.buff_keyword
+		local buff_template_name = buff_data.buff_template_name
+
+		if not buff_extension:has_keyword(buff_keyword) then
+			buff_extension:add_internally_controlled_buff(buff_template_name, t)
+		end
+	end
 end
 
 function _get_weapon_reach(action_data, attack_event)

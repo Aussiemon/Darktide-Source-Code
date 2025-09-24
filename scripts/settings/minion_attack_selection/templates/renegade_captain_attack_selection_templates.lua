@@ -74,6 +74,17 @@ local ALL_CATEGORIES = {
 		},
 	},
 }
+local ONLY_PLASMA = table.clone(ALL_CATEGORIES)
+
+ONLY_PLASMA.ranged = {
+	{
+		required_weapon_slot_name = "slot_plasma_pistol",
+		attack_names = {
+			"plasma_pistol_shoot",
+		},
+	},
+}
+
 local ALL_AMOUNT_FROM_CATEGORY = {}
 
 for category, entries in pairs(ALL_CATEGORIES) do
@@ -143,11 +154,29 @@ local renegade_captain_ranged = {
 		},
 	},
 }
+local renegade_captain_plasma_pistol = {
+	combat_range_multi_config_key = "default",
+	tag = "default",
+	categories = ONLY_PLASMA,
+	amount_from_category = {
+		aoe = 1,
+		melee = 1,
+		ranged = 1,
+	},
+	multi_selection = {
+		amount = 2,
+		categories = {
+			"charge",
+			"kick",
+		},
+	},
+}
 local templates = {
 	renegade_captain_all = renegade_captain_all,
 	renegade_captain_default = renegade_captain_default,
 	renegade_captain_melee = renegade_captain_melee,
 	renegade_captain_ranged = renegade_captain_ranged,
+	renegade_captain_plasma_pistol = renegade_captain_plasma_pistol,
 }
 
 return templates

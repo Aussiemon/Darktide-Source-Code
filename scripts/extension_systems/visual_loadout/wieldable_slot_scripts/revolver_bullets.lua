@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_bullets.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local Component = require("scripts/utilities/component")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local _components
@@ -76,8 +77,8 @@ end
 
 RevolverBullets._update_ammo_count = function (self, force_update)
 	local inventory_slot_component = self._inventory_slot_component
-	local current_ammo_clip = inventory_slot_component.current_ammunition_clip
-	local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+	local current_ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+	local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 	local missing_ammo = max_ammo_clip - current_ammo_clip
 	local components_lookup_1p = self._components_lookup_1p
 	local components_lookup_3p = self._components_lookup_3p

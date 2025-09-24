@@ -6,6 +6,7 @@ local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
 local ViewElementNewsSlide = class("ViewElementNewsSlide", "ViewElementBase")
 
 ViewElementNewsSlide.init = function (self, parent, draw_layer, start_scale)
@@ -18,10 +19,20 @@ ViewElementNewsSlide.init = function (self, parent, draw_layer, start_scale)
 	self._slide_time = 0
 	self._progress_widgets = nil
 
-	local news_button = self._widgets_by_name.news_button
+	self:set_visibility(false)
 
-	news_button.visible = false
-	news_button.content.hotspot.pressed_callback = callback(self, "view_requested")
+	local news_button = self._widgets_by_name.news_button
+	local view_request_callback = callback(self, "view_requested")
+
+	news_button.content.hotspot.pressed_callback = view_request_callback
+	self._input_action_left = "navigate_secondary_left_pressed"
+	self._input_action_right = "navigate_secondary_right_pressed"
+	self._widgets_by_name.input_prompt_left.content.input_action = self._input_action_left
+	self._widgets_by_name.input_prompt_right.content.input_action = self._input_action_right
+	self._input_action_open_news = "navigate_primary_right_pressed"
+	self._widgets_by_name.open_news_button.content.original_text = Localize("loc_main_menu_show_news")
+	self._widgets_by_name.open_news_button.content.gamepad_action = self._input_action_open_news
+	self._widgets_by_name.open_news_button.content.hotspot.pressed_callback = view_request_callback
 	self._backend_promise = Managers.data_service.news:get_events():next(function (backend_data)
 		self._backend_promise = nil
 
@@ -64,7 +75,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 		local raw_data = backend_data[i]
 		local contents = raw_data.contents
 		local content_count = contents and #contents or 0
-		local title, image_url, body_text, body_number
+		local title, image_url, body_text, body_number, slide_action, slide_button_cta
 
 		for j = 1, content_count do
 			local content = contents[j]
@@ -86,6 +97,19 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				local time_left = math.max(tonumber(content.data) - server_time, 0) / 1000
 
 				body_number = TextUtils.format_time_span_localized(time_left, true)
+			elseif type == "button" then
+				slide_action = {
+					action = content.action,
+					target = content.target,
+					data = content.data,
+					style = content.style,
+				}
+
+				if not slide_button_cta then
+					slide_button_cta = slide_action.data
+				end
+			elseif type == "cta_button" then
+				slide_button_cta = content.data
 			end
 		end
 
@@ -98,6 +122,8 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				image_url = image_url,
 				backend_index = i,
 				sort_index = raw_data.displayPriority and tonumber(raw_data.displayPriority) or 0,
+				action = slide_action,
+				button_cta = slide_button_cta,
 			}
 		end
 	end
@@ -110,13 +136,16 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 		end)
 	end
 
-	if #slides == 0 then
+	self:set_visibility(#slides > 0)
+
+	if not self._visible then
 		return
 	end
 
+	self._widgets_by_name.input_prompt_right.content.is_enabled = #slides > 1
+	self._widgets_by_name.input_prompt_left.content.is_enabled = #slides > 1
 	self._slide_data = slides
 	self._backend_data = backend_data
-	self._widgets_by_name.news_button.visible = true
 
 	self:_change_slide(1, Settings.transition_time)
 
@@ -248,6 +277,15 @@ ViewElementNewsSlide._default_transition_time = function (self)
 	return self:_slide_count() == 2 and Settings.transition_time or 0
 end
 
+ViewElementNewsSlide._change_slide_in_direction = function (self, dir)
+	local target = self._current_index + dir
+	local slide_count = self:_slide_count()
+
+	target = 1 + (target - 1) % slide_count
+
+	self:_change_slide(target)
+end
+
 ViewElementNewsSlide._change_slide = function (self, target, optional_start_time)
 	self._old_index = self._current_index
 	self._current_index = target
@@ -259,6 +297,7 @@ ViewElementNewsSlide._change_slide = function (self, target, optional_start_time
 	news_button.content.title = slide_data.title
 	news_button.content.body_text = slide_data.body_text
 	news_button.content.body_number = slide_data.body_number
+	self._widgets_by_name.open_news_button.content.original_text = slide_data.button_cta or Localize("loc_main_menu_show_news")
 
 	Managers.telemetry_events:update_news_widget(target, slide_data.id)
 
@@ -301,26 +340,40 @@ ViewElementNewsSlide._update_slide_image = function (self)
 end
 
 ViewElementNewsSlide.update = function (self, dt, t, input_service)
+	if not self._visible then
+		return
+	end
+
 	if self:_has_progress_bar() then
 		self._slide_time = self._slide_time + dt
 	end
 
 	if self._slide_time >= Settings.total_time then
-		local target = self._current_index + 1
-
-		if target > self:_slide_count() then
-			target = 1
-		end
-
-		self:_change_slide(target)
+		self:_change_slide_in_direction(1)
 	end
 
 	if self:_has_progress_bar() then
 		self:_position_progress_bar()
 	end
 
-	if self:_slide_count() > 0 then
+	local slide_count = self:_slide_count()
+
+	if slide_count > 0 then
 		self:_update_slide_image()
+	end
+
+	if slide_count > 1 then
+		local input_action_right, input_action_left = self._input_action_right, self._input_action_left
+
+		if input_action_right and input_service:get(input_action_right) then
+			self:_change_slide_in_direction(1)
+		elseif input_action_left and input_service:get(input_action_left) then
+			self:_change_slide_in_direction(-1)
+		end
+	end
+
+	if input_service:get(self._input_action_open_news) then
+		self._widgets_by_name.open_news_button.content.hotspot.pressed_callback()
 	end
 
 	return ViewElementNewsSlide.super.update(self, dt, t, input_service)
@@ -357,8 +410,8 @@ ViewElementNewsSlide._draw_widgets = function (self, dt, t, input_service, ui_re
 		number_width = number_width + 2 * Settings.buffer
 	end
 
-	local background_width = math.max(number_width, text_width)
-	local background_height = text_height + number_height + (1 + line_count) * Settings.buffer
+	local background_width = math.max(number_width, text_width) + Settings.buffer * 3
+	local background_height = text_height + number_height + (1 + line_count) * Settings.buffer + Settings.buffer
 
 	news_button.style.body_gradient.offset[1] = -background_width / 2
 	news_button.style.body_background.size[1] = background_width / 2
@@ -379,6 +432,11 @@ end
 ViewElementNewsSlide.view_requested = function (self)
 	local current_index = self._current_index
 	local slide_data = self._slide_data and self._slide_data[current_index]
+
+	if slide_data.action then
+		return NewsActionHandler.handle(slide_data.action)
+	end
+
 	local backend_index = slide_data and slide_data.backend_index
 	local backend_data = self._backend_data and self._backend_data[backend_index]
 

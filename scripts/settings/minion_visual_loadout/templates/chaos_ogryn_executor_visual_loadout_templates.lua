@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	chaos_ogryn_executor = {},
 }
-local basic_chaos_ogryn_executor_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_base_lowerbody = {
 			use_outline = true,
@@ -60,7 +60,7 @@ local basic_chaos_ogryn_executor_template = {
 				"content/items/characters/minions/gib_items/chaos_ogryn_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -68,37 +68,55 @@ local basic_chaos_ogryn_executor_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_chaos_ogryn_executor_template)
+local default_1 = table.clone(base_visual_loadout_template)
 
 templates.chaos_ogryn_executor.default = {
 	default_1,
 }
 
-local foundry_1 = table.clone(basic_chaos_ogryn_executor_template)
+local foundry_1 = table.clone(base_visual_loadout_template)
 
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02",
 }
 templates.chaos_ogryn_executor[zone_ids.tank_foundry] = {
 	foundry_1,
 }
 
-local dust_1 = table.clone(basic_chaos_ogryn_executor_template)
+local dust_1 = table.clone(base_visual_loadout_template)
 
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02",
 }
 templates.chaos_ogryn_executor[zone_ids.dust] = {
 	dust_1,
 }
 
-local watertown_1 = table.clone(basic_chaos_ogryn_executor_template)
+local watertown_1 = table.clone(base_visual_loadout_template)
 
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02",
 }
 templates.chaos_ogryn_executor[zone_ids.watertown] = {
 	watertown_1,
+}
+
+local void_1 = table.clone(base_visual_loadout_template)
+
+void_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.chaos_ogryn_executor[zone_ids.void] = {
+	void_1,
+}
+
+local horde_1 = table.clone(base_visual_loadout_template)
+
+horde_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.chaos_ogryn_executor[zone_ids.horde] = {
+	horde_1,
 }
 
 return templates

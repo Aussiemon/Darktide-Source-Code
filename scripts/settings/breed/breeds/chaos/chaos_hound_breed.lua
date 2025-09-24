@@ -5,6 +5,8 @@ local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_
 local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
+local CompanionAdditionalLeapingCondition = require("scripts/extension_systems/behavior/utilities/companion/companion_additional_leaping_condition")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
@@ -15,8 +17,6 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
-local CompanionAdditionalLeapingCondition = require("scripts/extension_systems/behavior/utilities/companion/companion_additional_leaping_condition")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
@@ -30,6 +30,7 @@ local breed_data = {
 	broadphase_radius = 1,
 	can_be_used_for_all_factions = true,
 	challenge_rating = 6,
+	detection_radius = 20,
 	display_name = "loc_breed_display_name_chaos_hound",
 	explosion_power_multiplier = 2,
 	faction_name = "chaos",
@@ -97,7 +98,6 @@ local breed_data = {
 			2.8,
 		},
 	},
-	detection_radius = math.huge,
 	target_changed_attack_intensities = {
 		disabling = 5,
 	},

@@ -11,7 +11,7 @@ local Mastery = require("scripts/utilities/mastery")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 
 local function _info(...)
 	Log.info("ProgressionManager", ...)
@@ -1155,8 +1155,9 @@ end
 
 ProgressionManager._sync_game_score_end_time = function (self)
 	local mechanism_name = Managers.mechanism:mechanism_name()
+	local is_valid_mechanism = mechanism_name == "adventure"
 
-	if mechanism_name == "adventure" then
+	if is_valid_mechanism then
 		local game_score_end_time = self._game_score_end_time
 
 		Managers.mechanism:trigger_event("game_score_end_time", game_score_end_time)

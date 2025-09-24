@@ -25,6 +25,7 @@ local hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_s
 local pickup_name = "syringe_speed_boost_pocketable"
 local assist_notification_type = "stimmed"
 local vo_event
-local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event)
+local consume_on_use = true
+local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use)
 
 return weapon_template

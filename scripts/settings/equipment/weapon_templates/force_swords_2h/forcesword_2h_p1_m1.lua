@@ -519,12 +519,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = base_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
@@ -601,12 +603,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_down_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_down_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_smiter,
@@ -695,12 +699,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
@@ -800,12 +806,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_smiter,
@@ -894,12 +902,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_up",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_up",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_uppercut,
@@ -1058,12 +1068,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
@@ -1142,12 +1154,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_stab",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.075,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_stab",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.075,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_stab_2h,
@@ -1449,12 +1463,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = stab_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left_diagonal_up",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left_diagonal_up",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_uppercut,
@@ -1613,12 +1629,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_right_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_smiter,
@@ -1719,12 +1737,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_right_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_right_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_linesman,
@@ -2128,12 +2148,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = stab_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_linesman,
@@ -2379,12 +2401,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = base_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_left_special",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.125,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_left_special",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.125,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_force_sword_2h_special,
@@ -2463,12 +2487,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_left_special",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_force_sword/heavy_attack_left_special",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_force_sword_2h_special,

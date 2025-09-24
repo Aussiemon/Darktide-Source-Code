@@ -72,7 +72,6 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 
 	if optional_real_profile then
 		local archetype = optional_real_profile.archetype
-		local specialization = optional_real_profile.specialization
 		local backstory = table.clone(optional_real_profile.lore.backstory)
 
 		backstory.crime = CrimesCompabilityMap[backstory.crime] or backstory.crime
@@ -89,7 +88,6 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 				backstory = backstory,
 			},
 			archetype = archetype,
-			specialization = specialization,
 			gender = gender,
 			breed = breed,
 		}
@@ -709,12 +707,6 @@ CharacterCreate.reset_height = function (self)
 	self:set_height(scale_factor)
 end
 
-CharacterCreate.set_specialization = function (self, specialization)
-	self._profile.specialization = specialization
-
-	self:_increase_value_version("specialization")
-end
-
 CharacterCreate._fetch_suggested_names_by_profile = function (self)
 	self._archetype_random_names = {}
 	self._companion_random_names = {}
@@ -819,7 +811,8 @@ CharacterCreate.personality_options = function (self)
 end
 
 CharacterCreate._randomize_personality = function (self)
-	local available_options = self:personality_options()
+	local personality_options = self:personality_options()
+	local available_options = self:_filter_options_by_restrictions(personality_options)
 	local index = math.random(1, table.size(available_options))
 	local count = 1
 
@@ -1137,10 +1130,7 @@ CharacterCreate._generate_backend_profile = function (self)
 	local new_profile = table.create_copy_instance(nil, profile)
 
 	new_profile.archetype = profile.archetype.name
-	new_profile.career = {
-		specialization = profile.specialization,
-	}
-	new_profile.specialization = nil
+	new_profile.career = {}
 
 	local new_loadout = {}
 

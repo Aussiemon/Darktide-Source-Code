@@ -221,12 +221,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
@@ -303,12 +305,14 @@ weapon_template.actions = {
 			0.8,
 			1.35,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/heavy_swing_shieldslam",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/heavy_swing_shieldslam",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_slabshield_tank,
@@ -449,12 +453,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
@@ -528,12 +534,14 @@ weapon_template.actions = {
 			0.4,
 			1.25,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/heavy_swing_shieldstab",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/heavy_swing_shieldstab",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_slabshield_smite,
@@ -675,12 +683,14 @@ weapon_template.actions = {
 			0.1,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_left_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_left_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
@@ -826,12 +836,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_right_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/swing_right_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
@@ -1127,12 +1139,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/push_follow_up",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/slab_shield/slab_shield_maul/push_follow_up",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_shield_light_smiter,

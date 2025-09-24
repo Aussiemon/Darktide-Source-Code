@@ -27,6 +27,22 @@ local default_packs = {
 		renegade = RoamerPacks.renegade_far_high,
 		cultist = RoamerPacks.cultist_far_high,
 	},
+	far_low_uprising = {
+		renegade = RoamerPacks.renegade_far_low_uprising,
+		cultist = RoamerPacks.cultist_far_low,
+	},
+	far_high_uprising = {
+		renegade = RoamerPacks.renegade_far_high_uprising,
+		cultist = RoamerPacks.cultist_far_high,
+	},
+	mixed_low = {
+		renegade = RoamerPacks.renegade_mixed_low,
+		cultist = RoamerPacks.cultist_mixed_low,
+	},
+	mixed_high = {
+		renegade = RoamerPacks.renegade_mixed_high,
+		cultist = RoamerPacks.cultist_mixed_high,
+	},
 	none = {
 		renegade = RoamerPacks.renegade_traitor_mix_none,
 		cultist = RoamerPacks.cultist_infected_mix_none,
@@ -89,7 +105,7 @@ local roamer_pacing_template = {
 				packs = {
 					default_packs.melee_low,
 					default_packs.close_low,
-					default_packs.far_low,
+					default_packs.far_low_uprising,
 					default_packs.none,
 					default_packs.none,
 					default_packs.none,
@@ -123,10 +139,10 @@ local roamer_pacing_template = {
 				packs = {
 					default_packs.melee_high,
 					default_packs.close_high,
-					default_packs.far_high,
+					default_packs.far_high_uprising,
 					default_packs.melee_high,
 					default_packs.close_high,
-					default_packs.far_high,
+					default_packs.far_high_uprising,
 				},
 				limits = RoamerLimits.high,
 			},
@@ -230,10 +246,10 @@ local roamer_pacing_template = {
 				packs = {
 					default_packs.melee_low,
 					default_packs.close_low,
-					default_packs.far_low,
+					default_packs.far_low_uprising,
 					default_packs.melee_low,
 					default_packs.close_low,
-					default_packs.far_low,
+					default_packs.far_low_uprising,
 				},
 				limits = RoamerLimits.low,
 			},
@@ -264,10 +280,10 @@ local roamer_pacing_template = {
 				packs = {
 					default_packs.melee_high,
 					default_packs.close_high,
-					default_packs.far_high,
+					default_packs.far_high_uprising,
 					default_packs.melee_high,
 					default_packs.close_high,
-					default_packs.far_high,
+					default_packs.far_high_uprising,
 				},
 				limits = RoamerLimits.high,
 			},

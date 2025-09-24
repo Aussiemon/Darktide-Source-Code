@@ -12,7 +12,11 @@ MissionObjectiveTargetExtension.init = function (self, extension_init_context, u
 	self._add_marker_on_objective_start = true
 	self._enabled_only_during_mission = false
 	self._registered_objective = nil
-	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	self._mission_objective_system = mission_objective_system
+	self._objective_group_id = mission_objective_system:get_objective_group_id_from_unit(unit)
 end
 
 MissionObjectiveTargetExtension.setup_from_component = function (self, objective_name, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
@@ -28,7 +32,7 @@ MissionObjectiveTargetExtension.setup_from_component = function (self, objective
 	end
 end
 
-MissionObjectiveTargetExtension.setup_from_external = function (self, objective_name, ui_target_type, objective_stage, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission, sync_to_clients, peer_id)
+MissionObjectiveTargetExtension.setup_from_external = function (self, objective_name, ui_target_type, objective_stage, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission, sync_to_clients)
 	self._objective_name = objective_name or self._objective_name
 	self._ui_target_type = ui_target_type or self._ui_target_type
 	self._objective_stage = objective_stage or self._objective_stage
@@ -81,32 +85,36 @@ end
 
 MissionObjectiveTargetExtension.add_unit_marker = function (self)
 	local objective_name = self._objective_name
+	local group_id = self._objective_group_id
 	local unit = self._unit
 
-	self._mission_objective_system:add_marker(objective_name, unit)
+	self._mission_objective_system:add_marker(objective_name, group_id, unit)
 end
 
 MissionObjectiveTargetExtension.remove_unit_marker = function (self)
 	local objective_name = self._objective_name
+	local group_id = self._objective_group_id
 	local unit = self._unit
 
-	self._mission_objective_system:remove_marker(objective_name, unit)
+	self._mission_objective_system:remove_marker(objective_name, group_id, unit)
 end
 
 MissionObjectiveTargetExtension.enable_unit = function (self)
 	local objective_name = self._objective_name
+	local group_id = self._objective_group_id
 	local unit = self._unit
 	local stage = self._objective_stage
 
-	self._mission_objective_system:enable_unit(objective_name, unit, stage)
+	self._mission_objective_system:enable_unit(objective_name, group_id, unit, stage)
 end
 
 MissionObjectiveTargetExtension.disable_unit = function (self)
 	local objective_name = self._objective_name
+	local group_id = self._objective_group_id
 	local unit = self._unit
 	local stage = self._objective_stage
 
-	self._mission_objective_system:disable_unit(objective_name, unit, stage)
+	self._mission_objective_system:disable_unit(objective_name, group_id, unit, stage)
 end
 
 MissionObjectiveTargetExtension.set_objective_name = function (self, objective_name, sync)
@@ -122,8 +130,24 @@ MissionObjectiveTargetExtension.set_objective_name = function (self, objective_n
 	end
 end
 
+MissionObjectiveTargetExtension.set_objective_group_id = function (self, objective_group_id)
+	self._objective_group_id = objective_group_id
+
+	if self._is_server then
+		local unit = self._unit
+		local unit_spawner_manager = Managers.state.unit_spawner
+		local unit_is_level_unit, unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_target_set_objective_group", unit_id, unit_is_level_unit, objective_group_id)
+	end
+end
+
 MissionObjectiveTargetExtension.objective_name = function (self)
 	return self._objective_name
+end
+
+MissionObjectiveTargetExtension.objective_group_id = function (self)
+	return self._objective_group_id
 end
 
 MissionObjectiveTargetExtension.set_ui_target_type = function (self, ui_target_type)

@@ -249,22 +249,22 @@ templates.weapon_trait_bespoke_ogryn_powermaul_p1_targets_receive_rending_debuff
 		weapon_trait_bespoke_ogryn_powermaul_p1_targets_receive_rending_debuff_on_weapon_special_attacks = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 1,
+					num_stacks_on_proc = 10,
 				},
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2,
+					num_stacks_on_proc = 12,
 				},
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3,
+					num_stacks_on_proc = 14,
 				},
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4,
+					num_stacks_on_proc = 16,
 				},
 			},
 		},
@@ -369,25 +369,21 @@ templates.weapon_trait_bespoke_ogryn_powermaul_p1_extra_explosion_on_activated_a
 		weapon_trait_bespoke_ogryn_powermaul_p1_extra_explosion_on_activated_attacks_on_armor = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.1,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.15,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.2,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.25,
 				},
 			},

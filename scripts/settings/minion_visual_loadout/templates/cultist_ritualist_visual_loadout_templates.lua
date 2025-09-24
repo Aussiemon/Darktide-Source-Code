@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	cultist_ritualist = {},
 }
-local basic_cultist_ritualist_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_upperbody = {
 			items = {
@@ -49,7 +49,7 @@ local basic_cultist_ritualist_template = {
 				"content/items/characters/minions/gib_items/newly_infected_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -70,22 +70,22 @@ local torso_02_items = {
 	"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_b",
 	"content/items/characters/minions/chaos_cultists/attachments_base/upperbody_b_color_var_01",
 }
-local default_1_1 = table.clone(basic_cultist_ritualist_template)
-local default_1_2 = table.clone(default_1_1)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(default_1)
 
-default_1_2.gib_variations = {
+default_2.gib_variations = {
 	"torso_02",
 }
-default_1_2.slots.slot_upperbody = {
+default_2.slots.slot_upperbody = {
 	items = torso_02_items,
 }
 
-local default_2_1 = table.clone(basic_cultist_ritualist_template)
+local default_3 = table.clone(base_visual_loadout_template)
 
-default_2_1.gib_variations = {
+default_3.gib_variations = {
 	"face_02",
 }
-default_2_1.slots.slot_face = {
+default_3.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_02",
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_02_tattoo_01",
@@ -97,22 +97,22 @@ default_2_1.slots.slot_face = {
 	},
 }
 
-local default_2_2 = table.clone(default_2_1)
+local default_4 = table.clone(default_3)
 
-default_2_2.gib_variations = {
+default_4.gib_variations = {
 	"face_02",
 	"torso_02",
 }
-default_2_2.slots.slot_upperbody = {
+default_4.slots.slot_upperbody = {
 	items = torso_02_items,
 }
 
-local default_3_1 = table.clone(basic_cultist_ritualist_template)
+local default_5 = table.clone(base_visual_loadout_template)
 
-default_3_1.gib_variations = {
+default_5.gib_variations = {
 	"face_03",
 }
-default_3_1.slots.slot_face = {
+default_5.slots.slot_face = {
 	items = {
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_03",
 		"content/items/characters/minions/chaos_cultists/attachments_base/face_03_tattoo_01",
@@ -124,22 +124,87 @@ default_3_1.slots.slot_face = {
 	},
 }
 
-local default_3_2 = table.clone(default_3_1)
+local default_6 = table.clone(default_5)
 
-default_3_2.gib_variations = {
+default_6.gib_variations = {
 	"face_03",
 	"torso_02",
 }
-default_3_2.slots.slot_upperbody = {
+default_6.slots.slot_upperbody = {
 	items = torso_02_items,
 }
 templates.cultist_ritualist.default = {
-	default_1_1,
-	default_1_2,
-	default_2_1,
-	default_2_2,
-	default_3_1,
-	default_3_2,
+	default_1,
+	default_2,
+	default_3,
+	default_4,
+	default_5,
+	default_6,
 }
+
+local tank_foundry_variations = {}
+
+for _, default_variation in pairs(templates.cultist_ritualist.default) do
+	local tank_foundry_variation = table.clone(default_variation)
+
+	tank_foundry_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/dirt_02",
+	}
+	tank_foundry_variations[#tank_foundry_variations + 1] = tank_foundry_variation
+end
+
+templates.cultist_ritualist[zone_ids.tank_foundry] = tank_foundry_variations
+
+local dust_variations = {}
+
+for _, default_variation in pairs(templates.cultist_ritualist.default) do
+	local dust_variation = table.clone(default_variation)
+
+	dust_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/sand_02",
+	}
+	dust_variations[#dust_variations + 1] = dust_variation
+end
+
+templates.cultist_ritualist[zone_ids.dust] = dust_variations
+
+local watertown_variations = {}
+
+for _, default_variation in pairs(templates.cultist_ritualist.default) do
+	local watertown_variation = table.clone(default_variation)
+
+	watertown_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_02",
+	}
+	watertown_variations[#watertown_variations + 1] = watertown_variation
+end
+
+templates.cultist_ritualist[zone_ids.watertown] = watertown_variations
+
+local void_variations = {}
+
+for _, default_variation in pairs(templates.cultist_ritualist.default) do
+	local void_variation = table.clone(default_variation)
+
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
+
+templates.cultist_ritualist[zone_ids.void] = void_variations
+
+local horde_variations = {}
+
+for _, default_variation in pairs(templates.cultist_ritualist.default) do
+	local horde_variation = table.clone(default_variation)
+
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
+
+templates.cultist_ritualist[zone_ids.horde] = horde_variations
 
 return templates

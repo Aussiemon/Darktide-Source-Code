@@ -3,7 +3,6 @@
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
@@ -51,7 +50,6 @@ local breed_data = {
 		companion = true,
 		minion = true,
 	},
-	inventory = MinionVisualLoadoutTemplates.companion_dog,
 	sounds = require("scripts/settings/breed/breeds/companion/companion_dog_sounds"),
 	vfx = require("scripts/settings/breed/breeds/companion/companion_dog_vfx"),
 	look_at_tag = breed_name,

@@ -5,11 +5,12 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimAssist = require("scripts/utilities/aim_assist")
+local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Component = require("scripts/utilities/component")
 local LagCompensation = require("scripts/utilities/lag_compensation")
+local MultiFireModes = require("scripts/settings/equipment/weapon_templates/multi_fire_modes")
 local Overheat = require("scripts/utilities/overheat")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Recoil = require("scripts/utilities/recoil")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
@@ -18,8 +19,8 @@ local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local Vo = require("scripts/utilities/vo")
-local MultiFireModes = require("scripts/settings/equipment/weapon_templates/multi_fire_modes")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
@@ -55,6 +56,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 	self._talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
+	self._ability_extension = ScriptUnit.extension(self._player_unit, "ability_system")
 
 	local player_unit = self._player_unit
 	local first_person_unit = self._first_person_unit
@@ -101,6 +103,8 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local max_shots = fire_rate_settings.max_shots
 
 	self._is_auto_fire_weapon = (max_shots == nil or max_shots == math.huge) and not not auto_fire_time
+	self._is_grenade_ability_weapon = weapon_template.is_grenade_ability_weapon
+	self._ability_extension = ScriptUnit.extension(self._player_unit, "ability_system")
 
 	local combo_count = params.combo_count
 
@@ -111,7 +115,7 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local talent_extension = self._talent_extension
 	local check_leadbelcher = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher)
 	local check_leadbelcher_improved = talent_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
-	local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
+	local has_ammo = self:_has_ammo()
 
 	if has_ammo and (check_leadbelcher or check_leadbelcher_improved) then
 		local leadbelcher_chance = 0
@@ -164,7 +168,7 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local inventory_slot_component = self._inventory_slot_component
 	local ammunition_usage = action_settings.ammunition_usage
 
-	if action_settings.activate_special_on_required_ammo and ammunition_usage and ammunition_usage <= inventory_slot_component.current_ammunition_clip then
+	if action_settings.activate_special_on_required_ammo and ammunition_usage and ammunition_usage <= self:_current_ammo() then
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true)
 
 		self._weapon_action_component.special_active_at_start = true
@@ -172,7 +176,12 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 		self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 	end
 
-	local special_active = inventory_slot_component.special_active
+	local special_active = false
+
+	if not self._is_grenade_ability_weapon then
+		special_active = inventory_slot_component.special_active
+	end
+
 	local special_recoil_template
 
 	if special_active then
@@ -218,13 +227,13 @@ end
 ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
-	local inventory_slot_component = self._inventory_slot_component
 
 	self._has_shot_this_frame = false
 
 	local is_auto_fire_weapon = self._is_auto_fire_weapon
 	local fire_state = action_component.fire_state
 	local is_not_auto_and_has_shot = not is_auto_fire_weapon and fire_state == "shot"
+	local fire_config = self._fire_configurations[action_component.current_fire_config]
 
 	if action_settings.ammunition_usage and not is_not_auto_and_has_shot then
 		local is_critical_strike = self._critical_strike_component.is_active
@@ -232,15 +241,13 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 		local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
 		local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
 		local no_ammo_consumption = has_no_ammo_keyword or is_critical_strike and has_no_ammo_on_crit_keyword or self._leadbelcher_shot
-		local has_ammo = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
-		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
+		local current_ammunition_reserve = self:_current_ammunition_reserve()
+		local has_ammo = self:_has_ammo(fire_config)
 
 		if not has_ammo and not no_ammo_consumption and current_ammunition_reserve > 0 then
 			return true
 		end
 	end
-
-	local fire_config = self._fire_configurations[action_component.current_fire_config]
 
 	if self._multi_fire_mode == MultiFireModes.simultaneous then
 		for i = 1, #self._fire_configurations do
@@ -254,13 +261,13 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 		self:_set_fire_state(t, "prepare_shooting")
 	end
 
-	if action_component.fire_state == "prepare_shooting" then
+	if action_component.fire_state == "prepare_shooting" or action_component.fire_state == "prepare_simultaneous_shot" then
 		local is_critical_strike = self._critical_strike_component.is_active
 		local buff_extension = self._buff_extension
 		local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
 		local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
 		local no_ammo_consumption = has_no_ammo_keyword or is_critical_strike and has_no_ammo_on_crit_keyword or self._leadbelcher_shot
-		local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
+		local has_ammo = self:_has_ammo(fire_config)
 
 		if no_ammo_consumption or has_ammo then
 			self:_set_fire_state(t, "start_shooting")
@@ -302,12 +309,12 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 
 		local next_fire_state = self:_next_fire_state(dt, t)
 
-		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" or next_fire_state == "shooting" and self._multi_fire_mode == MultiFireModes.simultaneous then
+		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" or next_fire_state == "prepare_simultaneous_shot" and self._multi_fire_mode == MultiFireModes.simultaneous then
 			self:_spend_ammunition(dt, t, charge_level, fire_config)
 			self:_add_heat(dt, t, charge_level)
 			self:_pay_warp_charge_cost_immediate(t, charge_level)
 			self:_trigger_new_charge(t)
-			self:_handle_shot_concluded_stats()
+			self:_handle_shot_concluded_stats(fire_config)
 		end
 
 		self:_set_fire_state(t, next_fire_state)
@@ -323,15 +330,20 @@ ActionShoot._next_fire_state = function (self, dt, t)
 	local fire_rate_settings = self:_fire_rate_settings()
 	local max_num_shots = fire_rate_settings.max_shots or math.huge
 	local auto_fire_time = fire_rate_settings.auto_fire_time
-	local current_fire_config = action_component.current_fire_config
 
-	if self._multi_fire_mode == MultiFireModes.simultaneous and current_fire_config < #self._fire_configurations then
-		return "shooting"
-	elseif max_num_shots <= action_component.num_shots_fired then
+	if max_num_shots <= action_component.num_shots_fired then
 		return "shot"
+	elseif self._multi_fire_mode == MultiFireModes.simultaneous and action_component.current_fire_config < #self._fire_configurations then
+		action_component.current_fire_config = action_component.current_fire_config + 1
+
+		return "prepare_simultaneous_shot"
 	elseif auto_fire_time then
 		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
 		action_component.fire_at_time = t + auto_fire_time
+
+		if self._multi_fire_mode == MultiFireModes.simultaneous then
+			action_component.current_fire_config = 1
+		end
 
 		return "waiting_to_shoot"
 	else
@@ -340,14 +352,8 @@ ActionShoot._next_fire_state = function (self, dt, t)
 end
 
 ActionShoot._prepare_fire_config = function (self, fire_config, weapon_extension)
-	local unit_data_ext = self._unit_data_extension
 	local inventory_component = self._inventory_component
 	local action_module_charge_component = self._action_module_charge_component
-
-	if fire_config.prepare_shooting_func then
-		fire_config.prepare_shooting_func(weapon_extension, unit_data_ext, inventory_component)
-	end
-
 	local anim_event = fire_config.anim_event
 	local anim_event_3p = fire_config.anim_event_3p or anim_event
 
@@ -386,73 +392,50 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local weapon_action_component = self._weapon_action_component
 	local position = first_person_component.position
 	local rotation = first_person_component.rotation
+	local fire_config = self._fire_configurations[action_component.current_fire_config]
 	local charge_level = 1
+	local override_charge_level = self:_prepare_fire_config(fire_config)
 
-	if self._multi_fire_mode == MultiFireModes.simultaneous then
-		for i = 1, #self._fire_configurations do
-			local override_charge_level = self:_prepare_fire_config(self._fire_configurations[i])
-
-			charge_level = override_charge_level or charge_level
-		end
-	else
-		local override_charge_level = self:_prepare_fire_config(self._fire_configurations[action_component.current_fire_config])
-
-		charge_level = override_charge_level or charge_level
-	end
-
+	charge_level = override_charge_level or charge_level
 	action_component.shooting_charge_level = charge_level
 
 	self:_set_charge_animation_variable(first_person_unit, charge_level)
 
-	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component)
 	local recoil_template = weapon_extension:recoil_template()
 	local sway_template = weapon_extension:sway_template()
+	local is_first_combo_bullet = self._multi_fire_mode ~= MultiFireModes.simultaneous or (action_component.num_shots_fired + 1) % #self._fire_configurations == 1
 
-	rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, rotation)
-	rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, rotation)
+	if is_first_combo_bullet then
+		local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component)
 
-	local gamepad_active = Managers.input:is_using_gamepad()
-	local enable_aim_assist = gamepad_active
+		rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, rotation)
+		rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, rotation)
 
-	if enable_aim_assist and not DevParameters.disable_aim_assist then
-		rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(smart_targeting_template, weapon_template, rotation)
+		local gamepad_active = Managers.input:is_using_gamepad()
+		local enable_aim_assist = gamepad_active
+
+		if enable_aim_assist and not DevParameters.disable_aim_assist then
+			rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(smart_targeting_template, weapon_template, rotation)
+		end
+
+		rotation = self._weapon_spread_extension:randomized_spread(rotation)
+		action_component.shooting_position = position
+		action_component.shooting_rotation = rotation
 	end
-
-	rotation = self._weapon_spread_extension:randomized_spread(rotation)
-	action_component.shooting_position = position
-	action_component.shooting_rotation = rotation
 
 	self:_update_sound_reflection()
 
-	local num_shots = shooting_status_component.num_shots
-	local new_num_shots = num_shots + 1
+	if is_first_combo_bullet then
+		local num_shots = shooting_status_component.num_shots
+		local new_num_shots = num_shots + 1
 
-	shooting_status_component.num_shots = new_num_shots
+		shooting_status_component.num_shots = new_num_shots
 
-	local spread_template = weapon_extension:spread_template()
+		local spread_template = weapon_extension:spread_template()
 
-	Sway.add_immediate_sway(sway_template, self._sway_control_component, sway_component, movement_state_component, "shooting", new_num_shots, player_unit)
-	Spread.add_immediate_spread_from_shooting(t, spread_template, self._spread_control_component, movement_state_component, shooting_status_component, "shooting", player_unit)
-	Recoil.add_recoil(t, recoil_template, recoil_component, self._recoil_control_component, movement_state_component, first_person_component.rotation, player_unit)
-
-	if self._multi_fire_mode == MultiFireModes.simultaneous then
-		for i = 1, #self._fire_configurations do
-			local fire_config = self._fire_configurations[i]
-
-			self:_play_muzzle_flash_vfx(fire_config, rotation, charge_level)
-
-			if self._is_server then
-				local suppression_settings = fire_config.close_range_suppression
-
-				if suppression_settings then
-					Suppression.apply_area_minion_suppression(player_unit, suppression_settings, position)
-				end
-			end
-		end
-	else
-		local fire_config = self._fire_configurations[action_component.current_fire_config]
-
-		self:_play_muzzle_flash_vfx(fire_config, rotation, charge_level)
+		Sway.add_immediate_sway(sway_template, self._sway_control_component, sway_component, movement_state_component, "shooting", new_num_shots, player_unit)
+		Spread.add_immediate_spread_from_shooting(t, spread_template, self._spread_control_component, movement_state_component, shooting_status_component, "shooting", player_unit)
+		Recoil.add_recoil(t, recoil_template, recoil_component, self._recoil_control_component, movement_state_component, first_person_component.rotation, player_unit)
 
 		if self._is_server then
 			local suppression_settings = fire_config.close_range_suppression
@@ -463,12 +446,13 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 		end
 	end
 
+	self:_play_muzzle_flash_vfx(fire_config, rotation, charge_level)
+
 	action_component.num_shots_fired = action_component.num_shots_fired + 1
 end
 
 ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config)
 	local action_settings = self._action_settings
-	local inventory_slot_component = self._inventory_slot_component
 	local use_charge = action_settings.use_charge
 	local is_critical_strike = self._critical_strike_component.is_active
 	local buff_extension = self._buff_extension
@@ -513,6 +497,12 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config
 		return
 	end
 
+	local has_double_ammo_consumption = buff_extension:has_keyword(buff_keywords.double_ammo_consumption)
+
+	if has_double_ammo_consumption then
+		ammo_usage = math.max(math.round(ammo_usage * 2))
+	end
+
 	local has_reduced_ammo_consumption = buff_extension:has_keyword(buff_keywords.reduced_ammo_consumption)
 
 	if has_reduced_ammo_consumption then
@@ -530,20 +520,19 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config
 		buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
 	end
 
-	local inventory_slot = self._inventory_slot_component
-	local new_ammunition = math.max(inventory_slot.current_ammunition_clip - ammo_usage, 0)
+	local current_ammo = self:_current_ammo(fire_config)
+	local new_ammunition = math.max(current_ammo - ammo_usage, 0)
 	local fx_settings = action_settings.fx or EMPTY_TABLE
 	local out_of_ammo_sfx_alias = fx_settings.out_of_ammo_sfx_alias
 
-	if new_ammunition == 0 and inventory_slot_component.current_ammunition_clip > 0 and out_of_ammo_sfx_alias then
+	if new_ammunition == 0 and current_ammo > 0 and out_of_ammo_sfx_alias then
 		_trigger_gear_sound(self._fx_extension, self:_muzzle_fx_source(), out_of_ammo_sfx_alias, self._action_module_charge_component, self:_reference_attachment_id(fire_config))
 	end
 
-	inventory_slot_component.current_ammunition_clip = new_ammunition
-	inventory_slot_component.last_ammunition_usage = t
+	self:_set_current_ammo(new_ammunition, t, fire_config)
 
 	local wielded_slot = self._inventory_component.wielded_slot
-	local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
+	local current_ammunition_reserve = self:_current_ammunition_reserve()
 
 	Managers.stats:record_private("hook_ammo_consumed", self._player, wielded_slot, ammo_usage, new_ammunition, current_ammunition_reserve)
 end
@@ -590,23 +579,19 @@ ActionShoot._set_fire_state = function (self, t, new_fire_state)
 		shooting_status_component.shooting_end_time = t
 	end
 
-	if new_fire_state == "prepare_shooting" then
+	if new_fire_state == "prepare_shooting" or new_fire_state == "prepare_simultaneous_shot" then
 		self:_check_for_auto_critical_strike()
 	elseif new_fire_state == "waiting_to_shoot" then
-		self:_check_for_auto_critical_strike_end(t, new_fire_state)
-
-		action_component.current_fire_config = math.index_wrapper(action_component.current_fire_config + 1, #self._fire_configurations)
-	elseif new_fire_state == "shooting" then
-		if self._multi_fire_mode == MultiFireModes.simultaneous then
-			action_component.current_fire_config = action_component.current_fire_config + 1
-		end
+		self:_check_for_auto_critical_strike_end()
 	elseif new_fire_state == "shot" then
-		self:_check_for_auto_critical_strike_end(t, new_fire_state)
+		self:_check_for_auto_critical_strike_end()
 
 		if self._multi_fire_mode == MultiFireModes.simultaneous then
 			for i = 1, #self._fire_configurations do
 				self:_play_muzzle_smoke(self._fire_configurations[i])
 			end
+
+			action_component.current_fire_config = math.index_wrapper(action_component.current_fire_config + 1, #self._fire_configurations)
 		else
 			local fire_config = self._fire_configurations[action_component.current_fire_config]
 
@@ -725,18 +710,21 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 	local num_pre_loop_events = fx_settings.num_pre_loop_events or 0
 	local no_ammo_shoot_sfx_alias = fx_settings.no_ammo_shoot_sfx_alias
 	local charge_level_parameter_name = fx_settings.charge_level_parameter_name
-	local has_ammunition = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
+	local has_ammunition = self:_has_ammo(fire_config)
 	local fire_state = action_component.fire_state
 	local num_shots_fired = action_component.num_shots_fired
 	local is_looping_shoot_sound_playing = self._run_looping_sfx
-	local automatic_fire = is_looping_shoot_sound_playing and (fire_state == "waiting_to_shoot" or fire_state == "prepare_shooting")
+	local automatic_fire = is_looping_shoot_sound_playing and (fire_state == "waiting_to_shoot" or fire_state == "shooting" or fire_state == "prepare_shooting" or fire_state == "prepare_simultaneous_shot")
 	local shooting = fire_state == "start_shooting" or automatic_fire
 	local trigger_single_shot_sound = shooting and has_ammunition and not automatic_fire
 	local trigger_no_ammo_sound = not shooting and no_ammo_shoot_sfx_alias and not has_ammunition
+	local reference_attachment_id = self:_reference_attachment_id(fire_config)
+
+	if self._multi_fire_mode == MultiFireModes.simultaneous then
+		reference_attachment_id = VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	end
 
 	if trigger_single_shot_sound then
-		local reference_attachment_id = self:_reference_attachment_id(fire_config)
-
 		if num_shots_fired < num_pre_loop_events then
 			if pre_loop_shoot_sfx_alias then
 				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, pre_loop_shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
@@ -750,7 +738,11 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 			_set_charge_level(fx_extension, muzzle_fx_source_name, charge_level_parameter_name, action_module_charge_component, reference_attachment_id)
 			_update_alt_fire_state(wwise_world, fx_extension, alternate_fire_component, muzzle_fx_source_name, reference_attachment_id)
 
-			local has_special_shot = self._inventory_slot_component.special_active
+			local has_special_shot = false
+
+			if not self._is_grenade_ability_weapon then
+				has_special_shot = self._inventory_slot_component.special_active
+			end
 
 			if shoot_sfx_special_extra_alias and has_special_shot then
 				local shoot_sfx_special_extra_with_offset = fx_settings.shoot_sfx_special_extra_with_offset
@@ -777,8 +769,6 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 			end
 		end
 	elseif trigger_no_ammo_sound then
-		local reference_attachment_id = self:_reference_attachment_id(fire_config)
-
 		_trigger_gear_sound(fx_extension, muzzle_fx_source_name, no_ammo_shoot_sfx_alias, action_module_charge_component, reference_attachment_id)
 		Vo.out_of_ammo_event(inventory_slot_component, visual_loadout_extension)
 	end
@@ -792,19 +782,33 @@ ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 	end
 
 	local action_component = self._action_component
-	local inventory_slot_component = self._inventory_slot_component
 	local fx_extension = self._fx_extension
 	local action_settings = self._action_settings
 	local muzzle_fx_source_name = self:_muzzle_fx_source()
 	local fx_settings = action_settings.fx or EMPTY_TABLE
 	local post_loop_tail_alias = fx_settings.post_loop_shoot_tail_sfx_alias
 	local num_pre_loop_events = fx_settings.num_pre_loop_events or 0
-	local reference_attachment_id = self:_reference_attachment_id(fire_config)
-	local has_ammo = ActionUtility.has_ammunition(inventory_slot_component, action_settings)
+	local reference_attachment_id, has_ammo
+
+	if self._multi_fire_mode == MultiFireModes.simultaneous then
+		reference_attachment_id = VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+		for i = 1, #self._fire_configurations do
+			if self:_has_ammo(self._fire_configurations[i]) then
+				has_ammo = true
+
+				break
+			end
+		end
+	else
+		reference_attachment_id = self:_reference_attachment_id(fire_config)
+		has_ammo = self:_has_ammo(fire_config)
+	end
+
 	local fire_state = action_component.fire_state
 	local is_looping_shoot_sfx_playing = self._run_looping_sound
-	local automatic_fire = is_looping_shoot_sfx_playing and (fire_state == "waiting_to_shoot" or fire_state == "prepare_shooting")
-	local shooting = fire_state == "start_shooting" or automatic_fire
+	local automatic_fire = is_looping_shoot_sfx_playing and (fire_state == "waiting_to_shoot" or fire_state == "shooting" or fire_state == "prepare_shooting" or fire_state == "prepare_simultaneous_shot")
+	local shooting = fire_state == "start_shooting" or fire_state == "shooting" or automatic_fire
 	local num_shots_fired = action_component.num_shots_fired
 	local started_shooting = shooting and has_ammo and not is_looping_shoot_sfx_playing and num_pre_loop_events <= num_shots_fired
 	local stopped_shooting = not shooting and is_looping_shoot_sfx_playing
@@ -846,7 +850,12 @@ ActionShoot._play_muzzle_flash_vfx = function (self, fire_config, shoot_rotation
 	local weapon_special_effect_name = fx.weapon_special_muzzle_flash_effect
 	local weapon_special_crit_effect_name = fx.weapon_special_muzzle_flash_crit_effect
 	local inventory_slot_component = self._inventory_slot_component
-	local special_active = inventory_slot_component.special_active
+	local special_active = false
+
+	if not self._is_grenade_ability_weapon then
+		special_active = inventory_slot_component.special_active
+	end
+
 	local effect_to_play
 
 	if special_active then
@@ -909,9 +918,9 @@ ActionShoot._play_muzzle_flash_vfx = function (self, fire_config, shoot_rotation
 	local muzzle_flash_size = fx.muzzle_flash_variable_size
 
 	if muzzle_flash_size_variable_name then
-		local charge_level = self._action_module_charge_component.charge_level
+		local component_charge_level = self._action_module_charge_component.charge_level
 		local min, max = muzzle_flash_size.min, muzzle_flash_size.max
-		local variable_value = (max - min) * charge_level + min
+		local variable_value = (max - min) * component_charge_level + min
 		local variable_index = World.find_particles_variable(self._world, effect_name, muzzle_flash_size_variable_name)
 
 		World.set_particles_variable(self._world, particle_id, variable_index, Vector3(variable_value, variable_value, variable_value))
@@ -1009,7 +1018,7 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 	end
 end
 
-ActionShoot._check_for_auto_critical_strike_end = function (self, t)
+ActionShoot._check_for_auto_critical_strike_end = function (self)
 	local auto_fire = self._is_auto_fire_weapon
 
 	if not auto_fire then
@@ -1102,8 +1111,7 @@ ActionShoot._muzzle_fx_source = function (self)
 	end
 
 	if double_barrel_shotgun_muzzle_flashes then
-		local inventory_slot_component = self._inventory_slot_component
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+		local current_ammunition_clip = self:_current_ammo()
 		local use_primary_node = current_ammunition_clip % 2 == 0
 
 		return use_primary_node and self._muzzle_fx_source_name or self._muzzle_fx_source_secondary_name
@@ -1127,7 +1135,7 @@ ActionShoot._eject_fx_source = function (self)
 	return use_primary_node and self._eject_fx_spawner_name or self._eject_fx_spawner_secondary_name
 end
 
-ActionShoot._handle_shot_concluded_stats = function (self)
+ActionShoot._handle_shot_concluded_stats = function (self, fire_config)
 	local shot_result = self._shot_result
 	local data_valid = shot_result.data_valid
 
@@ -1135,11 +1143,60 @@ ActionShoot._handle_shot_concluded_stats = function (self)
 		local hit_minion = shot_result.hit_minion
 		local hit_weakspot = shot_result.hit_weakspot
 		local killing_blow = shot_result.killing_blow
-		local inventory_slot_component = self._inventory_slot_component
-		local last_round_in_mag = inventory_slot_component.current_ammunition_clip == 0
+		local last_round_in_clip = self:_current_ammo(fire_config) == 0
 
-		Managers.stats:record_private("hook_ranged_attack_concluded", self._player, hit_minion, hit_weakspot, killing_blow, last_round_in_mag)
+		Managers.stats:record_private("hook_ranged_attack_concluded", self._player, hit_minion, hit_weakspot, killing_blow, last_round_in_clip)
 	end
+end
+
+ActionShoot._has_ammo = function (self, optional_fire_config)
+	local has_ammo
+
+	if self._is_grenade_ability_weapon then
+		has_ammo = self._ability_extension:remaining_ability_charges("grenade_ability") > 0
+	else
+		has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, self._action_settings, optional_fire_config and optional_fire_config.ammo_pool_index)
+	end
+
+	return has_ammo
+end
+
+ActionShoot._current_ammo = function (self, optional_fire_config)
+	local current_ammo
+
+	if self._is_grenade_ability_weapon then
+		current_ammo = self._ability_extension:remaining_ability_charges("grenade_ability")
+	else
+		current_ammo = Ammo.current_ammo_in_clips(self._inventory_slot_component, optional_fire_config and optional_fire_config.ammo_pool_index)
+	end
+
+	return current_ammo
+end
+
+ActionShoot._set_current_ammo = function (self, ammo, t, fire_config)
+	local current_ammo
+
+	if self._is_grenade_ability_weapon then
+		current_ammo = self._ability_extension:set_ability_charges("grenade_ability", ammo)
+	else
+		Ammo.set_current_ammo_in_clips(self._inventory_slot_component, ammo, fire_config.ammo_pool_index)
+
+		self._inventory_slot_component.last_ammunition_usage = t
+	end
+
+	return current_ammo
+end
+
+ActionShoot._current_ammunition_reserve = function (self)
+	local reserve
+
+	if self._is_grenade_ability_weapon then
+		reserve = self._ability_extension:remaining_ability_charges("grenade_ability")
+	else
+		reserve = self._inventory_slot_component.current_ammunition_reserve
+	end
+
+	return reserve
 end
 
 ActionShoot._fire_rate_settings = function (self)
@@ -1193,7 +1250,8 @@ end
 
 function _trigger_critical_sound(fx_extension, crit_shoot_sfx_alias, critical_strike_component, fire_state)
 	local is_critical_strike = critical_strike_component.is_active
-	local play_crit_sound = is_critical_strike and fire_state == "start_shooting"
+	local num_critical_shots = critical_strike_component.num_critical_shots
+	local play_crit_sound = is_critical_strike and fire_state == "start_shooting" and num_critical_shots == 1
 
 	if not play_crit_sound then
 		return

@@ -167,6 +167,10 @@ ErrorManager.show_errors = function (self)
 	return queue_empty_promise
 end
 
+ErrorManager.clear_errors = function (self)
+	self._error_queue = {}
+end
+
 ErrorManager.has_error = function (self)
 	return #self._error_queue > 0
 end

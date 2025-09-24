@@ -30,11 +30,13 @@ LocalWaitForGameObjectSyncState.update = function (self, dt)
 
 	self._time = self._time + dt
 
-	if Network.channel_state(shared_state.channel_id) ~= "connected" then
-		Log.info("LocalWaitForGameObjectSyncState", "Lost game session")
+	local state, reason = Network.channel_state(shared_state.channel_id)
+
+	if state ~= "connected" then
+		Log.info("LocalWaitForGameObjectSyncState", "Lost game session channel")
 
 		return "lost_session", {
-			game_reason = "lost_session",
+			engine_reason = reason,
 		}
 	end
 

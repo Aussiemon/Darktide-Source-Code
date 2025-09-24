@@ -2,20 +2,16 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Block = require("scripts/utilities/attack/block")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local HitZone = require("scripts/utilities/attack/hit_zone")
-local attack_types = AttackSettings.attack_types
-local leap_settings = CompanionDogSettings.dog_leap_settings
+local leap_settings = CompanionDogLocomotionSettings.dog_leap_settings
 local BtCompanionLeapAction = class("BtCompanionLeapAction", "BtNode")
 
 BtCompanionLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -48,7 +44,6 @@ BtCompanionLeapAction.enter = function (self, unit, breed, blackboard, scratchpa
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
 	local start_duration, start_leap_anim
-	local target_distance = perception_component.target_distance
 	local use_fast_jump = scratchpad.pounce_component.use_fast_jump
 
 	if not use_fast_jump then
@@ -322,28 +317,28 @@ BtCompanionLeapAction._leap = function (self, unit, scratchpad, action_data, sta
 	scratchpad.state = "leaping"
 end
 
-local LEAP_NODES = {
+local LEAP_TARGET_NODES = {
 	"enemy_aim_target_03",
 	"enemy_aim_target_04",
 }
-local TARGET_LEAP_NODE = "enemy_aim_target_02"
 
 BtCompanionLeapAction._check_colliding_minions = function (self, unit, scratchpad, action_data, ignore_dot_check)
 	local target_unit = scratchpad.perception_component.target_unit
 
-	for _, leap_node in pairs(LEAP_NODES) do
+	for ii = 1, #LEAP_TARGET_NODES do
+		local leap_node_name = LEAP_TARGET_NODES[ii]
 		local physics_world = scratchpad.physics_world
-		local attacking_unit_pos = Unit.world_position(unit, Unit.node(unit, leap_node))
+		local attacking_unit_pos = Unit.world_position(unit, Unit.node(unit, leap_node_name))
 		local radius = leap_settings.collision_radius
-		local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", attacking_unit_pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_character_melee_sweep")
+		local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", attacking_unit_pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_character_melee_sweep")
 
-		for i = 1, actor_count do
+		for jj = 1, num_actors do
 			repeat
-				local hit_actor = hit_actors[i]
+				local hit_actor = hit_actors[jj]
 				local hit_unit = Actor.unit(hit_actor)
 
 				if hit_unit == target_unit and HEALTH_ALIVE[hit_unit] then
-					return hit_unit, hit_actor, leap_node
+					return hit_unit, hit_actor, leap_node_name
 				end
 			until true
 		end

@@ -6,7 +6,7 @@ local overrides = {}
 table.make_unique(suppression_templates)
 table.make_unique(overrides)
 
-suppression_templates.default_ogryn_heavystubber_assault = {
+suppression_templates.ogryn_heavystubber_p1_m1_assault = {
 	still = {
 		decay_time = 0.25,
 		delay = 1,
@@ -65,19 +65,19 @@ suppression_templates.default_ogryn_heavystubber_assault = {
 	},
 	moving = {
 		inherits = {
-			"default_ogryn_heavystubber_assault",
+			"ogryn_heavystubber_p1_m1_assault",
 			"still",
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"default_ogryn_heavystubber_assault",
+			"ogryn_heavystubber_p1_m1_assault",
 			"still",
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"default_ogryn_heavystubber_assault",
+			"ogryn_heavystubber_p1_m1_assault",
 			"still",
 		},
 	},

@@ -407,9 +407,13 @@ end
 StoreService.character_wallets = function (self, skip_decoration)
 	local character_id = _current_character_id()
 
-	return self:_get_wallet(skip_decoration, character_id, function ()
-		return self._backend_interface.wallet:character_wallets(character_id)
-	end)
+	if character_id then
+		return self:_get_wallet(skip_decoration, character_id, function ()
+			return self._backend_interface.wallet:character_wallets(character_id)
+		end)
+	else
+		return Promise.resolved({})
+	end
 end
 
 StoreService.invalidate_wallets_cache = function (self)

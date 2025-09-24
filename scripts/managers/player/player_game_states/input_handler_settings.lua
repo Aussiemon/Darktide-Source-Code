@@ -38,7 +38,7 @@ local input_handler_settings = {
 		"wield_3_gamepad",
 		"wield_4",
 		"wield_5",
-		"weapon_reload",
+		"weapon_reload_pressed",
 		"interact_pressed",
 		"interact_inspect_pressed",
 		"combat_ability_pressed",

@@ -6,7 +6,7 @@ local overrides = {}
 table.make_unique(suppression_templates)
 table.make_unique(overrides)
 
-suppression_templates.default_autogun_assault = {
+suppression_templates.autogun_p1_m1_suppression_assault = {
 	still = {
 		decay_time = 0.25,
 		delay = 1,
@@ -65,24 +65,24 @@ suppression_templates.default_autogun_assault = {
 	},
 	moving = {
 		inherits = {
-			"default_autogun_assault",
+			"autogun_p1_m1_suppression_assault",
 			"still",
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"default_autogun_assault",
+			"autogun_p1_m1_suppression_assault",
 			"still",
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"default_autogun_assault",
+			"autogun_p1_m1_suppression_assault",
 			"still",
 		},
 	},
 }
-suppression_templates.fullauto_autogun_killshot = {
+suppression_templates.autogun_p1_m1_suppression_killshot = {
 	still = {
 		decay_time = 0.6,
 		delay = 0.2,
@@ -101,19 +101,19 @@ suppression_templates.fullauto_autogun_killshot = {
 	},
 	moving = {
 		inherits = {
-			"fullauto_autogun_killshot",
+			"autogun_p1_m1_suppression_killshot",
 			"still",
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"fullauto_autogun_killshot",
+			"autogun_p1_m1_suppression_killshot",
 			"still",
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"fullauto_autogun_killshot",
+			"autogun_p1_m1_suppression_killshot",
 			"still",
 		},
 	},

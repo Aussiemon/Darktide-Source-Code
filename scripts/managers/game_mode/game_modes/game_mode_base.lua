@@ -2,6 +2,7 @@
 
 local AfkChecker = require("scripts/managers/game_mode/afk_checker")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
+local GameModeExtensionHavoc = require("scripts/managers/game_mode/game_mode_extensions/game_mode_extension_havoc")
 local GameModeBase = class("GameModeBase")
 
 GameModeBase.INTERFACE = {
@@ -13,7 +14,7 @@ GameModeBase.INTERFACE = {
 	"on_player_unit_despawn",
 	"can_spawn_player",
 	"player_time_until_spawn",
-	"cleanup_game_mode_units",
+	"mission_cleanup",
 }
 
 local CLIENT_RPCS = {
@@ -57,10 +58,22 @@ GameModeBase.init = function (self, game_mode_context, game_mode_name, network_e
 	if settings.afk_check then
 		self._afk_checker = AfkChecker:new(self._is_server, settings.afk_check, network_event_delegate)
 	end
+
+	local game_mode_extensions = {}
+
+	if game_mode_context.havoc_data then
+		local havoc_extension = GameModeExtensionHavoc:new(game_mode_context.is_server)
+
+		game_mode_extensions.havoc = havoc_extension
+	end
+
+	self._game_mode_extensions = game_mode_extensions
 end
 
 GameModeBase.on_gameplay_init = function (self)
-	return
+	for _, extension in pairs(self._game_mode_extensions) do
+		extension:on_gameplay_init()
+	end
 end
 
 GameModeBase.on_gameplay_post_init = function (self)
@@ -90,11 +103,23 @@ GameModeBase.destroy = function (self)
 
 		self._afk_checker = nil
 	end
+
+	for _, extension in pairs(self._game_mode_extensions) do
+		extension:destroy()
+	end
+end
+
+GameModeBase.extension = function (self, name)
+	return self._game_mode_extensions[name]
 end
 
 GameModeBase.server_update = function (self, dt, t)
 	if self._afk_checker then
 		self._afk_checker:server_update(dt, t)
+	end
+
+	for _, extension in pairs(self._game_mode_extensions) do
+		extension:server_update(dt, t)
 	end
 end
 
@@ -132,16 +157,8 @@ GameModeBase.player_time_until_spawn = function (self, player)
 	return nil
 end
 
-GameModeBase.cleanup_game_mode_dynamic_lavels = function (self)
-	return
-end
-
-GameModeBase.cleanup_game_mode_units = function (self)
-	local bot_backfilling_allowed = self._settings.bot_backfilling_allowed
-
-	if bot_backfilling_allowed then
-		Managers.state.player_unit_spawn:remove_all_bots()
-	end
+GameModeBase.mission_cleanup = function (self)
+	Managers.state.player_unit_spawn:remove_all_bots()
 end
 
 GameModeBase._change_state = function (self, new_state)
@@ -183,6 +200,10 @@ GameModeBase.hot_join_sync = function (self, sender, channel)
 	if state_id ~= 1 then
 		RPC.rpc_change_game_mode_state(channel, state_id)
 	end
+
+	for _, extension in pairs(self._game_mode_extensions) do
+		extension:hot_join_sync(sender, channel)
+	end
 end
 
 GameModeBase._cinematic_active = function (self)
@@ -197,6 +218,10 @@ end
 
 GameModeBase.should_spawn_dead = function (self, player)
 	return false
+end
+
+GameModeBase.pre_populate_pickups_setup = function (self, pickup_spawners)
+	return
 end
 
 GameModeBase.get_additional_pickups = function (self)

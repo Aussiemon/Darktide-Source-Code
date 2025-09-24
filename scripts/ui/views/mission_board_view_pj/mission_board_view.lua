@@ -3,15 +3,9 @@
 local MissionBoardViewDefinitions = require("scripts/ui/views/mission_board_view_pj/mission_board_view_definitions")
 local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view_pj/mission_board_view_settings")
 local MissionBoardViewStyles = require("scripts/ui/views/mission_board_view_pj/mission_board_view_styles")
-local Styles = MissionBoardViewStyles
 local MissionBoardViewLogic = require("scripts/ui/views/mission_board_view_pj/mission_board_view_logic")
-local Settings = MissionBoardViewSettings
-
-Dimensions = Settings.dimensions
-
-local ScreenEffectSettings = Settings.on_screen_effect_settings
 local MissionBoardViewThemes = require("scripts/ui/views/mission_board_view_pj/mission_board_view_themes")
-local Blueprints = require("scripts/ui/views/mission_board_view_pj/mission_board_view_blueprints")
+local Blueprints = require("scripts/ui/view_content_blueprints/mission_tile_blueprints/mission_tile_blueprints")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
@@ -28,14 +22,27 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local TextUtils = require("scripts/utilities/ui/text")
 local InputUtils = require("scripts/managers/input/input_utils")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
+local Settings = MissionBoardViewSettings
+local Styles = MissionBoardViewStyles
+local Dimensions = Settings.dimensions
+local ScreenEffectSettings = Settings.on_screen_effect_settings
+local ViewElements = Settings.view_elements
+local Elements = {}
+
+for _, element in pairs(ViewElements) do
+	local elem
+
+	if element.file_path then
+		elem = require(element.file_path)
+	end
+
+	Elements[element.name] = elem
+end
 
 local function _character_level()
 	local local_player_id = 1
@@ -83,12 +90,14 @@ MissionBoardView.init = function (self, settings, context)
 	self._camera_zoom = 0
 	self._target_zoom = 0
 	self._zoom_speed = 0
+	self._element_layer = 10
 end
 
 MissionBoardView.on_enter = function (self)
 	MissionBoardView.super.on_enter(self)
 	Managers.event:register(self, "event_register_camera", "event_register_camera")
 	Managers.event:register(self, "event_register_camera_02", "event_register_camera_02")
+	Managers.event:register(self, "event_mission_board_mission_tile_pressed", "event_mission_board_mission_tile_pressed")
 
 	local world_spawner_settings = MissionBoardViewSettings.world_spawner_settings
 
@@ -96,15 +105,29 @@ MissionBoardView.on_enter = function (self)
 
 	self._world_spawner:spawn_level(world_spawner_settings.level_name)
 
-	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 40)
+	for _, element in pairs(ViewElements) do
+		local element_name = element.name
+		local element_class = element.class
+		local element_context = element.context or {}
+		local load_on_enter = element.load_on_enter or false
 
-	local legend_inputs = self._definitions.legend_inputs
+		if load_on_enter then
+			local elem = Elements[element_name]
+
+			self:_add_element(elem, element_name, self._element_layer)
+
+			self._element_layer = self._element_layer + 10
+		end
+	end
+
+	local input_legend_element = self:_element("input_legend")
+	local legend_inputs = ViewElements.input_legend.context.legend_inputs
 
 	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
-		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
+		input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
 	end
 
 	self:on_resolution_modified(self._render_scale)
@@ -183,6 +206,14 @@ MissionBoardView._has_active_campaign_missions = function (self, filtered_missio
 	end
 
 	return has_active_campaign_mission, active_mission_id
+end
+
+MissionBoardView.get_selected_mission_id = function (self)
+	return self._selected_mission_id
+end
+
+MissionBoardView.set_selected_mission_id = function (self, mission_id)
+	self._selected_mission_id = mission_id
 end
 
 MissionBoardView._get_last_unlocked_page = function (self)
@@ -284,12 +315,6 @@ MissionBoardView._open_current_page = function (self)
 end
 
 MissionBoardView.on_exit = function (self)
-	if self._input_legend_element then
-		self:_remove_element("input_legend")
-
-		self._input_legend_element = nil
-	end
-
 	if self._on_screen_effect_id then
 		World.destroy_particles(self._world_spawner._world, self._on_screen_effect_id)
 
@@ -311,6 +336,7 @@ MissionBoardView.on_exit = function (self)
 		self._mission_board_logic = nil
 	end
 
+	Managers.event:unregister(self, "event_mission_board_mission_tile_pressed")
 	MissionBoardView.super.on_exit(self)
 end
 
@@ -384,14 +410,26 @@ MissionBoardView._release_slot = function (self, slot)
 	used_slots[slot_group][slot_index] = false
 end
 
-MissionBoardView._widget_from_blueprint = function (self, widget_id, blueprint_name, mission_data, creation_context, ...)
+MissionBoardView._widget_from_blueprint = function (self, widget_id, blueprint_setting_name, mission_data, creation_context, ...)
+	local blueprint_settings = Settings.mission_tile_settings[blueprint_setting_name]
+
+	if not blueprint_settings then
+		Log.error("MissionBoardView", "No blueprint settings found for '%s'.", blueprint_setting_name)
+
+		return
+	end
+
+	local blueprint_name = blueprint_settings.blueprint_name
 	local blueprint = Blueprints[blueprint_name]
 
 	if not blueprint then
 		return
 	end
 
-	local widget = self:_create_widget(widget_id, blueprint)
+	local size = blueprint_settings.size
+	local scenegraph_id = blueprint_settings.scenegraph_id
+	local definition = Blueprints.make_blueprint(blueprint, scenegraph_id, size)
+	local widget = self:_create_widget(widget_id, definition)
 
 	if not widget then
 		return
@@ -405,13 +443,13 @@ MissionBoardView._widget_from_blueprint = function (self, widget_id, blueprint_n
 		content[key] = value
 	end
 
-	widget.content.blueprint_name = blueprint_name
-	widget.content.blueprint = blueprint
+	widget.content.blueprint_name = blueprint_setting_name
+	widget.content.blueprint = definition
 
-	local init = blueprint.init
+	local init = definition.init
 
 	if init then
-		local width, height = init(blueprint, widget, mission_data, creation_context)
+		local width, height = init(definition, widget, mission_data, creation_context)
 
 		return widget, width, height
 	end
@@ -448,7 +486,7 @@ MissionBoardView._create_mission_widget_from_mission = function (self, mission, 
 
 	local content = widget.content
 
-	content.hotspot.pressed_callback = callback(self, "_set_selected_mission", mission_id)
+	content.hotspot.pressed_callback = callback(self, "set_selected_mission", mission_id)
 
 	return widget
 end
@@ -475,7 +513,7 @@ MissionBoardView._set_static_mission_widget = function (self, id, optional_creat
 		table.merge(creation_context, optional_creation_context)
 	end
 
-	local widget = self:_widget_from_blueprint(id, "static_mission_definition", nil, creation_context, "mission_id", id, "slot", slot, "static", true)
+	local widget = self:_widget_from_blueprint(id, "static_tile", nil, creation_context, "mission_id", id, "slot", slot, "static", true)
 	local on_pressed_callback = optional_on_pressed_callback or callback(self, "_set_selected", id)
 	local position = slot.position
 
@@ -533,7 +571,7 @@ MissionBoardView._add_mission_widget = function (self, mission)
 		return
 	end
 
-	local blueprint_name = "small_mission_definition"
+	local blueprint_name = "mission_tile"
 	local widget = self:_create_mission_widget_from_mission(mission, blueprint_name, slot)
 
 	if not widget then
@@ -574,7 +612,7 @@ MissionBoardView._replace_mission_widget = function (self, old_widget, new_missi
 	mission_widgets[index] = new_widget
 
 	if self._selected_mission_id == old_mission_id then
-		self:_set_selected_mission(new_mission.id)
+		self:set_selected_mission(new_mission.id)
 	end
 
 	return true
@@ -681,7 +719,7 @@ MissionBoardView._update_mission_widgets = function (self, t)
 		local has_active_campaign_missions, active_story_mission_id = self:_has_active_campaign_missions(filtered_missions)
 
 		if active_story_mission_id then
-			self:_set_selected_mission(active_story_mission_id, true, true)
+			self:set_selected_mission(active_story_mission_id, true, true)
 		else
 			self:_set_selected_quickplay(true, true)
 		end
@@ -938,6 +976,12 @@ MissionBoardView._update_page = function (self, t)
 
 		if page and page.is_unlocked then
 			self:_open_current_page()
+
+			local view_element_campaign_mission_list = self:_element("mission_list")
+
+			if view_element_campaign_mission_list and view_element_campaign_mission_list:visible() then
+				view_element_campaign_mission_list:refresh_mission_list()
+			end
 		end
 	end
 end
@@ -1018,6 +1062,11 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	widgets_by_name.difficulty_progress_bar.content.visible = not is_loading
 	widgets_by_name.difficulty_progress_tooltip.content.visible = not is_loading
 	input_service = is_loading and input_service:null_service() or input_service
+	self._stored_input_service = input_service
+
+	local options_opened = self._mission_board_options ~= nil
+
+	input_service = options_opened and input_service:null_service() or input_service
 
 	MissionBoardView.super.update(self, dt, t, input_service)
 
@@ -1047,7 +1096,13 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	end
 
 	self:_update_page(t)
-	self:_update_mission_widgets(t)
+
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	if not view_element_campaign_mission_list or view_element_campaign_mission_list and not view_element_campaign_mission_list:visible() then
+		self:_update_mission_widgets(t)
+	end
+
 	self:_update_info_state(t)
 	self:_update_camera(dt, t)
 	self:_update_hologram_unit(dt, t)
@@ -1060,7 +1115,11 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	end
 end
 
-MissionBoardView._mission = function (self, mission_id)
+MissionBoardView._mission = function (self, mission_id, ignore_filter)
+	if ignore_filter then
+		return self._mission_board_logic:get_mission_data_by_id(mission_id)
+	end
+
 	return self._filtered_missions[mission_id]
 end
 
@@ -1574,7 +1633,7 @@ MissionBoardView._update_mission_info_panel = function (self)
 		local palette_name = ui_theme.view_data.palette_name
 		local mission
 
-		mission = self._selected_mission_id == "qp_mission_widget" and "qp_mission_widget" or self:_mission(self._selected_mission_id)
+		mission = self._selected_mission_id == "qp_mission_widget" and "qp_mission_widget" or self:_mission(self._selected_mission_id, true)
 
 		self:_update_mission_location(mission, palette_name)
 		self:_update_location_circumstance(mission, palette_name)
@@ -1664,7 +1723,8 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor, 
 end
 
 MissionBoardView._set_mission_sidebar = function (self, mission_id)
-	local mission = self:_mission(mission_id)
+	local ignore_filter = self:_element("mission_list"):visible()
+	local mission = self:_mission(mission_id, ignore_filter)
 
 	if mission == nil then
 		return false
@@ -1673,7 +1733,7 @@ MissionBoardView._set_mission_sidebar = function (self, mission_id)
 	return true
 end
 
-MissionBoardView._set_selected_mission = function (self, mission_id, move_gamepad_cursor, force_reload)
+MissionBoardView.set_selected_mission = function (self, mission_id, move_gamepad_cursor, force_reload)
 	return self:_set_selected(mission_id, "_set_mission_sidebar", move_gamepad_cursor, force_reload)
 end
 
@@ -1871,7 +1931,9 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 	self:_play_button_input(input_service)
 	self:_difficulty_stepper_input(input_service)
 
-	if InputDevice.gamepad_active then
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	if (not view_element_campaign_mission_list or view_element_campaign_mission_list and not view_element_campaign_mission_list:visible()) and InputDevice.gamepad_active then
 		self:_virtual_cursor_input(input_service, dt, t)
 	end
 end
@@ -1892,6 +1954,25 @@ end
 
 MissionBoardView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	MissionBoardView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+end
+
+MissionBoardView._update_elements = function (self, dt, t, input_service)
+	local elements_array = self._elements_array
+	local stored_input_service = self._stored_input_service
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local element_name = element.__class_name
+				local is_options_element = element_name == "ViewElemenMissionBoardOptions"
+				local used_input_service = is_options_element and stored_input_service or input_service
+
+				element:update(dt, t, used_input_service)
+			end
+		end
+	end
 end
 
 MissionBoardView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -1919,13 +2000,17 @@ MissionBoardView.draw = function (self, dt, t, input_service, layer)
 
 	UIRenderer.begin_pass(ui_renderer, self._ui_scenegraph, input_service, dt, self._render_settings)
 
-	local mission_widgets = self._mission_widgets
-	local mission_count = mission_widgets and #mission_widgets or 0
+	local view_element_campaign_mission_list = self:_element("mission_list")
 
-	for i = 1, mission_count do
-		local widget = mission_widgets[i]
+	if not view_element_campaign_mission_list or view_element_campaign_mission_list and not view_element_campaign_mission_list:visible() then
+		local mission_widgets = self._mission_widgets
+		local mission_count = mission_widgets and #mission_widgets or 0
 
-		UIWidget.draw(widget, ui_renderer)
+		for i = 1, mission_count do
+			local widget = mission_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	if self._objectives_tabs then
@@ -1971,27 +2056,31 @@ end
 
 MissionBoardView._callback_open_options = function (self)
 	local regions_latency = self._mission_board_logic:get_region_latencies()
+	local element_setting = Elements.options
 
-	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
+	self._mission_board_options = self:_add_element(element_setting, "options", 200, {
 		on_destroy_callback = callback(self, "_destroy_options_element"),
 	})
 
-	local presentation_data = {
-		{
+	local presentation_data = {}
+
+	if regions_latency then
+		presentation_data[#presentation_data + 1] = {
 			display_name = "loc_mission_board_view_options_Matchmaking_Location",
 			id = "region_matchmaking",
 			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
 			widget_type = "dropdown",
 			on_activated = function (value, template)
-				BackendUtilities.prefered_mission_region = value
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
 			end,
 			get_function = function (template)
 				local options = template.options_function()
+				local prefered_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
 
 				for i = 1, #options do
 					local option = options[i]
 
-					if option.value == BackendUtilities.prefered_mission_region then
+					if option.value == prefered_mission_region then
 						return option.id
 					end
 				end
@@ -2027,36 +2116,54 @@ MissionBoardView._callback_open_options = function (self)
 
 				return options
 			end,
-		},
-		{
-			display_name = "loc_private_tag_name",
-			id = "private_match",
-			tooltip_text = "loc_mission_board_view_options_private_game_desc",
-			widget_type = "checkbox",
-			start_value = self._mission_board_logic:is_private_match(),
-			get_function = function ()
-				return self._mission_board_logic:is_private_match()
+			on_changed = function (value)
+				Managers.data_service.region_latency:set_prefered_mission_region(value)
 			end,
-			on_activated = callback(self, "_callback_toggle_private_matchmaking"),
-		},
-		{
-			display_name = "loc_narrative_quickplay_name",
-			id = "quickplay_narrative",
-			tooltip_text = "loc_mission_board_view_options_narrative_quickplay_desc",
-			widget_type = "checkbox",
-			start_value = self._mission_board_logic:get_quickplay_into_narrative(),
-			get_function = function ()
-				return self._mission_board_logic:get_quickplay_into_narrative()
-			end,
-			on_activated = callback(self._mission_board_logic, "set_quickplay_into_narrative"),
-		},
+		}
+	end
+
+	presentation_data[#presentation_data + 1] = {
+		display_name = "loc_private_tag_name",
+		id = "private_match",
+		tooltip_text = "loc_mission_board_view_options_private_game_desc",
+		widget_type = "checkbox",
+		start_value = self._mission_board_logic:is_private_match(),
+		get_function = function ()
+			return self._mission_board_logic:is_private_match()
+		end,
+		on_activated = callback(self, "_callback_toggle_private_matchmaking"),
+	}
+	presentation_data[#presentation_data + 1] = {
+		display_name = "loc_narrative_quickplay_name",
+		id = "quickplay_narrative",
+		tooltip_text = "loc_mission_board_view_options_narrative_quickplay_desc",
+		widget_type = "checkbox",
+		start_value = self._mission_board_logic:get_quickplay_into_narrative(),
+		get_function = function ()
+			return self._mission_board_logic:get_quickplay_into_narrative()
+		end,
+		on_activated = callback(self._mission_board_logic, "set_quickplay_into_narrative"),
 	}
 
 	self._mission_board_options:present(presentation_data)
 end
 
+MissionBoardView._callback_open_replay_campaign_missions_view = function (self)
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	view_element_campaign_mission_list:set_visibility(true)
+	view_element_campaign_mission_list:refresh_mission_list()
+end
+
+MissionBoardView._callback_close_replay_campaign_missions_view = function (self)
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	view_element_campaign_mission_list:set_visibility(false)
+	self:_open_current_page()
+end
+
 MissionBoardView._destroy_options_element = function (self)
-	self:_remove_element("mission_board_options_element")
+	self:_remove_element("options")
 
 	self._mission_board_options = nil
 end
@@ -2074,7 +2181,9 @@ end
 MissionBoardView._callback_start_selected_mission = function (self)
 	local party_manager = self._party_manager
 	local selected_mission_id = self._selected_mission_id
-	local mission_is_selected = self:_mission(selected_mission_id) ~= nil
+	local mission_list = self:_element("mission_list")
+	local mission_list_visible = mission_list and mission_list:visible()
+	local mission_is_selected = self:_mission(selected_mission_id, mission_list_visible) ~= nil
 	local private_game = self._mission_board_logic:is_private_match()
 	local should_close = false
 
@@ -2120,6 +2229,10 @@ MissionBoardView.event_register_camera_02 = function (self, camera_unit)
 	Managers.event:unregister(self, "event_register_camera_02")
 
 	self._near_camera_unit = camera_unit
+end
+
+MissionBoardView.event_mission_board_mission_tile_pressed = function (self, mission_id)
+	self:_set_selected_mission(mission_id, false, true)
 end
 
 MissionBoardView._get_difficulty_data_by_name = function (self, difficulty_name)
@@ -2341,6 +2454,18 @@ MissionBoardView._update_threat_level_tooltip = function (self, dt, t)
 		style.background.color[1] = 255 * hover_progress
 		style.frame.color[1] = 255 * hover_progress
 	end
+end
+
+MissionBoardView._add_view_element = function (self, element_name)
+	local element_setting = Elements[element_name]
+	local element
+
+	if element_setting then
+		element = self:_add_element(element_setting, element_name, self._element_layer)
+		self._element_layer = self._element_layer + 1
+	end
+
+	return element
 end
 
 MissionBoardView._callback_hide_threat_level_tooltip = function (self)

@@ -130,7 +130,15 @@ TimedExplosive.update = function (self, unit, dt, t)
 			local destructible_extension = ScriptUnit.has_extension(unit, "destructible_system")
 
 			if destructible_extension == nil then
-				Managers.state.unit_spawner:mark_for_deletion(unit)
+				local unit_spawner = Managers.state.unit_spawner
+
+				if unit_spawner:is_husk(unit) then
+					if self._is_server then
+						unit_spawner:mark_for_deletion(unit)
+					end
+				else
+					unit_spawner:mark_for_deletion(unit)
+				end
 			end
 		end
 	end

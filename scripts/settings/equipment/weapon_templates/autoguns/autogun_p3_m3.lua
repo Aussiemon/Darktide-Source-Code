@@ -2,7 +2,6 @@
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -18,10 +17,10 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeAutogunP3 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p3")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
@@ -30,7 +29,6 @@ local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -101,7 +99,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -734,12 +732,14 @@ weapon_template.actions = {
 			1,
 			0.7,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
-			anchor_point_offset = {
-				0,
-				1.4,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
+				anchor_point_offset = {
+					0,
+					1.4,
+					-0.1,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -830,12 +830,14 @@ weapon_template.actions = {
 			1,
 			0.5,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_stab_bash",
-			anchor_point_offset = {
-				0,
-				1.6,
-				0.25,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_stab_bash",
+				anchor_point_offset = {
+					0,
+					1.6,
+					0.25,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -876,10 +878,10 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/autogun_rifle"
 weapon_template.reload_template = ReloadTemplates.autogun_ak
 weapon_template.spread_template = "default_autogun_burst"
-weapon_template.recoil_template = "default_autogun_burst"
-weapon_template.suppression_template = "default_autogun_assault"
+weapon_template.recoil_template = "ads_autogun_double_shot"
+weapon_template.suppression_template = "autogun_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "default"
-weapon_template.ammo_template = "autogun_p3_m1"
+weapon_template.ammo_template = "autogun_p3_m3"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",
@@ -910,21 +912,21 @@ weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	look_delta_template = "default_aiming",
 	peeking_mechanics = true,
-	recoil_template = "ads_autogun_single_shot_p3_m3",
-	spread_template = "default_autogun_alternate_fire_killshot",
+	recoil_template = "ads_autogun_double_shot",
+	spread_template = "autogun_p3_burst_ads",
 	start_anim_event = "to_ironsight",
 	start_anim_event_3p = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
 	stop_anim_event_3p = "to_unaim_ironsight",
-	suppression_template = "fullauto_autogun_killshot",
-	sway_template = "fullauto_p3_m3_autogun_killshot",
+	suppression_template = "autogun_p1_m1_suppression_killshot",
+	sway_template = "burst_autogun_ads",
 	crosshair = {
 		crosshair_type = "ironsight",
 	},
 	camera = {
-		custom_vertical_fov = 45,
+		custom_vertical_fov = 40,
 		near_range = 0.025,
-		vertical_fov = 54,
+		vertical_fov = 35,
 	},
 	movement_speed_modifier = {
 		{
@@ -957,7 +959,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
+weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.killshot_burst
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")

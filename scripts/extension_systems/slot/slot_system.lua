@@ -67,8 +67,8 @@ SlotSystem.destroy = function (self)
 	local traverse_logic = self._traverse_logic
 
 	if traverse_logic then
-		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 		GwNavTraverseLogic.destroy(traverse_logic)
+		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 	end
 
 	SlotSystem.super.destroy(self)

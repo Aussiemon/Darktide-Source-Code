@@ -431,6 +431,7 @@ ViewElementWintrackItemRewardOverlay.draw = function (self, dt, t, ui_renderer, 
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
 	render_settings.scale = previous_scale
+	render_settings.start_layer = previous_layer
 end
 
 ViewElementWintrackItemRewardOverlay.update = function (self, dt, t, input_service)

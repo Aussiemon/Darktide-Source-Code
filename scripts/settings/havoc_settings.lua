@@ -1077,4 +1077,4 @@ for modifier_name, _ in pairs(havoc_settings.positive_modifier_templates) do
 	havoc_settings.positive_modifiers[#havoc_settings.positive_modifiers + 1] = modifier_name
 end
 
-return settings("havoc_settings", havoc_settings)
+return settings("HavocSettings", havoc_settings)

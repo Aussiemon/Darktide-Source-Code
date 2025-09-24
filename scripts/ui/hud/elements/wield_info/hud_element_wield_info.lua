@@ -1,14 +1,12 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/wield_info/hud_element_wield_info.lua
 
 local Definitions = require("scripts/ui/hud/elements/wield_info/hud_element_wield_info_definitions")
-local WieldInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/wield_info_passives_templates")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local InputUtils = require("scripts/managers/input/input_utils")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local Action = require("scripts/utilities/action/action")
 local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
+local Text = require("scripts/utilities/ui/text")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local WieldInfoPassivesTemplates = require("scripts/ui/hud/elements/wield_info/wield_info_passives_templates")
 local HudElementWieldInfo = class("HudElementWieldInfo", "HudElementBase")
 
 HudElementWieldInfo.init = function (self, parent, draw_layer, start_scale)
@@ -61,14 +59,32 @@ HudElementWieldInfo._create_entry = function (self, input, optional_validation_f
 	local icon_width = input.icon_width or 0
 	local icon_height = input.icon_height or 0
 	local icon_color = input.icon_color
+	local text
 
-	if type(input_action) == "table" then
-		input_action = InputDevice.gamepad_active and input_action[2] or input_action[1]
+	if input_action then
+		if type(input_action) == "table" then
+			input_action = InputDevice.gamepad_active and input_action[2] or input_action[1]
+		end
+
+		local service_type = "Ingame"
+		local include_input_type = true
+
+		text = Text.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	else
+		text = Localize(description)
 	end
 
-	local service_type = "Ingame"
-	local include_input_type = true
-	local text = TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local text_color = input.text_color
+
+	if text_color then
+		text = Localize("loc_color_value_fomat_key", true, {
+			value = text,
+			r = text_color[2],
+			g = text_color[3],
+			b = text_color[4],
+		})
+	end
+
 	local widget_name = "input_widget_" .. self._widget_counter
 
 	self._widget_counter = self._widget_counter + 1

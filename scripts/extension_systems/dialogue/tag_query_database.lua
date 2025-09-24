@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/dialogue/tag_query_database.lua
 
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
+local RuleLoadingConditions = require("scripts/settings/dialogue/rule_loading_conditions")
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local TagQueryDatabase = class("TagQueryDatabase")
 
@@ -9,10 +10,12 @@ TagQueryDatabase.NUM_DATABASE_RULES = 4095
 TagQueryDatabase.init = function (self, dialogue_system)
 	self._database = RuleDatabase.initialize(TagQueryDatabase.NUM_DATABASE_RULES)
 	self._rule_id_mapping = {}
+	self._ids_by_rule_group = {}
 	self._rules_n = 0
 	self._contexts_by_object = {}
 	self._queries = {}
 	self._dialogue_system = dialogue_system
+	self._current_rule_group_forbidden_patterns = {}
 end
 
 TagQueryDatabase.destroy = function (self)
@@ -20,8 +23,10 @@ TagQueryDatabase.destroy = function (self)
 
 	self._database = nil
 	self._rule_id_mapping = nil
+	self._ids_by_rule_group = nil
 	self._contexts_by_object = nil
 	self._queries = nil
+	self._current_rule_group_forbidden_patterns = nil
 end
 
 TagQueryDatabase.add_object_context = function (self, object, context_name, context)
@@ -83,7 +88,159 @@ local context_indexes = table.mirror_array_inplace({
 	"faction_context",
 })
 
+TagQueryDatabase.voices_to_validate = function (self, rule_group_name)
+	local group_conditions = RuleLoadingConditions[rule_group_name]
+
+	if group_conditions and group_conditions.exclude_non_loaded_voices then
+		local voices = group_conditions and group_conditions.exclude_non_loaded_voices()
+		local num_voices = #voices
+
+		for i = 1, num_voices do
+			local voice = voices[i]
+
+			if not self._ids_by_rule_group[voice] then
+				table.remove(voices, i)
+			end
+		end
+
+		return voices
+	end
+end
+
+TagQueryDatabase.forbidden_rule_patterns = function (self, rule_group_name)
+	local group_conditions = RuleLoadingConditions[rule_group_name]
+
+	if not group_conditions then
+		return
+	end
+
+	local exclude_conditions = group_conditions.exclude_conditions
+	local forbidden_group_patterns
+
+	if exclude_conditions then
+		for condition, func in pairs(exclude_conditions) do
+			if func() then
+				forbidden_group_patterns = forbidden_group_patterns or {}
+
+				local forbidden_patterns = group_conditions[condition]
+
+				if forbidden_patterns then
+					table.append(forbidden_group_patterns, forbidden_patterns)
+				end
+			end
+		end
+
+		if forbidden_group_patterns then
+			table.sort(forbidden_group_patterns)
+		end
+	end
+
+	return forbidden_group_patterns
+end
+
+TagQueryDatabase.set_rule_group_conditions = function (self, rule_group_name)
+	local forbidden_group_patterns = self:forbidden_rule_patterns(rule_group_name)
+
+	if not forbidden_group_patterns then
+		self._current_rule_group_forbidden_patterns = {}
+	else
+		self._current_rule_group_forbidden_patterns = forbidden_group_patterns
+	end
+
+	local group_conditions = RuleLoadingConditions[rule_group_name]
+	local exclude_non_loaded_voices = group_conditions and group_conditions.exclude_non_loaded_voices
+
+	self._filter_rules_on_voices = exclude_non_loaded_voices and exclude_non_loaded_voices()
+end
+
+TagQueryDatabase.validate_rule_voice_requirement = function (self, rule_definition, in_game_voices)
+	local criterias = rule_definition.real_criterias or rule_definition.criterias
+	local num_criterias = #criterias
+	local valid_contexts = {
+		player_voice_profiles = true,
+		voice_template = true,
+	}
+	local valid_operators = {
+		SET_INCLUDES = true,
+		SET_INTERSECTS = true,
+	}
+
+	for i = 1, num_criterias do
+		local criteria = criterias[i]
+		local context = criteria[2]
+		local operator = criteria[3]
+
+		if valid_contexts[context] and valid_operators[operator] then
+			local num_voices = #in_game_voices
+			local voice_found = false
+
+			for ii = 1, num_voices do
+				local in_game_voice = in_game_voices[ii]
+				local criteria_voices = criteria.args
+				local num_criteria_voices = #criteria_voices
+
+				for iii = 1, num_criteria_voices do
+					local criteria_voice = criteria_voices[iii]
+
+					if criteria_voice == in_game_voice then
+						voice_found = true
+					end
+				end
+			end
+
+			if not voice_found then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
+TagQueryDatabase.validate_rule = function (self, rule_definition)
+	local rule_name = rule_definition.name
+
+	if self._rule_id_mapping[rule_name] then
+		return false
+	end
+
+	local forbidden_patterns = self._current_rule_group_forbidden_patterns
+	local num_forbidden_patterns = #forbidden_patterns
+
+	for i = 1, num_forbidden_patterns do
+		local forbidden_pattern = forbidden_patterns[i]
+
+		if string.find(rule_name, forbidden_pattern) then
+			return false
+		end
+	end
+
+	if self._filter_rules_on_voices then
+		local has_voice = self:validate_rule_voice_requirement(rule_definition, self._filter_rules_on_voices)
+
+		if not has_voice then
+			local rule_pattern = string.sub(rule_name, 1, -3)
+
+			self._current_rule_group_forbidden_patterns[#self._current_rule_group_forbidden_patterns + 1] = rule_pattern
+
+			return false
+		end
+	end
+
+	return true
+end
+
 TagQueryDatabase.define_rule = function (self, rule_definition)
+	local rule_allowed = self:validate_rule(rule_definition)
+
+	if not rule_allowed then
+		if DevParameters.dialogue_enable_loading_logs and not self._rule_id_mapping[rule_definition.name] then
+			Log.info("DialogueSystemDebug", "%q is not allowed to load", rule_definition.name)
+		end
+
+		return
+	end
+
 	local dialogue_name = rule_definition.name
 	local criterias = rule_definition.criterias
 	local real_criterias = table.clone(criterias)
@@ -142,10 +299,18 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 		self._rule_id_mapping[rule_id] = rule_definition
 		self._rule_id_mapping[rule_definition.name] = rule_id
 		self._rules_n = self._rules_n + 1
+
+		local rule_group = rule_definition.database
+
+		self._ids_by_rule_group[rule_group] = self._ids_by_rule_group[rule_group] or {}
+
+		local group_ids = self._ids_by_rule_group[rule_group]
+
+		group_ids[#group_ids + 1] = rule_id
 	end
 end
 
-TagQueryDatabase.remove_rule = function (self, rule_name)
+TagQueryDatabase.remove_rule = function (self, rule_name, rule_group_name)
 	local rule_id = self._rule_id_mapping[rule_name]
 
 	if rule_id then
@@ -153,12 +318,37 @@ TagQueryDatabase.remove_rule = function (self, rule_name)
 		self._rule_id_mapping[rule_name] = nil
 		self._rules_n = self._rules_n - 1
 
+		local rule_group_ids = self._ids_by_rule_group[rule_group_name]
+		local num_rule_group_ids = #rule_group_ids
+
+		for i = 1, num_rule_group_ids do
+			local id = rule_group_ids[i]
+
+			if id == rule_id then
+				table.remove(rule_group_ids, i)
+
+				break
+			end
+		end
+
+		if #rule_group_ids == 0 then
+			self._ids_by_rule_group[rule_group_name] = nil
+		end
+
 		RuleDatabase.remove_rule(self._database, rule_id)
 	end
 end
 
 TagQueryDatabase.num_rules = function (self)
 	return self._rules_n
+end
+
+TagQueryDatabase.ids_by_rule_group = function (self, rule_group)
+	return self._ids_by_rule_group[rule_group]
+end
+
+TagQueryDatabase.rule_id_mapping = function (self)
+	return self._rule_id_mapping
 end
 
 local best_queries = Script.new_array(8)

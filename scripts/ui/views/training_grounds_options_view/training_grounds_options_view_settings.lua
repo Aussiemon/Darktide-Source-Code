@@ -27,6 +27,10 @@ local training_grounds_options_view_settings = {
 	panel_size = {
 		default = {
 			720,
+			690,
+		},
+		large = {
+			720,
 			860,
 		},
 		small = {

@@ -76,6 +76,10 @@ ProjectileLocomotion.check_collision = function (hit_unit, hit_position, integra
 		return false
 	end
 
+	if hit_unit == integration_data.projectile_unit then
+		return false
+	end
+
 	return true
 end
 

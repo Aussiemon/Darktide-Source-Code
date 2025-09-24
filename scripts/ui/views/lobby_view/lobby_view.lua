@@ -188,9 +188,15 @@ LobbyView._setup_havoc_info = function (self)
 end
 
 LobbyView.select_target_level = function (self)
-	local level_name
+	local level_name = "default"
 
-	level_name = self._havoc_data and "havoc" or self._mission_data and self._mission_data.mission_name == "psykhanium" and "horde" or "default"
+	if self._havoc_data then
+		level_name = "havoc"
+	end
+
+	if self._mission_data and self._mission_data.mission_name == "psykhanium" then
+		level_name = "horde"
+	end
 
 	local level = LobbyViewSettings.levels_by_id[level_name] or LobbyViewSettings.levels_by_id.default
 	local level_packages = {

@@ -2,6 +2,7 @@
 
 local Component = require("scripts/utilities/component")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
+local PropDifficultySettings = require("scripts/settings/difficulty/prop_difficulty_settings")
 local PropHealthExtension = class("PropHealthExtension")
 
 PropHealthExtension.UPDATE_DISABLED_BY_DEFAULT = true
@@ -25,21 +26,13 @@ PropHealthExtension.init = function (self, extension_init_context, unit, extensi
 	self._speed_on_hit = 0
 end
 
-local HEALTH_DIFFICULTY_SCALING = {
-	0.4,
-	0.6,
-	0.75,
-	1,
-	1,
-}
-
 PropHealthExtension.setup_from_component = function (self, create_health_game_object, health, difficulty_scaling, invulnerable, unkillable, regenerate_health, breed_white_list, ignored_collider_actor_names, speed_on_hit)
 	if not self._is_server then
 		return
 	end
 
 	if difficulty_scaling then
-		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(HEALTH_DIFFICULTY_SCALING)
+		local health_scale = Managers.state.difficulty:get_table_entry_by_challenge(PropDifficultySettings.health_scaling)
 
 		health = health * health_scale
 	end

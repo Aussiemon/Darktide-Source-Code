@@ -5,6 +5,7 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local player_package_aliases = {
 	"sound_dependencies",
 	"particle_dependencies",
+	"decal_dependencies",
 	"base_units",
 }
 

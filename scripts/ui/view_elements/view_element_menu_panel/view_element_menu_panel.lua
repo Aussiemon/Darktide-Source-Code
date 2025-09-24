@@ -42,6 +42,15 @@ ViewElementMenuPanel.init = function (self, parent, draw_layer, start_scale, def
 	self._selected_index = nil
 	self._is_handling_navigation_input = false
 	self._content = {}
+	self._input_disabled = false
+end
+
+ViewElementMenuPanel.input_disabled = function (self)
+	return self._input_disabled
+end
+
+ViewElementMenuPanel.disable_input = function (self, disabled)
+	self._input_disabled = disabled
 end
 
 ViewElementMenuPanel.is_handling_navigation_input = function (self)
@@ -58,9 +67,8 @@ ViewElementMenuPanel._on_navigation_input_changed = function (self)
 	self:_update_input_texts()
 end
 
-ViewElementMenuPanel.set_selected_panel_index = function (self, index)
+ViewElementMenuPanel.set_selected_panel_index = function (self, index, allow_callback)
 	local widgets = self._content_widgets
-	local focus_widget
 
 	for j = 1, #widgets do
 		local widget = widgets[j]
@@ -68,14 +76,21 @@ ViewElementMenuPanel.set_selected_panel_index = function (self, index)
 		local is_selected = index == j
 
 		content.hotspot.is_selected = is_selected
-		focus_widget = is_selected and widget or focus_widget
 	end
+
+	local focus_widget = widgets[index]
 
 	if self._selected_index == nil and focus_widget then
 		local hotspot = focus_widget.content.hotspot
 
 		hotspot.anim_select_progress = 1
 		hotspot._is_selected = true
+	end
+
+	local callback = self._content[index] and self._content[index].callback
+
+	if allow_callback and callback then
+		callback()
 	end
 
 	self._selected_index = index
@@ -202,6 +217,10 @@ ViewElementMenuPanel._setup_grid = function (self, widgets, alignment_list)
 end
 
 ViewElementMenuPanel._on_entry_pressed_cb = function (self, widget, entry)
+	if self._input_disabled then
+		return
+	end
+
 	local current_index = self._selected_index
 
 	if not current_index then
@@ -233,6 +252,10 @@ ViewElementMenuPanel.on_resolution_modified = function (self, scale)
 end
 
 ViewElementMenuPanel.update = function (self, dt, t, input_service)
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
+
 	local content_widgets = self._content_widgets
 
 	if content_widgets then
@@ -277,6 +300,10 @@ end
 
 ViewElementMenuPanel._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	ViewElementMenuPanel.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+
+	if self._input_disabled then
+		input_service = input_service:null_service()
+	end
 
 	if self._grid_length then
 		local content_widgets = self._content_widgets

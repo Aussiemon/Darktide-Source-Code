@@ -86,13 +86,13 @@ ScriptedScenarioSystem.destroy = function (self)
 		self._scenario_bots[local_bot_id] = nil
 	end
 
-	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
-
-	self._nav_tag_cost_table = nil
-
 	GwNavTraverseLogic.destroy(self._traverse_logic)
 
 	self._traverse_logic = nil
+
+	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
+
+	self._nav_tag_cost_table = nil
 
 	if self._scenario_handler then
 		self._scenario_handler:destroy()

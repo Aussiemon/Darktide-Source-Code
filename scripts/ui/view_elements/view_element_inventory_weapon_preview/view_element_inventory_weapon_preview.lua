@@ -428,6 +428,7 @@ ViewElementInventoryWeaponPreview.draw = function (self, dt, t, ui_renderer, ren
 	end
 
 	render_settings.alpha_multiplier = previous_alpha_multiplier
+	render_settings.start_layer = previous_layer
 end
 
 ViewElementInventoryWeaponPreview.update = function (self, dt, t, input_service)

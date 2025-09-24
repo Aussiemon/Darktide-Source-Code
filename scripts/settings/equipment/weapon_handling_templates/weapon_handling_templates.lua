@@ -500,14 +500,14 @@ local weapon_handling_templates = {
 	},
 	autogun_triple_burst = {
 		fire_rate = {
-			auto_fire_time = 0.125,
+			auto_fire_time = 0.1,
 			fire_time = 0,
 			max_shots = 3,
 		},
 	},
 	autogun_quad_burst = {
 		fire_rate = {
-			auto_fire_time = 0.085,
+			auto_fire_time = 0.08,
 			fire_time = 0,
 			max_shots = 2,
 		},

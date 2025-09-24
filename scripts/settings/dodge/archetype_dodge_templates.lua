@@ -1,41 +1,41 @@
 ﻿-- chunkname: @scripts/settings/dodge/archetype_dodge_templates.lua
 
 local archetype_dodge_templates = {}
-local distance = 2.5
-local time = 0.4
-local average_speed = distance / time
-local speed_curve = {
+local default_distance = 2.5
+local default_time = 0.4
+local default_average_speed = default_distance / default_time
+local default_speed_curve = {
 	{
-		time_in_dodge = time * 0,
-		speed = average_speed * 1.5,
+		time_in_dodge = default_time * 0,
+		speed = default_average_speed * 1.5,
 	},
 	{
-		time_in_dodge = time * 0.2,
-		speed = average_speed * 1.5,
+		time_in_dodge = default_time * 0.2,
+		speed = default_average_speed * 1.5,
 	},
 	{
-		time_in_dodge = time * 0.25,
-		speed = average_speed * 1.25,
+		time_in_dodge = default_time * 0.25,
+		speed = default_average_speed * 1.25,
 	},
 	{
-		time_in_dodge = time * 0.4,
-		speed = average_speed * 1,
+		time_in_dodge = default_time * 0.4,
+		speed = default_average_speed * 1,
 	},
 	{
-		time_in_dodge = time * 0.7,
-		speed = average_speed * 1,
+		time_in_dodge = default_time * 0.7,
+		speed = default_average_speed * 1,
 	},
 	{
-		time_in_dodge = time * 0.85,
-		speed = average_speed * 0.75,
+		time_in_dodge = default_time * 0.85,
+		speed = default_average_speed * 0.75,
 	},
 	{
-		time_in_dodge = time * 0.9,
-		speed = average_speed * 0.55,
+		time_in_dodge = default_time * 0.9,
+		speed = default_average_speed * 0.55,
 	},
 	{
-		time_in_dodge = time * 1,
-		speed = average_speed * 0.5,
+		time_in_dodge = default_time * 1,
+		speed = default_average_speed * 0.5,
 	},
 }
 local zealot_distance = 2.75
@@ -121,7 +121,7 @@ archetype_dodge_templates.default = {
 	dodge_linger_time = 0.25,
 	minimum_dodge_input = 0.25,
 	stop_threshold = 0.25,
-	dodge_speed_at_times = speed_curve,
+	dodge_speed_at_times = default_speed_curve,
 }
 archetype_dodge_templates.zealot = {
 	base_distance = 2.5,
@@ -141,7 +141,7 @@ archetype_dodge_templates.psyker = {
 	dodge_linger_time = 0.2,
 	minimum_dodge_input = 0.25,
 	stop_threshold = 0.25,
-	dodge_speed_at_times = speed_curve,
+	dodge_speed_at_times = default_speed_curve,
 }
 archetype_dodge_templates.ogryn = {
 	base_distance = 3,
@@ -161,7 +161,7 @@ archetype_dodge_templates.adamant = {
 	dodge_linger_time = 0.2,
 	minimum_dodge_input = 0.25,
 	stop_threshold = 0.25,
-	dodge_speed_at_times = speed_curve,
+	dodge_speed_at_times = default_speed_curve,
 }
 
 return settings("ArchetypeDodgeTemplates", archetype_dodge_templates)

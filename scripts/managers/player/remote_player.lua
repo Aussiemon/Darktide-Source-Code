@@ -99,11 +99,15 @@ RemotePlayer.account_id = function (self)
 end
 
 RemotePlayer.character_id = function (self)
-	return self._profile.character_id
+	local profile = self._profile
+
+	return profile and profile.character_id
 end
 
 RemotePlayer.character_name = function (self)
-	return self._profile.name
+	local profile = self._profile
+
+	return profile and profile.name
 end
 
 RemotePlayer.is_human_controlled = function (self)
@@ -121,8 +125,10 @@ RemotePlayer.name = function (self)
 		end
 	end
 
-	if self._profile and self._profile.name then
-		return self._profile.name
+	local profile = self._profile
+
+	if profile and profile.name then
+		return profile.name
 	elseif HAS_STEAM and self._human_controlled then
 		local cached_name = self._cached_name
 
@@ -194,15 +200,20 @@ RemotePlayer.profile = function (self)
 end
 
 RemotePlayer.archetype_name = function (self)
-	return self._profile.archetype.name
+	local profile = self._profile
+
+	return profile and profile.archetype.name
 end
 
 RemotePlayer.breed_name = function (self)
-	return self._profile.archetype.breed
+	local profile = self._profile
+
+	return profile and profile.archetype.breed
 end
 
 RemotePlayer.companion_name = function (self)
-	local companion_data = self._profile.companion
+	local profile = self._profile
+	local companion_data = profile and profile.companion
 
 	return companion_data and companion_data.name or nil
 end

@@ -273,20 +273,6 @@ local views = {
 			UISoundEvents.character_create_exit,
 		},
 	},
-	debug_view = {
-		class = "DebugView",
-		disable_game_world = false,
-		display_name = "loc_debug_view_display_name",
-		game_world_blur = 1,
-		package = "packages/ui/views/debug_view/debug_view",
-		path = "scripts/ui/views/debug_view/debug_view",
-		enter_sound_events = {
-			UISoundEvents.default_menu_enter,
-		},
-		exit_sound_events = {
-			UISoundEvents.default_menu_exit,
-		},
-	},
 	splash_view = {
 		class = "SplashView",
 		display_name = "loc_splash_view_display_name",
@@ -631,27 +617,6 @@ local views = {
 			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
 		},
 	},
-	story_mission_background_view = {
-		class = "StoryMissionBackgroundView",
-		disable_game_world = true,
-		display_name = "loc_story_mission_background_view_display_name",
-		package = "packages/ui/views/story_mission_background_view/story_mission_background_view",
-		path = "scripts/ui/views/story_mission_background_view/story_mission_background_view",
-		state_bound = true,
-		use_transition_ui = true,
-		levels = {
-			"content/levels/ui/story_mission_background/story_mission_background",
-		},
-		enter_sound_events = {
-			UISoundEvents.story_mission_enter,
-		},
-		exit_sound_events = {
-			UISoundEvents.story_mission_exit,
-		},
-		wwise_states = {
-			options = WwiseGameSyncSettings.state_groups.options.story_mission_menu,
-		},
-	},
 	main_menu_background_view = {
 		class = "MainMenuBackgroundView",
 		disable_game_world = true,
@@ -817,8 +782,6 @@ _declare_view("mastery_view", require("scripts/ui/views/mastery_view/mastery_vie
 _declare_view("inventory_weapon_marks_view", require("scripts/ui/views/inventory_weapon_marks_view/inventory_weapon_marks_view_declaration_settings"))
 _declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_declaration_settings"))
 _declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
-_declare_view("story_mission_lore_view", require("scripts/ui/views/story_mission_lore_view/story_mission_lore_view_declaration_settings"))
-_declare_view("story_mission_play_view", require("scripts/ui/views/story_mission_play_view/story_mission_play_view_declaration_settings"))
 _declare_view("havoc_background_view", require("scripts/ui/views/havoc_background_view/havoc_background_view_declaration_settings"))
 _declare_view("havoc_play_view", require("scripts/ui/views/havoc_play_view/havoc_play_view_declaration_settings"))
 _declare_view("havoc_reward_presentation_view", require("scripts/ui/views/havoc_reward_presentation_view/havoc_reward_presentation_view_declaration_settings"))
@@ -827,6 +790,7 @@ _declare_view("penance_overview_view", require("scripts/ui/views/penance_overvie
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))
+_declare_view("player_survey_view", require("scripts/ui/views/player_survey_view/player_survey_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

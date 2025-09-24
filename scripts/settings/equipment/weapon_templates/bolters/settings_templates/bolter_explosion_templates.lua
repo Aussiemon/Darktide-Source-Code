@@ -61,6 +61,58 @@ explosion_templates.bolt_shell_stop = {
 		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_impact",
 	},
 }
+explosion_templates.bolt_shell_kill_m2 = {
+	close_radius = 1.8,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 1.2,
+	min_radius = 2,
+	radius = 5,
+	scalable_radius = false,
+	static_power_level = 500,
+	explosion_area_suppression = {
+		distance = 4,
+		suppression_value = 6,
+	},
+	close_damage_profile = DamageProfileTemplates.bolter_m2_kill_explosion,
+	close_damage_type = damage_types.boltshell,
+	damage_profile = DamageProfileTemplates.bolter_m2_kill_explosion,
+	damage_type = damage_types.boltshell,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	vfx = {
+		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact",
+	},
+}
+explosion_templates.bolt_shell_stop_m2 = {
+	close_radius = 1.8,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 1.2,
+	min_radius = 2,
+	radius = 5,
+	scalable_radius = false,
+	static_power_level = 500,
+	close_damage_profile = DamageProfileTemplates.bolter_m2_stop_explosion,
+	close_damage_type = damage_types.boltshell,
+	damage_profile = DamageProfileTemplates.bolter_m2_stop_explosion,
+	damage_type = damage_types.boltshell,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	explosion_area_suppression = {
+		distance = 4,
+		suppression_value = 6,
+	},
+	vfx = {
+		"content/fx/particles/weapons/rifles/bolter/bolter_m2_impact",
+	},
+}
 explosion_templates.boltpistol_shell_kill = {
 	close_radius = 0.75,
 	collision_filter = "filter_player_character_explosion",
@@ -142,6 +194,58 @@ explosion_templates.bolt_close_explosion = {
 explosion_templates.bolt_close_kill_explosion = table.clone(explosion_templates.bolt_close_explosion)
 explosion_templates.bolt_close_kill_explosion.close_damage_profile = DamageProfileTemplates.bolter_kill_explosion
 explosion_templates.bolt_close_kill_explosion.damage_profile = DamageProfileTemplates.bolter_kill_explosion
+explosion_templates.boltpistol_m2_shell_kill = {
+	close_radius = 1.75,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 1.2,
+	min_radius = 2,
+	radius = 5,
+	scalable_radius = false,
+	static_power_level = 500,
+	damage_profile = DamageProfileTemplates.boltpistol_m2_kill_explosion,
+	close_damage_profile = DamageProfileTemplates.boltpistol_m2_kill_explosion,
+	damage_type = damage_types.boltshell,
+	close_damage_type = damage_types.boltshell,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	vfx = {
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact",
+	},
+	explosion_area_suppression = {
+		distance = 4,
+		suppression_value = 6,
+	},
+}
+explosion_templates.boltpistol_m2_shell_stop = {
+	close_radius = 1.75,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 1.2,
+	min_radius = 2,
+	radius = 5,
+	scalable_radius = false,
+	static_power_level = 500,
+	close_damage_profile = DamageProfileTemplates.boltpistol_m2_stop_explosion,
+	close_damage_type = damage_types.boltshell,
+	damage_profile = DamageProfileTemplates.boltpistol_m2_stop_explosion,
+	damage_type = damage_types.boltshell,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	explosion_area_suppression = {
+		distance = 4,
+		suppression_value = 6,
+	},
+	vfx = {
+		"content/fx/particles/weapons/pistols/boltpistol/boltpistol_m2_impact",
+	},
+}
 
 return {
 	base_templates = explosion_templates,

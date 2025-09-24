@@ -515,6 +515,16 @@ local PUNCH = {
 		},
 	},
 }
+local SPECIAL_ACTION = {
+	"BtSelectorNode",
+	{
+		"BtUseStimAction",
+		name = "use_stim",
+		action_data = action_data.use_stim,
+	},
+	condition = "minion_can_use_special_action",
+	name = "use_special_action",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -581,6 +591,7 @@ local behavior_tree = {
 		name = "switch_weapon",
 		action_data = action_data.switch_weapon,
 	},
+	SPECIAL_ACTION,
 	{
 		"BtSelectorNode",
 		{
@@ -602,6 +613,18 @@ local behavior_tree = {
 		SHOTGUN,
 		condition = "is_aggroed",
 		name = "renegade_captain_combat",
+	},
+	{
+		"BtAlertedAction",
+		condition = "is_alerted",
+		name = "alerted",
+		action_data = action_data.alerted,
+	},
+	{
+		"BtPatrolAction",
+		condition = "should_patrol",
+		name = "patrol",
+		action_data = action_data.patrol,
 	},
 	{
 		"BtIdleAction",

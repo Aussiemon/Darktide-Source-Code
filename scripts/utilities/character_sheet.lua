@@ -2,7 +2,7 @@
 
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local CharacterSheet = {}
-local _fill_ability_blitz_or_aura, _add_modifier
+local _fill_combat_ability_or_grenade_ability_or_coherency, _add_modifier
 local TRASH_TABLE = {}
 local PASSIVES_BEST_IDENTIFIER = {}
 local COHERENCY_BEST_IDENTIFIER = {}
@@ -54,7 +54,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	local nodes = talent_layout.nodes
 	local selected_nodes = optional_selected_nodes or profile.selected_nodes
 	local combat_ability, grenade_ability
-	local found_base_ability, found_base_blitz, found_base_aura = false, false, false
+	local found_base_combat_ability, found_base_grenade_ability, found_base_coherency_talent = false, false, false
 	local base_talents = archetype.base_talents
 
 	for talent_name, selected_points in pairs(base_talents) do
@@ -64,32 +64,32 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 			local player_ability = talent.player_ability
 
 			if player_ability and player_ability.ability_type == "combat_ability" then
-				if found_base_ability then
+				if found_base_combat_ability then
 					Log.error("CharacterSheet", "Found multiple combat abilities in base_talents, one will be chosen at random.")
 				else
-					found_base_ability = true
+					found_base_combat_ability = true
 
-					_fill_ability_blitz_or_aura(ability, talent, talent.large_icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(ability, talent, talent.large_icon)
 
 					combat_ability = player_ability.ability
 				end
 			elseif player_ability and player_ability.ability_type == "grenade_ability" then
-				if found_base_blitz then
+				if found_base_grenade_ability then
 					Log.error("CharacterSheet", "Found multiple grenade abilities in base_talents, one will be chosen at random.")
 				else
-					found_base_blitz = true
+					found_base_grenade_ability = true
 
-					_fill_ability_blitz_or_aura(blitz, talent, talent.icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, talent.icon)
 
 					grenade_ability = player_ability.ability
 				end
 			elseif talent.coherency then
-				if found_base_aura then
+				if found_base_coherency_talent then
 					Log.error("CharacterSheet", "Found multiple talents with coherency in base_talents, one will be chosen as aura at random.")
 				else
-					found_base_aura = true
+					found_base_coherency_talent = true
 
-					_fill_ability_blitz_or_aura(aura, talent, talent.icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(aura, talent, talent.icon)
 				end
 			elseif iconics then
 				iconics[#iconics + 1] = talent
@@ -183,7 +183,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	if not force_base_talents then
 		local combat_ability_step_count = -1
 		local grenade_ability_step_count = -1
-		local found_ability, found_blitz, found_aura = false, false, false
+		local found_combat_ability, found_grenade_ability, found_coherency_talent = false, false, false
 		local num_nodes = #nodes
 
 		for ii = 1, num_nodes do
@@ -199,28 +199,28 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 					local found, step_count = NodeLayout.num_steps_to_start_recursive(talent_layout, node)
 
 					if node_type == "ability" then
-						if found_ability then
+						if found_combat_ability then
 							Log.error("CharacterSheet", "Found multiple selected combat abilities in selected_nodes.")
 						else
-							found_ability = true
+							found_combat_ability = true
 
-							_fill_ability_blitz_or_aura(ability, talent, node.icon)
+							_fill_combat_ability_or_grenade_ability_or_coherency(ability, talent, node.icon)
 						end
 					elseif node_type == "tactical" then
-						if found_blitz then
+						if found_grenade_ability then
 							Log.error("CharacterSheet", "Found multiple selected blitz in selected_nodes.")
 						else
-							found_blitz = true
+							found_grenade_ability = true
 
-							_fill_ability_blitz_or_aura(blitz, talent, node.icon)
+							_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, node.icon)
 						end
 					elseif node_type == "aura" then
-						if found_aura then
+						if found_coherency_talent then
 							Log.error("CharacterSheet", "Found multiple selected auras in selected_nodes.")
 						else
-							found_aura = true
+							found_coherency_talent = true
 
-							_fill_ability_blitz_or_aura(aura, talent, node.icon)
+							_fill_combat_ability_or_grenade_ability_or_coherency(aura, talent, node.icon)
 						end
 					end
 
@@ -335,7 +335,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 									_add_modifier(modifiers, "blitz", talent)
 								else
-									Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, grenade_ability.name, grenade_ability_step_count, step_count)
+									Log.error("CharacterSheet", "skipping grenade ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, grenade_ability.name, grenade_ability_step_count, step_count)
 								end
 							else
 								Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
@@ -352,7 +352,6 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 	if modifiers then
 		for talent_type, talents_data in pairs(modifiers) do
-			local table_looped = false
 			local current_index = 1
 
 			while current_index <= #talents_data do
@@ -403,7 +402,7 @@ CharacterSheet.convert_talents_to_node_layout = function (profile, selected_tale
 	return found_overrides and selected_nodes
 end
 
-function _fill_ability_blitz_or_aura(dest, talent, icon)
+function _fill_combat_ability_or_grenade_ability_or_coherency(dest, talent, icon)
 	dest.talent = talent
 	dest.icon = icon
 end

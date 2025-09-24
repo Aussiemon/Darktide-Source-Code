@@ -34,27 +34,6 @@ Blackboard.create = function (component_config)
 	return blackboard
 end
 
-Blackboard.validate = function (blackboard)
-	local component_config = blackboard.__config
-	local unit_alive = Unit.alive
-
-	for component_name, fields in pairs(component_config) do
-		local component = blackboard[component_name]
-
-		for field_name, field_type in pairs(fields) do
-			local value = component[field_name]
-
-			if field_type == "Vector3Box" then
-				-- Nothing
-			elseif field_type == "QuaternionBox" then
-				-- Nothing
-			elseif field_type == "Unit" then
-				-- Nothing
-			end
-		end
-	end
-end
-
 Blackboard.write_component = function (blackboard, component_name)
 	return blackboard[component_name]
 end

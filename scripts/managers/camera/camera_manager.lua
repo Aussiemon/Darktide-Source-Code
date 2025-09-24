@@ -300,6 +300,16 @@ CameraManager.shading_callback = function (self, world, shading_env, viewport, d
 			ShadingEnvironment.set_scalar(shading_env, "exposure_snap", 1)
 		end
 
+		if self._is_teleporting then
+			local fog_settings = ShadingEnvironment.vector3(shading_env, "fog0_settings")
+
+			ShadingEnvironment.set_vector3(shading_env, "fog0_settings", Vector3(0, fog_settings.y, fog_settings.z))
+
+			fog_settings = ShadingEnvironment.vector3(shading_env, "fog1_settings")
+
+			ShadingEnvironment.set_vector3(shading_env, "fog1_settings", Vector3(0, fog_settings.y, fog_settings.z))
+		end
+
 		for interaction_type, interaction_settings in pairs(WorldInteractionSettings) do
 			ShadingEnvironment.set_scalar(shading_env, interaction_settings.shading_env_variable, math.clamp(interaction_settings.window_size, 1, 100))
 		end

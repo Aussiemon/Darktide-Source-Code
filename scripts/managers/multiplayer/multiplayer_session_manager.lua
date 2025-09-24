@@ -226,6 +226,7 @@ MultiplayerSessionManager._get_loaders = function (self)
 		"scripts/loading/loaders/hud_loader",
 		"scripts/loading/loaders/level_loader",
 		"scripts/loading/loaders/view_loader",
+		"scripts/loading/loaders/game_mode_loader",
 	}
 
 	for i = 1, #loader_paths do

@@ -4,6 +4,7 @@ local AchievementWeaponGroups = require("scripts/settings/achievements/achieveme
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breeds = require("scripts/settings/breed/breeds")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MechanicusEventWeapons = require("scripts/settings/live_event/mechanicus_event_weapons")
 local MissionBuffsAllowed = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
@@ -12,7 +13,6 @@ local MissionTypes = require("scripts/settings/mission/mission_types")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local StatFlags = require("scripts/managers/stats/stat_flags")
 local StatMacros = require("scripts/managers/stats/stat_macros")
-local StatsCircumstanceUtil = require("scripts/managers/stats/utility/stats_circumstance_util")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
@@ -114,7 +114,8 @@ end)))
 local function is_weakspot_hit(attack_data)
 	local breed = Breeds[attack_data.target_breed_name]
 	local hit_zone_name = attack_data.hit_zone_name
-	local is_weak_spot_hit = Weakspot.hit_weakspot(breed, hit_zone_name)
+	local attacking_unit = attack_data.attacking_unit
+	local is_weak_spot_hit = Weakspot.hit_weakspot(breed, hit_zone_name, attacking_unit)
 
 	return is_weak_spot_hit
 end
@@ -1246,7 +1247,7 @@ do
 
 		StatDefinitions[seen_id] = {
 			flags = {
-				StatFlags,
+				StatFlags.team,
 			},
 			data = {
 				material = material,
@@ -1523,11 +1524,9 @@ do
 			},
 		},
 		include_condition = function (self, config)
-			local circumstance_name = config.circumstance_name
-			local hidden_circumstance_name = circumstance_name == "player_journey_010"
-			local eligible_circumstance_name = circumstance_name ~= nil and circumstance_name ~= "default" and not hidden_circumstance_name
+			local circumstance = CircumstanceTemplates[config.circumstance_name]
 
-			return eligible_circumstance_name
+			return circumstance and not circumstance.is_default
 		end,
 	}
 	StatDefinitions.mission_twins = {
@@ -1774,8 +1773,9 @@ do
 
 		local function has_correct_mutator(self, config)
 			local circumstance_name = config.circumstance_name
+			local circumstance_mutators = CircumstanceTemplates[circumstance_name] and CircumstanceTemplates[circumstance_name].mutators
 
-			return circumstance_name ~= "default" and table.array_contains(StatsCircumstanceUtil[circumstance_name], self.data.mutator)
+			return circumstance_mutators and table.array_contains(circumstance_mutators, self.data.mutator)
 		end
 
 		for _, entry in ipairs(circumstance_entries) do
@@ -2141,11 +2141,6 @@ do
 			},
 		},
 	}
-	StatDefinitions.hook_havoc_win_assisted = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
 	StatDefinitions.havoc_weekly_rewards_received = {
 		flags = {
 			StatFlags.backend,
@@ -2176,19 +2171,11 @@ do
 		triggers = {
 			{
 				id = "mission_won",
-				trigger = function (self, stat_data)
-					local user = Managers.stats:get_next_user()
-					local config = Managers.stats:get_stats_config()
-					local assisting_player = user.account_id ~= config.havoc_order_owner
-
-					if assisting_player then
-						return increment(self, stat_data)
-					end
-				end,
+				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = function (self, config)
-			return config.is_havoc
+			return config.is_havoc and config.havoc_order_owner ~= config.account_id
 		end,
 	}
 
@@ -2205,8 +2192,8 @@ do
 
 	for i = 1, #havoc_rank_thresholds do
 		local required_rank = havoc_rank_thresholds[i]
+		local stat_name = string.format("havoc_rank_reached_0%s", i)
 
-		stat_name = string.format("havoc_rank_reached_0%s", i)
 		StatDefinitions[stat_name] = {
 			flags = {},
 			data = {
@@ -2357,6 +2344,11 @@ StatDefinitions.total_melee_toughness_regen = {
 		},
 	},
 }
+
+local valid_poxhound_Breeds = {
+	chaos_hound = true,
+}
+
 StatDefinitions.poxhound_pushed_mid_air = {
 	flags = {
 		StatFlags.backend,
@@ -2378,7 +2370,7 @@ StatDefinitions.poxhound_pushed_mid_air = {
 					return
 				end
 
-				if breed_name == "chaos_hound" and action == "leap" and attack_type == "push" then
+				if valid_poxhound_Breeds[breed_name] and action == "leap" and attack_type == "push" then
 					return increment(self, stat_data)
 				end
 			end,
@@ -2757,6 +2749,11 @@ StatDefinitions.hook_team_chest_opened = {
 		StatFlags.team,
 	},
 }
+StatDefinitions.hook_health_station_interaccion_success = {
+	flags = {
+		StatFlags.hook,
+	},
+}
 StatDefinitions.hook_objective_side_incremented_progression = {
 	flags = {
 		StatFlags.hook,
@@ -2797,15 +2794,19 @@ do
 	local vo_stats = {
 		{
 			name = "hook_backstory_morrow_part_",
-			num_parts = 9,
+			num_parts = 11,
 		},
 		{
 			name = "hook_backstory_zola_part_",
-			num_parts = 7,
+			num_parts = 9,
 		},
 		{
 			name = "hook_backstory_brahms_part_",
 			num_parts = 10,
+		},
+		{
+			name = "hook_backstory_zorin_part_",
+			num_parts = 2,
 		},
 	}
 
@@ -3617,6 +3618,12 @@ do
 			name = "chaos_poxwalker_bomber",
 			breed_names = {
 				chaos_poxwalker_bomber = true,
+			},
+		},
+		{
+			name = "renegade_plasma_gunner",
+			breed_names = {
+				renegade_plasma_gunner = true,
 			},
 		},
 	}
@@ -6383,7 +6390,8 @@ do
 				trigger = function (self, stat_data, attack_data)
 					local attacking_unit = attack_data.attacking_unit
 					local target_blackboard = attack_data.target_blackboard
-					local is_in_pounced_state = target_blackboard and target_blackboard.disable.type == "pounced"
+					local has_disable_component = target_blackboard and Blackboard.has_component(target_blackboard, "disable")
+					local is_in_pounced_state = has_disable_component and target_blackboard.disable.type == "pounced" or false
 
 					if is_in_pounced_state then
 						local pouncing_unit = target_blackboard.disable.attacker_unit
@@ -6762,6 +6770,7 @@ do
 	local islands = {
 		"island_void",
 		"island_rooftops",
+		"island_machine",
 	}
 
 	for i = 1, #islands do
@@ -6828,6 +6837,39 @@ do
 		end,
 	}
 
+	local game_mode_survival_ammo_pickups_names_to_track = {
+		ammo_cache_deployable = true,
+		large_clip = true,
+		small_clip = true,
+	}
+
+	StatDefinitions.game_mode_survival_auric_session_ammo_pickups_and_health_station_uses = {
+		flags = {},
+		data = {},
+		triggers = {
+			{
+				id = "hook_picked_up_item",
+				trigger = function (self, stat_data, source_name)
+					if game_mode_survival_ammo_pickups_names_to_track[source_name] then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+			{
+				id = "hook_health_station_interaccion_success",
+				trigger = function (self, stat_data)
+					return increment(self, stat_data)
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			local game_mode_name = config.game_mode_name
+			local correct_difficulty = config.is_auric_mission
+
+			return game_mode_name == "survival" and correct_difficulty
+		end,
+	}
+
 	local survival_classes = MissionBuffsAllowed.available_family_builds
 
 	for i = 1, #survival_classes do
@@ -6862,15 +6904,19 @@ do
 	local vo_stats = {
 		{
 			name = "backstory_morrow_part_",
-			num_parts = 9,
+			num_parts = 11,
 		},
 		{
 			name = "backstory_zola_part_",
-			num_parts = 7,
+			num_parts = 9,
 		},
 		{
 			name = "backstory_brahms_part_",
 			num_parts = 10,
+		},
+		{
+			name = "backstory_zorin_part_",
+			num_parts = 2,
 		},
 	}
 
@@ -7207,6 +7253,34 @@ StatDefinitions.barrel_grounds_mission_won = {
 	triggers = {
 		{
 			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+StatDefinitions.plasma_smugglers_captain_kills = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			plasma_smugglers_darkness = true,
+			plasma_smugglers_default = true,
+			plasma_smugglers_hunting_grounds = true,
+			plasma_smugglers_increased_resistance = true,
+			plasma_smugglers_toxic_gas = true,
+			plasma_smugglers_ventilation = true,
+			plasma_smugglers_waves_of_specials = true,
+		},
+	},
+	triggers = {
+		{
+			id = "renegade_captain_killed",
 			trigger = StatMacros.increment,
 		},
 	},

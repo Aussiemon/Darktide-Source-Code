@@ -17,8 +17,8 @@ Crosshair.position = function (dt, t, ui_hud, ui_renderer, current_x, current_y,
 
 	if weapon_extension and player_camera then
 		local unit_data_extension = player_extensions.unit_data
-		local first_person_extention = player_extensions.first_person
-		local first_person_unit = first_person_extention:first_person_unit()
+		local first_person_extension = player_extensions.first_person
+		local first_person_unit = first_person_extension:first_person_unit()
 		local shoot_rotation = Unit.world_rotation(first_person_unit, 1)
 		local shoot_position = Unit.world_position(first_person_unit, 1)
 		local recoil_template = weapon_extension:recoil_template()

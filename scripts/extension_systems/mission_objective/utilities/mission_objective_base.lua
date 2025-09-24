@@ -9,6 +9,7 @@ local OBJECTIVE_EVENT_TYPES = table.enum("None", "mid_event", "end_event")
 
 MissionObjectiveBase.init = function (self)
 	self._name = nil
+	self._group_id = 0
 	self._objective_type = nil
 	self._is_updated_externally = false
 	self._order_of_activation = 0
@@ -58,8 +59,9 @@ MissionObjectiveBase.destroy = function (self)
 	return
 end
 
-MissionObjectiveBase.start_objective = function (self, mission_objective_data, registered_units, synchronizer_unit)
+MissionObjectiveBase.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
 	self._name = mission_objective_data.name
+	self._group_id = group_id or 0
 	self._objective_type = mission_objective_data.mission_objective_type
 	self._order_of_activation = last_activation_order
 	last_activation_order = last_activation_order + 1
@@ -162,7 +164,7 @@ MissionObjectiveBase.stage_done = function (self)
 
 			local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-			mission_objective_system:start_mission_objective_stage(self._name, self._stage)
+			mission_objective_system:start_mission_objective_stage(self._name, self._group_id, self._stage)
 		else
 			if self._music_wwise_state ~= WWISE_MUSIC_STATE_NONE then
 				self._mission_objective_system:sound_event(MissionSoundEvents.objective_finished)
@@ -380,6 +382,10 @@ end
 
 MissionObjectiveBase.name = function (self)
 	return self._name
+end
+
+MissionObjectiveBase.group_id = function (self)
+	return self._group_id
 end
 
 MissionObjectiveBase.objective_type = function (self)

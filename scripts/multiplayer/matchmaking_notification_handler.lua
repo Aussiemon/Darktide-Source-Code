@@ -1,28 +1,13 @@
 ﻿-- chunkname: @scripts/multiplayer/matchmaking_notification_handler.lua
 
 local Danger = require("scripts/utilities/danger")
+local Havoc = require("scripts/utilities/havoc")
 local InputUtils = require("scripts/managers/input/input_utils")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
 local MatchmakingNotificationHandler = class("MatchmakingNotificationHandler")
 local INPUT_SERVICE_TYPE = "View"
 local CANCEL_INPUT_ALIAS = "cancel_matchmaking"
-
-local function _get_havoc_rank(mission_data)
-	local min_havoc_rank = 1
-	local max_havoc_rank = 100
-	local havoc_rank_string = "havoc-rank-"
-
-	for i = min_havoc_rank, max_havoc_rank do
-		if mission_data.mission.flags[havoc_rank_string .. tostring(i)] then
-			return i
-		end
-	end
-
-	Log.error("Matchmaking Notification Handler", "Unable to get havoc rank")
-
-	return nil
-end
 
 local function _get_quick_play_values(qp_code)
 	local danger_settings = Danger.danger_by_qp_code(qp_code)
@@ -41,7 +26,7 @@ end
 
 local function _get_havoc_values(mission_data)
 	local mission_name = _mission_name(mission_data)
-	local havoc_rank = _get_havoc_rank(mission_data)
+	local havoc_rank = Havoc.get_havoc_rank(mission_data.mission and mission_data.mission.flags)
 	local havoc_string = Localize("loc_havoc_order_info_overlay")
 
 	if havoc_rank then

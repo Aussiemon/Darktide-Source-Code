@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	chaos_poxwalker = {},
 }
-local basic_poxwalker_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_body = {
 			use_outline = true,
@@ -105,7 +105,7 @@ local basic_poxwalker_template = {
 				"content/items/characters/minions/decal_material_overrides/decal_transit_05",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/environment_overrides/dirt_02",
@@ -113,8 +113,8 @@ local basic_poxwalker_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_poxwalker_template)
-local default_2 = table.clone(basic_poxwalker_template)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(base_visual_loadout_template)
 
 default_2.gib_variations = {
 	"lowerbody_a",
@@ -145,7 +145,7 @@ default_2.slots.slot_upper_body = {
 	},
 }
 
-local default_3 = table.clone(basic_poxwalker_template)
+local default_3 = table.clone(base_visual_loadout_template)
 
 default_3.gib_variations = {
 	"lowerbody_a",
@@ -188,7 +188,7 @@ default_3.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_4 = table.clone(basic_poxwalker_template)
+local default_4 = table.clone(base_visual_loadout_template)
 
 default_4.gib_variations = {
 	"lowerbody_a",
@@ -229,7 +229,7 @@ default_4.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_5 = table.clone(basic_poxwalker_template)
+local default_5 = table.clone(base_visual_loadout_template)
 
 default_5.gib_variations = {
 	"lowerbody_a",
@@ -270,7 +270,7 @@ default_5.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_6 = table.clone(basic_poxwalker_template)
+local default_6 = table.clone(base_visual_loadout_template)
 
 default_6.gib_variations = {
 	"lowerbody_a",
@@ -296,7 +296,7 @@ default_6.slots.slot_upper_body = {
 	},
 }
 
-local default_7 = table.clone(basic_poxwalker_template)
+local default_7 = table.clone(base_visual_loadout_template)
 
 default_7.gib_variations = {
 	"lowerbody_a",
@@ -339,7 +339,7 @@ default_7.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_8 = table.clone(basic_poxwalker_template)
+local default_8 = table.clone(base_visual_loadout_template)
 
 default_8.gib_variations = {
 	"lowerbody_a",
@@ -382,7 +382,7 @@ default_8.slots.slot_upperbody_decal = {
 	},
 }
 
-local default_9 = table.clone(basic_poxwalker_template)
+local default_9 = table.clone(base_visual_loadout_template)
 
 default_9.gib_variations = {
 	"lowerbody_a",
@@ -459,7 +459,7 @@ foundry_1.slots.slot_lower_body = {
 		"content/items/characters/minions/chaos_poxwalker/attachments_gear/lowerbody_a_var_foundry_04",
 	},
 }
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -493,7 +493,7 @@ foundry_2.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_04",
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_05",
 }
-foundry_2.slots.envrionmental_override.items = {
+foundry_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -515,7 +515,7 @@ foundry_3.slots.slot_upper_body = {
 		"content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_b_var_foundry_04",
 	},
 }
-foundry_3.slots.envrionmental_override.items = {
+foundry_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 
@@ -549,7 +549,7 @@ foundry_4.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_04",
 	"content/items/characters/minions/decal_material_overrides/decal_foundry_05",
 }
-foundry_4.slots.envrionmental_override.items = {
+foundry_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_01",
 }
 templates.chaos_poxwalker[zone_ids.tank_foundry] = {
@@ -579,7 +579,7 @@ dust_1.slots.slot_upper_body = {
 		"content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_c_var_dust_05",
 	},
 }
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -616,7 +616,7 @@ dust_2.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
 	"content/items/characters/minions/decal_material_overrides/decal_dust_05",
 }
-dust_2.slots.envrionmental_override.items = {
+dust_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -653,7 +653,7 @@ dust_3.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
 	"content/items/characters/minions/decal_material_overrides/decal_dust_05",
 }
-dust_3.slots.envrionmental_override.items = {
+dust_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 
@@ -690,7 +690,7 @@ dust_4.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_dust_04",
 	"content/items/characters/minions/decal_material_overrides/decal_dust_05",
 }
-dust_4.slots.envrionmental_override.items = {
+dust_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_01",
 }
 templates.chaos_poxwalker[zone_ids.dust] = {
@@ -726,7 +726,7 @@ watertown_1.slots.slot_upper_body = {
 		"content/items/characters/minions/chaos_poxwalker/attachments_gear/upperbody_c_var_wt_06",
 	},
 }
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -771,7 +771,7 @@ watertown_2.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_2.slots.envrionmental_override.items = {
+watertown_2.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -816,7 +816,7 @@ watertown_3.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_3.slots.envrionmental_override.items = {
+watertown_3.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 
@@ -860,7 +860,7 @@ watertown_4.slots.zone_decal.items = {
 	"content/items/characters/minions/decal_material_overrides/decal_wt_04",
 	"content/items/characters/minions/decal_material_overrides/decal_wt_05",
 }
-watertown_4.slots.envrionmental_override.items = {
+watertown_4.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_01",
 }
 templates.chaos_poxwalker[zone_ids.watertown] = {
@@ -870,8 +870,8 @@ templates.chaos_poxwalker[zone_ids.watertown] = {
 	watertown_4,
 }
 
-local throneside_1 = table.clone(basic_poxwalker_template)
-local throneside_2 = table.clone(basic_poxwalker_template)
+local throneside_1 = table.clone(base_visual_loadout_template)
+local throneside_2 = table.clone(base_visual_loadout_template)
 
 throneside_2.gib_variations = {
 	"lowerbody_a",
@@ -900,7 +900,7 @@ throneside_2.slots.slot_upper_body = {
 	},
 }
 
-local throneside_3 = table.clone(basic_poxwalker_template)
+local throneside_3 = table.clone(base_visual_loadout_template)
 
 throneside_3.gib_variations = {
 	"lowerbody_a",
@@ -934,7 +934,7 @@ throneside_3.slots.slot_upperbody_decal = {
 	},
 }
 
-local throneside_4 = table.clone(basic_poxwalker_template)
+local throneside_4 = table.clone(base_visual_loadout_template)
 
 throneside_4.gib_variations = {
 	"lowerbody_a",
@@ -973,7 +973,7 @@ throneside_4.slots.slot_upperbody_decal = {
 	},
 }
 
-local throneside_5 = table.clone(basic_poxwalker_template)
+local throneside_5 = table.clone(base_visual_loadout_template)
 
 throneside_5.gib_variations = {
 	"lowerbody_a",
@@ -1012,7 +1012,7 @@ throneside_5.slots.slot_upperbody_decal = {
 	},
 }
 
-local throneside_6 = table.clone(basic_poxwalker_template)
+local throneside_6 = table.clone(base_visual_loadout_template)
 
 throneside_6.gib_variations = {
 	"lowerbody_a",
@@ -1032,7 +1032,7 @@ throneside_6.slots.slot_upper_body = {
 	},
 }
 
-local throneside_7 = table.clone(basic_poxwalker_template)
+local throneside_7 = table.clone(base_visual_loadout_template)
 
 throneside_7.gib_variations = {
 	"lowerbody_a",
@@ -1073,7 +1073,7 @@ throneside_7.slots.slot_upperbody_decal = {
 	},
 }
 
-local throneside_8 = table.clone(basic_poxwalker_template)
+local throneside_8 = table.clone(base_visual_loadout_template)
 
 throneside_8.gib_variations = {
 	"lowerbody_a",
@@ -1114,7 +1114,7 @@ throneside_8.slots.slot_upperbody_decal = {
 	},
 }
 
-local throneside_9 = table.clone(basic_poxwalker_template)
+local throneside_9 = table.clone(base_visual_loadout_template)
 
 throneside_9.gib_variations = {
 	"lowerbody_a",
@@ -1141,5 +1141,31 @@ templates.chaos_poxwalker[zone_ids.throneside] = {
 	throneside_8,
 	throneside_9,
 }
+
+local void_variations = {}
+
+for _, tank_foundry_variation in pairs(templates.chaos_poxwalker[zone_ids.tank_foundry]) do
+	local void_variation = table.clone(tank_foundry_variation)
+
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
+
+templates.chaos_poxwalker[zone_ids.void] = void_variations
+
+local horde_variations = {}
+
+for _, tank_foundry_variation in pairs(templates.chaos_poxwalker[zone_ids.tank_foundry]) do
+	local horde_variation = table.clone(tank_foundry_variation)
+
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
+
+templates.chaos_poxwalker[zone_ids.horde] = horde_variations
 
 return templates

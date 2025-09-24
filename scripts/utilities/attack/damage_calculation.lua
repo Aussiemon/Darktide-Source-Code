@@ -1,10 +1,11 @@
 ﻿-- chunkname: @scripts/utilities/attack/damage_calculation.lua
 
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
-local Breed = require("scripts/utilities/breed")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
+local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local PowerLevel = require("scripts/utilities/attack/power_level")
@@ -12,6 +13,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_damage_modifier_to_damage_efficiency = AttackSettings.armor_damage_modifier_to_damage_efficiency
+local armor_types = ArmorSettings.types
 local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local melee_attack_strengths = AttackSettings.melee_attack_strength
@@ -21,16 +23,25 @@ local damage_types = DamageSettings.damage_types
 local far_range = DamageSettings.ranged_far
 local damage_output = PowerLevelSettings.damage_output
 local stagger_strength_output = PowerLevelSettings.stagger_strength_output
+local DAMAGE_TAKEN_BY_BREED_MULTIPLIER_BUFF_NAME_LUT = {}
+local DAMAGE_VS_BREED_MULTIPLIER_BUFF_NAME_LUT = {}
+
+for breed_name, breed_data in pairs(Breeds) do
+	DAMAGE_TAKEN_BY_BREED_MULTIPLIER_BUFF_NAME_LUT[breed_name] = string.format("damage_taken_by_%s_multiplier", breed_name)
+	DAMAGE_VS_BREED_MULTIPLIER_BUFF_NAME_LUT[breed_name] = string.format("damage_vs_%s", breed_name)
+end
+
+local HEALTHY_MIN_PERCENTAGE = 0.75
 local DamageCalculation = {}
-local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_damage, _base_boost_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_multiplier_from_breed, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_multiplier
+local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_damage, _base_boost_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_taken_by_breed_multiplier, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_multiplier
 local EMPTY_STAT_BUFFS = {}
 
-DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact, stagger_impact_bonus, attacking_unit_or_nil, attacker_owner_buff_extension)
+DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact, stagger_impact_bonus, attacking_unit_or_nil, attacking_unit_owner_unit_or_nil, attacker_owner_buff_extension)
 	attacker_stat_buffs = attacker_stat_buffs or EMPTY_STAT_BUFFS
 	target_stat_buffs = target_stat_buffs or EMPTY_STAT_BUFFS
 
 	local blackboard = BLACKBOARDS[target_unit]
-	local attacking_unit_blackboard_or_nil = attacking_unit_or_nil and BLACKBOARDS[attacking_unit_or_nil]
+	local attacking_unit_blackboard_or_nil = BLACKBOARDS[attacking_unit_or_nil]
 	local target_unit_health_extension = ScriptUnit.has_extension(target_unit, "health_system")
 
 	if target_settings.power_level_multiplier then
@@ -40,14 +51,14 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 		power_level = power_level * power_level_multiplier
 	end
 
-	local base_damage, base_buff_damage, attack_power_level = _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, hit_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, distance, auto_completed_action, blackboard, target_stagger_count, stagger_impact, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, target_unit_health_extension)
+	local base_damage, base_buff_damage, attack_power_level = _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, hit_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, target_stagger_count, stagger_impact, attacking_unit_or_nil, target_unit, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, target_unit_health_extension)
 	local is_target_staggered = num_triggered_staggers > 0 or target_buff_extension and target_buff_extension:has_keyword(keywords.count_as_staggered)
 	local warp_damage_types = DamageSettings.warp_damage_types
 	local is_warp_attack = warp_damage_types[damage_type]
-	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile)
+	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
 	local damage = base_damage + base_buff_damage
 	local finesse_boost_damage, finesse_buff_damage = 0, 0
-	local base_boost_damage = _base_boost_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, hit_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, lerp_values, attacker_stat_buffs)
+	local base_boost_damage = _base_boost_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, hit_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, lerp_values, attacker_stat_buffs, attacking_unit_or_nil, target_unit)
 	local boost_curve = target_settings.boost_curve or PowerLevelSettings.boost_curves.default
 	local armor_damage_modifier = DamageProfile.armor_damage_modifier("attack", damage_profile, target_settings, lerp_values, armor_type, is_critical_strike, dropoff_scalar, armor_penetrating, charge_level)
 	local armor_damage_modifier_lost = math.max(1 - armor_damage_modifier, 0)
@@ -72,7 +83,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	local is_finesse_hit = is_critical_strike or hit_weakspot
 
 	if is_finesse_hit then
-		finesse_boost_damage, finesse_buff_damage = _finesse_boost_damage(damage, base_boost_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, is_target_staggered, hit_weakspot, boost_curve, attack_type, attacker_stat_buffs, lerp_values, target_buff_extension, target_stat_buffs)
+		finesse_boost_damage, finesse_buff_damage = _finesse_boost_damage(damage, base_boost_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, is_target_staggered, hit_weakspot, boost_curve, attack_type, attacker_stat_buffs, lerp_values, target_buff_extension, target_stat_buffs, distance)
 	end
 
 	damage = damage + finesse_boost_damage
@@ -86,8 +97,8 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	local hit_zone_damage_multiplier = _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, damage_profile.ignore_hitzone_multiplier, ignore_hitzone_multipliers_breed_tags)
 
 	damage = damage * hit_zone_damage_multiplier
-	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs, target_toughness_extension)
-	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs, target_toughness_extension)
+	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs)
+	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs)
 	damage = _apply_diminishing_returns_to_damage(damage, target_health_extension, breed_or_nil)
 
 	local is_push = damage_profile.is_push or armor_type ~= "super_armor" and armor_damage_modifier == 0
@@ -104,7 +115,7 @@ end
 DamageCalculation.base_ui_damage = function (damage_profile, target_settings, power_level, charge_level, dropoff_scalar, lerp_values)
 	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
 	local is_critical_strike = false
-	local armor_type = ArmorSettings.types.unarmored
+	local armor_type = armor_types.unarmored
 	local attack_table = damage_output[armor_type]
 	local attack_min, attack_max = attack_table.min, attack_table.max
 	local attack_range = attack_max - attack_min
@@ -128,13 +139,13 @@ DamageCalculation.ui_finesse_multiplier = function (damage_profile, target_setti
 		local boost_table = target_settings.finesse_boost
 
 		finesse_boost_amount = finesse_boost_amount + (boost_table and boost_table[armor_type] or PowerLevelSettings.default_finesse_boost_amount[armor_type])
-		finesse_boost_amount = WeakspotSettings.finesse_boost_modifers[weakspot_type](finesse_boost_amount)
+		finesse_boost_amount = WeakspotSettings.finesse_boost_modifiers[weakspot_type](finesse_boost_amount)
 	end
 
 	local use_crit_boost = not damage_profile.no_crit_boost and is_critical_strike
 
 	if use_crit_boost then
-		local crit_boost_amount = damage_profile.crit_boost or PowerLevelSettings.default_crit_boost_amount
+		local crit_boost_amount = target_settings.crit_boost or damage_profile.crit_boost or PowerLevelSettings.default_crit_boost_amount
 
 		finesse_boost_amount = finesse_boost_amount + crit_boost_amount
 	end
@@ -163,24 +174,18 @@ function _apply_damage_type_buffs_to_damage(damage, attack_type, stat_buffs)
 	return damage
 end
 
-function _apply_armor_type_buffs_to_damage(base_damage, armor_type, stat_buffs, target_toughness_extension)
-	local damage = base_damage
+local ARMOR_TYPE_TO_STAT_BUFF = {
+	[armor_types.unarmored] = "unarmored_damage",
+	[armor_types.armored] = "armored_damage",
+	[armor_types.resistant] = "resistant_damage",
+	[armor_types.berserker] = "berserker_damage",
+	[armor_types.super_armor] = "super_armor_damage",
+	[armor_types.disgustingly_resilient] = "disgustingly_resilient_damage",
+}
 
-	if stat_buffs then
-		if armor_type == "unarmored" and stat_buffs.unarmored_damage then
-			damage = damage * stat_buffs.unarmored_damage
-		elseif armor_type == "armored" and stat_buffs.armored_damage then
-			damage = damage * stat_buffs.armored_damage
-		elseif armor_type == "resistant" and stat_buffs.resistant_damage then
-			damage = damage * stat_buffs.resistant_damage
-		elseif armor_type == "berserker" and stat_buffs.berserker_damage then
-			damage = damage * stat_buffs.berserker_damage
-		elseif armor_type == "super_armor" and stat_buffs.super_armor_damage then
-			damage = damage * stat_buffs.super_armor_damage
-		elseif armor_type == "disgustingly_resilient" and stat_buffs.disgustingly_resilient_damage then
-			damage = damage * stat_buffs.disgustingly_resilient_damage
-		end
-	end
+function _apply_armor_type_buffs_to_damage(base_damage, armor_type, stat_buffs)
+	local stat_buff = ARMOR_TYPE_TO_STAT_BUFF[armor_type]
+	local damage = stat_buff and base_damage * (stat_buffs and stat_buffs[stat_buff] or 1) or base_damage
 
 	return damage
 end
@@ -196,26 +201,50 @@ function _boost_curve_multiplier(curve, percent)
 	return p0 * (1 - local_t) + p1 * local_t
 end
 
-function _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+function _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil, attacking_unit_or_nil, target_unit_or_nil)
 	local dmg_table = damage_output[armor_type]
 	local dmg_min, dmg_max = dmg_table.min, dmg_table.max
 	local dmg_range = dmg_max - dmg_min
 	local charge_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-	local attack_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charge_power_level, "attack", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+	local attack_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charge_power_level, "attack", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil, attacking_unit_or_nil, target_unit_or_nil)
 	local percentage = PowerLevel.power_level_percentage(attack_power_level)
 
 	return dmg_min + dmg_range * percentage, scaled_power_level
 end
 
-function _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, attacked_health_extension)
-	local is_player = Breed.is_player(attacked_breed_or_nil)
+local EMPTY_TABLE = {}
+
+function _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, attacking_unit_or_nil, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, attacked_health_extension)
+	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
+	local target_is_player = Breed.is_player(attacked_breed_or_nil)
 	local damage_stat_buffs = 1
 	local damage_multiplier = 1
 	local damage_stat_buff = (attacker_stat_buffs.damage or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + damage_stat_buff
 
-	local is_companion = attacker_instigator_breed_or_nil and Breed.is_companion(attacker_instigator_breed_or_nil)
+	local is_melee_attack = attack_type == attack_types.melee
+	local is_ranged_attack = attack_type == attack_types.ranged or damage_profile.count_as_ranged_attack
+
+	if attacker_is_player and ALIVE[attacking_unit_or_nil] then
+		local player = Managers.state.player_unit_spawn:owner(attacking_unit_or_nil)
+		local weapon_extension = ScriptUnit.extension(attacking_unit_or_nil, "weapon_system")
+		local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
+		local critical_strike_chance = CriticalStrike.chance(player, weapon_handling_template, is_ranged_attack, is_melee_attack, true)
+		local crit_conversion_buff = (attacker_stat_buffs.critical_strike_chance_to_damage_convert or 0) * critical_strike_chance
+		local critical_damage = attacker_stat_buffs.critical_strike_damage or 1
+
+		if is_melee_attack then
+			critical_damage = critical_damage + (attacker_stat_buffs.melee_critical_strike_damage or 1) - 1
+		elseif is_ranged_attack then
+			critical_damage = critical_damage + (attacker_stat_buffs.ranged_critical_strike_damage or 1) - 1
+		end
+
+		crit_conversion_buff = crit_conversion_buff * critical_damage
+		damage_stat_buffs = damage_stat_buffs + crit_conversion_buff
+	end
+
+	local is_companion = Breed.is_companion(attacker_breed_or_nil)
 	local owner_stat_buffs = attacker_owner_buff_extension and attacker_owner_buff_extension:stat_buffs()
 
 	if is_companion and owner_stat_buffs and damage_type ~= damage_types.bleeding then
@@ -229,21 +258,22 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	end
 
 	local breed_name_or_nil = attacked_breed_or_nil and attacked_breed_or_nil.name
-	local breed_stat_buff = (breed_name_or_nil and attacker_stat_buffs["damage_vs_" .. breed_name_or_nil] or 1) - 1
+	local damage_vs_breed_stat_buff_name = DAMAGE_VS_BREED_MULTIPLIER_BUFF_NAME_LUT[breed_name_or_nil]
+	local damage_vs_breed_stat_buff = (damage_vs_breed_stat_buff_name and attacker_stat_buffs[damage_vs_breed_stat_buff_name] or 1) - 1
 
-	damage_stat_buffs = damage_stat_buffs + breed_stat_buff
+	damage_stat_buffs = damage_stat_buffs + damage_vs_breed_stat_buff
 
 	local close_damage_buff = attacker_stat_buffs.damage_near or 1
 	local far_damage_buff = attacker_stat_buffs.damage_far or 1
+	local ranged_far_damage_buff = is_ranged_attack and attacker_stat_buffs.ranged_damage_far or 1
 
 	distance = distance or 0
 
 	local distance_scalar = math.clamp((distance - close_range) / (far_range - close_range), 0, 1)
-	local distance_damage_buff = (distance_scalar and math.lerp(close_damage_buff, far_damage_buff, math.sqrt(distance_scalar)) or 1) - 1
+	local distance_damage_buff = (distance_scalar and math.lerp(close_damage_buff, far_damage_buff + ranged_far_damage_buff - 1, math.sqrt(distance_scalar)) or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + distance_damage_buff
 
-	local is_melee_attack = attack_type == attack_types.melee
 	local melee_damage_stat_buff = (is_melee_attack and attacker_stat_buffs.melee_damage or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + melee_damage_stat_buff
@@ -258,7 +288,6 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + fully_charged_heavy_attack_damage_stat_buff
 
-	local is_ranged_attack = attack_type == attack_types.ranged or damage_profile.count_as_ranged_attack
 	local ranged_damage_stat_buff = (is_ranged_attack and attacker_stat_buffs.ranged_damage or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + ranged_damage_stat_buff
@@ -320,7 +349,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + companion_vs_melee_damage_stat_buff
 
-	local is_healthy = attacked_health_extension and attacked_health_extension:current_health_percent() > 0.75
+	local is_healthy = attacked_health_extension and attacked_health_extension:current_health_percent() > HEALTHY_MIN_PERCENTAGE
 	local damage_vs_healthy = (is_healthy and attacker_stat_buffs.damage_vs_healthy or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_healthy
@@ -335,6 +364,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_ogryn_and_monsters_stat_buff
 
+	local target_is_captain = attacked_breed_or_nil and attacked_breed_or_nil.tags and (attacked_breed_or_nil.tags.captain or attacked_breed_or_nil.tags.cultist_captain)
+	local damage_vs_captain_stat_buff = (target_is_captain and attacker_stat_buffs.damage_vs_captains or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + damage_vs_captain_stat_buff
+
 	local target_is_monster = attacked_breed_or_nil and attacked_breed_or_nil.tags and attacked_breed_or_nil.tags.monster
 	local damage_vs_monsters_stat_buff = (target_is_monster and attacker_stat_buffs.damage_vs_monsters or 1) - 1
 
@@ -342,7 +376,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	local target_unaggroed
 
-	if blackboard and not is_player then
+	if blackboard and not target_is_player then
 		local perception_component = blackboard.perception
 		local aggro_state = perception_component.aggro_state
 		local is_unaggroed = aggro_state ~= "aggroed"
@@ -353,6 +387,19 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local damage_vs_unaggroed_stat_buff = (target_unaggroed and attacker_stat_buffs.damage_vs_unaggroed or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_unaggroed_stat_buff
+
+	local is_target_attacking_others
+
+	if blackboard and not target_is_player then
+		local perception_component = blackboard.perception
+		local attacked_unit_target_unit = perception_component.target_unit
+
+		is_target_attacking_others = attacking_unit_or_nil ~= attacked_unit_target_unit
+	end
+
+	local damage_vs_nonthreat_stat_buff = (is_target_attacking_others and attacker_stat_buffs.damage_vs_nonthreat or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + damage_vs_nonthreat_stat_buff
 
 	local suppresed_damage_stat_buff = (is_attacked_unit_suppressed and attacker_stat_buffs.damage_vs_suppressed or 1) - 1
 
@@ -384,6 +431,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + force_staff_single_target_damage_stat_buff
 
+	local force_staff_secondary = damage_profile.force_staff_secondary
+	local force_staff_secondary_damage_stat_buff = (force_staff_secondary and attacker_stat_buffs.force_staff_secondary_damage or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + force_staff_secondary_damage_stat_buff
+
 	local force_staff_melee = damage_profile.force_staff_melee
 	local force_staff_melee_damage_stat_buff = (force_staff_melee and attacker_stat_buffs.force_staff_melee_damage or 1) - 1
 
@@ -398,6 +450,10 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local smite_damage_stat_buff = (is_smite_attack and attacker_stat_buffs.smite_damage or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + smite_damage_stat_buff
+
+	local smite_damage_multiplier_stat_buff = is_smite_attack and attacker_stat_buffs.smite_damage_multiplier or 1
+
+	damage_multiplier = damage_multiplier * smite_damage_multiplier_stat_buff
 
 	local is_chain_lightning = damage_profile.chain_lightning
 	local chain_lightning_damage_stat_buff = (is_chain_lightning and attacker_stat_buffs.chain_lightning_damage or 1) - 1
@@ -415,6 +471,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + finesse_ability_multiplier_stat_buff
 
+	local is_explosion_attack = attack_type == attack_types.explosion
+	local explosion_damage_taken_stat_buff = (is_explosion_attack and target_stat_buffs.damage_taken_from_explosions or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + explosion_damage_taken_stat_buff
+
 	local is_burning_damage = damage_type == damage_types.burning
 	local burning_damage_taken_stat_buff = (is_burning_damage and target_stat_buffs.damage_taken_from_burning or 1) - 1
 
@@ -429,6 +490,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local electrocution_damage_taken_stat_buff = (is_electrocution_damage and target_stat_buffs.damage_taken_from_electrocution or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + electrocution_damage_taken_stat_buff
+
+	local is_kinetic_damage = damage_type == damage_types.kinetic
+	local kinetic_damage_taken_stat_buff = (is_kinetic_damage and target_stat_buffs.damage_taken_from_kinetic or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + kinetic_damage_taken_stat_buff
 
 	local is_ogryn_rock_damage = damage_type == damage_types.ogryn_friend_rock
 	local ogryn_rock_damage_damage_taken_stat_buff = (is_ogryn_rock_damage and attacker_stat_buffs.ogryn_friendly_rock_damage_modifier or 1) - 1
@@ -450,9 +516,9 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	return damage_stat_buffs
 end
 
-function _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, is_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, stagger_impact, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, attacked_health_extension)
-	local base_damage, attack_power_level = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type, is_weakspot)
-	local damage_stat_buffs = _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, attacked_health_extension)
+function _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, is_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, stagger_impact, attacking_unit_or_nil, target_unit_or_nil, target_unit_or_nil, attacker_owner_buff_extension, attacked_health_extension)
+	local base_damage, attack_power_level = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type, is_weakspot, attacking_unit_or_nil, target_unit_or_nil)
+	local damage_stat_buffs = _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, attacking_unit_or_nil, target_unit_or_nil, attacker_owner_buff_extension, attacked_health_extension)
 	local damage_taken_multiplier = target_stat_buffs and target_stat_buffs.damage_taken_multiplier or 1
 	local damage_taken_modifier = target_stat_buffs and target_stat_buffs.damage_taken_modifier or 1
 	local is_ranged_attack = attack_type == attack_types.ranged
@@ -460,37 +526,39 @@ function _base_damage(damage_profile, damage_type, target_settings, power_level,
 	local is_melee_attack = attack_type == attack_types.melee
 	local melee_damage_taken_multiplier = is_melee_attack and target_stat_buffs and target_stat_buffs.melee_damage_taken_multiplier or 1
 	local melee_damage_taken_modifier = is_melee_attack and target_stat_buffs and target_stat_buffs.melee_damage_taken_modifier or 1
-	local attacker_is_ogryn = attacker_breed_or_nil and attacker_breed_or_nil.tags and attacker_breed_or_nil.tags.ogryn
+	local attacker_is_ogryn = attacker_owner_breed_or_nil and attacker_owner_breed_or_nil.tags and attacker_owner_breed_or_nil.tags.ogryn
 	local ogryn_damage_taken_multiplier = attacker_is_ogryn and target_stat_buffs and target_stat_buffs.ogryn_damage_taken_multiplier or 1
-	local attacker_is_monster = attacker_breed_or_nil and attacker_breed_or_nil.tags and attacker_breed_or_nil.tags.monster
+	local attacker_is_monster = attacker_owner_breed_or_nil and attacker_owner_breed_or_nil.tags and attacker_owner_breed_or_nil.tags.monster
 	local monster_damage_taken_multiplier = attacker_is_monster and target_stat_buffs and target_stat_buffs.monster_damage_taken_multiplier or 1
 	local warp_damage_types = DamageSettings.warp_damage_types
 	local is_warp_attack = warp_damage_types[damage_type]
 	local warp_damage_taken_multiplier = is_warp_attack and target_stat_buffs and target_stat_buffs.warp_damage_taken_multiplier or 1
-	local non_warp_damage_taken_modifier = not is_warp_attack and target_stat_buffs and target_stat_buffs.non_warp_damage_taken_multiplier or 1
+	local non_warp_damage_taken_multiplier = not is_warp_attack and target_stat_buffs and target_stat_buffs.non_warp_damage_taken_multiplier or 1
 	local is_toxic_gas = damage_profile.toxic_gas
 	local toxic_gas_damage_taken_multiplier = is_toxic_gas and target_stat_buffs.damage_taken_from_toxic_gas_multiplier or 1
-	local per_breed_damage_taken_multiplier = _damage_multiplier_from_breed(target_stat_buffs, attacker_breed_or_nil)
-	local damage_taken_stat_buffs = damage_taken_multiplier * damage_taken_modifier * melee_damage_taken_modifier * ranged_damage_taken_multiplier * melee_damage_taken_multiplier * monster_damage_taken_multiplier * ogryn_damage_taken_multiplier * warp_damage_taken_multiplier * non_warp_damage_taken_modifier * toxic_gas_damage_taken_multiplier * per_breed_damage_taken_multiplier
+	local per_breed_damage_taken_multiplier = _damage_taken_by_breed_multiplier(target_stat_buffs, attacker_owner_breed_or_nil)
+	local damage_taken_modifiers = damage_taken_modifier + melee_damage_taken_modifier - 1
+	local damage_taken_multipliers = damage_taken_multiplier * ranged_damage_taken_multiplier * melee_damage_taken_multiplier * monster_damage_taken_multiplier * ogryn_damage_taken_multiplier * warp_damage_taken_multiplier * non_warp_damage_taken_multiplier * toxic_gas_damage_taken_multiplier * per_breed_damage_taken_multiplier
+	local damage_taken_stat_buffs = damage_taken_modifiers * damage_taken_multipliers
 	local buff_damage_modifier = damage_stat_buffs * damage_taken_stat_buffs - 1
 	local buff_damage = base_damage * buff_damage_modifier
 
 	return base_damage, buff_damage, attack_power_level
 end
 
-function _damage_multiplier_from_breed(target_stat_buffs, attacker_breed_or_nil)
-	if not attacker_breed_or_nil then
+function _damage_taken_by_breed_multiplier(target_stat_buffs, attacker_owner_breed_or_nil)
+	if not attacker_owner_breed_or_nil then
 		return 1
 	end
 
-	local breed_name = attacker_breed_or_nil.name
-	local stat_buff_name = "damage_taken_by_" .. breed_name .. "_multiplier"
-	local multiplier = target_stat_buffs[stat_buff_name] or 1
+	local breed_name = attacker_owner_breed_or_nil.name
+	local stat_buff_name = DAMAGE_TAKEN_BY_BREED_MULTIPLIER_BUFF_NAME_LUT[breed_name]
+	local multiplier = stat_buff_name and target_stat_buffs[stat_buff_name] or 1
 
 	return multiplier
 end
 
-function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile)
+function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
 	local is_melee = attack_type and attack_type == attack_types.melee
 	local is_ranged = attack_type == attack_types.ranged or damage_profile and damage_profile.count_as_ranged_attack
 	local attacker_multiplier = attacker_stat_buffs.rending_multiplier or 1
@@ -507,23 +575,29 @@ function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab
 	local melee_rending_multiplier = is_melee and attacker_stat_buffs.melee_rending_multiplier or 1
 	local attacker_melee_vs_staggered_multiplier = is_target_staggered and is_melee and attacker_stat_buffs.melee_rending_vs_staggered_multiplier or 1
 	local ranged_rending_multiplier = is_ranged and attacker_stat_buffs.ranged_rending_multiplier or 1
-	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_ranged_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier - 14
+	local close_range_rending_multiplier = 1
+
+	if (distance or 0) < close_range then
+		close_range_rending_multiplier = attacker_stat_buffs.close_range_rending_multiplier or 1
+	end
+
+	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_ranged_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier + close_range_rending_multiplier - 15
 
 	rending_multiplier = math.min(rending_multiplier, 1)
 
 	return rending_multiplier, rending_multiplier > 0
 end
 
-function _base_boost_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, is_weakspot, dropoff_scalar, attack_type, stat_buffs, lerp_values, attacker_stat_buffs)
+function _base_boost_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, is_weakspot, dropoff_scalar, attack_type, stat_buffs, lerp_values, attacker_stat_buffs, attacking_unit_or_nil, target_unit_or_nil)
 	local boost_damage_armor_conversion = PowerLevelSettings.boost_damage_armor_conversion[armor_type]
-	local damage = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, boost_damage_armor_conversion, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type, is_weakspot)
+	local damage = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, boost_damage_armor_conversion, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type, is_weakspot, attacking_unit_or_nil, target_unit_or_nil)
 
 	damage = _apply_damage_type_buffs_to_damage(damage, attack_type, stat_buffs)
 
 	return damage
 end
 
-function _finesse_boost_damage(base_damage, base_boost_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, is_target_staggered, hit_weakspot, boost_curve, attack_type, stat_buffs, lerp_values, target_buff_extension, target_stat_buffs)
+function _finesse_boost_damage(base_damage, base_boost_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, is_target_staggered, hit_weakspot, boost_curve, attack_type, stat_buffs, lerp_values, target_buff_extension, target_stat_buffs, distance)
 	local finesse_boost_amount = 0
 	local use_finesse_boost = not damage_profile.no_finesse_boost and hit_weakspot
 
@@ -538,13 +612,13 @@ function _finesse_boost_damage(base_damage, base_boost_damage, rending_damage, d
 			finesse_boost_amount = finesse_boost_amount + (boost_table and boost_table[armor_type] or PowerLevelSettings.default_finesse_boost_no_base_damage_amount[armor_type])
 		end
 
-		finesse_boost_amount = Weakspot.finesse_boost_modifer(breed_or_nil, hit_zone_name, finesse_boost_amount)
+		finesse_boost_amount = Weakspot.finesse_boost_modifier(breed_or_nil, hit_zone_name, finesse_boost_amount)
 	end
 
 	local use_crit_boost = not damage_profile.no_crit_boost and is_critical_strike
 
 	if use_crit_boost then
-		local crit_boost_amount = damage_profile.crit_boost or PowerLevelSettings.default_crit_boost_amount
+		local crit_boost_amount = target_settings.crit_boost or damage_profile.crit_boost or PowerLevelSettings.default_crit_boost_amount
 
 		finesse_boost_amount = finesse_boost_amount + crit_boost_amount
 	end
@@ -604,6 +678,13 @@ function _finesse_boost_damage(base_damage, base_boost_damage, rending_damage, d
 		critical_damage_stat_buff = critical_damage + ranged_critical_damage + melee_critical_damage - 2
 	end
 
+	local close_range_stat_buff = 1
+	local is_close_range = distance and distance < close_range
+
+	if is_ranged and is_close_range then
+		close_range_stat_buff = stat_buffs.finesse_close_range_modifier or 1
+	end
+
 	local crit_weakspot_damage_stat_buff = 1
 
 	if is_critical_strike and hit_weakspot then
@@ -616,7 +697,7 @@ function _finesse_boost_damage(base_damage, base_boost_damage, rending_damage, d
 	local finesse_buff_damage_multiplier = weakspot_damage_stat_buff
 
 	finesse_buff_damage_multiplier = finesse_buff_damage_multiplier + critical_damage_stat_buff + crit_weakspot_damage_stat_buff + finesse_modifier_bonus - 3
-	finesse_buff_damage_multiplier = finesse_buff_damage_multiplier + melee_finesse_modifier_bonus + ranged_finesse_modifier_bonus - 2
+	finesse_buff_damage_multiplier = finesse_buff_damage_multiplier + melee_finesse_modifier_bonus + ranged_finesse_modifier_bonus + close_range_stat_buff - 3
 
 	local final_finesse_damage = base_finesse_damage * finesse_buff_damage_multiplier
 

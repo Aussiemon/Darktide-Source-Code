@@ -117,7 +117,7 @@ MissionBuffsSelector.init_legendary_buffs_pool_for_player = function (self, play
 		valid_categorized_buffs[filtering_category] = {}
 	end
 
-	local valid_buffs = self:_get_valid_legendary_buffs_for_player_setup(player)
+	local valid_buffs, buffs_in_pool_already_given_to_player = self:_get_valid_legendary_buffs_for_player_setup(player)
 
 	for _, buff_name in ipairs(valid_buffs) do
 		if not buffs_to_exclude[buff_name] then
@@ -131,14 +131,33 @@ MissionBuffsSelector.init_legendary_buffs_pool_for_player = function (self, play
 		end
 	end
 
-	self._mission_buffs_handler:set_legendary_buffs_available_for_player(player, valid_categorized_buffs)
+	self._mission_buffs_handler:set_legendary_buffs_available_for_player(player, valid_categorized_buffs, buffs_in_pool_already_given_to_player)
+end
+
+MissionBuffsSelector._filter_and_append_buffs = function (self, player, dest, buffs_to_append, filtered_out_buffs)
+	local dest_size = #dest
+	local source_size = #buffs_to_append
+
+	for i = 1, source_size do
+		local buff_name = buffs_to_append[i]
+		local buff_already_given = self._mission_buffs_handler:does_player_have_buff_saved(player, buff_name)
+
+		if not buff_already_given then
+			dest_size = dest_size + 1
+			dest[dest_size] = buff_name
+		else
+			table.insert(filtered_out_buffs, buff_name)
+			Log.info("MissionBuffsSelector", "Player (PeerID: %s) with Archetype [%s] already had been given buff [%s].", player:peer_id(), player:archetype_name(), buff_name)
+		end
+	end
 end
 
 MissionBuffsSelector._get_valid_legendary_buffs_for_player_setup = function (self, player)
 	local legendary_buffs = MissionBuffsAllowedBuffs.legendary_buffs
 	local valid_buffs = {}
+	local buffs_in_pool_already_given_to_player = {}
 
-	table.append(valid_buffs, legendary_buffs.generic)
+	self:_filter_and_append_buffs(player, valid_buffs, legendary_buffs.generic, buffs_in_pool_already_given_to_player)
 
 	local player_unit = player.player_unit
 	local player_ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
@@ -160,14 +179,14 @@ MissionBuffsSelector._get_valid_legendary_buffs_for_player_setup = function (sel
 	local legendary_class_buffs = legendary_buffs[player_class_name]
 
 	if legendary_class_buffs and legendary_class_buffs.grenade_ability[player_grenade_ability_name] then
-		table.append(valid_buffs, legendary_class_buffs.grenade_ability[player_grenade_ability_name])
+		self:_filter_and_append_buffs(player, valid_buffs, legendary_class_buffs.grenade_ability[player_grenade_ability_name], buffs_in_pool_already_given_to_player)
 	end
 
 	if legendary_class_buffs and legendary_class_buffs.combat_ability[player_combat_ability_name] then
-		table.append(valid_buffs, legendary_class_buffs.combat_ability[player_combat_ability_name])
+		self:_filter_and_append_buffs(player, valid_buffs, legendary_class_buffs.combat_ability[player_combat_ability_name], buffs_in_pool_already_given_to_player)
 	end
 
-	return valid_buffs
+	return valid_buffs, buffs_in_pool_already_given_to_player
 end
 
 MissionBuffsSelector._pop_legendary_buff_from_players_pool = function (self, player, wave_num)
@@ -256,11 +275,64 @@ MissionBuffsSelector._fill_with_random_items_from_pool = function (items_pool, n
 	end
 end
 
+MissionBuffsSelector._fill_with_random_items_from_weighted_pool = function (items_pool, items_pool_weights, num_items, results)
+	local total_weight = 0
+	local weighted_pool_data = {}
+
+	for _, item_name in pairs(items_pool) do
+		local item_weight = items_pool_weights[item_name] or 1
+
+		if item_weight > 0 then
+			total_weight = total_weight + item_weight
+
+			if not items_pool_weights[item_name] then
+				Log.warning("MissionBuffsSelector", string.format("[%s] has missing weights. Defaulting to 1.", item_name))
+			end
+
+			local data = {
+				name = item_name,
+				weight = item_weight,
+			}
+
+			table.insert(weighted_pool_data, data)
+		end
+	end
+
+	local num_available_items = #weighted_pool_data
+	local num_items_left = num_items
+
+	while num_items_left > 0 and num_available_items > 0 do
+		local random_num = math.random(1, total_weight)
+
+		for i = 1, #weighted_pool_data do
+			local weighted_item_data = weighted_pool_data[i]
+			local item_weight = weighted_item_data.weight
+
+			if random_num <= item_weight then
+				table.insert(results, weighted_item_data.name)
+				table.remove(weighted_pool_data, i)
+
+				num_available_items = num_available_items - 1
+				num_items_left = num_items_left - 1
+				total_weight = total_weight - item_weight
+
+				break
+			else
+				random_num = random_num - item_weight
+			end
+		end
+	end
+end
+
 MissionBuffsSelector.create_buff_family_choice_for_all = function (self, num_choices)
 	local players = Managers.player:human_players()
 
 	for _, player in pairs(players) do
-		self:create_buff_family_choice_for_player(player, num_choices)
+		local player_has_family_selected = self._mission_buffs_handler:does_player_have_family_selected(player)
+
+		if not player_has_family_selected then
+			self:create_buff_family_choice_for_player(player, num_choices)
+		end
 	end
 end
 
@@ -270,8 +342,14 @@ MissionBuffsSelector.create_buff_family_choice_for_player = function (self, play
 	if is_human then
 		local family_buffs_pool = MissionBuffsAllowedBuffs.available_family_builds
 		local buff_families_name_options = {}
+		local weighted_randomization_data = self._mission_buffs_manager:get_weighted_randomization_data()
 
-		self._fill_with_random_items_from_pool(family_buffs_pool, NUM_OPTIONS_PER_CHOICE, buff_families_name_options)
+		self._fill_with_random_items_from_weighted_pool(family_buffs_pool, weighted_randomization_data.buff_family_weights, NUM_OPTIONS_PER_CHOICE, buff_families_name_options)
+
+		if num_choices > #buff_families_name_options then
+			self._fill_with_random_items_from_pool(family_buffs_pool, NUM_OPTIONS_PER_CHOICE, buff_families_name_options)
+		end
+
 		self._mission_buffs_handler:save_buff_family_choice_for_player(player, buff_families_name_options)
 		self:try_start_new_buff_choice_for_player(player)
 		self._mission_buffs_handler:check_if_all_players_chosen_family()

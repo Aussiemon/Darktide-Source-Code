@@ -10,6 +10,7 @@ local Explosion = require("scripts/utilities/attack/explosion")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local Vo = require("scripts/utilities/vo")
 local BtChaosHoundTargetPouncedAction = class("BtChaosHoundTargetPouncedAction", "BtNode")
 
 BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -40,6 +41,11 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	disabled_state_input.wants_disable = true
 	disabled_state_input.disabling_unit = unit
 	disabled_state_input.disabling_type = "pounced"
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed_name = unit_data_extension:breed().name
+
+	scratchpad.breed_name = breed_name
 	scratchpad.attempting_pounce = true
 	scratchpad.disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	scratchpad.disabled_state_input_component = disabled_state_input
@@ -79,6 +85,12 @@ BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
 	record_state_component.has_disabled_player = false
 end
 
+local cooldown_by_breed = {
+	chaos_armored_hound = "chaos_armored_hound_pounce",
+	chaos_hound = "chaos_hound_pounce",
+	chaos_hound_mutator = "chaos_hound_pounce",
+}
+
 BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local pounce_component = scratchpad.pounce_component
 	local pounce_target = pounce_component.pounce_target
@@ -98,7 +110,9 @@ BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard,
 
 	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 
-	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce)
+	local breed_name = scratchpad.breed_name
+	local cooldown_settings = cooldown_by_breed[breed_name]
+	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns[cooldown_settings])
 
 	pounce_component.pounce_cooldown = t + cooldown
 end
@@ -123,6 +137,15 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 				local summon_extension = ScriptUnit.extension(summon_unit_component.owner, "summon_minions_system")
 
 				summon_extension:wwise_on_minion_success()
+
+				local vo_event = action_data.vo_event
+
+				if vo_event then
+					local owner_unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+					local owner_breed = owner_unit_data_extension:breed()
+
+					Vo.enemy_generic_vo_event(owner_unit, vo_event, owner_breed.name)
+				end
 			end
 		else
 			local disabled_state_input_component = scratchpad.disabled_state_input_component

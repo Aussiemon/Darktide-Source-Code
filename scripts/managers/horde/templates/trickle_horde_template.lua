@@ -73,10 +73,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 		return false, nil, nil, nil
 	end
 
-	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, random_occluded_position)
-	local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-	local end_index = start_index + 1
-	local closest_mainpath_position = MainPathQueries.closest_position_between_nodes(random_occluded_position, start_index, end_index)
+	local closest_mainpath_position = main_path_manager:closest_main_path_position(random_occluded_position)
 
 	if HordeUtilities.position_has_line_of_sight_to_any_enemy_player(physics_world, closest_mainpath_position + Vector3.up(), side, OCCLUDED_POINTS_COLLISION_FILTER) then
 		return false, nil, nil, nil

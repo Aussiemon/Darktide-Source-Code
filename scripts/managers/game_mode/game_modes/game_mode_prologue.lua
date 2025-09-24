@@ -80,11 +80,6 @@ GameModePrologue._on_mission_outro_played = function (self)
 	self.mission_outro_played = true
 end
 
-GameModePrologue.cleanup_game_mode_units = function (self)
-	GameModePrologue.super.cleanup_game_mode_units(self)
-	Managers.state.player_unit_spawn:remove_all_bots()
-end
-
 GameModePrologue.fail = function (self)
 	self._failed = true
 end

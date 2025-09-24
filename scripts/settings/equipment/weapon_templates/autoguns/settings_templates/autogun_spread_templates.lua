@@ -40,12 +40,6 @@ spread_templates.default_autogun_assault = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -236,12 +230,6 @@ spread_templates.autogun_assault_p1_m1 = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -432,12 +420,6 @@ spread_templates.autogun_assault_p1_m2 = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -626,12 +608,6 @@ spread_templates.default_autogun_burst = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -738,12 +714,6 @@ spread_templates.default_autogun_burst_p3_m2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -838,12 +808,6 @@ spread_templates.default_autogun_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -940,12 +904,6 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1007,6 +965,182 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 		},
 	},
 }
+spread_templates.autogun_p3_burst_ads = {
+	still = {
+		max_spread = {
+			pitch = 8,
+			yaw = 8,
+		},
+		decay = {
+			from_shooting_grace_time = 0.1,
+			shooting = {
+				pitch = 0.25,
+				yaw = 0.25,
+			},
+			idle = {
+				pitch = 30,
+				yaw = 30,
+			},
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+		start_spread = {
+			start_pitch = 0,
+			start_yaw = 0,
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			damage_hit = {
+				{
+					pitch = 0.4,
+					yaw = 0.4,
+				},
+			},
+			shooting = {
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+			},
+		},
+		visual_spread_settings = {
+			horizontal_speed = 1,
+			intensity = 0.4,
+			rotation_speed = 0.5,
+			speed_change_frequency = 1,
+			speed_variance_max = 1.25,
+			speed_variance_min = 0.75,
+		},
+	},
+	moving = {
+		inherits = {
+			"autogun_p3_burst_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"autogun_p3_burst_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"autogun_p3_burst_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+}
+spread_templates.autogun_p3_single_ads = {
+	still = {
+		max_spread = {
+			pitch = 8,
+			yaw = 8,
+		},
+		decay = {
+			from_shooting_grace_time = 0.1,
+			shooting = {
+				pitch = 0.25,
+				yaw = 0.25,
+			},
+			idle = {
+				pitch = 35,
+				yaw = 35,
+			},
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+		start_spread = {
+			start_pitch = 0,
+			start_yaw = 0,
+		},
+		immediate_spread = {
+			num_shots_clear_time = 0.25,
+			damage_hit = {
+				{
+					pitch = 0.4,
+					yaw = 0.4,
+				},
+			},
+			shooting = {
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+				{
+					pitch = 0,
+					yaw = 0,
+				},
+			},
+		},
+		visual_spread_settings = {
+			horizontal_speed = 1,
+			intensity = 0.4,
+			rotation_speed = 0.5,
+			speed_change_frequency = 1,
+			speed_variance_max = 1.25,
+			speed_variance_min = 0.75,
+		},
+	},
+	moving = {
+		inherits = {
+			"autogun_p3_single_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+	crouch_still = {
+		inherits = {
+			"autogun_p3_single_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+	crouch_moving = {
+		inherits = {
+			"autogun_p3_single_ads",
+			"still",
+		},
+		continuous_spread = {
+			min_pitch = 0,
+			min_yaw = 0,
+		},
+	},
+}
 spread_templates.default_autogun_spraynpray = {
 	still = {
 		max_spread = {
@@ -1038,12 +1172,6 @@ spread_templates.default_autogun_spraynpray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1368,12 +1496,6 @@ spread_templates.autogun_p2_m1_hip = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1558,12 +1680,6 @@ spread_templates.autogun_p2_m1_ads = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1876,21 +1992,15 @@ spread_templates.autogun_p2_m2_hip = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 2.4,
-				lerp_perfect = 1.8,
+				lerp_basic = 1.4,
+				lerp_perfect = 1.2,
 			},
 			min_yaw = {
-				lerp_basic = 2.4,
-				lerp_perfect = 1.8,
+				lerp_basic = 1.4,
+				lerp_perfect = 1.2,
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2092,12 +2202,6 @@ spread_templates.autogun_p2_m2_ads = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2327,12 +2431,6 @@ spread_templates.autogun_p2_m3_hip = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2522,12 +2620,6 @@ spread_templates.autogun_p2_m3_ads = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

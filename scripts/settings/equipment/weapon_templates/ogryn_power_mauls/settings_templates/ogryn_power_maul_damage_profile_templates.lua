@@ -252,8 +252,8 @@ overrides.ogryn_powermaul_light_smiter_active = {
 			"power_distribution",
 			"attack",
 			{
-				220,
-				440,
+				720,
+				940,
 			},
 		},
 		{
@@ -453,8 +453,8 @@ overrides.ogryn_powermaul_light_linesman_active = {
 			"power_distribution",
 			"attack",
 			{
-				120,
-				200,
+				500,
+				600,
 			},
 		},
 		{
@@ -526,11 +526,11 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 	armor_damage_modifier = tank_heavy_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.45,
 			power_distribution = {
 				attack = {
-					175,
-					350,
+					180,
+					360,
 				},
 				impact = {
 					25,
@@ -543,8 +543,8 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					80,
-					160,
+					100,
+					200,
 				},
 				impact = {
 					25,
@@ -556,8 +556,8 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					60,
-					120,
+					75,
+					150,
 				},
 				impact = {
 					20,
@@ -616,8 +616,8 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 			"power_distribution",
 			"attack",
 			{
-				250,
-				475,
+				650,
+				875,
 			},
 		},
 		{
@@ -688,21 +688,42 @@ damage_templates.ogryn_powermaul_heavy_smiter = {
 	armor_damage_modifier = tank_heavy_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 1,
 			power_distribution = {
 				attack = {
-					200,
-					400,
+					250,
+					500,
 				},
 				impact = {
 					30,
 					35,
 				},
 			},
-			armor_damage_modifier = tank_heavy_default_am,
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+			},
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 1,
 			power_distribution = {
 				attack = {
 					90,
@@ -719,8 +740,8 @@ damage_templates.ogryn_powermaul_heavy_smiter = {
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
-					0,
-					0,
+					26,
+					50,
 				},
 				impact = {
 					10,
@@ -751,8 +772,8 @@ overrides.ogryn_powermaul_heavy_smiter_active = {
 			"power_distribution",
 			"attack",
 			{
-				300,
-				600,
+				800,
+				1200,
 			},
 		},
 		{
@@ -1788,6 +1809,114 @@ damage_templates.powermaul_explosion_outer = {
 	power_distribution = {
 		attack = 0,
 		impact = 15,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 0.2,
+			},
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	gibbing_power = gibbing_power.always,
+	damage_type = damage_types.plasma,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.ogryn_powermaul_explosion = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 1200,
+	stagger_category = "explosion",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 400,
+		impact = 65,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	damage_type = damage_types.kinetic,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.ogryn_powermaul_explosion_outer = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 125,
+		impact = 20,
 	},
 	armor_damage_modifier_ranged = {
 		near = {

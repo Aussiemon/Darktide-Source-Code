@@ -44,7 +44,7 @@ templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_check_proc_funcs = {
-		[proc_events.on_kill] = CheckProcFunctions.on_elite_kill,
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_or_special_kill,
 	},
 }
 templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {

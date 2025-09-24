@@ -374,12 +374,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left",
-			anchor_point_offset = {
-				0.1,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left",
+				anchor_point_offset = {
+					0.1,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_light_tank,
@@ -453,12 +455,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.25,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.25,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_heavy_tank,
@@ -610,12 +614,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_light_tank,
@@ -689,12 +695,14 @@ weapon_template.actions = {
 			0.45,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_shieldslam",
-			anchor_point_offset = {
-				-0.15,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_shieldslam",
+				anchor_point_offset = {
+					-0.15,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_heavy_smiter_shield,
@@ -846,12 +854,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left_up",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left_up",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_light_smiter,
@@ -926,12 +936,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_right_down",
-			anchor_point_offset = {
-				0.05,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/heavy_attack_right_down",
+				anchor_point_offset = {
+					0.05,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_heavy_smiter,
@@ -1075,12 +1087,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_right_down",
-			anchor_point_offset = {
-				0.05,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_right_down",
+				anchor_point_offset = {
+					0.05,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_light_smiter,
@@ -1421,12 +1435,14 @@ weapon_template.actions = {
 			0.15,
 			1.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left_up",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/assault_shield_maul/attack_left_up",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.powermaul_shield_light_smiter,

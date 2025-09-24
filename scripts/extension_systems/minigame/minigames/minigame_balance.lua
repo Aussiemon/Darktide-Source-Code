@@ -47,14 +47,8 @@ end
 MinigameBalance.decode_interrupt = function (self)
 	MinigameBalance.super.decode_interrupt(self)
 
-	local target_extension = ScriptUnit.has_extension(self._minigame_unit, "mission_objective_target_system")
-
-	if self._start_progression == 0 and target_extension then
-		local objective_name = target_extension:objective_name()
-		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-		local objective = mission_objective_system:active_objective(objective_name)
-
-		self._start_progression = objective and objective:progression() or 0
+	if self._start_progression == 0 then
+		self._start_progression = self._objective and self._objective:progression() or 0
 	end
 end
 
@@ -78,8 +72,9 @@ MinigameBalance.start = function (self, player)
 	if target_extension then
 		local objective_name = target_extension:objective_name()
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local group_id = mission_objective_system:get_objective_group_id_from_unit(self._minigame_unit)
 
-		self._objective = mission_objective_system:active_objective(objective_name)
+		self._objective = mission_objective_system:active_objective(objective_name, group_id)
 	end
 end
 

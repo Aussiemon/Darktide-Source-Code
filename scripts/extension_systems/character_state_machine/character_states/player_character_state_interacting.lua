@@ -90,15 +90,16 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 
 	if has_duration then
 		local animation_extension = self._animation_extension
+		local animation_duration = math.min(duration, 10)
 
 		if start_anim_event and anim_duration_variable_name then
-			animation_extension:anim_event_with_variable_float_1p(start_anim_event, anim_duration_variable_name, duration)
+			animation_extension:anim_event_with_variable_float_1p(start_anim_event, anim_duration_variable_name, animation_duration)
 		elseif start_anim_event then
 			animation_extension:anim_event_1p(start_anim_event)
 		end
 
 		if start_anim_event_3p and anim_duration_variable_name_3p then
-			animation_extension:anim_event_with_variable_float(start_anim_event_3p, anim_duration_variable_name_3p, duration)
+			animation_extension:anim_event_with_variable_float(start_anim_event_3p, anim_duration_variable_name_3p, animation_duration)
 		elseif start_anim_event then
 			animation_extension:anim_event(start_anim_event_3p)
 		end

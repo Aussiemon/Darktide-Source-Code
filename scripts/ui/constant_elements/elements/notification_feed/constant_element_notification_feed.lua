@@ -289,9 +289,7 @@ ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notificat
 	local widget = notification.widget
 	local item_type = item.item_type
 
-	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" or item_type == "WEAPON_SKIN" or item_type == "WEAPON_TRINKET" then
-		_apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
-	elseif item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
+	if item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" or item_type == "EMOTE" then
 		_apply_package_item_icon_cb_func(widget, item)
 	elseif item_type ~= "CHARACTER_TITLE" then
 		_apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -402,6 +400,8 @@ end
 
 ConstantElementNotificationFeed._generate_notification_data = function (self, message_type, data)
 	local notification_data
+	local difficulty_manager = Managers.state.difficulty
+	local challenge = difficulty_manager and difficulty_manager:get_challenge()
 
 	if message_type == MESSAGE_TYPES.default then
 		notification_data = {
@@ -515,14 +515,18 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		local icon, icon_size
 
-		if item_type == "PORTRAIT_FRAME" then
+		if item_type == "END_OF_ROUND" or item_type == "EMOTE" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "large"
+		elseif item_type == "PORTRAIT_FRAME" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "portrait_frame"
 		elseif item_type == "CHARACTER_INSIGNIA" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "insignia"
 		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" then
-			-- Nothing
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "large_weapon"
 		elseif item_type == "WEAPON_TRINKET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "large_item"
@@ -633,10 +637,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				enter_sound_event = enter_sound_event,
 			}
 		end
-	elseif message_type == MESSAGE_TYPES.collectible then
+	elseif message_type == MESSAGE_TYPES.collectible and challenge then
 		local player_name = data.player_name
 		local player = data.player
-		local num_plasteel = Managers.state.difficulty:get_challenge() * 2 * 10
+		local num_plasteel = challenge * 2 * 10
 
 		notification_data = {
 			icon = "content/ui/materials/base/ui_portrait_frame_base",
@@ -679,10 +683,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			},
 			enter_sound_event = UISoundEvents.notification_collectible_pickup,
 		}
-	elseif message_type == MESSAGE_TYPES.helped_collect_collectible then
+	elseif message_type == MESSAGE_TYPES.helped_collect_collectible and challenge then
 		local helped_string = data.helped_string
 		local player = data.player
-		local num_plasteel = Managers.state.difficulty:get_challenge() * 2 * 10
+		local num_plasteel = challenge * 2 * 10
 
 		notification_data = {
 			icon = "content/ui/materials/base/ui_portrait_frame_base",
@@ -725,7 +729,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			},
 			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
 		}
-	elseif message_type == MESSAGE_TYPES.destructible then
+	elseif message_type == MESSAGE_TYPES.destructible and challenge then
 		local player_name = data.player_name
 		local player = data.player
 		local num_collected = data.num_collected
@@ -733,7 +737,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local header_text = Localize("loc_notification_destructible_destroyed", true, {
 			player_name = player_name,
 		})
-		local num_plasteel = Managers.state.difficulty:get_challenge()
+		local num_plasteel = challenge * 10
 
 		notification_data = {
 			icon = "content/ui/materials/base/ui_portrait_frame_base",
@@ -750,7 +754,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 					},
 				},
 				{
-					display_name = string.format("%d/%d \n+%d %s", num_collected, num_total, 10 * num_plasteel, Localize("loc_currency_name_plasteel")),
+					display_name = string.format("%d/%d \n+%d %s", num_collected, num_total, num_plasteel, Localize("loc_currency_name_plasteel")),
 					color = {
 						255,
 						200,
@@ -1009,7 +1013,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		local icon, icon_size
 
-		if item_type == "PORTRAIT_FRAME" then
+		if item_type == "END_OF_ROUND" or item_type == "EMOTE" then
+			icon = "content/ui/materials/icons/items/containers/item_container_square"
+			icon_size = "large"
+		elseif item_type == "PORTRAIT_FRAME" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
 			icon_size = "portrait_frame"
 		elseif item_type == "CHARACTER_INSIGNIA" then
@@ -1017,10 +1024,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = "insignia"
 		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
-			icon_size = "large_item"
+			icon_size = "large_weapon"
 		elseif item_type == "WEAPON_TRINKET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_square"
-			icon_size = "trinket"
+			icon_size = "large_item"
 		elseif item_type == "WEAPON_SKIN" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "weapon_skin"
@@ -1273,10 +1280,14 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 			local slot_name = slots[1]
 			local item_state_machine = item.state_machine
 			local item_animation_event = item.animation_event
+			local item_companion_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
+			local item_companion_animation_event = item.companion_animation_event ~= nil and item.companion_animation_event ~= "" and item.companion_animation_event or nil
 			local context = {
 				camera_focus_slot_name = slot_name,
 				state_machine = item_state_machine,
 				animation_event = item_animation_event,
+				companion_state_machine = item_companion_state_machine,
+				companion_animation_event = item_companion_animation_event,
 			}
 			local on_load_callback = callback(self, "_on_item_icon_loaded", notification, item)
 			local icon_load_id = Managers.ui:load_item_icon(item, on_load_callback, context)

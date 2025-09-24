@@ -31,7 +31,11 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 	self._start_vo_line_timer = false
 	self._vo_line_interval = MissionObjectiveScanning.zone_settings.vo_trigger_time
 	self._vo_line_timer = self._vo_line_interval
-	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	self._mission_objective_system = mission_objective_system
+	self._objective_group_id = mission_objective_system:get_objective_group_id_from_unit(unit)
 
 	if is_server then
 		self._players_with_scanned_objects = {}
@@ -212,9 +216,9 @@ MissionObjectiveZoneScanExtension.register_scannable_unit = function (self, scan
 
 	if self._is_server then
 		local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
-		local level_scanable_id = Managers.state.unit_spawner:level_index(scannable_unit)
+		local level_scannable_id = Managers.state.unit_spawner:level_index(scannable_unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_register_scannable_unit", level_object_id, level_scanable_id)
+		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_register_scannable_unit", level_object_id, level_scannable_id)
 	end
 end
 
@@ -380,8 +384,9 @@ MissionObjectiveZoneScanExtension.activate_zone = function (self)
 
 		if current_objective_name then
 			local mission_objective_system = self._mission_objective_system
+			local objective_group_id = self._objective_group_id
 
-			mission_objective_system:set_objective_show_counter(current_objective_name, true)
+			mission_objective_system:set_objective_show_counter(current_objective_name, objective_group_id, true)
 		end
 	end
 end
@@ -396,8 +401,9 @@ MissionObjectiveZoneScanExtension._deactivate_zone = function (self)
 
 		if current_objective_name then
 			local mission_objective_system = self._mission_objective_system
+			local objective_group_id = self._objective_group_id
 
-			mission_objective_system:_override_ui_string(current_objective_name, nil, nil)
+			mission_objective_system:override_ui_string(current_objective_name, objective_group_id, nil, nil)
 		end
 	end
 end
@@ -410,9 +416,10 @@ MissionObjectiveZoneScanExtension.set_is_waiting_for_player_confirmation = funct
 
 		if current_objective_name then
 			local mission_objective_system = self._mission_objective_system
+			local objective_group_id = self._objective_group_id
 
-			mission_objective_system:set_objective_show_counter(current_objective_name, false)
-			mission_objective_system:_override_ui_string(current_objective_name, RETURN_TO_SERVO_SKULL_HEADER, RETURN_TO_SERVO_SKULL_DESC)
+			mission_objective_system:set_objective_show_counter(current_objective_name, objective_group_id, false)
+			mission_objective_system:override_ui_string(current_objective_name, objective_group_id, RETURN_TO_SERVO_SKULL_HEADER, RETURN_TO_SERVO_SKULL_DESC)
 		end
 
 		local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
@@ -441,7 +448,8 @@ end
 MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo_line, is_mission_giver_line)
 	if is_mission_giver_line then
 		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
-		local mission_objective = self._mission_objective_system:active_objective(current_objective_name)
+		local objective_group_id = self._objective_group_id
+		local mission_objective = self._mission_objective_system:active_objective(current_objective_name, objective_group_id)
 		local voice_profile = mission_objective:mission_giver_voice_profile()
 
 		if voice_profile then

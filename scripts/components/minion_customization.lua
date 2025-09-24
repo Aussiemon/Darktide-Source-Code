@@ -85,6 +85,10 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
+	self:_apply_customization(unit, attach_settings, item_table, global_material_override_table)
+end
+
+MinionCustomization._apply_customization = function (self, unit, attach_settings, item_table, global_material_override_table)
 	self:_spawn_items(item_table)
 
 	if attach_settings.lod_group then
@@ -172,6 +176,10 @@ MinionCustomization.editor_destroy = function (self, unit)
 end
 
 MinionCustomization.destroy = function (self, unit)
+	self:remove_attachments(unit)
+end
+
+MinionCustomization.remove_attachments = function (self, unit)
 	local i = 1
 	local array_size = 0
 	local attachment = Unit.get_data(unit, "attached_items", i)

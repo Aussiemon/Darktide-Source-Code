@@ -236,10 +236,10 @@ projectile_templates.krak_grenade = {
 	},
 	damage = {
 		fuse = {
-			fuse_time = 2,
+			fuse_time = 1,
 			impact_triggered = true,
 			max_lifetime = 2,
-			sticky_fuse_time = 2,
+			sticky_fuse_time = 1,
 			explosion_template = ExplosionTemplates.krak_grenade,
 			default_explosion_normal = Vector3Box(0, 0, -1),
 		},

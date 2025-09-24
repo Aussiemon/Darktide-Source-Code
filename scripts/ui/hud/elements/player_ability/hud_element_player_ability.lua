@@ -60,6 +60,8 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 	local cooldown_progress, remaining_ability_charges
 	local has_charges_left = true
 	local uses_charges = false
+	local in_process_of_going_on_cooldown = false
+	local force_on_cooldown = false
 
 	if ability_extension and ability_extension:ability_is_equipped(ability_id) then
 		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
@@ -90,7 +92,7 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		self:_set_progress(cooldown_progress)
 	end
 
-	local on_cooldown = cooldown_progress ~= 1
+	local on_cooldown = cooldown_progress ~= 1 and not in_process_of_going_on_cooldown or force_on_cooldown
 
 	if on_cooldown ~= self._on_cooldown or uses_charges ~= self._uses_charges or has_charges_left ~= self._has_charges_left then
 		if not on_cooldown and self._on_cooldown and (not uses_charges or has_charges_left) then

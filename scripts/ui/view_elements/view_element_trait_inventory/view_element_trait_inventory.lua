@@ -7,6 +7,33 @@ local Items = require("scripts/utilities/items")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+
+local function _style_text_height(text, style, ui_renderer)
+	local text_font_data = UIFonts.data_by_type(style.font_type)
+	local text_font = text_font_data.path
+	local text_size = style.size
+	local text_additional_size = style.size_addition
+	local calculate_size = {
+		text_size[1] or 0,
+		text_size[2] or 0,
+	}
+
+	if text_additional_size then
+		calculate_size = {
+			calculate_size[1] + text_additional_size[1],
+			calculate_size[2] + text_additional_size[2],
+		}
+	end
+
+	local use_max_extents = true
+	local text_options = UIFonts.get_font_options_by_style(style)
+	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, calculate_size, text_options, use_max_extents)
+
+	return text_height
+end
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -208,6 +235,8 @@ ViewElementTraitInventory.set_alpha_multiplier = function (self, alpha_multiplie
 end
 
 ViewElementTraitInventory.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
+	self:_update_info_box(ui_renderer)
+
 	if self._disabled then
 		input_service = input_service:null_service()
 	end
@@ -220,10 +249,6 @@ ViewElementTraitInventory.draw = function (self, dt, t, ui_renderer, render_sett
 	ViewElementTraitInventory.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = old_alpha_multiplier
-
-	local previous_layer = render_settings.start_layer
-
-	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 end
 
 ViewElementTraitInventory._update_animations = function (self, dt, t)
@@ -242,7 +267,7 @@ ViewElementTraitInventory._update_animations = function (self, dt, t)
 	end
 end
 
-ViewElementTraitInventory._update_info_box = function (self)
+ViewElementTraitInventory._update_info_box = function (self, ui_renderer)
 	local trait_info_box = self._widgets_by_name.trait_info_box_contents
 	local content = trait_info_box.content
 	local style = trait_info_box.style
@@ -257,6 +282,12 @@ ViewElementTraitInventory._update_info_box = function (self)
 
 		content.display_name = Localize(trait_item.display_name)
 		content.description = Items.trait_description(trait_item, trait_item.rarity, trait_item.value)
+
+		local icon_height = style.icon.size[2]
+		local description_height = _style_text_height(content.description, style.description, ui_renderer)
+		local trait_box_height = math.max(icon_height, style.description.offset[2] + description_height)
+
+		self:_set_scenegraph_size("trait_info_box_contents", nil, trait_box_height)
 
 		local texture_icon, texture_frame = Items.trait_textures(trait_item, trait_item.rarity)
 		local icon_material_values = style.icon.material_values
@@ -356,7 +387,6 @@ ViewElementTraitInventory.update = function (self, dt, t, input_service)
 	end
 
 	self:_handle_input(dt, t, input_service)
-	self:_update_info_box()
 	self:_update_animations(dt, t)
 	ViewElementTraitInventory.super.update(self, dt, t, input_service)
 end

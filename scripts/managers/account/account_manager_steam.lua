@@ -1,8 +1,9 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_steam.lua
 
-local AccountManagerBase = require("scripts/managers/account/account_manager_base")
-local RegionRestrictionsSteam = require("scripts/settings/region/region_restrictions_steam")
+require("scripts/managers/account/account_manager_base")
+
 local Promise = require("scripts/foundation/utilities/promise")
+local RegionRestrictionsSteam = require("scripts/settings/region/region_restrictions_steam")
 local AccountManagerSteam = class("AccountManagerSteam", "AccountManagerBase")
 
 AccountManagerSteam.signin_profile = function (self, signin_callback)
@@ -35,9 +36,10 @@ end
 AccountManagerSteam.open_to_store = function (self, to_target)
 	if not Steam.is_overlay_enabled() then
 		Log.info("AccountManagerSteam", "Can't open store. Steam Overlay is not enabled.")
+		pcall(Application.open_url_in_browser, "https://store.steampowered.com/app/" .. to_target)
 
 		return Promise.resolved({
-			success = true,
+			success = false,
 		})
 	end
 
@@ -61,14 +63,14 @@ AccountManagerSteam.open_to_store = function (self, to_target)
 		end
 
 		return {
-			success = true,
+			success = type(to_target) == "number" and Steam.is_subscribed(to_target) or false,
 		}
 	end)
 end
 
 AccountManagerSteam.is_owner_of = function (self, app_id)
 	return Promise.resolved({
-		is_owner = Steam.is_installed(app_id),
+		is_owner = Steam.is_subscribed(app_id),
 	})
 end
 

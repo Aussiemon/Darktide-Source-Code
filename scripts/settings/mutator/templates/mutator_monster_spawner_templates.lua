@@ -59,6 +59,20 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_plasma_smuggler_groups = {
+		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
+		spawner_template = {
+			asset_package = "packages/content/live_events/plasma_smugglers/plasma_smugglers_assets",
+			force_horde_on_spawn = true,
+			injection_template = "plasma_smugglers",
+			num_to_spawn = 3,
+			spawn_locations = "skulls_locations",
+			trigger_distance = 55,
+			monster_breed_name = {
+				"plasma_smugglers",
+			},
+		},
+	},
 }
 
 return mutator_templates

@@ -16,9 +16,9 @@ AdamantWhistleTargetingEffects.init = function (self, equipped_ability_effect_sc
 	self._is_local_unit = is_local_unit
 
 	local unit_data_extension = equipped_ability_effect_scripts_context.unit_data_extension
-	local action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
+	local action_module_target_finder_component = unit_data_extension:read_component("action_module_target_finder")
 
-	self._action_module_targeting_component = action_module_targeting_component
+	self._action_module_target_finder_component = action_module_target_finder_component
 
 	if is_local_unit then
 		local grenade_ability_action_component = unit_data_extension:read_component("grenade_ability_action")
@@ -45,8 +45,8 @@ AdamantWhistleTargetingEffects.update = function (self, unit, dt, t)
 	local action_settings = self._ability_template.actions[action_name]
 	local action_kind = action_settings and action_settings.kind
 	local is_aiming = action_kind == "target_finder"
-	local action_module_targeting_component = self._action_module_targeting_component
-	local target_unit = action_module_targeting_component.target_unit_1
+	local action_module_target_finder_component = self._action_module_target_finder_component
+	local target_unit = action_module_target_finder_component.target_unit_1
 
 	if not target_unit or not is_aiming then
 		self:_destroy_effects()

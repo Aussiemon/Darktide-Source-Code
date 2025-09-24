@@ -188,11 +188,9 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 
 		local companion_whistle_target
 		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-		local tag_target, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)
-		local tag_template = tag and tag:template()
-		local tag_type = tag_template and tag_template.marker_type
+		local tag_target, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
 
-		if tag_target and tag_type == "unit_threat_adamant" then
+		if tag_target then
 			local unit_data_extension = ScriptUnit.has_extension(tag_target, "unit_data_system")
 			local breed = unit_data_extension and unit_data_extension:breed()
 			local daemonhost = breed and breed.tags.witch

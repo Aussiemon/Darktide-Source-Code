@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/extension_systems/wounds/wounds_extension.lua
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local RegionConstants = require("scripts/settings/region/region_constants")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local RegionConstants = require("scripts/settings/region/region_constants")
 local attack_results = AttackSettings.attack_results
 local REUSE_WOUNDS = false
 local CLIENT_RPCS = {

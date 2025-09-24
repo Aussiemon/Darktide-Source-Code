@@ -23,6 +23,12 @@ BossExtension.init = function (self, extension_init_context, unit, extension_ini
 
 	self:_generate_display_name()
 
+	self._start_depleted = extension_init_data.start_depleted
+
+	if self._start_depleted then
+		self._boss_is_depleted_interrupter = true
+	end
+
 	local boss_template = breed.boss_template
 
 	if not self._is_server and boss_template then
@@ -158,6 +164,10 @@ BossExtension.is_weakened = function (self)
 	return self._is_weakened
 end
 
+BossExtension.boss_is_depleted_interrupter = function (self)
+	return self._boss_is_depleted_interrupter
+end
+
 BossExtension._start_boss_template = function (self, boss_template)
 	self._template_context = {
 		is_server = self._is_server,
@@ -181,9 +191,7 @@ local ALLOWED_BREEDS = {
 }
 
 function _setup_twins_special_names(display_name, breed)
-	local havoc_mananger = Managers.state.havoc
-
-	if not havoc_mananger:is_havoc() then
+	if not Managers.state.game_mode:game_mode():extension("havoc") then
 		return display_name
 	end
 

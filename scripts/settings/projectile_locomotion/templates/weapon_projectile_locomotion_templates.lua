@@ -9,7 +9,7 @@ local weapon_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 			},
 		},
-		shoot_parameters = {
+		spawn_projectile_parameters = {
 			initial_speed = 60,
 			spawn_offset = Vector3Box(0, 0, 0),
 			pitch_offset = {
@@ -38,7 +38,7 @@ local weapon_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 			},
 		},
-		shoot_parameters = {
+		spawn_projectile_parameters = {
 			initial_speed = 60,
 			spawn_offset = Vector3Box(0, 0, 0),
 			pitch_offset = {
@@ -78,17 +78,11 @@ local weapon_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
 				rotation_offset_maximal = Vector3Box(0, 0, 0),
-				initial_angular_velocity = Vector3Box(0, 0, 1),
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
 					z = math.pi * 2.2,
 				},
-			},
-			drop = {
-				inherit_owner_velocity_percentage = 1,
-				speed = 1,
-				locomotion_state = locomotion_states.engine_physics,
 			},
 		},
 		integrator_parameters = {
@@ -127,17 +121,11 @@ local weapon_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
 				rotation_offset_maximal = Vector3Box(0, 0, 0),
-				initial_angular_velocity = Vector3Box(0, 0, 1),
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
 					z = math.pi * 2.2,
 				},
-			},
-			drop = {
-				inherit_owner_velocity_percentage = 1,
-				speed = 1,
-				locomotion_state = locomotion_states.engine_physics,
 			},
 		},
 		integrator_parameters = {
@@ -177,17 +165,11 @@ local weapon_projectile_locomotion_templates = {
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
 				rotation_offset_maximal = Vector3Box(0, 0, 0),
-				initial_angular_velocity = Vector3Box(0, 0, 1),
 				randomized_angular_velocity = {
 					x = math.pi * 2.2,
 					y = math.pi * 1.1,
 					z = math.pi * 2.2,
 				},
-			},
-			drop = {
-				inherit_owner_velocity_percentage = 1,
-				speed = 1,
-				locomotion_state = locomotion_states.engine_physics,
 			},
 		},
 		integrator_parameters = {

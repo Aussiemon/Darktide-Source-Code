@@ -56,12 +56,11 @@ end
 
 MinigameDrill.stop = function (self)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
+	MinigameDrill.super.stop(self)
 
 	if self._is_server then
 		self._current_stage = nil
 	end
-
-	MinigameDrill.super.stop(self)
 end
 
 MinigameDrill.complete = function (self)
@@ -141,7 +140,7 @@ MinigameDrill.generate_targets = function (self, seed)
 		for target = 1, MinigameSettings.drill_stage_targets do
 			local x, y
 			local tries = 100
-			local is_valid_position = false
+			local is_valid_position
 
 			repeat
 				tries = tries - 1
@@ -263,7 +262,7 @@ MinigameDrill.on_axis_set = function (self, t, x, y)
 		return
 	end
 
-	if self._current_state ~= MinigameSettings.game_states.gameplay then
+	if self._current_state ~= MinigameSettings.game_states.gameplay or not self._current_stage then
 		return
 	end
 
@@ -332,7 +331,7 @@ MinigameDrill.uses_joystick = function (self)
 end
 
 MinigameDrill.is_on_target = function (self)
-	if not self._selected_index then
+	if not self._current_stage or not self._selected_index then
 		return false
 	end
 

@@ -9,6 +9,7 @@ local MissionBoardService = class("MissionBoardService")
 
 MissionBoardService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
+	self._progression_version = 0
 end
 
 MissionBoardService.fetch_mission = function (self, mission_id)
@@ -81,8 +82,18 @@ MissionBoardService.get_difficulty_progress = function (self, account_id, charac
 	return self._backend_interface.mission_board:get_difficulty_progress(account_id, character_id)
 end
 
+MissionBoardService._refresh_progression_data = function (self)
+	self._progression_version = (self._progression_version + 1) % 16
+	self._progression_data_tree = self:_build_progression_data_tree(self._backend_interface.mission_board:get_progression_unlock_data())
+end
+
+MissionBoardService.progression_version = function (self)
+	return self._progression_version
+end
+
 MissionBoardService.fetch_player_journey_data = function (self, account_id, character_id, force_refresh)
 	return self._backend_interface.mission_board:fetch_player_journey_data(account_id, character_id, force_refresh):next(function ()
+		self:_refresh_progression_data()
 		self:_build_campaign_order()
 	end)
 end
@@ -92,7 +103,9 @@ MissionBoardService.fetch_character_campaign_skip_data = function (self, account
 end
 
 MissionBoardService.skip_and_unlock_campaign = function (self, account_id, character_id)
-	return self._backend_interface.mission_board:skip_and_unlock_campaign(account_id, character_id)
+	return self._backend_interface.mission_board:skip_and_unlock_campaign(account_id, character_id):next(function ()
+		self:_refresh_progression_data()
+	end)
 end
 
 MissionBoardService.set_character_has_been_shown_skip_campaign_popup = function (self, account_id, character_id)
@@ -272,17 +285,34 @@ MissionBoardService._build_campaign_order = function (self)
 	end
 end
 
-MissionBoardService._progression_entry = function (self, type, key, optional_category)
-	local progression_data = self:get_progression_unlock_data()
-	local progression_count = progression_data and #progression_data or 0
+MissionBoardService._build_progression_data_tree = function (self, progression_data)
+	local tree = {}
 
-	for i = 1, progression_count do
-		local progression = progression_data[i]
+	for _, entry in ipairs(progression_data) do
+		local type = entry.type
+		local key = entry.key
+		local category = entry.category or "default"
 
-		if progression.type == type and progression.key == key and progression.category == optional_category then
-			return progression
+		if not tree[type] then
+			tree[type] = {}
 		end
+
+		if not tree[type][category] then
+			tree[type][category] = {}
+		end
+
+		if tree[type][category][key] then
+			Log.warning("MissionBoardService", "Duplicate progression entry found for type: %s, key: %s, category: %s", type, key, category)
+		end
+
+		tree[type][category][key] = entry
 	end
+
+	return tree
+end
+
+MissionBoardService._progression_entry = function (self, type, key, optional_category)
+	return table.nested_get(self, "_progression_data_tree", type, optional_category or "default", key)
 end
 
 MissionBoardService.index_in_campaign = function (self, type, key, category, campaign)

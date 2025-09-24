@@ -20,20 +20,6 @@ local discard_items_settings = {
 		210,
 		40,
 	},
-	animation_event_by_archetype = {
-		adamant = "human_adamant_inspect_pose",
-		ogryn = "ogryn_inspect_pose",
-		psyker = "human_psyker_inspect_pose",
-		veteran = "human_veteran_inspect_pose",
-		zealot = "human_zealot_inspect_pose",
-	},
-	archetype_badge_texture_by_name = {
-		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
-		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
-		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
-		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",
-		zealot = "content/ui/textures/icons/class_badges/zealot_01_01",
-	},
 }
 
 return settings("ViewElementDiscardItems", discard_items_settings)

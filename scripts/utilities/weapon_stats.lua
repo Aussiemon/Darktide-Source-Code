@@ -417,7 +417,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 	local ammo_clip_size, ammo_reserve_size
 
 	if uses_ammunition then
-		ammo_clip_size = ammo_template.ammunition_clip
+		ammo_clip_size = ammo_template.ammunition_clips[1]
 		ammo_reserve_size = ammo_template.ammunition_reserve
 	end
 
@@ -508,7 +508,7 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 					fire_rate = action_stats.fire_rate
 				end
 
-				if fire_rate and ammo_clip_size or action.charge_template and action.start_input == "shoot_pressed" or action.ammunition_usage and action.fire_configuration then
+				if fire_rate and ammo_clip_size or action.charge_template and action.start_input == "shoot_pressed" or action.ammunition_usage and (action.fire_configuration or action.fire_configurations) then
 					local auto_fire_time = fire_rate and fire_rate.auto_fire_time
 
 					if auto_fire_time then
@@ -561,10 +561,10 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local is_critical_strike = false
 						local armor_penetrating = false
 						local auto_completed_action = false
-						local target_unit, attacker_breed_or_nil, attacker_instigator_breed_or_nil
+						local target_unit, attacker_owner_breed_or_nil, attacker_breed_or_nil
 						local hit_shield = false
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
-						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, attacker_instigator_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
+						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
 
 						damage = damage * num_damage_iterations
 
@@ -1200,11 +1200,11 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 		local dropoff_scalar = action_data.dropoff_scalar
 		local action = weapon_actions[action_name]
 		local damage_profile, special_damage_profile = Action.damage_template(action)
-		local explosion_template = Action.explosion_template(action)
 
 		if damage_profile then
 			local action_power_level = Action.power_level(action)
 			local scaled_base_attack_power, scaled_base_impact_power = _calculate_power_stat(action, action_name, damage_profile, action_power_level, damage_profile_lerp_values, target_index, charge_level, dropoff_scalar)
+			local explosion_template = Action.explosion_template(action)
 
 			if explosion_template then
 				local inner = explosion_template.close_damage_profile

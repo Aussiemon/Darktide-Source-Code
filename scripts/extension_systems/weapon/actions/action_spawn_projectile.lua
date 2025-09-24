@@ -43,13 +43,13 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 	self._muzzle_fx_source_name = self._fx_sources._muzzle
 
 	if action_settings.track_towards_target then
-		local targeting_component = unit_data_extension:write_component("action_module_targeting")
+		local action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 
-		self._targeting_component = targeting_component
+		self._action_module_target_finder_component = action_module_target_finder_component
 
 		local target_finder_module_class_name = action_settings.target_finder_module_class_name
 
-		self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, targeting_component, action_settings)
+		self._targeting_module = ActionModules[target_finder_module_class_name]:new(is_server, physics_world, player_unit, action_module_target_finder_component, action_settings)
 	end
 
 	if action_settings.track_towards_position then
@@ -85,7 +85,7 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	if self._targeting_module then
 		local prefer_previous_action_targeting_result = action_settings.prefer_previous_action_targeting_result
 
-		if not prefer_previous_action_targeting_result or self._targeting_component.target_unit_1 == nil then
+		if not prefer_previous_action_targeting_result or self._action_module_target_finder_component.target_unit_1 == nil then
 			self._targeting_module:start(t)
 		end
 	end
@@ -168,6 +168,17 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 	end
 
 	local action_settings = self._action_settings
+	local constraint_node_1p, constraint_node_3p = action_settings.constraint_node_1p, action_settings.constraint_node_3p
+	local constraint_target_1p, constraint_target_3p = action_settings.constraint_target_1p, action_settings.constraint_target_3p
+
+	if constraint_node_1p and constraint_target_1p then
+		self:_set_constraint_target(constraint_node_1p, constraint_target_1p)
+	end
+
+	if constraint_node_3p and constraint_target_3p then
+		self:_set_constraint_target(constraint_node_3p, constraint_target_3p)
+	end
+
 	local time_scale = self._weapon_action_component.time_scale
 	local fire_time = action_settings.fire_time or DEFAULT_FIRE_TIME
 	local fire_time_scaled = fire_time / time_scale
@@ -309,6 +320,16 @@ ActionSpawnProjectile.running_action_state = function (self, t, time_in_action)
 	return nil
 end
 
+ActionSpawnProjectile._set_constraint_target = function (self, constraint_node, constraint_target)
+	local player_unit = self._player_unit
+	local node_index, node_position
+
+	node_index = Unit.node(player_unit, constraint_node)
+	node_position = Unit.world_position(player_unit, node_index)
+
+	Unit.animation_set_constraint_target(player_unit, Unit.animation_find_constraint_target(player_unit, constraint_target), node_position)
+end
+
 ActionSpawnProjectile._check_direction = function (self)
 	local name = self._action_settings.name
 
@@ -334,11 +355,11 @@ end
 
 ActionSpawnProjectile._target_unit_and_position = function (self)
 	local target_unit, target_position
-	local targeting_component = self._targeting_component
+	local action_module_target_finder_component = self._action_module_target_finder_component
 	local position_finder_component = self._position_finder_component
 
-	if targeting_component then
-		target_unit = targeting_component.target_unit_1
+	if action_module_target_finder_component then
+		target_unit = action_module_target_finder_component.target_unit_1
 	end
 
 	if position_finder_component then
@@ -465,7 +486,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	local player_unit = self._player_unit
 	local projectile_template = self:_projectile_template()
 	local projectile_locomotion_template = projectile_template.locomotion_template
-	local shoot_parameters = projectile_locomotion_template.shoot_parameters
+	local spawn_projectile_parameters = projectile_locomotion_template.spawn_projectile_parameters
 	local first_person = self._first_person_component
 	local position
 	local spawn_node = action_settings.spawn_node
@@ -480,7 +501,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 		position = first_person.position
 	end
 
-	local local_spawn_offset = shoot_parameters.spawn_offset and shoot_parameters.spawn_offset:unbox()
+	local local_spawn_offset = spawn_projectile_parameters.spawn_offset and spawn_projectile_parameters.spawn_offset:unbox()
 
 	if local_spawn_offset then
 		local spawn_offset = Quaternion.rotate(first_person.rotation, local_spawn_offset)
@@ -502,7 +523,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	position = position + velocity_offset
 
 	local rotation = Quaternion.identity()
-	local local_euler_rotation = shoot_parameters.rotation and shoot_parameters.rotation:unbox()
+	local local_euler_rotation = spawn_projectile_parameters.rotation and spawn_projectile_parameters.rotation:unbox()
 
 	if local_euler_rotation then
 		local local_rotation = Quaternion.from_euler_angles_xyz(local_euler_rotation.x, local_euler_rotation.y, local_euler_rotation.z)
@@ -517,7 +538,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	local is_right, is_left = self:_check_direction()
 
 	if have_target then
-		local pitch_settings = shoot_parameters.has_target_pitch_offset
+		local pitch_settings = spawn_projectile_parameters.has_target_pitch_offset
 		local max_angle_pitch = math.degrees_to_radians(pitch_settings.max)
 		local min_angle_pitch = math.degrees_to_radians(pitch_settings.min)
 		local random_pitch = math.random() * (max_angle_pitch - min_angle_pitch) + min_angle_pitch
@@ -526,7 +547,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 
 		shoot_rotation = Quaternion.multiply(pitch_rotation, shoot_rotation)
 
-		local yaw_settings = shoot_parameters.has_target_yaw_offset
+		local yaw_settings = spawn_projectile_parameters.has_target_yaw_offset
 		local yaw_max = is_right and -yaw_settings.min or yaw_settings.max
 		local yaw_min = is_left and yaw_settings.min or -yaw_settings.max
 		local max_angle_yaw = math.degrees_to_radians(yaw_max)
@@ -536,7 +557,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 
 		shoot_rotation = Quaternion.multiply(shoot_rotation, yaw_rotation)
 	else
-		local pitch_settings = shoot_parameters.pitch_offset
+		local pitch_settings = spawn_projectile_parameters.pitch_offset
 		local max_angle_pitch = math.degrees_to_radians(pitch_settings.max)
 		local min_angle_pitch = math.degrees_to_radians(pitch_settings.min)
 		local random_pitch = math.random() * (max_angle_pitch - min_angle_pitch) + min_angle_pitch
@@ -545,8 +566,8 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 
 		shoot_rotation = Quaternion.multiply(pitch_rotation, shoot_rotation)
 
-		if shoot_parameters.yaw_offset then
-			local yaw_settings = shoot_parameters.yaw_offset
+		if spawn_projectile_parameters.yaw_offset then
+			local yaw_settings = spawn_projectile_parameters.yaw_offset
 			local max_angle_yaw = math.degrees_to_radians(yaw_settings.max)
 			local min_angle_yaw = math.degrees_to_radians(yaw_settings.min)
 			local random_yaw = math.random() * (max_angle_yaw - min_angle_yaw) + min_angle_yaw
@@ -555,7 +576,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 			shoot_rotation = Quaternion.multiply(shoot_rotation, yaw_rotation)
 		end
 
-		if not shoot_parameters.skip_spread then
+		if not spawn_projectile_parameters.skip_spread then
 			local skip_update_component_data = true
 
 			shoot_rotation = self._weapon_spread_extension:randomized_spread(shoot_rotation, skip_update_component_data)
@@ -567,7 +588,7 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 	local locomotion_template = projectile_template.locomotion_template
 	local trajectory_parameters = locomotion_template and locomotion_template.trajectory_parameters and locomotion_template.trajectory_parameters.spawn
 	local starting_state = trajectory_parameters and trajectory_parameters.locomotion_state or locomotion_states.true_flight
-	local speed = shoot_parameters.initial_speed or 1
+	local speed = spawn_projectile_parameters.initial_speed or 1
 	local momentum = Vector3(0, 0, 1)
 
 	if offset then
@@ -590,6 +611,12 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 
 	if projectile_template.play_vce then
 		PlayerVoiceGrunts.trigger_voice("attack_short_vce", self._visual_loadout_extension, self._fx_extension, false)
+	end
+
+	local vo_tag = action_settings.vo_tag_release
+
+	if vo_tag then
+		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
 end
 

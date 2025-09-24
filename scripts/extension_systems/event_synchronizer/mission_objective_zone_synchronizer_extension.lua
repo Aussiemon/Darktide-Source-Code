@@ -22,7 +22,7 @@ MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self,
 	self._objective_name = objective_name
 	self._auto_start = auto_start
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
+	self._mission_objective_system:register_objective_synchronizer(objective_name, nil, self._unit)
 end
 
 MissionObjectiveZoneSynchronizerExtension.on_gameplay_post_init = function (self, unit)

@@ -67,6 +67,7 @@ StateRequireScripts._init_crashify = function (self)
 		Crashify.print_property("machine_id", Application.machine_id())
 	elseif PLATFORM == "ps5" then
 		Crashify.print_property("machine_id", Application.machine_id())
+		Crashify.print_property("device_type", Playstation.device_type())
 		Crashify.print_property("ps5_online_id", Playstation.online_id())
 
 		if Playstation.signed_in() then

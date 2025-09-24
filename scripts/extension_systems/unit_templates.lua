@@ -202,6 +202,13 @@ local function _resolve_minion_attacks(init_data, breed, game_object_data, attac
 
 	game_object_data.minion_attack_selection_template_id = NetworkLookup.minion_attack_selection_template_names[attack_selection_template_name]
 
+	local mutator_attack_selection_template_override_plasma = Managers.state.mutator:mutator("mutator_attack_selection_template_override_plasma")
+
+	if mutator_attack_selection_template_override_plasma then
+		attack_selection_template_name = "renegade_captain_plasma_pistol"
+		game_object_data.minion_attack_selection_template_id = NetworkLookup.minion_attack_selection_template_names[attack_selection_template_name]
+	end
+
 	local combat_range_multi_config_key = attack_selection_template and attack_selection_template.combat_range_multi_config_key
 	local selected_attack_names, used_weapon_slot_names = MinionAttackSelection.generate(attack_selection_template_name, attack_selection_seed)
 
@@ -220,12 +227,8 @@ local function _resolve_minion_inventory_and_attacks(init_data, breed, game_obje
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
 
-	if breed.has_havoc_inventory_override then
-		local havoc_mananger = Managers.state.havoc
-
-		if havoc_mananger:is_havoc() then
-			zone_id = breed.has_havoc_inventory_override
-		end
+	if breed.has_havoc_inventory_override and Managers.state.game_mode:game_mode():extension("havoc") then
+		zone_id = breed.has_havoc_inventory_override
 	end
 
 	local attack_selection_template_name, selected_attack_names, used_weapon_slot_names, combat_range_multi_config_key = _resolve_minion_attacks(init_data, breed, game_object_data, attack_selection_seed)
@@ -246,12 +249,8 @@ local function _resolve_minion_husk_inventory(breed, game_session, game_object_i
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
 
-	if breed.has_havoc_inventory_override then
-		local havoc_mananger = Managers.state.havoc
-
-		if havoc_mananger:is_havoc() then
-			zone_id = breed.has_havoc_inventory_override
-		end
+	if breed.has_havoc_inventory_override and Managers.state.game_mode:game_mode():extension("havoc") then
+		zone_id = breed.has_havoc_inventory_override
 	end
 
 	local used_weapon_slot_names
@@ -480,21 +479,10 @@ local unit_templates = {
 				side_id = side_id,
 				player = player,
 			})
-
-			if Managers.state.game_mode:use_hub_aim_extension() then
-				config:add("PlayerUnitHubAimExtension", {
-					aim_constraint_target_name = "aim_constraint_target",
-					aim_constraint_target_torso_name = "aim_constraint_target_torso",
-					head_aim_weight_name = "head_aim_weight",
-					torso_aim_weight_name = "chest_aim_weight",
-					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-				})
-			else
-				config:add("PlayerUnitAimExtension", {
-					aim_constraint_target_name = "aim_constraint_target",
-					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-				})
-			end
+			config:add("PlayerUnitAimExtension", {
+				aim_constraint_target_name = "aim_constraint_target",
+				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+			})
 
 			if (not is_local_unit or not is_human_controlled) and not Managers.state.game_mode:disable_hologram() then
 				config:add("PlayerUnitHologramExtension", {
@@ -681,21 +669,10 @@ local unit_templates = {
 					is_local_unit = false,
 					is_server = is_server,
 				})
-
-				if Managers.state.game_mode:use_hub_aim_extension() then
-					config:add("PlayerHuskHubAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_target_torso_name = "aim_constraint_target_torso",
-						head_aim_weight_name = "head_aim_weight",
-						torso_aim_weight_name = "chest_aim_weight",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				else
-					config:add("PlayerHuskAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				end
+				config:add("PlayerHuskAimExtension", {
+					aim_constraint_target_name = "aim_constraint_target",
+					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				})
 
 				if not Managers.state.game_mode:disable_hologram() then
 					config:add("PlayerUnitHologramExtension", {
@@ -917,21 +894,10 @@ local unit_templates = {
 					is_local_unit = is_local_unit,
 					initial_seed = character_state_seed,
 				})
-
-				if Managers.state.game_mode:use_hub_aim_extension() then
-					config:add("PlayerUnitHubAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_target_torso_name = "aim_constraint_target_torso",
-						head_aim_weight_name = "head_aim_weight",
-						torso_aim_weight_name = "chest_aim_weight",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				else
-					config:add("PlayerUnitAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				end
+				config:add("PlayerUnitAimExtension", {
+					aim_constraint_target_name = "aim_constraint_target",
+					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				})
 
 				local archetype_name = archetype.name
 				local wounds = Managers.state.difficulty:player_wounds(archetype_name)
@@ -1208,21 +1174,13 @@ local unit_templates = {
 				side_id = side_id,
 				player = player,
 			})
-
-			if Managers.state.game_mode:use_hub_aim_extension() then
-				config:add("PlayerUnitHubAimExtension", {
-					aim_constraint_target_name = "aim_constraint_target",
-					aim_constraint_target_torso_name = "aim_constraint_target_torso",
-					head_aim_weight_name = "head_aim_weight",
-					torso_aim_weight_name = "chest_aim_weight",
-					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-				})
-			else
-				config:add("PlayerUnitAimExtension", {
-					aim_constraint_target_name = "aim_constraint_target",
-					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-				})
-			end
+			config:add("PlayerUnitHubAimExtension", {
+				aim_constraint_target_name = "aim_constraint_target",
+				aim_constraint_target_torso_name = "aim_constraint_target_torso",
+				head_aim_weight_name = "head_aim_weight",
+				torso_aim_weight_name = "chest_aim_weight",
+				aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+			})
 
 			if (not is_local_unit or not is_human_controlled) and not Managers.state.game_mode:disable_hologram() then
 				config:add("PlayerUnitHologramExtension", {
@@ -1385,21 +1343,13 @@ local unit_templates = {
 					is_local_unit = false,
 					is_server = is_server,
 				})
-
-				if Managers.state.game_mode:use_hub_aim_extension() then
-					config:add("PlayerHuskHubAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_target_torso_name = "aim_constraint_target_torso",
-						head_aim_weight_name = "head_aim_weight",
-						torso_aim_weight_name = "chest_aim_weight",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				else
-					config:add("PlayerHuskAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				end
+				config:add("PlayerHuskHubAimExtension", {
+					aim_constraint_target_name = "aim_constraint_target",
+					aim_constraint_target_torso_name = "aim_constraint_target_torso",
+					head_aim_weight_name = "head_aim_weight",
+					torso_aim_weight_name = "chest_aim_weight",
+					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				})
 
 				if not Managers.state.game_mode:disable_hologram() then
 					config:add("PlayerUnitHologramExtension", {
@@ -1612,21 +1562,13 @@ local unit_templates = {
 					is_local_unit = is_local_unit,
 					initial_seed = character_state_seed,
 				})
-
-				if Managers.state.game_mode:use_hub_aim_extension() then
-					config:add("PlayerUnitHubAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_target_torso_name = "aim_constraint_target_torso",
-						head_aim_weight_name = "head_aim_weight",
-						torso_aim_weight_name = "chest_aim_weight",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				else
-					config:add("PlayerUnitAimExtension", {
-						aim_constraint_target_name = "aim_constraint_target",
-						aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
-					})
-				end
+				config:add("PlayerUnitHubAimExtension", {
+					aim_constraint_target_name = "aim_constraint_target",
+					aim_constraint_target_torso_name = "aim_constraint_target_torso",
+					head_aim_weight_name = "head_aim_weight",
+					torso_aim_weight_name = "chest_aim_weight",
+					aim_constraint_distance = PLAYER_AIM_CONSTRAINT_DISTANCE,
+				})
 
 				local archetype_name = archetype.name
 				local health = archetype.health
@@ -1916,15 +1858,29 @@ local unit_templates = {
 			end
 
 			if breed.toughness_template then
+				local start_depleted = false
+
+				if init_data.optional_void_shield_start_depleted then
+					start_depleted = true
+				end
+
 				config:add("MinionToughnessExtension", {
 					breed = breed,
+					start_depleted = start_depleted,
 				})
 			end
 
 			if breed.is_boss then
+				local start_depleted = false
+
+				if init_data.optional_void_shield_start_depleted then
+					start_depleted = true
+				end
+
 				config:add("BossExtension", {
 					breed = breed,
 					seed = boss_seed,
+					start_depleted = start_depleted,
 				})
 			end
 
@@ -2525,6 +2481,7 @@ local unit_templates = {
 				weapon_item_or_nil = weapon_item_or_nil or item,
 				fuse_override_time_or_nil = fuse_override_time_or_nil,
 				owner_side_or_nil = owner_side_or_nil,
+				initial_direction = direction,
 			})
 
 			local item_name = item.name

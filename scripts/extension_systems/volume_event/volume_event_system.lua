@@ -168,10 +168,6 @@ VolumeEventSystem._register_level_volume = function (self, volume_name)
 			connected_units = connected_units,
 		}
 
-		if self._init_done then
-			-- Nothing
-		end
-
 		for i = 1, #volume_levels do
 			local level = volume_levels[i]
 			local volume_id = VolumeEvent.register_volume(engine_volume_event_system, level, volume_name, extension_name, invert_volume, volume_data, on_enter, on_exit, filter)
@@ -212,10 +208,6 @@ VolumeEventSystem._unregister_level_volume = function (self, volume_name)
 	local engine_volume_event_system = self._engine_volume_event_system
 	local traversal_costs = self._traversal_costs
 	local volume_ids = volume.volume_ids
-
-	if self._init_done then
-		-- Nothing
-	end
 
 	for extension_name, _ in pairs(volume.events) do
 		for i = 1, #volume_ids do

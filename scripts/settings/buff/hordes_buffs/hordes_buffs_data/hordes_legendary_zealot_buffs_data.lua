@@ -20,7 +20,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_channel_heals_corruption =
 	},
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_shock_grenade_increase_next_hit_damage = {
-	description = "Stun grenades increases the damage done by the next damage taken when hit by 150%",
+	description = "Stun grenades increases the damage done by the next damage taken when hit by 250%",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_zealot_shock_grenade_increase_next_hit_damage",
 	title = "Weak to greatness",
@@ -28,7 +28,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_shock_grenade_increase_nex
 	buff_stats = {
 		damage = {
 			format_type = "percentage",
-			value = 1.5,
+			value = 2.5,
 		},
 	},
 }
@@ -49,7 +49,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_lunge_hit_triggers_shout =
 	buff_stats = {},
 }
 hordes_legendary_zealot_buffs_data.hordes_buff_zealot_regen_toughness_inside_fire_grenade = {
-	description = "Standing in the fire of a fire grenade regenerate 100% thoughness every 3 seconds",
+	description = "Standing in the fire of a fire grenade regenerate 100% thoughness every 2 seconds",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_zealot_regen_toughness_inside_fire_grenade",
 	title = "Fire addict",
@@ -61,7 +61,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_regen_toughness_inside_fir
 		},
 		time = {
 			format_type = "number",
-			value = 3,
+			value = 2,
 		},
 	},
 }
@@ -74,7 +74,7 @@ hordes_legendary_zealot_buffs_data.hordes_buff_zealot_knives_bleed_and_restore_t
 	buff_stats = {
 		thoughness = {
 			format_type = "percentage",
-			value = 0.1,
+			value = 0.15,
 		},
 	},
 }

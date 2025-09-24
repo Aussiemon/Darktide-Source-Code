@@ -559,8 +559,15 @@ PlayerUnitBuffExtension._remove_rpc_synced_buff = function (self, index)
 	end
 end
 
-PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, activation_time)
+PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, activation_time, skip_send_active_time_rpc)
 	if self._is_server then
+		if skip_send_active_time_rpc then
+			local buffs_by_index = self._buffs_by_index
+			local buff_instance = buffs_by_index[index]
+
+			return
+		end
+
 		local activation_frame = activation_time / self._fixed_time_step
 		local player = self._player
 
@@ -599,6 +606,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 	local buff_context = self._buff_context
 	local is_local_unit = buff_context.is_local_unit
 	local unit = buff_context.unit
+	local template_name = template.name
 	local player_effects = template.player_effects
 	local player = buff_context.player
 	local is_human_controlled = player:is_human_controlled()
@@ -638,7 +646,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 		local node_effects = player_effects.node_effects
 
 		if node_effects then
-			self:_start_node_effects(node_effects)
+			self:_start_node_effects(template_name, node_effects)
 		end
 
 		local wwise_parameters = player_effects.wwise_parameters
@@ -678,6 +686,7 @@ end
 
 PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 	local buff_context = self._buff_context
+	local template_name = template.name
 	local player_effects = template.player_effects
 	local player = buff_context.player
 	local is_human_controlled = player:is_human_controlled()
@@ -703,7 +712,7 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 			local player_node_effects = player_effects.node_effects
 
 			if player_node_effects then
-				self:_stop_node_effects(player_node_effects)
+				self:_stop_node_effects(template_name, player_node_effects)
 			end
 
 			local wwise_parameters = player_effects.wwise_parameters

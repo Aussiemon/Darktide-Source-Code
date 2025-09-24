@@ -30,18 +30,9 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	data.guid = component_guid
 	data.is_side_mission = false
 
-	if spawn_method == "primary_distribution" then
+	if string.find(spawn_method, "distribution") then
 		pool_spawner = true
-		data.distribution_type = DISTRIBUTION_TYPES.primary
-	elseif spawn_method == "secondary_distribution" then
-		pool_spawner = true
-		data.distribution_type = DISTRIBUTION_TYPES.secondary
-	elseif spawn_method == "mid_event_distribution" then
-		pool_spawner = true
-		data.distribution_type = DISTRIBUTION_TYPES.mid_event
-	elseif spawn_method == "end_event_distribution" then
-		pool_spawner = true
-		data.distribution_type = DISTRIBUTION_TYPES.end_event
+		data.distribution_type = spawn_method:gsub("_distribution", "")
 	elseif spawn_method == "guaranteed_spawn" then
 		data.distribution_type = DISTRIBUTION_TYPES.guaranteed
 	elseif spawn_method == "manual_spawn" or spawn_method == "flow_spawn" then
@@ -123,6 +114,10 @@ PickupSpawnerExtension.spawner_count = function (self)
 	return #self._components
 end
 
+PickupSpawnerExtension.is_chest = function (self)
+	return self._chest_extension ~= nil
+end
+
 PickupSpawnerExtension.can_spawn_pickup = function (self, component_index, pickup_name)
 	local component = self._components[component_index]
 
@@ -136,6 +131,91 @@ PickupSpawnerExtension.spawnable_pickups_amount = function (self, component_inde
 	local num_items = #component.spawnable_pickups
 
 	return num_items
+end
+
+PickupSpawnerExtension.has_next_item = function (self, component_index)
+	component_index = component_index or 1
+
+	local component = self._components[component_index]
+	local spawnable_pickups = component.spawnable_pickups
+
+	if type(spawnable_pickups) == "table" then
+		local spawnable_pickups_amount = self:spawnable_pickups_amount(component_index)
+
+		return spawnable_pickups_amount > 0
+	end
+end
+
+PickupSpawnerExtension.free_spawner_count = function (self, distribution_type_or_nil)
+	local count = 0
+	local num_components = #self._components
+	local components = self._components
+
+	for i = 1, num_components do
+		local component = components[i]
+
+		if (distribution_type_or_nil == nil or component.distribution_type == distribution_type_or_nil) and #component.spawned_items == 0 then
+			count = count + 1
+		end
+	end
+
+	return count
+end
+
+PickupSpawnerExtension.register_spawn_locations = function (self, node_list, distribution_type)
+	local num_components = #self._components
+	local components = self._components
+
+	for i = 1, num_components do
+		local component = components[i]
+
+		if component.distribution_type == distribution_type and #component.spawned_items == 0 then
+			node_list[#node_list + 1] = {
+				extension = self,
+				index = i,
+				chest = self._chest_extension ~= nil,
+			}
+		end
+	end
+end
+
+PickupSpawnerExtension.spawn_guaranteed = function (self)
+	local num_components = #self._components
+	local components = self._components
+
+	for i = 1, num_components do
+		local component = components[i]
+
+		if component.distribution_type == DISTRIBUTION_TYPES.guaranteed and component.spawnable_pickups ~= "all" and #component.spawnable_pickups > 0 then
+			local pickup_name = self._pickup_system:get_guaranteed_pickup(component.spawnable_pickups)
+
+			if pickup_name then
+				local check_reserve = true
+
+				self:spawn_specific_item(i, pickup_name, check_reserve)
+			end
+		end
+	end
+end
+
+PickupSpawnerExtension.request_rubberband_pickup = function (self, component_index)
+	local chest_extension = self._chest_extension
+	local component = self._components[component_index]
+	local pickup_name = self._pickup_system:get_rubberband_pickup(component.distribution_type, self._percentage_through_level)
+
+	chest_extension:reserve_pickup(component_index, pickup_name)
+
+	return pickup_name
+end
+
+PickupSpawnerExtension.spawn_item = function (self, component_index)
+	component_index = component_index or 1
+
+	local pickup_name = self:_fetch_next_item(component_index)
+	local check_reserve = true
+	local unit_item, unit_item_id = self:spawn_specific_item(component_index, pickup_name, check_reserve)
+
+	return unit_item, unit_item_id
 end
 
 PickupSpawnerExtension._fetch_next_item = function (self, component_index)
@@ -183,62 +263,6 @@ PickupSpawnerExtension._check_reserve = function (self, component_index, pickup_
 	end
 
 	return false
-end
-
-PickupSpawnerExtension.register_spawn_locations = function (self, node_list, distribution_type, pickup_settings)
-	local num_components = #self._components
-	local components = self._components
-
-	for i = 1, num_components do
-		local component = components[i]
-
-		if component.distribution_type == distribution_type then
-			node_list[#node_list + 1] = {
-				extension = self,
-				index = i,
-				chest = not not self._chest_extension,
-			}
-		end
-	end
-end
-
-PickupSpawnerExtension.spawn_guaranteed = function (self)
-	local num_components = #self._components
-	local components = self._components
-
-	for i = 1, num_components do
-		local component = components[i]
-
-		if component.distribution_type == DISTRIBUTION_TYPES.guaranteed and component.spawnable_pickups ~= "all" and #component.spawnable_pickups > 0 then
-			local pickup_name = self._pickup_system:get_guaranteed_pickup(component.spawnable_pickups)
-
-			if pickup_name then
-				local check_reserve = true
-
-				self:spawn_specific_item(i, pickup_name, check_reserve)
-			end
-		end
-	end
-end
-
-PickupSpawnerExtension.request_rubberband_pickup = function (self, component_index)
-	local chest_extension = self._chest_extension
-	local component = self._components[component_index]
-	local pickup_name = self._pickup_system:get_rubberband_pickup(component.distribution_type, self._percentage_through_level)
-
-	chest_extension:reserve_pickup(component_index, pickup_name)
-
-	return pickup_name
-end
-
-PickupSpawnerExtension.spawn_item = function (self, component_index)
-	component_index = component_index or 1
-
-	local pickup_name = self:_fetch_next_item(component_index)
-	local check_reserve = true
-	local unit_item, unit_item_id = self:spawn_specific_item(component_index, pickup_name, check_reserve)
-
-	return unit_item, unit_item_id
 end
 
 PickupSpawnerExtension.spawn_specific_item = function (self, component_index, pickup_name, check_reserve)

@@ -55,7 +55,7 @@ WeaponIconUI.unload_weapon_icon = function (self, reference_id)
 end
 
 WeaponIconUI.load_weapon_icon = function (self, item, on_load_callback, optional_render_context, prioritized, on_unload_callback)
-	local gear_id = item.gear_id or item.name
+	local gear_id = item.gear_id
 	local request_id_prefix = gear_id or math.uuid()
 
 	if not self._always_render then

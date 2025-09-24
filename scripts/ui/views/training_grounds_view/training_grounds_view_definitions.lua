@@ -1,13 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/training_grounds_view/training_grounds_view_definitions.lua
 
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local scenegraph_definition = {
 	corner_bottom_left = {

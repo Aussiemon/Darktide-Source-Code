@@ -4,6 +4,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Danger = require("scripts/utilities/danger")
 local Definitions = require("scripts/ui/views/mission_voting_view/mission_voting_view_definitions")
+local Havoc = require("scripts/utilities/havoc")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/mission_voting_view_blueprints")
@@ -29,11 +30,12 @@ local function get_input_text(action_name, input_service_name)
 end
 
 local function determine_havoc_promotion_rate(played_order_rank, own_order_rank)
-	if played_order_rank == nil or own_order_rank == nil then
+	local settings = Managers.data_service.havoc:get_settings()
+
+	if played_order_rank == nil or own_order_rank == nil or own_order_rank >= settings.max_rank then
 		return 0
 	end
 
-	local settings = Managers.data_service.havoc:get_settings()
 	local rank_diff = played_order_rank - own_order_rank
 
 	for _, element in ipairs(settings.gap_based_promotion_rate_multiplier) do
@@ -629,22 +631,6 @@ MissionVotingView._populate_quickplay_data = function (self)
 	accept_confirmation_widget.visible = false
 end
 
-local function _get_havoc_rank(mission_data)
-	local min_havoc_rank = 1
-	local max_havoc_rank = 100
-	local havoc_rank_string = "havoc-rank-"
-
-	for i = min_havoc_rank, max_havoc_rank do
-		if mission_data.flags[havoc_rank_string .. tostring(i)] then
-			return i
-		end
-	end
-
-	Log.error("Matchmaking Notification Handler", "Unable to get havoc rank")
-
-	return nil
-end
-
 MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_template = MissionTemplates[mission_data.map]
 	local zone_id = mission_template.zone_id
@@ -672,7 +658,7 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	local danger_level_widget = self._widgets_by_name.mission_danger_info
 
 	if mission_data.category == "havoc" then
-		local havoc_rank = _get_havoc_rank(mission_data)
+		local havoc_rank = Havoc.get_havoc_rank(mission_data.flags)
 
 		danger_level_widget.content.rank_text = Utf8.upper(tostring(havoc_rank))
 		danger_level_widget.content.danger_icon = "content/ui/materials/icons/generic/havoc"
@@ -766,22 +752,6 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 	return icon_definition
 end
 
-MissionVotingView._get_havoc_mutators = function (self, mission_data)
-	local mutators = {}
-
-	for k, _ in pairs(mission_data.flags) do
-		if string.find(k, "havoc%-circ%-") then
-			mutators[#mutators + 1] = k
-		end
-	end
-
-	if #mutators > 0 then
-		return mutators
-	else
-		return nil
-	end
-end
-
 MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 	table.clear(self._mission_icons_widgets)
 
@@ -806,7 +776,7 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 
 		local has_side_mission = not not mission_data.sideMission
 		local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
-		local havoc_mutators = self:_get_havoc_mutators(mission_data)
+		local havoc_mutators = Havoc.get_havoc_mutators(mission_data.flags)
 		local mission_type = MissionTypes[mission_template.mission_type]
 
 		mission_icon_settings[#mission_icon_settings + 1] = {

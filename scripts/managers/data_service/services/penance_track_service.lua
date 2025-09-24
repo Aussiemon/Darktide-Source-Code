@@ -5,29 +5,21 @@ local PenanceTrackService = class("PenanceTrackService")
 
 PenanceTrackService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
-	self._cached_track_data = nil
+	self._promise_cache = {}
 end
 
-PenanceTrackService.get_track = function (self, trackId)
-	local promise
+PenanceTrackService.get_track = function (self, track_id)
+	local promise_cache = self._promise_cache
 
-	if self._cached_track_data then
-		promise = Promise.resolved(self._cached_track_data)
-	else
-		promise = self._backend_interface.tracks:get_track(trackId):next(function (data)
-			self._cached_track_data = data
+	if not promise_cache[track_id] then
+		promise_cache[track_id] = self._backend_interface.tracks:get_track(track_id):catch(function (error)
+			promise_cache[track_id] = nil
 
-			return data
-		end):catch(function (error)
-			local error_string = tostring(error)
-
-			Log.error("PenanceTrackService", "Error fetching penance track: %s", error_string)
-
-			return {}
+			return Promise.rejected(error)
 		end)
 	end
 
-	return promise:next(function (data)
+	return promise_cache[track_id]:next(function (data)
 		return data
 	end)
 end

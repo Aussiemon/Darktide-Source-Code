@@ -11,6 +11,7 @@ local BUFF_TARGETS = BuffSettings.targets
 local MIN_PROC_EVENTS_SIZE = BuffSettings.min_proc_events_size
 local MAX_PROC_EVENTS = BuffSettings.max_proc_events
 local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
+local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local BuffExtensionBase = class("BuffExtensionBase")
 local Unit_world_position = Unit.world_position
 local Unit_node = Unit.node
@@ -73,17 +74,20 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._vfx_node_effects = {}
 	self._proc_event_param_tables = {}
 	self._num_proc_events = 0
-	self._param_table_index = 0
+	self._param_tables_start_index_reference = 1
+	self._num_params_table_in_use = 0
 	self._unique_frame_proc = {}
 
 	if pre_allocate_event_param_tables then
 		self._proc_events = Script.new_array(MAX_PROC_EVENTS * PROC_EVENTS_STRIDE)
+		self._proc_events_backup = Script.new_array(MAX_PROC_EVENTS * PROC_EVENTS_STRIDE)
 
 		for i = 1, MAX_PROC_EVENTS do
 			self._proc_event_param_tables[i] = {}
 		end
 	else
 		self._proc_events = Script.new_array(MIN_PROC_EVENTS_SIZE * PROC_EVENTS_STRIDE)
+		self._proc_events_backup = Script.new_array(MIN_PROC_EVENTS_SIZE * PROC_EVENTS_STRIDE)
 	end
 
 	if is_server then
@@ -210,7 +214,12 @@ BuffExtensionBase._update_proc_events = function (self, t)
 	local num_proc_events = self._num_proc_events
 
 	if num_proc_events > 0 then
-		local proc_events = self._proc_events
+		local iterating_proc_events = self._proc_events
+		local num_iterating_proc_events = num_proc_events
+
+		self._proc_events = self._proc_events_backup
+		self._num_proc_events = 0
+
 		local buffs = self._buffs
 		local portable_random = self._portable_random
 		local local_portable_random = self._local_portable_random
@@ -220,28 +229,39 @@ BuffExtensionBase._update_proc_events = function (self, t)
 			local buff = buffs[i]
 			local is_predicted = buff:is_predicted()
 			local force_prediction = buff:force_predicted_proc()
+			local skip_send_active_time_rpc = buff:skip_send_active_time_rpc()
 
 			if buff and buff.update_proc_events and (is_server or is_predicted or force_prediction) then
-				local activated_proc = buff:update_proc_events(t, proc_events, num_proc_events, portable_random, local_portable_random)
+				local activated_proc = buff:update_proc_events(t, iterating_proc_events, num_iterating_proc_events, portable_random, local_portable_random)
 
-				if activated_proc and is_server and not is_predicted then
-					local server_index = self:_find_local_index(buff)
+				if activated_proc then
+					if is_server and not is_predicted then
+						local server_index = self:_find_local_index(buff)
 
-					self:_set_proc_active_start_time(server_index, t)
+						self:_set_proc_active_start_time(server_index, t, skip_send_active_time_rpc)
+					end
+
+					if buff:remove_on_proc() then
+						buff:force_finish()
+					end
 				end
 			end
 		end
 
-		table.clear(proc_events)
+		num_proc_events = self._num_proc_events
 
-		self._num_proc_events = 0
+		table.clear(iterating_proc_events)
+
+		self._proc_events_backup = iterating_proc_events
+
+		self:_clear_param_tables(num_iterating_proc_events)
+
+		self._num_params_table_in_use = num_proc_events
+
+		if num_proc_events > 0 then
+			-- Nothing
+		end
 	end
-
-	for i = 1, self._param_table_index do
-		table.clear(self._proc_event_param_tables[i])
-	end
-
-	self._param_table_index = 0
 
 	table.clear(self._unique_frame_proc)
 end
@@ -383,6 +403,8 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 				existing_buff_instance:set_need_to_sync_start_time(false)
 			end
 
+			self:_proc_on_buff_event(template_name, existing_buff_instance, BuffSettings.proc_events.on_buff_stack_added)
+
 			buff_instance = existing_buff_instance
 		end
 	end
@@ -400,6 +422,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 		end
 
 		self:_on_add_buff(buff_instance)
+		self:_proc_on_buff_event(template_name, buff_instance, BuffSettings.proc_events.on_buff_added)
 
 		if can_stack then
 			self._stacking_buffs[template_name] = buff_instance
@@ -501,6 +524,7 @@ BuffExtensionBase._check_max_stacks_cap = function (self, template, t)
 	local previous_stack_count = stack_count
 
 	buff_instance:refresh_func(t, previous_stack_count)
+	self:_proc_on_buff_event(template_name, buff_instance, BuffSettings.proc_events.on_max_stack_refresh_buff)
 
 	return false
 end
@@ -509,6 +533,12 @@ BuffExtensionBase.refresh_duration_of_stacking_buff = function (self, buff_name,
 	local buff_instance = self._stacking_buffs[buff_name]
 
 	buff_instance:set_start_time(t)
+end
+
+BuffExtensionBase.add_duration_of_stacking_buff = function (self, buff_name, amount)
+	local buff_instance = self._stacking_buffs[buff_name]
+
+	buff_instance:add_duration(amount)
 end
 
 BuffExtensionBase.current_stacks = function (self, buff_name)
@@ -521,6 +551,12 @@ BuffExtensionBase.buff_start_time = function (self, buff_name)
 	local buff_instance = self._stacking_buffs[buff_name]
 
 	return buff_instance and buff_instance:start_time()
+end
+
+BuffExtensionBase.buff_duration_progress = function (self, buff_name)
+	local buff_instance = self._stacking_buffs[buff_name]
+
+	return buff_instance and buff_instance:duration_progress() or 0
 end
 
 BuffExtensionBase.remove_externally_controlled_buff = function (self, local_index)
@@ -616,9 +652,10 @@ BuffExtensionBase._on_remove_buff_stack = function (self, buff_instance, previou
 		local stack_node_effects = shared_effects.stack_node_effects
 
 		if stack_node_effects then
+			local template_name = template.name
 			local current_stack_count = buff_instance:stack_count()
 
-			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+			self:_check_stack_node_effects(template_name, stack_node_effects, current_stack_count, previous_stack_count)
 		end
 	end
 end
@@ -631,9 +668,10 @@ BuffExtensionBase._on_add_buff_stack = function (self, buff_instance, previous_s
 		local stack_node_effects = shared_effects.stack_node_effects
 
 		if stack_node_effects then
+			local template_name = template.name
 			local current_stack_count = buff_instance:stack_count()
 
-			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+			self:_check_stack_node_effects(template_name, stack_node_effects, current_stack_count, previous_stack_count)
 		end
 	end
 
@@ -843,22 +881,25 @@ BuffExtensionBase.is_frame_unique_proc = function (self, event, unique_key)
 end
 
 BuffExtensionBase.request_proc_event_param_table = function (self)
-	local param_table_index = self._param_table_index + 1
+	local num_params_table_in_use = self._num_params_table_in_use + 1
 
-	if param_table_index >= MAX_PROC_EVENTS then
+	if num_params_table_in_use > MAX_PROC_EVENTS then
 		Log.warning("BuffExtensionBase", "Out of proc event tables, ignoring proc!")
 
 		return nil
 	end
 
-	local param_table = self._proc_event_param_tables[param_table_index]
+	local param_table_index = self._param_tables_start_index_reference
+	local starting_index = param_table_index - 1
+	local current_table_index = (starting_index + num_params_table_in_use - 1) % MAX_PROC_EVENTS + 1
+	local param_table = self._proc_event_param_tables[current_table_index]
 
 	if not param_table then
 		param_table = Script.new_map(32)
-		self._proc_event_param_tables[param_table_index] = param_table
+		self._proc_event_param_tables[current_table_index] = param_table
 	end
 
-	self._param_table_index = param_table_index
+	self._num_params_table_in_use = num_params_table_in_use
 
 	return param_table
 end
@@ -889,7 +930,9 @@ BuffExtensionBase._start_fx = function (self, index, template)
 		local node_effects = shared_effects.node_effects
 
 		if node_effects then
-			self:_start_node_effects(node_effects)
+			local template_name = template.name
+
+			self:_start_node_effects(template_name, node_effects)
 		end
 	end
 end
@@ -901,14 +944,17 @@ BuffExtensionBase._stop_fx = function (self, index, template)
 		local shared_node_effects = shared_effects.node_effects
 
 		if shared_node_effects then
-			self:_stop_node_effects(shared_node_effects)
+			local template_name = template.name
+
+			self:_stop_node_effects(template_name, shared_node_effects)
 		end
 	end
 end
 
-BuffExtensionBase._start_node_effects = function (self, node_effects)
+BuffExtensionBase._start_node_effects = function (self, template_name, node_effects, optional_node_effects_priotity)
 	local active_node_sfx_effects = self._sfx_node_effects
 	local active_node_vfx_effects = self._vfx_node_effects
+	local new_node_effect_priority = optional_node_effects_priotity or 1
 	local buff_context = self._buff_context
 	local world = buff_context.world
 	local wwise_world = buff_context.wwise_world
@@ -984,6 +1030,15 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 					active_node_vfx[particle_effect] = {
 						particle_id = effect_id,
 						stop_type = stop_type,
+						current_effect_template_name = template_name,
+						current_effect_priority = new_node_effect_priority,
+						active_buffs = {
+							[template_name] = {
+								active_buffs_count = 1,
+								material_variables = vfx.material_variables or nil,
+								priority = new_node_effect_priority,
+							},
+						},
 					}
 
 					local material_variables = vfx.material_variables
@@ -998,6 +1053,25 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 
 							World.set_particles_material_vector3(world, effect_id, material_name, variable_name, vector_value)
 						end
+					end
+				else
+					local active_particle_effect_data = active_node_vfx[particle_effect]
+					local current_effect_priority = active_particle_effect_data.current_effect_priority
+					local active_effects_for_node_and_particle = active_particle_effect_data.active_buffs
+					local new_buff_existing_data = active_effects_for_node_and_particle[template_name]
+
+					if new_buff_existing_data then
+						new_buff_existing_data.active_buffs_count = new_buff_existing_data.active_buffs_count + 1
+					else
+						active_effects_for_node_and_particle[template_name] = {
+							active_buffs_count = 1,
+							material_variables = vfx.material_variables or nil,
+							priority = new_node_effect_priority,
+						}
+					end
+
+					if current_effect_priority <= new_node_effect_priority then
+						self:_set_new_effect_for_active_node_particle_effect(world, active_particle_effect_data, template_name, new_node_effect_priority, vfx.material_variables)
 					end
 				end
 
@@ -1016,7 +1090,7 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 	end
 end
 
-BuffExtensionBase._stop_node_effects = function (self, node_effects)
+BuffExtensionBase._stop_node_effects = function (self, removed_buff_template_name, node_effects)
 	local active_node_sfx_effects = self._sfx_node_effects
 	local active_node_vfx_effects = self._vfx_node_effects
 	local buff_context = self._buff_context
@@ -1065,14 +1139,14 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 			if vfx then
 				local active_node_vfx = active_node_vfx_effects[node_index]
 				local particle_effect = vfx.particle_effect
-				local active_particle_effect = active_node_vfx[particle_effect]
-				local new_ref_count = (active_particle_effect.ref_count or 0) - 1
+				local active_particle_effect_data = active_node_vfx[particle_effect]
+				local new_ref_count = (active_particle_effect_data.ref_count or 0) - 1
 
-				active_particle_effect.ref_count = new_ref_count
+				active_particle_effect_data.ref_count = new_ref_count
 
 				if new_ref_count < 1 then
-					local particle_id = active_particle_effect.particle_id
-					local stop_type = active_particle_effect.stop_type
+					local particle_id = active_particle_effect_data.particle_id
+					local stop_type = active_particle_effect_data.stop_type
 
 					if stop_type == "stop" then
 						World.stop_spawning_particles(world, particle_id)
@@ -1080,7 +1154,22 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 						World.destroy_particles(world, particle_id)
 					end
 
+					table.clear(active_node_vfx[particle_effect].active_buffs)
+
 					active_node_vfx[particle_effect] = nil
+				else
+					local active_buffs_for_node_and_particle = active_particle_effect_data.active_buffs
+					local removed_buff_data = active_buffs_for_node_and_particle[removed_buff_template_name]
+
+					removed_buff_data.active_buffs_count = removed_buff_data.active_buffs_count - 1
+
+					local last_instance_of_buff_removed = removed_buff_data.active_buffs_count < 1
+
+					if last_instance_of_buff_removed then
+						active_buffs_for_node_and_particle[removed_buff_template_name] = nil
+
+						self:_start_next_highest_priority_active_node_effect(world, removed_buff_template_name, active_particle_effect_data)
+					end
 				end
 
 				if next(active_node_vfx) == nil then
@@ -1091,9 +1180,46 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 	end
 end
 
+BuffExtensionBase._start_next_highest_priority_active_node_effect = function (self, world, removed_buff_template_name, active_particle_effect_data)
+	local active_buffs_for_node_and_particle = active_particle_effect_data.active_buffs
+	local new_node_effect_priority = -1
+	local new_node_effect_template_name, new_node_effect_material_variables
+
+	for active_buff_name, active_effect_data in pairs(active_buffs_for_node_and_particle) do
+		if new_node_effect_priority < active_effect_data.priority or active_effect_data.priority == new_node_effect_priority and new_node_effect_material_variables == nil then
+			new_node_effect_priority = active_effect_data.priority
+			new_node_effect_material_variables = active_effect_data.material_variables
+			new_node_effect_template_name = active_buff_name
+		end
+	end
+
+	if new_node_effect_template_name then
+		self:_set_new_effect_for_active_node_particle_effect(world, active_particle_effect_data, new_node_effect_template_name, new_node_effect_priority, new_node_effect_material_variables)
+	end
+end
+
+BuffExtensionBase._set_new_effect_for_active_node_particle_effect = function (self, world, active_particle_effect_data, new_effect_template_name, new_effect_priority, new_effect_material_variables)
+	active_particle_effect_data.current_effect_template_name = new_effect_template_name
+	active_particle_effect_data.current_effect_priority = new_effect_priority
+
+	local particle_id = active_particle_effect_data.particle_id
+
+	if new_effect_material_variables and particle_id then
+		for j = 1, #new_effect_material_variables do
+			local entry = new_effect_material_variables[j]
+			local material_name = entry.material_name
+			local variable_name = entry.variable_name
+			local value = entry.value
+			local vector_value = Vector3(value[1], value[2], value[3])
+
+			World.set_particles_material_vector3(world, particle_id, material_name, variable_name, vector_value)
+		end
+	end
+end
+
 local TEMP_STACK_NODE_EFFECTS = {}
 
-BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects, current_stack_count, previous_stack_count)
+BuffExtensionBase._check_stack_node_effects = function (self, template_name, stack_node_effects, current_stack_count, previous_stack_count, optional_node_effects_priotity)
 	if previous_stack_count < current_stack_count then
 		local index = 0
 
@@ -1112,7 +1238,7 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 		end
 
 		if index > 0 then
-			self:_start_node_effects(TEMP_STACK_NODE_EFFECTS)
+			self:_start_node_effects(template_name, TEMP_STACK_NODE_EFFECTS, optional_node_effects_priotity or 1)
 			table.clear_array(TEMP_STACK_NODE_EFFECTS, index)
 		end
 	else
@@ -1133,10 +1259,50 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 		end
 
 		if index > 0 then
-			self:_stop_node_effects(TEMP_STACK_NODE_EFFECTS)
+			self:_stop_node_effects(template_name, TEMP_STACK_NODE_EFFECTS)
 			table.clear_array(TEMP_STACK_NODE_EFFECTS, index)
 		end
 	end
+end
+
+BuffExtensionBase._proc_on_buff_event = function (self, template_name, buff_instance, proc_event_name)
+	local param_table = self:request_proc_event_param_table()
+
+	if param_table then
+		param_table.template_name = template_name
+		param_table.unit = self._unit
+
+		self:add_proc_event(proc_event_name, param_table)
+	end
+
+	local additional_arguments = buff_instance and buff_instance:additional_arguments()
+
+	if additional_arguments then
+		local owner_unit = additional_arguments.owner_unit
+		local owner_buff_extension = owner_unit and ScriptUnit.has_extension(owner_unit, "buff_system")
+		local owner_param_table = owner_buff_extension and owner_buff_extension:request_proc_event_param_table()
+
+		if owner_param_table then
+			owner_param_table.template_name = template_name
+			owner_param_table.unit = self._unit
+
+			owner_buff_extension:add_proc_event(proc_event_name, owner_param_table)
+		end
+	end
+end
+
+BuffExtensionBase._clear_param_tables = function (self, number_of_elements_to_clear)
+	local param_table_index = self._param_tables_start_index_reference
+	local starting_index = param_table_index - 1
+	local current_index
+
+	for i = 1, number_of_elements_to_clear do
+		current_index = (starting_index + i - 1) % MAX_PROC_EVENTS + 1
+
+		table.clear(self._proc_event_param_tables[current_index])
+	end
+
+	self._param_tables_start_index_reference = (param_table_index + number_of_elements_to_clear - 1) % MAX_PROC_EVENTS + 1
 end
 
 BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_talent)
@@ -1191,7 +1357,7 @@ BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, ga
 	self:_set_proc_active_start_time(index, activation_time)
 end
 
-BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time)
+BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time, skip_send_active_time_rpc)
 	ferror("Buff extension is using base implementation of _set_proc_active_start_time, it shouldn't")
 end
 

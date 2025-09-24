@@ -28,6 +28,7 @@ local DIRECTION = {
 	RIGHT = 4,
 	UP = 1,
 }
+local TAB_ELEMENT_LAYER = 4
 local STORE_LAYOUT = {
 	{
 		display_name = "loc_premium_store_category_title_featured",
@@ -118,7 +119,7 @@ StoreView.on_enter = function (self)
 	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
 
 	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
-	self._wallet_element:_generate_currencies(self._wallet_type, {
+	self._wallet_element:generate_currencies(self._wallet_type, {
 		nil,
 		30,
 	})
@@ -227,7 +228,7 @@ StoreView._set_panels_store = function (self)
 			30,
 		},
 	}
-	local category_panel = self:_setup_element(ViewElementTabMenu, "category_panel", 10, tab_menu_settings)
+	local category_panel = self:_setup_element(ViewElementTabMenu, "category_panel", TAB_ELEMENT_LAYER, tab_menu_settings)
 
 	self._category_panel = category_panel
 
@@ -291,6 +292,14 @@ StoreView._initialize_opening_page = function (self)
 		category_index = 1,
 		page_index = 1,
 	}
+
+	if self._context.target_storefront then
+		for i = 1, #STORE_LAYOUT do
+			if STORE_LAYOUT[i].storefront == self._context.target_storefront then
+				path.category_index = i
+			end
+		end
+	end
 
 	self:_open_navigation_path(path)
 end
@@ -503,8 +512,8 @@ StoreView.is_item_owned = function (self, id)
 end
 
 StoreView._open_navigation_path = function (self, path)
-	local category_index = path.category_index
-	local page_index = path.page_index
+	local category_index = path.category_index or 1
+	local page_index = path.page_index or 1
 
 	if not self._category_panel then
 		self:_set_panels_store()
@@ -543,7 +552,9 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 		end)
 	end
 
-	return self:_fetch_storefront(storefront, on_complete_callback)
+	local promise = self:_fetch_storefront(storefront, on_complete_callback)
+
+	return promise
 end
 
 StoreView._clear_telemetry_name = function (self)
@@ -1322,7 +1333,7 @@ StoreView._setup_panels = function (self, category_pages_layout_data)
 				30,
 			},
 		}
-		local page_panel = self:_setup_element(ViewElementTabMenu, "page_panel", 10, tab_menu_settings)
+		local page_panel = self:_setup_element(ViewElementTabMenu, "page_panel", TAB_ELEMENT_LAYER, tab_menu_settings)
 
 		self._page_panel = page_panel
 
@@ -1752,7 +1763,6 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 	local scenegraph_id = "grid_content_pivot"
 	local ui_renderer = self._ui_renderer
 	local widget_type = config.widget_type
-	local widget
 	local template = StoreViewContentBlueprints[widget_type]
 	local layout_width, layout_height = self:_scenegraph_size("grid_background")
 	local size_scale = config.size_scale
@@ -1782,8 +1792,8 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 	local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 	local name = "widget_" .. suffix
+	local widget = self:_create_widget(name, widget_definition)
 
-	widget = self:_create_widget(name, widget_definition)
 	widget.type = widget_type
 	widget.offset = new_position or {
 		0,

@@ -200,12 +200,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.3,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.3,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -272,12 +274,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_left",
-			anchor_point_offset = {
-				0.25,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_left",
+				anchor_point_offset = {
+					0.25,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,
@@ -403,12 +407,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.3,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.3,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -477,12 +483,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = short_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_diagonal_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_diagonal_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,
@@ -609,12 +617,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_stab_01",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.3,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_stab_01",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.3,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer_stab,
@@ -740,12 +750,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right_01",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.2,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right_01",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.2,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -874,12 +886,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = short_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/push_follow_up",
-			anchor_point_offset = {
-				0.25,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/push_follow_up",
+				anchor_point_offset = {
+					0.25,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_combat_knife_linesman,
@@ -1010,12 +1024,14 @@ weapon_template.actions = {
 			0.15,
 			0.6,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/attack_special_jab",
-			anchor_point_offset = {
-				-0.35,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/attack_special_jab",
+				anchor_point_offset = {
+					-0.35,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.jab_special,
@@ -1134,12 +1150,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = default_weapon_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_left",
-			anchor_point_offset = {
-				0.25,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/heavy_swing_down_left",
+				anchor_point_offset = {
+					0.25,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.medium_combat_knife_ninja_fencer,

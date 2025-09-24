@@ -136,7 +136,7 @@ local archetype_talents = {
 						},
 					},
 					value_manipulation = function (value)
-						return (value - 1) * 100
+						return math_round((value - 1) * 100)
 					end,
 				},
 			},
@@ -1262,7 +1262,6 @@ local archetype_talents = {
 			format_values = {
 				damage = {
 					format_type = "percentage",
-					num_decimals = 1,
 					prefix = "+",
 					value = talent_settings_2.offensive_2_3.melee_damage,
 				},
@@ -1528,12 +1527,12 @@ local archetype_talents = {
 				toughness = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.02,
+					value = 0.025,
 				},
 				toughness_reload = {
 					format_type = "percentage",
 					prefix = "+",
-					value = 0.1,
+					value = 0.15,
 				},
 				ability = {
 					format_type = "loc_string",
@@ -2176,7 +2175,7 @@ local archetype_talents = {
 					prefix = "+",
 					value = shared_talent_settings.ogryn_damage_reduction_on_high_stamina.damage_taken_multiplier,
 					value_manipulation = function (value)
-						return math_round((1 - value) * 100)
+						return (1 - value) * 100
 					end,
 				},
 				stamina = {
@@ -2706,7 +2705,7 @@ local archetype_talents = {
 					prefix = "+",
 					value = shared_talent_settings.ogryn_damage_taken_by_all_increases_strength_tdr.tdr,
 					value_manipulation = function (value)
-						return (1 - value) * 100
+						return math_round((1 - value) * 100)
 					end,
 				},
 			},

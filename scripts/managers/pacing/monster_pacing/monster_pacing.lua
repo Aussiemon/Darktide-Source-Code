@@ -161,10 +161,14 @@ MonsterPacing._generate_spawns = function (self, template)
 		num_to_spawn = math.max(num_to_spawn, #boss_injections)
 
 		if is_monster then
-			local add_num_monsters = Managers.state.havoc:get_modifier_value("add_num_monsters")
+			local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
 
-			if add_num_monsters then
-				num_to_spawn = num_to_spawn + add_num_monsters
+			if havoc_extension then
+				local add_num_monsters = havoc_extension:get_modifier_value("add_num_monsters")
+
+				if add_num_monsters then
+					num_to_spawn = num_to_spawn + add_num_monsters
+				end
 			end
 		end
 
@@ -476,8 +480,7 @@ MonsterPacing._fill_spawns_by_timer = function (self, dt, t, side_id, target_sid
 
 	local random_index = math.random(1, #possible_spawns_by_type)
 	local type_to_spawn = possible_spawns_by_type[random_index]
-	local random_player = math.random(1, #valid_player_positions)
-	local spawn_position = valid_player_positions[random_player]
+	local spawn_position = self:_get_furthest_pos_from_all_players(side_id)
 	local main_path_manager = Managers.state.main_path
 	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
 	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, spawn_position, 5, 5, 5)
@@ -641,6 +644,63 @@ MonsterPacing._update_allowance = function (self, dt, t, side_id, target_side_id
 	end
 
 	return false
+end
+
+local location_positions = {}
+
+MonsterPacing._get_furthest_pos_from_all_players = function (self, side_id)
+	local side_system = Managers.state.extension:system("side_system")
+	local player_side = side_system:get_side(side_id)
+	local valid_player_positions = player_side.valid_player_units_positions
+	local main_path_manager = Managers.state.main_path
+	local spawn_point_positions = main_path_manager:spawn_point_positions()
+
+	if #location_positions == 0 then
+		for i = 1, #spawn_point_positions do
+			local spawn_group_positions = spawn_point_positions[i]
+
+			for ii = 1, #spawn_group_positions do
+				local triangle_group = spawn_group_positions[ii]
+
+				for k = 1, #triangle_group do
+					local position = triangle_group[k]
+
+					location_positions[#location_positions + 1] = position
+				end
+			end
+		end
+	end
+
+	local player_positions = {}
+
+	for i = 1, #valid_player_positions do
+		local player_position = valid_player_positions[i]
+
+		player_positions[#player_positions + 1] = player_position
+	end
+
+	local vector3_distance_squared = Vector3.distance_squared
+	local furthestPosition
+	local maxTotalDistance = -math.huge
+
+	for i = 1, #location_positions do
+		local pos = location_positions[i]:unbox()
+		local totalDistance = 0
+
+		for ii = 1, #player_positions do
+			local player_pos = player_positions[ii]
+			local distance_sq = vector3_distance_squared(pos, player_pos)
+
+			totalDistance = totalDistance + distance_sq
+		end
+
+		if maxTotalDistance < totalDistance then
+			maxTotalDistance = totalDistance
+			furthestPosition = pos
+		end
+	end
+
+	return furthestPosition
 end
 
 MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
@@ -871,7 +931,11 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local force_horde_on_spawn = template.force_horde
 
 	if force_horde_on_spawn then
-		Managers.state.pacing:force_horde_pacing_spawn()
+		local has_forced_horde_condition = template.force_horde_condition
+
+		if not has_forced_horde_condition or has_forced_horde_condition() then
+			Managers.state.pacing:force_horde_pacing_spawn()
+		end
 	end
 
 	if monster.set_enraged then
@@ -1019,14 +1083,10 @@ MonsterPacing.remove_monsters_behind_pos = function (self, position)
 		return false
 	end
 
-	local nav_spawn_points, nav_world = main_path_manager:nav_spawn_points(), self._nav_world
-	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 1, 1, 1)
+	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 1, 1, 1)
 
 	if target_navmesh_position then
-		local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
-		local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-		local end_index = start_index + 1
-		local _, distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+		local distance = main_path_manager:travel_distance_from_position(target_navmesh_position)
 		local monsters = self._monsters
 
 		if monsters then

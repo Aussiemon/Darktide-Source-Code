@@ -4,31 +4,30 @@ local AbilityTemplates = require("scripts/settings/ability/ability_templates/abi
 local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerHuskAbilityExtension = class("PlayerHuskAbilityExtension")
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 
 PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._game_session = game_session
 	self._game_object_id = game_object_id
 	self._equipped_abilities = {}
-	self._enabled_abilities = {
-		combat_ability = false,
-		grenade_ability = false,
-	}
-	self._ability_max_charges = {
-		combat_ability = 0,
-		grenade_ability = 0,
-	}
-	self._ability_max_cooldown = {
-		combat_ability = 0,
-		grenade_ability = 0,
-	}
+	self._enabled_abilities = {}
+	self._ability_max_charges = {}
+	self._ability_max_cooldown = {}
+	self._components = {}
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-	self._components = {
-		grenade_ability = unit_data_extension:read_component("grenade_ability"),
-		combat_ability = unit_data_extension:read_component("combat_ability"),
-	}
+	for i = 1, #ability_types do
+		local component_name = ability_types[i]
+
+		self._enabled_abilities[component_name] = false
+		self._ability_max_charges[component_name] = 0
+		self._ability_max_cooldown[component_name] = 0
+		self._components[component_name] = unit_data_extension:read_component(component_name)
+	end
+
 	self._equipped_ability_effect_scripts = {}
 	self._equipped_ability_effect_scripts_context = {
 		world = extension_init_context.world,
@@ -77,39 +76,30 @@ PlayerHuskAbilityExtension.post_update = function (self, unit, dt, t, fixed_fram
 	end
 end
 
-local game_object_fields = {
-	combat_ability_enabled = false,
-	combat_ability_equipped = 0,
-	combat_ability_max_charges = 0,
-	combat_ability_max_cooldown = 0,
-	grenade_ability_enabled = false,
-	grenade_ability_equipped = 0,
-	grenade_ability_max_charges = 0,
-	grenade_ability_max_cooldown = 0,
-}
+local game_object_fields = {}
+
+for i = 1, #ability_types do
+	local ability_type = ability_types[i]
+
+	game_object_fields[ability_type .. "_equipped"] = 0
+	game_object_fields[ability_type .. "_enabled"] = false
+	game_object_fields[ability_type .. "_max_charges"] = 0
+	game_object_fields[ability_type .. "_max_cooldown"] = 0
+end
 
 PlayerHuskAbilityExtension._read_game_object = function (self, game_session, game_object_id)
 	GameSession.game_object_fields(game_session, game_object_id, game_object_fields)
 
-	local equipped_abilities = self._equipped_abilities
+	for i = 1, #ability_types do
+		local component_name = ability_types[i]
+		local equipped_abilities = self._equipped_abilities
 
-	self:_handle_ability_equip(equipped_abilities, "grenade_ability", game_object_fields.grenade_ability_equipped)
-	self:_handle_ability_equip(equipped_abilities, "combat_ability", game_object_fields.combat_ability_equipped)
+		self:_handle_ability_equip(equipped_abilities, component_name, game_object_fields[component_name .. "_equipped"])
 
-	local enabled_abilities = self._enabled_abilities
-
-	enabled_abilities.grenade_ability = game_object_fields.grenade_ability_enabled
-	enabled_abilities.combat_ability = game_object_fields.combat_ability_enabled
-
-	local ability_max_charges = self._ability_max_charges
-
-	ability_max_charges.grenade_ability = game_object_fields.grenade_ability_max_charges
-	ability_max_charges.combat_ability = game_object_fields.combat_ability_max_charges
-
-	local ability_max_cooldown = self._ability_max_cooldown
-
-	ability_max_cooldown.grenade_ability = game_object_fields.grenade_ability_max_cooldown
-	ability_max_cooldown.combat_ability = game_object_fields.combat_ability_max_cooldown
+		self._enabled_abilities[component_name] = game_object_fields[component_name .. "_enabled"]
+		self._ability_max_charges[component_name] = game_object_fields[component_name .. "_max_charges"]
+		self._ability_max_cooldown[component_name] = game_object_fields[component_name .. "_max_cooldown"]
+	end
 end
 
 PlayerHuskAbilityExtension._handle_ability_equip = function (self, equipped_abilities, ability_type, sync_value)
@@ -300,6 +290,10 @@ PlayerHuskAbilityExtension.get_current_ability_cooldown_time = function (self)
 end
 
 PlayerHuskAbilityExtension.get_current_ability_name = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.ability_pause_cooldown_settings = function (self)
 	error("not allowed to call on husk")
 end
 

@@ -9,8 +9,8 @@ local function _init_breed_settings(Breeds)
 		if need_initial_settings then
 			local line_of_sight_data = breed_data.line_of_sight_data
 
-			for i = 1, #line_of_sight_data do
-				local data = line_of_sight_data[i]
+			for ii = 1, #line_of_sight_data do
+				local data = line_of_sight_data[ii]
 
 				data.num_offsets = #data.offsets
 			end

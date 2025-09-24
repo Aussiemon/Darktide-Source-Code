@@ -7,26 +7,34 @@ local function assert_backend()
 end
 
 MasterItems.default_inventory = function (archetype_name, game_mode_settings_or_nil)
+	local inventory = {
+		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"],
+	}
+
+	do
+		local Archetypes = require("scripts/settings/archetype/archetypes")
+		local archetype = Archetypes[archetype_name]
+		local default_inventory = archetype.default_inventory
+
+		if default_inventory then
+			for slot_name, item_name in pairs(default_inventory) do
+				inventory[slot_name] = MasterItems.get_cached()[item_name]
+			end
+		end
+	end
+
 	if game_mode_settings_or_nil then
 		local default_inventory = game_mode_settings_or_nil.default_inventory
 		local archetype_default_inventory = default_inventory and default_inventory[archetype_name]
 
 		if archetype_default_inventory then
-			local inventory = {}
-
 			for slot_name, item_name in pairs(archetype_default_inventory) do
 				inventory[slot_name] = MasterItems.get_cached()[item_name]
 			end
-
-			return inventory
 		end
 	end
 
-	local default_inventory = {
-		slot_unarmed = MasterItems.get_cached()["content/items/weapons/player/melee/unarmed"],
-	}
-
-	return default_inventory
+	return inventory
 end
 
 local FALLBACK_ITEMS_BY_SLOT = {
@@ -58,7 +66,7 @@ local FALLBACK_ITEMS_BY_SLOT = {
 	slot_gear_extra_cosmetic = "content/items/characters/player/human/attachments_default/slot_attachment",
 	slot_gear_head = "content/items/characters/player/human/attachments_default/slot_gear_head",
 	slot_gear_lowerbody = "content/items/characters/player/human/attachments_default/slot_gear_legs",
-	slot_gear_material_override_decal = "content/items/characters/player/human/material_archetype_specific/empty_material_override_decal",
+	slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal",
 	slot_gear_upperbody = "content/items/characters/player/human/attachments_default/slot_gear_torso",
 	slot_insignia = "content/items/2d/insignias/insignia_default",
 	slot_pocketable = "content/items/pocketable/empty_pocketable",
@@ -80,8 +88,8 @@ if BUILD == "release" then
 	FALLBACK_ITEMS_BY_SLOT.slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_hair_color = "content/items/characters/player/hair_colors/hair_color_brown_01"
-	FALLBACK_ITEMS_BY_SLOT.slot_gear_material_override_decal = "content/items/characters/player/human/material_archetype_specific/empty_material_override_decal"
-	FALLBACK_ITEMS_BY_SLOT.slot_gear_extra_cosmetic = "items/characters/player/human/backpacks/empty_backpack"
+	FALLBACK_ITEMS_BY_SLOT.slot_gear_material_override_decal = "content/items/characters/player/human/gear_material_override_decal/empty_material_override_decal"
+	FALLBACK_ITEMS_BY_SLOT.slot_gear_extra_cosmetic = "content/items/characters/player/human/backpacks/empty_backpack"
 	FALLBACK_ITEMS_BY_SLOT.slot_gear_head = "content/items/characters/player/human/gear_head/empty_headgear"
 	FALLBACK_ITEMS_BY_SLOT.slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/empty_lowerbody"
 	FALLBACK_ITEMS_BY_SLOT.slot_gear_upperbody = "content/items/characters/player/human/gear_upperbody/empty_upperbody"
@@ -401,8 +409,8 @@ MasterItems.get_ui_item_instance = function (item)
 	end
 
 	local item_instance = {
+		__is_preview_item = true,
 		__is_ui_item_preview = true,
-		__data = item,
 		__gear = {
 			masterDataInstance = {
 				id = item.name,
@@ -451,7 +459,7 @@ MasterItems.get_ui_item_instance = function (item)
 			return field_value
 		end,
 		__newindex = function (t, field_name, value)
-			ferror("Not allowed to modify inventory items - %s[%s]", rawget(item_instance, "__gear_id"), field_name)
+			rawset(t, field_name, value)
 		end,
 		__tostring = function (t)
 			local master_item = rawget(item_instance, "__master_item")

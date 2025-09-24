@@ -133,15 +133,20 @@ HumanPlayer.has_local_profile = function (self)
 end
 
 HumanPlayer.archetype_name = function (self)
-	return self._profile.archetype.name
+	local profile = self._profile
+
+	return profile and profile.archetype.name
 end
 
 HumanPlayer.breed_name = function (self)
-	return self._profile.archetype.breed
+	local profile = self._profile
+
+	return profile and profile.archetype.breed
 end
 
 HumanPlayer.companion_name = function (self)
-	local companion_data = self._profile.companion
+	local profile = self._profile
+	local companion_data = profile and profile.companion
 
 	return companion_data and companion_data.name or nil
 end

@@ -28,7 +28,6 @@ local archetype_data = {
 	knocked_down_health = 1000,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/ogryn_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/ogryn",
-	ui_selection_order = 4,
 	toughness = ArchetypeToughnessTemplates.ogryn,
 	dodge = ArchetypeDodgeTemplates.ogryn,
 	sprint = ArchetypeSprintTemplates.ogryn,

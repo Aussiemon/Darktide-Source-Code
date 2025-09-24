@@ -89,18 +89,35 @@ templates.adamant_charge_passive_buff = {
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
+		[proc_events.on_lunge_start] = 1,
 		[proc_events.on_lunge_end] = 1,
 	},
+	conditional_keywords = {
+		keywords.count_as_blocking,
+		keywords.count_as_blocking_vs_ranged,
+		keywords.count_as_dodge_vs_chaos_hound_pounce,
+		keywords.count_as_dodge_vs_netgunner,
+	},
+	conditional_keywords_func = function (template_data)
+		return template_data.lunging
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local buff_extension = template_context.buff_extension
+	specific_proc_func = {
+		on_lunge_start = function (params, template_data, template_context, t)
+			template_data.lunging = true
+		end,
+		on_lunge_end = function (params, template_data, template_context, t)
+			template_data.lunging = false
 
-		buff_extension:add_internally_controlled_buff("adamant_post_charge_buff", t)
-	end,
+			local buff_extension = template_context.buff_extension
+
+			buff_extension:add_internally_controlled_buff("adamant_post_charge_buff", t)
+		end,
+	},
 }
 templates.adamant_post_charge_buff = {
 	class_name = "buff",
@@ -151,7 +168,11 @@ templates.adamant_charge_cooldown_buff = {
 		on_lunge_end = function (params, template_data, template_context, t)
 			local cooldown_time = math.min(template_data.cooldown, talent_settings.combat_ability.charge.cooldown_max)
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_time)
+			if cooldown_time > 0 then
+				template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_time)
+
+				template_data.cooldown = 0
+			end
 		end,
 	},
 }
@@ -200,7 +221,7 @@ templates.adamant_charge_toughness_buff = {
 
 			toughness = math.min(toughness, talent_settings.combat_ability.charge.toughness_max)
 
-			Toughness.replenish_percentage(template_context.unit, toughness)
+			Toughness.replenish_percentage(template_context.unit, toughness, false, "adamant_charge")
 
 			local stamina = talent_settings.combat_ability.charge.stamina * template_data.hits
 
@@ -410,7 +431,7 @@ templates.adamant_drone_base_buff = {
 	update_func = function (template_data, template_context, dt, t)
 		local toughness = talent_settings.blitz_ability.drone.toughness * dt
 
-		Toughness.replenish_percentage(template_context.unit, toughness)
+		Toughness.replenish_percentage(template_context.unit, toughness, false, "adamant_buff_drone")
 	end,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff",
@@ -436,7 +457,7 @@ templates.adamant_drone_improved_buff = {
 	update_func = function (template_data, template_context, dt, t)
 		local toughness = talent_settings.blitz_ability.drone.toughness_improved * dt
 
-		Toughness.replenish_percentage(template_context.unit, toughness)
+		Toughness.replenish_percentage(template_context.unit, toughness, false, "adamant_buff_drone")
 	end,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_adamant_drone_buff",
@@ -738,9 +759,8 @@ templates.adamant_hunt_stance = {
 	proc_func = function (params, template_data, template_context, t)
 		if CheckProcFunctions.on_ranged_hit(params, template_data, template_context) and template_data.ammo_talent and t >= template_data.next_ammo_t then
 			local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component
-			local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
-			local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
-			local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
+			local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_secondary_component)
+			local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
 			local ammo_replenish_percent = talent_settings.combat_ability.stance.ammo_percent
 			local wanted_ammo = math.ceil(max_ammo_in_clip * ammo_replenish_percent)
 			local amount = math.min(wanted_ammo, missing_ammo_in_clip)
@@ -1192,12 +1212,40 @@ templates.adamant_forceful = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_block] = 1,
 		[proc_events.on_player_hit_received] = 1,
+		[proc_events.on_combat_ability] = 1,
 	},
 	start_func = function (template_data, template_context)
-		return
+		local ability_strength = special_rules.adamant_forceful_ability_strength
+		local unit = template_context.unit
+		local talent_extension = ScriptUnit.extension(unit, "talent_system")
+
+		template_data.ability_strength = talent_extension:has_special_rule(ability_strength)
+		template_data.prevent_stacks = false
+	end,
+	update_func = function (template_data, template_context)
+		if template_data.prevent_stacks then
+			local has_buff = template_context.buff_extension:has_buff_using_buff_template("adamant_forceful_stacks")
+
+			if not has_buff then
+				template_data.prevent_stacks = false
+			end
+		end
 	end,
 	specific_proc_func = {
+		on_combat_ability = function (params, template_data, template_context, t)
+			if template_data.ability_strength then
+				local has_buff = template_context.buff_extension:has_buff_using_buff_template("adamant_forceful_stacks")
+
+				if has_buff then
+					template_data.prevent_stacks = true
+				end
+			end
+		end,
 		on_hit = function (params, template_data, template_context, t)
+			if template_data.prevent_stacks then
+				return
+			end
+
 			if params.target_number > 1 then
 				return
 			end
@@ -1211,6 +1259,10 @@ templates.adamant_forceful = {
 			end
 		end,
 		on_block = function (params, template_data, template_context, t)
+			if template_data.prevent_stacks then
+				return
+			end
+
 			template_context.buff_extension:add_internally_controlled_buff("adamant_forceful_stacks", t)
 		end,
 	},
@@ -1393,7 +1445,7 @@ local function _forceful_explosion(template_data, template_context)
 	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
 	local physics_world = World.physics_world(world)
 	local explosion_template = ExplosionTemplates.adamant_forceful_explosion
-	local power_level = 500
+	local power_level = 750
 	local position = Unit.local_position(unit, 1)
 	local attack_type = AttackSettings.attack_types.explosion
 

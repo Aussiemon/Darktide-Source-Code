@@ -35,12 +35,6 @@ spread_templates.default_stub_pistol_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -145,12 +139,6 @@ spread_templates.default_stub_pistol_killshot = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -222,12 +210,6 @@ spread_templates.stub_pistol_p1_m2_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = p1_m2_modifier * p1_m2_modifier,
-					yaw = p1_m2_modifier * p1_m2_modifier,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4 * p1_m2_modifier,
@@ -336,12 +318,6 @@ spread_templates.stub_pistol_p1_m2_ads = {
 					},
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.3,
@@ -425,12 +401,6 @@ spread_templates.stub_pistol_p1_m3_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25 * p1_m3_modifier,
-					yaw = 0.25 * p1_m3_modifier,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4 * p1_m3_modifier,

@@ -137,9 +137,13 @@ BtDisableAction._play_disable_anim = function (self, unit, blackboard, action_da
 	local current_slot = visual_loadout_extension:wielded_slot_name()
 
 	if current_slot then
-		scratchpad.current_slot = current_slot
+		local current_slot_data = visual_loadout_extension:slot_item(current_slot)
 
-		visual_loadout_extension:set_slot_visibility(current_slot, false)
+		if current_slot_data and current_slot_data.visible then
+			scratchpad.current_slot = current_slot
+
+			visual_loadout_extension:set_slot_visibility(current_slot, false)
+		end
 	end
 
 	local should_hide = true

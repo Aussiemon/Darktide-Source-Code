@@ -50,12 +50,6 @@ spread_templates.no_spread = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0,
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0,
@@ -116,12 +110,6 @@ spread_templates.plasma_rifle = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.15,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -206,12 +194,6 @@ spread_templates.plasma_rifle_charged = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -268,12 +250,6 @@ spread_templates.lasgun = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.15,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -358,12 +334,6 @@ spread_templates.lasgun_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -432,12 +402,6 @@ spread_templates.lasgun_reload = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -538,12 +502,6 @@ spread_templates.autogun_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -628,12 +586,6 @@ spread_templates.autogun_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -726,12 +678,6 @@ spread_templates.autogun_zoomed = {
 				{
 					pitch = 0.25,
 					yaw = 0.25,
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 1,
-					yaw = 1,
 				},
 			},
 			damage_hit = {
@@ -850,12 +796,6 @@ spread_templates.autopistol = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -956,12 +896,6 @@ spread_templates.shotgun_hip_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1022,12 +956,6 @@ spread_templates.rippergun_hip_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1088,12 +1016,6 @@ spread_templates.lasgun_hip_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1139,12 +1061,6 @@ spread_templates.lasgun_hip_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1203,12 +1119,6 @@ spread_templates.lasgun_hip_killshot_medium = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1242,12 +1152,6 @@ spread_templates.lasgun_hip_killshot_medium = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1306,12 +1210,6 @@ spread_templates.shotgun = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.5,
@@ -1368,12 +1266,6 @@ spread_templates.laspistol_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 5,
@@ -1454,12 +1346,6 @@ spread_templates.lasgun_brace = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1773,12 +1659,6 @@ spread_templates.lasgun_brace = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1863,12 +1743,6 @@ spread_templates.lasgun_brace_light = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2186,12 +2060,6 @@ spread_templates.lasgun_brace_light = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2548,12 +2416,6 @@ spread_templates.lasgun_zoomed = {
 					yaw = 0.25,
 				},
 			},
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1,
@@ -2762,12 +2624,6 @@ spread_templates.lasgun_zoomed_medium = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.3,
-					yaw = 0.3,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.75,
@@ -2846,12 +2702,6 @@ spread_templates.lasgun_pistol_zoomed = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.2,
-					yaw = 0.2,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 1.2,
@@ -2948,12 +2798,6 @@ spread_templates.lasgun_bfg_charge = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2990,12 +2834,6 @@ spread_templates.lasgun_bfg_charge = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.3,
-					yaw = 0.3,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.75,
@@ -3074,12 +2912,6 @@ spread_templates.boltgun_hip_spray_n_pray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -3156,12 +2988,6 @@ spread_templates.boltpistol_hip_spray_n_pray = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -3238,12 +3064,6 @@ spread_templates.psyker_smite = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.4,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 5,

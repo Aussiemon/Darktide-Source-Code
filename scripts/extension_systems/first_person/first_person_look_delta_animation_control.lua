@@ -9,6 +9,7 @@ local FirstPersonLookDeltaAnimationControl = class("FirstPersonLookDeltaAnimatio
 
 FirstPersonLookDeltaAnimationControl.init = function (self, first_person_unit, unit, is_husk)
 	self._first_person_unit = first_person_unit
+	self._unit = unit
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
@@ -40,7 +41,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 	local first_person_component = self._first_person_component
 	local weapon_action_component = self._weapon_action_component
 	local rotation = first_person_component.rotation
-	local look_delta_template = LookDelta.look_delta_template(weapon_action_component, self._alternate_fire_component)
+	local look_delta_template = LookDelta.look_delta_template(weapon_action_component, self._alternate_fire_component, self._unit)
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
 	local is_shooting

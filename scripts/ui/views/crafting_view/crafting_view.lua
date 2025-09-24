@@ -19,21 +19,38 @@ CraftingView.init = function (self, settings, context)
 end
 
 CraftingView.show_wallets = function (self, show)
-	local wallet_widget = self._widgets_by_name.corner_top_right
-	local no_wallet_widget = self._widgets_by_name.corner_top_right_no_wallet
+	if Managers.ui:is_view_closing(self.view_name) then
+		return
+	end
+
+	local widgets_by_name = self._widgets_by_name
+	local wallet_widget = widgets_by_name.corner_top_right
+	local no_wallet_widget = widgets_by_name.corner_top_right_no_wallet
 
 	if show == false then
 		self._wallet_type = {}
-		wallet_widget.content.visible = false
-		no_wallet_widget.content.visible = true
+
+		if wallet_widget then
+			wallet_widget.content.visible = false
+		end
+
+		if no_wallet_widget then
+			no_wallet_widget.content.visible = true
+		end
 	else
 		self._wallet_type = {
 			"diamantine",
 			"plasteel",
 			"credits",
 		}
-		wallet_widget.content.visible = true
-		no_wallet_widget.content.visible = false
+
+		if wallet_widget then
+			wallet_widget.content.visible = true
+		end
+
+		if no_wallet_widget then
+			no_wallet_widget.content.visible = false
+		end
 	end
 
 	self:_update_wallets()

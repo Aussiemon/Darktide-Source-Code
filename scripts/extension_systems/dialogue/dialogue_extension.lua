@@ -687,24 +687,35 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 
 	for i = 1, #rule_names do
 		local rule = rule_names[i]
+		local is_valid = vo_choice[rule]
 
-		if vo_choice[rule] then
-			local vo_event = {
-				unit = unit,
-				rule_name = rule,
-				wwise_route_key = wwise_route_key,
-				on_play_callback = on_play_callback,
-				seed = seed,
-				specific_line = specific_lines and specific_lines[i],
-			}
+		if not is_valid then
+			Log.exception("DialogueExtension", "Invalid request. unit: %s, play_local_vo_events: %s, rule: %s", unit, self._vo_profile_name, rule)
 
-			rule_queue[#rule_queue + 1] = vo_event
+			return false
 		end
+	end
+
+	local rule_count = #rule_queue
+
+	for i = 1, #rule_names do
+		local rule = rule_names[i]
+
+		rule_queue[rule_count + i] = {
+			unit = unit,
+			rule_name = rule,
+			wwise_route_key = wwise_route_key,
+			on_play_callback = on_play_callback,
+			seed = seed,
+			specific_line = specific_lines and specific_lines[i],
+		}
 	end
 
 	local animation_event = "start_talking"
 
 	dialogue_system:_trigger_face_animation_event(unit, animation_event)
+
+	return true
 end
 
 DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed, optional_keep_talking, pre_wwise_event, post_wwise_event, specific_line)

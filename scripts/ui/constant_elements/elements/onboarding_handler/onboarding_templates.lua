@@ -211,9 +211,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -258,9 +257,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -377,9 +375,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -481,9 +478,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -550,9 +546,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -617,9 +612,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -690,9 +684,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -757,9 +750,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -877,9 +869,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -957,9 +948,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -1014,9 +1004,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -1070,9 +1059,8 @@ local templates = {
 			end
 
 			local objective = self.objective
-			local objective_name = objective:name()
 
-			Managers.event:trigger("event_remove_mission_objective", objective_name)
+			Managers.event:trigger("event_remove_mission_objective", objective)
 
 			self.objective = nil
 
@@ -1148,58 +1136,6 @@ local templates = {
 		sync_on_events = {},
 	},
 	{
-		name = "season_1_twins_prologue",
-		valid_states = {
-			"GameplayStateRun",
-		},
-		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_prologue")
-		end,
-		on_activation = function (self)
-			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_prologue")
-
-			local level = Managers.state.mission:mission_level()
-
-			if level then
-				Level.trigger_event(level, "s1_event_twins_prologue")
-			end
-		end,
-	},
-	{
-		name = "season_1_twins_epilogue_1",
-		valid_states = {
-			"GameplayStateRun",
-		},
-		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_1")
-		end,
-		on_activation = function (self)
-			local level = Managers.state.mission:mission_level()
-
-			if level then
-				Level.trigger_event(level, "s1_event_twins_epilogue_1")
-			end
-		end,
-	},
-	{
-		name = "season_1_twins_epilogue_3",
-		valid_states = {
-			"GameplayStateRun",
-		},
-		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _is_on_story_chapter("s1_twins", "s1_twins_epilogue_3")
-		end,
-		on_activation = function (self)
-			Managers.narrative:complete_current_chapter("s1_twins", "s1_twins_epilogue_3")
-
-			local level = Managers.state.mission:mission_level()
-
-			if level then
-				Level.trigger_event(level, "s1_event_twins_epilogue_3")
-			end
-		end,
-	},
-	{
 		name = "Player Journey - Mission Board Tier Up",
 		valid_states = {
 			"GameplayStateRun",
@@ -1227,7 +1163,7 @@ local templates = {
 		end,
 		on_activation = function (self)
 			if _journey_mission_completed("km_heresy") then
-				Managers.narrative:complete_chapter_by_name("main_story", "km_heresy")
+				Managers.narrative:set_story_to_chapter("main_story", "km_heresy")
 				Managers.narrative:complete_event("level_unlock_credits_store_visited")
 				Managers.narrative:complete_event("level_unlock_crafting_station_visited")
 				Managers.narrative:complete_event("level_unlock_contract_store_visited")
@@ -1361,7 +1297,7 @@ local templates = {
 				jump_to_chapter = "dm_propaganda_1_2"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 
 			local player = Managers.player:local_player(1)
 
@@ -1407,9 +1343,9 @@ local templates = {
 				jump_to_chapter = "fm_cargo_2_1"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 
-			local level = Managers.state.mission:mission_level()
+			local level = Managers.state.mission and Managers.state.mission:mission_level()
 
 			if level then
 				Level.trigger_event(level, "horde_intro_vo")
@@ -1464,7 +1400,7 @@ local templates = {
 				ui_manager:open_view(view_name, nil, true, true, nil, context)
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1496,7 +1432,7 @@ local templates = {
 				ui_manager:open_view(view_name, nil, true, true, nil, context)
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1508,7 +1444,7 @@ local templates = {
 			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("fm_armoury") and (_last_completed_chapter_is("main_story", "core_research_2_2") or _last_completed_chapter_is("main_story", "hm_strain_2_2"))
 		end,
 		on_activation = function (self)
-			Managers.narrative:complete_chapter_by_name("main_story", "fm_armoury")
+			Managers.narrative:set_story_to_chapter("main_story", "fm_armoury")
 		end,
 	},
 	{
@@ -1562,7 +1498,7 @@ local templates = {
 				jump_to_chapter = "fm_resurgence_1_1"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1586,7 +1522,7 @@ local templates = {
 				jump_to_chapter = "dm_rise_3_1"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1606,7 +1542,7 @@ local templates = {
 				jump_to_chapter = "cm_archives_2_1"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1626,7 +1562,7 @@ local templates = {
 				jump_to_chapter = "hm_complex_3_1"
 			end
 
-			Managers.narrative:complete_chapter_by_name("main_story", jump_to_chapter)
+			Managers.narrative:set_story_to_chapter("main_story", jump_to_chapter)
 		end,
 	},
 	{
@@ -1638,7 +1574,7 @@ local templates = {
 			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_heresy") and (_last_completed_chapter_is("main_story", "hm_complex_3_1") or _last_completed_chapter_is("main_story", "dm_rise_3_1"))
 		end,
 		on_activation = function (self)
-			Managers.narrative:complete_chapter_by_name("main_story", "km_heresy")
+			Managers.narrative:set_story_to_chapter("main_story", "km_heresy")
 
 			if not _archetype_name_is("adamant") then
 				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")

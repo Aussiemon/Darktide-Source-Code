@@ -9,13 +9,13 @@ local CinematicManager = require("scripts/managers/cinematic/cinematic_manager")
 local CircumstanceManager = require("scripts/managers/circumstance/circumstance_manager")
 local CollectiblesManager = require("scripts/managers/collectibles/collectibles_manager")
 local CompanionInteractionsManager = require("scripts/managers/companion/companion_interactions_manager")
-local HavocManager = require("scripts/managers/havoc/havoc_manager")
 local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
 local EmoteManager = require("scripts/managers/emote/emote_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNvidiaAiAgent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nvidia_ai_agent")
 local HordeManager = require("scripts/managers/horde/horde_manager")
+local LevelInstanceManager = require("scripts/foundation/managers/level_instance/level_instance_manager")
 local MinionDeathManager = require("scripts/managers/minion/minion_death_manager")
 local MinionSpawnManager = require("scripts/managers/minion/minion_spawn_manager")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -107,7 +107,6 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 
 	Managers.state.minion_death = MinionDeathManager:new(is_server, network_event_delegate, soft_cap_out_of_bounds_units)
 	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission_template, level_name)
-	Managers.state.havoc = HavocManager:new(is_server, world, nav_world, level_name, level_seed)
 	Managers.state.cinematic = CinematicManager:new(world, is_server, network_event_delegate)
 	Managers.state.blood = BloodManager:new(world, is_server, network_event_delegate)
 	Managers.state.attack_report = AttackReportManager:new(is_server, network_event_delegate)
@@ -129,6 +128,7 @@ GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, 
 
 	Managers.state.unit_job = UnitJobManager:new(unit_spawner_manager)
 	Managers.state.unit_spawner = unit_spawner_manager
+	Managers.state.level_instance = LevelInstanceManager:new(world, extension_manager, is_server, UnitTemplates, game_session, level_name, network_event_delegate)
 end
 
 implements(GameplayInitStepManagers, GameplayInitStepInterface)

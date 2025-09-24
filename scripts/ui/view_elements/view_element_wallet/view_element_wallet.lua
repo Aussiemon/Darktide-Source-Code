@@ -22,7 +22,7 @@ ViewElementWallet.init = function (self, parent, draw_layer, start_scale)
 	self._text_options = {}
 end
 
-ViewElementWallet._generate_currencies = function (self, currencies_to_use, widget_size, wallets_per_column, grid_spacing)
+ViewElementWallet.generate_currencies = function (self, currencies_to_use, widget_size, wallets_per_column, grid_spacing)
 	local widgets = {}
 	local widgets_by_currency = {}
 	local grid_spacing = {

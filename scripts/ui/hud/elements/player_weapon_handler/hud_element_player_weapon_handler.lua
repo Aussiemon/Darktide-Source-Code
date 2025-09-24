@@ -107,7 +107,6 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 					inventory_component = inventory_component,
 					ability_extension = ability_extension,
 					ability = ability,
-					ability_type = ability_type,
 					slot_component = slot_component,
 					weapon_template = weapon_template,
 					weapon_name = weapon_name,

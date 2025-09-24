@@ -12,7 +12,7 @@ MissionObjectiveTimed.init = function (self)
 end
 
 MissionObjectiveTimed.get_time_left = function (self)
-	return self._max_incremented_progression - self._time_elapsed
+	return self._max_incremented_progression * (1 - self._progression)
 end
 
 MissionObjectiveTimed._get_duration = function (self, mission_objective_data)
@@ -35,8 +35,8 @@ MissionObjectiveTimed._get_duration = function (self, mission_objective_data)
 	return nil
 end
 
-MissionObjectiveTimed.start_objective = function (self, mission_objective_data, registered_units, synchronizer_unit)
-	MissionObjectiveTimed.super.start_objective(self, mission_objective_data, registered_units, synchronizer_unit)
+MissionObjectiveTimed.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+	MissionObjectiveTimed.super.start_objective(self, mission_objective_data, group_id, registered_units, synchronizer_unit)
 
 	self._use_counter = false
 	self._time_elapsed = 0

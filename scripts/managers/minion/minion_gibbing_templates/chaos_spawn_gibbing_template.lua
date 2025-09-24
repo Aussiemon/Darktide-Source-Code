@@ -35,7 +35,7 @@ head_sever.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 head_sever.scale_node = "j_head"
 head_sever.gibbing_threshold = SharedGibbingTemplates.head.gibbing_threshold + size
 head_sever.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -71,7 +71,7 @@ limb_segment.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_segment.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_segment.gibbing_threshold = SharedGibbingTemplates.limb_segment.gibbing_threshold + size
 limb_segment.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 
@@ -83,7 +83,7 @@ limb_full.stump_settings.vfx = SharedGibbingTemplates.vfx.blood_fountain
 limb_full.stump_settings.sfx = SharedGibbingTemplates.sfx.blood_fountain_neck
 limb_full.gibbing_threshold = SharedGibbingTemplates.limb_full.gibbing_threshold + size
 limb_full.material_overrides = {
-	"envrionmental_override",
+	"environmental_override",
 	"skin_color_override",
 }
 

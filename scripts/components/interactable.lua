@@ -68,7 +68,7 @@ Interactable.init = function (self, unit, is_server)
 		interactee_extension:set_emissive_material_name(emissive_material_name)
 
 		if require_all_players then
-			interactee_extension:set_block_text(missing_players_text or "loc_action_interaction_generic_missing_players")
+			interactee_extension:set_missing_players(true)
 		end
 
 		local has_animation_state_machine = Unit.has_animation_state_machine(unit)
@@ -76,6 +76,7 @@ Interactable.init = function (self, unit, is_server)
 		self._support_simple_animation = self:get_data(unit, "support_simple_animation") and not has_animation_state_machine
 		self._support_prop_animation = self:get_data(unit, "support_prop_animation") and not self._support_simple_animation
 		self._animation_back_speed_modifier = self:get_data(unit, "animation_back_speed_modifier")
+		self._animation_speed_modifier = self:get_data(unit, "animation_speed_modifier") or 1
 		self._is_playing_forward = nil
 		self._anim_time = 0
 		self._anim_length = 0
@@ -168,6 +169,14 @@ Interactable.interactable_disable = function (self, unit)
 	self:disable(unit)
 end
 
+Interactable.interactable_set_used = function (self, unit)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:set_used()
+	end
+end
+
 Interactable.interactable_disable_local = function (self, unit)
 	self:disable(unit, true)
 
@@ -175,6 +184,14 @@ Interactable.interactable_disable_local = function (self, unit)
 
 	interactee_extension:set_active(false)
 	interactee_extension:disable_active_hotjoin_sync()
+end
+
+Interactable.interactable_set_block_text = function (self, text, block_text_context)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:set_block_text(text, block_text_context)
+	end
 end
 
 Interactable.interactable_clear_block = function (self, unit)
@@ -259,24 +276,24 @@ Interactable._play_animation = function (self)
 	local anim_time_to = anim_data.time
 
 	if anim_time ~= anim_time_to then
-		local speed = anim_data.speed * self._animation_back_speed_modifier
+		local speed = anim_data.speed
 
 		if state == "forward" then
 			if self._interaction_canceled then
-				-- Nothing
+				speed = speed * self._animation_back_speed_modifier
 			else
 				local interaction_length = self._interaction_length
 				local length = interaction_length == 0 and 1 or interaction_length
 
-				speed = (self._anim_length - anim_time) / length
+				speed = (self._anim_length - anim_time) / length * self._animation_speed_modifier
 			end
 		elseif self._interaction_canceled then
-			speed = -speed
+			speed = -speed * self._animation_back_speed_modifier
 		else
 			local interaction_length = self._interaction_length
 			local length = interaction_length == 0 and 1 or interaction_length
 
-			speed = -(self._anim_length - (self._anim_length - anim_time)) / length
+			speed = -(self._anim_length - (self._anim_length - anim_time)) / length * self._animation_speed_modifier
 		end
 
 		Unit.play_simple_animation(self._unit, anim_time, anim_time_to, false, speed)
@@ -543,6 +560,14 @@ Interactable.component_data = {
 		ui_type = "number",
 		value = 1,
 	},
+	animation_speed_modifier = {
+		category = "Animation",
+		decimals = 1,
+		step = 0.5,
+		ui_name = "Animation Speed Modifier",
+		ui_type = "number",
+		value = 1,
+	},
 	emissive_material = {
 		category = "Emissive",
 		ui_name = "Emissive Material",
@@ -555,6 +580,10 @@ Interactable.component_data = {
 			type = "event",
 		},
 		interactable_disable = {
+			accessibility = "public",
+			type = "event",
+		},
+		interactable_set_used = {
 			accessibility = "public",
 			type = "event",
 		},

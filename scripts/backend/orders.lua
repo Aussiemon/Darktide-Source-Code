@@ -56,9 +56,17 @@ Orders.join_personal_mission = function (self, owner_id, mission_id, joiner_id)
 				return Promise.rejected(data)
 			end
 		end):catch(function (error)
-			local error_string = tostring(error)
+			if type(error) == "table" and error.status == 304 then
+				return Promise.resolved(error)
+			end
 
-			Log.error("Orders", "Error caught in Orders:join_personal_mission():\n%s", error_string)
+			local error_string = ""
+
+			if type(error) == "table" then
+				error_string = table.tostring(error, 99)
+			end
+
+			Log.exception("Orders", "Error caught in Orders:join_personal_mission():\n%s", error_string)
 
 			return {}
 		end)

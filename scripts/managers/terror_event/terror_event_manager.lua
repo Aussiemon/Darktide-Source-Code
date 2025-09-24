@@ -541,13 +541,13 @@ TerrorEventManager.trigger_network_synced_level_flow = function (self, flow_even
 	Level.trigger_event(level, flow_event_name)
 
 	local flow_event_id = self._flow_events_network_lookup[flow_event_name]
-	local level_id = ScriptWorld.level_id(self._world, level)
+	local level_id = Managers.state.unit_spawner:index_by_level(level)
 
 	Managers.state.game_session:send_rpc_clients("rpc_terror_event_trigger_level_flow", level_id, flow_event_id)
 end
 
 TerrorEventManager.rpc_terror_event_trigger_level_flow = function (self, channel_id, level_id, flow_event_id)
-	local level = ScriptWorld.level_from_id(self._world, level_id)
+	local level = Managers.state.unit_spawner:level_by_index(level_id)
 	local flow_event_name = self._flow_events_network_lookup[flow_event_id]
 
 	Level.trigger_event(level, flow_event_name)

@@ -49,6 +49,11 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed_name = unit_data_extension:breed().name
+
+	scratchpad.breed_name = breed_name
+
 	local target_unit = perception_component.target_unit
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 
@@ -366,9 +371,13 @@ BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchp
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
 			local hit_unit_pos = Unit.world_position(hit_unit, Unit.node(hit_unit, TARGET_LEAP_NODE))
-			local is_dodging = Dodge.is_dodging(hit_unit)
+			local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.incapacitating_pounce)
 
 			if is_dodging then
+				if dodge_type == "buff" then
+					break
+				end
+
 				local flat_pos = Vector3(attacking_unit_pos.x, attacking_unit_pos.y, hit_unit_pos.z)
 				local distance = Vector3.distance(flat_pos, hit_unit_pos)
 
@@ -434,8 +443,16 @@ BtChaosHoundLeapAction._update_stopping_state = function (self, scratchpad, t)
 	end
 end
 
+local cooldown_by_breed = {
+	chaos_armored_hound = "chaos_armored_hound_pounce",
+	chaos_hound = "chaos_hound_pounce",
+	chaos_hound_mutator = "chaos_hound_pounce",
+}
+
 BtChaosHoundLeapAction._set_pounce_cooldown = function (self, scratchpad, t)
-	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.chaos_hound_pounce)
+	local breed_name = scratchpad.breed_name
+	local cooldown_settings = cooldown_by_breed[breed_name]
+	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns[cooldown_settings])
 
 	scratchpad.pounce_component.pounce_cooldown = t + cooldown
 end
@@ -445,7 +462,7 @@ local LAG_COMPENSATION_CHECK_RADIUS = 3
 local MAX_LAG_COMPENSATION = 0.2
 
 BtChaosHoundLeapAction._update_leaping_state = function (self, unit, scratchpad, action_data, dt, t, breed, locomotion_extension, target_unit)
-	local target_is_dodging, target_dodge_type = Dodge.is_dodging(target_unit)
+	local target_is_dodging, target_dodge_type = Dodge.is_dodging(target_unit, attack_types.incapacitating_pounce)
 
 	if target_is_dodging and not scratchpad.target_dodged_during_attack then
 		scratchpad.target_dodged_during_attack = true
@@ -506,7 +523,7 @@ BtChaosHoundLeapAction._update_leaping_state = function (self, unit, scratchpad,
 				end
 			end
 
-			local colliding_target_is_dodging, colliding_target_dodge_type = Dodge.is_dodging(current_colliding_target)
+			local colliding_target_is_dodging, colliding_target_dodge_type = Dodge.is_dodging(current_colliding_target, attack_types.incapacitating_pounce)
 
 			if colliding_target_is_dodging and not is_in_front then
 				Dodge.sucessful_dodge(current_colliding_target, unit, "melee", colliding_target_dodge_type, breed)

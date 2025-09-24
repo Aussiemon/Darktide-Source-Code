@@ -584,10 +584,12 @@ EndView._setup_stay_in_party_vote = function (self)
 end
 
 EndView.select_target_level = function (self)
-	local level_name
+	local level_name = "default"
 	local played_mission = self._context.played_mission
 
-	level_name = played_mission == "psykhanium" and "horde" or "default"
+	if played_mission == "psykhanium" then
+		level_name = "horde"
+	end
 
 	local level = EndViewSettings.levels_by_id[level_name] or EndViewSettings.levels_by_id.default
 	local level_packages = {
@@ -796,8 +798,8 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local profile_spawner = slot.profile_spawner
 	local companion_data = {
-		state_machine = end_of_round_pose_item.companion_state_machine ~= nil and end_of_round_pose_item.companion_state_machine ~= "" and end_of_round_pose_item.companion_state_machine or nil,
-		animation_event = end_of_round_pose_item.companion_animation_event ~= nil and end_of_round_pose_item.companion_animation_event ~= "" and end_of_round_pose_item.companion_animation_event or nil,
+		state_machine = end_of_round_pose_item and end_of_round_pose_item.companion_state_machine ~= nil and end_of_round_pose_item.companion_state_machine ~= "" and end_of_round_pose_item.companion_state_machine or nil,
+		animation_event = end_of_round_pose_item and end_of_round_pose_item.companion_animation_event ~= nil and end_of_round_pose_item.companion_animation_event ~= "" and end_of_round_pose_item.companion_animation_event or nil,
 	}
 	local companion_visible = not not companion_data.state_machine
 

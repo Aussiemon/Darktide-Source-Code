@@ -98,6 +98,14 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		end
 	end
 
+	local is_depleted_interrupter = boss_extension:boss_is_depleted_interrupter()
+
+	if is_depleted_interrupter then
+		localized_display_name = Localize("loc_void_depleted_prefix", true, {
+			breed = localized_display_name,
+		})
+	end
+
 	self:_set_active(true)
 
 	local health_bar_logic = HudHealthBarLogic:new(HudElementBossHealthSettings)
@@ -299,14 +307,14 @@ HudElementBossHealth._apply_widget_bar_fractions = function (self, widget, bar_w
 end
 
 function _check_havoc_monster_health(initial_max_health, max_health, breed, localized_display_name)
-	local havoc_mananger = Managers.state.havoc
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
 
-	if not havoc_mananger:is_havoc() then
+	if not havoc_extension then
 		return localized_display_name
 	end
 
 	local multiplied_max_health
-	local havoc_health_override_value = Managers.state.havoc:get_modifier_value("modify_monster_health")
+	local havoc_health_override_value = havoc_extension:get_modifier_value("modify_monster_health")
 
 	if havoc_health_override_value then
 		multiplied_max_health = initial_max_health + initial_max_health * havoc_health_override_value

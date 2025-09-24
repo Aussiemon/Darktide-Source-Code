@@ -21,7 +21,7 @@ ActionGivePocketable.init = function (self, action_context, action_params, actio
 
 	local unit_data_extension = self._unit_data_extension
 
-	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 end
 
 ActionGivePocketable.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -35,7 +35,7 @@ ActionGivePocketable.fixed_update = function (self, dt, t, time_in_action)
 		return
 	end
 
-	local target_unit = self._action_module_targeting_component.target_unit_1
+	local target_unit = self._action_module_target_finder_component.target_unit_1
 
 	if target_unit then
 		local action_settings = self._action_settings
@@ -92,7 +92,7 @@ end
 ActionGivePocketable.finish = function (self, reason, data, t, time_in_action)
 	ActionGivePocketable.super.finish(self, reason, data, t, time_in_action)
 
-	self._action_module_targeting_component.target_unit_1 = nil
+	self._action_module_target_finder_component.target_unit_1 = nil
 end
 
 return ActionGivePocketable

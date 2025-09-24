@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_survival.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
@@ -11,6 +12,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local DEFAULT_RESPAWN_TIME = 30
 local GameModeSurvival = class("GameModeSurvival", "GameModeBase")
+local _fill_with_random_items_from_weighted_pool
 local SERVER_RPCS = {}
 local CLIENT_RPCS = {
 	"rpc_set_player_respawn_time",
@@ -19,6 +21,7 @@ local CLIENT_RPCS = {
 	"rpc_client_hordes_wave_completed",
 	"rpc_client_hordes_show_wave_completed_notification",
 	"rpc_client_hordes_tag_remaining_enemies",
+	"rpc_client_hordes_set_selected_island",
 }
 
 local function _log(...)
@@ -127,8 +130,17 @@ GameModeSurvival.init = function (self, game_mode_context, game_mode_name, netwo
 	self._objectives_completed = {}
 	self._current_island = nil
 
+	if self._is_server then
+		self._backend_hordes_weighted_randomization = {
+			island_weights = {},
+		}
+
+		self:_fetch_hordes_backend_data()
+	end
+
 	self:_init_buff_system(game_mode_name, network_event_delegate)
 	Managers.event:register(self, "event_surival_mode_tag_remaining_enemies", "_tag_remaining_enemies")
+	Managers.event:register(self, "hordes_mode_select_random_island", "select_random_island")
 	Managers.event:register(self, "hordes_mode_on_wave_started", "on_wave_started")
 	Managers.event:register(self, "hordes_mode_on_objective_completed", "on_objective_completed")
 	Managers.event:register(self, "hordes_mode_on_wave_completed", "on_wave_completed")
@@ -155,6 +167,12 @@ end
 GameModeSurvival.hot_join_sync = function (self, sender, channel)
 	GameModeSurvival.super.hot_join_sync(self, sender, channel)
 	RPC.rpc_client_hordes_set_progress_data(channel, self._current_wave, self._waves_completed, self._is_wave_in_progress)
+
+	if self._island_selected then
+		local island_name_id = NetworkLookup.hordes_island_names[self._island_selected]
+
+		RPC.rpc_client_hordes_set_selected_island(channel, island_name_id)
+	end
 end
 
 GameModeSurvival.client_update = function (self, dt, t)
@@ -168,6 +186,7 @@ end
 GameModeSurvival.destroy = function (self)
 	self:_destroy_buff_system()
 	Managers.event:unregister(self, "event_surival_mode_tag_remaining_enemies")
+	Managers.event:unregister(self, "hordes_mode_select_random_island")
 	Managers.event:unregister(self, "hordes_mode_on_wave_started")
 	Managers.event:unregister(self, "hordes_mode_on_objective_completed")
 	Managers.event:unregister(self, "hordes_mode_on_wave_completed")
@@ -402,6 +421,40 @@ GameModeSurvival.fail = function (self, reason)
 	self._end_reason = reason
 end
 
+GameModeSurvival._fetch_hordes_backend_data = function (self)
+	local horde_setting_from_the_backend_promise = Managers.backend.interfaces.hordes:get_horde_setting_from_the_backend()
+
+	horde_setting_from_the_backend_promise:next(callback(self, "cb_get_horde_setting_from_the_backend_received")):catch(callback(self, "cb_get_horde_setting_from_the_backend_failed"))
+end
+
+GameModeSurvival.cb_get_horde_setting_from_the_backend_received = function (self, horde_backend_data)
+	local weighted_randomization_data = horde_backend_data.settings
+
+	if not weighted_randomization_data.island_weights then
+		Log.error("GameModeSurvival", "Backend list of hordes weighted randomization does not have weights for Islands (will default to even weights).")
+
+		weighted_randomization_data.island_weights = {}
+	end
+
+	self._backend_hordes_weighted_randomization = weighted_randomization_data
+
+	local weighted_randomization_message = "Weighted Randomization Data\nIslands:"
+
+	for island_name, weight in pairs(weighted_randomization_data.island_weights) do
+		weighted_randomization_message = weighted_randomization_message .. "[" .. island_name .. "-" .. weight .. "]"
+	end
+
+	Log.info("GameModeSurvival", weighted_randomization_message)
+end
+
+GameModeSurvival.cb_get_horde_setting_from_the_backend_failed = function (self, err)
+	Log.error("GameModeSurvival", string.format("Could not get backend list of hordes weighted randomization for Buff Family and Islands (will default to even weights). Error: %s", err.description))
+
+	self._backend_hordes_weighted_randomization = {
+		island_weights = {},
+	}
+end
+
 GameModeSurvival._init_buff_system = function (self, game_mode_name, network_event_delegate)
 	self._mission_buffs_manager = MissionBuffsManager:new(self._is_server, self, game_mode_name, network_event_delegate)
 end
@@ -410,6 +463,43 @@ GameModeSurvival._destroy_buff_system = function (self, game_mode_name, network_
 	self._mission_buffs_manager:destroy()
 
 	self._mission_buffs_manager = nil
+end
+
+GameModeSurvival.select_random_island = function (self)
+	if not self._is_server then
+		return
+	end
+
+	local available_islands = HordesModeSettings.island_names
+	local island_weights = self._backend_hordes_weighted_randomization.island_weights
+	local target_island = {}
+
+	_fill_with_random_items_from_weighted_pool(available_islands, island_weights, 1, target_island)
+
+	if #target_island == 0 then
+		local random_index = math.random(1, #available_islands)
+
+		target_island[1] = available_islands[random_index]
+	end
+
+	local selected_island_name = target_island[1]
+
+	self._island_selected = selected_island_name
+
+	Log.info("GameModeSurvival", "Server selected Island to play: %s", selected_island_name)
+
+	local level = Managers.state.mission:mission_level()
+	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name and level then
+		local island_selected_level_event_name = "horde_mode_" .. selected_island_name .. "_selected"
+
+		Level.trigger_event(level, island_selected_level_event_name)
+	end
+
+	local island_name_id = NetworkLookup.hordes_island_names[selected_island_name]
+
+	Managers.state.game_session:send_rpc_clients("rpc_client_hordes_set_selected_island", island_name_id)
 end
 
 GameModeSurvival.on_island_entered = function (self, island_name)
@@ -545,14 +635,22 @@ GameModeSurvival._handle_game_end_server = function (self, game_won)
 	Managers.stats:record_team("hook_game_mode_survival_game_end", game_won, self._completition_time, difficulty)
 
 	local total_waves_completed = self:get_total_waves_completed()
+	local telemetry_events = Managers.telemetry_events
 
 	Log.info("GameModeSurvival", "Game Mode Ended: Island played [%s] | Total Waves Completed [%d] | Islands Completed [%d] | Completition Time [%f]", self._current_island or "NONE", total_waves_completed or -1, self._islands_completed or -1, self._completition_time or -1)
 
-	if Managers.telemetry_events then
-		local players = Managers.player:human_players()
+	local players = Managers.player:human_players()
 
-		for _, player in pairs(players) do
+	for _, player in pairs(players) do
+		if telemetry_events then
 			Managers.telemetry_events:player_hordes_mode_ended(player, game_won, self._completition_time, self._current_island or "NONE", total_waves_completed or 0)
+		end
+
+		local stat_id = player.remote and player.stat_id or player:local_player_id()
+		local pickups_and_health_station_uses_stat = Managers.stats:read_user_stat(stat_id, "game_mode_survival_auric_session_ammo_pickups_and_health_station_uses")
+
+		if game_won and pickups_and_health_station_uses_stat == 0 then
+			Managers.achievements:unlock_achievement(player, "horde_win_auric_no_ammo_pickups_or_health_station")
 		end
 	end
 end
@@ -883,7 +981,7 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local inventory_slot_component = unit_data_extension:read_component(slot_name)
 		local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-		local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 		local data = {}
 
 		if max_ammo_reserve > 0 then
@@ -891,7 +989,7 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 		end
 
 		if max_ammo_clip > 0 then
-			data.ammo_clip_percent = inventory_slot_component.current_ammunition_clip / max_ammo_clip
+			data.ammo_clip_percent = Ammo.current_ammo_in_clips(inventory_slot_component) / max_ammo_clip
 		end
 
 		weapon_slot_data[slot_name] = data
@@ -976,14 +1074,14 @@ GameModeSurvival._apply_persistent_player_data = function (self, player)
 			for slot_name, data in pairs(selected_data.weapon_slot_data) do
 				local inventory_slot_component = unit_data_extension:write_component(slot_name)
 				local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-				local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+				local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 				if max_ammo_reserve > 0 and data.ammo_reserve_percent then
 					inventory_slot_component.current_ammunition_reserve = math.round(max_ammo_reserve * data.ammo_reserve_percent)
 				end
 
 				if max_ammo_clip > 0 and data.ammo_clip_percent then
-					inventory_slot_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
+					Ammo.set_current_ammo_in_clips(inventory_slot_component, math.round(max_ammo_clip * data.ammo_clip_percent))
 				end
 			end
 
@@ -1087,6 +1185,55 @@ GameModeSurvival._set_ready_time_to_spawn = function (self, player, time)
 	end
 end
 
+function _fill_with_random_items_from_weighted_pool(items_pool, items_pool_weights, num_items, results)
+	local total_weight = 0
+	local weighted_pool_data = {}
+
+	for _, item_name in pairs(items_pool) do
+		local item_weight = items_pool_weights[item_name] or 1
+
+		if item_weight > 0 then
+			total_weight = total_weight + item_weight
+
+			if not items_pool_weights[item_name] then
+				Log.warning("GameModeSurvival", string.format("[%s] has missing weights. Defaulting to 1.", item_name))
+			end
+
+			local data = {
+				name = item_name,
+				weight = item_weight,
+			}
+
+			table.insert(weighted_pool_data, data)
+		end
+	end
+
+	local num_available_items = #weighted_pool_data
+	local num_items_left = num_items
+
+	while num_items_left > 0 and num_available_items > 0 do
+		local random_num = math.random(1, total_weight)
+
+		for i = 1, #weighted_pool_data do
+			local weighted_item_data = weighted_pool_data[i]
+			local item_weight = weighted_item_data.weight
+
+			if random_num <= item_weight then
+				table.insert(results, weighted_item_data.name)
+				table.remove(weighted_pool_data, i)
+
+				num_available_items = num_available_items - 1
+				num_items_left = num_items_left - 1
+				total_weight = total_weight - item_weight
+
+				break
+			else
+				random_num = random_num - item_weight
+			end
+		end
+	end
+end
+
 GameModeSurvival.rpc_set_player_respawn_time = function (self, channel_id, peer_id, local_player_id, time)
 	local player_manager = Managers.player
 	local player = player_manager:player(peer_id, local_player_id)
@@ -1123,6 +1270,19 @@ end
 
 GameModeSurvival.rpc_client_hordes_tag_remaining_enemies = function (self, channel_id)
 	self:_tag_remaining_enemies()
+end
+
+GameModeSurvival.rpc_client_hordes_set_selected_island = function (self, channel_id, island_name_id)
+	local island_name = NetworkLookup.hordes_island_names[island_name_id]
+	local level = Managers.state.mission:mission_level()
+
+	Log.info("GameModeSurvival", "Server selected Island to play: %s", island_name)
+
+	if island_name and level then
+		local island_selected_level_event_name = "horde_mode_" .. island_name .. "_selected"
+
+		Level.trigger_event(level, island_selected_level_event_name)
+	end
 end
 
 GameModeSurvival.get_additional_pickups = function (self)

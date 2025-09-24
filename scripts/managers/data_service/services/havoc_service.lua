@@ -2,8 +2,9 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
-local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local HavocService = class("HavocService")
+
+HavocService.HAVOC_UNLOCK_STATUS = table.index_lookup_table("locked", "awaiting_maelstrom_completion", "unlocked")
 
 HavocService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
@@ -145,8 +146,8 @@ HavocService.refresh_havoc_unlock_status = function (self)
 			return
 		end
 
-		if adjusted_value > #NetworkLookup.havoc_unlock_status then
-			local err = string.format("Backend provided index for havoc_unlock_status that was out of bounds for NetworkLookup.havoc_unlock_status: %i\n", value)
+		if adjusted_value > #HavocService.HAVOC_UNLOCK_STATUS then
+			local err = string.format("Backend provided index for havoc_unlock_status that was out of bounds for HavocService.HAVOC_UNLOCK_STATUS: %i\n", value)
 
 			Log.exception("HavocService", err)
 			self:_set_fallback_havoc_unlock_status()
@@ -154,7 +155,7 @@ HavocService.refresh_havoc_unlock_status = function (self)
 			return
 		end
 
-		local havoc_unlock_status = NetworkLookup.havoc_unlock_status[adjusted_value]
+		local havoc_unlock_status = HavocService.HAVOC_UNLOCK_STATUS[adjusted_value]
 
 		self._havoc_unlock_status = havoc_unlock_status
 
@@ -179,7 +180,7 @@ HavocService.get_havoc_unlock_status = function (self)
 end
 
 HavocService._set_fallback_havoc_unlock_status = function (self)
-	self._havoc_unlock_status = NetworkLookup.havoc_unlock_status[1]
+	self._havoc_unlock_status = HavocService.HAVOC_UNLOCK_STATUS[1]
 
 	Log.info("Using fallback havoc_unlock_status.")
 end
@@ -187,15 +188,15 @@ end
 HavocService.set_havoc_unlock_status = function (self, value)
 	local backend_value
 
-	for i = 1, #NetworkLookup.havoc_unlock_status do
-		if value == NetworkLookup.havoc_unlock_status[i] then
+	for i = 1, #HavocService.HAVOC_UNLOCK_STATUS do
+		if value == HavocService.HAVOC_UNLOCK_STATUS[i] then
 			backend_value = i - 1
 
 			break
 		end
 	end
 
-	Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):next(function ()
+	return Managers.backend.interfaces.account:set_havoc_unlock_status(backend_value):next(function ()
 		self._havoc_unlock_status = value
 	end):catch(function (err)
 		local error_message = string.format("Error setting havoc_unlock_status: %s", err)

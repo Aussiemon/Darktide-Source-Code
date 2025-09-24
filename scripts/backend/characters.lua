@@ -165,12 +165,6 @@ Characters.delete_character = function (self, character_id)
 	end)
 end
 
-Characters.set_specialization = function (self, character_id, specialization)
-	return self:set_data(character_id, "career", {
-		specialization = specialization,
-	})
-end
-
 Characters.set_talents_v2 = function (self, character_id, talents)
 	return self:set_data(character_id, "vocation", {
 		talents = talents,
@@ -209,20 +203,6 @@ Characters.get_narrative = function (self, character_id)
 	end)
 end
 
-Characters.get_missions = function (self, character_id)
-	return self:get_data(character_id, "narrative|missions"):next(function (response)
-		local data = _process_narrative(response.body.data)
-
-		return data and data.missions or {}
-	end)
-end
-
-Characters.set_mission = function (self, character_id, event_name, is_completed)
-	return self:set_data(character_id, "narrative|missions", {
-		[event_name] = is_completed ~= false and "true" or "false",
-	})
-end
-
 Characters.set_narrative_story_chapter = function (self, character_id, story_name, chapter_id)
 	return self:set_data(character_id, "narrative|stories", {
 		[story_name] = chapter_id,
@@ -233,6 +213,42 @@ Characters.set_narrative_event_completed = function (self, character_id, event_n
 	return self:set_data(character_id, "narrative|events", {
 		[event_name] = is_completed ~= false and "true" or "false",
 	})
+end
+
+Characters.set_narrative_data = function (self, character_id, event_data, story_data)
+	local data = {}
+
+	for event_name, is_completed in pairs(event_data) do
+		data[#data + 1] = {
+			path = "narrative|events",
+			data = {
+				[event_name] = is_completed ~= false and "true" or "false",
+			},
+		}
+	end
+
+	for story_name, chapter_id in pairs(story_data) do
+		data[#data + 1] = {
+			path = "narrative|stories",
+			data = {
+				[story_name] = chapter_id,
+			},
+		}
+	end
+
+	local promise = Promise:resolved()
+
+	for i = 1, #data do
+		local entry = data[i]
+
+		local function next_entry()
+			return self:set_data(character_id, entry.path, entry.data)
+		end
+
+		promise = promise:next(next_entry)
+	end
+
+	return promise
 end
 
 Characters.get_narrative_event = function (self, character_id, event_name, optional_account_id)

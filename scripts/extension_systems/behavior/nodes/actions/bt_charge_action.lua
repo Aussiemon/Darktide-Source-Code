@@ -196,6 +196,17 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 	local charge_max_speed_at = action_data.charge_max_speed_at
 	local charge_scale = time_spent_charging / charge_max_speed_at
 	local wanted_charge_speed = math.min(charge_speed_min + charge_scale * (charge_speed_max - charge_speed_min), charge_speed_max)
+
+	if scratchpad.close_attack_started then
+		wanted_charge_speed = action_data.close_attack_speed
+
+		local variable = action_data.close_attack_animation_variable
+		local value = action_data.close_attack_animation_value
+
+		scratchpad.animation_extension:set_variable(variable, value)
+		MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+	end
+
 	local target_velocity = MinionMovement.target_velocity(target_unit)
 	local target_position = POSITION_LOOKUP[target_unit]
 	local extrapolated_position = target_position + target_velocity * action_data.target_extrapolation_length_scale
@@ -261,7 +272,17 @@ BtChargeAction._update_charging = function (self, unit, scratchpad, action_data,
 	local colliding_unit = self:_check_colliding_players(unit, scratchpad, action_data)
 
 	if colliding_unit then
-		self:_hit_target(unit, colliding_unit, scratchpad, action_data, t)
+		if action_data.using_close_attack_type then
+			if not scratchpad.close_attack_started then
+				scratchpad.close_attack_started = self:_close_attack_target(unit, colliding_unit, scratchpad, action_data, t)
+			end
+		else
+			self:_hit_target(unit, colliding_unit, scratchpad, action_data, t)
+		end
+	end
+
+	if scratchpad.close_attack_started and t > scratchpad.attack_damage_t then
+		scratchpad.state = "attacking"
 	end
 
 	self:_update_anim_lean_variable(unit, scratchpad, action_data, dt, target_position)
@@ -280,8 +301,17 @@ BtChargeAction._update_navigating = function (self, unit, scratchpad, action_dat
 		return
 	end
 
+	local close_attack_started = scratchpad.close_attack_started and action_data.using_close_attack_type
 	local target_unit = scratchpad.perception_component.target_unit
-	local target_position = POSITION_LOOKUP[target_unit]
+	local target_position
+
+	if close_attack_started and scratchpad.last_target_position then
+		target_position = scratchpad.last_target_position:unbox()
+	else
+		target_position = POSITION_LOOKUP[target_unit]
+		scratchpad.last_target_position = Vector3Box(target_position)
+	end
+
 	local navigation_extension = scratchpad.navigation_extension
 	local destination = navigation_extension:destination()
 	local distance = Vector3.distance(target_position, destination)
@@ -373,6 +403,13 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 		local unit_position = POSITION_LOOKUP[unit]
 		local target_position = POSITION_LOOKUP[hit_target]
 		local direction = Vector3.normalize(target_position - unit_position)
+		local distance_to_target = Vector3.distance(target_position, unit_position)
+		local required_minimum_distance = action_data.required_minimum_distance
+
+		if required_minimum_distance and required_minimum_distance < distance_to_target then
+			return
+		end
+
 		local head_node = Unit.node(hit_target, "j_head")
 		local hit_world_position = Unit.world_position(hit_target, head_node)
 		local damage, result, damage_efficiency = Attack.execute(hit_target, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_type", attack_types.melee, "attack_direction", direction, "hit_world_position", hit_world_position, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)
@@ -381,7 +418,7 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 
 		local effect_template = action_data.effect_template
 
-		if effect_template then
+		if effect_template and not scratchpad.global_effect_id then
 			local fx_system = scratchpad.fx_system
 			local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
@@ -423,10 +460,20 @@ BtChargeAction._check_wall_collision = function (self, unit, scratchpad, action_
 end
 
 BtChargeAction._check_colliding_players = function (self, unit, scratchpad, action_data)
+	local using_close_attack_type = action_data.using_close_attack_type
+	local hit_actors, actor_count
 	local position = POSITION_LOOKUP[unit]
 	local physics_world = scratchpad.physics_world
-	local radius = action_data.collision_radius
-	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
+
+	if using_close_attack_type then
+		local radius = action_data.close_collision_radius
+
+		hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
+	else
+		local radius = action_data.collision_radius
+
+		hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
+	end
 
 	if actor_count > 0 then
 		local hit_actor = hit_actors[1]
@@ -485,6 +532,45 @@ BtChargeAction._hit_target = function (self, unit, hit_unit, scratchpad, action_
 	local slot_system = Managers.state.extension:system("slot_system")
 
 	slot_system:do_slot_search(unit, true)
+end
+
+BtChargeAction._close_attack_target = function (self, unit, hit_unit, scratchpad, action_data, t)
+	scratchpad.hit_target = hit_unit
+
+	local attack_anim_duration = action_data.close_attack_anim_duration
+
+	if type(attack_anim_duration) == "table" then
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+
+		attack_anim_duration = attack_anim_duration[wielded_slot_name] or attack_anim_duration.default
+	end
+
+	local effect_template = action_data.effect_template
+
+	if effect_template then
+		local fx_system = scratchpad.fx_system
+		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+
+		scratchpad.global_effect_id = global_effect_id
+	end
+
+	scratchpad.attack_duration_t = t + attack_anim_duration
+	scratchpad.attack_damage_t = t + action_data.close_attack_anim_damage_timing
+
+	local attack_anim = action_data.close_attack_anim
+
+	scratchpad.animation_extension:anim_event(attack_anim)
+
+	local speed = action_data.close_attack_speed
+
+	scratchpad.navigation_extension:set_enabled(true, speed)
+
+	local slot_system = Managers.state.extension:system("slot_system")
+
+	slot_system:do_slot_search(unit, true)
+
+	return true
 end
 
 BtChargeAction._get_turn_slowdown_percentage = function (self, unit, direction, action_data)

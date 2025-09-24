@@ -15,7 +15,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_infinite_ammo_during_sta
 	buff_stats = {},
 }
 hordes_legendary_veteran_buffs_data.hordes_buff_veteran_increased_damage_after_stealth = {
-	description = "Veteran infiltrate increase damage of 70% for 3sc after leaving stealth",
+	description = "Veteran infiltrate increase damage of 110% for 3sc after leaving stealth",
 	gradient = "content/ui/textures/color_ramps/talent_ability",
 	icon = "content/ui/textures/icons/buffs/hud/horde_buffs/big_buffs/hordes_buff_veteran_increased_damage_after_stealth",
 	title = "Strike first, think later",
@@ -27,7 +27,7 @@ hordes_legendary_veteran_buffs_data.hordes_buff_veteran_increased_damage_after_s
 		},
 		dammage = {
 			format_type = "percentage",
-			value = 0.7,
+			value = 1.1,
 		},
 	},
 }

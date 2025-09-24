@@ -15,10 +15,11 @@ GameplayInitStepGameMode.on_enter = function (self, parent, params)
 	local world = shared_state.world
 	local physics_world = shared_state.physics_world
 	local is_server = shared_state.is_server
+	local havoc_data = shared_state.havoc_data
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
-	self:_init_game_mode(mission_name, world, physics_world, is_server, network_event_delegate)
+	self:_init_game_mode(mission_name, world, physics_world, is_server, network_event_delegate, havoc_data)
 end
 
 GameplayInitStepGameMode.update = function (self, main_dt, main_t)
@@ -38,7 +39,7 @@ GameplayInitStepGameMode.update = function (self, main_dt, main_t)
 	return GameplayInitStepMission, next_step_params
 end
 
-GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, physics_world, is_server, network_event_delegate)
+GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, physics_world, is_server, network_event_delegate, havoc_data)
 	local mission = MissionTemplates[mission_name]
 	local game_mode_name = mission.game_mode_name
 	local gameplay_modifiers = mission.gameplay_modifiers
@@ -46,6 +47,7 @@ GameplayInitStepGameMode._init_game_mode = function (self, mission_name, world, 
 		world = world,
 		physics_world = physics_world,
 		is_server = is_server,
+		havoc_data = havoc_data,
 		mission_template = mission,
 	}
 	local game_mode_manager = GameModeManager:new(game_mode_context, game_mode_name, gameplay_modifiers, network_event_delegate)

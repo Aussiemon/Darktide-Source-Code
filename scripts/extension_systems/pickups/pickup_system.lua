@@ -7,7 +7,6 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local Health = require("scripts/utilities/health")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
-local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
@@ -29,6 +28,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._mission_pool = PickupSettings[system_init_data.mission.pickup_pool]
 	self._mission_pool_adjustments = system_init_data.mission.pickup_settings
 	self._backend_pool_adjustments = context.pickup_pool_adjustments
+	self._min_chest_spawner_ratios = system_init_data.mission.min_chest_spawner_ratios or PickupSettings.min_chest_spawner_ratios
 	self._seed = system_init_data.level_seed
 	self._is_server = is_server
 	self._material_collected = {}
@@ -99,7 +99,8 @@ PickupSystem._fetch_settings = function (self)
 	end
 
 	local game_mode_manager = Managers.state.game_mode
-	local game_mode_overrides = game_mode_manager:game_mode():get_additional_pickups()
+	local game_mode = game_mode_manager:game_mode()
+	local game_mode_overrides = game_mode:get_additional_pickups()
 
 	if game_mode_overrides then
 		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(game_mode_overrides, difficulty)
@@ -107,9 +108,11 @@ PickupSystem._fetch_settings = function (self)
 		self:_add_to_table(selected_pools, pickup_settings_adjust)
 	end
 
-	if Managers.state.havoc:is_havoc() then
-		local havoc_overrides = MissionOverrides.havoc_pickups
-		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(havoc_overrides.pickup_settings, difficulty)
+	local havoc_extension = game_mode:extension("havoc")
+
+	if havoc_extension then
+		local havoc_overrides = havoc_extension:get_havoc_pickup_overrides()
+		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(havoc_overrides, difficulty)
 
 		self:_add_to_table(selected_pools, pickup_settings_adjust)
 	end
@@ -247,6 +250,11 @@ PickupSystem._populate_pickups = function (self)
 		self._seed = self:_shuffle(pickup_spawners, self._seed)
 	end
 
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	game_mode:pre_populate_pickups_setup(pickup_spawners)
+
 	for i = 1, num_spawners do
 		pickup_spawners[i]:spawn_guaranteed()
 	end
@@ -274,7 +282,7 @@ PickupSystem._populate_pickups = function (self)
 		end
 
 		for distribution_type, pickup_settings in pairs(mission_pickup_settings) do
-			self._seed = self:_spawn_spread_pickups(PICKUP_SPAWNER_EXTENSIONS, distribution_type, pickup_settings, self._seed)
+			self._seed = self:spawn_spread_pickups(PICKUP_SPAWNER_EXTENSIONS, distribution_type, pickup_settings, self._seed)
 		end
 	end
 
@@ -292,7 +300,7 @@ PickupSystem._populate_pickups = function (self)
 		local time = Managers.backend:get_server_time(0) / 1000
 		local seed = os.date("%Y", time) * 55 + os.date("%V", time)
 
-		self:_spawn_spread_pickups(PICKUP_SPAWNER_EXTENSIONS, DISTRIBUTION_TYPES.side_mission, side_settings, seed)
+		self:spawn_spread_pickups(PICKUP_SPAWNER_EXTENSIONS, DISTRIBUTION_TYPES.side_mission, side_settings, seed)
 	end
 end
 
@@ -590,13 +598,13 @@ end
 local PICKUPS_TO_SPAWN = {}
 local USABLE_SPAWNERS = {}
 
-PickupSystem._spawn_spread_pickups = function (self, pickup_spawners, distribution_type, pickup_pool, seed)
+PickupSystem.spawn_spread_pickups = function (self, pickup_spawners, distribution_type, pickup_pool, seed)
 	local num_spawners = #pickup_spawners
 
 	table.clear(USABLE_SPAWNERS)
 
 	for i = 1, num_spawners do
-		pickup_spawners[i]:register_spawn_locations(USABLE_SPAWNERS, distribution_type, pickup_pool)
+		pickup_spawners[i]:register_spawn_locations(USABLE_SPAWNERS, distribution_type)
 	end
 
 	local pickup_count = 0
@@ -608,7 +616,7 @@ PickupSystem._spawn_spread_pickups = function (self, pickup_spawners, distributi
 	end
 
 	local spawn_ratio = pickup_count / #USABLE_SPAWNERS
-	local min_chest_spawner_ratio = PickupSettings.min_chest_spawner_ratio[distribution_type] or 0
+	local min_chest_spawner_ratio = self._min_chest_spawner_ratios[distribution_type] or 0
 	local chest_spawners = 0
 
 	for i = 1, #USABLE_SPAWNERS do
@@ -828,6 +836,8 @@ PickupSystem._spawn_open_pickups = function (self, distribution_type, pickup_poo
 		end
 	end
 
+	seed = table.shuffle(pickups_to_spawn, seed)
+
 	for i = #usable_spawners, 1, -1 do
 		local spawner = usable_spawners[i]
 		local success, pickup_index = self:_check_spawn(spawner, pickups_to_spawn)
@@ -863,16 +873,7 @@ end
 
 PickupSystem.update = function (self, system_context, dt, t)
 	if self._is_server then
-		local spawned_pickups, soft_cap_out_of_bounds_units = self._spawned_pickups, self._soft_cap_out_of_bounds_units
-
-		for i = #spawned_pickups, 1, -1 do
-			local unit = spawned_pickups[i]
-
-			if soft_cap_out_of_bounds_units[unit] then
-				Log.info("PickupSystem", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
-				self:despawn_pickup(unit)
-			end
-		end
+		-- Nothing
 	end
 end
 
@@ -953,6 +954,8 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 		self._unit_to_skip_group[pickup_unit] = skip_group
 	end
 
+	Managers.state.out_of_bounds:register_soft_oob_unit(pickup_unit, self, "_update_soft_oob")
+
 	return pickup_unit, pickup_unit_go_id
 end
 
@@ -982,8 +985,18 @@ PickupSystem.despawn_pickup = function (self, pickup_unit)
 
 	local deleted_index = table.index_of(spawned_pickups, pickup_unit)
 
+	if not ALIVE[pickup_unit] then
+		Log.error("PickupSystem", "[despawn_pickup] Unit(%s) is not alive, but trying to be despawned", tostring(pickup_unit))
+	end
+
+	if deleted_index > 0 then
+		table.swap_delete(spawned_pickups, deleted_index)
+	else
+		Log.error("PickupSystem", "[despawn_pickup] Unit(%s) not managed by this spawner.", tostring(pickup_unit))
+	end
+
 	Managers.state.unit_spawner:mark_for_deletion(pickup_unit)
-	table.swap_delete(spawned_pickups, deleted_index)
+	Managers.state.out_of_bounds:unregister_soft_oob_unit(pickup_unit, self)
 end
 
 PickupSystem.interact_with = function (self, pickup_unit, player_session_id)
@@ -1112,6 +1125,15 @@ PickupSystem.get_collected_materials = function (self)
 	end
 
 	return self._material_collected
+end
+
+PickupSystem._update_soft_oob = function (self, unit)
+	local not_despawned_this_frame = self._pickup_to_interactors[unit]
+
+	if not_despawned_this_frame then
+		Log.info("PickupSystem", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
+		self:despawn_pickup(unit)
+	end
 end
 
 return PickupSystem

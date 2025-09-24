@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local MinionAttack = require("scripts/utilities/minion_attack")
@@ -11,6 +12,7 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
+local attack_types = AttackSettings.attack_types
 local BtShootNetAction = class("BtShootNetAction", "BtNode")
 
 BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -221,7 +223,7 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 	local wanted_travel_distance, available_travel_distance = action_data.net_speed * dt, shoot_data.available_travel_distance
 	local travel_distance = math.min(wanted_travel_distance, available_travel_distance)
 	local target_unit = scratchpad.perception_component.target_unit
-	local is_dodging, dodge_type = Dodge.is_dodging(target_unit)
+	local is_dodging, dodge_type = Dodge.is_dodging(target_unit, attack_types.incapacitating_net)
 
 	if is_dodging and not scratchpad.target_dodged_during_attack then
 		scratchpad.target_dodged_during_attack = true
@@ -292,9 +294,13 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 end
 
 BtShootNetAction._evaluate_collision = function (self, action_data, hit_unit, new_sweep_position)
-	local is_dodging = Dodge.is_dodging(hit_unit)
+	local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.incapacitating_net)
 
 	if is_dodging then
+		if dodge_type == "buff" then
+			return false
+		end
+
 		local net_dodge_sweep_radius = action_data.net_dodge_sweep_radius
 		local hit_unit_position = POSITION_LOOKUP[hit_unit]
 		local flat_position = Vector3(hit_unit_position.x, hit_unit_position.y, new_sweep_position.z)

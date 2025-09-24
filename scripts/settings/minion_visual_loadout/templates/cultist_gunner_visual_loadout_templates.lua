@@ -2,7 +2,10 @@
 
 local MissionSettings = require("scripts/settings/mission/mission_settings")
 local zone_ids = MissionSettings.mission_zone_ids
-local basic_cultist_gunner_template = {
+local templates = {
+	cultist_gunner = {},
+}
+local base_visual_loadout_template = {
 	slots = {
 		slot_ranged_weapon = {
 			drop_on_death = true,
@@ -62,7 +65,7 @@ local basic_cultist_gunner_template = {
 				"content/items/characters/minions/gib_items/newly_infected_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -79,35 +82,55 @@ local basic_cultist_gunner_template = {
 		},
 	},
 }
-local templates = {}
+local default_1 = table.clone(base_visual_loadout_template)
 
-templates.cultist_gunner = {
-	default = {},
-	[zone_ids.tank_foundry] = {},
-	[zone_ids.dust] = {},
-	[zone_ids.watertown] = {},
+templates.cultist_gunner.default = {
+	default_1,
 }
-templates.cultist_gunner.default[1] = table.clone(basic_cultist_gunner_template)
 
-local foundry_1 = table.clone(basic_cultist_gunner_template)
+local foundry_1 = table.clone(base_visual_loadout_template)
 
-foundry_1.slots.envrionmental_override.items = {
+foundry_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/dirt_02",
 }
-templates.cultist_gunner.tank_foundry[1] = foundry_1
+templates.cultist_gunner[zone_ids.tank_foundry] = {
+	foundry_1,
+}
 
-local dust_1 = table.clone(basic_cultist_gunner_template)
+local dust_1 = table.clone(base_visual_loadout_template)
 
-dust_1.slots.envrionmental_override.items = {
+dust_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/sand_02",
 }
-templates.cultist_gunner.dust[1] = dust_1
+templates.cultist_gunner[zone_ids.dust] = {
+	dust_1,
+}
 
-local watertown_1 = table.clone(basic_cultist_gunner_template)
+local watertown_1 = table.clone(base_visual_loadout_template)
 
-watertown_1.slots.envrionmental_override.items = {
+watertown_1.slots.environmental_override.items = {
 	"content/items/characters/minions/environment_overrides/acid_02",
 }
-templates.cultist_gunner.watertown[1] = watertown_1
+templates.cultist_gunner[zone_ids.watertown] = {
+	watertown_1,
+}
+
+local void_1 = table.clone(base_visual_loadout_template)
+
+void_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.cultist_gunner[zone_ids.void] = {
+	void_1,
+}
+
+local horde_1 = table.clone(base_visual_loadout_template)
+
+horde_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/snow_01",
+}
+templates.cultist_gunner[zone_ids.horde] = {
+	horde_1,
+}
 
 return templates

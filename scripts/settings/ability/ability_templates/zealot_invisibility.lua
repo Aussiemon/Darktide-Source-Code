@@ -22,6 +22,7 @@ ability_template.action_input_hierarchy = {
 ability_template.actions = {
 	action_stance_change = {
 		ability_type = "combat_ability",
+		allow_lugging = true,
 		allowed_during_sprint = true,
 		anim = "ability_cloak",
 		kind = "stance_change",

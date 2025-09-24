@@ -7,6 +7,7 @@ local PlayerUnitActionInputExtension = class("PlayerUnitActionInputExtension")
 
 PlayerUnitActionInputExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._action_input_parsers = {}
+	self._parser_by_ability_type = {}
 	self._disabled = extension_init_data.is_social_hub
 end
 
@@ -28,12 +29,20 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 			action_extension = weapon_extension,
 		},
 		combat_ability_action = {
+			ability_component_name = "combat_ability",
 			action_input_type = "ability",
 			debug_draw = true,
 			templates = AbilityTemplates,
 			action_extension = ability_extension,
 		},
 		grenade_ability_action = {
+			ability_component_name = "grenade_ability",
+			action_input_type = "ability",
+			templates = AbilityTemplates,
+			action_extension = ability_extension,
+		},
+		pocketable_ability_action = {
+			ability_component_name = "pocketable_ability",
 			action_input_type = "ability",
 			templates = AbilityTemplates,
 			action_extension = ability_extension,
@@ -58,6 +67,10 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 			local action_component = unit_data:read_component(action_component_name)
 
 			self._action_input_parsers[action_component_name] = ActionInputParser:new(unit, action_component_name, action_component, data, debug_index)
+
+			if data.ability_component_name then
+				self._parser_by_ability_type[data.ability_component_name] = self._action_input_parsers[action_component_name]
+			end
 
 			local cache_config = {
 				input_sequences_is_running = string.format("%s_input_sequences_is_running", action_component_name),
@@ -122,6 +135,14 @@ end
 
 PlayerUnitActionInputExtension.clear_input_queue_and_sequences = function (self, id)
 	local parser = self._action_input_parsers[id]
+
+	if parser then
+		parser:clear_input_queue_and_sequences()
+	end
+end
+
+PlayerUnitActionInputExtension.clear_input_queue_and_sequences_by_ability_type = function (self, ability_type)
+	local parser = self._parser_by_ability_type[ability_type]
 
 	if parser then
 		parser:clear_input_queue_and_sequences()

@@ -229,10 +229,6 @@ ViewElementPerksItem.draw = function (self, dt, t, ui_renderer, render_settings,
 	ViewElementPerksItem.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 
 	render_settings.alpha_multiplier = old_alpha_multiplier
-
-	local previous_layer = render_settings.start_layer
-
-	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 end
 
 ViewElementPerksItem._update_animations = function (self, dt, t)

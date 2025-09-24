@@ -1,15 +1,10 @@
 ﻿-- chunkname: @scripts/extension_systems/perception/target_selection_templates/companion_dog_target_selection_template.lua
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
-local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
-
-local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, debug_target_weighting_or_nil)
-	return 0
-end
 
 local function _is_target_aggroed(target_unit)
 	local target_blackboard = BLACKBOARDS[target_unit]
@@ -111,10 +106,33 @@ end
 local target_selection_template = {}
 
 target_selection_template.companion_dog = function (unit, side, perception_component, buff_extension, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
+	local is_in_hub = Managers.state.game_mode:is_social_hub() or Managers.state.game_mode:is_prologue_hub()
+
+	if is_in_hub then
+		return nil
+	end
+
 	local target_unit = perception_component.target_unit
 	local companion_blackboard = BLACKBOARDS[unit]
-	local companion_position = POSITION_LOOKUP[unit]
 	local owner_unit = companion_blackboard.behavior.owner_unit
+	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+	local movable_platform_component = companion_blackboard and companion_blackboard.movable_platform
+	local is_in_platform = movable_platform_component and movable_platform_component.unit_reference ~= nil
+
+	if is_in_platform then
+		local _, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
+		local tag_id = tag and tag:id()
+
+		if tag_id then
+			local exernal_removal = true
+
+			smart_tag_system:cancel_tag(tag_id, owner_unit, exernal_removal)
+		end
+
+		return nil
+	end
+
+	local companion_position = POSITION_LOOKUP[unit]
 	local owner_unit_position = POSITION_LOOKUP[owner_unit]
 	local talent_extension = ScriptUnit.extension(owner_unit, "talent_system")
 	local melee_focus = talent_extension:has_special_rule("adamant_companion_melee_focus")
@@ -130,7 +148,7 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 
 	local character_state_component = owner_unit_data_extension:read_component("character_state")
 	local entered_t = character_state_component and character_state_component.entered_t or 0
-	local target_disable_cooldown_t = entered_t + CompanionDogSettings.initial_target_disable_cooldown
+	local target_disable_cooldown_t = entered_t + CompanionDogLocomotionSettings.initial_target_disable_cooldown
 	local disabled_character_state = owner_unit_data_extension:read_component("disabled_character_state")
 
 	if PlayerUnitStatus.is_pounced(disabled_character_state) and target_disable_cooldown_t < t then
@@ -162,13 +180,10 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 	end
 
 	local companion_whistle_component = Blackboard.write_component(companion_blackboard, "whistle")
-	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-	local tagged_unit, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit)
-	local tag_template = tag and tag:template()
-	local tag_type = tag_template and tag_template.marker_type
+	local tagged_unit, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
 	local companion_whistle_target
 
-	if tag_type == "unit_threat_adamant" then
+	if tagged_unit then
 		local invalid_target = false
 		local unit_data_extension = ScriptUnit.has_extension(tagged_unit, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()
@@ -186,6 +201,9 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 			companion_whistle_component.current_target = tagged_unit
 			companion_whistle_target = tagged_unit
 		end
+	elseif companion_whistle_component and companion_whistle_component.current_target then
+		companion_whistle_component.current_target = nil
+		target_unit = nil
 	end
 
 	if companion_whistle_target then

@@ -5,16 +5,6 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtCompanionHubInteractionWithPlayerAction = class("BtCompanionHubInteractionWithPlayerAction", "BtNode")
-
-BtCompanionHubInteractionWithPlayerAction.TIME_TO_FIRST_EVALUATE = {
-	0.8,
-	1.5,
-}
-BtCompanionHubInteractionWithPlayerAction.CONSECUTIVE_EVALUATE_INTERVAL = {
-	1,
-	2,
-}
-
 local _is_looking_at_target, _move_towards_animation_point, _rotate_towards_target_unit
 
 BtCompanionHubInteractionWithPlayerAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -73,38 +63,6 @@ BtCompanionHubInteractionWithPlayerAction.enter = function (self, unit, breed, b
 end
 
 BtCompanionHubInteractionWithPlayerAction.init_values = function (self, blackboard)
-	local behavior_component = Blackboard.write_component(blackboard, "behavior")
-
-	behavior_component.move_to_position:store(0, 0, 0)
-
-	behavior_component.has_move_to_position = false
-	behavior_component.current_state = "idle"
-	behavior_component.move_state = "idle"
-	behavior_component.should_skip_start_anim = false
-	behavior_component.is_out_of_bound = false
-
-	local follow_component = Blackboard.write_component(blackboard, "follow")
-
-	follow_component.last_referenced_vector:store(0, 0, 0)
-
-	follow_component.current_owner_cooldown = -1
-	follow_component.last_owner_cooldown_time = -1
-	follow_component.current_position_cooldown = -1
-	follow_component.current_movement_type = "none"
-	follow_component.current_movement_animation = "none"
-
-	local pounce_component = Blackboard.write_component(blackboard, "pounce")
-
-	pounce_component.pounce_target = nil
-	pounce_component.target_hit_zone_name = ""
-	pounce_component.leap_node = ""
-	pounce_component.pounce_cooldown = 0
-	pounce_component.started_leap = false
-	pounce_component.has_pounce_target = false
-	pounce_component.has_pounce_started = false
-	pounce_component.has_jump_off_direction = true
-	pounce_component.use_fast_jump = false
-
 	local hub_interaction_component = Blackboard.write_component(blackboard, "hub_interaction_with_player")
 
 	hub_interaction_component.has_owner_started_interaction = false

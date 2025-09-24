@@ -17,6 +17,7 @@ _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/rene
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_flamer_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_gunner_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_netgunner_shoot_templates")
+_create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_plasma_gunner_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_rifleman_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_shocktrooper_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/renegade/renegade_sniper_shoot_templates")

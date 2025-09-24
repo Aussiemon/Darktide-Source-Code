@@ -2,7 +2,6 @@
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -17,12 +16,11 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeAutogunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
@@ -30,11 +28,7 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -103,7 +97,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -629,7 +623,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.autogun
 weapon_template.spread_template = "autogun_assault_p1_m2"
 weapon_template.recoil_template = "default_autogun_assault"
-weapon_template.suppression_template = "default_autogun_assault"
+weapon_template.suppression_template = "autogun_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "autogun"
 weapon_template.ammo_template = "autogun_p1_m2"
 weapon_template.conditional_state_to_action_input = {
@@ -671,7 +665,7 @@ weapon_template.alternate_fire_settings = {
 	start_anim_event_3p = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
 	stop_anim_event_3p = "to_unaim_ironsight",
-	suppression_template = "fullauto_autogun_killshot",
+	suppression_template = "autogun_p1_m1_suppression_killshot",
 	sway_template = "fullauto_autogun_killshot",
 	crosshair = {
 		crosshair_type = "ironsight",

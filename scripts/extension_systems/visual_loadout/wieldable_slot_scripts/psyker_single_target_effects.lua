@@ -19,7 +19,7 @@ PsykerSingleTargetEffects.init = function (self, context, slot, weapon_template,
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
-	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:read_component("action_module_target_finder")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 
 	local source_id = WwiseWorld.make_manual_source(wwise_world, SPAWN_POS:unbox())
@@ -66,7 +66,7 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	local spawn_pos = SPAWN_POS:unbox()
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local targeting_fx = action_settings and action_settings.targeting_fx
-	local target_unit = self._action_module_targeting_component.target_unit_1
+	local target_unit = self._action_module_target_finder_component.target_unit_1
 	local charge_level = self:_charge_level()
 	local show_effect = targeting_fx and (not targeting_fx.show_on_full_charge or charge_level >= 1)
 

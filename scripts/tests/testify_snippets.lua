@@ -53,7 +53,6 @@ end
 TestifySnippets.wait_for_main_menu = function ()
 	Testify:make_request("wait_for_main_menu_displayed")
 	Testify:make_request("wait_for_profile_synchronization")
-	Testify:make_request("wait_for_narrative_loaded")
 end
 
 TestifySnippets.load_mission = function (mission_name, challenge, resistance, circumstance_name, side_mission)
@@ -133,6 +132,42 @@ TestifySnippets.enter_free_flight = function ()
 	end
 end
 
+TestifySnippets.free_flight_camera_follow_path = function (coordinates, speed)
+	local distance_increment = speed / 40
+
+	for j = 1, #coordinates - 1 do
+		local lerp_ratio = 0
+		local previous_coordinate = coordinates[j]
+
+		previous_coordinate = Vector3Box(previous_coordinate.x, previous_coordinate.y, previous_coordinate.z)
+
+		local next_coordinate = coordinates[j + 1]
+
+		next_coordinate = Vector3Box(next_coordinate.x, next_coordinate.y, next_coordinate.z)
+
+		local camera_direction = next_coordinate:unbox() - previous_coordinate:unbox()
+		local camera_rotation = Quaternion.look(camera_direction)
+
+		camera_rotation = QuaternionBox(camera_rotation)
+
+		local distance = Vector3.distance(previous_coordinate:unbox(), next_coordinate:unbox())
+
+		while lerp_ratio < 1 do
+			local previous_position = previous_coordinate:unbox()
+			local next_position = next_coordinate:unbox()
+			local current_position = Vector3.lerp(previous_position, next_position, lerp_ratio)
+			local camera_data = {
+				rotation = camera_rotation,
+				position = Vector3Box(current_position),
+			}
+
+			TestifySnippets.set_free_flight_camera_position(camera_data)
+
+			lerp_ratio = lerp_ratio + distance_increment / distance
+		end
+	end
+end
+
 TestifySnippets.set_free_flight_camera_position = function (camera_data)
 	if DEDICATED_SERVER then
 		TestifySnippets.send_request_to_all_peers("set_free_flight_camera_position", nil, nil, camera_data)
@@ -197,6 +232,8 @@ TestifySnippets.render_setting_template = function (setting_id)
 			return setting
 		end
 	end
+
+	ferror("Render setting %s not found", setting_id)
 end
 
 TestifySnippets.is_host = function ()

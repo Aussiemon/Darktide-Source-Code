@@ -5,8 +5,8 @@ local minion_difficulty_settings = {}
 local function _equal_difficulty_values(val, val_2)
 	local diff_table = {}
 
-	for i = 1, 5 do
-		diff_table[i] = {
+	for ii = 1, 5 do
+		diff_table[ii] = {
 			val,
 			val_2,
 		}
@@ -177,10 +177,10 @@ local function _shoot_steps_asc(from, to, ceil)
 	}
 	local shoot_steps = {}
 
-	for i = 1, #steps do
-		local value = steps[i]
+	for ii = 1, #steps do
+		local value = steps[ii]
 
-		shoot_steps[i] = ceil and {
+		shoot_steps[ii] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value),
 		} or {
@@ -203,10 +203,10 @@ local function _shoot_steps_desc(from, to, ceil)
 	}
 	local shoot_steps = {}
 
-	for i = 1, #steps do
-		local value = steps[i]
+	for ii = 1, #steps do
+		local value = steps[ii]
 
-		shoot_steps[i] = ceil and {
+		shoot_steps[ii] = ceil and {
 			math.ceil(from * value),
 			math.ceil(to * value),
 		} or {
@@ -234,7 +234,13 @@ minion_difficulty_settings.health = {
 	renegade_netgunner = _special_health_steps(450),
 	cultist_mutant = _special_health_steps(2000),
 	cultist_mutant_mutator = _special_health_steps(1000),
-	cultist_captain = _roamer_health_steps(14000),
+	cultist_captain = {
+		17500,
+		21000,
+		28000,
+		40000,
+		50000,
+	},
 	cultist_flamer = _special_health_steps(700),
 	renegade_flamer = _special_health_steps(700),
 	renegade_flamer_mutator = _special_health_steps(700),
@@ -243,20 +249,75 @@ minion_difficulty_settings.health = {
 	renegade_sniper = _special_health_steps(250),
 	chaos_ogryn_gunner = _elite_health_steps(2000),
 	chaos_ogryn_bulwark = _elite_health_steps(2400),
-	chaos_ogryn_executor = _elite_health_steps(1800),
+	chaos_ogryn_executor = {
+		1350,
+		2250,
+		2700,
+		4875,
+		6500,
+	},
 	chaos_daemonhost = _roamer_health_steps(16000),
 	chaos_mutator_daemonhost = _roamer_health_steps(16000),
-	renegade_captain = _roamer_health_steps(16000),
-	renegade_melee = _roamer_health_steps(250),
-	renegade_rifleman = _roamer_health_steps(150),
-	renegade_assault = _roamer_health_steps(180),
-	renegade_executor = _elite_health_steps(1500),
-	renegade_shocktrooper = _elite_health_steps(500),
+	renegade_captain = {
+		20000,
+		24000,
+		32000,
+		40000,
+		50000,
+	},
+	renegade_melee = {
+		250,
+		313,
+		375,
+		650,
+		815,
+	},
+	renegade_rifleman = {
+		150,
+		188,
+		225,
+		400,
+		500,
+	},
+	renegade_assault = {
+		180,
+		225,
+		270,
+		500,
+		625,
+	},
+	renegade_executor = {
+		1250,
+		1500,
+		1875,
+		2775,
+		3700,
+	},
+	renegade_shocktrooper = {
+		350,
+		500,
+		625,
+		1125,
+		1500,
+	},
+	renegade_plasma_gunner = _elite_health_steps(950),
 	renegade_twin_captain = _monster_health_steps(24000),
 	renegade_twin_captain_two = _monster_health_steps(24000),
-	renegade_gunner = _elite_health_steps(600),
+	renegade_gunner = {
+		450,
+		600,
+		900,
+		1275,
+		1700,
+	},
 	renegade_radio_operator = _elite_health_steps(1000),
-	renegade_berzerker = _elite_health_steps(1000),
+	renegade_berzerker = {
+		850,
+		1000,
+		1250,
+		1875,
+		2500,
+	},
 	cultist_berzerker = _elite_health_steps(1000),
 	cultist_ritualist = _roamer_health_steps(1000),
 	cultist_melee = _roamer_health_steps(275),
@@ -291,25 +352,17 @@ minion_difficulty_settings.hit_mass = {
 	renegade_flamer_mutator = 2,
 	renegade_grenadier = 2,
 	renegade_netgunner = 3,
-	renegade_plasma_shocktrooper = 4,
+	renegade_plasma_gunner = 4,
 	renegade_sniper = 2,
 	renegade_twin_captain = 4,
 	renegade_twin_captain_two = 4,
-	chaos_newly_infected = {
-		1,
-		1,
-		1,
-		1.25,
-		1.25,
-		1.25,
-	},
-	chaos_poxwalker = {
-		1.25,
-		1.25,
-		1.25,
+	chaos_armored_infected = {
 		1.5,
 		1.5,
 		1.5,
+		1.5,
+		1.5,
+		2.5,
 	},
 	chaos_lesser_mutated_poxwalker = {
 		1.25,
@@ -327,13 +380,29 @@ minion_difficulty_settings.hit_mass = {
 		1.5,
 		1.5,
 	},
-	chaos_armored_infected = {
+	chaos_newly_infected = {
+		1,
+		1,
+		1,
+		1.25,
+		1.25,
+		1.25,
+	},
+	chaos_poxwalker = {
+		1.25,
+		1.25,
+		1.25,
 		1.5,
 		1.5,
 		1.5,
-		1.5,
-		1.5,
+	},
+	chaos_mutator_ritualist = {
 		2.5,
+		2.5,
+		2.5,
+		2.5,
+		2.5,
+		3,
 	},
 	cultist_assault = {
 		1.75,
@@ -352,14 +421,6 @@ minion_difficulty_settings.hit_mass = {
 		3,
 	},
 	cultist_ritualist = {
-		2.5,
-		2.5,
-		2.5,
-		2.5,
-		2.5,
-		3,
-	},
-	chaos_mutator_ritualist = {
 		2.5,
 		2.5,
 		2.5,
@@ -391,14 +452,6 @@ minion_difficulty_settings.hit_mass = {
 		5,
 		8,
 	},
-	renegade_radio_operator = {
-		5,
-		5,
-		5,
-		5,
-		5,
-		8,
-	},
 	renegade_melee = {
 		3.5,
 		3.5,
@@ -406,6 +459,14 @@ minion_difficulty_settings.hit_mass = {
 		3.5,
 		3.5,
 		4,
+	},
+	renegade_radio_operator = {
+		5,
+		5,
+		5,
+		5,
+		5,
+		8,
 	},
 	renegade_rifleman = {
 		1.5,
@@ -457,6 +518,7 @@ minion_difficulty_settings.power_level = {
 	renegade_default_shot = _step_dmg_ranged(275),
 	renegade_executor_melee = _step_dmg_melee(300),
 	renegade_gunner_shot = _step_dmg_ranged(325),
+	renegade_plasma_gunner = _step_dmg_ranged(650),
 	renegade_radio_operator_shot = _step_dmg_ranged(325),
 	renegade_shotgun_shot = _step_dmg_ranged(300),
 	renegade_assault_shot = _step_dmg_ranged(225),
@@ -702,6 +764,13 @@ minion_difficulty_settings.shooting = {
 		time_per_shot = _equal_difficulty_values(0, 0),
 		num_shots = _equal_difficulty_values(10, 10),
 		shoot_dodge_window = _equal_difficulty_values(0.75, 0.75),
+	},
+	renegade_plasma_gunner = {
+		aim_durations = _shoot_steps_desc(0.3, 0.5),
+		shoot_cooldown = _shoot_steps_desc(1.75, 1.75),
+		time_per_shot = _equal_difficulty_values(0, 0),
+		num_shots = _equal_difficulty_values(1, 1),
+		shoot_dodge_window = _equal_difficulty_values(0.5, 0.8),
 	},
 	cultist_assault = {
 		aim_durations = _shoot_steps_desc(0.4, 0.5),

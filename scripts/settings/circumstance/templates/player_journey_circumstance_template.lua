@@ -251,4 +251,8 @@ circumstance_templates.player_journey_014 = {
 	},
 }
 
+for _, template in pairs(circumstance_templates) do
+	template.is_default = true
+end
+
 return circumstance_templates

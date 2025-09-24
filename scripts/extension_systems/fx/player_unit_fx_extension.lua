@@ -1,10 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/fx/player_unit_fx_extension.lua
 
-local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local PlayerUnitFxExtension = class("PlayerUnitFxExtension")
 local PARTICLE_INDEX_MIN = NetworkConstants.particle_index_min
@@ -1748,13 +1746,6 @@ PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_
 		return
 	end
 
-	local sound_config = PlayerCharacterLoopingSoundAliases[sound_alias]
-	local is_2d = sound_config.is_2d
-
-	if is_2d then
-		-- Nothing
-	end
-
 	local looping_sound = self._looping_sounds[sound_alias]
 
 	optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
@@ -1818,11 +1809,6 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 	local sound_config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local has_husk_events = not not sound_config.has_husk_events
 	local is_2d = sound_config.is_2d
-
-	if is_2d then
-		-- Nothing
-	end
-
 	local ignored_as_exclusive_event = false
 	local is_husk = self:should_play_husk_effect()
 
@@ -2082,11 +2068,6 @@ PlayerUnitFxExtension._spawn_looping_particles = function (self, looping_particl
 	local particle_config = PlayerCharacterLoopingParticleAliases[looping_particle_alias]
 	local particle_alias = particle_config.particle_alias
 	local screen_space = particle_config.screen_space
-
-	if screen_space then
-		-- Nothing
-	end
-
 	local resolved, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
 
 	if not resolved then

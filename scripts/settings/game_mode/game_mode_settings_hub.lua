@@ -14,7 +14,6 @@ local settings = {
 	player_unit_template_name_override = "player_character_social_hub",
 	starting_character_state_name = "hub_jog",
 	use_foot_ik = true,
-	use_hub_aim_extension = true,
 	use_side_color = false,
 	use_third_person_hub_camera = true,
 	vaulting_allowed = false,

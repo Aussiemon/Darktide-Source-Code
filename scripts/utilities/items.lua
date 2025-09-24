@@ -13,6 +13,7 @@ local TraitValueParser = require("scripts/utilities/trait_value_parser")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Promise = require("scripts/utilities/weapon/weapon_template")
 local unit_alive = Unit.alive
 local expertise_multiplier = 10
 local max_weapon_preview = 0.8
@@ -54,6 +55,14 @@ end
 
 Items.is_weapon = function (item_type)
 	return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+end
+
+Items.is_gadget = function (item_type)
+	return item_type == "GADGET"
+end
+
+Items.is_companion = function (item_type)
+	return item_type == "COMPANION_GEAR_FULL"
 end
 
 Items.is_character_bound = function (item_type)
@@ -567,6 +576,10 @@ Items.total_stats_value = function (item)
 end
 
 Items.expertise_level = function (item, no_symbol, use_base_item_level)
+	if not item then
+		return ""
+	end
+
 	if item.item_type ~= "GADGET" then
 		local base_item_level = item.baseItemLevel
 		local item_level
@@ -660,7 +673,7 @@ local _item_property_definitions = {
 			local left_value = table.nested_get(item, "profile_properties", "footstep_type_left")
 			local right_value = table.nested_get(item, "profile_properties", "footstep_type_right")
 
-			return left_value and left_value ~= "default" or right_value and right_value ~= "default"
+			return left_value and left_value ~= "" or right_value and right_value ~= ""
 		end,
 	},
 }
@@ -1114,6 +1127,10 @@ Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
 		local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
 
 		function link_attachment_item_to_slot(target_table, slot_id, item, optional_path)
+			if not target_table then
+				return
+			end
+
 			local path = optional_path or nil
 
 			for k, t in pairs(target_table) do
@@ -1142,13 +1159,17 @@ Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
 			end
 		end
 
-		local master_item = weapon_item.__master_item
+		local master_item = weapon_item.__master_item or weapon_item
 
 		attach_point = link_attachment_item_to_slot(master_item, "slot_trinket_1", trinket_item)
 		attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
 	end
 
-	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
+	if attach_point then
+		return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
+	else
+		return Promise.rejected("no attach point found to apply the trinket")
+	end
 end
 
 Items.unequip_slots = function (unequip_sots)
@@ -1450,7 +1471,8 @@ end
 
 Items.sort_comparator = function (definitions)
 	return function (a, b)
-		local a_item, b_item = a.item, b.item
+		local a_item = a.real_item or a.item
+		local b_item = b.real_item or b.item
 
 		if a_item and b_item then
 			for i = 1, #definitions, 2 do
@@ -1901,6 +1923,8 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 				archetype = Archetypes[item.archetypes[ii]]
 
 				if archetype then
+					item_archetype = archetype
+
 					break
 				end
 			end

@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolt_pistols/boltpistol_p1_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local Ammo = require("scripts/utilities/ammo")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -16,7 +16,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeBoltpistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_boltpistol_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_keywords = BuffSettings.keywords
 local damage_types = DamageSettings.damage_types
@@ -99,7 +98,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -198,7 +197,7 @@ weapon_template.actions = {
 		wield_reload_anim_event = "equip_reload",
 		wield_reload_anim_event_func = function (inventory_slot_component)
 			local ignore_state = inventory_slot_component.reload_state == "fit_new_mag"
-			local ammo_empty = inventory_slot_component.current_ammunition_clip == 0
+			local ammo_empty = Ammo.current_ammo_in_clips(inventory_slot_component) == 0
 
 			if ignore_state and not ammo_empty then
 				return "equip"
@@ -592,12 +591,14 @@ weapon_template.actions = {
 			1,
 			0.15,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/bolt_pistol/push",
-			anchor_point_offset = {
-				0.1,
-				1.2,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/bolt_pistol/push",
+				anchor_point_offset = {
+					0.1,
+					1.2,
+					-0.15,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -745,9 +746,9 @@ weapon_template.entry_actions = {
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/bolt_pistol"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/bolt_pistol"
 weapon_template.reload_template = ReloadTemplates.boltpistol
-weapon_template.spread_template = "boltpistol_p1m1_spread_hip"
+weapon_template.spread_template = "boltpistol_p1_m1_spread_assault"
 weapon_template.recoil_template = "default_boltpistol_hip"
-weapon_template.suppression_template = "hip_lasgun_killshot"
+weapon_template.suppression_template = "boltpistol_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "bolter"
 weapon_template.ammo_template = "boltpistol_p1_m1"
 weapon_template.conditional_state_to_action_input = {
@@ -783,7 +784,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_bolter_killshot",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "boltpistol_p1_m1_suppression_killshot",
 	sway_template = "default_boltpistol_killshot",
 	toughness_template = "killshot_zoomed",
 	crosshair = {

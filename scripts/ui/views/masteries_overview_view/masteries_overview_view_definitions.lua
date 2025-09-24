@@ -20,7 +20,7 @@ local mask_size = {
 	grid_height - 40,
 }
 local patterns_grid_settings = {
-	hide_dividers = true,
+	hide_top_divider = true,
 	scroll_start_margin = 80,
 	scrollbar_horizontal_offset = -8,
 	scrollbar_vertical_margin = 80,
@@ -38,6 +38,46 @@ local patterns_grid_settings = {
 	grid_size = grid_size,
 	mask_size = mask_size,
 	edge_padding = edge_padding,
+	bottom_divider_passes = {
+		{
+			pass_type = "texture",
+			style_id = "candles_1",
+			value = "content/ui/materials/effects/masteries/panel_main_lower_frame_candles",
+			value_id = "candles_1",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
+				offset = {
+					0,
+					57,
+					21,
+				},
+				size = {
+					750,
+					200,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "bottom",
+			value = "content/ui/materials/frames/masteries/panel_main_lower_frame",
+			value_id = "bottom",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "bottom",
+				offset = {
+					0,
+					30,
+					20,
+				},
+				size = {
+					656,
+					66,
+				},
+			},
+		},
+	},
 }
 local patterns_tab_menu_settings = {
 	button_spacing = 4,
@@ -96,16 +136,17 @@ local mastery_pattern_display_name_text_style = table.clone(UIFontSettings.heade
 
 mastery_pattern_display_name_text_style.horizontal_alignment = "center"
 mastery_pattern_display_name_text_style.text_horizontal_alignment = "center"
-mastery_pattern_display_name_text_style.text_vertical_alignment = "top"
+mastery_pattern_display_name_text_style.text_vertical_alignment = "center"
 mastery_pattern_display_name_text_style.size_addition = {
-	-40,
+	-80,
 }
 mastery_pattern_display_name_text_style.offset = {
 	0,
-	40,
+	-10,
 	6,
 }
 mastery_pattern_display_name_text_style.font_size = 40
+mastery_pattern_display_name_text_style.line_spacing = 1
 
 local mastery_pattern_info_title = table.clone(mastery_pattern_display_name_text_style)
 
@@ -115,6 +156,10 @@ mastery_pattern_info_title.offset = {
 	40,
 	6,
 }
+mastery_pattern_info_title.size_addition = {
+	-40,
+}
+mastery_pattern_info_title.text_vertical_alignment = "top"
 mastery_pattern_info_title.size = nil
 
 local expertise_info = table.clone(mastery_pattern_display_name_text_style)
@@ -126,7 +171,9 @@ expertise_info.offset = {
 	15,
 	6,
 }
-expertise_info.text_vertical_alignment = "center"
+expertise_info.size_addition = {
+	-40,
+}
 
 local expertise_description = table.clone(expertise_info)
 
@@ -379,44 +426,6 @@ local widget_definitions = {
 				size = {
 					656,
 					90,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "candles_1",
-			value = "content/ui/materials/effects/masteries/panel_main_lower_frame_candles",
-			value_id = "candles_1",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
-				offset = {
-					0,
-					67,
-					21,
-				},
-				size = {
-					750,
-					200,
-				},
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "bottom",
-			value = "content/ui/materials/frames/masteries/panel_main_lower_frame",
-			value_id = "bottom",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "bottom",
-				offset = {
-					0,
-					40,
-					20,
-				},
-				size = {
-					656,
-					66,
 				},
 			},
 		},

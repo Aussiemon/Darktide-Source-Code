@@ -2,6 +2,7 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
 local action_data = {
@@ -271,8 +272,10 @@ local action_data = {
 		running_stagger_anim_right = "run_stagger_02",
 		running_stagger_duration = 1.1666666666666667,
 		use_animation_running_stagger_speed = true,
+		utility_weight = 1,
 		vo_event = "assault",
 		walk_anim_event = "move_fwd_walk",
+		considerations = UtilityConsiderations.melee_follow,
 	},
 	melee_attack = {
 		ignore_blocked = true,
@@ -344,20 +347,20 @@ local action_data = {
 		},
 		attack_anim_damage_timings = {
 			attack_move_combo_01_fast = {
-				0.7777777777777778,
-				1.5833333333333333,
-				1.6666666666666667,
-				2.4722222222222223,
-				2.5277777777777777,
-				3.361111111111111,
-				3.4444444444444446,
+				0.6666666666666666,
+				1.3571428571428572,
+				1.4285714285714286,
+				2.119047619047619,
+				2.1666666666666665,
+				2.880952380952381,
+				2.9523809523809526,
 			},
 			attack_move_combo_08_fast = {
-				0.6,
-				1.4333333333333333,
-				1.5,
-				2.6,
-				3.466666666666667,
+				0.5,
+				1.1944444444444444,
+				1.25,
+				2.1666666666666665,
+				2.888888888888889,
 			},
 		},
 		move_start_timings = {
@@ -365,8 +368,8 @@ local action_data = {
 			attack_move_combo_08_fast = 0,
 		},
 		attack_anim_durations = {
-			attack_move_combo_01_fast = 3.888888888888889,
-			attack_move_combo_08_fast = 3.6666666666666665,
+			attack_move_combo_01_fast = 3.3333333333333335,
+			attack_move_combo_08_fast = 3.0555555555555554,
 		},
 		attack_intensities = {
 			melee = 2,
@@ -478,6 +481,38 @@ local action_data = {
 					value = 0,
 				},
 			},
+		},
+		damage_profile = DamageProfileTemplates.melee_berzerker_combo,
+		damage_type = damage_types.minion_melee_sharp,
+	},
+	close_leap_attack = {
+		assault_vo_interval_t = 1,
+		ignore_blocked = true,
+		move_speed_variable_lerp_speed = 10,
+		move_speed_variable_name = "moving_attack_fwd_speed",
+		moving_attack = true,
+		stagger_reduction = 50,
+		utility_weight = 1,
+		vo_event = "assault",
+		weapon_reach = 3.75,
+		considerations = UtilityConsiderations.cultist_berzerker_close_leap_attack,
+		attack_anim_events = {
+			"lunge_attack",
+		},
+		attack_anim_damage_timings = {
+			lunge_attack = {
+				1.1111111111111112,
+			},
+		},
+		move_start_timings = {
+			lunge_attack = 0,
+		},
+		attack_anim_durations = {
+			lunge_attack = 2.0987654320987654,
+		},
+		attack_intensities = {
+			melee = 2,
+			ranged = 1,
 		},
 		damage_profile = DamageProfileTemplates.melee_berzerker_combo,
 		damage_type = damage_types.minion_melee_sharp,
@@ -737,6 +772,19 @@ local action_data = {
 	},
 	exit_spawner = {
 		run_anim_event = "move_fwd",
+	},
+	use_stim = {
+		anim_event = "use_syringe",
+		duration = 1.6666666666666667,
+		exit_state = "to_combat",
+		special_visual_wield_considerations = "slot_melee_weapon",
+		effect_template = EffectTemplates.minion_stim_effect,
+		stim_buffs = {
+			"mutator_stimmed_minion_red",
+			"mutator_stimmed_minion_yellow",
+			"mutator_stimmed_minion_green",
+			"mutator_stimmed_minion_blue",
+		},
 	},
 }
 

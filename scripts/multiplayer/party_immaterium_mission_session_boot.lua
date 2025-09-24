@@ -252,18 +252,17 @@ PartyImmateriumMissionSessionBoot._clear = function (self)
 		self._connection_client:delete()
 
 		self._connection_client = nil
+		self._engine_lobby = nil
+	elseif self._engine_lobby then
+		Network.leave_lan_lobby(self._engine_lobby)
+
+		self._engine_lobby = nil
 	end
 
 	if self._wan_lobby_browser then
 		LanClient.destroy_lobby_browser(self._wan_client, self._wan_lobby_browser)
 
 		self._wan_lobby_browser = nil
-	end
-
-	if self._engine_lobby then
-		Network.leave_lan_lobby(self._engine_lobby)
-
-		self._engine_lobby = nil
 	end
 
 	self:_set_state(STATES.idle)

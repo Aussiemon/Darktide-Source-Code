@@ -87,7 +87,7 @@ CosmeticsVendorView._setup_tabs = function (self)
 	end
 
 	for archetype_name, archetype in pairs(Archetypes) do
-		if table.contains(ArchetypeSettings.archetype_cosmetics_whitelist, archetype_name) then
+		if ArchetypeSettings.archetype_cosmetics_whitelist[archetype_name] then
 			cosmetic_tabs[#cosmetic_tabs + 1] = {
 				display_name = archetype.archetype_name,
 				ui_selection_order = archetype.ui_selection_order,

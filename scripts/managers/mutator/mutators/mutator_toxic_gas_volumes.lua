@@ -5,9 +5,7 @@ require("scripts/managers/mutator/mutators/mutator_base")
 local Component = require("scripts/utilities/component")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
-local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local MutatorToxicGasVolumes = class("MutatorToxicGasVolumes", "MutatorBase")
 local GasPhases = table.enum("dormant", "activating", "active")
 local GAS_START_SOUND_EVENT = "wwise/events/world/play_event_toxic_gas_high_start"
@@ -226,7 +224,9 @@ MutatorToxicGasVolumes._get_clouds = function (self, gas_clouds)
 	local fog_units = component_system:get_units_from_component_name("ToxicGasFog")
 
 	if #fog_units == 0 then
-		return
+		Log.exception("MutatorToxicGasVolumes", "No ToxicGasFog components found in the level.")
+
+		return 0
 	end
 
 	local num_sections = 0
@@ -308,7 +308,6 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 	local gas_clouds = self._gas_clouds
 	local num_sections = self:_get_clouds(gas_clouds)
 	local main_path_manager = Managers.state.main_path
-	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local active_gas_clouds, nav_world = {}, self._nav_world
 	local force_next_to_not_skip = false
 
@@ -350,10 +349,7 @@ MutatorToxicGasVolumes._setup_static_clouds = function (self)
 				local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 5, 10, 5)
 
 				if position_on_navmesh then
-					local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_navmesh)
-					local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
-					local end_index = start_index + 1
-					local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
+					local travel_distance = main_path_manager:travel_distance_from_position(position_on_navmesh)
 					local boxed_position = Vector3Box(position)
 
 					active_gas_clouds[#active_gas_clouds + 1] = {
@@ -382,7 +378,6 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 	self:_get_corals(corals)
 
 	local main_path_manager, nav_world = Managers.state.main_path, self._nav_world
-	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local alternating_gas_clouds = {}
 	local alternating_timers = {}
 	local sound_positions = {}
@@ -431,16 +426,13 @@ MutatorToxicGasVolumes._setup_alternating_clouds = function (self)
 					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 5, 10, 5)
 
 					if position_on_navmesh then
-						local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, position_on_navmesh)
 						local alternating_min_range = wanted_component:get_data(cloud_unit, "alternating_min_range")
 						local alternating_max_range = wanted_component:get_data(cloud_unit, "alternating_max_range")
 
 						alternating_timers[i][k].min_range = alternating_min_range
 						alternating_timers[i][k].max_range = alternating_max_range
 
-						local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index)
-						local end_index = start_index + 1
-						local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
+						local travel_distance = main_path_manager:travel_distance_from_position(position_on_navmesh)
 						local boxed_position = Vector3Box(position)
 						local corals_for_cloud = corals[i] and corals[i][k]
 

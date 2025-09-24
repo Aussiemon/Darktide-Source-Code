@@ -8,7 +8,7 @@ local AchievementTypes = require("scripts/managers/achievements/achievement_type
 local AchievementWeaponGroups = require("scripts/settings/achievements/achievement_weapon_groups")
 local MissionBuffsAllowed = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local MissionTypes = require("scripts/settings/mission/mission_types")
-local PSNPlatformAchievements = require("scripts/settings/achievements/psn_platform_achievements")
+local PsnPlatformAchievements = require("scripts/settings/achievements/psn_platform_achievements")
 local SteamPlatformAchievements = require("scripts/settings/achievements/steam_platform_achievements")
 local XboxLivePlatformAchievements = require("scripts/settings/achievements/xbox_live_platform_achievements")
 local AchievementTypesLookup = table.enum(unpack(table.keys(AchievementTypes)))
@@ -49,32 +49,52 @@ local function string_replacement(pattern, index, config)
 	end)
 end
 
+local function _override_with_index(index, config)
+	return index
+end
+
+local function _override_with_config(key)
+	return function (index, config)
+		local value = config[key]
+
+		return value
+	end
+end
+
+local function _apply_overrides(index, definition, overrides, config)
+	for key, override in pairs(overrides) do
+		local override_type = type(override)
+
+		if override_type == "function" then
+			definition[key] = override(index, config, definition, key)
+		elseif override_type == "string" then
+			definition[key] = string_replacement(override, index, config)
+		elseif override_type == "table" then
+			definition[key] = definition[key] or {}
+
+			_apply_overrides(index, definition[key], override, config)
+		end
+	end
+end
+
 local function family(base, overrides, configs)
-	local last_id
+	local prev_id
 
 	for index, config in ipairs(configs) do
 		local definition = table.clone(base)
 
-		for key, override in pairs(overrides) do
-			local override_type = type(override)
-
-			if override_type == "function" then
-				definition[key] = override(index, config, definition, key)
-			elseif override_type == "string" then
-				definition[key] = string_replacement(override, index, config)
-			end
-		end
+		_apply_overrides(index, definition, overrides, config)
 
 		definition.family_index = index
 
 		local id = definition.id
 
-		if last_id then
-			definition.previous = last_id
-			AchievementDefinitions[last_id].next = id
+		if prev_id then
+			definition.previous = prev_id
+			AchievementDefinitions[prev_id].next = id
 		end
 
-		last_id = id
+		prev_id = id
 		AchievementDefinitions[id] = definition
 	end
 end
@@ -119,7 +139,11 @@ local function tiered_target_family(id_pattern, base, targets)
 
 	return family(base, {
 		id = id_pattern,
-		loc_title_variables = _generate_tier_localization(),
+		loc_title_variables = {
+			tier = function (index, config)
+				return index
+			end,
+		},
 		target = function (index, config)
 			return config.target
 		end,
@@ -705,10 +729,10 @@ do
 			flags = {},
 		}
 		AchievementDefinitions.zealot_aura_backstab_kills_while_alone = {
-			description = "loc_achievement_zealot_aura_backstab_kills_while_alone_description",
+			description = "loc_achievement_zealot_aura_stamina_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_17",
 			stat_name = "zealot_aura_backstab_kills_while_alone",
-			target = 200,
+			target = 7500,
 			title = "loc_achievement_zealot_aura_backstab_kills_while_alone_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
@@ -1954,7 +1978,7 @@ do
 
 	for _, weapon in ipairs(weapons) do
 		local achievement_name = "mastery_complete_" .. weapon.pattern
-		local pattern_name_string = weapon.pattern_name_string or "loc_weapon_family_" .. weapon.pattern .. "_m1"
+		local pattern_name_string = weapon.pattern_name_string or string.format("loc_weapon_family_%s_m1", weapon.pattern)
 		local localized_pattern_name = Localize(pattern_name_string)
 
 		AchievementDefinitions[achievement_name] = {
@@ -1978,93 +2002,98 @@ end
 
 do
 	local category_name = "weapons"
-	local mastery_level_tiers = {
-		40,
-		80,
-		120,
-		160,
-		200,
-	}
 
-	for i = 1, #mastery_level_tiers do
-		local mastery_track_levels_name = "mastery_complete_total_mastery_levels_" .. i
-
-		AchievementDefinitions[mastery_track_levels_name] = {
-			description = "loc_achievement_total_mastery_description",
-			icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0003",
-			stat_name = "mastery_track_levels",
-			title = "loc_achievement_total_mastery_name",
-			type = AchievementTypesLookup.increasing_stat,
-			target = mastery_level_tiers[i],
-			loc_variables = {
-				level = mastery_level_tiers[i],
-			},
-			loc_title_variables = {
-				rank = i,
-			},
-			category = category_name,
-			flags = {},
-		}
-	end
-
-	local unlock_blessings = {
-		20,
-		30,
-		40,
-		50,
-	}
-
-	for i = 1, #unlock_blessings do
-		local mastery_track_levels_name = "blessings_unlocked_" .. i
-
-		AchievementDefinitions[mastery_track_levels_name] = {
-			description = "loc_achievement_total_blessings_unlocked_description",
-			icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0001",
-			stat_name = "crafting_unique_traits_seen",
-			title = "loc_achievement_total_blessings_unlocked_name",
-			type = AchievementTypesLookup.increasing_stat,
-			target = unlock_blessings[i],
-			loc_variables = {
-				amount = unlock_blessings[i],
-			},
-			loc_title_variables = {
-				rank = i,
-			},
-			category = category_name,
-			flags = {},
-		}
-	end
-
-	local expertise_tiers_variable = {
-		300,
-		400,
-		500,
-	}
-	local expertise_tiers = {
-		30,
-		40,
-		50,
-	}
-
-	for i = 1, #expertise_tiers do
-		local expertise_tiers_name = "expertise_tiers_reached_" .. i
-
-		AchievementDefinitions[expertise_tiers_name] = {
-			description = "loc_achievement_expertise_level_description",
-			icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0005",
-			title = "loc_achievement_expertise_level_name",
-			type = AchievementTypesLookup.direct_unlock,
-			stat_name = "expertise_reached_" .. expertise_tiers[i],
-			loc_variables = {
-				level = expertise_tiers_variable[i],
-			},
-			loc_title_variables = {
-				rank = i,
-			},
-			category = category_name,
-			flags = {},
-		}
-	end
+	family({
+		description = "loc_achievement_total_mastery_description",
+		icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0003",
+		stat_name = "mastery_track_levels",
+		title = "loc_achievement_total_mastery_name",
+		type = AchievementTypesLookup.increasing_stat,
+		category = category_name,
+		flags = {},
+	}, {
+		id = "mastery_complete_total_mastery_levels_{index:%d}",
+		loc_title_variables = {
+			rank = _override_with_index,
+		},
+		loc_variables = {
+			level = _override_with_config("target"),
+		},
+		target = _override_with_config("target"),
+	}, {
+		{
+			target = 40,
+		},
+		{
+			target = 80,
+		},
+		{
+			target = 120,
+		},
+		{
+			target = 160,
+		},
+		{
+			target = 200,
+		},
+	})
+	family({
+		description = "loc_achievement_total_blessings_unlocked_description",
+		icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0001",
+		stat_name = "crafting_unique_traits_seen",
+		title = "loc_achievement_total_blessings_unlocked_name",
+		type = AchievementTypesLookup.increasing_stat,
+		category = category_name,
+		flags = {},
+	}, {
+		id = "blessings_unlocked_{index:%d}",
+		loc_title_variables = {
+			rank = _override_with_index,
+		},
+		loc_variables = {
+			amount = _override_with_config("target"),
+		},
+		target = _override_with_config("target"),
+	}, {
+		{
+			target = 20,
+		},
+		{
+			target = 30,
+		},
+		{
+			target = 40,
+		},
+		{
+			target = 50,
+		},
+	})
+	family({
+		description = "loc_achievement_expertise_level_description",
+		icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0005",
+		title = "loc_achievement_expertise_level_name",
+		type = AchievementTypesLookup.direct_unlock,
+		category = category_name,
+		flags = {},
+	}, {
+		id = "expertise_tiers_reached_{index:%d}",
+		loc_title_variables = {
+			rank = _override_with_index,
+		},
+		loc_variables = {
+			level = _override_with_config("target"),
+		},
+	}, {
+		{
+			target = 300,
+		},
+		{
+			target = 400,
+		},
+		{
+			target = 500,
+		},
+	})
 
 	AchievementDefinitions.primary_weapon_max_expertise = {
 		description = "loc_achievement_primary_weapon_max_expertise_description",
@@ -3172,16 +3201,24 @@ do
 			target = 1,
 			title = "loc_achievement_horde_win_in_less_than_X_name",
 			type = AchievementTypesLookup.increasing_stat,
-			icon = path .. "horde_achievements/horde_archetype_time",
+			icon = path .. "horde_achievements/horde_speedrun_win",
 			flags = {},
 			loc_variables = {
 				target = 25,
 			},
 		}
+		AchievementDefinitions.horde_win_auric_no_ammo_pickups_or_health_station = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_no_heal_description",
+			title = "loc_achievement_horde_no_heal_title",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "horde_achievements/horde_auric_win_no_ammo_pickup_or_health_station",
+			flags = {},
+		}
 		AchievementDefinitions.horde_complete_all_maps = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_complete_all_maps_description",
-			target = 2,
+			target = 3,
 			title = "loc_achievement_horde_complete_all_maps_name",
 			type = AchievementTypesLookup.multi_stat,
 			icon = path .. "horde_achievements/horde_island_complete_two_maps",
@@ -3194,20 +3231,26 @@ do
 					increasing = true,
 					target = 1,
 				},
+				horde_win_island_machine = {
+					increasing = true,
+					target = 1,
+				},
 			},
 			flags = {},
-			loc_variables = {},
+			loc_variables = {
+				target = 3,
+			},
 		}
 
 		local survival_classes = MissionBuffsAllowed.available_family_builds
 		local icon_prefix = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_"
 
-		for i = 1, #survival_classes do
-			local class_name = survival_classes[i]
-			local horde_win_all_archetype = "horde_win_" .. class_name .. "_archetype"
-			local icon_name = icon_prefix .. class_name
-			local title = "loc_achievement_horde_win_" .. class_name .. "_archetype_name"
-			local description = "loc_achievement_horde_win_" .. class_name .. "_archetype_description"
+		for ii = 1, #survival_classes do
+			local class_name = survival_classes[ii]
+			local horde_win_all_archetype = string.format("horde_win_%s_archetype", class_name)
+			local icon_name = string.format("%s%s", icon_prefix, class_name)
+			local title = string.format("loc_achievement_horde_win_%s_archetype_name", class_name)
+			local description = string.format("loc_achievement_horde_win_%s_archetype_description", class_name)
 
 			AchievementDefinitions[horde_win_all_archetype] = {
 				category = "mission_survival",
@@ -3226,10 +3269,10 @@ do
 
 		AchievementDefinitions.horde_win_all_archetype = {
 			category = "mission_survival",
-			description = "loc_achievement_horde_win_all_archetype_description",
+			description = "loc_achievement_horde_win_families_group_x_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_all",
 			target = 5,
-			title = "loc_achievement_horde_win_all_archetype_name",
+			title = "loc_achievement_horde_win_families_group_x_name",
 			type = AchievementTypesLookup.meta,
 			achievements = table.set({
 				"horde_win_fire_archetype",
@@ -3237,8 +3280,40 @@ do
 				"horde_win_cowboy_archetype",
 				"horde_win_elementalist_archetype",
 				"horde_win_unkillable_archetype",
+				"horde_win_critical_archetype",
+				"horde_win_unstoppable_archetype",
 			}),
 			flags = {},
+			loc_title_variables = {
+				tier = 1,
+			},
+			loc_variables = {
+				target = 5,
+			},
+		}
+		AchievementDefinitions.horde_win_all_archetype_tier_two = {
+			category = "mission_survival",
+			description = "loc_achievement_horde_win_families_group_x_description",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_all_2",
+			target = 7,
+			title = "loc_achievement_horde_win_families_group_x_name",
+			type = AchievementTypesLookup.meta,
+			achievements = table.set({
+				"horde_win_fire_archetype",
+				"horde_win_electric_archetype",
+				"horde_win_cowboy_archetype",
+				"horde_win_elementalist_archetype",
+				"horde_win_unkillable_archetype",
+				"horde_win_critical_archetype",
+				"horde_win_unstoppable_archetype",
+			}),
+			flags = {},
+			loc_title_variables = {
+				tier = 2,
+			},
+			loc_variables = {
+				target = 7,
+			},
 		}
 
 		local function generate_vo_stats(name, num_vo, target)
@@ -3269,7 +3344,7 @@ do
 		end
 
 		local vo_target = 1
-		local morrow_num_vo = 9
+		local morrow_num_vo = 11
 
 		AchievementDefinitions.horde_morrow_story = {
 			category = "mission_survival",
@@ -3286,7 +3361,7 @@ do
 			},
 		}
 
-		local zola_num_vo = 7
+		local zola_num_vo = 9
 
 		AchievementDefinitions.horde_zola_story = {
 			category = "mission_survival",
@@ -3319,17 +3394,35 @@ do
 				target = vo_target,
 			},
 		}
+
+		local zorin_num_vo = 2
+
+		AchievementDefinitions.horde_zorin_story = {
+			category = "mission_survival",
+			description = "loc_horde_zorin_story_desc",
+			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_zorin",
+			title = "loc_horde_zorin_story_title",
+			type = AchievementTypesLookup.multi_stat,
+			target = zorin_num_vo,
+			stats = generate_vo_stats("zorin", zorin_num_vo, vo_target),
+			stats_sorting = generate_vo_stats_sorting("zorin", zorin_num_vo),
+			flags = {},
+			loc_variables = {
+				target = vo_target,
+			},
+		}
 		AchievementDefinitions.horde_mortis_collect_all = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_mortis_collect_all_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memory_shard_collect_all",
-			target = 3,
+			target = 4,
 			title = "loc_achievement_horde_mortis_collect_all_name",
 			type = AchievementTypesLookup.meta,
 			achievements = table.set({
 				"horde_morrow_story",
 				"horde_zola_story",
 				"horde_brahms_story",
+				"horde_zorin_story",
 			}),
 			flags = {},
 		}
@@ -3781,7 +3874,7 @@ do
 		target = 50,
 		title = "loc_achievement_elites_and_specials_killed_using_red_stimm_name",
 		type = AchievementTypesLookup.increasing_stat,
-		icon = path .. "havoc_achievements/havoc_mission_total_syringes",
+		icon = path .. "havoc_achievements/havoc_mission_use_red_stim",
 		category = category_name,
 		flags = {},
 	}
@@ -3801,7 +3894,7 @@ do
 		target = 1000,
 		title = "loc_achievement_ability_time_saved_using_yellow_stimm_name",
 		type = AchievementTypesLookup.increasing_stat,
-		icon = path .. "havoc_achievements/havoc_mission_use_red_stim",
+		icon = path .. "havoc_achievements/havoc_mission_use_yellow_stim",
 		category = category_name,
 		flags = {},
 	}
@@ -3811,7 +3904,7 @@ do
 		target = 1000,
 		title = "loc_achievement_horde_kills_during_blue_stimm_name",
 		type = AchievementTypesLookup.increasing_stat,
-		icon = path .. "havoc_achievements/havoc_mission_use_yellow_stim",
+		icon = path .. "havoc_achievements/havoc_mission_use_blue_stim",
 		category = category_name,
 		flags = {},
 	}
@@ -4132,12 +4225,12 @@ for id, definition in pairs(AchievementDefinitions) do
 end
 
 for id, definition in pairs(AchievementDefinitions) do
-	local platform_id = PSNPlatformAchievements.backend_to_platform[id]
+	local platform_id = PsnPlatformAchievements.backend_to_platform[id]
 
 	if platform_id ~= nil then
 		definition.psn = {
 			id = platform_id,
-			show_progress = not not PSNPlatformAchievements.show_progress[platform_id],
+			show_progress = not not PsnPlatformAchievements.show_progress[platform_id],
 		}
 	end
 end

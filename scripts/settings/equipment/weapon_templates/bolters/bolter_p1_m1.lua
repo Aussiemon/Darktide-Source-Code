@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolters/bolter_p1_m1.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -17,7 +16,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeBolterP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_bolter_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -99,7 +97,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -585,12 +583,14 @@ weapon_template.actions = {
 			1,
 			0.7,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
-			anchor_point_offset = {
-				0,
-				1.4,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
+				anchor_point_offset = {
+					0,
+					1.4,
+					-0.1,
+				},
 			},
 		},
 		damage_type = damage_types.weapon_butt,
@@ -741,7 +741,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.bolter
 weapon_template.spread_template = "default_bolter_spraynpray"
 weapon_template.recoil_template = "default_bolter_spraynpray"
-weapon_template.suppression_template = "hip_lasgun_killshot"
+weapon_template.suppression_template = "bolter_p1_m1_suppression_spraynpray"
 weapon_template.look_delta_template = "bolter"
 weapon_template.ammo_template = "bolter_p1_m1"
 weapon_template.conditional_state_to_action_input = {
@@ -777,7 +777,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_bolter_killshot",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "bolter_p1_m1_suppression_killshot",
 	sway_template = "default_bolter_killshot",
 	toughness_template = "killshot_zoomed",
 	crosshair = {

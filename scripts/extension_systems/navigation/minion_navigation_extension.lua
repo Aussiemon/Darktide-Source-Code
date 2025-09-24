@@ -231,10 +231,10 @@ MinionNavigationExtension.destroy = function (self, unit)
 	TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = nil
 
 	self:set_enabled(false)
-	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
-	GwNavCostMapMultiplierTable.destroy(self._nav_cost_map_multiplier_table)
 	GwNavBot.destroy(self._nav_bot)
 	GwNavTraverseLogic.destroy(self._traverse_logic)
+	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
+	GwNavCostMapMultiplierTable.destroy(self._nav_cost_map_multiplier_table)
 	GwNavSmartObjectInterval.destroy(self._next_smart_object_interval)
 end
 

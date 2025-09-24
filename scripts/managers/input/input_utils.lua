@@ -110,6 +110,12 @@ InputUtils.split_key = function (inputstr)
 	return m, t, d
 end
 
+InputUtils.split_key_to_table = function (inputstr, key_info)
+	key_info.main, key_info.enablers, key_info.disablers = InputUtils.split_key(inputstr)
+
+	return key_info
+end
+
 InputUtils.make_string = function (key_info)
 	local keystring = key_info.main
 
@@ -287,6 +293,7 @@ InputUtils.platform_device_list = function ()
 		table.append(_temp_device_list, input_device_list.keyboard)
 
 		_temp_device_list[#_temp_device_list + 1] = Pad1
+		_temp_device_list[#_temp_device_list + 1] = PS5Pad1
 	end
 
 	return _temp_device_list

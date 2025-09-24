@@ -3,9 +3,10 @@
 local AbilityTemplate = require("scripts/utilities/ability/ability_template")
 local Action = require("scripts/utilities/action/action")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
-local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local buff_keywords = BuffSettings.keywords
 local Sprint = {}
 local SPRINT_DODGE_ANGLE_THRESHOLD_RAD = math.degrees_to_radians(70)
@@ -16,6 +17,7 @@ local TAU = math.pi * 2
 local INPUT_ALIGNED_WITH_MOVENESS = TAU / 7
 local ENOUGH_MOVE_IN_FORWARD_DIRECTION = 0.7
 local VELOCITY_ALIGNED_WITH_ORIENTATION = TAU / 7
+local SPRINT_START_SLOWDOWN_DURATION = PlayerCharacterConstants.sprint_start_slowdown_duration
 
 Sprint.check = function (t, unit, movement_state_component, sprint_character_state_component, input_source, locomotion_component, weapon_action_component, combat_ability_action_component, alternate_fire_component, weapon_template, player_character_constants, buff_extension)
 	local current_weapon_action_name, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
@@ -110,23 +112,23 @@ Sprint.is_sprinting = function (sprint_character_state_component)
 	return sprint_character_state_component.is_sprinting or sprint_character_state_component.is_sprint_jumping
 end
 
-Sprint.is_in_start_slowdown = function (unit, sprint_character_state_component)
-	local is_server = Managers.state.game_session:is_server()
+Sprint.is_in_start_slowdown = function (unit, character_state_component, sprint_character_state_component)
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 
-	if is_sprinting then
-		local character_state_machine_extension = ScriptUnit.has_extension(unit, "character_state_machine_system")
-		local current_state = character_state_machine_extension:current_state()
-		local current_state_name = character_state_machine_extension:current_state_name()
+	if not is_sprinting then
+		return false
+	end
 
-		if current_state and current_state_name and current_state_name == "sprinting" then
-			local slowdown_duration = current_state:slowdown_duration()
-			local entered_t = current_state:entered_t()
-			local slowdown_end_t = entered_t + slowdown_duration
-			local gameplay_t = Managers.time:time("gameplay")
+	local character_state_machine_extension = ScriptUnit.has_extension(unit, "character_state_machine_system")
+	local current_state = character_state_machine_extension:current_state()
+	local current_state_name = character_state_machine_extension:current_state_name()
 
-			return gameplay_t <= slowdown_end_t
-		end
+	if current_state and current_state_name == "sprinting" then
+		local entered_t = character_state_component.entered_t
+		local slowdown_end_t = entered_t + SPRINT_START_SLOWDOWN_DURATION
+		local gameplay_t = Managers.time:time("gameplay")
+
+		return gameplay_t <= slowdown_end_t
 	end
 
 	return false
@@ -180,8 +182,8 @@ end
 
 local _sprint_requires_press_to_interrupt_table = {}
 
-for i = 1, #ActionHandlerSettings.sprint_requires_press_to_interrupt do
-	local action_kind = ActionHandlerSettings.sprint_requires_press_to_interrupt[i]
+for ii = 1, #ActionHandlerSettings.sprint_requires_press_to_interrupt do
+	local action_kind = ActionHandlerSettings.sprint_requires_press_to_interrupt[ii]
 
 	_sprint_requires_press_to_interrupt_table[action_kind] = true
 end
@@ -205,8 +207,8 @@ end
 
 local _no_interruption_for_sprint_table = {}
 
-for i = 1, #ActionHandlerSettings.no_interruption_for_sprint do
-	local action_kind = ActionHandlerSettings.no_interruption_for_sprint[i]
+for ii = 1, #ActionHandlerSettings.no_interruption_for_sprint do
+	local action_kind = ActionHandlerSettings.no_interruption_for_sprint[ii]
 
 	_no_interruption_for_sprint_table[action_kind] = true
 end
@@ -230,8 +232,8 @@ end
 
 local _prevent_sprint_table = {}
 
-for i = 1, #ActionHandlerSettings.prevent_sprint do
-	local action_kind = ActionHandlerSettings.prevent_sprint[i]
+for ii = 1, #ActionHandlerSettings.prevent_sprint do
+	local action_kind = ActionHandlerSettings.prevent_sprint[ii]
 
 	_prevent_sprint_table[action_kind] = true
 end

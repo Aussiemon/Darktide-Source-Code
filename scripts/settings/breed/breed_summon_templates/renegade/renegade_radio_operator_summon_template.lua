@@ -7,6 +7,10 @@ local summon_templates = {
 		wwise_on_death_events = {
 			"wwise/events/minions/play_minion_captain__force_field_overload_vce",
 		},
+		interval_til_next_summon = {
+			10,
+			20,
+		},
 	},
 }
 

@@ -31,6 +31,95 @@ local SLIDE_TWEAK_VALUES = {
 	ninja_fencer = {},
 	no_tweak_values = {},
 }
+local weapon_component_config = {
+	current_ammunition_clip = {
+		default_value = 0,
+		network_type = "ammunition_small",
+	},
+	current_ammunition_clip_2 = {
+		default_value = 0,
+		network_type = "ammunition_small",
+	},
+	current_ammunition_reserve = {
+		default_value = 0,
+		network_type = "ammunition_large",
+	},
+	current_ammunition_clips_in_use = {
+		default_value = 0,
+		network_type = "lookup_2bit0",
+	},
+	max_ammunition_clip = {
+		default_value = 0,
+		network_type = "ammunition_small",
+	},
+	max_ammunition_clip_2 = {
+		default_value = 0,
+		network_type = "ammunition_small",
+	},
+	max_ammunition_reserve = {
+		default_value = 0,
+		network_type = "ammunition_large",
+	},
+	ammunition_at_reload_start = {
+		default_value = 0,
+		network_type = "ammunition_small",
+	},
+	last_ammunition_usage = {
+		default_value = 0,
+		network_type = "fixed_frame_offset_start_t_6bit",
+	},
+	reload_state = {
+		default_value = "none",
+		network_type = RELOAD_STATES,
+	},
+	overheat_state = {
+		default_value = "idle",
+		network_type = {
+			"idle",
+			"increasing",
+			"decreasing",
+			"exploding",
+			"soft_lockout",
+			"lockout",
+		},
+	},
+	overheat_last_charge_at_t = {
+		default_value = 0,
+		network_type = "fixed_frame_offset_start_t_6bit",
+	},
+	overheat_remove_at_t = {
+		default_value = 0,
+		network_type = "fixed_frame_offset_end_t_6bit",
+	},
+	overheat_current_percentage = {
+		default_value = 0,
+		network_type = "weapon_overheat",
+	},
+	overheat_starting_percentage = {
+		default_value = 0,
+		network_type = "weapon_overheat",
+	},
+	special_active = {
+		default_value = false,
+		network_type = "bool",
+	},
+	num_special_charges = {
+		default_value = 0,
+		network_type = "num_special_charges",
+	},
+	max_num_special_charges = {
+		default_value = 0,
+		network_type = "num_special_charges",
+	},
+	special_active_start_t = {
+		default_value = 0,
+		network_type = "fixed_frame_offset_start_t_6bit",
+	},
+	special_charge_remove_at_t = {
+		default_value = 0,
+		network_type = "fixed_frame_offset_end_t_9bit",
+	},
+}
 local constants = {
 	acceleration = 19,
 	air_acceleration = 3,
@@ -61,6 +150,8 @@ local constants = {
 	ladder_top_entering_time = 1,
 	ladder_top_leaving_animation_time = 1,
 	ladder_top_leaving_time = 1,
+	leave_knocked_down_damage_immunity_buff = "knocked_down_damage_immunity_linger",
+	leave_knocked_down_damage_reduction_buff = "knocked_down_damage_reduction_linger",
 	ledge_hanging_to_ground_safe_distance = 1.2,
 	max_component_buffs = 10,
 	max_dynamic_weapon_buffs = 4,
@@ -79,6 +170,7 @@ local constants = {
 	slide_move_speed_threshold = 4.2,
 	sprint_jump_speed_threshold = 4.8,
 	sprint_move_speed_threshold = 3.8,
+	sprint_start_slowdown_duration = 0.11,
 	step_up_max_distance = 1.5,
 	step_up_max_fall_speed = 2.1,
 	step_up_min_fall_speed = -0.1,
@@ -542,6 +634,7 @@ local constants = {
 	ability_configuration = {
 		combat_ability = "slot_combat_ability",
 		grenade_ability = "slot_grenade_ability",
+		pocketable_ability = "slot_pocketable_small",
 	},
 	player_interactions = {
 		{
@@ -586,96 +679,24 @@ local constants = {
 		first_person = {},
 	},
 	inventory_slot_component_data = {
-		weapon = {
-			current_ammunition_clip = {
-				default_value = 0,
-				network_type = "ammunition_small",
-			},
-			current_ammunition_reserve = {
-				default_value = 0,
-				network_type = "ammunition_large",
-			},
-			max_ammunition_clip = {
-				default_value = 0,
-				network_type = "ammunition_small",
-			},
-			max_ammunition_reserve = {
-				default_value = 0,
-				network_type = "ammunition_large",
-			},
-			ammunition_at_reload_start = {
-				default_value = 0,
-				network_type = "ammunition_small",
-			},
-			last_ammunition_usage = {
-				default_value = 0,
-				network_type = "fixed_frame_offset_start_t_6bit",
-			},
-			reload_state = {
-				default_value = "none",
-				network_type = RELOAD_STATES,
-			},
-			overheat_state = {
-				default_value = "idle",
-				network_type = {
-					"idle",
-					"increasing",
-					"decreasing",
-					"exploding",
-					"soft_lockout",
-					"lockout",
-				},
-			},
-			overheat_last_charge_at_t = {
-				default_value = 0,
-				network_type = "fixed_frame_offset_start_t_6bit",
-			},
-			overheat_remove_at_t = {
-				default_value = 0,
-				network_type = "fixed_frame_offset_end_t_6bit",
-			},
-			overheat_current_percentage = {
-				default_value = 0,
-				network_type = "weapon_overheat",
-			},
-			overheat_starting_percentage = {
-				default_value = 0,
-				network_type = "weapon_overheat",
-			},
-			special_active = {
-				default_value = false,
-				network_type = "bool",
-			},
-			num_special_charges = {
-				default_value = 0,
-				network_type = "num_special_charges",
-			},
-			max_num_special_charges = {
-				default_value = 0,
-				network_type = "num_special_charges",
-			},
-			special_active_start_t = {
-				default_value = 0,
-				network_type = "fixed_frame_offset_start_t_6bit",
-			},
-			special_charge_remove_at_t = {
-				default_value = 0,
-				network_type = "fixed_frame_offset_end_t_9bit",
-			},
-		},
+		weapon = table.clone(weapon_component_config),
 		luggable = {
 			existing_unit_3p = {
 				network_type = "Unit",
 			},
 		},
 		unarmed = {},
-		pocketable = {
+		pocketable = table.merge(table.clone(weapon_component_config), {
 			unequip_slot = {
 				default_value = false,
 				network_type = "bool",
 			},
-		},
-		ability = {},
+			unwield_slot = {
+				default_value = false,
+				network_type = "bool",
+			},
+		}),
+		ability = table.clone(weapon_component_config),
 		device = {},
 	},
 	fall_damage = {
@@ -704,6 +725,14 @@ local constants = {
 		buff_template_names = {
 			"coherency_toughness_regen",
 		},
+	},
+	current_ammo_clip_fields = {
+		[1] = "current_ammunition_clip",
+		[2] = "current_ammunition_clip_2",
+	},
+	max_ammo_clip_fields = {
+		[1] = "max_ammunition_clip",
+		[2] = "max_ammunition_clip_2",
 	},
 }
 

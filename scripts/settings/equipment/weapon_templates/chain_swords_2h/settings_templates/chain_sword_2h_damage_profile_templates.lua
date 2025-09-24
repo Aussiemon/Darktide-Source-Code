@@ -46,6 +46,50 @@ local chainsword_sawing = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 	},
 }
+local chainsword_sawing_tick = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_3,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
+local chainsword_sawing_rip = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_25,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_8,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
 local chain_sword_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
@@ -619,8 +663,8 @@ overrides.light_chainsword_sticky_2h = {
 			"power_distribution",
 			"attack",
 			{
-				50,
-				100,
+				150,
+				300,
 			},
 		},
 		{
@@ -655,7 +699,7 @@ overrides.light_chainsword_sticky_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -742,7 +786,7 @@ overrides.light_chainsword_sticky_last_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			chainsword_sawing_rip,
 		},
 		{
 			"weapon_special",
@@ -1062,8 +1106,8 @@ overrides.smiter_light_chainsword_2h_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				50,
-				100,
+				150,
+				300,
 			},
 		},
 		{
@@ -1089,7 +1133,7 @@ overrides.smiter_light_chainsword_2h_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -1176,7 +1220,7 @@ overrides.smiter_light_chainsword_sticky_last_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			chainsword_sawing_rip,
 		},
 		{
 			"weapon_special",
@@ -2162,8 +2206,8 @@ overrides.heavy_chainsword_sticky_2h = {
 			"power_distribution",
 			"attack",
 			{
-				100,
-				200,
+				225,
+				450,
 			},
 		},
 		{
@@ -2198,7 +2242,7 @@ overrides.heavy_chainsword_sticky_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"targets",
@@ -2504,7 +2548,7 @@ overrides.heavy_chainsword_sticky_last_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			chainsword_sawing_rip,
 		},
 		{
 			"targets",
@@ -2755,8 +2799,8 @@ overrides.heavy_chainsword_smiter_sticky_2h = {
 			"power_distribution",
 			"attack",
 			{
-				100,
-				200,
+				225,
+				450,
 			},
 		},
 		{
@@ -2791,7 +2835,7 @@ overrides.heavy_chainsword_smiter_sticky_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"targets",
@@ -2896,7 +2940,7 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			chainsword_sawing,
+			chainsword_sawing_rip,
 		},
 		{
 			"weapon_special",

@@ -14,7 +14,6 @@ local zealot_lunge_templates = {}
 zealot_lunge_templates.zealot_dash = {
 	add_buff = "no_toughness_damage_buff",
 	add_buff_delay = 0.13,
-	add_delayed_buff = "zealot_dash_buff",
 	block_input_cancel = true,
 	block_input_cancel_time_threshold = 0.4,
 	combat_ability = true,
@@ -27,6 +26,7 @@ zealot_lunge_templates.zealot_dash = {
 	on_screen_effect = "content/fx/particles/screenspace/screen_zealot_dash",
 	on_screen_effect_delay = 0.13,
 	sensitivity_modifier = 0.1,
+	special_rule = "zealot_dash_increased_duration",
 	start_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_enter",
 	stop_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_exit",
 	lunge_speed_at_times = {
@@ -82,6 +82,14 @@ zealot_lunge_templates.zealot_dash = {
 		on_state = "zealot_dash",
 	},
 	restore_toughness = talent_settings.combat_ability.toughness,
+	add_delayed_buff = {
+		"zealot_combat_ability_attack_speed_increase",
+		"zealot_dash_buff",
+	},
+	add_delayed_buff_special_rule = {
+		"zealot_combat_ability_attack_speed_increased_duration",
+		"zealot_dash_buff",
+	},
 	stop_armor_types = {
 		armor_types.super_armor,
 		armor_types.void_shield,

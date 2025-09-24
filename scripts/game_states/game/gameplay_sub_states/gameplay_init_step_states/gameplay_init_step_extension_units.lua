@@ -51,6 +51,7 @@ end
 GameplayInitStepExtensionUnits._init_extension_unit_registration = function (self, world, level, time_query_handle)
 	local units = Level.units(level, true)
 
+	Managers.state.unit_spawner:register_static_level_spawned_units(level, units)
 	Level.finish_spawn_time_sliced(level)
 	self:_optimize_world_units(world)
 

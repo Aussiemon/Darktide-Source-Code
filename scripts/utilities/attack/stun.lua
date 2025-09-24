@@ -41,8 +41,12 @@ end
 function _is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit)
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+	local alternate_fire_settings = weapon_template.alternate_fire_settings
+	local uninterruptible
 
-	if alternate_fire_component.is_active and weapon_template.alternate_fire_settings and weapon_template.alternate_fire_settings.uninterruptible then
+	uninterruptible = alternate_fire_settings and alternate_fire_settings.uninterruptible
+
+	if alternate_fire_component.is_active and uninterruptible then
 		return true
 	end
 

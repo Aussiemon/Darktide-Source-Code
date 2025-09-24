@@ -38,7 +38,7 @@ LuggableSynchronizerExtension.setup_from_component = function (self, objective_n
 
 		objective_name = is_side_mission_synchronizer and side_mission.name or objective_name
 
-		mission_objective_system:register_objective_synchronizer(objective_name, unit)
+		mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
 	end
 
 	self._objective_name = objective_name
@@ -250,10 +250,11 @@ end
 
 LuggableSynchronizerExtension._update_mission_increment = function (self, dt, increment)
 	local objective_name = self._objective_name
+	local group_id = self._group_id
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-	if mission_objective_system:is_current_active_objective(objective_name) then
-		mission_objective_system:external_update_mission_objective(objective_name, dt, increment)
+	if mission_objective_system:is_current_active_objective(objective_name, group_id) then
+		mission_objective_system:external_update_mission_objective(objective_name, group_id, dt, increment)
 	end
 end
 
@@ -302,10 +303,12 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 		local luggable_unit, _
 		local objective_name = self._objective_name
 		local objective_stage = 1
+		local objective_group_id = self._group_id
 
 		if mission_target_extension then
 			objective_name = mission_target_extension:objective_name()
 			objective_stage = mission_target_extension:objective_stage()
+			objective_group_id = mission_target_extension:objective_group_id()
 		end
 
 		if objective_stage < self._objective_stage then
@@ -326,6 +329,7 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 		local sync = true
 
 		luggable_objective_target_extension:set_objective_name(objective_name, sync)
+		luggable_objective_target_extension:set_objective_group_id(objective_group_id)
 
 		local luggable_extension = ScriptUnit.extension(luggable_unit, "luggable_system")
 

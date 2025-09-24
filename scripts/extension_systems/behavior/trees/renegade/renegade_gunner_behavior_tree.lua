@@ -63,6 +63,16 @@ local COMBAT = {
 	condition = "is_aggroed",
 	name = "combat",
 }
+local SPECIAL_ACTION = {
+	"BtSelectorNode",
+	{
+		"BtUseStimAction",
+		name = "use_stim",
+		action_data = action_data.use_stim,
+	},
+	condition = "minion_can_use_special_action",
+	name = "use_special_action",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -111,6 +121,7 @@ local behavior_tree = {
 		condition = "at_smart_object",
 		name = "smart_object",
 	},
+	SPECIAL_ACTION,
 	{
 		"BtStaggerAction",
 		condition = "is_staggered",

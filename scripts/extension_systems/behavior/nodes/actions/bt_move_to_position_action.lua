@@ -15,6 +15,8 @@ BtMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	2,
 }
 
+local minion_spawner_radius_checks = 40
+
 BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 
@@ -29,7 +31,18 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 	end
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
-	local move_to_position = behavior_component.move_to_position:unbox()
+	local move_to_position
+	local move_to_closest_minion_spawner = action_data.move_to_closest_minion_spawner
+
+	if move_to_closest_minion_spawner then
+		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+		local unit_postion = POSITION_LOOKUP[unit]
+		local spawners = minion_spawn_system:spawners_in_range(unit_postion, minion_spawner_radius_checks)
+		local num_spawners = #spawners
+		local random_spawner = spawners[math.random(1, num_spawners)]
+
+		move_to_position = random_spawner._exit_position:unbox()
+	end
 
 	navigation_extension:move_to(move_to_position)
 
@@ -49,14 +62,6 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 	end
 end
 
-BtMoveToPositionAction.init_values = function (self, blackboard)
-	local behavior_component = Blackboard.write_component(blackboard, "behavior")
-
-	behavior_component.move_to_position:store(0, 0, 0)
-
-	behavior_component.has_move_to_position = false
-end
-
 BtMoveToPositionAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	if scratchpad.is_anim_driven then
 		MinionMovement.set_anim_driven(scratchpad, false)
@@ -73,11 +78,16 @@ BtMoveToPositionAction.leave = function (self, unit, breed, blackboard, scratchp
 	end
 
 	local behavior_component = scratchpad.behavior_component
+	local despawn_once_reached = action_data.despawn_once_reached
 
-	behavior_component.has_move_to_position = false
+	if despawn_once_reached then
+		local minion_spawn_manager = Managers.state.minion_spawn
+
+		minion_spawn_manager:despawn_minion(unit)
+	end
 end
 
-local ARRIVED_AT_POSITION_THRESHOLD_SQ = 0.5625
+local ARRIVED_AT_POSITION_THRESHOLD_SQ = 1
 
 BtMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local self_position, move_to_position = POSITION_LOOKUP[unit], scratchpad.move_to_position:unbox()

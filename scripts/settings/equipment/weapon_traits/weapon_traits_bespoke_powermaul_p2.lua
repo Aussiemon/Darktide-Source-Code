@@ -179,25 +179,21 @@ templates.weapon_trait_bespoke_powermaul_p2_extra_explosion_on_activated_attacks
 		weapon_trait_bespoke_powermaul_p2_extra_explosion_on_activated_attacks_on_armor = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.1,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.15,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.2,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.weapon_special_max_activations] = 1,
 					[stat_buffs.explosion_radius_modifier] = 0.25,
 				},
 			},

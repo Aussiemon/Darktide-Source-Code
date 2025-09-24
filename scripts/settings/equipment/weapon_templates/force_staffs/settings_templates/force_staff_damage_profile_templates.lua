@@ -92,6 +92,7 @@ damage_templates.force_staff_ball = {
 	},
 }
 damage_templates.default_force_staff_bfg = {
+	force_staff_secondary = true,
 	force_weapon_damage = true,
 	ignore_shield = true,
 	ragdoll_only = true,
@@ -172,6 +173,7 @@ damage_templates.default_force_staff_bfg = {
 	},
 }
 damage_templates.default_force_staff_demolition = {
+	force_staff_secondary = true,
 	force_weapon_damage = true,
 	ignore_stagger_reduction = true,
 	ragdoll_push_force = 200,
@@ -251,6 +253,7 @@ damage_templates.default_force_staff_demolition = {
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
 }
 damage_templates.close_force_staff_p4_demolition = {
+	force_staff_secondary = true,
 	force_weapon_damage = true,
 	ignore_shield = true,
 	ignore_stagger_reduction = true,
@@ -386,6 +389,7 @@ damage_templates.force_staff_p4_demolition = {
 	gib_push_force = GibbingSettings.gib_push_force.force_demolition,
 }
 damage_templates.close_force_staff_demolition = {
+	force_staff_secondary = true,
 	force_weapon_damage = true,
 	ignore_shield = true,
 	ignore_stagger_reduction = true,
@@ -583,6 +587,7 @@ local assault_warpfire_armor_mod = {
 damage_templates.default_warpfire_assault = {
 	accumulative_stagger_strength_multiplier = 0.5,
 	duration_scale_bonus = 0.5,
+	force_staff_secondary = true,
 	force_weapon_damage = true,
 	ragdoll_push_force = 10,
 	stagger_category = "flamer",
@@ -731,6 +736,7 @@ damage_templates.default_warpfire_assault_burst = {
 damage_templates.default_chain_lighting_attack = {
 	attack_direction_override = "push",
 	chain_lightning_staff = true,
+	force_staff_secondary = true,
 	ignore_hitzone_multiplier = true,
 	ragdoll_push_force = 10,
 	random_gib_hitzone = true,
@@ -915,6 +921,7 @@ damage_templates.default_chain_lighting_attack = {
 }
 damage_templates.default_chain_lighting_interval = {
 	chain_lightning_staff = true,
+	force_staff_secondary = true,
 	ignore_hitzone_multiplier = true,
 	stagger_category = "sticky",
 	armor_damage_modifier = {

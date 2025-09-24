@@ -44,24 +44,30 @@ end
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionStanceChange.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	local talent_extension = self._talent_extension
 	local reload_secondary = action_settings.reload_secondary
 	local stop_reload = action_settings.stop_reload
 	local stop_current_action = action_settings.stop_current_action
-	local anim = action_settings.anim
-	local anim_3p = action_settings.anim_3p or anim
+	local ability_template_tweak_data = self._ability_template_tweak_data
+	local anim = ability_template_tweak_data.anim == nil and action_settings.anim or ability_template_tweak_data.anim
+	local anim_3p = ability_template_tweak_data.anim_3p == nil and action_settings.anim_3p or ability_template_tweak_data.anim_3p or anim
 	local block_weapon_actions = action_settings.block_weapon_actions
 	local refill_toughness = action_settings.refill_toughness
-	local vent_warp_charge = action_settings.vent_warp_charge
+	local vent_warp_charge_special_rule = action_settings.vent_warp_charge_special_rule
+	local has_vent_warp_charge_special_rule = not vent_warp_charge_special_rule or talent_extension:has_special_rule(vent_warp_charge_special_rule)
+	local vent_warp_charge = has_vent_warp_charge_special_rule and action_settings.vent_warp_charge
 	local vo_tag = action_settings.vo_tag
 	local player_unit = self._player_unit
-	local ability_template_tweak_data = self._ability_template_tweak_data
 	local buff_to_add = ability_template_tweak_data.buff_to_add
-	local slot_to_wield = action_settings.auto_wield_slot or ability_template_tweak_data.auto_wield_slot
-	local skip_wield_action = action_settings.skip_wield_action
+	local slot_to_wield = ability_template_tweak_data.auto_wield_slot or action_settings.auto_wield_slot
+	local skip_wield_action = ability_template_tweak_data.skip_wield_action or action_settings.skip_wield_action
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
+	local allow_lugging = action_settings.allow_lugging
 
-	Luggable.drop_luggable(t, player_unit, inventory_component, visual_loadout_extension, true)
+	if not allow_lugging then
+		Luggable.drop_luggable(t, player_unit, inventory_component, visual_loadout_extension, true)
+	end
 
 	if vo_tag then
 		Vo.play_combat_ability_event(player_unit, vo_tag)
@@ -101,14 +107,11 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		self._ability_component.cooldown_paused = true
 	end
 
-	local talent_extension = self._talent_extension
 	local reload_weapon = talent_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
 
 	if reload_secondary or reload_weapon then
 		local inventory_slot_secondary_component = self._inventory_slot_secondary_component
-		local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
-		local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
-		local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
+		local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
 
 		Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, missing_ammo_in_clip)
 
@@ -136,6 +139,14 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 			self._buff_extension:add_proc_event(buff_proc_events.on_reload, param_table_on_reload)
 		end
+	end
+
+	if type(anim) == "function" then
+		anim = anim(player_unit)
+	end
+
+	if type(anim_3p) == "function" then
+		anim_3p = anim_3p(player_unit)
 	end
 
 	if anim then

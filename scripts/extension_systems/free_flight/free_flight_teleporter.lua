@@ -41,7 +41,9 @@ FreeFlightTeleporter.teleport_player_to_camera_position = function (self, positi
 end
 
 FreeFlightTeleporter._teleport_player = function (self, player, position, rotation)
-	PlayerMovement.teleport(player, position, rotation)
+	local send_character_state_disruption_event = true
+
+	PlayerMovement.teleport(player, position, rotation, send_character_state_disruption_event)
 end
 
 FreeFlightTeleporter.rpc_debug_free_flight_teleport_client = function (self, channel_id, player_id, peer_id, position)

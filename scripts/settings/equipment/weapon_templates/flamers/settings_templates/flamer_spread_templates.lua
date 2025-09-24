@@ -33,12 +33,6 @@ spread_templates.default_flamer_assault = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.7,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -123,12 +117,6 @@ spread_templates.default_flamer_demolitions = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.35,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

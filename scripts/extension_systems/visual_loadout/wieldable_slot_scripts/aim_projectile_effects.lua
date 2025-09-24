@@ -137,7 +137,7 @@ AimProjectileEffects._trajectory_settings = function (self, t)
 		local fuse_settings = projectile_template.damage.fuse
 		local explode_on_impact = fuse_settings and fuse_settings.impact_triggered and fuse_settings.impact_fuse_time == 0
 		local impact_settings = projectile_template.damage.impact
-		local destroy_on_impact = impact_settings and impact_settings.delete_on_impact or impact_settings.explosion_template
+		local destroy_on_impact = impact_settings and (impact_settings.delete_on_impact or impact_settings.explosion_template)
 
 		_trajectory_settings.stop_on_impact = destroy_on_impact or explode_on_impact
 	end

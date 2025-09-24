@@ -98,6 +98,22 @@ BackendUtilities.wrap_paged_response = function (paged, prev_links)
 	}
 end
 
+BackendUtilities.collect_all_paged_data = function (at_promise, items)
+	items = items or {}
+
+	return at_promise:next(function (paged)
+		for _, item in pairs(paged.items) do
+			table.insert(items, item)
+		end
+
+		if paged.has_next then
+			return BackendUtilities.collect_all_paged_data(paged.next_page(), items)
+		else
+			return items
+		end
+	end)
+end
+
 BackendUtilities.create_error = function (code, description)
 	local t = {
 		code = code,

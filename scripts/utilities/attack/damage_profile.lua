@@ -26,8 +26,8 @@ DamageProfile.target_settings = function (damage_profile, target_index)
 	return target_settings
 end
 
-DamageProfile.power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
-	local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+DamageProfile.power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil, attacker_unit_or_nil, target_unit_or_nil)
+	local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil, attacker_unit_or_nil, target_unit_or_nil, damage_profile)
 	local power_type_power = _distribute_power_level_to_power_type(power_type, scaled_power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
 
 	return power_type_power, scaled_power_level
@@ -37,10 +37,11 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local stat_buffs_or_nil = buff_extension and buff_extension:stat_buffs()
 	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-	local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave", stat_buffs_or_nil, attack_type_or_nil)
+	local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave", stat_buffs_or_nil, attack_type_or_nil, nil, unit, nil, damage_profile)
 	local cleave_output = PowerLevelSettings.cleave_output
 	local cleave_min, cleave_max = cleave_output.min, cleave_output.max
 	local cleave_range = cleave_max - cleave_min
+	local is_melee_attack = attack_type_or_nil == attack_types.melee
 	local is_ranged_attack = attack_type_or_nil == attack_types.ranged
 	local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
 	local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
@@ -49,10 +50,10 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	local attack_modifier
 	local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
 	local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
-	local max_melee_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_melee_hit_mass_attack_modifier or 1
+	local max_melee_hit_mass_attack_modifier = is_melee_attack and stat_buffs_or_nil and stat_buffs_or_nil.max_melee_hit_mass_attack_modifier or 1
 	local ranged_max_hit_mass_attack_modifier = is_ranged_attack and stat_buffs_or_nil and stat_buffs_or_nil.ranged_max_hit_mass_attack_modifier or 1
 
-	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier + max_melee_hit_mass_attack_modifier - 2
+	attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier + max_melee_hit_mass_attack_modifier + ranged_max_hit_mass_attack_modifier - 3
 	max_hit_mass_attack = max_hit_mass_attack * attack_modifier
 
 	local impact_modifier
@@ -63,8 +64,16 @@ DamageProfile.max_hit_mass = function (damage_profile, power_level, charge_level
 	max_hit_mass_impact = max_hit_mass_impact * impact_modifier
 
 	local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_cleave)
+	local critical_melee_hit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_melee_hit_infinite_cleave)
+	local should_infinite_cleave_on_crit = crit_infinite_cleave_keyword or is_melee_attack and critical_melee_hit_infinite_cleave_keyword
 
-	if is_critical_strike and crit_infinite_cleave_keyword then
+	if is_critical_strike and should_infinite_cleave_on_crit then
+		max_hit_mass_attack = math.huge
+	end
+
+	local ranged_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.ranged_attack_infinite_cleave)
+
+	if is_ranged_attack and ranged_infinite_cleave_keyword then
 		max_hit_mass_attack = math.huge
 	end
 

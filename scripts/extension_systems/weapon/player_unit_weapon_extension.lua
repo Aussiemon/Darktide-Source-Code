@@ -4,6 +4,7 @@ local Action = require("scripts/utilities/action/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
+local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
@@ -170,7 +171,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._action_handler = ActionHandler:new(unit, WeaponActionHandlerData)
 
 	self._action_handler:add_component("weapon_action")
-	self._action_handler:set_tweak_component("weapon_tweak_templates")
+	self._action_handler:set_weapon_extension_and_tweak_component(self, "weapon_tweak_templates")
 
 	self._weapon_action_movement = WeaponActionMovement:new(self, unit_data, buff_extension)
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
@@ -265,12 +266,12 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_module_position_finder.position_valid = false
 	self._action_module_position_finder_component = action_module_position_finder
 
-	local action_module_targeting = unit_data_extension:write_component("action_module_targeting")
+	local action_module_target_finder = unit_data_extension:write_component("action_module_target_finder")
 
-	action_module_targeting.target_unit_1 = nil
-	action_module_targeting.target_unit_2 = nil
-	action_module_targeting.target_unit_3 = nil
-	self._action_module_targeting_component = action_module_targeting
+	action_module_target_finder.target_unit_1 = nil
+	action_module_target_finder.target_unit_2 = nil
+	action_module_target_finder.target_unit_3 = nil
+	self._action_module_target_finder_component = action_module_target_finder
 
 	local action_throw_luggable = unit_data_extension:write_component("action_throw_luggable")
 
@@ -505,6 +506,16 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	AimAssist.update_ramp_multiplier(dt, t, self._aim_assist_ramp_component)
 end
 
+local _ammo_clip_component_fields = {}
+
+for i = 1, #PlayerCharacterConstants.current_ammo_clip_fields do
+	_ammo_clip_component_fields[PlayerCharacterConstants.current_ammo_clip_fields[i]] = i
+end
+
+for i = 1, #PlayerCharacterConstants.max_ammo_clip_fields do
+	_ammo_clip_component_fields[PlayerCharacterConstants.max_ammo_clip_fields[i]] = i
+end
+
 PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slot_name, weapon_unit, fx_sources, t, optional_existing_unit_3p, from_server_correction_occurred)
 	local unit_data_ext = ScriptUnit.extension(self._unit, "unit_data_system")
 	local inventory_slot_component = unit_data_ext:write_component(slot_name)
@@ -529,10 +540,11 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	local config = slot_configuration[slot_name]
 	local slot_component_data = inventory_slot_component_data[config.slot_type]
 	local base_ammo = {}
-	local base_clip = {}
+	local base_clip, clips_in_use
 
 	for key, data in pairs(slot_component_data) do
-		if key == "current_ammunition_clip" or key == "max_ammunition_clip" then
+		if _ammo_clip_component_fields[key] then
+			local clip_index = _ammo_clip_component_fields[key]
 			local clip_size = 0
 			local template_name = weapon_template.ammo_template or "none"
 
@@ -541,11 +553,17 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 				local templates = weapon_tweak_templates[template_types.ammo]
 				local ammo_template = templates[template_name]
 
-				clip_size = math.floor(ammo_template.ammunition_clip or 0)
+				if ammo_template.ammunition_clips[clip_index] then
+					clip_size = math.floor(ammo_template.ammunition_clips[clip_index] or 0)
+					clips_in_use = bit.bor(clips_in_use or 0, bit.lshift(1, clip_index - 1))
+				end
 			end
 
+			base_clip = base_clip or {}
 			base_clip[key] = clip_size
 			inventory_slot_component[key] = clip_size
+		elseif key == "current_ammunition_clips_in_use" then
+			clips_in_use = clips_in_use or 0
 		elseif key == "current_ammunition_reserve" or key == "max_ammunition_reserve" then
 			local reserve_size = 0
 			local template_name = weapon_template.ammo_template or "none"
@@ -579,6 +597,10 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 
 	self._base_ammo_by_slot[slot_name] = base_ammo
 	self._base_clip_by_slot[slot_name] = base_clip
+
+	if clips_in_use then
+		inventory_slot_component.current_ammunition_clips_in_use = clips_in_use
+	end
 
 	if not from_server_correction_occurred then
 		local buffs = weapon.buffs
@@ -983,7 +1005,7 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.weapon_action_component = self._weapon_action_component
 	temp_table.action_module_charge_component = self._action_module_charge_component
 	temp_table.action_module_position_finder_component = self._action_module_position_finder_component
-	temp_table.action_module_targeting_component = self._action_module_targeting_component
+	temp_table.action_module_target_finder_component = self._action_module_target_finder_component
 
 	return temp_table
 end
@@ -1149,26 +1171,23 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 		self._server_buff_indexes[slot_name] = server_slot_buff_indexes
 	end
 
-	for i = 1, num_buffs do
-		local buff_template_name = buff_list[i]
+	for ii = 1, num_buffs do
+		local buff_template_name = buff_list[ii]
+		local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, t, "item_slot_name", slot_name, "owner_unit", player_unit, "source_item", weapon_item)
+		local component_name = lookup[ii]
 
-		if buff_template_name ~= "description_values" then
-			local client_tried_adding_rpc_buff, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, t, "item_slot_name", slot_name, "owner_unit", player_unit, "source_item", weapon_item)
-			local component_name = lookup[i]
+		if not client_tried_adding_rpc_buff then
+			if component_index then
+				inventory_slot_component[component_name] = component_index
+			elseif is_server then
+				local server_slot_buff_target_indexes = server_slot_buff_indexes[buff_target]
 
-			if not client_tried_adding_rpc_buff then
-				if component_index then
-					inventory_slot_component[component_name] = component_index
-				elseif is_server then
-					local server_slot_buff_target_indexes = server_slot_buff_indexes[buff_target]
-
-					if not server_slot_buff_target_indexes then
-						server_slot_buff_target_indexes = {}
-						server_slot_buff_indexes[buff_target] = server_slot_buff_target_indexes
-					end
-
-					server_slot_buff_target_indexes[#server_slot_buff_target_indexes + 1] = local_index
+				if not server_slot_buff_target_indexes then
+					server_slot_buff_target_indexes = {}
+					server_slot_buff_indexes[buff_target] = server_slot_buff_target_indexes
 				end
+
+				server_slot_buff_target_indexes[#server_slot_buff_target_indexes + 1] = local_index
 			end
 		end
 	end
@@ -1223,9 +1242,16 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 		inventory_slot_component.max_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.max_ammunition_reserve * capacity_modifier), 0, ammo_large_hard_limit)
 
 		local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
+		local current_ammo_fields = PlayerCharacterConstants.current_ammo_clip_fields
+		local max_ammo_fields = PlayerCharacterConstants.max_ammo_clip_fields
 
-		inventory_slot_component.max_ammunition_clip = math.clamp(math.floor(inventory_slot_component.max_ammunition_clip * clip_size_modifier), 0, ammo_small_hard_limit)
-		inventory_slot_component.current_ammunition_clip = math.clamp(math.floor(inventory_slot_component.current_ammunition_clip * clip_size_modifier), 0, ammo_small_hard_limit)
+		for i = 1, #current_ammo_fields do
+			local current_field = current_ammo_fields[i]
+			local max_field = max_ammo_fields[i]
+
+			inventory_slot_component[current_field] = math.clamp(math.floor(inventory_slot_component[current_field] * clip_size_modifier), 0, ammo_small_hard_limit)
+			inventory_slot_component[max_field] = math.clamp(math.floor(inventory_slot_component[max_field] * clip_size_modifier), 0, ammo_small_hard_limit)
+		end
 	end
 end
 
@@ -1312,25 +1338,29 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 		local base_clip = self._base_clip_by_slot[slot_name]
 
 		if base_clip then
-			local base_current_clip = base_clip.current_ammunition_clip
-			local base_max_clip = base_clip.max_ammunition_clip
+			local max_fields = PlayerCharacterConstants.max_ammo_clip_fields
+			local inventory_slot_component = slot.inventory_slot_component
 
-			if base_current_clip and base_max_clip then
-				local inventory_slot_component = slot.inventory_slot_component
-				local clip_size = inventory_slot_component.max_ammunition_clip
-				local stat_buffs = self._buff_extension:stat_buffs()
-				local clip_size_capacity_modifier = stat_buffs.clip_size_modifier
-				local new_clip_size = math.ceil(base_max_clip * clip_size_capacity_modifier)
-				local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
-				local clamped_new_clip_size = math.clamp(new_clip_size, 0, ammo_small_hard_limit)
+			for i = 1, #max_fields do
+				local max_field = max_fields[i]
+				local base_max_clip = base_clip[max_field]
 
-				if clip_size ~= clamped_new_clip_size then
-					local current_clip = inventory_slot_component.current_ammunition_clip
-					local current_clip_percent = current_clip / clip_size
-					local new_current_clip = math.floor(current_clip_percent * clamped_new_clip_size)
+				if base_max_clip then
+					local clip_size = Ammo.max_ammo_in_clips(inventory_slot_component, i)
+					local stat_buffs = self._buff_extension:stat_buffs()
+					local clip_size_capacity_modifier = stat_buffs.clip_size_modifier
+					local new_clip_size = math.ceil(base_max_clip * clip_size_capacity_modifier)
+					local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
+					local clamped_new_clip_size = math.clamp(new_clip_size, 0, ammo_small_hard_limit)
 
-					inventory_slot_component.current_ammunition_clip = new_current_clip
-					inventory_slot_component.max_ammunition_clip = clamped_new_clip_size
+					if clip_size ~= clamped_new_clip_size then
+						local current_clip = Ammo.current_ammo_in_clips(inventory_slot_component, i)
+						local current_clip_percent = current_clip / clip_size
+						local new_current_clip = math.floor(current_clip_percent * clamped_new_clip_size)
+
+						Ammo.set_current_ammo_in_clips(inventory_slot_component, new_current_clip, i)
+						Ammo.set_max_ammo_in_clips(inventory_slot_component, clamped_new_clip_size, i)
+					end
 				end
 			end
 		end
@@ -1353,7 +1383,7 @@ PlayerUnitWeaponExtension.move_speed_modifier = function (self, t)
 	local alternate_fire_speed_mod = 1
 
 	if alternate_fire_is_active then
-		alternate_fire_speed_mod = AlternateFire.movement_speed_modifier(self._alternate_fire_read_component, weapon_template, t, self)
+		alternate_fire_speed_mod = AlternateFire.movement_speed_modifier(self._alternate_fire_read_component, weapon_template, t, self, self._unit)
 	end
 
 	local weapon_action_speed_mod = self._weapon_action_movement:move_speed_modifier(t)

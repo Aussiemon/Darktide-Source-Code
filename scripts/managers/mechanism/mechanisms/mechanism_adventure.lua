@@ -141,50 +141,6 @@ MechanismAdventure.sync_data = function (self, channel_id)
 	local data = self._mechanism_data
 
 	RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed, data.havoc_data)
-
-	return RPC.rpc_sync_mechanism_data_adventure(channel_id, NetworkLookup.missions[data.mission_name], NetworkLookup.circumstance_templates[data.circumstance_name], NetworkLookup.mission_objective_names[data.side_mission], self._state_index, NetworkLookup.game_mode_outcomes[data.end_result or "n/a"], data.ready_for_transition, data.victory_defeat_done, data.game_score_done, self._is_owner_mission_server, data.challenge, data.resistance, NetworkLookup.mission_giver_vo_overrides[data.mission_giver_vo_override], data.backend_mission_id, data.ready_voting_completed)
-end
-
-MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, mission_giver_vo_override_id, backend_mission_id, ready_voting_completed)
-	local mission_name = NetworkLookup.missions[mission_name_id]
-	local circumstance_name = NetworkLookup.circumstance_templates[circumstance_name_id]
-	local side_mission = NetworkLookup.mission_objective_names[side_mission_id]
-	local mission_giver_vo_override = NetworkLookup.mission_giver_vo_overrides[mission_giver_vo_override_id]
-
-	self._state_index = state_index
-	self._state = self._states_lookup[state_index]
-
-	local end_result = NetworkLookup.game_mode_outcomes[end_result_id]
-
-	if end_result == "n/a" then
-		end_result = nil
-	end
-
-	local data = self._mechanism_data
-
-	data.level_name = Missions[mission_name].level
-	data.mission_name = mission_name
-	data.circumstance_name = circumstance_name
-	data.side_mission = side_mission
-	data.end_result = end_result
-	data.ready_for_transition = ready_for_transition
-	data.victory_defeat_done = victory_defeat_done
-	data.game_score_done = game_score_done
-	data.challenge = challenge
-	data.resistance = resistance
-	data.mission_giver_vo_override = mission_giver_vo_override
-	data.backend_mission_id = backend_mission_id
-	data.ready_voting_completed = ready_voting_completed
-
-	self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_adventure")
-
-	self._is_syncing = false
-	self._is_owner_mission_server = is_owner_mission_server
-	self._pending_state_change = true
-
-	if ready_voting_completed then
-		Managers.party_immaterium:ready_voting_completed()
-	end
 end
 
 MechanismAdventure.rpc_sync_mechanism_data_adventure = function (self, channel_id, mission_name_id, circumstance_name_id, side_mission_id, state_index, end_result_id, ready_for_transition, victory_defeat_done, game_score_done, is_owner_mission_server, challenge, resistance, mission_giver_vo_override_id, backend_mission_id, ready_voting_completed, havoc_data)
@@ -283,8 +239,6 @@ MechanismAdventure.profile_changes_are_allowed = function (self)
 		return false
 	end
 end
-
-local not_ready_peers = {}
 
 MechanismAdventure._on_vote_finished = function (self, result)
 	if result == "approved" then

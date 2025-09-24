@@ -92,7 +92,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_charge = {
-			description = "loc_talent_adamant_bash_ability_description",
+			description = "loc_ability_adamant_charge_blocking_desc",
 			display_name = "loc_talent_adamant_charge_ability_name",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_charge",
 			name = "Improved Charge",

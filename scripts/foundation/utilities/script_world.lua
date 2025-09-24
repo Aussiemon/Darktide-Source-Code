@@ -534,4 +534,88 @@ ScriptWorld.optimize_level_units = function (level)
 	end
 end
 
+ScriptWorld.spawn_level_instance = function (world, name, position, rotation, spawn_units, optional_instance_hash)
+	local level_instances = World.get_data(world, "level_instances")
+
+	position = position or Vector3.zero()
+	rotation = rotation or Quaternion.identity()
+
+	local scale = Vector3(1, 1, 1)
+	local level
+
+	if spawn_units then
+		level = World.spawn_level(world, name, position, rotation, scale)
+	else
+		level = World.spawn_level_time_sliced(world, name, position, rotation, scale)
+	end
+
+	local level_instance_array = level_instances[name] or {}
+	local instance_id = #level_instance_array + 1
+	local level_instance_hash = optional_instance_hash or Level._name_hash_32(level) + instance_id
+
+	Level.set_data(level, "instance_hash", level_instance_hash)
+	Level.set_data(level, "runtime_loaded_level", true)
+	table.insert(level_instance_array, level)
+
+	level_instances[name] = level_instance_array
+
+	Log.info("ScriptWorld", "Registering level instance named: '%q' with id: '%d' and hash '%s'", name, instance_id, level_instance_hash)
+	World.set_data(world, "level_instances", level_instances)
+
+	local level_units = Level.units(level, true)
+	local category_name = "level_spawned"
+	local extension_manager = Managers.state.extension
+
+	extension_manager:add_and_register_units(world, level_units, nil, category_name)
+
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	unit_spawner_manager:register_runtime_loaded_level(level, level_instance_hash)
+	Level.trigger_level_spawned(level)
+
+	return level, instance_id, level_instance_hash
+end
+
+ScriptWorld.destroy_level_instance = function (world, name, instance_id)
+	local level_instances = World.get_data(world, "level_instances")
+	local level_instance = level_instances[name][instance_id]
+
+	if not level_instance then
+		return
+	end
+
+	local instance_hash = Level.get_data(level_instance, "instance_hash")
+
+	Log.info("ScriptWorld", "Destroying level instance named: '%q' with id: '%d' and hash '%s'", name, instance_id, instance_hash)
+	Level.trigger_level_shutdown(level_instance)
+
+	local level_units = Level.units(level_instance, true)
+	local extension_manager = Managers.state.extension
+
+	extension_manager:unregister_units(level_units, #level_units)
+
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	unit_spawner_manager:unregister_runtime_loaded_level(level_instance, instance_hash)
+
+	for i = 1, #level_units do
+		World.destroy_unit(world, level_units[i])
+	end
+
+	World.destroy_level(world, level_instance)
+	table.swap_delete(level_instances[name], instance_id)
+end
+
+ScriptWorld.destroy_level_instances = function (world)
+	local level_instances = World.get_data(world, "level_instances")
+
+	for level_name, level_instance_array in pairs(level_instances) do
+		for i = #level_instance_array, 1, -1 do
+			ScriptWorld.destroy_level_instance(world, level_name, i)
+		end
+	end
+
+	World.set_data(world, "level_instances", {})
+end
+
 return ScriptWorld

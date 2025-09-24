@@ -157,7 +157,7 @@ local default_debug_input_settings = {
 			type = "pressed",
 		},
 		remove_monster_warning = {
-			raw = "keyboard_left shift+keyboard_v",
+			raw = "keyboard_esc",
 			type = "pressed",
 		},
 		select_self_unit_toggle = {
@@ -195,30 +195,6 @@ local default_debug_input_settings = {
 		},
 		give_move_order = {
 			raw = "keyboard_oem_minus",
-			type = "pressed",
-		},
-		sweep_point_forward = {
-			raw = "keyboard_numpad 6",
-			type = "pressed",
-		},
-		sweep_point_backward = {
-			raw = "keyboard_numpad 4",
-			type = "pressed",
-		},
-		sweep_point_axis_cycle = {
-			raw = "keyboard_numpad 5",
-			type = "pressed",
-		},
-		sweep_anchor_point_toggle = {
-			raw = "keyboard_numpad 8",
-			type = "pressed",
-		},
-		sweep_editor_dump = {
-			raw = "keyboard_enter",
-			type = "pressed",
-		},
-		sweep_editor_exit = {
-			raw = "keyboard_esc",
 			type = "pressed",
 		},
 		reset_quick_drawer_stay = {

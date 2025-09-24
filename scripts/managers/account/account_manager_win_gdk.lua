@@ -1,10 +1,11 @@
 ﻿-- chunkname: @scripts/managers/account/account_manager_win_gdk.lua
 
-local AccountManagerBase = require("scripts/managers/account/account_manager_base")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
+require("scripts/managers/account/account_manager_base")
+
 local AccountManagerGDKShared = require("scripts/managers/account/account_manager_gdk_shared")
 local Promise = require("scripts/foundation/utilities/promise")
 local RegionRestrictionsXboxLive = require("scripts/settings/region/region_restrictions_xbox_live")
+local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local AccountManagerWinGDK = class("AccountManagerWinGDK", "AccountManagerBase")
 local SIGNIN_STATES = {

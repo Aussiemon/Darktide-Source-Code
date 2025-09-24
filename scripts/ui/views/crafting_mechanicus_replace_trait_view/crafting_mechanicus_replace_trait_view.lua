@@ -239,8 +239,8 @@ CraftingMechanicusReplaceTraitView._on_trait_selected = function (self, widget, 
 
 	self._ingredients.existing_trait_index = index
 
-	self._weapon_stats:select_trait(index)
 	self._weapon_stats:preview_trait(index)
+	self._weapon_stats:select_trait(index)
 
 	if self._using_cursor_navigation then
 		self._crafting_recipe:select_grid_widget(index and widget or nil)
@@ -258,6 +258,7 @@ CraftingMechanicusReplaceTraitView._on_trait_selected = function (self, widget, 
 	local selected = index ~= nil
 
 	if not selected then
+		self._weapon_stats:preview_trait(previous_existing_trait_index)
 		self:remove_ingredient(previous_existing_trait_index)
 	end
 
@@ -358,6 +359,8 @@ CraftingMechanicusReplaceTraitView.update = function (self, dt, t, input_service
 		else
 			self._weapon_stats:preview_trait(self._ingredients.existing_trait_index)
 		end
+
+		self:_update_element_position("weapon_stats_pivot", self._weapon_stats)
 
 		self._resync_can_craft = nil
 	end

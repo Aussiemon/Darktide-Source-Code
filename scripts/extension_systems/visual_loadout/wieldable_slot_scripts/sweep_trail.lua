@@ -25,8 +25,11 @@ SweepTrail.init = function (self, context, slot, weapon_template, fx_sources, it
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._visual_loadout_extension = context.visual_loadout_extension
 	self._sweep_trail_components_1p = _slot_components(slot.attachments_by_unit_1p[unit_1p])
 	self._sweep_trail_components_3p = _slot_components(slot.attachments_by_unit_3p[unit_3p])
+	self._unit_1p = unit_1p
+	self._slot_name = slot.name
 	self._trail_visible = true
 end
 
@@ -109,6 +112,12 @@ SweepTrail._update_trail_status = function (self, t, action_settings)
 		is_visible = false
 	end
 
+	local relevant = self:_is_child_of_sweep_reference(action_settings)
+
+	if not relevant then
+		is_visible = is_visible and false
+	end
+
 	local visibility_changed = is_visible ~= self._trail_visible
 	local in_3p = not self._first_person_mode
 
@@ -116,6 +125,30 @@ SweepTrail._update_trail_status = function (self, t, action_settings)
 	_update_status(self._sweep_trail_components_3p, is_critical, is_powered, is_visible, visibility_changed, in_3p)
 
 	self._trail_visible = is_visible
+end
+
+SweepTrail._is_child_of_sweep_reference = function (self, action_settings)
+	local sweeps = action_settings and action_settings.sweeps
+
+	if not sweeps then
+		return true
+	end
+
+	local has_any_specified_attachment_id = false
+
+	for i = 1, #sweeps do
+		local attachment_id = sweeps[i].reference_attachment_id
+
+		if attachment_id then
+			has_any_specified_attachment_id = true
+
+			if self._visual_loadout_extension:is_unit_part_of_attachment(self._unit_1p, self._slot_name, attachment_id) then
+				return true
+			end
+		end
+	end
+
+	return not has_any_specified_attachment_id
 end
 
 function _slot_components(attachments)

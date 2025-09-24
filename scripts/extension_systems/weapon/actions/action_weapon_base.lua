@@ -148,10 +148,11 @@ ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_range
 	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
+	local prevent_crit = buff_extension:has_keyword("prevent_critical_strike")
 	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike") or action_auto_crit
 	local chance
 
-	chance = guaranteed_crit and 1 or CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee)
+	chance = prevent_crit and 0 or guaranteed_crit and 1 or CriticalStrike.chance(player, weapon_handling_template, is_ranged, is_melee, false)
 
 	local is_critical_strike, new_prd_state, new_seed = CriticalStrike.is_critical_strike(chance, prd_state, seed)
 

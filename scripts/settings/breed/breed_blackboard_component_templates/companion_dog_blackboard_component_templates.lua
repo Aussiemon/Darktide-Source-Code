@@ -64,11 +64,6 @@ local companion_dog = {
 		type = "string",
 		unit = "Unit",
 	},
-	disable = {
-		attacker_unit = "Unit",
-		is_disabled = "boolean",
-		type = "string",
-	},
 	pounce = {
 		has_jump_off_direction = "boolean",
 		has_pounce_started = "boolean",
@@ -99,6 +94,9 @@ local companion_dog_hub = table.clone(companion_dog)
 companion_dog_hub.hub_interaction_with_player = {
 	has_owner_started_interaction = "boolean",
 }
+companion_dog_hub.behavior.is_out_of_bound = nil
+companion_dog_hub.pounce = nil
+companion_dog_hub.whistle = nil
 companion_dog_hub.movable_platform = nil
 
 local templates = {

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/camera/camera_settings.lua
 
 local CameraTransitionTemplates = require("scripts/settings/camera/camera_transition_templates")
+local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 
 CameraSettings = CameraSettings or {}
 CameraSettings.world = {
@@ -509,7 +510,7 @@ CameraSettings.player_first_person = {
 		name = "root_node",
 		near_range = 0.08,
 		should_apply_fov_multiplier = true,
-		vertical_fov = 65,
+		vertical_fov = DefaultGameParameters.vertical_fov,
 		tree_transitions = {
 			world = CameraTransitionTemplates.instant_cut,
 			third_person = CameraTransitionTemplates.to_third_person,

@@ -621,7 +621,7 @@ local horde_pacing_template = {
 		},
 		havoc_02 = {
 			aggro_nearby_roamers_zone_range = 3,
-			max_active_minions = 105,
+			max_active_minions = 110,
 			max_active_minions_for_ambush = 50,
 			num_trickle_hordes_active_for_cooldown = 4,
 			time_between_waves = 7,
@@ -669,12 +669,12 @@ local horde_pacing_template = {
 			horde_group_sound_events = HORDE_GROUP_SOUND_EVENTS,
 			pre_stinger_delays = PRE_STINGER_DELAYS,
 			trickle_horde_travel_distance_range = {
-				30,
-				110,
+				20,
+				100,
 			},
 			trickle_horde_cooldown = {
+				25,
 				30,
-				45,
 			},
 			coordinated_horde_strike_settings = {
 				[COORDINATED_HORDE_STRIKE_TYPES.long_horde] = {
@@ -840,7 +840,14 @@ local horde_pacing_template = {
 								1,
 								2,
 							},
-							composition = HordeCompositions.havoc_coordinated_blockade_behind,
+							faction_composition = {
+								renegade = {
+									HordeCompositions.havoc_renegade_coordinated_blockade_behind,
+								},
+								cultist = {
+									HordeCompositions.havoc_cultist_coordinated_blockade_behind,
+								},
+							},
 						},
 						{
 							horde_type = "far_vector_horde",

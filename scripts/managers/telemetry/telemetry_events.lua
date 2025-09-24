@@ -4,7 +4,9 @@ local TelemetryEvent = require("scripts/managers/telemetry/telemetry_event")
 local TelemetrySettings = require("scripts/managers/telemetry/telemetry_settings")
 local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
+local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local TelemetryEvents = class("TelemetryEvents")
 local RPCS = {
 	"rpc_sync_server_session_id",
@@ -190,11 +192,9 @@ TelemetryEvents.gameplay_started = function (self, params)
 	local telemetry_reporters = Managers.telemetry_reporters
 
 	telemetry_reporters:start_reporter("com_wheel")
-	telemetry_reporters:start_reporter("combat_ability")
 	telemetry_reporters:start_reporter("enemy_spawns")
 	telemetry_reporters:start_reporter("fixed_update_missed_inputs")
 	telemetry_reporters:start_reporter("frame_time", params)
-	telemetry_reporters:start_reporter("grenade_ability")
 	telemetry_reporters:start_reporter("pacing")
 	telemetry_reporters:start_reporter("picked_items")
 	telemetry_reporters:start_reporter("used_items")
@@ -209,6 +209,10 @@ TelemetryEvents.gameplay_started = function (self, params)
 	telemetry_reporters:start_reporter("voice_over_bank_reshuffled")
 	telemetry_reporters:start_reporter("voice_over_event_triggered")
 	telemetry_reporters:start_reporter("mispredict")
+
+	for i = 1, #ability_types do
+		telemetry_reporters:start_reporter(ability_types[i])
+	end
 end
 
 TelemetryEvents.gameplay_stopped = function (self)
@@ -227,13 +231,15 @@ TelemetryEvents.gameplay_stopped = function (self)
 	telemetry_reporters:stop_reporter("picked_items")
 	telemetry_reporters:stop_reporter("used_items")
 	telemetry_reporters:stop_reporter("pacing")
-	telemetry_reporters:stop_reporter("grenade_ability")
 	telemetry_reporters:stop_reporter("frame_time")
 	telemetry_reporters:stop_reporter("fixed_update_missed_inputs")
 	telemetry_reporters:stop_reporter("enemy_spawns")
-	telemetry_reporters:stop_reporter("combat_ability")
 	telemetry_reporters:stop_reporter("com_wheel")
 	telemetry_reporters:stop_reporter("mispredict")
+
+	for i = 1, #ability_types do
+		telemetry_reporters:stop_reporter(ability_types[i])
+	end
 
 	local event = self:_create_event("gameplay_stopped")
 
@@ -572,25 +578,11 @@ TelemetryEvents.player_exits_captivity = function (self, player, rescued_by_play
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.player_combat_ability_report = function (self, reports)
+TelemetryEvents.player_ability_report = function (self, reports, report_name)
 	for _, report in pairs(reports) do
 		local entries = report.entries
 		local player_data = report.player_data
-		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_combat_ability_report", {
-			game = player_data.telemetry_game_session,
-			gameplay = self._session.gameplay,
-		})
-
-		event:set_data(entries)
-		self._manager:register_event(event)
-	end
-end
-
-TelemetryEvents.player_grenade_ability_report = function (self, reports)
-	for _, report in pairs(reports) do
-		local entries = report.entries
-		local player_data = report.player_data
-		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "player_grenade_ability_report", {
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, report_name, {
 			game = player_data.telemetry_game_session,
 			gameplay = self._session.gameplay,
 		})
@@ -1294,6 +1286,15 @@ TelemetryEvents.dlc_purchase_button_clicked = function (self, dlc_telemetry_id, 
 		identifier = dlc_telemetry_id,
 		dlc_variant = dlc_variant,
 		active_views = active_views,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.has_premium_currency_discount = function (self, has_premium_currency_discount)
+	local event = self:_create_event("has_premium_currency_discount")
+
+	event:set_data({
+		has_discount = has_premium_currency_discount,
 	})
 	self._manager:register_event(event)
 end

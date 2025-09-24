@@ -30,6 +30,11 @@ local melee_base = {
 		should_override = "boolean",
 		target_template = "string",
 	},
+	disable = {
+		attacker_unit = "Unit",
+		is_disabled = "boolean",
+		type = "string",
+	},
 }
 
 table.merge(melee_base, base_template)
@@ -50,6 +55,11 @@ melee_shield_patroller.patrol = {
 	should_patrol = "boolean",
 	walk_position = "Vector3Box",
 }
+melee_shield_patroller.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
+}
 
 local melee_patroller = table.clone(melee_base)
 
@@ -60,6 +70,11 @@ melee_patroller.patrol = {
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
 	walk_position = "Vector3Box",
+}
+melee_patroller.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
 }
 
 local melee_can_be_suppressed = table.clone(melee_base)
@@ -89,6 +104,11 @@ melee_patroller_can_be_suppressed.patrol = {
 local unarmed = {
 	behavior = {
 		move_state = "string",
+	},
+	disable = {
+		attacker_unit = "Unit",
+		is_disabled = "boolean",
+		type = "string",
 	},
 }
 

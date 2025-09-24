@@ -183,11 +183,12 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	params.dodge_direction = nil
 
 	local buff_extension = self._buff_extension
+	local dodge_cost = 1
 
 	if t > dodge_character_state_component.consecutive_dodges_cooldown then
-		dodge_character_state_component.consecutive_dodges = 1
+		dodge_character_state_component.consecutive_dodges = dodge_cost
 	else
-		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + 1, NetworkConstants.max_consecutive_dodges)
+		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + dodge_cost, NetworkConstants.max_consecutive_dodges)
 	end
 
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)

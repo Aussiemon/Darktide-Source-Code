@@ -13,9 +13,9 @@ local HudElementMissionObjectiveFeed = class("HudElementMissionObjectiveFeed", "
 HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_scale, definitions)
 	HudElementMissionObjectiveFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
 
-	self._objective_widgets_by_name = {}
 	self._hud_objectives = {}
-	self._hud_objectives_names_array = {}
+	self._hud_objectives_sorted = {}
+	self._objective_widgets = {}
 	self._mission_widget_definitions = Definitions.objective_definitions
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	self._scan_delay = HudElementMissionObjectiveFeedSettings.scan_delay
@@ -62,9 +62,12 @@ local ALERT_COLOR = {
 }
 
 HudElementMissionObjectiveFeed._update_widgets = function (self, dt, t)
-	for objective_name, hud_objective in pairs(self._hud_objectives) do
-		if self:has_widget(objective_name) then
-			local widget = self._widgets_by_name[objective_name]
+	local objective_widgets = self._objective_widgets
+
+	for objective, hud_objective in pairs(self._hud_objectives) do
+		local widget = objective_widgets[objective]
+
+		if widget then
 			local content = widget.content
 			local ui_state = hud_objective:state()
 
@@ -88,7 +91,7 @@ HudElementMissionObjectiveFeed._update_widgets = function (self, dt, t)
 			end
 
 			if content.show_timer then
-				self:_update_timer_progress(hud_objective, dt)
+				self:_update_timer_progress(hud_objective, widget, dt)
 			end
 		end
 	end
@@ -129,34 +132,35 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self, ui_ren
 	end
 
 	local hud_objectives = self._hud_objectives
-	local active_objectives = self._mission_objective_system:active_objectives()
+	local objective_widgets = self._objective_widgets
 
-	for objective_name, hud_objective in pairs(hud_objectives) do
-		local active_objective = active_objectives[objective_name]
+	for objective, hud_objective in pairs(hud_objectives) do
 		local locally_added = hud_objective:locally_added()
-		local should_show = locally_added or active_objective and active_objective:use_hud()
+		local should_show = locally_added or objective and objective:use_hud()
 
 		if should_show then
-			if not locally_added and not hud_objective:is_synchronized_with_objective(active_objective) then
-				hud_objective:synchronize_objective(active_objective)
+			if not locally_added and not hud_objective:is_synchronized_with_objective() then
+				hud_objective:synchronize_objective()
 
-				local widget = self._widgets_by_name[objective_name]
+				local widget = objective_widgets[objective]
 
 				if widget then
-					self:_update_widget_height(widget, active_objective, hud_objective, ui_renderer)
-					self:_synchronize_widget_with_hud_objective(objective_name)
+					self:_update_widget_height(widget, objective, hud_objective, ui_renderer)
+					self:_synchronize_widget_with_hud_objective(objective)
 					self:_align_objective_widgets()
 				end
 			end
 
 			hud_objective:update_markers()
 		else
-			self:_remove_objective(objective_name)
+			self:_remove_objective(objective)
 		end
 	end
 
-	for objective_name, objective in pairs(active_objectives) do
-		local hud_objective_exists = hud_objectives[objective_name] ~= nil
+	local active_objectives = self._mission_objective_system:active_objectives()
+
+	for objective, _ in pairs(active_objectives) do
+		local hud_objective_exists = hud_objectives[objective] ~= nil
 
 		if not hud_objective_exists and objective:use_hud() then
 			self:_add_objective(objective, ui_renderer)
@@ -173,25 +177,24 @@ HudElementMissionObjectiveFeed.event_add_objective = function (self, objective, 
 end
 
 HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_renderer, locally_added)
-	local objective_name = objective:name()
 	local new_hud_objective = HudElementMissionObjective:new(objective)
 
-	self._hud_objectives_names_array[#self._hud_objectives_names_array + 1] = objective_name
-	self._hud_objectives[objective_name] = new_hud_objective
+	self._hud_objectives[objective] = new_hud_objective
+	self._hud_objectives_sorted[#self._hud_objectives_sorted + 1] = new_hud_objective
 
 	if objective:hide_widget() then
 		return
 	end
 
-	self._objective_widgets_counter = self._objective_widgets_counter + 1
-
 	local objective_category = objective:objective_category()
 	local mission_widget_definition = self._mission_widget_definitions[objective_category]
-	local widget = self:_create_widget(objective_name, mission_widget_definition)
+	local widget_name = objective:group_id() .. "-" .. objective:name()
+	local widget = self:_create_widget(widget_name, mission_widget_definition)
 
-	self._objective_widgets_by_name[objective_name] = widget
+	self._objective_widgets[objective] = widget
+	self._objective_widgets_counter = self._objective_widgets_counter + 1
 
-	self:_synchronize_widget_with_hud_objective(objective_name)
+	self:_synchronize_widget_with_hud_objective(objective)
 	self:_update_widget_height(widget, objective, new_hud_objective, ui_renderer)
 	self:_align_objective_widgets()
 end
@@ -252,22 +255,24 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 	content.size[2] = widget_height
 end
 
-HudElementMissionObjectiveFeed._remove_objective = function (self, objective_name)
-	if self._hud_objectives[objective_name] then
-		self._hud_objectives[objective_name]:delete()
-
-		self._hud_objectives[objective_name] = nil
-
-		local array_index = table.find(self._hud_objectives_names_array, objective_name)
+HudElementMissionObjectiveFeed._remove_objective = function (self, objective)
+	if self._hud_objectives[objective] then
+		local array_index = table.find(self._hud_objectives_sorted, self._hud_objectives[objective])
 
 		if array_index then
-			table.remove(self._hud_objectives_names_array, array_index)
+			table.remove(self._hud_objectives_sorted, array_index)
 		end
 
-		if self._objective_widgets_by_name[objective_name] then
-			self:_unregister_widget_name(objective_name)
+		self._hud_objectives[objective]:delete()
 
-			self._objective_widgets_by_name[objective_name] = nil
+		self._hud_objectives[objective] = nil
+
+		if self._objective_widgets[objective] then
+			local widget_name = objective:group_id() .. "-" .. objective:name()
+
+			self:_unregister_widget_name(widget_name)
+
+			self._objective_widgets[objective] = nil
 			self._objective_widgets_counter = self._objective_widgets_counter - 1
 
 			self:_align_objective_widgets()
@@ -277,9 +282,8 @@ HudElementMissionObjectiveFeed._remove_objective = function (self, objective_nam
 
 		for i = 1, #event_objectives_to_add do
 			local objective_data = event_objectives_to_add[i]
-			local objective = objective_data.objective
 
-			if objective:name() == objective_name then
+			if objective == objective_data.objective then
 				table.remove(event_objectives_to_add, i)
 
 				return
@@ -288,9 +292,9 @@ HudElementMissionObjectiveFeed._remove_objective = function (self, objective_nam
 	end
 end
 
-HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function (self, objective_name)
-	local widget = self._widgets_by_name[objective_name]
-	local hud_objective = self._hud_objectives[objective_name]
+HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function (self, objective)
+	local widget = self._objective_widgets[objective]
+	local hud_objective = self._hud_objectives[objective]
 	local content = widget.content
 	local style = widget.style
 	local state = hud_objective:state()
@@ -324,7 +328,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		content.show_bar = true
 		content.bar_icon = hud_objective:progress_bar_icon()
 
-		self:_update_bar_progress(hud_objective)
+		self:_update_bar_progress(hud_objective, widget)
 	else
 		content.show_bar = false
 	end
@@ -344,7 +348,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 			realign = true
 		end
 
-		self:_update_timer_progress(hud_objective, nil, realign)
+		self:_update_timer_progress(hud_objective, widget, nil, realign)
 	else
 		content.max_counter_amount = nil
 		content.show_timer = false
@@ -403,9 +407,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	end
 end
 
-HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_objective)
-	local objective_name = hud_objective:objective_name()
-	local widget = self._widgets_by_name[objective_name]
+HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_objective, widget)
 	local style = widget.style
 	local bar_style = style.bar
 	local icon_style = style.bar_icon
@@ -416,9 +418,7 @@ HudElementMissionObjectiveFeed._update_bar_progress = function (self, hud_object
 	icon_style.offset[1] = 40 + default_length * progression
 end
 
-HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_objective, dt, realign)
-	local objective_name = hud_objective:objective_name()
-	local widget = self._widgets_by_name[objective_name]
+HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_objective, widget, dt, realign)
 	local content = widget.content
 	local show_minutes = content.show_minutes
 	local show_hours = content.show_hours
@@ -476,15 +476,13 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local entry_spacing_by_category = HudElementMissionObjectiveFeedSettings.entry_spacing_by_category
 	local entry_order_by_objective_category = HudElementMissionObjectiveFeedSettings.entry_order_by_objective_category
 	local offset_y = 0
-	local objective_widgets_by_name = self._objective_widgets_by_name
+	local objective_widgets = self._objective_widgets
 	local total_background_height = 0
-	local objectives_counter = self._objective_widgets_counter
 	local index_counter = 0
-	local hud_objectives = self._hud_objectives
+	local hud_objectives_sorted = self._hud_objectives_sorted
+	local objectives_counter = #hud_objectives_sorted
 
-	local function mission_objective_sort_function(a, b)
-		local a_objective = hud_objectives[a]
-		local b_objective = hud_objectives[b]
+	local function mission_objective_sort_function(a_objective, b_objective)
 		local a_priority = a_objective:sort_order() or entry_order_by_objective_category[a_objective:objective_category()]
 		local b_priority = b_objective:sort_order() or entry_order_by_objective_category[b_objective:objective_category()]
 
@@ -497,18 +495,16 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 		return true
 	end
 
-	local hud_objectives_names_array = self._hud_objectives_names_array
-
-	if #hud_objectives_names_array > 1 then
-		table.sort(hud_objectives_names_array, mission_objective_sort_function)
+	if #hud_objectives_sorted > 1 then
+		table.sort(hud_objectives_sorted, mission_objective_sort_function)
 	end
 
-	for i = 1, #hud_objectives_names_array do
-		local objective_name = hud_objectives_names_array[i]
-		local widget = objective_widgets_by_name[objective_name]
+	for i = 1, #hud_objectives_sorted do
+		local hud_objective = hud_objectives_sorted[i]
+		local objective = hud_objective:objective()
+		local widget = objective_widgets[objective]
 
 		if widget then
-			local hud_objective = hud_objectives[objective_name]
 			local objective_category = hud_objective:objective_category()
 			local entry_spacing = entry_spacing_by_category[objective_category] or entry_spacing_by_category.default
 
@@ -538,10 +534,10 @@ HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_serv
 	if self._objective_widgets_counter > 0 then
 		HudElementMissionObjectiveFeed.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
-		local objective_widgets_by_name = self._objective_widgets_by_name
+		local objective_widgets = self._objective_widgets
 
-		if objective_widgets_by_name then
-			for _, widget in pairs(objective_widgets_by_name) do
+		if objective_widgets then
+			for _, widget in pairs(objective_widgets) do
 				UIWidget.draw(widget, ui_renderer)
 			end
 		end

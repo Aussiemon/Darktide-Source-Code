@@ -44,7 +44,7 @@ LocalPlayersSyncState.update = function (self, dt)
 
 	local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnected" then
+	if state == "disconnecting" or state == "disconnected" then
 		Log.info("LocalPlayersSyncState", "Connection channel disconnected")
 
 		return "disconnected", {

@@ -16,6 +16,7 @@ SingleLevelLoader.init = function (self)
 	self._level_package_id = nil
 	self._level_loaded = false
 	self._load_state = LOAD_STATES.none
+	self._dont_load_theme = false
 end
 
 SingleLevelLoader.destroy = function (self)
@@ -28,6 +29,7 @@ SingleLevelLoader.start_loading = function (self, context)
 	local theme_tag = context.theme_tag
 
 	self._theme_tag = theme_tag
+	self._dont_load_theme = context.dont_load_theme
 	self._level_name = level_name
 
 	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
@@ -48,6 +50,11 @@ SingleLevelLoader._level_load_done_callback = function (self, item_definitions)
 
 	local level_name = self._level_name
 	local theme_tag = self._theme_tag
+
+	if self._dont_load_theme then
+		ThemePackage.level_resource_disable_theme(level_name)
+	end
+
 	local item_packages_to_load = ItemPackage.level_resource_dependency_packages(item_definitions, level_name)
 	local theme_packages_to_load = ThemePackage.level_resource_dependency_packages(level_name, theme_tag)
 

@@ -87,4 +87,14 @@ shared_buff_functions.get_broadphase_and_enemy_side_names = function (source_uni
 	return broadphase, enemy_side_names
 end
 
+shared_buff_functions.get_broadphase_and_allied_side_names = function (source_unit)
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[source_unit]
+	local enemy_side_names = side:relation_side_names("allied")
+
+	return broadphase, enemy_side_names
+end
+
 return shared_buff_functions

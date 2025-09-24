@@ -14,17 +14,18 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 local WeaponTraitsBespokePlasmagunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_plasmagun_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
-local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
+local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -94,7 +95,7 @@ weapon_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -910,10 +911,7 @@ weapon_template.base_stats = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
 				display_data = {
-					display_stats = {
-						ammunition_clip = {},
-						ammunition_reserve = {},
-					},
+					display_stats = WeaponBarUIDescriptionTemplates.default_bar_stats.ammo.display_stats,
 				},
 			},
 		},
@@ -926,6 +924,7 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/plasma_rifle"
 weapon_template.reload_template = ReloadTemplates.plasma_rifle
 weapon_template.spread_template = "default_plasma_rifle_bfg"
+weapon_template.recoil_template = "default_plasma_rifle_bfg"
 weapon_template.combo_reset_duration = 0.5
 weapon_template.ammo_template = "plasmagun_p1_m1"
 weapon_template.conditional_state_to_action_input = {

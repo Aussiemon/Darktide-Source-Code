@@ -164,7 +164,7 @@ end
 
 TrainingGroundsOptionsView.on_exit = function (self)
 	local save_data = Managers.save:character_data()
-	local danger = self._widgets_by_name.difficulty_stepper.content.danger
+	local danger = self._widgets_by_name.difficulty_stepper and self._widgets_by_name.difficulty_stepper.content.danger
 
 	if danger then
 		save_data.training_grounds_danger = danger
@@ -204,6 +204,10 @@ TrainingGroundsOptionsView._setup_info = function (self)
 
 	if show_difficulty_stepper then
 		self:_create_difficulty_stepper_indicators(danger)
+
+		local panel_size_large = view_settings.panel_size.large
+
+		self:_resize_background(panel_size_large)
 	end
 
 	widgets_by_name.select_difficulty_text.content.text = Localize("loc_mission_board_select_difficulty")

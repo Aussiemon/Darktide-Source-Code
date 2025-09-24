@@ -325,7 +325,7 @@ local widget_definitions = {
 			value_id = "texture",
 			style = {
 				material_values = {
-					texture_frame = "content/ui/textures/icons/items/frames/default",
+					portrait_frame_texture = "content/ui/textures/icons/items/frames/default",
 					use_placeholder_texture = 1,
 				},
 			},

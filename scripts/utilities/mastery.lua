@@ -6,7 +6,7 @@ local RankSettings = require("scripts/settings/item/rank_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local WeaponExperienceSettings = require("scripts/settings/weapon_experience_settings")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local dummy_exp_per_level = table.clone(WeaponExperienceSettings.experience_per_level_array)
 local cached_pattern_id_to_category_id, cached_category_id_to_pattern_id
 local Mastery = {}
@@ -37,7 +37,7 @@ Mastery.get_weapon_xp_per_level = function (mastery_data)
 	for i = 1, #milestones do
 		local milestone = milestones[i]
 
-		exp_per_level[i] = milestone.xpLimit
+		exp_per_level[i] = milestone and milestone.xpLimit or 1
 	end
 
 	return exp_per_level
@@ -54,7 +54,7 @@ Mastery.get_max_points = function (mastery_data)
 	for i = 1, #milestones do
 		local milestone = milestones[i]
 
-		if milestone.rewards then
+		if milestone and milestone.rewards then
 			for id, data in pairs(milestone.rewards) do
 				local reward_points = data.stats and data.stats.points
 
@@ -78,7 +78,7 @@ Mastery.get_all_unlocked_points = function (mastery_data)
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
-		if milestone.rewards then
+		if milestone and milestone.rewards then
 			for id, data in pairs(milestone.rewards) do
 				local reward_points = data.stats and data.stats.points
 
@@ -107,7 +107,7 @@ Mastery.get_max_blessing_rarity_unlocked_level = function (mastery_data)
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
-		if milestone.rewards then
+		if milestone and milestone.rewards then
 			for id, data in pairs(milestone.rewards) do
 				if id == "trait_unlock" then
 					local trait_rank = data.data and data.data.trait_rank and math.clamp(data.data.trait_rank, 0, RankSettings.max_trait_rank) or 1
@@ -157,7 +157,7 @@ Mastery.get_max_perk_rarity_unlocked_level = function (mastery_data)
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
-		if milestone.rewards then
+		if milestone and milestone.rewards then
 			for id, data in pairs(milestone.rewards) do
 				if id == "perk_unlock" then
 					local perk_rank = data.data and data.data.perk_rank and math.clamp(data.data.perk_rank, 0, RankSettings.max_perk_rank) or 1
@@ -182,9 +182,11 @@ Mastery.rewards_by_level = function (mastery_data)
 	for i = 1, #milestones do
 		local milestone = milestones[i]
 
-		level_milestones[milestone.level] = level_milestones[milestone.level] or {}
+		if milestone and milestone.level then
+			level_milestones[milestone.level] = level_milestones[milestone.level] or {}
 
-		table.insert(level_milestones[milestone.level], milestone.rewards or {})
+			table.insert(level_milestones[milestone.level], milestone.rewards or {})
+		end
 	end
 
 	return level_milestones
@@ -201,9 +203,11 @@ Mastery.milestones_by_level = function (mastery_data)
 	for i = 1, #milestones do
 		local milestone = milestones[i]
 
-		level_milestones[milestone.level] = level_milestones[milestone.level] or {}
+		if milestone and milestone.level then
+			level_milestones[milestone.level] = level_milestones[milestone.level] or {}
 
-		table.insert(level_milestones[milestone.level], milestone)
+			table.insert(level_milestones[milestone.level], milestone)
+		end
 	end
 
 	return level_milestones
@@ -218,8 +222,6 @@ Mastery.get_mastery_max_level = function (mastery_data)
 	end
 
 	for i = 1, #milestones do
-		local milestone = milestones[i]
-
 		max_level = math.max(max_level, i)
 	end
 
@@ -260,7 +262,7 @@ Mastery.get_mastery_rewards_by_id = function (mastery_data, reward_type_id)
 		for i = 1, #milestones do
 			local milestone = milestones[i]
 
-			if milestone.rewards then
+			if milestone and milestone.rewards then
 				for id, reward in pairs(milestone.rewards) do
 					if string.find(id, reward_type_id) then
 						rewards[#rewards + 1] = {
@@ -293,10 +295,27 @@ Mastery.get_milestone_ui_data = function (milestone)
 		end
 	end
 
+	table.sort(milestone_rewards, function (a, b)
+		if a.sort_order and b.sort_order then
+			return a.sort_order < b.sort_order
+		else
+			return false
+		end
+	end)
+
 	return milestone_rewards
 end
 
 Mastery.get_reward_ui_data = function (id, reward)
+	local sort_order = {
+		cosmetic = 2,
+		currency = 5,
+		expertise_point = 3,
+		mark_unlock = 1,
+		mastery_points = 4,
+		perk_unlock = 6,
+		trait_unlock = 6,
+	}
 	local reward_data = {}
 
 	if not reward then
@@ -305,8 +324,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 
 	local reward_type = id
 	local default_icon = "content/ui/materials/icons/weapons/hud/combat_blade_01"
-
-	reward_data.type = reward_type
+	local sort_id
 
 	if string.find(reward_type, "perk_unlock") then
 		local reward_rarity = reward.data and reward.data.perk_rank and math.clamp(reward.data.perk_rank, 0, RankSettings.max_perk_rank) or 0
@@ -319,8 +337,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 			32,
 			32,
 		}
-
-		return reward_data
+		sort_id = "perk_unlock"
 	elseif string.find(reward_type, "trait_unlock") then
 		local reward_rarity = reward.data and reward.data.trait_rank and math.clamp(reward.data.trait_rank, 0, RankSettings.max_trait_rank) or 0
 
@@ -336,24 +353,21 @@ Mastery.get_reward_ui_data = function (id, reward)
 			100,
 		}
 		reward_data.icon_color = Color.terminal_text_body(255, true)
-
-		return reward_data
+		sort_id = "trait_unlock"
 	elseif string.find(reward_type, "mastery_points") then
 		reward_data.display_name = Localize("loc_mastery_reward_mastery_points")
 
 		local points = reward.stats and reward.stats.points or 0
 
 		reward_data.text = string.format("\n+%s", points)
-
-		return reward_data
+		sort_id = "mastery_points"
 	elseif string.find(reward_type, "expertise_point") then
 		reward_data.display_name = Localize("loc_mastery_reward_expertise_cap")
 
-		local expertise_cap = reward.data and reward.data.expertise_cap * Items.get_expertise_multiplier() or 0
+		local expertise_cap = reward.data and reward.data.expertise_cap and reward.data.expertise_cap * Items.get_expertise_multiplier() or 0
 
 		reward_data.text = string.format("\n%s", expertise_cap)
-
-		return reward_data
+		sort_id = "expertise_point"
 	elseif string.find(reward_type, "currency") then
 		local currency_data = WalletSettings[reward.type]
 
@@ -364,8 +378,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 			60,
 		}
 		reward_data.text = reward.value
-
-		return reward_data
+		sort_id = "currency"
 	elseif string.find(reward_type, "cosmetic") then
 		reward_data.icon = default_icon
 		reward_data.display_name = reward_type
@@ -373,6 +386,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 			300,
 			128,
 		}
+		sort_id = "cosmetic"
 
 		return reward_data
 	elseif string.find(reward_type, "mark_unlock") then
@@ -389,12 +403,12 @@ Mastery.get_reward_ui_data = function (id, reward)
 				300,
 				128,
 			}
-
-			return reward_data
+			sort_id = "mark_unlock"
 		end
-
-		return reward_data
 	end
+
+	reward_data.type = reward_type
+	reward_data.sort_order = sort_id and sort_order[sort_id] or math.huge
 
 	return reward_data
 end
@@ -441,9 +455,14 @@ Mastery.get_current_expertise_cap = function (mastery_data)
 
 		if current_level >= reward_data.level then
 			local cap_reward = rewards_data[i]
-			local cap = cap_reward and cap_reward.reward and cap_reward.reward.data and cap_reward.reward.data.expertise_cap * Items.get_expertise_multiplier() or default_expertise
+			local cap
+			local expertise_cap = cap_reward and cap_reward.reward and cap_reward.reward.data and cap_reward.reward.data.expertise_cap
 
-			return cap
+			if expertise_cap then
+				cap = expertise_cap * Items.get_expertise_multiplier()
+			end
+
+			return cap or default_expertise
 		end
 	end
 
@@ -462,9 +481,10 @@ Mastery.get_max_expertise_cap = function (mastery_data)
 	end
 
 	local reward_data = rewards_data[#rewards_data]
+	local expertise_cap = reward_data and reward_data.reward and reward_data.reward.data and reward_data.reward.data.expertise_cap
 
-	if reward_data then
-		local cap = reward_data.reward and reward_data.reward.data and reward_data.reward.data.expertise_cap * Items.get_expertise_multiplier() or 0
+	if expertise_cap then
+		local cap = expertise_cap * Items.get_expertise_multiplier()
 
 		return cap
 	end
@@ -599,7 +619,7 @@ Mastery.get_start_and_end_xp = function (mastery_data)
 
 	for i = 1, #milestones do
 		local milestone = milestones[i]
-		local milestone_xp = milestone.xpLimit or 1
+		local milestone_xp = milestone and milestone.xpLimit or 1
 		local previous_milestone = milestones[i - 1]
 
 		if current_xp < milestone_xp then
@@ -842,7 +862,7 @@ Mastery.get_xp_for_max_level = function (mastery_data)
 	local current_xp = mastery_data.current_xp
 	local milestones = mastery_data.milestones
 	local milestone = milestones[#milestones]
-	local end_xp = milestone.xpLimit or 0
+	local end_xp = milestone.xpLimit or 1
 
 	xp = math.max(0, end_xp - current_xp)
 
@@ -931,7 +951,7 @@ Mastery.get_unclaimed_rewards = function (mastery_data)
 
 	for i = 1, claimed_level + 1 do
 		local milestone = mastery_data.milestones[i]
-		local rewards = milestone.rewards
+		local rewards = milestone and milestone.rewards
 
 		if rewards then
 			for reward_name, data in pairs(rewards) do

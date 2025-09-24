@@ -219,13 +219,6 @@ GameModeManager.use_third_person_hub_camera = function (self)
 	return use_third_person_hub_camera
 end
 
-GameModeManager.use_hub_aim_extension = function (self)
-	local game_mode_settings = self._game_mode:settings()
-	local use_hub_aim_extension = game_mode_settings.use_hub_aim_extension
-
-	return use_hub_aim_extension
-end
-
 GameModeManager.hud_settings = function (self)
 	local game_mode_settings = self._game_mode:settings()
 	local hud_settings = game_mode_settings.hud_settings
@@ -349,12 +342,8 @@ GameModeManager.player_time_until_spawn = function (self, player)
 	return self._game_mode:player_time_until_spawn(player)
 end
 
-GameModeManager.cleanup_game_mode_dynamic_lavels = function (self)
-	self._game_mode:cleanup_game_mode_dynamic_lavels()
-end
-
-GameModeManager.cleanup_game_mode_units = function (self)
-	self._game_mode:cleanup_game_mode_units()
+GameModeManager.mission_cleanup = function (self, on_shutdown)
+	self._game_mode:mission_cleanup(on_shutdown)
 end
 
 GameModeManager.should_spawn_dead = function (self, player)

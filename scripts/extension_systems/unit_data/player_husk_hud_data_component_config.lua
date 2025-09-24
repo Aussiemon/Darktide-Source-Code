@@ -7,7 +7,7 @@ local husk_hud_data_component_config = {
 		"normal",
 		"position_valid",
 	},
-	action_module_targeting = {
+	action_module_target_finder = {
 		"target_unit_1",
 		"target_unit_2",
 		"target_unit_3",
@@ -52,6 +52,11 @@ local husk_hud_data_component_config = {
 		"num_charges",
 	},
 	combat_ability = {
+		"cooldown",
+		"cooldown_paused",
+		"num_charges",
+	},
+	pocketable_ability = {
 		"cooldown",
 		"cooldown_paused",
 		"num_charges",

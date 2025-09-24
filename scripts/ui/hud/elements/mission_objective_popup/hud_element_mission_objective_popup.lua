@@ -94,25 +94,22 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 	self._popup_animation_id = popup_animation_id
 end
 
-HudElementMissionObjectivePopup._can_present_mission = function (self, mission_name)
-	local mission_objective = self._mission_objective_system:active_objective(mission_name)
-
-	if not mission_objective then
+HudElementMissionObjectivePopup._can_present_mission = function (self, objective)
+	if not objective then
 		return false
 	end
 
-	return mission_objective:use_hud() and mission_objective:popups_enabled()
+	return objective:use_hud() and objective:popups_enabled()
 end
 
-HudElementMissionObjectivePopup.event_mission_objective_start = function (self, mission_name)
-	if not self:_can_present_mission(mission_name) then
+HudElementMissionObjectivePopup.event_mission_objective_start = function (self, objective)
+	if not self:_can_present_mission(objective) then
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:active_objective(mission_name)
-	local alert = mission_objective:ui_state() == "alert"
-	local description_text = mission_objective:header()
-	local icon = mission_objective:icon()
+	local alert = objective:ui_state() == "alert"
+	local description_text = objective:header()
+	local icon = objective:icon()
 	local title_text = self:_localize(alert and "loc_objective_op_train_alert_header" or "loc_hud_mission_objective_popup_title_start")
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
@@ -132,34 +129,33 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	end
 end
 
-HudElementMissionObjectivePopup.event_mission_objective_update = function (self, mission_name)
-	if not self:_can_present_mission(mission_name) then
+HudElementMissionObjectivePopup.event_mission_objective_update = function (self, objective)
+	if not self:_can_present_mission(objective) then
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:active_objective(mission_name)
-	local show_progression_popup_on_update = mission_objective:show_progression_popup_on_update()
+	local show_progression_popup_on_update = objective:show_progression_popup_on_update()
 
 	if not show_progression_popup_on_update then
 		return
 	end
 
-	local max_counter_amount = mission_objective:max_incremented_progression()
+	local max_counter_amount = objective:max_incremented_progression()
 
 	if max_counter_amount == 0 then
 		return
 	end
 
-	local current_counter_amount = mission_objective:incremented_progression()
+	local current_counter_amount = objective:incremented_progression()
 	local update_text
 
 	if current_counter_amount and max_counter_amount then
 		update_text = tostring(current_counter_amount) .. "/" .. tostring(max_counter_amount)
 	end
 
-	local alert = mission_objective:ui_state() == "alert"
-	local description_text = mission_objective:header()
-	local icon = mission_objective:icon()
+	local alert = objective:ui_state() == "alert"
+	local description_text = objective:header()
+	local icon = objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_update")
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
@@ -180,15 +176,14 @@ HudElementMissionObjectivePopup.event_mission_objective_update = function (self,
 	end
 end
 
-HudElementMissionObjectivePopup.event_mission_objective_complete = function (self, mission_name)
-	if not self:_can_present_mission(mission_name) then
+HudElementMissionObjectivePopup.event_mission_objective_complete = function (self, objective)
+	if not self:_can_present_mission(objective) then
 		return
 	end
 
-	local mission_objective = self._mission_objective_system:active_objective(mission_name)
-	local alert = mission_objective:ui_state() == "alert"
-	local description_text = mission_objective:header()
-	local icon = mission_objective:icon()
+	local alert = objective:ui_state() == "alert"
+	local description_text = objective:header()
+	local icon = objective:icon()
 	local title_text = self:_localize("loc_hud_mission_objective_popup_title_complete")
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {

@@ -233,7 +233,7 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 			local unit_data_extension = ScriptUnit.extension(camera_follow_unit, "unit_data_system")
 			local weapon_action_component = unit_data_extension:read_component("weapon_action")
 			local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-			local vertical_fov, custom_vertical_fov, near_range = AlternateFire.camera_variables(weapon_template)
+			local vertical_fov, custom_vertical_fov, near_range = AlternateFire.camera_variables(weapon_template, camera_follow_unit)
 
 			camera_manager:set_variable(viewport_name, "zoom_vertical_fov", vertical_fov)
 			camera_manager:set_variable(viewport_name, "zoom_custom_vertical_fov", custom_vertical_fov)

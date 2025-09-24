@@ -19,13 +19,6 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ClassSelectionView = class("ClassSelectionView", "BaseView")
-local temp_archetype_to_specialization_lookup = {
-	adamant = "adamant",
-	ogryn = "ogryn_2",
-	psyker = "psyker_2",
-	veteran = "veteran_2",
-	zealot = "zealot_2",
-}
 
 ClassSelectionView.init = function (self, settings, context)
 	ClassSelectionView.super.init(self, Definitions, settings, context)
@@ -219,10 +212,6 @@ ClassSelectionView.update = function (self, dt, t, input_service)
 end
 
 ClassSelectionView._on_continue_pressed = function (self)
-	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
-
-	self._character_create:set_specialization(selected_specialization_name)
-
 	if not self._using_cursor_navigation then
 		self:_play_sound(UISoundEvents.character_create_class_confirm)
 	end
@@ -542,8 +531,6 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 
 		self:_handle_details_button_text()
 	end
-
-	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
 
 	if self._current_archetype_available_promise and not self._current_archetype_available_promise:is_fulfilled() then
 		self._current_archetype_available_promise:cancel()
@@ -1070,17 +1057,11 @@ ClassSelectionView.on_archetype_pressed = function (self, target_option)
 end
 
 ClassSelectionView.on_continue_pressed = function (self)
-	local selected_specialization_name = temp_archetype_to_specialization_lookup[self._selected_archetype.name]
-
-	self._character_create:set_specialization(self._selected_specialization.name)
-
 	if self._archetype_details_visible then
 		self:_play_sound(UISoundEvents.character_create_class_confirm)
 		Managers.event:trigger("event_create_new_character_continue")
 	else
-		if not self._archetype_details_visible or not self._selected_specialization or selected_specialization_name ~= self._selected_specialization.name then
-			self._selected_specialization = self._selected_archetype.specializations[selected_specialization_name]
-
+		if not self._archetype_details_visible then
 			self:_show_archetypes_widgets(true)
 		end
 

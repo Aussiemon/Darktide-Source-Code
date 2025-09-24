@@ -14,7 +14,6 @@ local CLIENT_RPCS = {
 	"rpc_player_assisted",
 	"rpc_update_slot",
 }
-local SERVER_RPCS = {}
 
 PlayerManager.PLAYER_INTERFACE = {
 	"type",
@@ -56,18 +55,12 @@ PlayerManager.set_network = function (self, is_server, network_event_delegate)
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 
 		self._network_event_delegate = network_event_delegate
-	elseif self._is_server then
-		network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
-
-		self._network_event_delegate = network_event_delegate
 	end
 end
 
 PlayerManager.unset_network = function (self)
 	if not self._is_server and self._network_event_delegate then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
-	elseif self._is_server and self._network_event_delegate then
-		self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
 	end
 end
 
@@ -647,9 +640,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		sync_data.character_id_array[i] = player:character_id()
 
 		if include_profile_chunks then
-			local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
-			local profile_updating = profile_synchronizer_host:profile_updates_profile(player:peer_id(), local_player_id)
-			local profile = profile_updating or player:profile()
+			local profile = player:profile()
 			local profile_json = ProfileUtils.pack_profile(profile)
 			local profile_chunks = {}
 

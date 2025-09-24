@@ -82,11 +82,8 @@ MissionBuffsManager.init = function (self, is_server, game_mode, game_mode_name,
 		self._mission_buffs_handler = MissionBuffsHandler:new(self, game_mode, is_server)
 		self._mission_buffs_selector = MissionBuffsSelector:new(self, self._mission_buffs_handler, network_event_delegate, is_server)
 
-		local buffs_to_exclude_promise = Managers.backend.interfaces.hordes:deactivate_buffs_from_the_backend()
+		self:_fetch_backend_data_needed_before_player_data_initialization()
 
-		buffs_to_exclude_promise:next(callback(self, "cb_backend_buffs_to_exclude_received")):catch(callback(self, "cb_backend_buffs_to_exclude_failed"))
-
-		self._backend_buffs_to_exclude = nil
 		self._players_needing_data_initialization = {}
 	end
 
@@ -118,6 +115,76 @@ MissionBuffsManager.destroy = function (self)
 	self._mission_buffs_ui_manager = nil
 end
 
+MissionBuffsManager._fetch_backend_data_needed_before_player_data_initialization = function (self)
+	local weighted_randomization_data_promise = Managers.backend.interfaces.hordes:get_horde_setting_from_the_backend()
+
+	weighted_randomization_data_promise:next(callback(self, "cb_get_horde_setting_from_the_backend_received")):catch(callback(self, "cb_get_horde_setting_from_the_backend_failed"))
+
+	self._backend_weighted_randomization = nil
+	self._backend_buffs_to_exclude = nil
+end
+
+MissionBuffsManager.cb_get_horde_setting_from_the_backend_received = function (self, horde_backend_data)
+	self:_init_randomization_settings(horde_backend_data)
+	self:_init_backend_deactivated_buffs(horde_backend_data)
+	self:_manage_delayed_data_initialization_for_players()
+end
+
+MissionBuffsManager.cb_get_horde_setting_from_the_backend_failed = function (self, err)
+	Log.error("MissionBuffsManager", string.format("Could not get backend list of settings.\nNo buffs will be excluded, Buff Family and Islands will default to even weights.\nError: %s", err.description))
+
+	self._backend_buffs_to_exclude = {}
+	self._backend_weighted_randomization = {
+		buff_family_weights = {},
+	}
+
+	self:_manage_delayed_data_initialization_for_players()
+end
+
+MissionBuffsManager._init_randomization_settings = function (self, horde_backend_data)
+	local horde_backend_settings = horde_backend_data.settings or {}
+	local buff_family_weights = horde_backend_settings.buff_family_weights or {}
+
+	if not horde_backend_settings.buff_family_weights then
+		Log.error("MissionBuffsManager", "Backend list of horde settings does not have weights for Buff Families (will default to even weights).")
+	end
+
+	self._backend_weighted_randomization = {
+		buff_family_weights = buff_family_weights,
+	}
+
+	local weighted_randomization_message = "Weighted Randomization Data\nBuff Families:"
+
+	for buff_family_name, weight in pairs(buff_family_weights) do
+		weighted_randomization_message = weighted_randomization_message .. "[" .. buff_family_name .. "-" .. weight .. "]"
+	end
+
+	Log.info("MissionBuffsManager", weighted_randomization_message)
+end
+
+MissionBuffsManager._init_backend_deactivated_buffs = function (self, horde_backend_data)
+	local deactivated_buffs_data = horde_backend_data.deactivated_buffs or {}
+	local buffs_to_exclude = deactivated_buffs_data.deactivated_buffs_list or {}
+
+	if deactivated_buffs_data.deactivated_buffs_enabled and not deactivated_buffs_data.deactivated_buffs_list then
+		Log.error("MissionBuffsManager", "Backend list of hordes settings does not have list of deactivated buffs but has it enabled (none will be excluded).")
+	end
+
+	local excluded_buffs = {}
+	local excluded_buffs_message = "Buffs Excluded: "
+
+	if deactivated_buffs_data.deactivated_buffs_enabled then
+		for _, buff_name in pairs(buffs_to_exclude) do
+			excluded_buffs[buff_name] = true
+			excluded_buffs_message = excluded_buffs_message .. buff_name .. " || "
+		end
+	end
+
+	self._backend_buffs_to_exclude = excluded_buffs
+
+	Log.info("MissionBuffsManager", excluded_buffs_message)
+end
+
 MissionBuffsManager.check_if_all_players_chosen_family = function (self)
 	self._mission_buffs_handler:check_if_all_players_chosen_family()
 end
@@ -134,32 +201,12 @@ MissionBuffsManager.get_buffs_to_exclude = function (self)
 	return self._backend_buffs_to_exclude
 end
 
+MissionBuffsManager.get_weighted_randomization_data = function (self)
+	return self._backend_weighted_randomization
+end
+
 MissionBuffsManager.get_buff_family_selected_by_player = function (self, player)
 	return self._mission_buffs_handler:get_buff_family_selected_by_player(player)
-end
-
-MissionBuffsManager.cb_backend_buffs_to_exclude_received = function (self, buffs_to_exclude)
-	local excluded_buffs = {}
-	local excluded_buffs_message = "Buffs Excluded: "
-
-	for _, buff_name in pairs(buffs_to_exclude) do
-		excluded_buffs[buff_name] = true
-		excluded_buffs_message = excluded_buffs_message .. buff_name .. " || "
-	end
-
-	Log.info("MissionBuffsManager", excluded_buffs_message)
-
-	self._backend_buffs_to_exclude = excluded_buffs
-
-	self:_manage_delayed_data_initialization_for_players()
-end
-
-MissionBuffsManager.cb_backend_buffs_to_exclude_failed = function (self, err)
-	Log.error("MissionBuffsManager", string.format("Could not get backend list of buffs to exclude. Error: %s", err.description))
-
-	self._backend_buffs_to_exclude = {}
-
-	self:_manage_delayed_data_initialization_for_players()
 end
 
 MissionBuffsManager.give_player_silent_buff_not_saved_to_player_data = function (self, player, buff_name)

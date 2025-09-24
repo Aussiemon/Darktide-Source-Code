@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	chaos_ogryn_bulwark = {},
 }
-local basic_chaos_ogryn_bulwark_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_base_upperbody = {
 			use_outline = true,
@@ -86,7 +86,7 @@ local basic_chaos_ogryn_bulwark_template = {
 				"content/items/characters/minions/gib_items/chaos_ogryn_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -103,10 +103,10 @@ local basic_chaos_ogryn_bulwark_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_chaos_ogryn_bulwark_template)
-local default_2 = table.clone(basic_chaos_ogryn_bulwark_template)
-local default_3 = table.clone(basic_chaos_ogryn_bulwark_template)
-local default_4 = table.clone(basic_chaos_ogryn_bulwark_template)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(base_visual_loadout_template)
+local default_3 = table.clone(base_visual_loadout_template)
+local default_4 = table.clone(base_visual_loadout_template)
 
 default_4.gib_variations = {
 	"head_01",
@@ -118,7 +118,7 @@ default_4.slots.slot_head = {
 	},
 }
 
-local default_5 = table.clone(basic_chaos_ogryn_bulwark_template)
+local default_5 = table.clone(base_visual_loadout_template)
 
 default_5.gib_variations = {
 	"head_01",
@@ -131,7 +131,7 @@ default_5.slots.slot_head = {
 	},
 }
 
-local default_6 = table.clone(basic_chaos_ogryn_bulwark_template)
+local default_6 = table.clone(base_visual_loadout_template)
 
 default_6.gib_variations = {
 	"head_01",
@@ -144,7 +144,7 @@ default_6.slots.slot_head = {
 	},
 }
 
-local default_7 = table.clone(basic_chaos_ogryn_bulwark_template)
+local default_7 = table.clone(base_visual_loadout_template)
 
 default_4.gib_variations = {
 	"var_01",
@@ -213,262 +213,75 @@ templates.chaos_ogryn_bulwark.default = {
 	default_12,
 }
 
-local foundry_1 = table.clone(default_1)
+local tank_foundry_variations = {}
+local tank_foundry_index = 1
 
-foundry_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.chaos_ogryn_bulwark.default) do
+	local tank_foundry_variation = table.clone(default_variation)
 
-local foundry_2 = table.clone(default_2)
+	tank_foundry_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/dirt_02",
+	}
+	tank_foundry_variations[#tank_foundry_variations + 1] = tank_foundry_variation
+	tank_foundry_index = tank_foundry_index + 1
+end
 
-foundry_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.chaos_ogryn_bulwark[zone_ids.tank_foundry] = tank_foundry_variations
 
-local foundry_3 = table.clone(default_3)
+local dust_variations = {}
+local dust_index = 1
 
-foundry_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.chaos_ogryn_bulwark.default) do
+	local dust_variation = table.clone(default_variation)
 
-local foundry_4 = table.clone(default_4)
+	dust_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/sand_02",
+	}
+	dust_variations[#dust_variations + 1] = dust_variation
+	dust_index = dust_index + 1
+end
 
-foundry_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.chaos_ogryn_bulwark[zone_ids.dust] = dust_variations
 
-local foundry_5 = table.clone(default_5)
+local watertown_variations = {}
+local watertown_index = 1
 
-foundry_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.chaos_ogryn_bulwark.default) do
+	local watertown_variation = table.clone(default_variation)
 
-local foundry_6 = table.clone(default_6)
+	watertown_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_02",
+	}
+	watertown_variations[#watertown_variations + 1] = watertown_variation
+	watertown_index = watertown_index + 1
+end
 
-foundry_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.chaos_ogryn_bulwark[zone_ids.watertown] = watertown_variations
 
-local foundry_7 = table.clone(default_7)
+local void_variations = {}
 
-foundry_7.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.chaos_ogryn_bulwark.default) do
+	local void_variation = table.clone(default_variation)
 
-local foundry_8 = table.clone(default_8)
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
 
-foundry_8.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.chaos_ogryn_bulwark[zone_ids.void] = void_variations
 
-local foundry_9 = table.clone(default_9)
+local horde_variations = {}
 
-foundry_9.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.chaos_ogryn_bulwark.default) do
+	local horde_variation = table.clone(default_variation)
 
-local foundry_10 = table.clone(default_10)
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
 
-foundry_10.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
-
-local foundry_11 = table.clone(default_11)
-
-foundry_11.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
-
-local foundry_12 = table.clone(default_12)
-
-foundry_12.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
-templates.chaos_ogryn_bulwark[zone_ids.tank_foundry] = {
-	foundry_1,
-	foundry_2,
-	foundry_3,
-	foundry_4,
-	foundry_5,
-	foundry_6,
-	foundry_7,
-	foundry_8,
-	foundry_9,
-	foundry_10,
-	foundry_11,
-	foundry_12,
-}
-
-local dust_1 = table.clone(default_1)
-
-dust_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_2 = table.clone(default_2)
-
-dust_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_3 = table.clone(default_3)
-
-dust_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_4 = table.clone(default_4)
-
-dust_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_5 = table.clone(default_5)
-
-dust_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_6 = table.clone(default_6)
-
-dust_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_7 = table.clone(default_7)
-
-dust_7.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_8 = table.clone(default_8)
-
-dust_8.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_9 = table.clone(default_9)
-
-dust_9.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_10 = table.clone(default_10)
-
-dust_10.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_11 = table.clone(default_11)
-
-dust_11.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_12 = table.clone(default_12)
-
-dust_12.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-templates.chaos_ogryn_bulwark[zone_ids.dust] = {
-	dust_1,
-	dust_2,
-	dust_3,
-	dust_4,
-	dust_5,
-	dust_6,
-	dust_7,
-	dust_8,
-	dust_9,
-	dust_10,
-	dust_11,
-	dust_12,
-}
-
-local watertown_1 = table.clone(default_1)
-
-watertown_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_2 = table.clone(default_2)
-
-watertown_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_3 = table.clone(default_3)
-
-watertown_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_4 = table.clone(default_4)
-
-watertown_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_5 = table.clone(default_5)
-
-watertown_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_6 = table.clone(default_6)
-
-watertown_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_7 = table.clone(default_7)
-
-watertown_7.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_8 = table.clone(default_8)
-
-watertown_8.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_9 = table.clone(default_9)
-
-watertown_9.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_10 = table.clone(default_10)
-
-watertown_10.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_11 = table.clone(default_11)
-
-watertown_11.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_12 = table.clone(default_12)
-
-watertown_12.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-templates.chaos_ogryn_bulwark[zone_ids.watertown] = {
-	watertown_1,
-	watertown_2,
-	watertown_3,
-	watertown_4,
-	watertown_5,
-	watertown_6,
-	watertown_7,
-	watertown_8,
-	watertown_9,
-	watertown_10,
-	watertown_11,
-	watertown_12,
-}
+templates.chaos_ogryn_bulwark[zone_ids.horde] = horde_variations
 
 return templates

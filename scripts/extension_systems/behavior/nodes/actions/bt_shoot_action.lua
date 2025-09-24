@@ -362,8 +362,9 @@ end
 
 BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_data)
 	local valid_angle, aim_dot, flat_to_target = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+	local override_non_valid_angle = action_data.override_non_valid_angle
 
-	if not valid_angle then
+	if not valid_angle and not override_non_valid_angle then
 		MinionAttack.stop_shooting(unit, scratchpad)
 		self:_start_aiming(unit, t, scratchpad, action_data)
 

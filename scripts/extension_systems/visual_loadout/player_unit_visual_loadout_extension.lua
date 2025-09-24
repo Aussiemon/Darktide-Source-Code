@@ -8,6 +8,7 @@ local MasterItems = require("scripts/backend/master_items")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local PlayerCharacterSounds = require("scripts/settings/sound/player_character_sounds")
@@ -176,8 +177,15 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	local fixed_frame_t = extension_init_context.fixed_frame_t
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 
-	for i = 1, #slot_equip_order do
-		local slot_name = slot_equip_order[i]
+	self._static_profile_properties = {
+		breed = extension_init_data.archetype.breed,
+		companion_breed = extension_init_data.archetype.companion_breed,
+		archetype = extension_init_data.archetype.name,
+		selected_voice = extension_init_data.selected_voice,
+	}
+
+	for ii = 1, #slot_equip_order do
+		local slot_name = slot_equip_order[ii]
 		local item = initial_items[slot_name]
 
 		if item then
@@ -187,9 +195,7 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 		end
 	end
 
-	self._archetype_property = extension_init_data.archetype.name
-	self._selected_voice_property = extension_init_data.selected_voice
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._static_profile_properties)
 
 	local default_wielded_slot_name = extension_init_data.default_wielded_slot_name
 
@@ -413,14 +419,20 @@ PlayerUnitVisualLoadoutExtension.update_delayed_unequipped_slots = function (sel
 		local slot = equipment[slot_name]
 		local item = slot.item
 
-		if slot_component.unequip_slot and item ~= nil then
-			if inventory.wielded_slot == slot_name then
-				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
+		if item ~= nil then
+			if slot_component.unwield_slot or slot_component.unequip_slot then
+				if inventory.wielded_slot == slot_name then
+					PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
+				end
+
+				slot_component.unwield_slot = false
 			end
 
-			PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
+			if slot_component.unequip_slot then
+				PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
 
-			slot_component.unequip_slot = false
+				slot_component.unequip_slot = false
+			end
 		end
 	end
 end
@@ -433,6 +445,27 @@ PlayerUnitVisualLoadoutExtension.update_unit_position = function (self, unit, dt
 	if wielded_slot_scripts then
 		WieldableSlotScripts.update_unit_position(wielded_slot_scripts, unit, dt, t)
 	end
+end
+
+PlayerUnitVisualLoadoutExtension.is_unit_part_of_attachment = function (self, unit, slot_name, attachment_id, in_1p)
+	local equipment = self._equipment
+	local slot = equipment[slot_name]
+
+	if slot then
+		local root_unit_1p_or_nil = slot.attachment_id_lookup_1p[attachment_id]
+
+		if unit == root_unit_1p_or_nil or root_unit_1p_or_nil and slot.attachment_map_by_unit_1p[root_unit_1p_or_nil][unit] then
+			return true
+		end
+
+		local root_unit_3p_or_nil = slot.attachment_id_lookup_3p[attachment_id]
+
+		if unit == root_unit_3p_or_nil or root_unit_3p_or_nil and slot.attachment_map_by_unit_3p[root_unit_3p_or_nil][unit] then
+			return true
+		end
+	end
+
+	return false
 end
 
 PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, unit, from_frame)
@@ -538,7 +571,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 
 						mission_objective_system:store_grimoire()
 					end
-				else
+				elseif not PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, "slot_pocketable", "undroppable") then
 					local unit = self._unit
 					local inventory_component = self._inventory_component
 
@@ -674,7 +707,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 		self._mispredict_package_handler:item_equipped(item)
 	end
 
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._static_profile_properties)
 end
 
 PlayerUnitVisualLoadoutExtension.unequip_item_from_slot = function (self, slot_name, fixed_frame)
@@ -772,7 +805,7 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 		self._mispredict_package_handler:item_unequipped(item, fixed_frame)
 	end
 
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._locally_wielded_slot, self._static_profile_properties)
 end
 
 PlayerUnitVisualLoadoutExtension.wield_slot = function (self, slot_name)
@@ -800,7 +833,7 @@ PlayerUnitVisualLoadoutExtension._wield_slot = function (self, slot_name)
 	self:_update_item_visibility(is_in_first_person_mode)
 
 	self._locally_wielded_slot = slot_name
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, slot_name, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, slot_name, self._static_profile_properties)
 
 	local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
@@ -885,7 +918,7 @@ PlayerUnitVisualLoadoutExtension._unwield_slot = function (self, slot_name)
 	equipment_component.unwield_slot(slot, is_in_first_person_mode)
 
 	self._locally_wielded_slot = nil
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, nil, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, nil, self._static_profile_properties)
 end
 
 PlayerUnitVisualLoadoutExtension.can_wield = function (self, slot_name)
@@ -985,6 +1018,12 @@ PlayerUnitVisualLoadoutExtension.resolve_gear_particle = function (self, particl
 	local properties = self._profile_properties
 
 	return PlayerCharacterParticles.resolve_particle(particle_alias, properties, optional_external_properties)
+end
+
+PlayerUnitVisualLoadoutExtension.resolve_gear_decal = function (self, decal_alias, optional_external_properties)
+	local properties = self._profile_properties
+
+	return PlayerCharacterDecals.resolve_decal(decal_alias, properties, optional_external_properties)
 end
 
 PlayerUnitVisualLoadoutExtension.profile_properties = function (self)

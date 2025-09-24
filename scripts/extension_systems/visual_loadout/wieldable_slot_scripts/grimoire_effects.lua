@@ -39,7 +39,6 @@ GrimoireEffects.init = function (self, context, slot, weapon_template, fx_source
 	local fx_source_name = fx_sources[SOURCE_NAME]
 
 	self._fx_source_name = fx_source_name
-	self._vfx_link_unit, self._vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 end
 
 GrimoireEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -121,11 +120,11 @@ GrimoireEffects._start_idle_effects = function (self)
 
 	if not self._looping_idle_effect_id then
 		local world = self._world
-		local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
 		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(EQUIPPED_LOOPING_PARTICLE_ALIAS, _external_properties)
 
 		if resolved then
 			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
 
 			World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

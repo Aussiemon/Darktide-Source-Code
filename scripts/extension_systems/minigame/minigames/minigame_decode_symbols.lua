@@ -72,7 +72,6 @@ MinigameDecodeSymbols.start = function (self, player)
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
 
 		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
-		local is_server = self._is_server
 		local rewind_ms = LagCompensation.rewind_ms(is_server, not player.remote, player)
 		local decode_start_time = fixed_frame_t + rewind_ms
 		local unit_spawner_manager = Managers.state.unit_spawner
@@ -107,12 +106,13 @@ MinigameDecodeSymbols.stop = function (self)
 			end
 
 			table.clear(self._misses_per_player)
-		elseif self._current_stage > 1 then
+		elseif self._current_stage and self._current_stage > 1 then
 			self:_player_miss_target(player)
 		end
 	end
 
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
+	MinigameDecodeSymbols.super.stop(self)
 
 	if is_server then
 		self._decode_start_time = nil
@@ -120,8 +120,6 @@ MinigameDecodeSymbols.stop = function (self)
 
 		table.clear(self._symbols)
 	end
-
-	MinigameDecodeSymbols.super.stop(self)
 end
 
 MinigameDecodeSymbols.setup_game = function (self)
@@ -167,7 +165,7 @@ end
 MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	MinigameDecodeSymbols.super.on_action_pressed(self, t)
 
-	if self:is_completed() or not self._is_server then
+	if not self._current_stage or self:is_completed() or not self._is_server then
 		return
 	end
 
@@ -206,6 +204,11 @@ end
 MinigameDecodeSymbols.is_on_target = function (self, t)
 	local sweep_duration = self._decode_symbols_sweep_duration
 	local current_stage = self._current_stage
+
+	if not current_stage then
+		return false
+	end
+
 	local targets = self._decode_targets
 	local target = targets[current_stage]
 	local target_margin = 1 / (self._decode_symbols_items_per_stage - 1) * sweep_duration

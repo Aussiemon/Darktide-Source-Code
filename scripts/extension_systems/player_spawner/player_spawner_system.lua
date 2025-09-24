@@ -20,6 +20,7 @@ PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_d
 	end
 
 	self._physics_world = extension_init_context.physics_world
+	self._in_hub = Managers.state.game_mode:is_social_hub()
 	self._spawn_points_by_identifier = {}
 	self._next_spawn_point_index_by_identifier = {}
 	self._in_safe_volume = true
@@ -36,7 +37,7 @@ PlayerSpawnerSystem.destroy = function (self)
 end
 
 PlayerSpawnerSystem.update = function (self, system_context, dt, t)
-	if self._is_server then
+	if self._is_server and not self._in_hub then
 		self._backup_progression_cooldown = self._backup_progression_cooldown - dt
 
 		if self._backup_progression_cooldown <= 0 then

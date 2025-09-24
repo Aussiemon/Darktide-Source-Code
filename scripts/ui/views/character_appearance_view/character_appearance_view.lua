@@ -3023,7 +3023,7 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 					local character_id = player and player:character_id()
 					local account_id = player and player:account_id()
 
-					narrative_manager:complete_chapter_by_name("main_story", "km_station")
+					narrative_manager:set_story_to_chapter("main_story", "km_station")
 					Popups.skip_player_journey.mind_wipe(nil, function ()
 						if mission_board_service then
 							Managers.telemetry_events:player_journey_popup_play_journey("mind_wipe", true)
@@ -4579,8 +4579,10 @@ CharacterAppearanceView._filter_changed_items = function (self, items)
 
 	for slot, item in pairs(items) do
 		local original_item = original_loadout[slot]
+		local item_name = item.name
+		local original_item_name = original_item and original_item.name
 
-		if item.name ~= original_item.name then
+		if item_name ~= original_item_name then
 			filtered_items[slot] = item
 			identical = false
 		end

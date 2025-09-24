@@ -14,7 +14,7 @@ LocalConnectSessionChannelState.update = function (self, dt)
 	if shared_state.channel_id then
 		local state, reason = Network.channel_state(shared_state.channel_id)
 
-		if state == "disconnected" then
+		if state == "disconnecting" or state == "disconnected" then
 			if self._attempts_left <= 0 then
 				Log.info("LocalConnectSessionChannelState", "Denied a channel to %s after several attempts", shared_state.peer_id)
 

@@ -550,6 +550,52 @@ local considerations = {
 			is_condition = true,
 		},
 	},
+	plasma_gunner_shoot_utility = {
+		distance_to_target = {
+			blackboard_component = "perception",
+			component_field = "target_distance",
+			max_value = 30,
+			spline = {
+				0,
+				0.1,
+				0.1,
+				0.1,
+				0.51,
+				1,
+				0.981,
+				1,
+				1,
+				0.1,
+			},
+		},
+		has_line_of_sight = {
+			blackboard_component = "perception",
+			component_field = "has_line_of_sight",
+			is_condition = true,
+		},
+	},
+	shoot_close = {
+		distance_to_target = {
+			blackboard_component = "perception",
+			component_field = "target_distance",
+			max_value = 30,
+			spline = {
+				0,
+				1,
+				0.5,
+				1,
+				0.900001,
+				0.25,
+				1,
+				0,
+			},
+		},
+		has_line_of_sight = {
+			blackboard_component = "perception",
+			component_field = "has_line_of_sight",
+			is_condition = true,
+		},
+	},
 	move_to_cover_shoot = {
 		distance_to_target = {
 			blackboard_component = "perception",

@@ -138,7 +138,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			50,
+			25,
+			1,
+		},
+	},
+	reward_interaction = {
+		horizontal_alignment = "center",
+		parent = "reward_progress_bar",
+		vertical_alignment = "bottom",
+		size = {
+			bar_size[1] - 200,
+			reward_size[2] + 150,
+		},
+		position = {
+			0,
+			0,
 			1,
 		},
 	},
@@ -752,7 +766,11 @@ local reward_base_pass_template = {
 		visibility_function = function (content, style)
 			return content.claimed
 		end,
-		change_function = ButtonPassTemplates.terminal_button_change_function,
+		change_function = function (content, style)
+			if not content.hotspot.disabled then
+				ButtonPassTemplates.terminal_button_change_function(content, style)
+			end
+		end,
 	},
 	{
 		pass_type = "text",
@@ -777,7 +795,11 @@ local reward_base_pass_template = {
 		visibility_function = function (content, style)
 			return content.claimed
 		end,
-		change_function = ButtonPassTemplates.terminal_button_change_function,
+		change_function = function (content, style)
+			if not content.hotspot.disabled then
+				ButtonPassTemplates.terminal_button_change_function(content, style)
+			end
+		end,
 	},
 	{
 		pass_type = "texture",
@@ -827,7 +849,7 @@ local reward_base_pass_template = {
 			},
 		},
 		visibility_function = function (content, style)
-			return content.hotspot.is_hover or content.hotspot.is_selected
+			return not content.hotspot.disabled and (content.hotspot.is_hover or content.hotspot.is_selected)
 		end,
 		change_function = ButtonPassTemplates.terminal_button_change_function,
 	},

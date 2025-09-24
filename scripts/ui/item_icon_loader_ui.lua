@@ -165,10 +165,6 @@ ItemIconLoaderUI._request_by_id = function (self, id, ignore_assert)
 			return data
 		end
 	end
-
-	if ignore_assert then
-		-- Nothing
-	end
 end
 
 ItemIconLoaderUI.has_request = function (self, id)

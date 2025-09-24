@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
+local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -517,7 +518,7 @@ ActionFlamerGas.running_action_state = function (self, t, time_in_action)
 		end
 	else
 		local inventory_slot_component = self._inventory_slot_component
-		local current_ammo_clip = inventory_slot_component.current_ammunition_clip
+		local current_ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 		local current_ammo_reserve = inventory_slot_component.current_ammunition_reserve
 
 		if current_ammo_clip == 0 then

@@ -272,8 +272,22 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
+						24,
 						27,
-						32,
+					},
+				},
+				{
+					name = "chaos_mutated_poxwalker",
+					amount = {
+						1,
+						4,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						1,
+						4,
 					},
 				},
 			},
@@ -283,8 +297,22 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						32,
-						35,
+						26,
+						29,
+					},
+				},
+				{
+					name = "chaos_mutated_poxwalker",
+					amount = {
+						2,
+						4,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						2,
+						4,
 					},
 				},
 			},
@@ -294,8 +322,22 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						34,
-						37,
+						28,
+						32,
+					},
+				},
+				{
+					name = "chaos_mutated_poxwalker",
+					amount = {
+						2,
+						5,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						2,
+						5,
 					},
 				},
 			},
@@ -340,8 +382,15 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						27,
-						32,
+						24,
+						26,
+					},
+				},
+				{
+					name = "chaos_armored_infected",
+					amount = {
+						1,
+						6,
 					},
 				},
 			},
@@ -351,8 +400,15 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						32,
-						35,
+						26,
+						28,
+					},
+				},
+				{
+					name = "chaos_armored_infected",
+					amount = {
+						1,
+						8,
 					},
 				},
 			},
@@ -362,8 +418,15 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						34,
-						37,
+						30,
+						32,
+					},
+				},
+				{
+					name = "chaos_armored_infected",
+					amount = {
+						1,
+						10,
 					},
 				},
 			},
@@ -408,10 +471,49 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
+						40,
+						45,
+					},
+				},
+				{
+					name = "chaos_mutated_poxwalker",
+					amount = {
+						1,
+						4,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						1,
+						4,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
 						45,
 						50,
 					},
 				},
+				{
+					name = "chaos_mutated_poxwalker",
+					amount = {
+						1,
+						5,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						1,
+						5,
+					},
+				},
 			},
 		},
 		{
@@ -423,15 +525,18 @@ local horde_compositions = {
 						55,
 					},
 				},
-			},
-		},
-		{
-			breeds = {
 				{
-					name = "chaos_poxwalker",
+					name = "chaos_mutated_poxwalker",
 					amount = {
-						55,
-						60,
+						2,
+						5,
+					},
+				},
+				{
+					name = "chaos_lesser_mutated_poxwalker",
+					amount = {
+						2,
+						5,
 					},
 				},
 			},
@@ -476,10 +581,35 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
+						40,
+						45,
+					},
+				},
+				{
+					name = "chaos_armored_infected",
+					amount = {
+						1,
+						6,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_newly_infected",
+					amount = {
 						45,
 						50,
 					},
 				},
+				{
+					name = "chaos_armored_infected",
+					amount = {
+						1,
+						8,
+					},
+				},
 			},
 		},
 		{
@@ -491,15 +621,11 @@ local horde_compositions = {
 						55,
 					},
 				},
-			},
-		},
-		{
-			breeds = {
 				{
-					name = "chaos_newly_infected",
+					name = "chaos_armored_infected",
 					amount = {
-						55,
-						60,
+						1,
+						10,
 					},
 				},
 			},
@@ -715,6 +841,31 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
+						3,
+						4,
+					},
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
 						4,
 						5,
 					},
@@ -726,6 +877,13 @@ local horde_compositions = {
 						1,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
 			},
 		},
 		{
@@ -733,12 +891,19 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
-						5,
 						6,
+						7,
 					},
 				},
 				{
 					name = "renegade_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						1,
@@ -751,12 +916,19 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
-						7,
 						8,
+						9,
 					},
 				},
 				{
 					name = "renegade_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						1,
@@ -777,22 +949,11 @@ local horde_compositions = {
 					name = "renegade_gunner",
 					amount = {
 						1,
-						1,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "renegade_rifleman",
-					amount = {
-						10,
-						11,
+						2,
 					},
 				},
 				{
-					name = "renegade_gunner",
+					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						2,
@@ -805,14 +966,21 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
+						9,
 						11,
-						12,
 					},
 				},
 				{
 					name = "renegade_gunner",
 					amount = {
 						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
 						3,
 					},
 				},
@@ -1790,6 +1958,13 @@ local horde_compositions = {
 						1,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
 			},
 		},
 		{
@@ -1797,12 +1972,19 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
+						4,
 						5,
-						6,
 					},
 				},
 				{
 					name = "renegade_gunner",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						2,
@@ -1815,12 +1997,44 @@ local horde_compositions = {
 				{
 					name = "renegade_rifleman",
 					amount = {
-						7,
-						8,
+						4,
+						5,
 					},
 				},
 				{
 					name = "renegade_gunner",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						2,
+						3,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "renegade_rifleman",
+					amount = {
+						8,
+						9,
+					},
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
 					amount = {
 						2,
 						3,
@@ -1840,8 +2054,15 @@ local horde_compositions = {
 				{
 					name = "renegade_gunner",
 					amount = {
-						2,
 						3,
+						4,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						3,
+						4,
 					},
 				},
 			},
@@ -1862,19 +2083,8 @@ local horde_compositions = {
 						4,
 					},
 				},
-			},
-		},
-		{
-			breeds = {
 				{
-					name = "renegade_rifleman",
-					amount = {
-						11,
-						12,
-					},
-				},
-				{
-					name = "renegade_gunner",
+					name = "renegade_plasma_gunner",
 					amount = {
 						3,
 						4,
@@ -2794,6 +3004,13 @@ local horde_compositions = {
 						2,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						1,
+					},
+				},
 			},
 		},
 		{
@@ -2812,6 +3029,13 @@ local horde_compositions = {
 						3,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						2,
+					},
+				},
 			},
 		},
 		{
@@ -2828,6 +3052,13 @@ local horde_compositions = {
 					amount = {
 						3,
 						6,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						2,
 					},
 				},
 			},
@@ -2848,6 +3079,13 @@ local horde_compositions = {
 						6,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						1,
+						3,
+					},
+				},
 			},
 		},
 		{
@@ -2866,6 +3104,13 @@ local horde_compositions = {
 						7,
 					},
 				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						2,
+						3,
+					},
+				},
 			},
 		},
 		{
@@ -2882,6 +3127,13 @@ local horde_compositions = {
 					amount = {
 						5,
 						8,
+					},
+				},
+				{
+					name = "renegade_plasma_gunner",
+					amount = {
+						2,
+						3,
 					},
 				},
 			},

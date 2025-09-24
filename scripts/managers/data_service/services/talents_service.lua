@@ -33,10 +33,6 @@ local function _set_talents_backend_response_fail(result)
 	end
 end
 
-local function _set_specialization_backend_response_fail(error)
-	Log.error("Talents", "couldn't set selected specialization in backend")
-end
-
 TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
 	local character_id = player:character_id()
 	local talents = TalentLayoutParser.pack_backend_data(layout, points_spent)
@@ -48,14 +44,6 @@ TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
 	end)
 
 	return promise
-end
-
-TalentsService.set_specialization = function (self, player, specialization)
-	local backend = self._backend_interface.characters
-	local character_id = player:character_id()
-	local characters_promise = backend:set_specialization(character_id, specialization)
-
-	characters_promise:next(callback(_set_backend_response_success, player, specialization), _set_specialization_backend_response_fail)
 end
 
 TalentsService.load_icons_for_profile = function (self, profile, reference_name, callback, prioritize)

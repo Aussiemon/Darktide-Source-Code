@@ -32,7 +32,7 @@ NavigationSystem.set_enabled_unit = function (self, unit, enabled)
 end
 
 NavigationSystem.update = function (self, context, dt, t)
-	GwNavWorld.join_async_update(self._nav_world)
+	Managers.state.nav_mesh:join_async_update()
 
 	local enabled_units = self._enabled_units
 

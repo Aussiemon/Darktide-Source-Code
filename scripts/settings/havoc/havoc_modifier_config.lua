@@ -174,7 +174,7 @@ local havoc_modifier_config = {
 }
 local previous_table
 
-for i, modifer_table in ipairs(havoc_modifier_config) do
+for _, modifer_table in ipairs(havoc_modifier_config) do
 	if previous_table ~= nil then
 		for name, tier in pairs(previous_table) do
 			if not modifer_table[name] then
@@ -186,4 +186,4 @@ for i, modifer_table in ipairs(havoc_modifier_config) do
 	previous_table = modifer_table
 end
 
-return settings("havoc_modifer_config", havoc_modifier_config)
+return settings("HavocModiferConfig", havoc_modifier_config)

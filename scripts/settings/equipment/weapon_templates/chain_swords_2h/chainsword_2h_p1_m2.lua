@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/chain_swords_2h/chainsword_2h_p1_m2.lua
 
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainSpeedTemplates = require("scripts/settings/equipment/chain_speed_templates")
@@ -17,7 +16,6 @@ local WeaponTraitsChainsword2hP1 = require("scripts/settings/equipment/weapon_tr
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
@@ -28,9 +26,6 @@ local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
-local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
@@ -463,12 +458,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_chainsword_2h_tank,
@@ -561,12 +558,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_left_down",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_left_down",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainsword_2h_smiter,
@@ -762,12 +761,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_chainsword_2h_tank,
@@ -856,12 +857,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/heavy_attack_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainsword_2h_smiter,
@@ -1071,12 +1074,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_chainsword_2h_tank,
@@ -1282,12 +1287,14 @@ weapon_template.actions = {
 		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right_up",
-			anchor_point_offset = {
-				-0.2,
-				0,
-				-0.16,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right_up",
+				anchor_point_offset = {
+					-0.2,
+					0,
+					-0.16,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
@@ -1411,15 +1418,56 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		hit_stickyness_settings = hit_stickyness_settings_light,
-		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
+		hit_stickyness_settings_special_active = {
+			always_sticky = true,
+			disallow_chain_actions = true,
+			duration = 1,
+			min_sticky_time = 0.25,
+			sensitivity_modifier = 0.1,
+			start_anim_event = "attack_hit_stick",
+			stop_anim_event = "yank_out",
+			damage = {
+				instances = 3,
+				damage_profile = DamageProfileTemplates.smiter_light_chainsword_2h_sticky,
+				damage_type = damage_types.sawing_stuck,
+				last_damage_profile = DamageProfileTemplates.smiter_light_chainsword_sticky_last_2h,
+				dodge_damage_profile = DamageProfileTemplates.sticky_dodge_push,
+			},
+			disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
+			movement_curve = {
+				{
+					modifier = 0.3,
+					t = 0.5,
+				},
+				{
+					modifier = 0.45,
+					t = 0.55,
+				},
+				{
+					modifier = 0.65,
+					t = 0.6,
+				},
+				{
+					modifier = 0.7,
+					t = 1,
+				},
+				{
+					modifier = 1,
+					t = 1.3,
+				},
+				start_modifier = 0.1,
+			},
+		},
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_stab",
-			anchor_point_offset = {
-				0.07,
-				0,
-				-0.07,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_stab",
+				anchor_point_offset = {
+					0.07,
+					0,
+					-0.07,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.smiter_light_chainsword_2h,
@@ -1550,6 +1598,7 @@ weapon_template.weapon_special_tweak_data = {
 	keep_active_on_sprint = true,
 	keep_active_on_stun = true,
 	keep_active_on_vault = true,
+	keep_buff_ability_active_on_special = true,
 	num_activations = 1,
 }
 weapon_template.fx_sources = {

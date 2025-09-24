@@ -1,17 +1,20 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/utilities/action_utility.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local ActionUtility = {}
 
-ActionUtility.has_ammunition = function (inventory_slot_component, action_settings)
+ActionUtility.has_ammunition = function (inventory_slot_component, action_settings, optional_ammo_pool_index)
 	local ammunition_usage = action_settings.ammunition_usage
 
 	if ammunition_usage then
-		if ammunition_usage <= inventory_slot_component.current_ammunition_clip then
+		local current_ammo = Ammo.current_ammo_in_clips(inventory_slot_component, optional_ammo_pool_index)
+
+		if ammunition_usage <= current_ammo then
 			return true
-		elseif inventory_slot_component.current_ammunition_clip > 0 and action_settings.allow_shots_with_less_than_required_ammo then
+		elseif current_ammo > 0 and action_settings.allow_shots_with_less_than_required_ammo then
 			return true
 		else
 			return false

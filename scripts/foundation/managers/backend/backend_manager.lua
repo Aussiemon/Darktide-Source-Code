@@ -37,14 +37,6 @@ local function retry_delay(attempt)
 	return sleep / 1000
 end
 
-local function is_retryable_error_code(code)
-	if code and (code == 429 or code == 1000 or code == 0 or math.floor(code / 100) == 5) then
-		return true
-	end
-
-	return false
-end
-
 local BackendManager = class("BackendManager")
 
 BackendManager.init = function (self, default_headers_ctr)
@@ -74,6 +66,10 @@ local function _check_response_time(path, value)
 	end
 end
 
+BackendManager.is_retryable_error_code = function (self, code)
+	return code and (code == 429 or code == 1000 or code == 0 or math.floor(code / 100) == 5)
+end
+
 BackendManager.update = function (self, dt, t)
 	local initialized = self._initialized
 
@@ -91,8 +87,9 @@ BackendManager.update = function (self, dt, t)
 				if promise then
 					if result_mapping.error then
 						local inflight_request = self._inflight_title_requests[id]
+						local error_code = result_mapping.error.code
 
-						if result_mapping.error.code and is_retryable_error_code(result_mapping.error.code) and inflight_request and inflight_request.retry_count < TITLE_REQUEST_RETRY_COUNT then
+						if self:is_retryable_error_code(error_code) and inflight_request and inflight_request.retry_count < TITLE_REQUEST_RETRY_COUNT then
 							Log.warning("BackendManager", "Title request failed - will retry after pause:\n%s", BackendUtilities.ERROR_METATABLE.__tostring(result_mapping.error))
 
 							local delay = retry_delay(inflight_request.retry_count)
@@ -406,7 +403,7 @@ BackendManager.title_request = function (self, path, options)
 	local default_headers = self._default_headers_ctr()
 
 	if default_headers then
-		table.merge(options.headers, default_headers)
+		table.add_missing(options.headers, default_headers)
 	end
 
 	local promise = Promise:new()

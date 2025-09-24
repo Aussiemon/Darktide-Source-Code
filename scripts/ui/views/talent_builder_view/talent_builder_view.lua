@@ -714,19 +714,11 @@ TalentBuilderView._draw_connection_between_widgets = function (self, ui_renderer
 	for pass_style_name, pass_style in pairs(node_connection_style) do
 		if pass_style_name == "line" then
 			pass_style.size[1] = fill_distance
-		else
+		elseif pass_style_name ~= "arrow" then
 			pass_style.size[1] = distance
 		end
 
 		pass_style.angle = math.pi - angle
-	end
-
-	local arrow_style = node_connection_style.arrow
-
-	if arrow_style then
-		arrow_style.offset[1] = distance * 0.5
-		arrow_style.pivot[1] = arrow_style.default_pivot[1] - distance * 0.5
-		arrow_style.angle = math.pi - angle
 	end
 
 	node_connection_widget.content.progressing = not has_progressed and progressing
@@ -831,7 +823,10 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
 
 	if resolution_modified then
-		self:_on_input_scroll_axis_changed(0)
+		self:_on_input_scroll_axis_changed(0, {
+			0,
+			0,
+		})
 	end
 
 	local pass_input, pass_draw = TalentBuilderView.super.update(self, dt, t, input_service)

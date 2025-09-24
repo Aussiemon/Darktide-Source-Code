@@ -350,12 +350,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = combat_axe_sweep_box,
 		hit_zone_priority = default_hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shovel/attack_down_folded",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shovel/attack_down_folded",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_shovel_special,
@@ -442,12 +444,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = default_hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/shovel/heavy_attack_down_folded",
-			anchor_point_offset = {
-				0,
-				0.1,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/shovel/heavy_attack_down_folded",
+				anchor_point_offset = {
+					0,
+					0.1,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_shovel_special,
@@ -600,12 +604,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = combat_axe_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_tank,
@@ -678,12 +684,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_left_diagonal_down",
-			anchor_point_offset = {
-				0,
-				0.1,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_left_diagonal_down",
+				anchor_point_offset = {
+					0,
+					0.1,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_shovel_tank,
@@ -831,12 +839,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right",
-			anchor_point_offset = {
-				-0.05,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right",
+				anchor_point_offset = {
+					-0.05,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_tank,
@@ -909,12 +919,14 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/heavy_attack_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.heavy_shovel_smite,
@@ -1060,12 +1072,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = combat_axe_sweep_box,
 		hit_zone_priority = hit_zone_priority,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_tank,
@@ -1199,12 +1213,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
-			anchor_point_offset = {
-				-0.1,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_left",
+				anchor_point_offset = {
+					-0.1,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_tank,
@@ -1348,12 +1364,14 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = default_hit_zone_priority,
 		weapon_box = combat_axe_sweep_box,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right_diagonal_down",
-			anchor_point_offset = {
-				-0.05,
-				0,
-				-0.05,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_right_diagonal_down",
+				anchor_point_offset = {
+					-0.05,
+					0,
+					-0.05,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_shovel_marks_single_target,

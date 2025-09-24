@@ -45,6 +45,50 @@ local chainsword_sawing = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 	},
 }
+local chainsword_sawing_tick = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_0_3,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
+local chainsword_sawing_rip = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_25,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_1,
+		[armor_types.super_armor] = damage_lerp_values.lerp_1_1,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_1,
+		[armor_types.armored] = damage_lerp_values.lerp_1,
+		[armor_types.resistant] = damage_lerp_values.lerp_1,
+		[armor_types.player] = damage_lerp_values.lerp_1,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+		[armor_types.void_shield] = damage_lerp_values.lerp_1,
+	},
+}
 local chain_sword_crit_mod = {
 	attack = {
 		[armor_types.unarmored] = 0,
@@ -221,22 +265,6 @@ overrides.light_chainaxe_active = {
 			true,
 		},
 		{
-			"targets",
-			1,
-			"power_distribution",
-			"attack",
-			{
-				30,
-				110,
-			},
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
-		},
-		{
 			"cleave_distribution",
 			no_cleave,
 		},
@@ -307,8 +335,8 @@ overrides.light_chainaxe_active_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				100,
-				200,
+				160,
+				320,
 			},
 		},
 		{
@@ -325,7 +353,7 @@ overrides.light_chainaxe_active_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -391,7 +419,7 @@ overrides.light_chainaxe_active_sticky_last = {
 			"attack",
 			{
 				300,
-				500,
+				600,
 			},
 		},
 		{
@@ -408,7 +436,7 @@ overrides.light_chainaxe_active_sticky_last = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",
@@ -695,8 +723,8 @@ damage_templates.light_chainaxe_tank = {
 		{
 			power_distribution = {
 				attack = {
-					30,
-					90,
+					55,
+					115,
 				},
 				impact = {
 					6,
@@ -707,8 +735,8 @@ damage_templates.light_chainaxe_tank = {
 		{
 			power_distribution = {
 				attack = {
-					20,
-					60,
+					35,
+					75,
 				},
 				impact = {
 					4,
@@ -719,8 +747,8 @@ damage_templates.light_chainaxe_tank = {
 		{
 			power_distribution = {
 				attack = {
-					20,
-					30,
+					25,
+					45,
 				},
 				impact = {
 					3,
@@ -730,7 +758,10 @@ damage_templates.light_chainaxe_tank = {
 		},
 		default_target = {
 			power_distribution = {
-				attack = damage_lerp_values.no_damage,
+				attack = {
+					20,
+					30,
+				},
 				impact = {
 					5,
 					8,
@@ -898,16 +929,6 @@ overrides.heavy_chainaxe_active = {
 			true,
 		},
 		{
-			"targets",
-			1,
-			"power_distribution",
-			"attack",
-			{
-				60,
-				130,
-			},
-		},
-		{
 			"cleave_distribution",
 			no_cleave,
 		},
@@ -922,12 +943,6 @@ overrides.heavy_chainaxe_active = {
 		{
 			"wounds_template",
 			WoundsTemplates.chainaxe_sawing,
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
 		},
 		{
 			"weapon_special",
@@ -987,8 +1002,8 @@ overrides.heavy_chainaxe_active_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				100,
 				200,
+				400,
 			},
 		},
 		{
@@ -1005,7 +1020,7 @@ overrides.heavy_chainaxe_active_sticky = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_tick),
 		},
 		{
 			"weapon_special",
@@ -1084,7 +1099,7 @@ overrides.heavy_chainaxe_active_sticky_last = {
 			"targets",
 			1,
 			"armor_damage_modifier",
-			table.clone(chainsword_sawing),
+			table.clone(chainsword_sawing_rip),
 		},
 		{
 			"weapon_special",
@@ -1252,6 +1267,7 @@ overrides.heavy_chainaxe_sticky_last_quick = {
 	},
 }
 damage_templates.light_chainaxe_pushfollowup_tank = {
+	ignore_stagger_reduction = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 250,
 	stagger_category = "melee",
@@ -1446,7 +1462,7 @@ overrides.chainaxe_light_stab = {
 			"impact",
 			{
 				15,
-				15,
+				20,
 			},
 		},
 		{
@@ -1499,7 +1515,7 @@ overrides.chainaxe_light_stab = {
 			"armor_damage_modifier",
 			"impact",
 			"berserker",
-			damage_lerp_values.lerp_0_5,
+			damage_lerp_values.lerp_0_9,
 		},
 		{
 			"targets",

@@ -43,7 +43,7 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 			return true
 		end
 
-		local item_name = item.gear and item.gear.masterDataInstance.id
+		local item_name = item.name or item.gear and item.gear.masterDataInstance.id
 
 		equipped = item_name == equipped_item_name
 	end
@@ -677,7 +677,7 @@ local function generate_blueprints_function(grid_size)
 						companion_animation_event = item_companion_animation_event,
 					}
 
-					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize, nil)
 				end
 			end,
 			unload_icon = function (parent, widget, element, ui_renderer)
@@ -724,6 +724,8 @@ local function generate_blueprints_function(grid_size)
 				local rarity = item.rarity
 				local offer = element.offer
 
+				content.locked = element.locked
+
 				if offer and offer.price then
 					local price_data = offer.price.amount
 					local type = price_data.type
@@ -759,6 +761,14 @@ local function generate_blueprints_function(grid_size)
 					end
 				end
 
+				if rarity then
+					local rarity_color, rarity_color_dark = Items.rarity_color(item)
+
+					if rarity_color_dark then
+						style.background_gradient.color = table.clone(rarity_color_dark)
+					end
+				end
+
 				if content.show_class_restrictions then
 					local item = element.visual_item
 					local text = ""
@@ -784,6 +794,7 @@ local function generate_blueprints_function(grid_size)
 				local style = widget.style
 				local content = widget.content
 				local element = content.element
+				local real_item = element.real_item
 				local item = element.real_item or element.item
 
 				if item then
@@ -808,13 +819,14 @@ local function generate_blueprints_function(grid_size)
 			end,
 			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 				local content = widget.content
-				local item = element.item or element.real_item
+				local item = element.real_item or element.item
 
 				if not content.icon_load_id and item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 					local render_context = {
 						alignment_key = element.alignment_key,
 						alignment_key_value = element.alignment_key_value,
+						size = element.render_size,
 					}
 
 					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
@@ -1567,7 +1579,7 @@ local function generate_blueprints_function(grid_size)
 			end,
 			pass_template = ItemPassTemplates.item_name,
 			init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer, profile)
-				local item = element.item
+				local item = element.real_item or element.item
 				local ignore_localization = element.ignore_localization
 				local display_name
 

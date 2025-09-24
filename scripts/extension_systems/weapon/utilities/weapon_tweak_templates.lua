@@ -234,6 +234,9 @@ function _preparse_templates(weapon_template, template_type)
 	end
 
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
+
+	alternate_fire_settings = weapon_template.alternate_fire_settings
+
 	local alternate_fire_template = alternate_fire_settings and alternate_fire_settings[key]
 
 	if alternate_fire_template then

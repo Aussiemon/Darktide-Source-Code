@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_action_handler_data.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
@@ -90,8 +91,8 @@ local function _ammo_check(action_settings, condition_func_params)
 	local inventory_slot_component = condition_func_params.inventory_slot_component
 	local visual_loadout_extension = condition_func_params.visual_loadout_extension
 	local ammo_reserve = inventory_slot_component.current_ammunition_reserve
-	local clip_capacity = inventory_slot_component.max_ammunition_clip
-	local current_clip_amount = inventory_slot_component.current_ammunition_clip
+	local clip_capacity = Ammo.max_ammo_in_clips(inventory_slot_component)
+	local current_clip_amount = Ammo.current_ammo_in_clips(inventory_slot_component)
 	local full_clip = clip_capacity == current_clip_amount
 	local empty_clip = current_clip_amount == 0
 	local reload_policy = action_settings.reload_policy or "always"
@@ -113,7 +114,7 @@ end
 
 local function _has_ammo(condition_func_params)
 	local inventory_slot_component = condition_func_params.inventory_slot_component
-	local current_clip_amount = inventory_slot_component.current_ammunition_clip
+	local current_clip_amount = Ammo.current_ammo_in_clips(inventory_slot_component)
 
 	return current_clip_amount > 0
 end
@@ -145,7 +146,7 @@ local function _has_ability_charge_or_ammo(action_settings, condition_func_param
 	end
 
 	local inventory_slot_component = condition_func_params.inventory_slot_component
-	local has_ammo = not not inventory_slot_component and not not inventory_slot_component.current_ammunition_clip
+	local has_ammo = not not inventory_slot_component and not not Ammo.current_ammo_in_clips(inventory_slot_component)
 
 	if has_ammo then
 		return _has_ammo(condition_func_params)
@@ -278,7 +279,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		return _has_ammo(condition_func_params)
 	end,
 	overload_charge = function (action_settings, condition_func_params, used_input)
-		if action_settings.psyker_smite or condition_func_params.inventory_slot_component.max_ammunition_clip <= 0 then
+		if action_settings.psyker_smite or Ammo.max_ammo_in_clips(condition_func_params.inventory_slot_component) <= 0 then
 			return true
 		end
 
@@ -412,8 +413,8 @@ weapon_action_data.action_kind_condition_funcs = {
 			return false
 		end
 
-		local action_module_targeting_component = condition_func_params.action_module_targeting_component
-		local target_unit = action_module_targeting_component.target_unit_1
+		local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
+		local target_unit = action_module_target_finder_component.target_unit_1
 		local validate_target_func = action_settings.validate_target_func
 
 		return not validate_target_func or validate_target_func(target_unit)
@@ -424,9 +425,9 @@ weapon_action_data.action_kind_condition_funcs = {
 		if action_settings.self_use then
 			target_unit = condition_func_params.unit
 		else
-			local action_module_targeting_component = condition_func_params.action_module_targeting_component
+			local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
 
-			target_unit = action_module_targeting_component.target_unit_1
+			target_unit = action_module_target_finder_component.target_unit_1
 		end
 
 		if not target_unit then
@@ -478,7 +479,7 @@ local function _no_ammo(condition_func_params, action_params, remaining_time)
 	local player_unit = action_params.player_unit
 	local weapon = action_params.weapon
 	local inventory_slot_component = weapon.inventory_slot_component
-	local no_ammo_in_clip = inventory_slot_component.current_ammunition_clip == 0
+	local no_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component) == 0
 	local has_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve > 0
 	local buff_keywords = BuffSettings.keywords
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
@@ -701,7 +702,7 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 		fully_vented = true,
 	},
 }
-weapon_action_data.action_kind_with_reversed_timescale = {
+weapon_action_data.action_kinds_with_inverted_timescale = {
 	overload_charge = true,
 	overload_charge_position_finder = true,
 	overload_charge_target_finder = true,

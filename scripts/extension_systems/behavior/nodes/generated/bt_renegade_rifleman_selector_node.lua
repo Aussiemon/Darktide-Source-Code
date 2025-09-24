@@ -130,7 +130,42 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_stagger = children[5]
+		local node_use_special_action = children[5]
+		local condition_result
+
+		repeat
+			local perception_component = blackboard.perception
+			local has_line_of_sight = perception_component.has_line_of_sight
+			local stim_component = blackboard.stim
+			local can_use_stim = stim_component.can_use_stim
+			local t_til_use = stim_component.t_til_use
+			local t = Managers.time:time("gameplay")
+			local behavior_component = blackboard.behavior
+			local combat_range = behavior_component.combat_range
+
+			if has_line_of_sight and can_use_stim and t_til_use < t and (combat_range == "far" or combat_range == "close" or combat_range == "melee") then
+				condition_result = true
+
+				do break end
+				break
+			end
+
+			condition_result = false and condition_result
+		until true
+
+		if condition_result then
+			local leaf_node = node_use_special_action:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_use_special_action
+
+				return leaf_node
+			end
+		end
+	end
+
+	do
+		local node_stagger = children[6]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -143,7 +178,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_blocked = children[6]
+		local node_blocked = children[7]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -156,16 +191,28 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_switch_weapon = children[7]
+		local node_switch_weapon = children[8]
 		local condition_result
-		local weapon_switch_component = blackboard.weapon_switch
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
-		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
-		if scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name then
-			condition_result = true
-		end
+		repeat
+			local weapon_switch_component = blackboard.weapon_switch
+			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+			local wanted_weapon_slot = weapon_switch_component.wanted_weapon_slot
+			local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+			local stim_component = blackboard.stim
+
+			if stim_component then
+				local currently_using_stim = stim_component.currently_using_stim
+
+				if currently_using_stim then
+					condition_result = false
+
+					break
+				end
+			end
+
+			condition_result = (scratchpad.is_switching_weapons or wanted_weapon_slot ~= "unarmed" and wanted_weapon_slot ~= wielded_slot_name) and true or condition_result
+		until true
 
 		if condition_result then
 			new_running_child_nodes[node_identifier] = node_switch_weapon
@@ -175,7 +222,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_cover_combat = children[8]
+		local node_cover_combat = children[9]
 		local tree_node = node_cover_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_cover_combat
@@ -263,7 +310,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_suppressed = children[9]
+		local node_suppressed = children[10]
 		local suppression_component = blackboard.suppression
 		local is_suppressed = suppression_component.is_suppressed
 		local condition_result = is_suppressed
@@ -276,7 +323,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_melee_combat = children[10]
+		local node_melee_combat = children[11]
 		local tree_node = node_melee_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -355,7 +402,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_far_combat = children[11]
+		local node_far_combat = children[12]
 		local tree_node = node_far_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_far_combat
@@ -434,7 +481,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_close_combat = children[12]
+		local node_close_combat = children[13]
 		local tree_node = node_close_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_close_combat
@@ -513,7 +560,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_alerted = children[13]
+		local node_alerted = children[14]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -562,7 +609,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_patrol = children[14]
+		local node_patrol = children[15]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -613,7 +660,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 		end
 	end
 
-	local node_idle = children[15]
+	local node_idle = children[16]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

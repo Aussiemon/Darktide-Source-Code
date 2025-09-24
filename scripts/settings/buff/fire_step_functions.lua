@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/buff/fire_step_functions.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local FireStepFunctions = {
 	default_continuous_fire_step_func = function (template_data, template_context)
@@ -13,7 +14,7 @@ local FireStepFunctions = {
 			return 0
 		end
 
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.1))
 	end,
@@ -28,7 +29,7 @@ local FireStepFunctions = {
 			return 0
 		end
 
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.1))
 	end,
@@ -43,7 +44,7 @@ local FireStepFunctions = {
 			return 0
 		end
 
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.05))
 	end,
@@ -58,7 +59,7 @@ local FireStepFunctions = {
 			return 0
 		end
 
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.025))
 	end,

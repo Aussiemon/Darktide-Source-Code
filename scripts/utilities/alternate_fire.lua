@@ -9,24 +9,25 @@ local AlternateFire = {}
 
 AlternateFire.start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
+	local spread_template_name, recoil_template_name, sway_template_name, suppression_template_name, toughness_template_name
 
+	spread_template_name = alternate_fire_settings.spread_template or weapon_template.spread_template or "none"
+	recoil_template_name = alternate_fire_settings.recoil_template or weapon_template.recoil_template or "none"
+	sway_template_name = alternate_fire_settings.sway_template or weapon_template.sway_template or "none"
+	suppression_template_name = alternate_fire_settings.suppression_template or weapon_template.suppression_template or "none"
+	toughness_template_name = alternate_fire_settings.toughness_template or weapon_template.toughness_template or "none"
 	alternate_fire_component.is_active = true
 	alternate_fire_component.start_t = t
-
-	local spread_template_name = alternate_fire_settings.spread_template or weapon_template.spread_template or "none"
-	local recoil_template_name = alternate_fire_settings.recoil_template or weapon_template.recoil_template or "none"
-	local sway_template_name = alternate_fire_settings.sway_template or weapon_template.sway_template or "none"
-	local suppression_template_name = alternate_fire_settings.suppression_template or weapon_template.suppression_template or "none"
-	local toughness_template_name = alternate_fire_settings.toughness_template or weapon_template.toughness_template or "none"
-
 	weapon_tweak_templates_component.spread_template_name = spread_template_name
 	weapon_tweak_templates_component.recoil_template_name = recoil_template_name
 	weapon_tweak_templates_component.sway_template_name = sway_template_name
 	weapon_tweak_templates_component.suppression_template_name = suppression_template_name
 	weapon_tweak_templates_component.toughness_template_name = toughness_template_name
 
-	local start_anim_event = alternate_fire_settings.start_anim_event
-	local start_anim_event_3p = alternate_fire_settings.start_anime_event_3p or start_anim_event
+	local start_anim_event, start_anim_event_3p
+
+	start_anim_event = alternate_fire_settings.start_anim_event
+	start_anim_event_3p = alternate_fire_settings.start_anime_event_3p or start_anim_event
 
 	if start_anim_event and start_anim_event_3p then
 		animation_extension:anim_event_1p(start_anim_event)
@@ -81,8 +82,10 @@ AlternateFire.stop = function (alternate_fire_component, peeking_component, firs
 	end
 
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
-	local stop_anim_event = alternate_fire_settings.stop_anim_event
-	local stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
+	local stop_anim_event, stop_anim_event_3p
+
+	stop_anim_event = alternate_fire_settings.stop_anim_event
+	stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
 
 	if stop_anim_event and stop_anim_event_3p then
 		animation_extension:anim_event_1p(stop_anim_event)
@@ -120,13 +123,15 @@ AlternateFire.check_exit = function (alternate_fire_component, weapon_template, 
 	end
 end
 
-AlternateFire.movement_speed_modifier = function (alternate_fire_component, weapon_template, t, weapon_extension)
+AlternateFire.movement_speed_modifier = function (alternate_fire_component, weapon_template, t, weapon_extension, unit)
 	if not alternate_fire_component.is_active then
 		return 1
 	end
 
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
-	local movement_speed_modifier = alternate_fire_settings.movement_speed_modifier
+	local movement_speed_modifier
+
+	movement_speed_modifier = alternate_fire_settings.movement_speed_modifier
 
 	if not movement_speed_modifier then
 		return 1
@@ -180,7 +185,7 @@ AlternateFire.modify_movement_curve = function (weapon_extension, base_value)
 	return base_value
 end
 
-AlternateFire.camera_variables = function (weapon_template)
+AlternateFire.camera_variables = function (weapon_template, camera_follow_unit)
 	if not weapon_template then
 		return nil, nil, nil
 	end
@@ -191,7 +196,9 @@ AlternateFire.camera_variables = function (weapon_template)
 		return nil, nil, nil
 	end
 
-	local camera_settings = alternate_fire_settings.camera
+	local camera_settings
+
+	camera_settings = alternate_fire_settings.camera
 
 	if not camera_settings then
 		return nil, nil, nil

@@ -19,8 +19,8 @@ PlayerHuskAimExtension.init = function (self, extension_init_context, unit, exte
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
-	self._sticky_aim_position_box = Vector3Box()
-	self._skticy_aim_blend = 0
+	self._sticky_aim_position = Vector3Box()
+	self._sticky_aim_blend = 0
 
 	local aim_direction = GameSession.game_object_field(game_session, game_object_id, "aim_direction")
 
@@ -52,8 +52,8 @@ PlayerHuskAimExtension.update = function (self, unit, dt, t)
 	self._aim_direction_box:store(lerped_aim_direction)
 
 	local aim_position = root_position + lerped_aim_direction * self._aim_contraint_distance
-	local sticky_aim_position = self._sticky_aim_position_box:unbox()
-	local skticy_aim_blend = self._skticy_aim_blend or 0
+	local sticky_aim_position = self._sticky_aim_position:unbox()
+	local sticky_aim_blend = self._sticky_aim_blend or 0
 	local action_sweep_component = self._action_sweep_component
 
 	if action_sweep_component.is_sticky then
@@ -62,17 +62,17 @@ PlayerHuskAimExtension.update = function (self, unit, dt, t)
 		if stycky_position then
 			sticky_aim_position = root_position + Vector3.normalize(stycky_position - root_position) * self._aim_contraint_distance
 
-			self._sticky_aim_position_box:store(sticky_aim_position)
+			self._sticky_aim_position:store(sticky_aim_position)
 
-			skticy_aim_blend = math.lerp(skticy_aim_blend, 1, dt * 16)
+			sticky_aim_blend = math.lerp(sticky_aim_blend, 1, dt * 16)
 		end
 	else
-		skticy_aim_blend = math.lerp(skticy_aim_blend, 0, dt * 5)
+		sticky_aim_blend = math.lerp(sticky_aim_blend, 0, dt * 5)
 	end
 
-	self._skticy_aim_blend = skticy_aim_blend
+	self._sticky_aim_blend = sticky_aim_blend
 
-	local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, skticy_aim_blend)
+	local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, sticky_aim_blend)
 
 	Unit.animation_set_constraint_target(unit, self._aim_constraint_variable, new_aim_position)
 	self._aim_animation_control:update(dt, t)

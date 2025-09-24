@@ -997,6 +997,8 @@ UIManager.update = function (self, dt, t)
 			back_buffer_renderer:update(dt, t)
 		end
 	end
+
+	self._loading_state_data:update()
 end
 
 UIManager.render = function (self, dt, t)
@@ -1535,9 +1537,9 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local player = Managers.player:local_player(1)
 		local profile = dummy_profile or player:profile()
-		local gender_name = profile.gender
-		local breed_name = profile.archetype.breed
-		local archetype = profile.archetype
+		local gender_name = profile and profile.gender
+		local breed_name = profile and profile.archetype.breed
+		local archetype = profile and profile.archetype
 		local archetype_name = archetype and archetype.name
 
 		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)

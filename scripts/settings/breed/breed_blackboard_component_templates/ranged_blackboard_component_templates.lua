@@ -46,6 +46,11 @@ local ranged_base = {
 		should_override = "boolean",
 		target_template = "string",
 	},
+	disable = {
+		attacker_unit = "Unit",
+		is_disabled = "boolean",
+		type = "string",
+	},
 }
 
 table.merge(ranged_base, base_template)
@@ -129,6 +134,11 @@ riflemen.patrol = {
 	should_patrol = "boolean",
 	walk_position = "Vector3Box",
 }
+riflemen.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
+}
 
 local ranged_patroller = table.clone(ranged_base)
 
@@ -139,6 +149,11 @@ ranged_patroller.patrol = {
 	patrol_leader_unit = "Unit",
 	should_patrol = "boolean",
 	walk_position = "Vector3Box",
+}
+ranged_patroller.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
 }
 
 local ranged_patroller_no_suppression = table.clone(ranged_base)
@@ -151,6 +166,11 @@ ranged_patroller_no_suppression.patrol = {
 	should_patrol = "boolean",
 	walk_position = "Vector3Box",
 }
+ranged_patroller_no_suppression.stim = {
+	can_use_stim = "boolean",
+	currently_using_stim = "boolean",
+	t_til_use = "number",
+}
 ranged_patroller_no_suppression.suppression = nil
 
 local renegade_flamer_mutator = table.clone(ranged_patroller)
@@ -158,6 +178,7 @@ local renegade_flamer_mutator = table.clone(ranged_patroller)
 renegade_flamer_mutator.slot = nil
 renegade_flamer_mutator.blocked = nil
 renegade_flamer_mutator.suppression = nil
+renegade_flamer_mutator.stim = nil
 renegade_flamer_mutator.statistics = {
 	num_attacks_done = "number",
 	num_in_liquid = "number",
@@ -186,6 +207,7 @@ renegade_twin_captain.nearby_units_broadphase = {
 	next_broadphase_t = "number",
 	num_units = "number",
 }
+renegade_twin_captain.disable = nil
 
 local renegade_twin_captain_two = table.clone(ranged_base)
 
@@ -229,9 +251,11 @@ renegade_twin_captain_two.nearby_units_broadphase = {
 	next_broadphase_t = "number",
 	num_units = "number",
 }
+renegade_twin_captain_two.disable = nil
 
 local renegade_radio_operator = table.clone(riflemen)
 
+renegade_radio_operator.stim = nil
 renegade_radio_operator.summon = {
 	amount = "number",
 	next_summon_t = "number",

@@ -936,14 +936,16 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 		self:_update_window_size()
 		self:_on_navigation_input_changed()
 
-		if #self._grid_widgets == 0 then
+		if table.is_empty(self._grid_widgets) then
 			self:_show_empty_message()
 		end
 	else
 		self:update_grid_layout(layout)
 
-		if #self._grid_widgets == 0 then
+		if table.is_empty(self._grid_widgets) then
 			self:_show_empty_message()
+		else
+			self:_hide_empty_message()
 		end
 	end
 end

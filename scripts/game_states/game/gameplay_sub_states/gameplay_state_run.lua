@@ -23,7 +23,6 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	self._fixed_frame_counter = 0
 	self._failed_clients = {}
 	self._delayed_disconnects = {}
-	self._crash_countdown = GameParameters.crash_countdown
 
 	self:_register_run_network_events(is_server)
 	Managers.event:trigger("event_loading_finished")
@@ -46,14 +45,17 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	TaskbarFlash.flash_window()
 end
 
-GameplayStateRun.on_exit = function (self)
+GameplayStateRun.on_exit = function (self, exit_params)
 	local shared_state = self._shared_state
 	local gameplay_state = self._gameplay_state
 	local is_server = shared_state.is_server
 
 	Managers.telemetry_events:memory_usage("mission_end")
 	Managers.telemetry_events:gameplay_stopped()
-	MissionCleanupUtilies.cleanup(shared_state, gameplay_state)
+
+	local on_shutdown = exit_params and exit_params.on_shutdown
+
+	MissionCleanupUtilies.cleanup(shared_state, gameplay_state, nil, on_shutdown)
 	self:_unregister_run_network_events(is_server)
 end
 
@@ -62,15 +64,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	local is_server, is_dedicated_server = shared_state.is_server, shared_state.is_dedicated_server
 
 	self._fixed_frame_parsed = false
-
-	if self._crash_countdown > -1 then
-		self._crash_countdown = self._crash_countdown - main_dt
-		self._crash_countdown = math.max(self._crash_countdown, 0)
-
-		if self._crash_countdown == 0 then
-			Application.crash(GameParameters.crash_type)
-		end
-	end
 
 	if not Managers.state.game_mode:run_single_threaded_physics() then
 		local physics_world = shared_state.physics_world
@@ -82,7 +75,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	Managers.state.game_session:update(main_dt)
 	Managers.state.unit_spawner:set_deletion_state(DELETION_STATES.during_extension_update)
 	Managers.state.position_lookup:pre_update()
-	Managers.state.out_of_bounds:pre_update(shared_state)
 	Managers.state.bone_lod:pre_update()
 
 	local gameplay_timer_registered = self._gameplay_timer_registered
@@ -92,7 +84,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 
 	player_manager:state_pre_update(main_dt, main_t)
 	Managers.state.unit_spawner:commit_and_remove_pending_units()
-	Managers.state.out_of_bounds:update(shared_state)
 
 	local extension_manager = Managers.state.extension
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -284,6 +275,9 @@ GameplayStateRun.rpc_sync_clock = function (self, channel_id, time, offset)
 
 		Managers.world:set_scene_update_callback(world, function ()
 			Managers.state.extension:physics_async_update()
+		end)
+		Managers.world:set_post_scene_update_callback(world, function ()
+			Managers.state.out_of_bounds:post_update(shared_state)
 		end)
 	end
 end

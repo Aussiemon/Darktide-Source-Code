@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/utilities/aim_assist.lua
 
-local InputDevice = require("scripts/managers/input/input_device")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
 local AimAssist = {}
 local MULTIPLIER_EPSILON = 0.0001

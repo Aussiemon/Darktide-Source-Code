@@ -216,7 +216,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 		self._fixed_update_added_unit_list[unit] = true
 	end
 
-	local unit_in_runtime_loaded_level = ScriptUnit.unit_in_runtime_loaded_level(unit)
+	local unit_in_cinematic_level = ScriptUnit.unit_in_cinematic_level(unit)
 
 	for i = 1, num_extensions do
 		repeat
@@ -231,7 +231,7 @@ ExtensionManager.add_unit_extensions = function (self, world, unit, extension_co
 			local extension_system_name = extension_to_system_map[name]
 			local system = self_systems[extension_system_name]
 
-			if unit_in_runtime_loaded_level and not system:run_in_runtime_loaded_level() then
+			if unit_in_cinematic_level and not system:run_in_cinematic_level() then
 				extension_list[#extension_list] = nil
 
 				break

@@ -5,8 +5,6 @@ require("scripts/extension_systems/respawn_beacon/respawn_beacon_extension")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
-local BEACON_ACTIVATION_DISTANCE = 45
 local PLAYER_MOVE_PLAYERS_TO_BEACON_DISTANCE = 30
 local RespawnBeaconSystem = class("RespawnBeaconSystem", "ExtensionSystemBase")
 
@@ -44,15 +42,10 @@ RespawnBeaconSystem._create_respawn_beacons = function (self)
 			local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 1, 1, 1)
 
 			if target_navmesh_position then
-				local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
-				local start_index = main_path_manager:node_index_by_nav_group_index(group_index)
-				local end_index = start_index + 1
-				local _, distance, percentage, _, segment_index = MainPathQueries.closest_position_between_nodes(position, start_index, end_index)
+				local distance = main_path_manager:travel_distance_from_position(target_navmesh_position)
 				local entry = {
 					unit = unit,
 					distance = distance,
-					percentage = percentage,
-					segment_index = segment_index,
 				}
 
 				self._beacon_main_path_distance_lookup[unit] = distance
@@ -294,7 +287,7 @@ RespawnBeaconSystem._move_hogtied_players = function (self, players, best_beacon
 
 	extension:move_hogtied_players(players)
 
-	if old_beacon ~= best_beacon then
+	if old_beacon and old_beacon ~= best_beacon then
 		local old_extension = self._unit_to_extension_map[old_beacon]
 
 		old_extension:clear_occupied_units()

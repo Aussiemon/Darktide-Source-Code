@@ -39,12 +39,6 @@ spread_templates.default_force_staff_killshot = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.8,
-			suppression_hit = {
-				{
-					pitch = 0.5,
-					yaw = 0.5,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,

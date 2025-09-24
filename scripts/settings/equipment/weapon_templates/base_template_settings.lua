@@ -145,7 +145,7 @@ base_template_settings.grenade_ability_actions = {
 		},
 		projectile_template = ProjectileTemplates.zealot_throwing_knives,
 		action_condition_func = function (action_settings, condition_func_params, used_input)
-			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives) and not _has_talent_special_rule(condition_func_params, special_rules.adamant_whistle)
+			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
 		end,
 	},
 }

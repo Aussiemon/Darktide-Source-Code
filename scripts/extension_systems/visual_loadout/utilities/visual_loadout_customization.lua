@@ -328,6 +328,10 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		return nil
 	end
 
+	if settings.is_ui_preview and item_data.hide_in_ui_preview then
+		return nil
+	end
+
 	local breed_attach_node = not settings.is_minion and item_data.breed_attach_node and item_data.breed_attach_node[settings.breed_name]
 	local attach_node = optional_as_leaf_override_attach_node or breed_attach_node or item_data.attach_node
 	local attach_node_index

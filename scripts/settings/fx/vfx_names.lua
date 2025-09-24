@@ -118,6 +118,8 @@ for name, template in pairs(MinionPushFxTemplates) do
 end
 
 vfx_names["content/fx/particles/enemies/bolstering_shockwave"] = true
+vfx_names["content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"] = true
+vfx_names["content/fx/particles/weapons/force_staff/force_staff_impact_01"] = true
 vfx_names["content/fx/particles/debug/fx_debug_1m_burst"] = true
 vfx_names["content/fx/particles/impacts/flesh/nurgle_corruption_death"] = true
 vfx_names["content/fx/particles/liquid_area/nurgle_buff_slime"] = true
@@ -128,11 +130,22 @@ vfx_names["content/fx/particles/enemies/buff_gardens_embrace_head_02"] = true
 vfx_names["content/fx/particles/enemies/enraged_elites_rage"] = true
 vfx_names["content/fx/particles/enemies/rotten_armor_leak"] = true
 vfx_names["content/fx/particles/enemies/rotten_armor_death"] = true
+vfx_names["content/fx/particles/enemies/rotten_armor_death"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_power"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_speed"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_heal"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_ability"] = true
+vfx_names["content/fx/particles/enemies/rotten_armor_ogryn_death"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_ogryn_power"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_ogryn_speed"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_ogryn_heal"] = true
+vfx_names["content/fx/particles/enemies/buff_stimmed_ogryn_ability"] = true
 vfx_names["content/fx/particles/player_buffs/buff_fire_360angle_01"] = true
 vfx_names["content/fx/particles/player_buffs/buff_healing_area"] = true
 vfx_names["content/fx/particles/abilities/zealot_relic_emit_01"] = true
 vfx_names["content/fx/particles/player_buffs/buff_electricity_grenade_01"] = true
 vfx_names["content/fx/particles/player_buffs/buff_electricity_one_target_01"] = true
 vfx_names["content/fx/particles/abilities/squad_leader_ability_shout_activate"] = true
+vfx_names["content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_explosion_medium"] = true
 
 return vfx_names

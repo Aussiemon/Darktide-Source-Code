@@ -289,12 +289,6 @@ spread_templates.default_ogryn_heavystubber_braced = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.15,
-					yaw = 0.15,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.3,
@@ -471,12 +465,6 @@ spread_templates.default_ogryn_heavystubber_burst = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.75,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -638,100 +626,6 @@ spread_templates.default_ogryn_heavystubber_burst = {
 		},
 	},
 }
-spread_templates.default_ogryn_heavystubber_alternate_fire = {
-	still = {
-		max_spread = {
-			pitch = 8,
-			yaw = 8,
-		},
-		decay = {
-			from_shooting_grace_time = 0.1,
-			shooting = {
-				pitch = 0.25,
-				yaw = 0.25,
-			},
-			idle = {
-				pitch = 1.25,
-				yaw = 1.25,
-			},
-		},
-		continuous_spread = {
-			min_pitch = 0,
-			min_yaw = 0,
-		},
-		start_spread = {
-			start_pitch = 0,
-			start_yaw = 0,
-		},
-		immediate_spread = {
-			num_shots_clear_time = 0.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
-			damage_hit = {
-				{
-					pitch = 0.4,
-					yaw = 0.4,
-				},
-			},
-			shooting = {
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-				{
-					pitch = 0,
-					yaw = 0,
-				},
-			},
-		},
-		visual_spread_settings = {
-			horizontal_speed = 1,
-			intensity = 0.4,
-			rotation_speed = 0.5,
-			speed_change_frequency = 1,
-			speed_variance_max = 1.25,
-			speed_variance_min = 0.75,
-		},
-	},
-	moving = {
-		inherits = {
-			"default_autogun_killshot",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 0,
-			min_yaw = 0,
-		},
-	},
-	crouch_still = {
-		inherits = {
-			"default_autogun_killshot",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 0,
-			min_yaw = 0,
-		},
-	},
-	crouch_moving = {
-		inherits = {
-			"default_autogun_killshot",
-			"still",
-		},
-		continuous_spread = {
-			min_pitch = 0,
-			min_yaw = 0,
-		},
-	},
-}
 
 local pitch_spread = 0.86
 local yaw_spread = pitch_spread * 1.2
@@ -759,12 +653,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1078,12 +966,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1162,12 +1044,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1188,12 +1064,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m2 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1250,12 +1120,6 @@ spread_templates.default_ogryn_heavystubber_braced_m2 = {
 			},
 		},
 		immediate_spread = {
-			suppression_hit = {
-				{
-					pitch = 0.15,
-					yaw = 0.15,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.3,
@@ -1345,12 +1209,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1664,12 +1522,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -1742,12 +1594,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_braced_m3 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2061,12 +1907,6 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_braced_m3 = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2156,12 +1996,6 @@ spread_templates.ogryn_heavystubber_p2_m1_spread_aim = {
 				{
 					pitch = 0.5,
 					yaw = 0.5,
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
 				},
 			},
 			damage_hit = {
@@ -2272,12 +2106,6 @@ spread_templates.ogryn_heavystubber_p2_m1_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2339,12 +2167,6 @@ spread_templates.ogryn_heavystubber_p2_m1_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2434,12 +2256,6 @@ spread_templates.ogryn_heavystubber_p2_spread_aim = {
 				{
 					pitch = 0.1,
 					yaw = 0.1,
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
 				},
 			},
 			damage_hit = {
@@ -2550,12 +2366,6 @@ spread_templates.ogryn_heavystubber_p2_m2_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2617,12 +2427,6 @@ spread_templates.ogryn_heavystubber_p2_m2_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2701,12 +2505,6 @@ spread_templates.ogryn_heavystubber_p2_m3_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 1.5,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2764,12 +2562,6 @@ spread_templates.ogryn_heavystubber_p2_m3_spread_hip = {
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.25,
-			suppression_hit = {
-				{
-					pitch = 0.25,
-					yaw = 0.25,
-				},
-			},
 			damage_hit = {
 				{
 					pitch = 0.4,
@@ -2859,12 +2651,6 @@ spread_templates.ogryn_heavystubber_p2_m3_spread_aim = {
 				{
 					pitch = 0.1,
 					yaw = 0.1,
-				},
-			},
-			suppression_hit = {
-				{
-					pitch = 0,
-					yaw = 0,
 				},
 			},
 			damage_hit = {

@@ -398,4 +398,17 @@ PackageManager.update = function (self, dt, t)
 	return next(self._async_packages) == nil
 end
 
+PackageManager.apply_backend_game_settings = function (self)
+	if GameParameters.extra_persistent_package ~= "" then
+		local info = string.split(GameParameters.extra_persistent_package, ",")
+		local chance = tonumber(info[1])
+		local package_name = info[2]
+
+		if chance >= math.random() then
+			print(string.format("[PackageManager] Loading extra persistent package '%s'", package_name))
+			self:load(package_name)
+		end
+	end
+end
+
 return PackageManager

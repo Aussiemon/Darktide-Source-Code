@@ -151,7 +151,7 @@ local line_effects = {
 				start = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger_orange",
 			},
 			interval = {
-				distance = 5,
+				distance = 2.5,
 				increase = 0,
 			},
 		},

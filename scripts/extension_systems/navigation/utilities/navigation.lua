@@ -11,8 +11,8 @@ Navigation.create_nav_tag_volume = function (nav_world, bottom_points, altitude_
 	return tag_volume
 end
 
-Navigation.destroy_nav_tag_volume = function (tag_volume)
-	return
+Navigation.remove_nav_tag_volume_from_world = function (tag_volume)
+	GwNavTagVolume.destroy(tag_volume)
 end
 
 Navigation.create_traverse_logic = function (nav_world, nav_tag_allowed_layers, optional_nav_cost_map_multipliers, enable_crowd_dispersion)
@@ -112,7 +112,8 @@ Navigation.add_nav_data = function (nav_world, nav_data, level_name)
 end
 
 Navigation.remove_nav_data = function (nav_data)
-	GwNavWorld.remove_navdata(nav_data)
+	GwNavData.remove_navdata(nav_data)
+	GwNavData.destroy(nav_data)
 end
 
 Navigation.vector3s_to_arrays = function (vectors)

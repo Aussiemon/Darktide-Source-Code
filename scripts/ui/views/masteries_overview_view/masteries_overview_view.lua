@@ -13,7 +13,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local FALLBACK_TEXTURE = "core/fallback_resources/missing_texture"
 local MasteriesOverviewView = class("MasteriesOverviewView", "BaseView")
 
@@ -270,9 +270,7 @@ MasteriesOverviewView._setup_layout_entries = function (self)
 
 			if master_item and mastery_data then
 				local marks = Mastery.get_all_mastery_marks(mastery_data)
-				local has_mark_unlocks = marks and #marks > 0
-				local first_mark_item = has_mark_unlocks and marks[1].item
-				local hud_icon = first_mark_item and first_mark_item.hud_icon or master_item.hud_icon
+				local hud_icon = master_item.hud_icon
 
 				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
 
@@ -784,6 +782,7 @@ MasteriesOverviewView._get_milestones_data = function (self, mastery_id)
 				icon_color = milestone_ui_data.icon_color,
 				icon_material_values = milestone_ui_data.icon_material_values,
 				type = milestone_ui_data.type,
+				sort_order = milestone_ui_data.sort_order,
 			}
 		end
 	end
@@ -791,8 +790,14 @@ MasteriesOverviewView._get_milestones_data = function (self, mastery_id)
 	table.sort(milestones_data, function (a, b)
 		local a_level = a.level or 0
 		local b_level = b.level or 0
+		local a_sort_order = a.sort_order or math.huge
+		local b_sort_order = b.sort_order or math.huge
 
-		return a_level < b_level
+		if a_level == b_level then
+			return a_sort_order < b_sort_order
+		else
+			return a_level < b_level
+		end
 	end)
 
 	return Promise.resolved(milestones_data)

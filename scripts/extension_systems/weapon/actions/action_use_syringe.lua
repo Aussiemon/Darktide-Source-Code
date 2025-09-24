@@ -18,7 +18,7 @@ ActionUseSyringe.init = function (self, action_context, action_params, action_se
 
 	local unit_data_extension = self._unit_data_extension
 
-	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 end
 
 ActionUseSyringe.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -51,18 +51,21 @@ end
 ActionUseSyringe.finish = function (self, reason, data, t, time_in_action)
 	ActionUseSyringe.super.finish(self, reason, data, t, time_in_action)
 
-	local action_module_targeting_component = self._action_module_targeting_component
+	local action_module_target_finder_component = self._action_module_target_finder_component
 
-	action_module_targeting_component.target_unit_1 = nil
-	action_module_targeting_component.target_unit_2 = nil
-	action_module_targeting_component.target_unit_3 = nil
+	action_module_target_finder_component.target_unit_1 = nil
+	action_module_target_finder_component.target_unit_2 = nil
+	action_module_target_finder_component.target_unit_3 = nil
 
-	local action_settings = self._action_settings
-
-	if action_settings.remove_item_from_inventory and self._did_use then
+	if self._did_use then
 		local inventory_slot_component = self._inventory_slot_component
+		local action_settings = self._action_settings
 
-		inventory_slot_component.unequip_slot = true
+		if action_settings.remove_item_from_inventory then
+			inventory_slot_component.unequip_slot = true
+		else
+			inventory_slot_component.unwield_slot = true
+		end
 	end
 end
 
@@ -80,11 +83,11 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 	if should_use then
 		self._did_use = true
 
-		local action_module_targeting_component = self._action_module_targeting_component
+		local action_module_target_finder_component = self._action_module_target_finder_component
 
-		action_module_targeting_component.target_unit_1 = nil
-		action_module_targeting_component.target_unit_2 = nil
-		action_module_targeting_component.target_unit_3 = nil
+		action_module_target_finder_component.target_unit_1 = nil
+		action_module_target_finder_component.target_unit_2 = nil
+		action_module_target_finder_component.target_unit_3 = nil
 
 		if self._is_server then
 			local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
@@ -151,11 +154,11 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
-	if self._did_use and action_settings.remove_item_from_inventory then
+	if self._did_use then
 		local remove_time = action_settings.remove_item_from_inventory_time or action_settings.total_time
 		local should_unequip = remove_time <= time_in_action
 
-		if should_unequip and action_settings.remove_item_from_inventory then
+		if should_unequip then
 			local inventory_component = self._inventory_component
 			local player_unit = self._player_unit
 
@@ -191,8 +194,8 @@ end
 
 ActionUseSyringe._target_unit = function (self)
 	local action_settings = self._action_settings
-	local action_module_targeting_component = self._action_module_targeting_component
-	local target_unit = action_module_targeting_component.target_unit_1
+	local action_module_target_finder_component = self._action_module_target_finder_component
+	local target_unit = action_module_target_finder_component.target_unit_1
 	local self_use = action_settings.self_use or action_settings.self_use_if_no_target and not target_unit
 	local target = self_use and self._player_unit or target_unit
 	local validate_target_func = action_settings.validate_target_func

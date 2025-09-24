@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective.lua
 
+local Ammo = require("scripts/utilities/ammo")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
@@ -11,6 +12,7 @@ local GameModeCoopCompleteObjective = class("GameModeCoopCompleteObjective", "Ga
 local CLIENT_RPCS = {
 	"rpc_set_player_respawn_time",
 	"rpc_fetch_session_report",
+	"rpc_client_tag_remaining_enemies",
 }
 
 local function _log(...)
@@ -27,6 +29,7 @@ GameModeCoopCompleteObjective.init = function (self, game_mode_context, game_mod
 
 	if self._is_server then
 		Managers.event:register(self, "in_safe_volume", "in_safe_volume")
+		Managers.event:register(self, "event_tag_remaining_enemies", "_tag_remaining_enemies")
 
 		self._persistent_data_humans = {}
 		self._persistent_data_bots = {}
@@ -40,6 +43,7 @@ end
 GameModeCoopCompleteObjective.destroy = function (self)
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
+		Managers.event:unregister(self, "event_tag_remaining_enemies")
 	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -333,7 +337,7 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local inventory_slot_component = unit_data_extension:read_component(slot_name)
 		local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-		local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+		local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 		local data = {}
 
 		if max_ammo_reserve > 0 then
@@ -341,7 +345,7 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 		end
 
 		if max_ammo_clip > 0 then
-			data.ammo_clip_percent = inventory_slot_component.current_ammunition_clip / max_ammo_clip
+			data.ammo_clip_percent = Ammo.current_ammo_in_clips(inventory_slot_component) / max_ammo_clip
 		end
 
 		weapon_slot_data[slot_name] = data
@@ -426,14 +430,14 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 			for slot_name, data in pairs(selected_data.weapon_slot_data) do
 				local inventory_slot_component = unit_data_extension:write_component(slot_name)
 				local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-				local max_ammo_clip = inventory_slot_component.max_ammunition_clip
+				local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
 
 				if max_ammo_reserve > 0 and data.ammo_reserve_percent then
 					inventory_slot_component.current_ammunition_reserve = math.round(max_ammo_reserve * data.ammo_reserve_percent)
 				end
 
 				if max_ammo_clip > 0 and data.ammo_clip_percent then
-					inventory_slot_component.current_ammunition_clip = math.round(max_ammo_clip * data.ammo_clip_percent)
+					Ammo.set_current_ammo_in_clips(inventory_slot_component, math.round(max_ammo_clip * data.ammo_clip_percent))
 				end
 			end
 
@@ -550,74 +554,28 @@ GameModeCoopCompleteObjective.rpc_set_player_respawn_time = function (self, chan
 	end
 end
 
-GameModeCoopCompleteObjective.hot_join_sync = function (self, sender, channel)
-	GameModeCoopCompleteObjective.super.hot_join_sync(self, sender, channel)
+GameModeCoopCompleteObjective.rpc_client_tag_remaining_enemies = function (self, channel_id)
+	self:_tag_remaining_enemies()
+end
 
-	local sender_player = Managers.player:player(sender, 1)
-	local sender_account_id = sender_player and sender_player:account_id()
-
-	if not sender_account_id then
-		Log.error("GameModeCoopCompleteObjective", "Unable to retrieve account id of peer %s", sender)
-
-		return
+GameModeCoopCompleteObjective._tag_remaining_enemies = function (self)
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_client_tag_remaining_enemies")
 	end
 
-	local mission_id = Managers.mechanism:backend_mission_id()
+	if not DEDICATED_SERVER then
+		local outline_system = Managers.state.extension:system("outline_system")
 
-	if not mission_id then
-		return
-	end
+		if outline_system then
+			local side = Managers.state.extension:system("side_system"):get_side_from_name("villains")
+			local _, target_units = side:relation_sides("allied"), side:alive_units_by_tag("allied", "minion")
 
-	Managers.data_service.mission_board:fetch_mission(mission_id):next(function (data)
-		local order_owner_id
-		local flags = data.mission and data.mission.flags
-
-		for key, _ in pairs(flags) do
-			if string.find(key, "order%-owner%-") then
-				order_owner_id = string.gsub(key, "order%-owner%-", "")
-
-				break
+			for _, unit in pairs(target_units) do
+				if HEALTH_ALIVE[unit] then
+					outline_system:add_outline(unit, "hordes_tagged_remaining_target")
+				end
 			end
 		end
-
-		if order_owner_id then
-			local order_joiner_id = sender_account_id
-
-			self:_queue_join_personal_mission(order_owner_id, mission_id, order_joiner_id)
-		end
-	end)
-end
-
-GameModeCoopCompleteObjective._queue_join_personal_mission = function (self, order_owner_id, mission_id, order_joiner_id)
-	if not self._join_personal_mission_queue then
-		self._join_personal_mission_queue = {}
-	end
-
-	local queue = self._join_personal_mission_queue
-	local new_entry = {
-		order_owner_id = order_owner_id,
-		mission_id = mission_id,
-		order_joiner_id = order_joiner_id,
-	}
-
-	table.insert(queue, new_entry)
-
-	if not self._join_personal_mission_queue_active then
-		self._join_personal_mission_queue_active = true
-
-		self:_next_join_personal_mission()
-	end
-end
-
-GameModeCoopCompleteObjective._next_join_personal_mission = function (self)
-	local queue = self._join_personal_mission_queue
-
-	if table.is_empty(queue) then
-		self._join_personal_mission_queue_active = false
-	else
-		local args = table.remove(queue)
-
-		Managers.backend.interfaces.orders:join_personal_mission(args.order_owner_id, args.mission_id, args.order_joiner_id):next(self:_next_join_personal_mission())
 	end
 end
 

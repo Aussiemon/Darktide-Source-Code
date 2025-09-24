@@ -3,6 +3,7 @@
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 
 local Action = require("scripts/utilities/action/action")
+local Ammo = require("scripts/utilities/ammo")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local AimProjectileAdsEffects = class("AimProjectileAdsEffects", "AimProjectileEffects")
@@ -15,6 +16,7 @@ AimProjectileAdsEffects.init = function (self, context, slot, weapon_template, f
 
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
+	self._owner_unit = owner_unit
 end
 
 local _trajectory_settings = {}
@@ -24,7 +26,14 @@ AimProjectileAdsEffects._trajectory_settings = function (self, t)
 
 	local weapon_template = self._weapon_template
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
-	local projectile_aim_effect_settings = alternate_fire_settings.projectile_aim_effect_settings
+	local projectile_aim_effect_settings
+
+	projectile_aim_effect_settings = alternate_fire_settings and alternate_fire_settings.projectile_aim_effect_settings
+
+	if not projectile_aim_effect_settings then
+		return false, nil
+	end
+
 	local alternate_fire_component = self._alternate_fire_component
 	local is_aiming_down_sights = alternate_fire_component and alternate_fire_component.is_active
 	local aiming_down_sights_start_time = alternate_fire_component and alternate_fire_component.start_t
@@ -44,7 +53,7 @@ AimProjectileAdsEffects._trajectory_settings = function (self, t)
 	end
 
 	local inventory_slot_component = self._inventory_slot_component
-	local no_ammo_in_clip = inventory_slot_component.current_ammunition_clip == 0
+	local no_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component) == 0
 	local no_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve == 0
 
 	if no_ammo_in_clip and no_ammo_in_reserve then

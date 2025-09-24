@@ -220,12 +220,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_linesman,
@@ -301,12 +303,14 @@ weapon_template.actions = {
 			0.15,
 			1.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_heavy_smiter,
@@ -454,12 +458,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_right_diagonal",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_right_diagonal",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_linesman,
@@ -535,12 +541,14 @@ weapon_template.actions = {
 			0.25,
 			1.25,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_heavy_tank,
@@ -685,12 +693,14 @@ weapon_template.actions = {
 			0.25,
 			1.25,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_tank,
@@ -839,12 +849,14 @@ weapon_template.actions = {
 			0.15,
 			1.2,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_right",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_right",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_smiter_alt,
@@ -974,12 +986,14 @@ weapon_template.actions = {
 			0.15,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/push_follow_up",
-			anchor_point_offset = {
-				0,
-				0,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/push_follow_up",
+				anchor_point_offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_linesman_pushfollow,
@@ -1130,12 +1144,14 @@ weapon_template.actions = {
 			0.45,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_slap",
-			anchor_point_offset = {
-				0.15,
-				-0.3,
-				-0.1,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_slap",
+				anchor_point_offset = {
+					0.15,
+					-0.3,
+					-0.1,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_special,
@@ -1225,12 +1241,14 @@ weapon_template.actions = {
 			0.56,
 			1,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_slap_left",
-			anchor_point_offset = {
-				0.15,
-				-0.3,
-				-0.15,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_slap_left",
+				anchor_point_offset = {
+					0.15,
+					-0.3,
+					-0.15,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_special,
@@ -1375,12 +1393,14 @@ weapon_template.actions = {
 			0.6,
 			0.9,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_stab",
-			anchor_point_offset = {
-				-0.2,
-				0.2,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_stab",
+				anchor_point_offset = {
+					-0.2,
+					0.2,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_punch,

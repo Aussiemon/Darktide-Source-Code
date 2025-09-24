@@ -17,7 +17,7 @@ HealthStationExtension.init = function (self, extension_init_context, unit)
 	self._pickup_spawner_extension = nil
 	self._animation_extension = nil
 	self._socket_unit = nil
-	self._battery_unit = nil
+	self._spawned_battery_unit = nil
 	self._battery_spawning_mode = "none"
 	self._first_frame_setup = false
 	self._point_of_interest_extension = nil
@@ -48,13 +48,9 @@ HealthStationExtension.setup_from_component = function (self, start_charge_amoun
 	end
 end
 
-HealthStationExtension.hot_join_sync = function (self, charge_amount, socket_unit, battery_unit)
+HealthStationExtension.hot_join_sync = function (self, charge_amount, socket_unit)
 	if socket_unit then
 		self:register_socket_unit(socket_unit)
-	end
-
-	if battery_unit then
-		self:register_battery_unit(battery_unit)
 	end
 
 	self:set_charge_amount(charge_amount)
@@ -97,7 +93,7 @@ HealthStationExtension.fixed_update = function (self, unit, dt, t)
 
 			if should_plug then
 				self:_teleport_battery_to_socket()
-				self:socket_luggable(self._battery_unit)
+				self:socket_luggable(self._spawned_battery_unit)
 				self:_update_indicators()
 			end
 
@@ -247,8 +243,12 @@ HealthStationExtension._update_indicators = function (self)
 		Unit.set_scalar_for_materials(self._unit, "increase_color", indicator_level)
 
 		if self._charge_amount == 0 then
-			Light.set_enabled(Unit.light(self._battery_unit, 1), false)
-			Unit.set_scalar_for_materials(self._battery_unit, "emissive_multiplier", 0)
+			local battery_unit = self._luggable_socket_extension:socketed_unit()
+
+			if battery_unit then
+				Light.set_enabled(Unit.light(battery_unit, 1), false)
+				Unit.set_scalar_for_materials(battery_unit, "emissive_multiplier", 0)
+			end
 		end
 	end
 end
@@ -319,16 +319,15 @@ HealthStationExtension.socket_luggable = function (self, luggable_unit)
 	end
 end
 
-HealthStationExtension.battery_unit = function (self)
-	return self._battery_unit
+HealthStationExtension.spawned_battery_unit = function (self)
+	return self._spawned_battery_unit
 end
 
 HealthStationExtension.spawn_battery = function (self)
-	if self._is_server and self._battery_unit == nil then
-		local battery_unit, battery_id = self._pickup_spawner_extension:spawn_item()
-		local battery_is_level_unit = false
+	if self._is_server and self._spawned_battery_unit == nil then
+		local battery_unit = self._pickup_spawner_extension:spawn_item()
 
-		self:register_battery_unit(battery_unit)
+		self._spawned_battery_unit = battery_unit
 
 		local point_of_interest_ext = self._point_of_interest_extension
 
@@ -341,11 +340,6 @@ HealthStationExtension.spawn_battery = function (self)
 		else
 			point_of_interest_ext:set_tag("charged_health_station")
 		end
-
-		local station_level_id = Managers.state.unit_spawner:level_index(self._unit)
-		local game_session_manager = Managers.state.game_session
-
-		game_session_manager:send_rpc_clients("rpc_health_station_on_battery_spawned", station_level_id, battery_id, battery_is_level_unit)
 	end
 end
 
@@ -353,19 +347,19 @@ HealthStationExtension.unspawn_battery = function (self)
 	if self._is_server then
 		self:_check_battery_alive()
 
-		if self._battery_unit ~= nil then
-			local battery_unit = self._battery_unit
+		if self._spawned_battery_unit ~= nil then
+			local battery_unit = self._spawned_battery_unit
 
 			self._pickup_spawner_extension:despawn_item(battery_unit)
 
-			self._battery_unit = nil
+			self._spawned_battery_unit = nil
 		end
 	end
 end
 
 HealthStationExtension._check_battery_alive = function (self)
-	if self._battery_unit ~= nil and not ALIVE[self._battery_unit] then
-		self._battery_unit = nil
+	if self._spawned_battery_unit ~= nil and not ALIVE[self._spawned_battery_unit] then
+		self._spawned_battery_unit = nil
 	end
 end
 
@@ -374,7 +368,7 @@ HealthStationExtension._teleport_battery_to_socket = function (self)
 	local socket_node = Unit.node(unit, "g_battery_socket")
 	local socket_position = Unit.world_position(unit, socket_node)
 	local socket_rotation = Unit.world_rotation(unit, socket_node)
-	local battery_unit = self._battery_unit
+	local battery_unit = self._spawned_battery_unit
 	local projectile_locomotion_extension = ScriptUnit.extension(battery_unit, "locomotion_system")
 
 	projectile_locomotion_extension:switch_to_sleep(socket_position, socket_rotation)
@@ -383,10 +377,13 @@ end
 HealthStationExtension.register_socket_unit = function (self, socket_unit)
 	self._socket_unit = socket_unit
 	self._luggable_socket_extension = ScriptUnit.extension(socket_unit, "luggable_socket_system")
-end
 
-HealthStationExtension.register_battery_unit = function (self, battery_unit)
-	self._battery_unit = battery_unit
+	local pickup_types = {
+		"battery_01_luggable",
+		"battery_02_luggable",
+	}
+
+	self._luggable_socket_extension:set_allowed_luggable_pickup_types(pickup_types)
 end
 
 return HealthStationExtension

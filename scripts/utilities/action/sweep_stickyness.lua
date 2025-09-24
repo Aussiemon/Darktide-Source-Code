@@ -56,20 +56,20 @@ SweepStickyness.num_damage_instances_this_frame = function (hit_stickyness_setti
 	local first_instance = false
 	local interval_start, interval_end = math.round_with_precision(t - start_t, 4), math.round_with_precision(next_t - start_t, 4)
 
-	for i = 1, damage_instances do
-		local damage_instance_t = time_between_instances * i
+	for ii = 1, damage_instances do
+		local damage_instance_t = time_between_instances * ii
 
 		if interval_start < damage_instance_t and damage_instance_t <= interval_end then
 			num_damage_instances = num_damage_instances + 1
 
-			if i == damage_instances then
+			if ii == damage_instances then
 				last_instance = true
 			end
 		elseif interval_end < damage_instance_t then
 			break
 		end
 
-		if i == 1 and start_t < t and t < start_t + time_between_instances then
+		if ii == 1 and start_t < t and t < start_t + time_between_instances then
 			first_instance = true
 		end
 	end

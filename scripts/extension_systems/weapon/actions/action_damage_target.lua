@@ -26,7 +26,7 @@ ActionDamageTarget.init = function (self, action_context, action_params, action_
 
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
-	self._action_module_targeting_component = unit_data_extension:write_component("action_module_targeting")
+	self._action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
 end
 
 ActionDamageTarget.start = function (self, action_settings, t, time_scale, start_params)
@@ -57,7 +57,7 @@ end
 ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 	local action_settings = self._action_settings
 	local prevent_explosion = self._prevent_explosion
-	local targeting_component = self._action_module_targeting_component
+	local targeting_component = self._action_module_target_finder_component
 	local fire_time = action_settings.fire_time or 0
 	local should_fire = ActionUtility.is_within_trigger_time(time_in_action, dt, fire_time)
 	local target_unit = targeting_component.target_unit_1
@@ -105,7 +105,7 @@ end
 ActionDamageTarget._deal_damage = function (self, charge_level)
 	local action_settings = self._action_settings
 	local player_unit = self._player_unit
-	local targeting_component = self._action_module_targeting_component
+	local targeting_component = self._action_module_target_finder_component
 	local damage_profile = action_settings.damage_profile
 	local damage_type = action_settings.damage_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
@@ -177,7 +177,7 @@ ActionDamageTarget.finish = function (self, reason, data, t, time_in_action)
 
 	ActionDamageTarget.super.finish(self, reason, data, t, time_in_action)
 
-	self._action_module_targeting_component.target_unit_1 = nil
+	self._action_module_target_finder_component.target_unit_1 = nil
 	self._prevent_explosion = nil
 end
 

@@ -24,7 +24,7 @@ local gibbing_template = {
 			gibbing_threshold = GibbingThresholds.always,
 			material_overrides = {
 				"slot_body",
-				"envrionmental_override",
+				"environmental_override",
 			},
 		},
 	},

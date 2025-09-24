@@ -19,10 +19,9 @@ local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_template
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local armor_types = ArmorSettings.types
-local template_types = WeaponTweakTemplateSettings.template_types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
+local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local wounds_shapes = WoundsSettings.shapes
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
@@ -151,7 +150,7 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "weapon_reload",
+				input = "weapon_reload_pressed",
 				value = true,
 			},
 		},
@@ -762,12 +761,14 @@ weapon_template.actions = {
 			1.5,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_right",
-			anchor_point_offset = {
-				0,
-				0.5,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_right",
+				anchor_point_offset = {
+					0,
+					0.5,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.linesman_left_heavy,
@@ -860,12 +861,14 @@ weapon_template.actions = {
 			0.9,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_left",
-			anchor_point_offset = {
-				0,
-				0.5,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_left",
+				anchor_point_offset = {
+					0,
+					0.5,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.linesman_right_heavy,
@@ -956,12 +959,14 @@ weapon_template.actions = {
 			1.3,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_uppercut",
-			anchor_point_offset = {
-				0,
-				0.5,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/swing_uppercut",
+				anchor_point_offset = {
+					0,
+					0.5,
+					0,
+				},
 			},
 		},
 		damage_profile = DamageProfileTemplates.light_grenadier_gauntlet_smiter,
@@ -1037,12 +1042,14 @@ weapon_template.actions = {
 			1.2,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_down",
-			anchor_point_offset = {
-				-0,
-				0.5,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_down",
+				anchor_point_offset = {
+					-0,
+					0.5,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.smiter_down,
@@ -1118,12 +1125,14 @@ weapon_template.actions = {
 			0.9,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_right_diagonal_up",
-			anchor_point_offset = {
-				0,
-				0.3,
-				0,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_right_diagonal_up",
+				anchor_point_offset = {
+					0,
+					0.3,
+					0,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.linesman_right_heavy,
@@ -1199,12 +1208,14 @@ weapon_template.actions = {
 			1.85,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_stab",
-			anchor_point_offset = {
-				0.6,
-				0.3,
-				0.3,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_stab",
+				anchor_point_offset = {
+					0.6,
+					0.3,
+					0.3,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.ogryn_punch,
@@ -1347,12 +1358,14 @@ weapon_template.actions = {
 			1,
 			0.3,
 		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_stab_special",
-			anchor_point_offset = {
-				0.3,
-				1.1,
-				0.25,
+		sweeps = {
+			{
+				matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_stab_special",
+				anchor_point_offset = {
+					0.3,
+					1.1,
+					0.25,
+				},
 			},
 		},
 		herding_template = HerdingTemplates.ogryn_punch,

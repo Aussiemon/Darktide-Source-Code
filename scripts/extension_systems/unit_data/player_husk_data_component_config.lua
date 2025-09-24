@@ -87,8 +87,11 @@ local husk_data_component_config = {
 	},
 	slot_primary = {
 		"current_ammunition_clip",
+		"current_ammunition_clip_2",
+		"current_ammunition_clips_in_use",
 		"current_ammunition_reserve",
 		"max_ammunition_clip",
+		"max_ammunition_clip_2",
 		"max_ammunition_reserve",
 		"overheat_starting_percentage",
 		"overheat_current_percentage",
@@ -99,8 +102,11 @@ local husk_data_component_config = {
 	},
 	slot_secondary = {
 		"current_ammunition_clip",
+		"current_ammunition_clip_2",
 		"current_ammunition_reserve",
+		"current_ammunition_clips_in_use",
 		"max_ammunition_clip",
+		"max_ammunition_clip_2",
 		"max_ammunition_reserve",
 		"overheat_starting_percentage",
 		"overheat_current_percentage",
@@ -162,6 +168,9 @@ local husk_data_component_config = {
 		"active",
 	},
 	combat_ability = {
+		"active",
+	},
+	pocketable_ability = {
 		"active",
 	},
 	scanning = {

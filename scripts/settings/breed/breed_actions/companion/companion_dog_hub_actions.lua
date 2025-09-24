@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_actions/companion/companion_dog_hub_actions.lua
 
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local idle_circle_distances = {
 	inner_circle_distance = 0.75,
 	outer_circle_distance = 2.5,
@@ -62,9 +62,9 @@ local move_to_position_default = {
 		slow_max_deceleration = 16,
 		speed_timer = 0,
 	},
-	dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-	dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_hub_config,
-	dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_hub_config,
+	dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+	dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_hub_config,
+	dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_hub_config,
 }
 local action_data = {
 	name = "companion_dog_hub",
@@ -97,9 +97,9 @@ local action_data = {
 		follow_owner_cooldown = 1,
 		override_lrb_to_use_owner_speed = true,
 		reset_position_timer = 0.1,
-		dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-		dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_hub_config,
-		dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_hub_config,
+		dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_hub_config,
+		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_hub_config,
 		companion_cone_check = {
 			angle = 90,
 		},
@@ -108,9 +108,9 @@ local action_data = {
 		follow_owner_cooldown = 1,
 		reset_position_timer = 0.1,
 		idle_circle_distances = idle_circle_distances,
-		dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-		dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_hub_config,
-		dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_hub_config,
+		dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_hub_config,
+		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_hub_config,
 		far_distance = hub_far_distance,
 		cone_angle = math.pi / 3,
 	},

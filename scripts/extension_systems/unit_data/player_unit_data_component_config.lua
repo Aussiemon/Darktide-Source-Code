@@ -10,10 +10,8 @@ local PlayerAbilities = require("scripts/settings/ability/player_abilities/playe
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterFxSourceNames = require("scripts/settings/fx/player_character_fx_source_names")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
-local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerCharacterStates = require("scripts/settings/player_character/player_character_states")
 local PlayerUnitAnimationStateConfig = require("scripts/extension_systems/animation/utilities/player_unit_animation_state_config")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local tweak_template_types = WeaponTweakTemplateSettings.template_types
@@ -798,6 +796,18 @@ local PlayerComponentConfig = {
 		current_action_name = ABILITY_ACTIONS,
 		previous_action_name = ABILITY_ACTIONS,
 	},
+	pocketable_ability_action = {
+		combo_count = "action_combo_count",
+		end_t = "fixed_frame_offset",
+		is_infinite_duration = "bool",
+		special_active_at_start = "bool",
+		sprint_ready_time = "fixed_frame_offset",
+		start_t = "fixed_frame_offset",
+		time_scale = "action_time_scale",
+		template_name = ABILITY_TEMPLATES,
+		current_action_name = ABILITY_ACTIONS,
+		previous_action_name = ABILITY_ACTIONS,
+	},
 	action_throw_luggable = {
 		thrown = "bool",
 		slot_to_wield = INVENTORY_SLOTS,
@@ -852,6 +862,7 @@ local PlayerComponentConfig = {
 			"prepare_shooting",
 			"start_shooting",
 			"shooting",
+			"prepare_simultaneous_shot",
 			"shot",
 		},
 	},
@@ -876,7 +887,7 @@ local PlayerComponentConfig = {
 		position = "Vector3",
 		position_valid = "bool",
 	},
-	action_module_targeting = {
+	action_module_target_finder = {
 		target_unit_1 = "Unit",
 		target_unit_2 = "Unit",
 		target_unit_3 = "Unit",
@@ -967,6 +978,7 @@ local PlayerComponentConfig = {
 	equipped_abilities = {
 		combat_ability = PLAYER_ABILITIES,
 		grenade_ability = PLAYER_ABILITIES,
+		pocketable_ability = PLAYER_ABILITIES,
 	},
 	grenade_ability = {
 		active = "bool",
@@ -976,6 +988,13 @@ local PlayerComponentConfig = {
 		num_charges = "ability_charges",
 	},
 	combat_ability = {
+		active = "bool",
+		cooldown = "fixed_frame_time",
+		cooldown_paused = "bool",
+		enabled = "bool",
+		num_charges = "ability_charges",
+	},
+	pocketable_ability = {
 		active = "bool",
 		cooldown = "fixed_frame_time",
 		cooldown_paused = "bool",

@@ -3,8 +3,65 @@
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local window_size = NewsViewSettings.window_size
 local grid_size = NewsViewSettings.grid_size
+
+local function _button_input_handler(self, input_service)
+	if not input_service:get(self.content.entry.input_action) then
+		return false
+	end
+
+	if self.content.hotspot.disabled then
+		return false
+	end
+
+	self.content.hotspot.pressed_callback()
+
+	return true
+end
+
+local function _button_factory(button_pass_template)
+	return {
+		pass_template_function = function (self, config, ui_renderer)
+			local passes = table.clone(button_pass_template)
+
+			return passes
+		end,
+		size_function = function (parent, config, ui_renderer)
+			if config.size and #config.size == 2 then
+				return config.size
+			end
+
+			local size = table.clone(button_pass_template.size)
+			local parent_size = grid_size
+
+			if not config.size then
+				local ratio = size[2] / size[1]
+
+				size[1] = parent_size and parent_size[1] or size[1]
+				size[2] = ratio * size[1]
+
+				return size
+			end
+
+			size[2] = config.size[1]
+			size[1] = parent_size and parent_size[1] or size[1]
+
+			return size
+		end,
+		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
+			local content = widget.content
+
+			content.input_action = element.input_action
+			content.gamepad_action = element.input_action
+			content.original_text = element.text
+			content.hotspot.pressed_callback = element.callback
+			widget.handle_input = _button_input_handler
+		end,
+	}
+end
+
 local widget_blueprints_by_type = {
 	dynamic_spacing = {
 		size_function = function (parent, element, ui_renderer)
@@ -249,6 +306,9 @@ local widget_blueprints_by_type = {
 			local element = content.element
 		end,
 	},
+	terminal_button = _button_factory(ButtonPassTemplates.terminal_button),
+	default_button = _button_factory(ButtonPassTemplates.default_button),
+	aquila_button = _button_factory(ButtonPassTemplates.aquila_button),
 }
 
 return widget_blueprints_by_type

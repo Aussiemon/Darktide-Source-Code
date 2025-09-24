@@ -605,44 +605,61 @@ local function create_definitions(settings)
 	}
 
 	if not hide_dividers then
-		local top_divider_passes = {
-			{
-				pass_type = "texture",
-				style_id = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_upper",
-				value_id = "texture",
-				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
-					vertical_alignment = "top",
-				},
-			},
-		}
+		local top_divider_passes
 
-		if settings.top_divider_passes then
-			table.append(top_divider_passes, settings.top_divider_passes)
+		if not settings.hide_top_divider then
+			top_divider_passes = {
+				{
+					pass_type = "texture",
+					style_id = "texture",
+					value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+					value_id = "texture",
+					style = {
+						horizontal_alignment = "center",
+						scale_to_material = true,
+						vertical_alignment = "top",
+					},
+				},
+			}
+
+			if settings.top_divider_passes then
+				table.append(top_divider_passes, settings.top_divider_passes)
+			end
+		elseif settings.top_divider_passes then
+			top_divider_passes = settings.top_divider_passes
 		end
 
-		local bottom_divider_passes = {
-			{
-				pass_type = "texture",
-				style_id = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_lower",
-				value_id = "texture",
-				style = {
-					horizontal_alignment = "center",
-					scale_to_material = true,
-					vertical_alignment = "center",
-				},
-			},
-		}
+		local bottom_divider_passes
 
-		if settings.bottom_divider_passes then
-			table.append(bottom_divider_passes, settings.bottom_divider_passes)
+		if not settings.hide_bottom_divider then
+			bottom_divider_passes = {
+				{
+					pass_type = "texture",
+					style_id = "texture",
+					value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+					value_id = "texture",
+					style = {
+						horizontal_alignment = "center",
+						scale_to_material = true,
+						vertical_alignment = "center",
+					},
+				},
+			}
+
+			if settings.bottom_divider_passes then
+				table.append(bottom_divider_passes, settings.bottom_divider_passes)
+			end
+		elseif settings.bottom_divider_passes then
+			bottom_divider_passes = settings.bottom_divider_passes
 		end
 
-		widget_definitions.grid_divider_top = UIWidget.create_definition(top_divider_passes, "grid_divider_top")
-		widget_definitions.grid_divider_bottom = UIWidget.create_definition(bottom_divider_passes, "grid_divider_bottom")
+		if top_divider_passes then
+			widget_definitions.grid_divider_top = UIWidget.create_definition(top_divider_passes, "grid_divider_top")
+		end
+
+		if bottom_divider_passes then
+			widget_definitions.grid_divider_bottom = UIWidget.create_definition(bottom_divider_passes, "grid_divider_bottom")
+		end
 	end
 
 	return {

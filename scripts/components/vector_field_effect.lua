@@ -16,10 +16,10 @@ VectorFieldEffect.init = function (self, unit)
 		duration = self._duration,
 	}
 
-	local world = Application.main_world()
+	local world = Unit.world(unit)
 
 	self._vector_field = World.vector_field(world, "wind")
-	self._effect_path = "vector_fields/" .. self._effect
+	self._effect_path = "content/vector_fields/" .. self._effect
 
 	self:disable(unit)
 	self:enable(unit)
@@ -191,6 +191,11 @@ VectorFieldEffect.component_data = {
 		ui_name = "Phase",
 		ui_type = "slider",
 		value = 0,
+	},
+	effect_resources = {
+		filter = "vector_field",
+		ui_name = "Effect Resource",
+		ui_type = "resource_array",
 	},
 }
 

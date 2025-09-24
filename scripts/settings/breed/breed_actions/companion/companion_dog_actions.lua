@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_actions/companion/companion_dog_actions.lua
 
-local CompanionDogSettings = require("scripts/utilities/companion/companion_dog_settings")
+local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local damage_types = DamageSettings.damage_types
 local idle_circle_distances = {
 	inner_circle_distance = 2,
@@ -70,9 +70,9 @@ local move_to_position_default = {
 	push_ignored_breeds = {
 		chaos_poxwalker_bomber = true,
 	},
-	dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-	dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_config,
-	dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_config,
+	dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+	dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
+	dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
 }
 local action_data = {
 	name = "companion_dog",
@@ -114,9 +114,9 @@ local action_data = {
 	companion_has_move_position = {
 		follow_owner_cooldown = 1,
 		reset_position_timer = 0.1,
-		dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-		dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_config,
-		dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_config,
+		dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
+		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
 		companion_cone_check = {
 			angle = 90,
 		},
@@ -125,9 +125,9 @@ local action_data = {
 		follow_owner_cooldown = 1,
 		reset_position_timer = 0.1,
 		idle_circle_distances = idle_circle_distances,
-		dog_owner_follow_config = CompanionDogSettings.dog_owner_follow_config,
-		dog_forward_follow_config = CompanionDogSettings.dog_forward_follow_config,
-		dog_lrb_follow_config = CompanionDogSettings.dog_lrb_follow_config,
+		dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
+		dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
+		dog_lrb_follow_config = CompanionDogLocomotionSettings.dog_lrb_follow_config,
 	},
 	move_to_position = table.merge(table.clone(move_to_position_default), {
 		arrived_at_distance_threshold_sq = 1,

@@ -30,12 +30,12 @@ local scenegraph_definition = {
 		parent = "canvas",
 		vertical_alignment = "top",
 		size = {
-			700,
-			194,
+			1200,
+			124,
 		},
 		position = {
 			110,
-			60,
+			130,
 			2,
 		},
 	},
@@ -834,7 +834,7 @@ local widget_definitions = {
 				font_type = "machine_medium",
 				material = "content/ui/materials/font_gradients/slug_font_gradient_header",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "center",
+				text_vertical_alignment = "top",
 				text_color = Color.white(nil, true),
 				offset = {
 					0,
@@ -853,11 +853,11 @@ local widget_definitions = {
 				font_size = 24,
 				font_type = "proxima_nova_bold",
 				text_horizontal_alignment = "left",
-				text_vertical_alignment = "center",
+				text_vertical_alignment = "top",
 				text_color = Color.terminal_text_header(nil, true),
 				offset = {
 					0,
-					40,
+					50,
 					1,
 				},
 			},

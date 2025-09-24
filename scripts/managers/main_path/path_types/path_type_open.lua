@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/managers/main_path/path_types/path_type_open.lua
 
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PathTypeOpen = class("PathTypeOpen")
 
@@ -23,9 +22,10 @@ PathTypeOpen.init = function (self, world, nav_world, num_sides, is_server, use_
 	end
 
 	self._side_progress_on_path = side_progress_on_path
+	self._travel_distance_by_side = {}
+	self._last_travel_distance_update_by_side = {}
+	self._last_position_by_side = {}
 	self._segment_index_by_unit = {}
-	self._group_index_by_unit = {}
-	self._previous_frame_group_index_by_unit = {}
 end
 
 PathTypeOpen.destroy = function (self)
@@ -87,23 +87,35 @@ PathTypeOpen.segment_index_by_unit = function (self, unit)
 	return self._segment_index_by_unit[unit]
 end
 
+PathTypeOpen.closest_main_path_position = function (self, position, return_on_no_index)
+	return MainPathQueries.closest_position(position)
+end
+
+PathTypeOpen.travel_distance_from_position = function (self, position, return_on_no_index)
+	local side_system = Managers.state.extension:system("side_system")
+	local hero_side = side_system:get_side_from_name("heroes")
+	local hero_progress_position = self._last_position_by_side[hero_side] and self._last_position_by_side[hero_side]:unbox()
+
+	if not hero_progress_position then
+		return 0
+	end
+
+	return (self._travel_distance_by_side[hero_side] or 0) + Vector3.distance(hero_progress_position, position)
+end
+
+PathTypeOpen.generate_spawn_points = function (self, nav_triangle_group, group_to_main_path_index)
+	return
+end
+
 PathTypeOpen.update_progress_on_path = function (self, t)
-	local main_path_manager = Managers.state.main_path
-	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local side_system = Managers.state.extension:system("side_system")
 	local sides = side_system:sides()
 	local segment_index_by_unit = self._segment_index_by_unit
 
 	table.clear(segment_index_by_unit)
 
-	self._group_index_by_unit, self._previous_frame_group_index_by_unit = self._previous_frame_group_index_by_unit, self._group_index_by_unit
-
-	table.clear(self._group_index_by_unit)
-
-	local group_index_by_unit, previous_frame_group_index_by_unit = self._group_index_by_unit, self._previous_frame_group_index_by_unit
 	local side_progress_on_path = self._side_progress_on_path
 	local invalid_vector = Vector3.invalid_vector()
-	local nav_world = self._nav_world
 	local num_sides = #sides
 
 	for i = 1, num_sides do
@@ -113,25 +125,37 @@ PathTypeOpen.update_progress_on_path = function (self, t)
 		local side = sides[i]
 		local valid_player_units = side.valid_player_units
 		local num_valid_player_units = #valid_player_units
+		local side_travel_distance = self._travel_distance_by_side[i] or 0
+		local old_progress_position = self._last_position_by_side[i] and self._last_position_by_side[i]:unbox()
+		local progress_position
+		local time_since_update = t - (self._last_travel_distance_update_by_side[i] or -math.huge)
+
+		if num_valid_player_units > 0 and time_since_update > 2.5 then
+			progress_position = Vector3.zero()
+
+			for j = 1, num_valid_player_units do
+				local player_unit = valid_player_units[j]
+
+				progress_position = progress_position + POSITION_LOOKUP[player_unit]
+			end
+
+			progress_position = progress_position / num_valid_player_units
+
+			if old_progress_position then
+				side_travel_distance = side_travel_distance + Vector3.distance(progress_position, old_progress_position)
+			end
+
+			self._travel_distance_by_side[i] = side_travel_distance
+			self._last_position_by_side[i] = Vector3Box(progress_position)
+			self._last_travel_distance_update_by_side[i] = t
+		end
+
+		progress_position = progress_position or old_progress_position
 
 		for j = 1, num_valid_player_units do
 			local player_unit = valid_player_units[j]
 			local player_position = POSITION_LOOKUP[player_unit]
-			local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, player_position)
-
-			if not group_index then
-				local navigation_extension = ScriptUnit.extension(player_unit, "navigation_system")
-				local latest_position_on_nav_mesh = navigation_extension:latest_position_on_nav_mesh()
-
-				if latest_position_on_nav_mesh then
-					group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, latest_position_on_nav_mesh)
-				end
-
-				group_index = group_index or previous_frame_group_index_by_unit[player_unit]
-			end
-
-			local start_location = MainPathQueries.position_from_distance(0)
-			local travel_distance = Vector3.distance(start_location, player_position)
+			local travel_distance = side_travel_distance + Vector3.distance(player_position, progress_position)
 
 			if best_travel_distance < travel_distance then
 				ahead_unit = player_unit
@@ -146,7 +170,6 @@ PathTypeOpen.update_progress_on_path = function (self, t)
 			end
 
 			segment_index_by_unit[player_unit] = 1
-			group_index_by_unit[player_unit] = group_index
 		end
 
 		local progress_on_path = side_progress_on_path[i]

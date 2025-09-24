@@ -6,6 +6,7 @@ local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_
 local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlayerCharacterParticles = require("scripts/settings/particles/player_character_particles")
 local PlayerCharacterSounds = require("scripts/settings/sound/player_character_sounds")
@@ -154,9 +155,13 @@ PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, 
 		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
 	}
 	self._mission = extension_init_data.mission
-	self._archetype_property = extension_init_data.archetype.name
-	self._selected_voice_property = extension_init_data.selected_voice
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._static_profile_properties = {
+		breed = extension_init_data.archetype.breed,
+		companion_breed = extension_init_data.archetype.companion_breed,
+		archetype = extension_init_data.archetype.name,
+		selected_voice = extension_init_data.selected_voice,
+	}
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._static_profile_properties)
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 	self._companion_slots = {}
 
@@ -286,7 +291,7 @@ PlayerHuskVisualLoadoutExtension.wield_slot = function (self, slot_name)
 	equipment_component.wield_slot(equipment, first_person_mode)
 	self:_update_item_visibility(self._is_in_first_person_mode)
 
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, slot_name, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, slot_name, self._static_profile_properties)
 
 	local slot_scripts = self._wieldable_slot_scripts[slot_name]
 
@@ -329,7 +334,7 @@ PlayerHuskVisualLoadoutExtension.unwield_slot = function (self, slot_name)
 	equipment_component.unwield_slot(equipment[slot_name], first_person_mode)
 
 	self._wielded_slot = PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, nil, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, nil, self._static_profile_properties)
 end
 
 PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name, item, optional_existing_unit_3p)
@@ -380,7 +385,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 
 	self:_update_item_visibility(is_in_first_person_mode)
 
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._static_profile_properties)
 end
 
 PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = function (self, channel_id, go_id, slot_id, debug_item_id)
@@ -395,6 +400,9 @@ PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = fu
 
 	if client_item_name ~= debug_item_name then
 		client_item_name = client_item_name or "N/A"
+
+		local channel_peer_id = Network.peer_id(channel_id)
+		local player_peer_id = player:peer_id()
 
 		Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item than server has in player profile.")
 		ferror("[PlayerHuskVisualLoadoutExtension] Profile item mismatch. Failed to equip item `%s` in slot `%s`. Client item was `%s`", debug_item_name, slot_name, client_item_name)
@@ -452,7 +460,7 @@ PlayerHuskVisualLoadoutExtension.rpc_player_unequip_item_from_slot = function (s
 
 	self:_update_item_visibility(self._is_in_first_person_mode)
 
-	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._archetype_property, self._selected_voice_property)
+	self._profile_properties = equipment_component.resolve_profile_properties(equipment, self._wielded_slot, self._static_profile_properties)
 end
 
 PlayerHuskVisualLoadoutExtension.source_fx_for_slot = function (self, slot_name)
@@ -496,6 +504,12 @@ PlayerHuskVisualLoadoutExtension.resolve_gear_particle = function (self, particl
 	return PlayerCharacterParticles.resolve_particle(particle_alias, properties, optional_external_properties)
 end
 
+PlayerHuskVisualLoadoutExtension.resolve_gear_decal = function (self, decal_alias, optional_external_properties)
+	local properties = self._profile_properties
+
+	return PlayerCharacterDecals.resolve_decal(decal_alias, properties, optional_external_properties)
+end
+
 PlayerHuskVisualLoadoutExtension.profile_properties = function (self)
 	return self._profile_properties
 end
@@ -523,6 +537,27 @@ PlayerHuskVisualLoadoutExtension.telemetry_wielded_weapon = function (self)
 	local item = equipment[self._wielded_slot]
 
 	return item
+end
+
+PlayerHuskVisualLoadoutExtension.is_unit_part_of_attachment = function (self, unit, slot_name, attachment_id)
+	local equipment = self._equipment
+	local slot = equipment[slot_name]
+
+	if slot then
+		local root_unit_1p_or_nil = slot.attachment_id_lookup_1p[attachment_id]
+
+		if unit == root_unit_1p_or_nil or root_unit_1p_or_nil and slot.attachment_map_by_unit_1p[root_unit_1p_or_nil][unit] then
+			return true
+		end
+
+		local root_unit_3p_or_nil = slot.attachment_id_lookup_3p[attachment_id]
+
+		if unit == root_unit_3p_or_nil or root_unit_3p_or_nil and slot.attachment_map_by_unit_3p[root_unit_3p_or_nil][unit] then
+			return true
+		end
+	end
+
+	return false
 end
 
 PlayerHuskVisualLoadoutExtension.set_force_hide_wieldable_slot = function (self, slot_name, first_person, third_person)

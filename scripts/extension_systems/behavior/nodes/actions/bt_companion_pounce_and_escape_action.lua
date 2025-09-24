@@ -50,7 +50,6 @@ BtCompanionTargetPounceAndEscapeAction.enter = function (self, unit, breed, blac
 
 	scratchpad.target_blackboard = target_blackboard
 	scratchpad.target_death_component = target_blackboard.death
-	scratchpad.target_disable_component = Blackboard.write_component(target_blackboard, "disable")
 	scratchpad.target_stagger_component = target_blackboard.stagger
 
 	self:_initial_set_up(unit, scratchpad, action_data, t)

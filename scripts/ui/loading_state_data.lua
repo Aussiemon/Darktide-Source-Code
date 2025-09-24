@@ -22,6 +22,7 @@ end
 
 LoadingStateData.init = function (self)
 	self._states = {}
+	self._tracked_promises = {}
 	self._min_prio = 1
 	self._max_prio = #LoadingStateData.WAIT_REASON
 	self._last_reason = false
@@ -32,7 +33,14 @@ LoadingStateData.init = function (self)
 	Managers.event:register(self, "event_stop_waiting", "_event_stop_waiting")
 end
 
-LoadingStateData._event_start_waiting = function (self)
+LoadingStateData._event_start_waiting = function (self, promise, reason)
+	if promise then
+		table.insert(self._tracked_promises, {
+			promise = promise,
+			reason = reason,
+		})
+	end
+
 	self._start_wait_time = Managers.time:time("main")
 end
 
@@ -43,6 +51,23 @@ end
 
 LoadingStateData._event_stop_waiting = function (self)
 	self._start_wait_time = math.huge
+end
+
+LoadingStateData.update = function (self)
+	local promises = self._tracked_promises
+	local was_tracking = #promises > 0
+
+	for i = #promises, 1, -1 do
+		if promises[i].promise:is_pending() then
+			self:_event_set_waiting_state(promises[i].reason)
+		else
+			table.swap_delete(self._tracked_promises, i)
+		end
+	end
+
+	if was_tracking and #self._tracked_promises == 0 then
+		self:_event_stop_waiting()
+	end
 end
 
 LoadingStateData.post_update = function (self)

@@ -310,6 +310,7 @@ local item_slot_settings = {
 		},
 	},
 	slot_pocketable_small = {
+		ability_type = "pocketable_ability",
 		slot_type = "pocketable",
 		wield_input = "wield_4",
 		gamepad_wield_input = {

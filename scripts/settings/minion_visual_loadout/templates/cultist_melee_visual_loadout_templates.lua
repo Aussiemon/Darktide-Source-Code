@@ -5,7 +5,7 @@ local zone_ids = MissionSettings.mission_zone_ids
 local templates = {
 	cultist_melee = {},
 }
-local basic_cultist_melee_template = {
+local base_visual_loadout_template = {
 	slots = {
 		slot_upperbody = {
 			use_outline = true,
@@ -77,7 +77,7 @@ local basic_cultist_melee_template = {
 				"content/items/characters/minions/gib_items/newly_infected_flesh",
 			},
 		},
-		envrionmental_override = {
+		environmental_override = {
 			is_material_override_slot = true,
 			items = {
 				"content/items/characters/minions/generic_items/empty_minion_item",
@@ -94,8 +94,8 @@ local basic_cultist_melee_template = {
 		},
 	},
 }
-local default_1 = table.clone(basic_cultist_melee_template)
-local default_2 = table.clone(basic_cultist_melee_template)
+local default_1 = table.clone(base_visual_loadout_template)
+local default_2 = table.clone(base_visual_loadout_template)
 
 default_2.gib_variations = {
 	"face_03",
@@ -111,7 +111,7 @@ default_2.slots.slot_face = {
 	},
 }
 
-local default_3 = table.clone(basic_cultist_melee_template)
+local default_3 = table.clone(base_visual_loadout_template)
 
 default_3.gib_variations = {
 	"no_gear",
@@ -122,7 +122,7 @@ default_3.slots.slot_variation_gear = {
 	},
 }
 
-local default_4 = table.clone(basic_cultist_melee_template)
+local default_4 = table.clone(base_visual_loadout_template)
 
 default_4.gib_variations = {
 	"no_gear",
@@ -156,136 +156,69 @@ templates.cultist_melee.default = {
 	default_6,
 }
 
-local foundry_1 = table.clone(basic_cultist_melee_template)
+local tank_foundry_variations = {}
 
-foundry_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.cultist_melee.default) do
+	local tank_foundry_variation = table.clone(default_variation)
 
-local foundry_2 = table.clone(default_2)
+	tank_foundry_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/dirt_02",
+	}
+	tank_foundry_variations[#tank_foundry_variations + 1] = tank_foundry_variation
+end
 
-foundry_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.cultist_melee[zone_ids.tank_foundry] = tank_foundry_variations
 
-local foundry_3 = table.clone(default_3)
+local dust_variations = {}
 
-foundry_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.cultist_melee.default) do
+	local dust_variation = table.clone(default_variation)
 
-local foundry_4 = table.clone(default_4)
+	dust_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/sand_02",
+	}
+	dust_variations[#dust_variations + 1] = dust_variation
+end
 
-foundry_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+templates.cultist_melee[zone_ids.dust] = dust_variations
 
-local foundry_5 = table.clone(default_3)
+local watertown_variations = {}
 
-foundry_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
+for _, default_variation in pairs(templates.cultist_melee.default) do
+	local watertown_variation = table.clone(default_variation)
 
-local foundry_6 = table.clone(default_4)
+	watertown_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_02",
+	}
+	watertown_variations[#watertown_variations + 1] = watertown_variation
+end
 
-foundry_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/dirt_02",
-}
-templates.cultist_melee[zone_ids.tank_foundry] = {
-	foundry_1,
-	foundry_2,
-	foundry_3,
-	foundry_4,
-	foundry_5,
-	foundry_6,
-}
+templates.cultist_melee[zone_ids.watertown] = watertown_variations
 
-local dust_1 = table.clone(basic_cultist_melee_template)
+local void_variations = {}
 
-dust_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
+for _, default_variation in pairs(templates.cultist_melee.default) do
+	local void_variation = table.clone(default_variation)
 
-local dust_2 = table.clone(default_3)
+	void_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	void_variations[#void_variations + 1] = void_variation
+end
 
-dust_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
+templates.cultist_melee[zone_ids.void] = void_variations
 
-local dust_3 = table.clone(default_3)
+local horde_variations = {}
 
-dust_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
+for _, default_variation in pairs(templates.cultist_melee.default) do
+	local horde_variation = table.clone(default_variation)
 
-local dust_4 = table.clone(default_4)
+	horde_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/snow_01",
+	}
+	horde_variations[#horde_variations + 1] = horde_variation
+end
 
-dust_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_5 = table.clone(default_3)
-
-dust_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-
-local dust_6 = table.clone(default_4)
-
-dust_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/sand_02",
-}
-templates.cultist_melee[zone_ids.dust] = {
-	dust_1,
-	dust_2,
-	dust_3,
-	dust_4,
-	dust_5,
-	dust_6,
-}
-
-local watertown_1 = table.clone(basic_cultist_melee_template)
-
-watertown_1.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_2 = table.clone(default_2)
-
-watertown_2.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_3 = table.clone(default_3)
-
-watertown_3.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_4 = table.clone(default_4)
-
-watertown_4.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_5 = table.clone(default_3)
-
-watertown_5.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-
-local watertown_6 = table.clone(default_4)
-
-watertown_6.slots.envrionmental_override.items = {
-	"content/items/characters/minions/environment_overrides/acid_02",
-}
-templates.cultist_melee[zone_ids.watertown] = {
-	watertown_1,
-	watertown_2,
-	watertown_3,
-	watertown_4,
-	watertown_5,
-	watertown_6,
-}
+templates.cultist_melee[zone_ids.horde] = horde_variations
 
 return templates
