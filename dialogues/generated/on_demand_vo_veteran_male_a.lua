@@ -952,23 +952,6 @@ local on_demand_vo_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_veteran_male_a__smart_tag_vo_pickup_health_booster_01",
-			"loc_veteran_male_a__smart_tag_vo_pickup_health_booster_02",
-			"loc_veteran_male_a__smart_tag_vo_pickup_health_booster_03",
-			"loc_veteran_male_a__smart_tag_vo_pickup_health_booster_04",
-		},
-		sound_events_duration = {
-			0.972188,
-			0.921729,
-			1.274625,
-			1.168458,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

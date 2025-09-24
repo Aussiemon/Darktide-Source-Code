@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/zealot_male_a_zealot_female_b.lua
 
 local zealot_male_a_zealot_female_b = {
+	bonding_conversations_victoria_cauldron_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__bonding_conversations_victoria_cauldron_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.438438,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversations_victoria_cauldron_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__bonding_conversations_victoria_cauldron_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.346938,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversations_victoria_indiscipline_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -20,6 +42,28 @@ local zealot_male_a_zealot_female_b = {
 		},
 		sound_events_duration = {
 			[1] = 3.550438,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversations_victoria_laggard_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__bonding_conversations_victoria_laggard_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.121146,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversations_victoria_laggard_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__bonding_conversations_victoria_laggard_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.428646,
 		},
 		randomize_indexes = {},
 	},

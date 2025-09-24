@@ -61,6 +61,28 @@ local circumstance_vo_darkness_zealot_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_burn_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__pimlico_bonding_conversation_burn_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.57524,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_burn_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__pimlico_bonding_conversation_burn_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.847042,
+		},
+		randomize_indexes = {},
+	},
 	power_circumstance_start_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

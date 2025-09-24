@@ -90,6 +90,50 @@ local psyker_female_b_zealot_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_wishes_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__oval_bonding_conversation_wishes_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.186521,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_wishes_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__oval_bonding_conversation_wishes_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.828063,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_seventeen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__oval_world_conversation_cumbernauld_brahms_seventeen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.951,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_seventeen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__oval_world_conversation_cumbernauld_brahms_seventeen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.458292,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("psyker_female_b_zealot_male_b", psyker_female_b_zealot_male_b)

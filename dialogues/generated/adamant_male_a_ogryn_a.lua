@@ -45,6 +45,28 @@ local adamant_male_a_ogryn_a = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_male_a_ogryn_bonding_conversation_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__adamant_male_a_ogryn_bonding_conversation_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.947594,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_ogryn_bonding_conversation_03_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__adamant_male_a_ogryn_bonding_conversation_03_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.945219,
+		},
+		randomize_indexes = {},
+	},
 	adamant_male_a_ogryn_bonding_conversation_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

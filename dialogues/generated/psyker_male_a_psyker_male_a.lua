@@ -1,6 +1,446 @@
 ﻿-- chunkname: @dialogues/generated/psyker_male_a_psyker_male_a.lua
 
 local psyker_male_a_psyker_male_a = {
+	adamant_female_a_psyker_bonding_conversation_06_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_06_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.17675,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_06_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_06_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.242542,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_07_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_07_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.438563,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_07_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_07_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.451,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_08_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_08_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.94075,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_09_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_09_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.552604,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_09_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_09_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.677896,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_10_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_10_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.661896,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_a_psyker_bonding_conversation_10_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_a_psyker_bonding_conversation_10_c_01",
+		},
+		sound_events_duration = {
+			[1] = 1.586167,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_07_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_07_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.331958,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_07_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_07_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.424354,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_08_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_08_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.563667,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_08_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_08_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.813063,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_09_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_09_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.545667,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_09_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_09_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.063375,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_09_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_09_e_01",
+		},
+		sound_events_duration = {
+			[1] = 2.347688,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_10_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_10_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.48775,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_10_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_b_psyker_bonding_conversation_10_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.163125,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_c_psyker_bonding_conversation_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 1.77875,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_04_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_female_c_psyker_bonding_conversation_04_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.565,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_07_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_07_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.398521,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_07_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_07_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.442188,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_09_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_09_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.129354,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_09_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_09_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.504917,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_10_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_10_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.696729,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_psyker_bonding_conversation_10_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_a_psyker_bonding_conversation_10_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.704271,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_06_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_06_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.758792,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_06_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_06_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.175375,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_07_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_07_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.582625,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_07_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_07_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.294292,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_08_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_08_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.103938,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_08_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_08_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.079604,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_09_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_09_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.954958,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_09_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_09_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.226271,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_10_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_10_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.469792,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_10_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_10_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.00025,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_10_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_10_e_01",
+		},
+		sound_events_duration = {
+			[1] = 4.508542,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_10_g = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_b_psyker_bonding_conversation_10_g_01",
+		},
+		sound_events_duration = {
+			[1] = 1.602458,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_psyker_bonding_conversation_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_c_psyker_bonding_conversation_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.501396,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_psyker_bonding_conversation_04_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__adamant_male_c_psyker_bonding_conversation_04_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.805708,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_angry_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -1351,6 +1791,369 @@ local psyker_male_a_psyker_male_a = {
 		},
 		sound_events_duration = {
 			[1] = 2.722229,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_observe_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_observe_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.199625,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_observe_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_observe_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.889458,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_purgated_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_purgated_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.212167,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_purgated_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_purgated_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.755854,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_screams_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_screams_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.744854,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_screams_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_screams_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.331063,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_scruffy_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_scruffy_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.346833,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_scruffy_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_scruffy_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.752208,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_travail_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_travail_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.237438,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_travail_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_bonding_conversation_travail_c_01",
+		},
+		sound_events_duration = {
+			[1] = 7.936563,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_fifteen_mangolin_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_balta_nobles_fifteen_mangolin_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.067625,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_fifteen_mangolin_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_balta_nobles_fifteen_mangolin_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.576417,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_twentysix_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_balta_nobles_twentysix_a_01",
+		},
+		sound_events_duration = {
+			[1] = 9.308375,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_twentysix_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_balta_nobles_twentysix_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.447,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_eighteen_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_cumbernauld_brahms_eighteen_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.967479,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_eighteen_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_cumbernauld_brahms_eighteen_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.038958,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtyfour_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_thirtyfour_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.803958,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtyfour_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_thirtyfour_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.925792,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtyfour_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_thirtyfour_e_01",
+		},
+		sound_events_duration = {
+			[1] = 1.460417,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtyone_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_thirtyone_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.992688,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtyone_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_thirtyone_c_01",
+		},
+		sound_events_duration = {
+			[1] = 8.269688,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_twentytwo_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_twentytwo_a_01",
+		},
+		sound_events_duration = {
+			[1] = 6.609625,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_twentytwo_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_daviot_steel_twentytwo_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.708479,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_elvanfoot_hestia_seven_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_elvanfoot_hestia_seven_a_01",
+		},
+		sound_events_duration = {
+			[1] = 6.920667,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_elvanfoot_hestia_seven_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_elvanfoot_hestia_seven_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.662625,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_eighteen_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_fingal_swagger_eighteen_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.517,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_eighteen_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_fingal_swagger_eighteen_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.449292,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirtyone_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_thirtyone_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.399375,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirtyone_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_thirtyone_c_01",
+		},
+		sound_events_duration = {
+			[1] = 2.963354,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirtytwo_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_thirtytwo_a_01",
+		},
+		sound_events_duration = {
+			[1] = 7.33375,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirtytwo_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_thirtytwo_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.039646,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_twentythree_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_twentythree_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.936125,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_twentythree_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_universal_hestia_twentythree_c_01",
+		},
+		sound_events_duration = {
+			[1] = 6.669479,
 		},
 		randomize_indexes = {},
 	},

@@ -823,23 +823,6 @@ local on_demand_vo_adamant_female_a = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_adamant_female_a__smart_tag_vo_pickup_health_booster_01",
-			"loc_adamant_female_a__smart_tag_vo_pickup_health_booster_02",
-			"loc_adamant_female_a__smart_tag_vo_pickup_health_booster_03",
-			"loc_adamant_female_a__smart_tag_vo_pickup_health_booster_04",
-		},
-		sound_events_duration = {
-			1.350667,
-			1.398,
-			1.32,
-			1.308,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

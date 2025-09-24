@@ -56,6 +56,28 @@ local zealot_male_b_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_daviot_steel_thirty_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_daviot_steel_thirty_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.533542,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirty_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_daviot_steel_thirty_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.945542,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_male_b_psyker_female_a", zealot_male_b_psyker_female_a)

@@ -2195,6 +2195,229 @@ return function ()
 	define_rule({
 		category = "enemy_vo_prio_1",
 		database = "enemy_vo",
+		name = "plasma_gunner_alerted_idle",
+		response = "plasma_gunner_alerted_idle",
+		wwise_route = 58,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"alerted_idle",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_plasma_gunner",
+			},
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_alerted_idle",
+				OP.TIMEDIFF,
+				OP.GT,
+				6,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_alerted_idle",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_alerted_idle",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_alerted_idle",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "plasma_gunner_shooting",
+		response = "plasma_gunner_shooting",
+		wwise_route = 58,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"start_shooting",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_plasma_gunner",
+			},
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_shooting",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_shooting",
+				OP.TIMESET,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "plasma_gunner_stopped_shooting",
+		response = "plasma_gunner_stopped_shooting",
+		wwise_route = 58,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"stopped_shooting",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_plasma_gunner",
+			},
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_stopped_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_stopped_shooting",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"enemy_memory_plasma_gunner_stopped_shooting",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"faction_memory_plasma_gunner_stopped_shooting",
+				OP.TIMESET,
+			},
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "plasma_gunner_take_cover",
+		response = "plasma_gunner_take_cover",
+		wwise_route = 58,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"take_cover",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_plasma_gunner",
+			},
+			{
+				"user_memory",
+				"enemy_memory_take_cover",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+			{
+				"faction_memory",
+				"faction_memory_take_cover",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"enemy_memory_take_cover",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"faction_memory_take_cover",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
 		name = "ranged_idle_player_low_on_health",
 		response = "ranged_idle_player_low_on_health",
 		wwise_route = 2,
@@ -2899,6 +3122,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 1,
@@ -2956,6 +3182,9 @@ return function ()
 				"enemy_memory_traitor_flamer_start_shooting",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

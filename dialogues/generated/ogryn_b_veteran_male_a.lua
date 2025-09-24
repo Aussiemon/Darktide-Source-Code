@@ -158,6 +158,50 @@ local ogryn_b_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_leadership_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_bonding_conversation_leadership_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.245958,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_leadership_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_bonding_conversation_leadership_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.426208,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_universal_hestia_two_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.514,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_two_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_universal_hestia_two_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.938083,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_b_veteran_male_a", ogryn_b_veteran_male_a)

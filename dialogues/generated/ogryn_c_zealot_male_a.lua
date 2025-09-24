@@ -121,6 +121,28 @@ local ogryn_c_zealot_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_cumbernauld_brahms_sixteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_a__oval_world_conversation_cumbernauld_brahms_sixteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.903125,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_sixteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_a__oval_world_conversation_cumbernauld_brahms_sixteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.838396,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_c_zealot_male_a", ogryn_c_zealot_male_a)

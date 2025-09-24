@@ -23,6 +23,28 @@ local veteran_female_c_psyker_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_gareloch_ten_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.749521,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_gareloch_ten_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_gareloch_ten_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.265896,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_female_c_psyker_male_a", veteran_female_c_psyker_male_a)

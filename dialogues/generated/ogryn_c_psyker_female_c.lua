@@ -119,6 +119,72 @@ local ogryn_c_psyker_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_heart_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_heart_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.834188,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_heart_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_heart_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.363625,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_snivellers_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_snivellers_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.548458,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_snivellers_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_snivellers_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.15199,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_thinking_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_thinking_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.78826,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_thinking_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_c__pimlico_bonding_conversation_thinking_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.159813,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_c_psyker_female_c", ogryn_c_psyker_female_c)

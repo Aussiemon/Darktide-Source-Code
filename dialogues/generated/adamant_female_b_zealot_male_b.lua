@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/adamant_female_b_zealot_male_b.lua
 
 local adamant_female_b_zealot_male_b = {
+	adamant_female_b_zealot_bonding_conversation_12_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__adamant_female_b_zealot_bonding_conversation_12_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.365,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_12_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__adamant_female_b_zealot_bonding_conversation_12_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.907313,
+		},
+		randomize_indexes = {},
+	},
 	adamant_female_b_zealot_bonding_conversation_13_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -42,6 +64,28 @@ local adamant_female_b_zealot_male_b = {
 		},
 		sound_events_duration = {
 			[1] = 2.156958,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_15_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__adamant_female_b_zealot_bonding_conversation_15_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.074542,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_15_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__adamant_female_b_zealot_bonding_conversation_15_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.574313,
 		},
 		randomize_indexes = {},
 	},

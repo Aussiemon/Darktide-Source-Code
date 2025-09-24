@@ -354,7 +354,7 @@ local gameplay_vo_psyker_male_c = {
 	},
 	combat_pause_one_liner = {
 		randomize_indexes_n = 0,
-		sound_events_n = 11,
+		sound_events_n = 10,
 		sound_events = {
 			"loc_psyker_male_c__combat_pause_one_liner_01",
 			"loc_psyker_male_c__combat_pause_one_liner_02",
@@ -366,7 +366,6 @@ local gameplay_vo_psyker_male_c = {
 			"loc_psyker_male_c__combat_pause_one_liner_08",
 			"loc_psyker_male_c__combat_pause_one_liner_09",
 			"loc_psyker_male_c__combat_pause_one_liner_10",
-			"loc_psyker_male_c__lore_enemy_within_three_a_02",
 		},
 		sound_events_duration = {
 			2.197698,
@@ -379,7 +378,6 @@ local gameplay_vo_psyker_male_c = {
 			2.608,
 			2.608458,
 			2.806156,
-			5.702979,
 		},
 		randomize_indexes = {},
 	},

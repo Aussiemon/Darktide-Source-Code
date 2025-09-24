@@ -129,7 +129,7 @@ local mission_vo_psykhanium_past_matriarch_a = {
 			[1] = "loc_past_matriarch_a__story_echo_brahms_03_b_01",
 		},
 		sound_events_duration = {
-			[1] = 7.562844,
+			[1] = 6.073458,
 		},
 		randomize_indexes = {},
 	},

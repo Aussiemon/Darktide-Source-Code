@@ -78,6 +78,28 @@ local veteran_male_c_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_wolfer_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__bonding_conversation_waterloo_wolfer_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.617458,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_wolfer_10_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__bonding_conversation_waterloo_wolfer_10_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.811229,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_waterloo_worse_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

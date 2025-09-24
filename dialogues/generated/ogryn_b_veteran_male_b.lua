@@ -169,6 +169,28 @@ local ogryn_b_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_cumbernauld_brahms_fifteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__oval_world_conversation_cumbernauld_brahms_fifteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.191188,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_fifteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__oval_world_conversation_cumbernauld_brahms_fifteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.202875,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_b_veteran_male_b", ogryn_b_veteran_male_b)

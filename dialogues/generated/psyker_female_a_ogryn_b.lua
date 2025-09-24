@@ -23,6 +23,28 @@ local psyker_female_a_ogryn_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_cumbernauld_brahms_eleven_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.137188,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_eleven_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_world_conversation_cumbernauld_brahms_eleven_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.624646,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("psyker_female_a_ogryn_b", psyker_female_a_ogryn_b)

@@ -354,7 +354,7 @@ local gameplay_vo_psyker_female_c = {
 	},
 	combat_pause_one_liner = {
 		randomize_indexes_n = 0,
-		sound_events_n = 11,
+		sound_events_n = 10,
 		sound_events = {
 			"loc_psyker_female_c__combat_pause_one_liner_01",
 			"loc_psyker_female_c__combat_pause_one_liner_02",
@@ -366,7 +366,6 @@ local gameplay_vo_psyker_female_c = {
 			"loc_psyker_female_c__combat_pause_one_liner_08",
 			"loc_psyker_female_c__combat_pause_one_liner_09",
 			"loc_psyker_female_c__combat_pause_one_liner_10",
-			"loc_psyker_female_c__lore_enemy_within_three_a_02",
 		},
 		sound_events_duration = {
 			2.239542,
@@ -379,7 +378,6 @@ local gameplay_vo_psyker_female_c = {
 			3.38901,
 			3.158854,
 			2.912479,
-			6.710302,
 		},
 		randomize_indexes = {},
 	},

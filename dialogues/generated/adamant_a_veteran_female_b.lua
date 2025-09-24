@@ -74,7 +74,7 @@ local adamant_a_veteran_female_b = {
 			[1] = "loc_veteran_female_b__combat_pause_limited_bolt_on_a_adamant_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.053677,
+			[1] = 5.264708,
 		},
 		randomize_indexes = {},
 	},

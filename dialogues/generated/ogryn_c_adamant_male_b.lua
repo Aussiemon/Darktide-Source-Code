@@ -1,6 +1,94 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_c_adamant_male_b.lua
 
 local ogryn_c_adamant_male_b = {
+	adamant_male_b_ogryn_bonding_conversation_26_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_26_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.965677,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_26_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_26_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.331604,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_28_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_28_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.337031,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_28_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_28_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.45,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_29_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_29_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.974094,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_29_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_29_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.378167,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_30_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_30_b_01",
+		},
+		sound_events_duration = {
+			[1] = 0.770125,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_30_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_30_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.506,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_c_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

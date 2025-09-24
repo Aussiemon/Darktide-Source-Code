@@ -4,6 +4,3097 @@ return function ()
 	define_rule({
 		category = "conversations_prio_1",
 		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_16_a",
+		response = "adamant_female_a_zealot_bonding_conversation_16_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_16_b",
+		response = "adamant_female_a_zealot_bonding_conversation_16_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_16_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_16_c",
+		response = "adamant_female_a_zealot_bonding_conversation_16_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_16_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_16_d",
+		response = "adamant_female_a_zealot_bonding_conversation_16_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_16_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_16_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_17_a",
+		response = "adamant_female_a_zealot_bonding_conversation_17_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_17_b",
+		response = "adamant_female_a_zealot_bonding_conversation_17_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_17_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_17_c",
+		response = "adamant_female_a_zealot_bonding_conversation_17_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_17_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_17_d",
+		response = "adamant_female_a_zealot_bonding_conversation_17_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_17_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_17_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_18_a",
+		response = "adamant_female_a_zealot_bonding_conversation_18_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_18_b",
+		response = "adamant_female_a_zealot_bonding_conversation_18_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_18_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_18_c",
+		response = "adamant_female_a_zealot_bonding_conversation_18_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_18_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_18_d",
+		response = "adamant_female_a_zealot_bonding_conversation_18_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_18_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_18_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_19_a",
+		response = "adamant_female_a_zealot_bonding_conversation_19_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_19_b",
+		response = "adamant_female_a_zealot_bonding_conversation_19_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_19_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_19_c",
+		response = "adamant_female_a_zealot_bonding_conversation_19_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_19_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_19_d",
+		response = "adamant_female_a_zealot_bonding_conversation_19_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_19_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_19_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_20_a",
+		response = "adamant_female_a_zealot_bonding_conversation_20_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90,
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_20_b",
+		response = "adamant_female_a_zealot_bonding_conversation_20_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_20_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_20_c",
+		response = "adamant_female_a_zealot_bonding_conversation_20_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_20_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_a_zealot_bonding_conversation_20_d",
+		response = "adamant_female_a_zealot_bonding_conversation_20_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a_zealot_bonding_conversation_20_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_a_zealot_bonding_conversation_20_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_b_zealot_bonding_conversation_18_a",
+		response = "adamant_female_b_zealot_bonding_conversation_18_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_b",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_b_zealot_bonding_conversation_18_b",
+		response = "adamant_female_b_zealot_bonding_conversation_18_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_b_zealot_bonding_conversation_18_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_b",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_b_zealot_bonding_conversation_18_c",
+		response = "adamant_female_b_zealot_bonding_conversation_18_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_b_zealot_bonding_conversation_18_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_b_zealot_bonding_conversation_18_d",
+		response = "adamant_female_b_zealot_bonding_conversation_18_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_b_zealot_bonding_conversation_18_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_b_zealot_bonding_conversation_18_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_c_zealot_bonding_conversation_19_a",
+		response = "adamant_female_c_zealot_bonding_conversation_19_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90,
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_c_zealot_bonding_conversation_19_b",
+		response = "adamant_female_c_zealot_bonding_conversation_19_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_c_zealot_bonding_conversation_19_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_c_zealot_bonding_conversation_19_c",
+		response = "adamant_female_c_zealot_bonding_conversation_19_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_c_zealot_bonding_conversation_19_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_female_c_zealot_bonding_conversation_19_d",
+		response = "adamant_female_c_zealot_bonding_conversation_19_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_c_zealot_bonding_conversation_19_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_female_c",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_female_c_zealot_bonding_conversation_19_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_18_a",
+		response = "adamant_male_a_zealot_bonding_conversation_18_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_18_b",
+		response = "adamant_male_a_zealot_bonding_conversation_18_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_18_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_18_c",
+		response = "adamant_male_a_zealot_bonding_conversation_18_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_18_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_18_d",
+		response = "adamant_male_a_zealot_bonding_conversation_18_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_18_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_18_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_19_a",
+		response = "adamant_male_a_zealot_bonding_conversation_19_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90,
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_19_b",
+		response = "adamant_male_a_zealot_bonding_conversation_19_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_19_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_19_c",
+		response = "adamant_male_a_zealot_bonding_conversation_19_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_19_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_19_d",
+		response = "adamant_male_a_zealot_bonding_conversation_19_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_19_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_19_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_20_a",
+		response = "adamant_male_a_zealot_bonding_conversation_20_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_20_b",
+		response = "adamant_male_a_zealot_bonding_conversation_20_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_20_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_20_c",
+		response = "adamant_male_a_zealot_bonding_conversation_20_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_20_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_a_zealot_bonding_conversation_20_d",
+		response = "adamant_male_a_zealot_bonding_conversation_20_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a_zealot_bonding_conversation_20_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_a_zealot_bonding_conversation_20_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_17_a",
+		response = "adamant_male_b_zealot_bonding_conversation_17_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_b",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_17_b",
+		response = "adamant_male_b_zealot_bonding_conversation_17_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_17_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_17_c",
+		response = "adamant_male_b_zealot_bonding_conversation_17_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_17_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_17_d",
+		response = "adamant_male_b_zealot_bonding_conversation_17_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_17_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_17_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_20_a",
+		response = "adamant_male_b_zealot_bonding_conversation_20_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_b",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_20_b",
+		response = "adamant_male_b_zealot_bonding_conversation_20_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_20_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_20_c",
+		response = "adamant_male_b_zealot_bonding_conversation_20_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_20_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_b_zealot_bonding_conversation_20_d",
+		response = "adamant_male_b_zealot_bonding_conversation_20_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b_zealot_bonding_conversation_20_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_b_zealot_bonding_conversation_20_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_c_zealot_bonding_conversation_20_a",
+		response = "adamant_male_c_zealot_bonding_conversation_20_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"adamant_male_c",
+				},
+			},
+			{
+				"faction_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_c_zealot_bonding_conversation_20_b",
+		response = "adamant_male_c_zealot_bonding_conversation_20_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_c_zealot_bonding_conversation_20_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_c_zealot_bonding_conversation_20_c",
+		response = "adamant_male_c_zealot_bonding_conversation_20_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_c_zealot_bonding_conversation_20_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "adamant_male_c_zealot_bonding_conversation_20_d",
+		response = "adamant_male_c_zealot_bonding_conversation_20_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_c_zealot_bonding_conversation_20_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"adamant_male_c",
+				},
+			},
+			{
+				"user_memory",
+				"adamant_male_c_zealot_bonding_conversation_20_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
 		name = "bonding_conversation_bloodbath_a",
 		response = "bonding_conversation_bloodbath_a",
 		wwise_route = 0,
@@ -7155,6 +10246,3383 @@ return function ()
 			{
 				"user_memory",
 				"oval_bonding_conversation_eyes_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_remarkable_a",
+		response = "oval_bonding_conversation_remarkable_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_remarkable_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_remarkable_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_remarkable_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_remarkable_b",
+		response = "oval_bonding_conversation_remarkable_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_remarkable_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_remarkable_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_remarkable_c",
+		response = "oval_bonding_conversation_remarkable_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_remarkable_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_remarkable_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_remarkable_d",
+		response = "oval_bonding_conversation_remarkable_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_remarkable_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_remarkable_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_tread_a",
+		response = "oval_bonding_conversation_tread_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_tread_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_tread_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_tread_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_tread_b",
+		response = "oval_bonding_conversation_tread_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_tread_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_tread_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_tread_c",
+		response = "oval_bonding_conversation_tread_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_tread_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_tread_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_tread_d",
+		response = "oval_bonding_conversation_tread_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_tread_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_tread_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_uplifting_a",
+		response = "oval_bonding_conversation_uplifting_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90,
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true",
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_c",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_uplifting_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_uplifting_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_bonding_conversation_uplifting_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0",
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_uplifting_b",
+		response = "oval_bonding_conversation_uplifting_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_uplifting_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_bonding_conversation_uplifting_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_uplifting_c",
+		response = "oval_bonding_conversation_uplifting_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_uplifting_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_uplifting_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_bonding_conversation_uplifting_d",
+		response = "oval_bonding_conversation_uplifting_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_bonding_conversation_uplifting_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_c",
+				},
+			},
+			{
+				"user_memory",
+				"oval_bonding_conversation_uplifting_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_four_a",
+		response = "oval_world_conversation_balta_nobles_four_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_four_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_four_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_four_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_four_b",
+		response = "oval_world_conversation_balta_nobles_four_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_four_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_four_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_four_c",
+		response = "oval_world_conversation_balta_nobles_four_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_four_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_four_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_four_d",
+		response = "oval_world_conversation_balta_nobles_four_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_four_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_four_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_nine_mangolin_a",
+		response = "oval_world_conversation_balta_nobles_nine_mangolin_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_nine_mangolin_b",
+		response = "oval_world_conversation_balta_nobles_nine_mangolin_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_nine_mangolin_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_nine_mangolin_c",
+		response = "oval_world_conversation_balta_nobles_nine_mangolin_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_nine_mangolin_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_nine_mangolin_d",
+		response = "oval_world_conversation_balta_nobles_nine_mangolin_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_nine_mangolin_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_nine_mangolin_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_twentytwo_mangolin_a",
+		response = "oval_world_conversation_balta_nobles_twentytwo_mangolin_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_twentytwo_mangolin_b",
+		response = "oval_world_conversation_balta_nobles_twentytwo_mangolin_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_twentytwo_mangolin_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_twentytwo_mangolin_c",
+		response = "oval_world_conversation_balta_nobles_twentytwo_mangolin_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_twentytwo_mangolin_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_balta_nobles_twentytwo_mangolin_d",
+		response = "oval_world_conversation_balta_nobles_twentytwo_mangolin_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_balta_nobles_twentytwo_mangolin_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_balta_nobles_twentytwo_mangolin_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_cumbernauld_brahms_nine_a",
+		response = "oval_world_conversation_cumbernauld_brahms_nine_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_cumbernauld_brahms_nine_b",
+		response = "oval_world_conversation_cumbernauld_brahms_nine_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_cumbernauld_brahms_nine_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_cumbernauld_brahms_nine_c",
+		response = "oval_world_conversation_cumbernauld_brahms_nine_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_cumbernauld_brahms_nine_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_cumbernauld_brahms_nine_d",
+		response = "oval_world_conversation_cumbernauld_brahms_nine_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_cumbernauld_brahms_nine_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_cumbernauld_brahms_nine_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_thirty_a",
+		response = "oval_world_conversation_daviot_steel_thirty_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_daviot_steel_thirty_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_thirty_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_daviot_steel_thirty_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_thirty_b",
+		response = "oval_world_conversation_daviot_steel_thirty_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_thirty_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_thirty_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_thirty_c",
+		response = "oval_world_conversation_daviot_steel_thirty_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_thirty_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_thirty_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_thirty_d",
+		response = "oval_world_conversation_daviot_steel_thirty_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_thirty_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_thirty_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_twentynine_a",
+		response = "oval_world_conversation_daviot_steel_twentynine_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_daviot_steel_twentynine_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_twentynine_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_daviot_steel_twentynine_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_twentynine_b",
+		response = "oval_world_conversation_daviot_steel_twentynine_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_twentynine_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_twentynine_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_twentynine_c",
+		response = "oval_world_conversation_daviot_steel_twentynine_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_twentynine_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_twentynine_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_daviot_steel_twentynine_d",
+		response = "oval_world_conversation_daviot_steel_twentynine_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_daviot_steel_twentynine_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_daviot_steel_twentynine_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_fingal_swagger_sixteen_a",
+		response = "oval_world_conversation_fingal_swagger_sixteen_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_b",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_fingal_swagger_sixteen_b",
+		response = "oval_world_conversation_fingal_swagger_sixteen_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_fingal_swagger_sixteen_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_b",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_fingal_swagger_sixteen_c",
+		response = "oval_world_conversation_fingal_swagger_sixteen_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_fingal_swagger_sixteen_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_fingal_swagger_sixteen_d",
+		response = "oval_world_conversation_fingal_swagger_sixteen_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_fingal_swagger_sixteen_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_fingal_swagger_sixteen_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_seven_a",
+		response = "oval_world_conversation_universal_hestia_seven_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_seven_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_seven_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_seven_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_seven_b",
+		response = "oval_world_conversation_universal_hestia_seven_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_seven_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_seven_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_seven_c",
+		response = "oval_world_conversation_universal_hestia_seven_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_seven_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_seven_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_seven_d",
+		response = "oval_world_conversation_universal_hestia_seven_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_seven_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_seven_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_thirty_a",
+		response = "oval_world_conversation_universal_hestia_thirty_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_thirty_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_thirty_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_thirty_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_thirty_b",
+		response = "oval_world_conversation_universal_hestia_thirty_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_thirty_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_thirty_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_thirty_c",
+		response = "oval_world_conversation_universal_hestia_thirty_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_thirty_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_thirty_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_thirty_d",
+		response = "oval_world_conversation_universal_hestia_thirty_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_thirty_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_c",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_thirty_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentyone_a",
+		response = "oval_world_conversation_universal_hestia_twentyone_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_twentyone_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentyone_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_twentyone_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentyone_b",
+		response = "oval_world_conversation_universal_hestia_twentyone_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentyone_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentyone_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentyone_c",
+		response = "oval_world_conversation_universal_hestia_twentyone_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentyone_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentyone_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentyone_d",
+		response = "oval_world_conversation_universal_hestia_twentyone_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentyone_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentyone_b_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentyone_e",
+		response = "oval_world_conversation_universal_hestia_twentyone_e",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentyone_d",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentyone_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentytwo_a",
+		response = "oval_world_conversation_universal_hestia_twentytwo_a",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk",
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1,
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+				},
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0,
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_a",
+				OP.EQ,
+				0,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220,
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_a_user",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_a",
+				OP.ADD,
+				1,
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentytwo_b",
+		response = "oval_world_conversation_universal_hestia_twentytwo_b",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentytwo_a",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_b_user",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentytwo_c",
+		response = "oval_world_conversation_universal_hestia_twentytwo_c",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentytwo_b",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_b",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_a_user",
+				OP.EQ,
+				1,
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "conversations_prio_1",
+		database = "zealot_male_b",
+		name = "oval_world_conversation_universal_hestia_twentytwo_d",
+		response = "oval_world_conversation_universal_hestia_twentytwo_d",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"oval_world_conversation_universal_hestia_twentytwo_c",
+				},
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_male_a",
+				},
+			},
+			{
+				"user_memory",
+				"oval_world_conversation_universal_hestia_twentytwo_b_user",
 				OP.EQ,
 				1,
 			},

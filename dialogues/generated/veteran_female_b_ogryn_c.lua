@@ -144,6 +144,28 @@ local veteran_female_b_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_twins_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_twins_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.06549,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_twins_02_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__bonding_conversation_waterloo_twins_02_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.425031,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_waterloo_wolfer_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -163,6 +185,17 @@ local veteran_female_b_ogryn_c = {
 		},
 		sound_events_duration = {
 			[1] = 4.458198,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_quiet_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__pimlico_bonding_conversation_quiet_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.652021,
 		},
 		randomize_indexes = {},
 	},

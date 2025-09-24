@@ -23,6 +23,50 @@ local adamant_male_c_ogryn_b = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_male_c_ogryn_bonding_conversation_12_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_12_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.386854,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_ogryn_bonding_conversation_12_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_12_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.86174,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_ogryn_bonding_conversation_13_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_13_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.124833,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_ogryn_bonding_conversation_13_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_13_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.609396,
+		},
+		randomize_indexes = {},
+	},
 	adamant_male_c_ogryn_bonding_conversation_14_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -42,6 +86,28 @@ local adamant_male_c_ogryn_b = {
 		},
 		sound_events_duration = {
 			[1] = 3.344948,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_ogryn_bonding_conversation_15_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_15_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.767708,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_c_ogryn_bonding_conversation_15_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__adamant_male_c_ogryn_bonding_conversation_15_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.948115,
 		},
 		randomize_indexes = {},
 	},

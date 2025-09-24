@@ -1,6 +1,50 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_b_adamant_male_a.lua
 
 local ogryn_b_adamant_male_a = {
+	adamant_male_a_ogryn_bonding_conversation_17_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_a__adamant_male_a_ogryn_bonding_conversation_17_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.216906,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_ogryn_bonding_conversation_17_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_a__adamant_male_a_ogryn_bonding_conversation_17_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.386198,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_ogryn_bonding_conversation_20_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_a__adamant_male_a_ogryn_bonding_conversation_20_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.638875,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_a_ogryn_bonding_conversation_20_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_a__adamant_male_a_ogryn_bonding_conversation_20_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.37575,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_b_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

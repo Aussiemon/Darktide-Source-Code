@@ -38,6 +38,28 @@ local circumstance_vo_darkness_veteran_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_burn_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__pimlico_bonding_conversation_burn_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.918542,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_burn_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__pimlico_bonding_conversation_burn_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.145833,
+		},
+		randomize_indexes = {},
+	},
 	power_circumstance_start_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

@@ -186,6 +186,39 @@ local ogryn_a_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_morrow_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_bonding_conversation_morrow_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.566083,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_morrow_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_bonding_conversation_morrow_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.565083,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_seventeen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_balta_nobles_seventeen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.333042,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_a_psyker_female_a", ogryn_a_psyker_female_a)

@@ -45,6 +45,50 @@ local psyker_female_a_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_balta_nobles_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_balta_nobles_three_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.402208,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_three_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_balta_nobles_three_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.260375,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_fingal_swagger_two_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.4835,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_two_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__oval_world_conversation_fingal_swagger_two_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.394042,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("psyker_female_a_veteran_male_a", psyker_female_a_veteran_male_a)

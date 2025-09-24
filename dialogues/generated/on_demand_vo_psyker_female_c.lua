@@ -965,23 +965,6 @@ local on_demand_vo_psyker_female_c = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_psyker_female_c__smart_tag_vo_pickup_health_booster_01",
-			"loc_psyker_female_c__smart_tag_vo_pickup_health_booster_02",
-			"loc_psyker_female_c__smart_tag_vo_pickup_health_booster_03",
-			"loc_psyker_female_c__smart_tag_vo_pickup_health_booster_04",
-		},
-		sound_events_duration = {
-			1.022917,
-			1.051594,
-			1.002167,
-			1.149573,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/adamant_male_b_zealot_female_c.lua
 
 local adamant_male_b_zealot_female_c = {
+	adamant_male_b_zealot_bonding_conversation_51_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_c__adamant_male_b_zealot_bonding_conversation_51_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.156698,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_zealot_bonding_conversation_51_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_c__adamant_male_b_zealot_bonding_conversation_51_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.309448,
+		},
+		randomize_indexes = {},
+	},
 	adamant_male_b_zealot_bonding_conversation_52_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

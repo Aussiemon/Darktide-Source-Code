@@ -265,6 +265,72 @@ local ogryn_a_zealot_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_fingal_swagger_twenty_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__oval_world_conversation_fingal_swagger_twenty_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.326333,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_twenty_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__oval_world_conversation_fingal_swagger_twenty_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.584792,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_gareloch_sixteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__oval_world_conversation_gareloch_sixteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.210542,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_gareloch_sixteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__oval_world_conversation_gareloch_sixteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.674563,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_happy_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__pimlico_bonding_conversation_happy_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.365198,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_happy_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__pimlico_bonding_conversation_happy_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.062552,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_a_zealot_male_c", ogryn_a_zealot_male_c)

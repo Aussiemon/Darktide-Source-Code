@@ -121,6 +121,28 @@ local ogryn_c_veteran_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_bodyguard_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__pimlico_bonding_conversation_bodyguard_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.011292,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_bodyguard_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__pimlico_bonding_conversation_bodyguard_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.305938,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_c_veteran_female_b", ogryn_c_veteran_female_b)

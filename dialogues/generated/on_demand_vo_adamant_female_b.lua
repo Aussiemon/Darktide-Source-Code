@@ -626,19 +626,6 @@ local on_demand_vo_adamant_female_b = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_adamant_female_b__smart_tag_vo_pickup_health_booster_01",
-			[2] = "loc_adamant_female_b__smart_tag_vo_pickup_health_booster_02",
-		},
-		sound_events_duration = {
-			[1] = 1.017323,
-			[2] = 1.171969,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

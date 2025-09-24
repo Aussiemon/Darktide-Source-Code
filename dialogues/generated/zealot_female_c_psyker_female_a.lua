@@ -45,6 +45,50 @@ local zealot_female_c_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_gareloch_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__pimlico_bonding_conversation_gareloch_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.548271,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_gareloch_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__pimlico_bonding_conversation_gareloch_01_d_01",
+		},
+		sound_events_duration = {
+			[1] = 7.657,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_heavy_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__pimlico_bonding_conversation_heavy_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.225792,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_heavy_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__pimlico_bonding_conversation_heavy_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.921396,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_female_c_psyker_female_a", zealot_female_c_psyker_female_a)

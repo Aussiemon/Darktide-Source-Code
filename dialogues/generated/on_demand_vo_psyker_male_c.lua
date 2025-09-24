@@ -958,23 +958,6 @@ local on_demand_vo_psyker_male_c = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_psyker_male_c__smart_tag_vo_pickup_health_booster_01",
-			"loc_psyker_male_c__smart_tag_vo_pickup_health_booster_02",
-			"loc_psyker_male_c__smart_tag_vo_pickup_health_booster_03",
-			"loc_psyker_male_c__smart_tag_vo_pickup_health_booster_04",
-		},
-		sound_events_duration = {
-			0.95649,
-			0.933927,
-			1.192719,
-			1.259281,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

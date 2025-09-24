@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/adamant_female_b_psyker_female_b.lua
 
 local adamant_female_b_psyker_female_b = {
+	adamant_female_b_psyker_bonding_conversation_41_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_41_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.079063,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_41_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_41_d_01",
+		},
+		sound_events_duration = {
+			[1] = 7.289938,
+		},
+		randomize_indexes = {},
+	},
 	adamant_female_b_psyker_bonding_conversation_42_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -42,6 +64,50 @@ local adamant_female_b_psyker_female_b = {
 		},
 		sound_events_duration = {
 			[1] = 2.261646,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_44_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_44_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.116938,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_44_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_44_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.871083,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_45_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_45_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.399563,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_psyker_bonding_conversation_45_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__adamant_female_b_psyker_bonding_conversation_45_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.464938,
 		},
 		randomize_indexes = {},
 	},

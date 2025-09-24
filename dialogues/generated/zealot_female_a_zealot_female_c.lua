@@ -133,6 +133,28 @@ local zealot_female_a_zealot_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	pimlico_bonding_conversation_chastise_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_c__pimlico_bonding_conversation_chastise_b_01",
+		},
+		sound_events_duration = {
+			[1] = 7.803208,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_chastise_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_c__pimlico_bonding_conversation_chastise_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.030031,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_female_a_zealot_female_c", zealot_female_a_zealot_female_c)

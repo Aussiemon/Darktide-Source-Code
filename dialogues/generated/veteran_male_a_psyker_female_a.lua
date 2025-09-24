@@ -67,6 +67,50 @@ local veteran_male_a_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_weight_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_bonding_conversation_weight_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.160917,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_weight_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_bonding_conversation_weight_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.437146,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_universal_hestia_four_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.615063,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_four_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_universal_hestia_four_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.766479,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_male_a_psyker_female_a", veteran_male_a_psyker_female_a)

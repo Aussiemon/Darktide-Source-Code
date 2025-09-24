@@ -1067,7 +1067,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -8027,6 +8027,11 @@ return function ()
 				"time_since_friendly_fire_global",
 				OP.TIMESET,
 			},
+			{
+				"user_memory",
+				"friendly_fire_from_zealot_to_veteran_user",
+				OP.TIMESET,
+			},
 		},
 		heard_speak_routing = {
 			target = "players",
@@ -10381,6 +10386,7 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
+					"adamant",
 				},
 			},
 			{
@@ -10593,6 +10599,11 @@ return function ()
 			{
 				"user_memory",
 				"last_seen_killstreak_user",
+				OP.TIMESET,
+			},
+			{
+				"user_memory",
+				"time_since_psyker_seen_killstreak_veteran",
 				OP.TIMESET,
 			},
 		},
@@ -17810,8 +17821,11 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"renegade_gunner",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_gunner",
+					"renegade_plasma_gunner",
+				},
 			},
 			{
 				"user_context",
@@ -18028,7 +18042,7 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
-			target = "disabled",
+			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -18290,6 +18304,11 @@ return function ()
 				"last_seen_killstreak_user",
 				OP.TIMESET,
 			},
+			{
+				"user_memory",
+				"time_since_veteran_seen_killstreak_ogryn",
+				OP.TIMESET,
+			},
 		},
 		heard_speak_routing = {
 			target = "players",
@@ -18417,6 +18436,11 @@ return function ()
 			{
 				"user_memory",
 				"last_seen_killstreak_user",
+				OP.TIMESET,
+			},
+			{
+				"user_memory",
+				"time_since_veteran_seen_killstreak_veteran",
 				OP.TIMESET,
 			},
 		},

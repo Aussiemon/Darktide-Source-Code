@@ -56,6 +56,28 @@ local veteran_female_a_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_daviot_steel_nine_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_daviot_steel_nine_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.421208,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_nine_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__oval_world_conversation_daviot_steel_nine_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.134771,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_female_a_psyker_female_a", veteran_female_a_psyker_female_a)

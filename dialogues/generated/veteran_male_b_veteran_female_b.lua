@@ -89,6 +89,50 @@ local veteran_male_b_veteran_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_fingal_swagger_ten_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__oval_world_conversation_fingal_swagger_ten_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.366479,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_fingal_swagger_ten_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__oval_world_conversation_fingal_swagger_ten_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.894875,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_eighteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__oval_world_conversation_universal_hestia_eighteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.569,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_eighteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__oval_world_conversation_universal_hestia_eighteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.709125,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_male_b_veteran_female_b", veteran_male_b_veteran_female_b)

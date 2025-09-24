@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/psyker_female_a_psyker_male_b.lua
 
 local psyker_female_a_psyker_male_b = {
+	bonding_conversation_hammersmith_dead_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__bonding_conversation_hammersmith_dead_b_01",
+		},
+		sound_events_duration = {
+			[1] = 7.090438,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_dead_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__bonding_conversation_hammersmith_dead_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.287292,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_hammersmith_dreaming_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

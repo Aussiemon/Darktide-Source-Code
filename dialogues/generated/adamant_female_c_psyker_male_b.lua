@@ -45,6 +45,28 @@ local adamant_female_c_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_female_c_psyker_bonding_conversation_16_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_16_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.515229,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_16_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_16_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.62975,
+		},
+		randomize_indexes = {},
+	},
 	adamant_female_c_psyker_bonding_conversation_17_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -64,6 +86,50 @@ local adamant_female_c_psyker_male_b = {
 		},
 		sound_events_duration = {
 			[1] = 1.812479,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_18_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_18_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.428063,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_18_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_18_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.183104,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_19_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_19_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.884313,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_c_psyker_bonding_conversation_19_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_female_c_psyker_bonding_conversation_19_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.528417,
 		},
 		randomize_indexes = {},
 	},

@@ -271,6 +271,50 @@ local ogryn_b_psyker_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_trouble_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__oval_bonding_conversation_trouble_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.712063,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_trouble_two_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__oval_bonding_conversation_trouble_d_01",
+		},
+		sound_events_duration = {
+			[1] = 7.124229,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_forty_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__oval_world_conversation_daviot_steel_forty_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.236667,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_forty_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__oval_world_conversation_daviot_steel_forty_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.234563,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_b_psyker_female_b", ogryn_b_psyker_female_b)

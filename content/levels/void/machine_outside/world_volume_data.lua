@@ -2,13 +2,13 @@
 
 local volume_data = {
 	{
-		height = 3,
+		height = 10.1544313430786,
 		name = "volume",
 		type = "content/volume_types/player_mover_blocker",
 		alt_max_vector = {
 			14.982894897460938,
 			215.5023193359375,
-			17.089675903320312,
+			24.24410629272461,
 		},
 		alt_min_vector = {
 			14.982894897460938,
@@ -110,13 +110,13 @@ local volume_data = {
 		},
 	},
 	{
-		height = 3,
+		height = 10.8479795455933,
 		name = "volume_001",
 		type = "content/volume_types/player_mover_blocker",
 		alt_max_vector = {
 			14.732894897460938,
 			203.5023193359375,
-			16.589675903320312,
+			24.437654495239258,
 		},
 		alt_min_vector = {
 			14.732894897460938,
@@ -126,12 +126,12 @@ local volume_data = {
 		bottom_points = {
 			{
 				14.232894897460938,
-				198.5023193359375,
+				174.450927734375,
 				13.589674949645996,
 			},
 			{
 				15.232894897460938,
-				198.5023193359375,
+				174.450927734375,
 				13.589674949645996,
 			},
 			{

@@ -133,6 +133,28 @@ local zealot_female_b_veteran_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_twins_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_twins_05_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.364208,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_twins_05_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__bonding_conversation_waterloo_twins_05_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.1845,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_waterloo_wolfer_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

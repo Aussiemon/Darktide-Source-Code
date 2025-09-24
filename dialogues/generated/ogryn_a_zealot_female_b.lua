@@ -175,6 +175,28 @@ local ogryn_a_zealot_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_strong_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__oval_bonding_conversation_strong_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.98125,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_strong_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__oval_bonding_conversation_strong_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.202021,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_a_zealot_female_b", ogryn_a_zealot_female_b)

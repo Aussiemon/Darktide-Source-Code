@@ -133,6 +133,28 @@ local zealot_male_c_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_universal_hestia_eight_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__oval_world_conversation_universal_hestia_eight_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.441042,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_eight_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__oval_world_conversation_universal_hestia_eight_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.255792,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_male_c_veteran_male_b", zealot_male_c_veteran_male_b)

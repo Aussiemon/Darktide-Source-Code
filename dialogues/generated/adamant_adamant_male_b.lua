@@ -268,7 +268,7 @@ local adamant_adamant_male_b = {
 	},
 	blitz_grenade_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 7,
 		sound_events = {
 			"loc_adamant_male_b__blitz_grenade_a_01",
 			"loc_adamant_male_b__blitz_grenade_a_02",
@@ -277,7 +277,6 @@ local adamant_adamant_male_b = {
 			"loc_adamant_male_b__blitz_grenade_a_05",
 			"loc_adamant_male_b__blitz_grenade_a_06",
 			"loc_adamant_male_b__blitz_grenade_a_07",
-			"loc_adamant_male_b__blitz_grenade_a_08",
 		},
 		sound_events_duration = {
 			1.340552,
@@ -287,7 +286,6 @@ local adamant_adamant_male_b = {
 			1.303667,
 			1.397781,
 			1.438979,
-			1.398708,
 		},
 		randomize_indexes = {},
 	},

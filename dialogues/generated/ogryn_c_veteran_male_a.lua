@@ -45,6 +45,28 @@ local ogryn_c_veteran_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_meds_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_meds_b_01",
+		},
+		sound_events_duration = {
+			[1] = 0.841583,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_meds_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__bonding_conversation_waterloo_meds_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.601667,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_waterloo_memory_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

@@ -186,6 +186,94 @@ local ogryn_a_veteran_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_cumbernauld_brahms_ten_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__oval_world_conversation_cumbernauld_brahms_ten_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.369052,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_ten_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__oval_world_conversation_cumbernauld_brahms_ten_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.14476,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_twentyfive_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__oval_world_conversation_universal_hestia_twentyfive_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.949625,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_twentyfive_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__oval_world_conversation_universal_hestia_twentyfive_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.860313,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_fingal_swagger_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__pimlico_bonding_conversation_fingal_swagger_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.002,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_fingal_swagger_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__pimlico_bonding_conversation_fingal_swagger_01_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.15624,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_war_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__pimlico_bonding_conversation_war_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.732927,
+		},
+		randomize_indexes = {},
+	},
+	pimlico_bonding_conversation_war_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__pimlico_bonding_conversation_war_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.352156,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_a_veteran_female_c", ogryn_a_veteran_female_c)

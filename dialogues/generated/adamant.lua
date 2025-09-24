@@ -259,7 +259,7 @@ return function ()
 			},
 			{
 				"user_memory",
-				"ogryn_seen_killstreak_psyker_user",
+				"last_adamant_seen_killstreak_psyker_user",
 				OP.TIMESET,
 			},
 		},

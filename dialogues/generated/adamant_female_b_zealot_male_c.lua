@@ -1,6 +1,72 @@
 ﻿-- chunkname: @dialogues/generated/adamant_female_b_zealot_male_c.lua
 
 local adamant_female_b_zealot_male_c = {
+	adamant_female_b_zealot_bonding_conversation_21_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_21_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.955865,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_21_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_21_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.06475,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_22_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_22_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.065333,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_22_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_22_d_01",
+		},
+		sound_events_duration = {
+			[1] = 0.910146,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_23_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_23_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.190417,
+		},
+		randomize_indexes = {},
+	},
+	adamant_female_b_zealot_bonding_conversation_23_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__adamant_female_b_zealot_bonding_conversation_23_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.21799,
+		},
+		randomize_indexes = {},
+	},
 	adamant_female_b_zealot_bonding_conversation_24_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

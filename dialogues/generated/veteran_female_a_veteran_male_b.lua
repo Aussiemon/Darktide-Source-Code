@@ -111,6 +111,28 @@ local veteran_female_a_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_twins_09_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__bonding_conversation_waterloo_twins_09_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.497917,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_twins_09_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__bonding_conversation_waterloo_twins_09_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.097271,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_female_a_veteran_male_b", veteran_female_a_veteran_male_b)

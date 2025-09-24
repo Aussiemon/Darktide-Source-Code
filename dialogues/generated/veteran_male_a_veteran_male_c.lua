@@ -89,6 +89,28 @@ local veteran_male_a_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_waterloo_twins_12_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_twins_12_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.103771,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_waterloo_twins_12_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__bonding_conversation_waterloo_twins_12_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.066677,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_waterloo_wolfer_12_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

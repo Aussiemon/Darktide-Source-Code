@@ -242,18 +242,16 @@ local on_demand_vo_adamant_male_a = {
 	},
 	smart_tag_vo_enemy_berserker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 3,
 		sound_events = {
 			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_01",
 			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_02",
 			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_03",
-			"loc_adamant_male_a__smart_tag_vo_enemy_berserker_04",
 		},
 		sound_events_duration = {
 			0.758375,
 			0.780677,
 			0.861458,
-			1.105333,
 		},
 		randomize_indexes = {},
 	},
@@ -696,21 +694,6 @@ local on_demand_vo_adamant_male_a = {
 			0.907063,
 			0.840333,
 			0.94601,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_adamant_male_a__smart_tag_vo_pickup_health_booster_01",
-			"loc_adamant_male_a__smart_tag_vo_pickup_health_booster_02",
-			"loc_adamant_male_a__smart_tag_vo_pickup_health_booster_03",
-		},
-		sound_events_duration = {
-			1.236573,
-			1.172,
-			1.138271,
 		},
 		randomize_indexes = {},
 	},

@@ -973,23 +973,6 @@ local on_demand_vo_ogryn_a = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_pickup_health_booster = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_ogryn_a__smart_tag_vo_pickup_health_booster_01",
-			"loc_ogryn_a__smart_tag_vo_pickup_health_booster_02",
-			"loc_ogryn_a__smart_tag_vo_pickup_health_booster_03",
-			"loc_ogryn_a__smart_tag_vo_pickup_health_booster_04",
-		},
-		sound_events_duration = {
-			1.725479,
-			1.959521,
-			1.904917,
-			2.110146,
-		},
-		randomize_indexes = {},
-	},
 	smart_tag_vo_pickup_medical_crate = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

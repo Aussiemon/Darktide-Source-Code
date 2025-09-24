@@ -23,6 +23,28 @@ local adamant_female_b_adamant_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_to_adamant_bonding_conversation_59_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_c__adamant_to_adamant_bonding_conversation_59_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.281625,
+		},
+		randomize_indexes = {},
+	},
+	adamant_to_adamant_bonding_conversation_59_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_c__adamant_to_adamant_bonding_conversation_59_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.835927,
+		},
+		randomize_indexes = {},
+	},
 	adamant_to_adamant_bonding_conversation_60_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

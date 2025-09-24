@@ -661,6 +661,138 @@ local mission_vo_psykhanium_past_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
+	story_echo_zola_31_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_31_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.492585,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_31_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_31_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.46649,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_32_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_32_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.320063,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_32_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_32_c_01",
+		},
+		sound_events_duration = {
+			[1] = 1.185552,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_32_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_32_e_01",
+		},
+		sound_events_duration = {
+			[1] = 1.311656,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_33_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_33_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.791635,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_33_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_33_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.178083,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_34_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_34_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.523323,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_34_f = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_34_f_01",
+		},
+		sound_events_duration = {
+			[1] = 2.302906,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_37_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_37_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.967438,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_38_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_38_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.694898,
+		},
+		randomize_indexes = {},
+	},
+	story_echo_zola_38_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_past_explicator_a__story_echo_zola_38_e_01",
+		},
+		sound_events_duration = {
+			[1] = 8.579573,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_vo_psykhanium_past_explicator_a", mission_vo_psykhanium_past_explicator_a)

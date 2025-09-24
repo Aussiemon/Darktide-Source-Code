@@ -45,6 +45,28 @@ local zealot_male_a_psyker_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_cumbernauld_brahms_seven_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_cumbernauld_brahms_seven_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.661563,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_cumbernauld_brahms_seven_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__oval_world_conversation_cumbernauld_brahms_seven_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.549958,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_male_a_psyker_male_a", zealot_male_a_psyker_male_a)

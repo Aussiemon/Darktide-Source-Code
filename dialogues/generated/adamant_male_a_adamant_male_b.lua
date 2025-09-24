@@ -67,6 +67,28 @@ local adamant_male_a_adamant_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_to_adamant_bonding_conversation_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_to_adamant_bonding_conversation_05_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.426969,
+		},
+		randomize_indexes = {},
+	},
+	adamant_to_adamant_bonding_conversation_05_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_to_adamant_bonding_conversation_05_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.352385,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("adamant_male_a_adamant_male_b", adamant_male_a_adamant_male_b)

@@ -1812,8 +1812,11 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"renegade_gunner",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_gunner",
+					"renegade_plasma_gunner",
+				},
 			},
 			{
 				"user_memory",
@@ -2253,51 +2256,6 @@ return function ()
 			{
 				"user_memory",
 				"last_saw_forge_metal",
-				OP.TIMESET,
-			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.15,
-			},
-		},
-	})
-	define_rule({
-		category = "player_on_demand_vo",
-		database = "on_demand_vo",
-		name = "smart_tag_vo_pickup_health_booster",
-		response = "smart_tag_vo_pickup_health_booster",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"on_demand_vo_tag_item",
-			},
-			{
-				"query_context",
-				"item_tag",
-				OP.EQ,
-				"pup_health_booster",
-			},
-			{
-				"user_memory",
-				"time_since_smart_tag_item",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_smart_tag_item",
-				OP.TIMESET,
-			},
-			{
-				"user_memory",
-				"last_saw_health_booster",
 				OP.TIMESET,
 			},
 		},

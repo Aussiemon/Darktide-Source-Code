@@ -221,6 +221,50 @@ local ogryn_b_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_hungry_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__oval_bonding_conversation_hungry_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.977729,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_hungry_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__oval_bonding_conversation_hungry_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.623677,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_eighteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__oval_world_conversation_balta_nobles_eighteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.809604,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_eighteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_c__oval_world_conversation_balta_nobles_eighteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.734073,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_b_ogryn_c", ogryn_b_ogryn_c)

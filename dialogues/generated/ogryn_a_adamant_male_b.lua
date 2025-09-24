@@ -1,6 +1,116 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_a_adamant_male_b.lua
 
 local ogryn_a_adamant_male_b = {
+	adamant_male_b_ogryn_bonding_conversation_06_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_06_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.566667,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_06_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_06_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.150198,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.067698,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_07_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_07_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.483573,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_08_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_08_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.718177,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_08_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_08_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.775469,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_09_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_09_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.917563,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_09_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_09_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.575167,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.866979,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_ogryn_bonding_conversation_10_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__adamant_male_b_ogryn_bonding_conversation_10_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.718813,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

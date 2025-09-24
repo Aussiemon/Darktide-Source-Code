@@ -45,6 +45,28 @@ local ogryn_b_psyker_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	bonding_conversation_hammersmith_tired_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_tired_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.129229,
+		},
+		randomize_indexes = {},
+	},
+	bonding_conversation_hammersmith_tired_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_a__bonding_conversation_hammersmith_tired_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.738438,
+		},
+		randomize_indexes = {},
+	},
 	bonding_conversation_metropolitan_killing_spikeys_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

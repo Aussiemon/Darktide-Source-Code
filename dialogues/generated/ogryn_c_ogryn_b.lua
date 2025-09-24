@@ -120,6 +120,72 @@ local ogryn_c_ogryn_b = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_stomping_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_bonding_conversation_stomping_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.042052,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_stomping_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_bonding_conversation_stomping_d_01",
+		},
+		sound_events_duration = {
+			[1] = 5.892729,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_vox_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_bonding_conversation_vox_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.83974,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_vox_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_bonding_conversation_vox_d_01",
+		},
+		sound_events_duration = {
+			[1] = 4.236615,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtynine_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_world_conversation_daviot_steel_thirtynine_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.290583,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_thirtynine_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__oval_world_conversation_daviot_steel_thirtynine_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.462938,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_c_ogryn_b", ogryn_c_ogryn_b)

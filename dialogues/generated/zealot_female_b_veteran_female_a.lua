@@ -133,6 +133,50 @@ local zealot_female_b_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_bonding_conversation_prayer_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_bonding_conversation_prayer_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.329333,
+		},
+		randomize_indexes = {},
+	},
+	oval_bonding_conversation_prayer_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_bonding_conversation_prayer_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.037396,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_seven_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_balta_nobles_seven_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.583875,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_balta_nobles_seven_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_balta_nobles_seven_d_01",
+		},
+		sound_events_duration = {
+			[1] = 3.198854,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("zealot_female_b_veteran_female_a", zealot_female_b_veteran_female_a)

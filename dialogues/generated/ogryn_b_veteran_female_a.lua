@@ -180,6 +180,50 @@ local ogryn_b_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	oval_world_conversation_daviot_steel_seven_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_daviot_steel_seven_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.631375,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_daviot_steel_seven_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_daviot_steel_seven_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.503167,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirteen_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_universal_hestia_thirteen_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.1075,
+		},
+		randomize_indexes = {},
+	},
+	oval_world_conversation_universal_hestia_thirteen_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__oval_world_conversation_universal_hestia_thirteen_d_01",
+		},
+		sound_events_duration = {
+			[1] = 1.634375,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("ogryn_b_veteran_female_a", ogryn_b_veteran_female_a)
