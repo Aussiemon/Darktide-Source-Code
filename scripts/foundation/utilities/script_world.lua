@@ -540,6 +540,12 @@ ScriptWorld.spawn_level_instance = function (world, name, position, rotation, sp
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 
+	local rot_angle = math.abs(Quaternion.angle(rotation, Quaternion.identity()))
+
+	if rot_angle < 4 * math.pi / 360 then
+		rotation = Quaternion.identity()
+	end
+
 	local scale = Vector3(1, 1, 1)
 	local level
 
@@ -551,10 +557,20 @@ ScriptWorld.spawn_level_instance = function (world, name, position, rotation, sp
 
 	local level_instance_array = level_instances[name] or {}
 	local instance_id = #level_instance_array + 1
-	local level_instance_hash = optional_instance_hash or Level._name_hash_32(level) + instance_id
+	local level_instance_hash = optional_instance_hash
+
+	if not level_instance_hash then
+		level_instance_hash = Application.make_hash(name, instance_id)
+		level_instance_hash = string.sub(level_instance_hash, 1, 7)
+	elseif type(level_instance_hash) == "number" then
+		level_instance_hash = string.format("%x", level_instance_hash)
+	end
 
 	Level.set_data(level, "instance_hash", level_instance_hash)
 	Level.set_data(level, "runtime_loaded_level", true)
+
+	level_instance_hash = tonumber(level_instance_hash, 16)
+
 	table.insert(level_instance_array, level)
 
 	level_instances[name] = level_instance_array
@@ -585,6 +601,8 @@ ScriptWorld.destroy_level_instance = function (world, name, instance_id)
 	end
 
 	local instance_hash = Level.get_data(level_instance, "instance_hash")
+
+	instance_hash = tonumber(instance_hash, 16)
 
 	Log.info("ScriptWorld", "Destroying level instance named: '%q' with id: '%d' and hash '%s'", name, instance_id, instance_hash)
 	Level.trigger_level_shutdown(level_instance)

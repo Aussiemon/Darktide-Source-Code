@@ -115,6 +115,21 @@ templates.ogryn_toughness_restored_aura_tracking_buff = {
 	proc_events = {
 		[proc_events.on_toughness_replenished] = 1,
 	},
+	check_proc_func = function (params, template_data, template_context, t)
+		if table.is_empty(params) or not params.amount or params.triggering_proc_event ~= "on_toughness_replenished" then
+			local error_string = string.format("Proc buff params table for %q scrambled or empty:\n", "ogryn_toughness_restored_aura_tracking_buff")
+
+			for key, value in pairs(params) do
+				error_string = string.format("%s\t%s:%s\n", error_string, key, value)
+			end
+
+			Log.exception("ProcBuff", error_string)
+
+			return false
+		end
+
+		return true
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
@@ -1100,7 +1115,21 @@ templates.ogryn_heavy_attacks_bleed = {
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_non_kill),
+	check_proc_func = CheckProcFunctions.all(function (params, template_data, template_context, t)
+		if table.is_empty(params) or not params.damage or params.triggering_proc_event ~= "on_hit" then
+			local error_string = string.format("Proc buff params table for %q scrambled or empty:\n", "ogryn_heavy_attacks_bleed")
+
+			for key, value in pairs(params) do
+				error_string = string.format("%s\t%s:%s\n", error_string, key, value)
+			end
+
+			Log.exception("ProcBuff", error_string)
+
+			return false
+		end
+
+		return true
+	end, CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_non_kill),
 	proc_func = function (params, template_data, template_context, t)
 		if CheckProcFunctions.on_kill(params) then
 			return

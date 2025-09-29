@@ -1122,11 +1122,9 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self)
 		self:_set_selected_mission(mission_id)
 	end
 
-	if self._should_refresh_mission_list then
-		self:_start_mission_list_entry_animation()
+	self:_start_mission_list_entry_animation()
 
-		self._should_refresh_mission_list = nil
-	end
+	self._should_refresh_mission_list = nil
 end
 
 ViewElementCampaignMissionList.cb_on_mission_tile_pressed = function (self, mission_data, widget_offset)

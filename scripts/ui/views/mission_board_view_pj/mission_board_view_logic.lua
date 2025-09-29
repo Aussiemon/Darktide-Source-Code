@@ -790,7 +790,7 @@ MissionBoardViewLogic.get_missions_by_filters = function (self, filters)
 	local missions_t = {}
 	local missions = self._mission_data
 
-	if table.is_empty(missions) then
+	if missions == nil or table.is_empty(missions) then
 		return missions_t
 	end
 

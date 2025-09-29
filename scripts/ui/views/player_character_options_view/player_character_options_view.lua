@@ -184,15 +184,11 @@ end
 PlayerCharacterOptionsView.update = function (self, dt, t, input_service, layer)
 	if self._inspected_player then
 		local player_info = self._player_info
-		local is_online = true
 		local peer_id = self._peer_id
 		local local_player_id = self._local_player_id
+		local player = Managers.player:player(peer_id, local_player_id)
 
-		if not is_online or not Managers.player:player(peer_id, local_player_id) then
-			if Managers.ui:view_active("inventory_background_view") then
-				Managers.ui:close_view("inventory_background_view")
-			end
-
+		if not player or player.__deleted then
 			self._inspected_player = nil
 
 			Managers.ui:close_view("player_character_options_view")

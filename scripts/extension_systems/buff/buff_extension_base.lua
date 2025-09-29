@@ -906,6 +906,9 @@ end
 
 BuffExtensionBase.add_proc_event = function (self, event, params)
 	local num_proc_events = self._num_proc_events
+
+	params.triggering_proc_event = event
+
 	local proc_events = self._proc_events
 
 	proc_events[num_proc_events * PROC_EVENTS_STRIDE + 1] = event

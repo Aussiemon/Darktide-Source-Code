@@ -28,15 +28,19 @@ local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
 InventoryBackgroundView.init = function (self, settings, context)
 	self._context = context
-	self.show_locked_cosmetics = true
 
 	local player = context and context.player or self:_player()
 
+	if not player or player.__deleted then
+		return
+	end
+
 	self._preview_player = player
+	self.show_locked_cosmetics = true
 	self._is_own_player = self._preview_player == self:_player()
 	self._is_readonly = context and context.is_readonly
 
-	local profile = self._preview_player:profile()
+	local profile = self._preview_player and self._preview_player:profile()
 
 	self._player_level = profile.current_level
 	self._inventory_items = {}
@@ -57,6 +61,13 @@ InventoryBackgroundView.on_enter = function (self)
 	InventoryBackgroundView.super.on_enter(self)
 
 	local player = self._preview_player
+
+	if not player or player.__deleted then
+		self:_handle_back_pressed()
+
+		return
+	end
+
 	local profile = player:profile()
 	local player_unit = player.player_unit
 	local unit_data = ScriptUnit.has_extension(player_unit, "unit_data_system")
@@ -273,7 +284,10 @@ end
 
 InventoryBackgroundView._request_player_frame = function (self, item, ui_renderer)
 	self:_unload_portrait_frame(ui_renderer)
-	self:_load_portrait_frame(item)
+
+	if item then
+		self:_load_portrait_frame(item)
+	end
 end
 
 InventoryBackgroundView._load_portrait_frame = function (self, item)
@@ -329,7 +343,10 @@ end
 
 InventoryBackgroundView._request_player_insignia = function (self, item, ui_renderer)
 	self:_unload_insignia(ui_renderer)
-	self:_load_insignia(item)
+
+	if item then
+		self:_load_insignia(item)
+	end
 end
 
 InventoryBackgroundView._load_insignia = function (self, item)
@@ -685,10 +702,7 @@ end
 
 InventoryBackgroundView._handle_back_pressed = function (self)
 	self:_switch_active_view(nil)
-
-	local view_name = "inventory_background_view"
-
-	Managers.ui:close_view(view_name)
+	Managers.ui:close_view(self.view_name)
 end
 
 InventoryBackgroundView.cb_on_close_pressed = function (self)
@@ -2292,6 +2306,12 @@ InventoryBackgroundView._draw_widgets = function (self, dt, t, input_service, ui
 end
 
 InventoryBackgroundView.update = function (self, dt, t, input_service)
+	if not self._preview_player or self._preview_player.__deleted then
+		self:_handle_back_pressed()
+
+		return
+	end
+
 	local profile_preset_handling_input = self:profile_preset_handling_input()
 	local active_view = self._active_view
 	local view_instance = active_view and Managers.ui:view_instance(active_view)

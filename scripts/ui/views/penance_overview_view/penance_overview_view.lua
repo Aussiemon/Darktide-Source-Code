@@ -477,10 +477,10 @@ PenanceOverviewView._build_achievements_cache = function (self)
 end
 
 PenanceOverviewView._setup_achievements = function (self)
-	self:_remove_completed_favorites()
 	self:_build_top_category_to_parent_cache()
 	self:_build_achievements_cache()
 	self:_build_category_button_config()
+	self:_remove_completed_favorites()
 end
 
 local function is_meta_achievement(achievement_id)

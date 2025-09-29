@@ -722,10 +722,15 @@ PlayerUnitAbilityExtension.max_ability_charges = function (self, ability_type)
 		return 0
 	end
 
-	local buff_extension = self._buff_extension
-	local has_extra_charges_keyword = buff_extension:has_keyword(buff_keywords.allow_extra_ability_charges)
 	local equipped_abilities = self._equipped_abilities
 	local ability = equipped_abilities[ability_type]
+
+	if not ability then
+		return 0
+	end
+
+	local buff_extension = self._buff_extension
+	local has_extra_charges_keyword = buff_extension:has_keyword(buff_keywords.allow_extra_ability_charges)
 	local max_charges = ability.max_charges
 	local ability_stat_buff = ability.stat_buff
 

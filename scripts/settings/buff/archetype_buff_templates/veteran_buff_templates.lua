@@ -2290,6 +2290,21 @@ templates.veteran_share_toughness_gained = {
 	stat_buffs = {
 		[stat_buffs.coherency_radius_modifier] = talent_settings_3.coop_3.radius,
 	},
+	check_proc_func = function (params, template_data, template_context, t)
+		if table.is_empty(params) or not params.amount or params.triggering_proc_event ~= "on_toughness_replenished" then
+			local error_string = string.format("Proc buff params table for %q scrambled or empty:\n", "veteran_share_toughness_gained")
+
+			for key, value in pairs(params) do
+				error_string = string.format("%s\t%s:%s\n", error_string, key, value)
+			end
+
+			Log.exception("ProcBuff", error_string)
+
+			return false
+		end
+
+		return true
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local coherency_extension = ScriptUnit.extension(unit, "coherency_system")

@@ -134,9 +134,9 @@ local template = {
 		psykhanium_horde_random_waves_5_alt = {
 			"horde_wave_5_a_alt",
 			1,
-			"horde_wave_6_b_alt",
+			"horde_wave_5_b_alt",
 			1,
-			"horde_wave_6_c_alt",
+			"horde_wave_5_c_alt",
 			1,
 		},
 		psykhanium_horde_random_waves_6_alt = {
