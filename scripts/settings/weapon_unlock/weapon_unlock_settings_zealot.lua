@@ -64,14 +64,13 @@ local zealot_weapon_unlock_settings = {
 	{
 		level = 10,
 		items = {
-			"content/items/weapons/player/ranged/autogun_p3_m3",
+			"content/items/weapons/player/ranged/boltpistol_p1_m1",
 		},
 	},
 	{
 		level = 11,
 		items = {
 			"content/items/weapons/player/melee/chainsword_2h_p1_m1",
-			"content/items/weapons/player/ranged/boltpistol_p1_m1",
 		},
 	},
 	{

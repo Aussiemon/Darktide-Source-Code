@@ -234,9 +234,34 @@ templates.renegade_plasma_gunner_toughness_reduction = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = _multiplier_step(0.25),
-		[buff_stat_buffs.toughness_replenish_multiplier] = _multiplier_step(0.25),
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = _multiplier_step(0.5),
+		[buff_stat_buffs.toughness_replenish_multiplier] = _multiplier_step(0.5),
 	},
+}
+templates.renegade_plasma_gunner_set_material_scalar = {
+	class_name = "buff",
+	duration = 10,
+	max_stacks = 1,
+	predicted = false,
+	update_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local has_visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
+
+		if has_visual_loadout_extension then
+			local scalar_val = 6
+			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+			local inventory_unit = visual_loadout_extension:slot_unit("slot_ranged_weapon")
+
+			Unit.set_scalar_for_materials(inventory_unit, "emissive_multiplier", scalar_val, true)
+
+			template_data.done = true
+		end
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		if template_data.done then
+			return true
+		end
+	end,
 }
 templates.cultist_flamer_liquid_immunity = {
 	class_name = "buff",

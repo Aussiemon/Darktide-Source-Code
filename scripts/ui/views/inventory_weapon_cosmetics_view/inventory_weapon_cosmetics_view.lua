@@ -78,6 +78,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 	self._visibility_toggled_on = true
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._selected_item = context.preview_item
+	self._is_loading = false
 
 	local selected_item = self._selected_item
 
@@ -100,6 +101,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 		if trinket_item and trinket_item ~= "content/items/weapons/player/trinkets/empty_trinket" then
 			self._selected_weapon_trinket_name = trinket_item
 			self._equipped_weapon_trinket_name = trinket_item
+			self._starting_weapon_trinket_name = trinket_item
 		end
 
 		self._selected_weapon_skin_name = selected_item.slot_weapon_skin
@@ -113,6 +115,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 		end
 
 		self._equipped_weapon_skin_name = self._selected_weapon_skin_name
+		self._starting_weapon_skin_name = self._selected_weapon_skin_name
 	end
 
 	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings, context)
@@ -153,6 +156,44 @@ InventoryWeaponCosmeticsView._setup_forward_gui = function (self)
 	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
 
 	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
+end
+
+InventoryWeaponCosmeticsView.on_enter = function (self)
+	InventoryWeaponCosmeticsView.super.on_enter(self)
+
+	self._render_settings.alpha_multiplier = 0
+	self._inventory_items = {}
+
+	self:_setup_forward_gui()
+
+	self._background_widget = self:_create_widget("background", Definitions.background_widget)
+
+	if not self._selected_item then
+		return
+	end
+
+	local grid_size = Definitions.grid_settings.grid_size
+
+	self._content_blueprints = require("scripts/ui/view_content_blueprints/item_blueprints")(grid_size)
+
+	self:_setup_input_legend()
+
+	if not self._on_enter_anim_id then
+		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
+	end
+
+	self._world_spawner = self._parent:world_spawner()
+
+	if self._presentation_item then
+		self:_setup_weapon_preview()
+		self:_preview_item(self._presentation_item)
+	end
+
+	self:present_grid_layout({})
+	self:_register_button_callbacks()
+	self:_setup_menu_tabs()
+	self:_load_layout()
+	self:_register_event("event_force_refresh_inventory", "event_force_refresh_inventory")
 end
 
 InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
@@ -200,29 +241,216 @@ InventoryWeaponCosmeticsView.on_exit = function (self)
 
 	self:_destroy_forward_gui()
 	self:_destroy_side_panel()
+	self:_equip_items_on_server()
 	InventoryWeaponCosmeticsView.super.on_exit(self)
 end
 
-InventoryWeaponCosmeticsView.on_enter = function (self)
-	InventoryWeaponCosmeticsView.super.on_enter(self)
+InventoryWeaponCosmeticsView._equip_items_on_server = function (self)
+	local selected_item = self._selected_item
 
-	self._render_settings.alpha_multiplier = 0
-
-	self:_setup_forward_gui()
-
-	self._background_widget = self:_create_widget("background", Definitions.background_widget)
-
-	if not self._selected_item then
-		return
+	local function equip_weapon_skin_func()
+		if self._equipped_weapon_skin_name ~= self._starting_weapon_skin_name then
+			return Items.equip_weapon_skin(selected_item, self._equipped_weapon_skin)
+		else
+			return Promise:resolved()
+		end
 	end
 
-	local grid_size = Definitions.grid_settings.grid_size
+	local function equip_trinket_func()
+		if self._equipped_weapon_trinket_name ~= self._starting_weapon_trinket_name then
+			return Items.equip_weapon_trinket(selected_item, self._equipped_weapon_trinket)
+		else
+			return Promise:resolved()
+		end
+	end
 
-	self._content_blueprints = require("scripts/ui/view_content_blueprints/item_blueprints")(grid_size)
+	local promises_func = {
+		equip_weapon_skin_func,
+		equip_trinket_func,
+	}
+	local run_equip_promise
 
-	self:_setup_input_legend()
+	function run_equip_promise(promises_list, index, gears)
+		local promise_func = promises_list[index]
 
-	local tabs_content = {
+		if promise_func then
+			return promise_func():next(function (result)
+				local gear = result and result.item
+
+				if gear then
+					gears[#gears + 1] = gear
+				end
+
+				local next_index = index + 1
+
+				return run_equip_promise(promises_list, next_index, gears)
+			end)
+		else
+			local modified_item = false
+			local gear = gears[#gears]
+
+			if gear then
+				local gear_id = selected_item and selected_item.gear_id
+				local item = MasterItems.get_item_instance(gear, gear_id)
+
+				if item then
+					Managers.ui:item_icon_updated(item)
+					Managers.event:trigger("event_item_icon_updated", item)
+					Managers.event:trigger("event_replace_list_item", item)
+					Log.debug("InventoryWeaponCosmeticsView", "Items equipped in loadout slots")
+
+					local peer_id = Network.peer_id()
+					local local_player_id = 1
+					local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+
+					if is_server then
+						local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+						profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+					else
+						Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+					end
+				end
+			end
+		end
+	end
+
+	run_equip_promise(promises_func, 1, {})
+end
+
+InventoryWeaponCosmeticsView.event_force_refresh_inventory = function (self)
+	self._force_refresh = true
+end
+
+InventoryWeaponCosmeticsView._should_refresh = function (self, dt, t)
+	local is_loading = self:get_loading_state()
+
+	if is_loading then
+		return false
+	end
+
+	local refresh_in_seconds = self._refresh_in_seconds
+
+	refresh_in_seconds = refresh_in_seconds and math.max(refresh_in_seconds - dt, 0)
+	self._refresh_in_seconds = refresh_in_seconds
+
+	if refresh_in_seconds and refresh_in_seconds == 0 then
+		return true
+	end
+
+	return false
+end
+
+InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local equip_button = widgets_by_name.equip_button
+
+	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
+end
+
+InventoryWeaponCosmeticsView._setup_weapon_stats = function (self)
+	return
+end
+
+local function sort_function_generator(item_comparator)
+	return function (a, b)
+		if a.sort_group ~= b.sort_group then
+			return a.sort_group < b.sort_group
+		end
+
+		if a.widget_type == "divider" and b.widget_type == "divider" then
+			return false
+		end
+
+		return item_comparator(a, b)
+	end
+end
+
+InventoryWeaponCosmeticsView._setup_sort_options = function (self, has_rarity)
+	self._sort_options = {}
+
+	if has_rarity then
+		self._sort_options[#self._sort_options + 1] = {
+			display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+			}),
+			sort_function = sort_function_generator(Items.sort_comparator({
+				"<",
+				Items.compare_item_sort_order,
+				">",
+				Items.compare_item_rarity,
+				"<",
+				Items.compare_item_name,
+			})),
+		}
+		self._sort_options[#self._sort_options + 1] = {
+			display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
+			}),
+			sort_function = sort_function_generator(Items.sort_comparator({
+				"<",
+				Items.compare_item_sort_order,
+				"<",
+				Items.compare_item_rarity,
+				"<",
+				Items.compare_item_name,
+			})),
+		}
+	end
+
+	self._sort_options[#self._sort_options + 1] = {
+		display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+			sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+		}),
+		sort_function = sort_function_generator(Items.sort_comparator({
+			"<",
+			Items.compare_item_sort_order,
+			"<",
+			Items.compare_item_name,
+		})),
+	}
+	self._sort_options[#self._sort_options + 1] = {
+		display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+			sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
+		}),
+		sort_function = sort_function_generator(Items.sort_comparator({
+			"<",
+			Items.compare_item_sort_order,
+			">",
+			Items.compare_item_name,
+		})),
+	}
+
+	local sort_callback = callback(self, "cb_on_sort_button_pressed")
+
+	self._item_grid:setup_sort_button(self._sort_options, sort_callback)
+end
+
+InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
+	if not self._weapon_preview then
+		local reference_name = "weapon_preview"
+		local layer = 10
+		local context = {
+			draw_background = true,
+			ignore_blur = true,
+		}
+
+		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
+
+		local allow_rotation = true
+
+		self._weapon_preview:set_force_allow_rotation(allow_rotation)
+		self._weapon_preview:center_align(0, {
+			-0.2,
+			-0.3,
+			-0.25,
+		})
+		self:_set_weapon_zoom(self._weapon_zoom_fraction)
+	end
+end
+
+InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
+	self._tabs_content = {
 		{
 			display_name = "loc_weapon_cosmetics_title_skins",
 			filter_on_weapon_template = true,
@@ -390,134 +618,6 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 		},
 	}
 
-	if not self._on_enter_anim_id then
-		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
-	end
-
-	if self._presentation_item then
-		self:_setup_weapon_preview()
-		self:_preview_item(self._presentation_item)
-	end
-
-	self:present_grid_layout({})
-	self:_register_button_callbacks()
-	self:set_loading_state(true)
-	self:_fetch_inventory_items(tabs_content):next(function (items_by_slots)
-		self:set_loading_state(false)
-		self:_setup_menu_tabs(tabs_content)
-		self:cb_switch_tab(1)
-	end)
-end
-
-InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
-	local widgets_by_name = self._widgets_by_name
-	local equip_button = widgets_by_name.equip_button
-
-	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
-end
-
-InventoryWeaponCosmeticsView._setup_weapon_stats = function (self)
-	return
-end
-
-local function sort_function_generator(item_comparator)
-	return function (a, b)
-		if a.sort_group ~= b.sort_group then
-			return a.sort_group < b.sort_group
-		end
-
-		if a.widget_type == "divider" and b.widget_type == "divider" then
-			return false
-		end
-
-		return item_comparator(a, b)
-	end
-end
-
-InventoryWeaponCosmeticsView._setup_sort_options = function (self)
-	if not self._sort_options then
-		self._sort_options = {}
-		self._sort_options[#self._sort_options + 1] = {
-			display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
-			}),
-			sort_function = sort_function_generator(Items.sort_comparator({
-				"<",
-				Items.compare_item_sort_order,
-				">",
-				Items.compare_item_rarity,
-				"<",
-				Items.compare_item_name,
-			})),
-		}
-		self._sort_options[#self._sort_options + 1] = {
-			display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_rarity"),
-			}),
-			sort_function = sort_function_generator(Items.sort_comparator({
-				"<",
-				Items.compare_item_sort_order,
-				"<",
-				Items.compare_item_rarity,
-				"<",
-				Items.compare_item_name,
-			})),
-		}
-		self._sort_options[#self._sort_options + 1] = {
-			display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
-			}),
-			sort_function = sort_function_generator(Items.sort_comparator({
-				"<",
-				Items.compare_item_sort_order,
-				"<",
-				Items.compare_item_name,
-			})),
-		}
-		self._sort_options[#self._sort_options + 1] = {
-			display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
-				sort_name = Localize("loc_inventory_item_grid_sort_title_name"),
-			}),
-			sort_function = sort_function_generator(Items.sort_comparator({
-				"<",
-				Items.compare_item_sort_order,
-				">",
-				Items.compare_item_name,
-			})),
-		}
-	end
-
-	local sort_callback = callback(self, "cb_on_sort_button_pressed")
-
-	self._item_grid:setup_sort_button(self._sort_options, sort_callback)
-end
-
-InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
-	if not self._weapon_preview then
-		local reference_name = "weapon_preview"
-		local layer = 10
-		local context = {
-			draw_background = true,
-			ignore_blur = true,
-		}
-
-		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
-
-		local allow_rotation = true
-
-		self._weapon_preview:set_force_allow_rotation(allow_rotation)
-		self._weapon_preview:center_align(0, {
-			-0.2,
-			-0.3,
-			-0.25,
-		})
-		self:_set_weapon_zoom(self._weapon_zoom_fraction)
-	end
-end
-
-InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
-	self._tabs_content = content
-
 	local grid_size = Definitions.grid_settings.grid_size
 	local id = "tab_menu"
 	local layer = 10
@@ -553,9 +653,10 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 	}
 
 	local tab_ids = {}
+	local tabs_content_size = #self._tabs_content
 
-	for i = 1, #content do
-		local tab_content = content[i]
+	for i = 1, tabs_content_size do
+		local tab_content = self._tabs_content[i]
 		local display_name = tab_content.display_name
 		local display_icon = tab_content.icon
 		local pressed_callback = callback(self, "cb_switch_tab", i)
@@ -564,7 +665,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self, content)
 		tab_ids[i] = tab_id
 	end
 
-	local total_height = button_size[2] * #content + button_spacing * #content
+	local total_height = button_size[2] * tabs_content_size + button_spacing * tabs_content_size
 
 	self:_set_scenegraph_size("button_pivot_background", nil, total_height + 30)
 
@@ -596,12 +697,57 @@ InventoryWeaponCosmeticsView._setup_input_legend = function (self)
 	end
 end
 
-InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, tabs_content)
+InventoryWeaponCosmeticsView._load_layout = function (self)
+	self._inventory_items = {}
+
+	self:_stop_previewing()
+	self:set_loading_state(true)
+
+	self._refresh_in_seconds = nil
+
+	self._promise_container:cancel_on_destroy(self:_fetch_inventory_items()):next(function ()
+		self:set_loading_state(false)
+		self:_prepare_layout_data()
+
+		if not self._selected_tab_index then
+			self:cb_switch_tab(1)
+		else
+			local tab_content = self._tabs_content[self._selected_tab_index]
+			local slot_name = tab_content.slot_name
+
+			self:_show_layout_by_slot(slot_name)
+		end
+	end):catch(function ()
+		self:set_loading_state(false)
+	end)
+end
+
+InventoryWeaponCosmeticsView.set_loading_state = function (self, is_loading)
+	InventoryWeaponCosmeticsView.super.set_loading_state(self, is_loading)
+
+	self._is_loading = is_loading
+
+	if self._tab_menu_element then
+		self._tab_menu_element:disable_input(is_loading)
+
+		local tab_entries = self._tab_menu_element:entries()
+
+		for i = 1, #tab_entries do
+			local tab_entry = tab_entries[i]
+			local id = tab_entry.id
+
+			self._tab_menu_element:set_tab_disabled(id, is_loading)
+		end
+	end
+end
+
+InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
 	local selected_item = self._selected_item
 	local promises = Promise.resolved({})
+	local tabs_content = self._tabs_content
 
 	for i = 1, #tabs_content do
 		local tab_content = tabs_content[i]
@@ -709,7 +855,17 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, tabs_conte
 		end)
 	end
 
-	return Promise.all(unpack(promises)):next(function (items_data)
+	return self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (items_data)
+		self._items_by_slot = {}
+
+		for i = 1, #items_data do
+			local tab_content = tabs_content[i]
+			local slot_name = tab_content.slot_name
+
+			self._items_by_slot[slot_name] = items_data[i]
+		end
+	end):catch(function (items_data)
+		self._refresh_in_seconds = 5
 		self._items_by_slot = {}
 
 		for i = 1, #items_data do
@@ -795,8 +951,6 @@ InventoryWeaponCosmeticsView._item_valid_by_current_pattern = function (self, it
 	return weapon_template_restriction and table.contains(weapon_template_restriction, selected_item_weapon_template)
 end
 
-InventoryWeaponCosmeticsView.equipped_item_in_slot = nil
-
 InventoryWeaponCosmeticsView.selected_item_name_in_slot = function (self, slot_name)
 	if slot_name == "slot_trinket_1" then
 		return self._selected_weapon_trinket_name
@@ -822,58 +976,20 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 
 	if previewed_element then
 		local selected_item = self._selected_item
-		local promise, item_type
+		local item_type
 
 		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
-			promise = Items.equip_weapon_skin(selected_item, self._selected_weapon_skin)
 			item_type = "skin"
 		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
-			promise = Items.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
 			item_type = "trinket"
 		end
 
-		if promise then
-			self._equip_promise = promise
-
-			promise:next(function (result)
-				local gear = result.item
-				local gear_id = selected_item and selected_item.gear_id
-				local item = MasterItems.get_item_instance(gear, gear_id)
-
-				self._selected_item = item
-
-				Managers.ui:item_icon_updated(item)
-				Managers.event:trigger("event_item_icon_updated", item)
-				Managers.event:trigger("event_replace_list_item", item)
-
-				if item_type == "skin" then
-					self._equipped_weapon_skin_name = self._selected_weapon_skin_name
-					self._equipped_weapon_skin = self._selected_weapon_skin
-				else
-					self._equipped_weapon_trinket_name = self._selected_weapon_trinket_name
-					self._equipped_weapon_trinket = self._selected_weapon_trinket
-				end
-
-				Log.debug("InventoryWeaponCosmeticsView", "Items equipped in loadout slots")
-
-				local peer_id = Network.peer_id()
-				local local_player_id = 1
-				local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
-
-				if is_server then
-					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
-
-					profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-				else
-					Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
-				end
-
-				self._equip_promise = nil
-			end):catch(function (errors)
-				Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots: %s", errors)
-
-				self._equip_promise = nil
-			end)
+		if item_type == "skin" then
+			self._equipped_weapon_skin_name = self._selected_weapon_skin_name
+			self._equipped_weapon_skin = self._selected_weapon_skin
+		else
+			self._equipped_weapon_trinket_name = self._selected_weapon_trinket_name
+			self._equipped_weapon_trinket = self._selected_weapon_trinket
 		end
 	end
 end
@@ -893,41 +1009,38 @@ end
 InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 	local previewed_item = self._previewed_item
 	local previewed_element = self._previewed_element
-
-	if not self._tabs_content or not previewed_item then
-		return ""
-	end
-
-	local is_disabled = true
-	local has_items = self._offer_items_layout and #self._offer_items_layout > 0
-
-	if self._selected_tab_index == 1 and has_items and self._selected_weapon_skin_name ~= self._equipped_weapon_skin_name then
-		is_disabled = false
-	elseif self._selected_tab_index == 2 and has_items and self._selected_weapon_trinket_name ~= self._equipped_weapon_trinket_name then
-		is_disabled = false
-	end
-
-	local is_locked = previewed_element and not not previewed_element.locked
-	local is_equipped = false
-
-	if is_disabled then
-		local selected_tab_index = self._selected_tab_index
-		local content = self._tabs_content[selected_tab_index]
-		local selected_slot_name = content.slot_name
-		local equipped_item_name = selected_slot_name and self:equipped_item_name_in_slot(selected_slot_name)
-
-		if previewed_item.empty_item and (not equipped_item_name or equipped_item_name == "") then
-			is_equipped = true
-		else
-			local item_name = previewed_item.name or previewed_item.__gear and previewed_item.__gear.masterDataInstance.id
-
-			is_equipped = item_name == equipped_item_name
-		end
-	end
-
 	local target_status
 
-	target_status = is_equipped and "equipped" or is_disabled and "disabled" or is_locked and "locked" or "equip"
+	if not self._tabs_content or not previewed_item or self._is_loading then
+		target_status = "locked"
+	else
+		local is_disabled = true
+		local has_items = self._offer_items_layout and #self._offer_items_layout > 0
+
+		if self._selected_tab_index == 1 and has_items and self._selected_weapon_skin_name ~= self._equipped_weapon_skin_name or self._selected_tab_index == 2 and has_items and self._selected_weapon_trinket_name ~= self._equipped_weapon_trinket_name then
+			is_disabled = false
+		end
+
+		local is_locked = previewed_element and not not previewed_element.locked
+		local is_equipped = false
+
+		if is_disabled then
+			local selected_tab_index = self._selected_tab_index
+			local content = self._tabs_content[selected_tab_index]
+			local selected_slot_name = content.slot_name
+			local equipped_item_name = selected_slot_name and self:equipped_item_name_in_slot(selected_slot_name)
+
+			if previewed_item.empty_item and (not equipped_item_name or equipped_item_name == "") then
+				is_equipped = true
+			else
+				local item_name = previewed_item.name or previewed_item.__gear and previewed_item.__gear.masterDataInstance.id
+
+				is_equipped = item_name == equipped_item_name
+			end
+		end
+
+		target_status = is_equipped and "equipped" or is_disabled and "disabled" or is_locked and "locked" or "equip"
+	end
 
 	local current_equip_button_status = self._equip_button_status
 
@@ -1104,6 +1217,10 @@ InventoryWeaponCosmeticsView._handle_input = function (self, input_service, dt, 
 end
 
 InventoryWeaponCosmeticsView.update = function (self, dt, t, input_service)
+	if self:_should_refresh(dt, t) then
+		self:_load_layout()
+	end
+
 	self:_update_equip_button_status()
 
 	return InventoryWeaponCosmeticsView.super.update(self, dt, t, input_service)
@@ -1187,6 +1304,20 @@ InventoryWeaponCosmeticsView._draw_widgets = function (self, dt, t, input_servic
 	end
 end
 
+local function _filter_locked_elements(element)
+	return not element.locked or element.widget_type == "divider"
+end
+
+InventoryWeaponCosmeticsView._filtered_layout = function (self, slot_name)
+	local filtered_layout = self._layout_by_slot_name[slot_name]
+
+	if self._show_locked_cosmetics == false then
+		filtered_layout = table.filtered_array(filtered_layout, _filter_locked_elements)
+	end
+
+	return filtered_layout
+end
+
 InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 	if index ~= self._selected_tab_index then
 		if self._selected_tab_index then
@@ -1218,16 +1349,48 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 			self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 		end
 
-		local layout
+		self:_show_layout_by_slot(slot_name)
+	end
+end
 
-		if self._items_by_slot[slot_name] then
-			layout = self:_prepare_layout_data(self._items_by_slot[slot_name], content)
+InventoryWeaponCosmeticsView._show_layout_by_slot = function (self, slot_name)
+	local filtered_layout = self._weapon_cosmetic_layouts_by_slot[slot_name] or {}
+
+	if self._show_locked_cosmetics == false then
+		filtered_layout = table.filtered_array(filtered_layout, _filter_locked_elements)
+	end
+
+	local has_rarity, has_locked = false, false
+
+	for i = 1, #filtered_layout do
+		local layout = filtered_layout[i]
+
+		if layout.item and layout.item.rarity then
+			has_rarity = true
 		end
 
-		self._offer_items_layout = layout or {}
+		if layout.locked then
+			has_locked = true
+		end
 
-		self:_present_layout_by_slot_filter()
+		if has_rarity and has_locked then
+			break
+		end
 	end
+
+	if has_locked then
+		self._show_locked_cosmetics = true
+
+		if self._parent and self._parent.show_locked_cosmetics ~= nil then
+			self._show_locked_cosmetics = self._parent.show_locked_cosmetics
+		end
+	end
+
+	self:_setup_sort_options(has_rarity)
+
+	self._offer_items_layout = filtered_layout or {}
+
+	self:_present_layout_by_slot_filter()
 end
 
 InventoryWeaponCosmeticsView.on_resolution_modified = function (self, scale)
@@ -1278,171 +1441,185 @@ end
 local function items_by_name(entry_array, is_item)
 	local _items_by_name = {}
 
-	for i = 1, #entry_array do
-		local entry = entry_array[i]
-		local item = is_item and entry or entry.item
-		local name = item and item.name
+	if entry_array then
+		for i = 1, #entry_array do
+			local entry = entry_array[i]
+			local item = is_item and entry or entry.item
+			local name = item and item.name
 
-		if name then
-			_items_by_name[name] = entry
+			if name then
+				_items_by_name[name] = entry
+			end
 		end
 	end
 
 	return _items_by_name
 end
 
-InventoryWeaponCosmeticsView._prepare_layout_data = function (self, items, tab_context)
-	local slot_name = tab_context.slot_name
-	local item_type = tab_context.item_type
-	local generate_visual_item_function = tab_context.generate_visual_item_function
-	local get_empty_item_function = tab_context.get_empty_item
-	local layout_count, layout = 0, {}
-	local inventory_items = items.items
-	local penance_track_items = items.penance_track_items
-	local store_items = items.store_items
-	local selected_slot = ItemSlotSettings[slot_name]
-	local achievement_items = self:_achievement_items(slot_name)
-	local player = self._preview_player
-	local profile = player:profile()
-	local remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
-	local locked_achievement_items_by_name = items_by_name(achievement_items, false)
-	local locked_store_items_by_name = items_by_name(store_items, false)
-	local locked_penance_track_items_by_name = items_by_name(penance_track_items, false)
+InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
+	local tabs_content = self._tabs_content
+	local items_by_slot = self._items_by_slot
+	local layout_by_slot = {}
 
-	for i = 1, #inventory_items do
-		local inventory_item = inventory_items[i]
-		local is_empty = inventory_item.empty_item
-		local item
+	for i = 1, #tabs_content do
+		local tab_content = tabs_content[i]
+		local slot_name = tab_content.slot_name
+		local item_type = tab_content.item_type
+		local items = items_by_slot[slot_name]
+		local generate_visual_item_function = tab_content.generate_visual_item_function
+		local get_empty_item_function = tab_content.get_empty_item
+		local layout_count, layout = 0, {}
+		local inventory_items = items and items.items
+		local penance_track_items = items and items.penance_track_items
+		local store_items = items and items.store_items
+		local selected_slot = ItemSlotSettings[slot_name]
+		local achievement_items = self:_achievement_items(slot_name)
+		local player = self._preview_player
+		local profile = player:profile()
+		local remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+		local locked_achievement_items_by_name = items_by_name(achievement_items, false)
+		local locked_store_items_by_name = items_by_name(store_items, false)
+		local locked_penance_track_items_by_name = items_by_name(penance_track_items, false)
 
-		if is_empty then
-			item = get_empty_item_function(self._selected_item, slot_name, item_type)
-		else
-			item = inventory_item.item
+		if inventory_items then
+			for i = 1, #inventory_items do
+				local inventory_item = inventory_items[i]
+				local is_empty = inventory_item.empty_item
+				local item
+
+				if is_empty then
+					item = get_empty_item_function(self._selected_item, slot_name, item_type)
+				else
+					item = inventory_item.item
+				end
+
+				if item then
+					local item_name = item.name
+					local found_achievement = locked_achievement_items_by_name[item_name]
+
+					locked_achievement_items_by_name[item_name] = nil
+
+					local found_store = locked_store_items_by_name[item_name]
+
+					locked_store_items_by_name[item_name] = nil
+
+					local found_penance_track = locked_penance_track_items_by_name[item_name]
+
+					locked_penance_track_items_by_name[item_name] = nil
+
+					local gear_id = item.gear_id
+					local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+					local visual_item = is_empty and item or generate_visual_item_function(item, self._selected_item, item_type)
+					local real_item = not is_empty and item or nil
+
+					layout_count = layout_count + 1
+					layout[layout_count] = {
+						widget_type = "item_icon",
+						is_empty = is_empty,
+						item = visual_item,
+						real_item = real_item,
+						slot = selected_slot,
+						achievement = found_achievement,
+						penance_track = found_penance_track,
+						store = found_store,
+						new_item_marker = is_new,
+						remove_new_marker_callback = remove_new_marker_callback,
+						profile = profile,
+						sort_group = is_empty and 0 or 1,
+						render_size = {
+							256,
+							128,
+						},
+					}
+				end
+			end
 		end
 
-		if item then
-			local item_name = item.name
-			local found_achievement = locked_achievement_items_by_name[item_name]
+		local has_locked_achievement_item = next(locked_achievement_items_by_name) ~= nil
+		local has_locked_penance_track_item = next(locked_penance_track_items_by_name) ~= nil
+		local has_locked_store_item = next(locked_store_items_by_name) ~= nil
 
-			locked_achievement_items_by_name[item_name] = nil
-
-			local found_store = locked_store_items_by_name[item_name]
-
-			locked_store_items_by_name[item_name] = nil
-
-			local found_penance_track = locked_penance_track_items_by_name[item_name]
-
-			locked_penance_track_items_by_name[item_name] = nil
-
-			local gear_id = item.gear_id
-			local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-			local visual_item = is_empty and item or generate_visual_item_function(item, self._selected_item, item_type)
-			local real_item = not is_empty and item or nil
-
+		if has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item then
 			layout_count = layout_count + 1
 			layout[layout_count] = {
-				widget_type = "item_icon",
-				is_empty = is_empty,
-				item = visual_item,
-				real_item = real_item,
-				slot = selected_slot,
-				achievement = found_achievement,
-				penance_track = found_penance_track,
-				store = found_store,
-				new_item_marker = is_new,
-				remove_new_marker_callback = remove_new_marker_callback,
-				profile = profile,
-				sort_group = is_empty and 0 or 1,
-				render_size = {
-					256,
-					128,
-				},
+				sort_group = 4,
+				widget_type = "divider",
 			}
 		end
-	end
 
-	local has_locked_achievement_item = next(locked_achievement_items_by_name) ~= nil
-	local has_locked_penance_track_item = next(locked_penance_track_items_by_name) ~= nil
-	local has_locked_store_item = next(locked_store_items_by_name) ~= nil
+		for _, achievement_item in pairs(locked_achievement_items_by_name) do
+			local item = achievement_item.item
 
-	if has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item then
-		layout_count = layout_count + 1
-		layout[layout_count] = {
-			sort_group = 4,
-			widget_type = "divider",
-		}
-	end
+			if item then
+				local visual_item = generate_visual_item_function(achievement_item.item, self._selected_item, item_type)
 
-	for _, achievement_item in pairs(locked_achievement_items_by_name) do
-		local item = achievement_item.item
-
-		if item then
-			local visual_item = generate_visual_item_function(achievement_item.item, self._selected_item, item_type)
-
-			layout_count = layout_count + 1
-			layout[layout_count] = {
-				locked = true,
-				sort_group = 5,
-				widget_type = "item_icon",
-				item = visual_item,
-				real_item = achievement_item.item,
-				slot = selected_slot,
-				achievement = achievement_item,
-				render_size = {
-					256,
-					128,
-				},
-			}
+				layout_count = layout_count + 1
+				layout[layout_count] = {
+					locked = true,
+					sort_group = 5,
+					widget_type = "item_icon",
+					item = visual_item,
+					real_item = achievement_item.item,
+					slot = selected_slot,
+					achievement = achievement_item,
+					render_size = {
+						256,
+						128,
+					},
+				}
+			end
 		end
-	end
 
-	for _, penance_track_item in pairs(locked_penance_track_items_by_name) do
-		local item = penance_track_item.item
+		for _, penance_track_item in pairs(locked_penance_track_items_by_name) do
+			local item = penance_track_item.item
 
-		if item then
-			local visual_item = generate_visual_item_function(penance_track_item.item, self._selected_item, item_type)
+			if item then
+				local visual_item = generate_visual_item_function(penance_track_item.item, self._selected_item, item_type)
 
-			layout_count = layout_count + 1
-			layout[layout_count] = {
-				locked = true,
-				sort_group = 5,
-				widget_type = "item_icon",
-				item = visual_item,
-				real_item = penance_track_item.item,
-				slot = selected_slot,
-				penance_track = penance_track_item,
-				render_size = {
-					256,
-					128,
-				},
-			}
+				layout_count = layout_count + 1
+				layout[layout_count] = {
+					locked = true,
+					sort_group = 5,
+					widget_type = "item_icon",
+					item = visual_item,
+					real_item = penance_track_item.item,
+					slot = selected_slot,
+					penance_track = penance_track_item,
+					render_size = {
+						256,
+						128,
+					},
+				}
+			end
 		end
-	end
 
-	for _, store_item in pairs(locked_store_items_by_name) do
-		local item = store_item.item
+		for _, store_item in pairs(locked_store_items_by_name) do
+			local item = store_item.item
 
-		if item then
-			local visual_item = generate_visual_item_function(store_item.item, self._selected_item, item_type)
+			if item then
+				local visual_item = generate_visual_item_function(store_item.item, self._selected_item, item_type)
 
-			layout_count = layout_count + 1
-			layout[layout_count] = {
-				locked = true,
-				sort_group = 5,
-				widget_type = "item_icon",
-				item = visual_item,
-				real_item = store_item.item,
-				slot = selected_slot,
-				store = store_item.item,
-				render_size = {
-					256,
-					128,
-				},
-			}
+				layout_count = layout_count + 1
+				layout[layout_count] = {
+					locked = true,
+					sort_group = 5,
+					widget_type = "item_icon",
+					item = visual_item,
+					real_item = store_item.item,
+					slot = selected_slot,
+					store = store_item.item,
+					render_size = {
+						256,
+						128,
+					},
+				}
+			end
 		end
+
+		layout_by_slot[slot_name] = layout
 	end
 
-	return layout
+	self._weapon_cosmetic_layouts_by_slot = layout_by_slot
 end
 
 InventoryWeaponCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, dy)
@@ -1536,6 +1713,20 @@ InventoryWeaponCosmeticsView._setup_side_panel = function (self, item, is_locked
 		widget_offset[1] = dx
 		widget_offset[2] = dy + widget_offset[2] - y_offset
 	end
+end
+
+InventoryWeaponCosmeticsView.is_item_owned = function (self, target_gear_id)
+	local inventory_items = self._inventory_items
+
+	for _, item in ipairs(inventory_items) do
+		local gear_id = item.gear_id
+
+		if gear_id == target_gear_id then
+			return true
+		end
+	end
+
+	return false
 end
 
 return InventoryWeaponCosmeticsView

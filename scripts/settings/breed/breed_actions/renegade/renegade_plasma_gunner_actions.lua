@@ -1109,7 +1109,7 @@ local action_data = {
 	},
 	shoot = {
 		attack_intensity_type = "elite_shotgun",
-		before_shoot_effect_template_timing = 1.5,
+		before_shoot_effect_template_timing = 2.6,
 		can_strafe_shoot = true,
 		clear_shot_line_of_sight_id = "eyes",
 		cooldown_vo_event = "stopped_shooting",

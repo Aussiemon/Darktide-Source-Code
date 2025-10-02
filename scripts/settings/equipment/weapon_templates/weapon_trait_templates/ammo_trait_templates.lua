@@ -4,7 +4,8 @@ local ammo_trait_templates = {}
 
 ammo_trait_templates.default_ammo_stat = {
 	{
-		"ammunition_clip",
+		"ammunition_clips",
+		1,
 		{
 			max = 1,
 			min = 0,
@@ -20,7 +21,8 @@ ammo_trait_templates.default_ammo_stat = {
 }
 ammo_trait_templates.default_ammo_perk = {
 	{
-		"ammunition_clip",
+		"ammunition_clips",
+		1,
 		0.05,
 	},
 	{
@@ -30,7 +32,8 @@ ammo_trait_templates.default_ammo_perk = {
 }
 ammo_trait_templates.flamer_p1_m1_ammo_stat = {
 	{
-		"ammunition_clip",
+		"ammunition_clips",
+		1,
 		{
 			max = 0.75,
 			min = 0.25,

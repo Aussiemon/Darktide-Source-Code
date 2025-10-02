@@ -307,9 +307,11 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 		local buff_extension = self._buff_extension
 		local param_table = buff_extension:request_proc_event_param_table()
 
-		param_table.attacked_unit = target_unit
+		if param_table then
+			param_table.attacked_unit = target_unit
 
-		buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
+			buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
+		end
 	end
 
 	local killing_blow = attack_result == AttackSettings.attack_results.died

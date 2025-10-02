@@ -236,22 +236,22 @@ ConstantElementSubtitles._get_active_dialogue_system = function (self)
 		for i = 1, num_views do
 			local view_name = active_views[i]
 			local view = ui_manager:view_instance(view_name)
+			local view_dialogue_system = view and view:dialogue_system()
 
-			if view and view.dialogue_system then
+			if view_dialogue_system then
 				local state_managers = Managers.state
 
 				if state_managers then
 					local extension_manager = state_managers.extension
 					local system_name = "dialogue_system"
 					local world_dialogue_system = extension_manager and extension_manager:has_system(system_name) and extension_manager:system(system_name)
-					local view_dialogue_system = view:dialogue_system()
 
 					if world_dialogue_system and world_dialogue_system ~= view_dialogue_system then
 						world_dialogue_system:force_stop_all()
 					end
 				end
 
-				return view:dialogue_system()
+				return view_dialogue_system
 			end
 		end
 	end

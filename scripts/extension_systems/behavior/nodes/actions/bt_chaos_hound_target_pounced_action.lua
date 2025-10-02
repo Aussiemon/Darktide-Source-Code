@@ -86,7 +86,6 @@ BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
 end
 
 local cooldown_by_breed = {
-	chaos_armored_hound = "chaos_armored_hound_pounce",
 	chaos_hound = "chaos_hound_pounce",
 	chaos_hound_mutator = "chaos_hound_pounce",
 }

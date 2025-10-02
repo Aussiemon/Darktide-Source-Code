@@ -470,7 +470,7 @@ local specials_pacing_template = {
 			},
 		},
 		{
-			chance_for_coordinated_strike = 0.9,
+			chance_for_coordinated_strike = 0.3,
 			coordinated_strike_challenge_rating = 5,
 			coordinated_surge_chance = 0.2,
 			destroy_special_distance = 100,

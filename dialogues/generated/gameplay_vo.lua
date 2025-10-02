@@ -1067,7 +1067,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				100,
+				80,
 			},
 			{
 				"faction_memory",
@@ -1075,6 +1075,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				20,
+			},
+			{
+				"faction_memory",
+				"combat_pause_one_liner_cooldown",
+				OP.TIMEDIFF,
+				OP.GT,
+				120,
 			},
 		},
 		on_done = {
@@ -1095,6 +1102,11 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.SUB,
 				40,
+			},
+			{
+				"faction_memory",
+				"combat_pause_one_liner_cooldown",
+				OP.TIMESET,
 			},
 		},
 		heard_speak_routing = {

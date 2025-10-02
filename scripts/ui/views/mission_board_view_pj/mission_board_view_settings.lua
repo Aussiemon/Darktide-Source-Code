@@ -293,8 +293,9 @@ MissionBoardViewSettings.view_elements = {
 					on_pressed_callback = "_callback_open_replay_campaign_missions_view",
 					visibility_function = function (parent, id)
 						local mission_list = parent:_element("mission_list")
+						local is_loading = parent._is_loading
 
-						return mission_list and not mission_list:visible() and not parent._mission_board_options
+						return not is_loading and mission_list and not mission_list:visible() and not parent._mission_board_options
 					end,
 				},
 				{
@@ -304,8 +305,9 @@ MissionBoardViewSettings.view_elements = {
 					on_pressed_callback = "_callback_close_replay_campaign_missions_view",
 					visibility_function = function (parent, id)
 						local mission_list = parent:_element("mission_list")
+						local is_loading = parent._is_loading
 
-						return mission_list and mission_list:visible() and not parent._mission_board_options
+						return not is_loading and mission_list and mission_list:visible() and not parent._mission_board_options
 					end,
 				},
 				{

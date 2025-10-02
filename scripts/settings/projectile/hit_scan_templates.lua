@@ -236,11 +236,6 @@ hit_scan_templates.renegade_plasma_gunner = {
 				stop_explosion_template = ExplosionTemplates.renegade_captain_plasma_stop,
 			},
 		},
-		penetration = {
-			depth = 0.75,
-			target_index_increase = 2,
-			stop_explosion_template = ExplosionTemplates.renegade_captain_plasma_stop,
-		},
 	},
 }
 hit_scan_templates.renegade_captain_plasma_pistol_plasma = {

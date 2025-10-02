@@ -790,7 +790,6 @@ _declare_view("penance_overview_view", require("scripts/ui/views/penance_overvie
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))
-_declare_view("player_survey_view", require("scripts/ui/views/player_survey_view/player_survey_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

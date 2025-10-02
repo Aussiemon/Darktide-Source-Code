@@ -91,6 +91,7 @@ MissionBoardView.init = function (self, settings, context)
 	self._target_zoom = 0
 	self._zoom_speed = 0
 	self._element_layer = 10
+	self._is_loading = true
 end
 
 MissionBoardView.on_enter = function (self)
@@ -1062,6 +1063,11 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	widgets_by_name.difficulty_progress_bar.content.visible = not is_loading
 	widgets_by_name.difficulty_progress_tooltip.content.visible = not is_loading
 	input_service = is_loading and input_service:null_service() or input_service
+
+	if self._is_loading ~= is_loading then
+		self._is_loading = is_loading
+	end
+
 	self._stored_input_service = input_service
 
 	local options_opened = self._mission_board_options ~= nil
@@ -2149,6 +2155,10 @@ MissionBoardView._callback_open_options = function (self)
 end
 
 MissionBoardView._callback_open_replay_campaign_missions_view = function (self)
+	if self._is_loading then
+		return
+	end
+
 	local view_element_campaign_mission_list = self:_element("mission_list")
 
 	view_element_campaign_mission_list:set_visibility(true)
@@ -2229,6 +2239,11 @@ MissionBoardView.event_register_camera_02 = function (self, camera_unit)
 	Managers.event:unregister(self, "event_register_camera_02")
 
 	self._near_camera_unit = camera_unit
+end
+
+MissionBoardView.set_camera_target_zoom_rotation = function (self, target_zoom, target_rotation)
+	self._target_zoom = target_zoom
+	self._target_rotation = target_rotation
 end
 
 MissionBoardView.event_mission_board_mission_tile_pressed = function (self, mission_id)

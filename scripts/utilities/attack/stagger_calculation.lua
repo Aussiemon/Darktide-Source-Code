@@ -193,7 +193,8 @@ function _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_
 	local shout_impact_modifier = attack_type == attack_types.shout and attacker_stat_buffs.shout_impact_modifier or 1
 	local melee_weakspot_modifier = attack_type == attack_types.melee and hit_weakspot and attacker_stat_buffs.melee_weakspot_impact_modifier or 1
 	local super_armor_impact_on_crit = armor_type == armor_types.super_armor and is_critical_strike and attacker_stat_buffs.super_armor_impact_on_crit or 1
-	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier + super_armor_impact_on_crit + push_impact_modifier - 7
+	local num_modifiers = 8
+	local modifier = impact_modifier + target_impact_modifier + melee_impact_modifier + ranged_impact_modifier + explosion_impact_modifier + shout_impact_modifier + melee_weakspot_modifier + super_armor_impact_on_crit + push_impact_modifier - num_modifiers
 
 	return modifier
 end

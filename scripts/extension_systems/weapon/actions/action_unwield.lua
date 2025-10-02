@@ -45,11 +45,25 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 		local keywords = next_weapon_template.keywords
 
 		if table.array_contains(keywords, "ranged") then
-			buff_extension:add_proc_event(buff_proc_events.on_wield_ranged, param_table)
+			local ranged_param_table = buff_extension:request_proc_event_param_table()
+
+			if ranged_param_table then
+				ranged_param_table.weapon_template = next_weapon_template
+				ranged_param_table.previously_wielded_slot = current_wielded_slot
+
+				buff_extension:add_proc_event(buff_proc_events.on_wield_ranged, ranged_param_table)
+			end
 		end
 
 		if table.array_contains(keywords, "melee") then
-			buff_extension:add_proc_event(buff_proc_events.on_wield_melee, param_table)
+			local melee_param_table = buff_extension:request_proc_event_param_table()
+
+			if melee_param_table then
+				melee_param_table.weapon_template = next_weapon_template
+				melee_param_table.previously_wielded_slot = current_wielded_slot
+
+				buff_extension:add_proc_event(buff_proc_events.on_wield_melee, melee_param_table)
+			end
 		end
 	end
 

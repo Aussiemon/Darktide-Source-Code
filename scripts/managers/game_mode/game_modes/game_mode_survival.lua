@@ -649,7 +649,7 @@ GameModeSurvival._handle_game_end_server = function (self, game_won)
 		local stat_id = player.remote and player.stat_id or player:local_player_id()
 		local pickups_and_health_station_uses_stat = Managers.stats:read_user_stat(stat_id, "game_mode_survival_auric_session_ammo_pickups_and_health_station_uses")
 
-		if game_won and pickups_and_health_station_uses_stat == 0 then
+		if game_won and danger_settings.is_auric and pickups_and_health_station_uses_stat == 0 then
 			Managers.achievements:unlock_achievement(player, "horde_win_auric_no_ammo_pickups_or_health_station")
 		end
 	end

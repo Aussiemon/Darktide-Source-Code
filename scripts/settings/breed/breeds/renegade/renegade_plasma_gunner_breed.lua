@@ -111,6 +111,9 @@ local breed_data = {
 		standing = "offset_shotgun_standing_shoot_01",
 	},
 	combat_range_data = BreedCombatRanges.renegade_plasma_gunner,
+	spawn_buffs = {
+		"renegade_plasma_gunner_set_material_scalar",
+	},
 	combat_vector_config = {
 		can_flank = true,
 		choose_furthest_away = true,

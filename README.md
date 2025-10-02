@@ -4,6 +4,7 @@
 
 Date       |  Patch   | Notes
 --------:  | :-----:  | :--------------
+09-30-25   |  1.9.2   |
 09-25-25   |  1.9.1   |
 09-23-25   |  1.9.0   | Bundle format changed, limn extraction
 09-01-25   |  1.8.8   | (No code changes)

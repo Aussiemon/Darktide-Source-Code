@@ -371,11 +371,11 @@ CharacterAppearanceView.on_enter = function (self)
 		self._pages = self:_get_pages()
 		self._page_grids = {}
 
-		self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
+		self:_register_event("update_profiles_sync_state", "_event_profiles_sync_changed")
 
 		local is_syncing = self._parent and self._parent._character_is_syncing or false
 
-		self:_event_profile_sync_changed(is_syncing)
+		self:_event_profiles_sync_changed(is_syncing)
 		self:_create_offscreen_renderer()
 		self:_setup_input_legend()
 		self:_setup_button_callbacks()
@@ -2841,7 +2841,7 @@ CharacterAppearanceView._change_page_indicator = function (self, index)
 	end
 end
 
-CharacterAppearanceView._event_profile_sync_changed = function (self, is_active)
+CharacterAppearanceView._event_profiles_sync_changed = function (self, is_active)
 	self:_show_loading_character(is_active)
 end
 
@@ -3254,7 +3254,7 @@ CharacterAppearanceView.on_exit = function (self)
 	CharacterAppearanceView.super.on_exit(self)
 	self:_destroy_background()
 	self:_destroy_renderer()
-	Managers.event:unregister(self, "update_character_sync_state")
+	Managers.event:unregister(self, "update_profiles_sync_state")
 end
 
 CharacterAppearanceView._get_planet_options = function (self)

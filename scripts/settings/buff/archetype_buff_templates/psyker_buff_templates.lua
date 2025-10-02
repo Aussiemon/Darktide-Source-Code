@@ -3552,7 +3552,7 @@ templates.psyker_chain_lightning_heavy_attacks = {
 			local improved_target_buff = talent_extension and talent_extension:has_special_rule(special_rules.psyker_chain_lightning_improved_target_buff)
 			local buff_name = improved_target_buff and "psyker_heavy_swings_shock_improved" or "psyker_heavy_swings_shock"
 
-			buff_ext:add_internally_controlled_buff(buff_name, t)
+			buff_ext:add_internally_controlled_buff(buff_name, t, "owner_unit", template_context.unit)
 		end
 	end,
 	special_rule = special_rules.psyker_chain_lightning_improved_target_buff,

@@ -502,9 +502,6 @@ buff_settings.proc_event_validation = {
 		fog_owner_unit = "unit",
 		target_unit = "unit",
 	},
-	on_force_field_death = {
-		force_field_unit = "unit",
-	},
 	on_warp_charge_changed = {
 		percentage_change = "number",
 	},

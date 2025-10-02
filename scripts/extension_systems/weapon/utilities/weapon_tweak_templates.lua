@@ -372,7 +372,13 @@ function _resolve_template(out_template, base_template, lerp_values_or_nil, defa
 		if type(template) == "table" then
 			local lerp_basic, lerp_perfect = template.lerp_basic, template.lerp_perfect
 			local lerpable_value = lerp_basic and lerp_perfect
-			local current_lerp_values = lerp_values_or_nil and lerp_values_or_nil[key]
+			local current_lerp_values
+
+			if type(lerp_values_or_nil) == "table" then
+				current_lerp_values = lerp_values_or_nil[key]
+			else
+				current_lerp_values = lerp_values_or_nil
+			end
 
 			if lerpable_value then
 				local t = current_lerp_values or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE

@@ -2660,8 +2660,10 @@ local snipers_focus_max_stacks_talent = 15
 
 local function _snipers_focus_handle_stacks(template_data, template_context, previous_stacks, t)
 	local current_stacks = template_context.stack_count
+	local went_above_stack_threshold = previous_stacks < snipers_focus_max_stacks and current_stacks >= snipers_focus_max_stacks
+	local went_below_stack_threshold = previous_stacks >= snipers_focus_max_stacks and current_stacks < snipers_focus_max_stacks
 
-	if previous_stacks < snipers_focus_max_stacks and current_stacks >= snipers_focus_max_stacks then
+	if went_above_stack_threshold then
 		if template_data.threat_bonus then
 			local _, id = template_context.buff_extension:add_externally_controlled_buff("veteran_snipers_focus_threat_buff", t)
 
@@ -2678,8 +2680,10 @@ local function _snipers_focus_handle_stacks(template_data, template_context, pre
 			template_data.rending_buff_active = true
 		end
 
-		template_context.buff_extension:add_internally_controlled_buff("veteran_snipers_focus_effect", t)
-	elseif previous_stacks >= snipers_focus_max_stacks and current_stacks < snipers_focus_max_stacks then
+		local _, snipers_focus_effect_id = template_context.buff_extension:add_externally_controlled_buff("veteran_snipers_focus_effect", t)
+
+		template_data.veteran_snipers_focus_effect_id = snipers_focus_effect_id
+	elseif went_below_stack_threshold then
 		if template_data.threat_buff_active and template_data.veteran_snipers_focus_threat_buff_id then
 			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_threat_buff_id)
 
@@ -2694,7 +2698,11 @@ local function _snipers_focus_handle_stacks(template_data, template_context, pre
 			template_data.veteran_snipers_focus_rending_buff_id = nil
 		end
 
-		template_context.buff_extension:remove_internally_controlled_buff_stack("veteran_snipers_focus_effect")
+		if template_data.veteran_snipers_focus_effect_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_effect_id)
+
+			template_data.veteran_snipers_focus_effect_id = nil
+		end
 	end
 end
 
@@ -2814,6 +2822,12 @@ templates.veteran_snipers_focus_stat_buff = {
 
 			template_data.rending_buff_active = nil
 			template_data.veteran_snipers_focus_rending_buff_id = nil
+		end
+
+		if template_data.veteran_snipers_focus_effect_id then
+			template_context.buff_extension:mark_buff_finished(template_data.veteran_snipers_focus_effect_id)
+
+			template_data.veteran_snipers_focus_effect_id = nil
 		end
 	end,
 }

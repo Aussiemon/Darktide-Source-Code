@@ -1197,6 +1197,27 @@ NodeBuilderViewBase._handle_input = function (self, input_service, dt, t)
 	local left_input_hold = input_service:get("left_hold")
 	local allowed_node_input = self:_allowed_node_input()
 	local input_handled = false
+	local dragging_background = false
+	local is_background_drag_allowed = self:_can_drag_background()
+
+	if is_background_drag_allowed and allowed_node_input then
+		local layout_background_widget = widgets_by_name.layout_background
+		local move_input_prefix = "left"
+		local handled = self:_handle_scenegraph_coordinates(layout_background_widget.name, layout_background_widget.scenegraph_id, input_service, move_input_prefix, render_settings, true)
+
+		if handled then
+			if self._background_drag_frame_delay then
+				input_handled = true
+				dragging_background = true
+			else
+				self._background_drag_frame_delay = true
+			end
+		else
+			self._background_drag_frame_delay = false
+		end
+	end
+
+	self._dragging_background = dragging_background
 
 	if allowed_node_input then
 		local scroll

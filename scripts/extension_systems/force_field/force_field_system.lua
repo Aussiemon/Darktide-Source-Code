@@ -40,20 +40,6 @@ ForceFieldSystem.update = function (self, context, dt, t, ...)
 				local is_dead = extension:is_dead()
 
 				if remaining_duration <= 0 or is_dead or owner_is_dead and not unit_extension_data.marked_for_deletion then
-					if ALIVE[owner_unit] then
-						local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
-
-						if buff_extension then
-							local param_table = extension.buff_extension:request_proc_event_param_table()
-
-							if param_table then
-								param_table.force_field_unit = unit
-
-								buff_extension:add_proc_event(proc_events.on_force_field_death, param_table)
-							end
-						end
-					end
-
 					extension:on_death(t)
 
 					extension.is_expired = true

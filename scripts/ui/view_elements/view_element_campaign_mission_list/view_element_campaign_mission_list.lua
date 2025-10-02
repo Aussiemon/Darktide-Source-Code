@@ -233,7 +233,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 		return
 	end
 
-	if input_service:get("navigate_right_pressed") then
+	if input_service:get("navigate_right_continuous") then
 		local has_found_target = false
 		local target_row = self._selected_row
 		local target_column = self._selected_col + 1 < DEFAULT_GRID_COLS and self._selected_col + 1 or DEFAULT_GRID_COLS
@@ -242,7 +242,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 		has_found_target = not not target_cell.data
 
 		if has_found_target then
-			self:_set_selected_mission(target_cell.data.id)
+			self:on_mission_tile_pressed(target_cell.data, target_cell.slot)
 
 			self._selected_col = target_column
 			self._selected_row = target_row
@@ -256,7 +256,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 					local cell = self._mission_grid[row][col]
 
 					if cell and cell.data then
-						self:_set_selected_mission(cell.data.id)
+						self:on_mission_tile_pressed(cell.data, cell.slot)
 
 						self._selected_col = col
 						self._selected_row = row
@@ -275,7 +275,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 				end
 			end
 		end
-	elseif input_service:get("navigate_left_pressed") then
+	elseif input_service:get("navigate_left_continuous") then
 		local has_found_target = false
 		local target_row = self._selected_row
 		local target_column = self._selected_col - 1 > 1 and self._selected_col - 1 or 1
@@ -284,7 +284,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 		has_found_target = not not target_cell.data
 
 		if has_found_target then
-			self:_set_selected_mission(target_cell.data.id)
+			self:on_mission_tile_pressed(target_cell.data, target_cell.slot)
 
 			self._selected_col = target_column
 			self._selected_row = target_row
@@ -298,7 +298,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 					local cell = self._mission_grid[row][col]
 
 					if cell and cell.data then
-						self:_set_selected_mission(cell.data.id)
+						self:on_mission_tile_pressed(cell.data, cell.slot)
 
 						self._selected_col = col
 						self._selected_row = row
@@ -318,7 +318,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 				end
 			end
 		end
-	elseif input_service:get("navigate_up_pressed") then
+	elseif input_service:get("navigate_up_continuous") then
 		local target_row = self._selected_row - 1 > 1 and self._selected_row - 1 or 1
 		local target_column = self._selected_col
 
@@ -326,7 +326,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 			local cell = self._mission_grid[row] and self._mission_grid[row][target_column]
 
 			if cell and cell.data then
-				self:_set_selected_mission(cell.data.id)
+				self:on_mission_tile_pressed(cell.data, cell.slot)
 
 				self._selected_row = row
 				self._selected_col = target_column
@@ -338,7 +338,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 				break
 			end
 		end
-	elseif input_service:get("navigate_down_pressed") then
+	elseif input_service:get("navigate_down_continuous") then
 		local target_row = self._selected_row + 1 < #self._mission_grid and self._selected_row + 1 or #self._mission_grid
 		local target_column = self._selected_col
 
@@ -346,7 +346,7 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 			local cell = self._mission_grid[row] and self._mission_grid[row][target_column]
 
 			if cell and cell.data then
-				self:_set_selected_mission(cell.data.id)
+				self:on_mission_tile_pressed(cell.data, cell.slot)
 
 				self._selected_row = row
 				self._selected_col = target_column
@@ -360,10 +360,13 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 		end
 	elseif input_service:get("mission_board_play_debrief") then
 		local cell = _get_grid_cell_data(self._mission_grid, self._selected_row, self._selected_col)
+		local debrief_widget = cell and cell.debrief_widget
+		local mission_data = cell and cell.data
+		local debrief_widget_content = debrief_widget and debrief_widget.content
+		local is_locked = debrief_widget_content and debrief_widget_content.is_locked
 
-		if cell and cell.data then
-			local mission = cell.data
-			local circumstance = mission.circumstance
+		if mission_data and not is_locked then
+			local circumstance = mission_data.circumstance
 
 			self:_queue_debrief_video(circumstance)
 		end
@@ -703,6 +706,7 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local sub_title = Localize(Zones[mission_template.zone_id].name)
 	local texture = mission_template.texture_small
 	local parent = self:parent()
+	local theme = parent:_get_ui_theme()
 	local is_locked = parent._mission_board_logic:is_mission_locked(mission)
 	local cell_data = {}
 	local display_order = self:_get_mission_display_order(mission_data.key)
@@ -715,14 +719,17 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 		display_order = display_order,
 	}
 	local widget = self:_widget_from_blueprint("mission_" .. idx, "mission_tile", mission, creation_context)
+	local theme_slots = theme.slots.small
+	local slot = theme_slots[math.fmod(display_order - 1, #theme_slots) + 1]
 
-	widget.content.hotspot.pressed_callback = callback(self, "cb_on_mission_tile_pressed", mission)
+	widget.content.hotspot.pressed_callback = callback(self, "on_mission_tile_pressed", mission, slot)
 	widget.visible = false
 	cell_data.widget = widget
 	cell_data.name = "cell_" .. mission_data.key
 	cell_data.data = mission
 	cell_data.unlock_data = mission_data
 	cell_data.is_locked = is_locked
+	cell_data.slot = slot
 	cell_data.row = row
 	cell_data.col = col
 
@@ -769,7 +776,7 @@ ViewElementCampaignMissionList._populate_grid = function (self, grid, filtered_m
 
 		if mission_data then
 			local tree_data = tree_like_mission_data[mission_data.key]
-			local parents = tree_data.prerequisites
+			local parents = tree_data and tree_data.prerequisites
 
 			if parents and #parents > 1 then
 				local child = self:_get_cell_by_name(mission_data.key)
@@ -1026,6 +1033,20 @@ ViewElementCampaignMissionList._is_cell_within_mask = function (self, cell)
 end
 
 ViewElementCampaignMissionList._queue_debrief_video = function (self, debrief_key)
+	if not InputDevice.gamepad_active then
+		local input_service = Managers.input:get_input_service("View")
+		local cursor = input_service:get("cursor")
+		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+		local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
+		local position = self._ui_scenegraph.list_mask.world_position
+		local size = self._ui_scenegraph.list_mask.size
+		local is_within_mask_bounds = math.point_is_inside_2d_box(cursor_position, position, size)
+
+		if not is_within_mask_bounds then
+			return
+		end
+	end
+
 	local debrief_video = Settings.debrief_videos[debrief_key]
 
 	if debrief_video then
@@ -1106,7 +1127,7 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self)
 		local cell = _get_grid_cell_data(self._mission_grid, self._selected_row, self._selected_col)
 
 		if cell and cell.data then
-			self:_set_selected_mission(cell.data.id)
+			self:on_mission_tile_pressed(cell.data, cell.slot)
 
 			local scrollbar_widget = self._scrollbar_widget
 			local scrollbar_content = scrollbar_widget and scrollbar_widget.content
@@ -1117,9 +1138,12 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self)
 	else
 		local head_mission = self._ordered_story_missions[1]
 		local mission_data = self:_get_mission_by_key(head_mission.key)
-		local mission_id = mission_data and mission_data.id or nil
+		local theme = parent:_get_ui_theme()
+		local slots = theme.slots.small
+		local slot = slots[1]
 
-		self:_set_selected_mission(mission_id)
+		parent:set_selected_mission(mission_data.id)
+		parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
 	end
 
 	self:_start_mission_list_entry_animation()
@@ -1127,23 +1151,26 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self)
 	self._should_refresh_mission_list = nil
 end
 
-ViewElementCampaignMissionList.cb_on_mission_tile_pressed = function (self, mission_data, widget_offset)
-	local input_service = Managers.input:get_input_service("View")
-	local cursor = input_service:get("cursor")
-	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
-	local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
-	local position = self._ui_scenegraph.list_mask.world_position
-	local size = self._ui_scenegraph.list_mask.size
-	local is_within_mask_bounds = math.point_is_inside_2d_box(cursor_position, position, size)
+ViewElementCampaignMissionList.on_mission_tile_pressed = function (self, mission_data, slot)
+	if not InputDevice.gamepad_active then
+		local input_service = Managers.input:get_input_service("View")
+		local cursor = input_service:get("cursor")
+		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+		local cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)
+		local position = self._ui_scenegraph.list_mask.world_position
+		local size = self._ui_scenegraph.list_mask.size
+		local is_within_mask_bounds = math.point_is_inside_2d_box(cursor_position, position, size)
 
-	if not is_within_mask_bounds then
-		return
+		if not is_within_mask_bounds then
+			return
+		end
 	end
 
 	local parent = self:parent()
 
 	if parent then
 		parent:set_selected_mission(mission_data.id)
+		parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
 	end
 end
 

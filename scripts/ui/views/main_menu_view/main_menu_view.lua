@@ -18,7 +18,6 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
 local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
-local PlayerSurveyView = require("scripts/ui/views/player_survey_view/player_survey_view")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -39,7 +38,8 @@ MainMenuView.on_enter = function (self)
 
 	self._character_list_widgets = {}
 	self._character_slot_spawn_id = 0
-	self._character_wait_overlay_active = self._parent and self._parent._character_is_syncing or false
+	self._profiles_wait_overlay_active = self._parent and self._parent._profiles_are_syncing or false
+	self._waiting_on_character = self._parent and self._parent._character_is_syncing or false
 	self._is_main_menu_open = false
 	self._character_list_grid = nil
 	self._news_list_requested = false
@@ -49,7 +49,7 @@ MainMenuView.on_enter = function (self)
 	self:_create_character_list_renderer()
 	self:_setup_input_legend()
 	self:_show_character_details(false)
-	self:_set_waiting_for_characters(false)
+	self:_set_waiting_for_profiles(false)
 	self:_setup_interactions()
 
 	if IS_XBS or IS_PLAYSTATION then
@@ -66,7 +66,8 @@ MainMenuView.on_enter = function (self)
 
 	self:_register_event("event_main_menu_profiles_changed", "_event_profiles_changed")
 	self:_register_event("event_main_menu_selected_profile_changed", "_event_selected_profile_changed")
-	self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
+	self:_register_event("update_profiles_sync_state", "_event_profiles_sync_changed")
+	self:_register_event("update_character_sync_state", "_event_character_sync_changed")
 	Managers.event:trigger("event_main_menu_entered")
 	Managers.event:trigger("event_update_reward_claim_state")
 
@@ -283,7 +284,8 @@ MainMenuView.cb_on_list_entry_pressed = function (self, widget, entry)
 	end
 end
 
-MainMenuView._set_waiting_for_characters = function (self, waiting)
+MainMenuView._set_waiting_for_profiles = function (self, waiting)
+	self._profiles_wait_overlay_active = waiting
 	self._widgets_by_name.overlay.content.visible = waiting == true
 
 	if waiting then
@@ -295,6 +297,10 @@ MainMenuView._set_waiting_for_characters = function (self, waiting)
 			widget.content.hotspot.is_selected = false
 		end
 	end
+end
+
+MainMenuView._event_character_sync_changed = function (self, waiting)
+	self._waiting_on_character = waiting
 end
 
 MainMenuView._event_profiles_changed = function (self, profiles)
@@ -403,19 +409,6 @@ MainMenuView._populate_news_list = function (self)
 		local slides = table.filter_array(raw_news, function (item)
 			return not item:is_read()
 		end)
-		local show_survey = false
-
-		for _, slide in ipairs(raw_news) do
-			for _, contents in ipairs(slide.contents) do
-				if contents.data == "test_show_survey" then
-					show_survey = true
-				end
-			end
-		end
-
-		if show_survey then
-			Promise.delay(1):next(PlayerSurveyView.open)
-		end
 
 		if #slides > 0 then
 			self._news_list = {
@@ -440,14 +433,12 @@ MainMenuView._update_news_list = function (self)
 	self:_populate_news_list()
 end
 
-MainMenuView._event_profile_sync_changed = function (self, is_active)
-	self._character_wait_overlay_active = is_active
-
-	self:_set_waiting_for_characters(is_active)
+MainMenuView._event_profiles_sync_changed = function (self, profiles_syncing, character_syncing)
+	self:_set_waiting_for_profiles(profiles_syncing)
 end
 
 MainMenuView.update = function (self, dt, t, input_service)
-	if self._character_wait_overlay_active then
+	if self._profiles_wait_overlay_active then
 		input_service = input_service:null_service()
 	else
 		self:_update_counts_refreshes(dt, t)
@@ -497,13 +488,15 @@ MainMenuView.update = function (self, dt, t, input_service)
 		end
 	end
 
+	self:_update_play_button_state()
+
 	return MainMenuView.super.update(self, dt, t, input_service)
 end
 
 MainMenuView.draw = function (self, dt, t, input_service, layer)
 	local stored_service = input_service
 
-	if self._character_wait_overlay_active or self._server_migration_element then
+	if self._profiles_wait_overlay_active or self._server_migration_element then
 		input_service = input_service:null_service()
 	end
 
@@ -566,7 +559,7 @@ MainMenuView._on_navigation_input_changed = function (self)
 end
 
 MainMenuView._handle_input = function (self, input_service, dt, t)
-	if self._character_wait_overlay_active or self._server_migration_element then
+	if self._profiles_wait_overlay_active or self._server_migration_element then
 		input_service = input_service:null_service()
 	end
 
@@ -606,7 +599,7 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= max_num_characters then
 				self:_on_character_widget_selected(selected_character_list_index + 1)
 			end
-		elseif play_button.content.visible and not play_button.disabled and input_service:get("confirm_pressed") then
+		elseif play_button.content.visible and not play_button.content.hotspot.disabled and input_service:get("confirm_pressed") then
 			play_button.content.hotspot.pressed_callback()
 		elseif create_button.hotspot.disabled ~= true and input_service:get("hotkey_menu_special_1") then
 			self._widgets_by_name.create_button.content.hotspot.pressed_callback()
@@ -807,7 +800,7 @@ MainMenuView.character_profiles = function (self)
 end
 
 MainMenuView.character_wait_overlay_active = function (self)
-	return self._character_wait_overlay_active
+	return self._profiles_wait_overlay_active
 end
 
 MainMenuView.on_character_widget_selected = function (self, index)
@@ -873,7 +866,6 @@ end
 
 MainMenuView._show_character_details = function (self, show, profile)
 	self._character_details_active = show
-	self._widgets_by_name.play_button.content.visible = show
 	self._widgets_by_name.character_info.content.visible = show
 
 	if show == true then
@@ -902,17 +894,10 @@ MainMenuView._show_character_details = function (self, show, profile)
 			is_archetype_available_promise = selected_archetype:is_available()
 		end
 
-		if not is_archetype_available_promise:is_fulfilled() then
-			self._widgets_by_name.play_button.visible = false
-			self._widgets_by_name.play_button.disabled = true
-		end
-
 		self._current_archetype_available_promise = is_archetype_available_promise
 
 		self._promise_container:cancel_on_destroy(is_archetype_available_promise):next(function (result)
-			self._widgets_by_name.play_button.visible = true
 			self._widgets_by_name.play_button.content.original_text = result.available and Utf8.upper(Localize("loc_main_menu_play_button")) or Utf8.upper(Localize("loc_dlc_cta"))
-			self._widgets_by_name.play_button.disabled = false
 
 			self._widgets_by_name.play_button.content.hotspot.pressed_callback = function ()
 				if result.available then
@@ -927,6 +912,19 @@ MainMenuView._show_character_details = function (self, show, profile)
 			end
 		end)
 	end
+end
+
+MainMenuView._update_play_button_state = function (self)
+	if not self._widgets_by_name.play_button then
+		return
+	end
+
+	local dlc_promise = self._current_archetype_available_promise and not self._current_archetype_available_promise:is_fulfilled()
+	local waiting_on_character = self._waiting_on_character
+	local characters_details_active = self._character_details_active
+
+	self._widgets_by_name.play_button.content.visible = characters_details_active and dlc_promise ~= true
+	self._widgets_by_name.play_button.content.hotspot.disabled = waiting_on_character or dlc_promise
 end
 
 MainMenuView._are_slots_full = function (self)

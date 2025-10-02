@@ -584,6 +584,12 @@ end
 function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, charge_level, position, rotation, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local source_is_player = attacking_owner_unit_or_nil and player_unit_spawn_manager:is_player_unit(attacking_owner_unit_or_nil)
+	local vfx_extension
+
+	if source_is_player then
+		vfx_extension = ScriptUnit.extension(attacking_owner_unit_or_nil, "fx_system")
+	end
+
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
 	local scalable_vfx = explosion_template.scalable_vfx
 	local vfx = explosion_template.vfx
@@ -600,7 +606,13 @@ function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_u
 				for j = 1, num_effects do
 					local effect_name = effects[j]
 					local radius_variable_name = vfx_data.radius_variable_name
-					local particle_id = World.create_particles(world, effect_name, position, rotation)
+					local particle_id
+
+					if vfx_extension then
+						particle_id = vfx_extension:spawn_particles(effect_name, position)
+					else
+						particle_id = World.create_particles(world, effect_name, position, rotation)
+					end
 
 					if particle_id and radius_variable_name then
 						local variable_index = World.find_particles_variable(world, effect_name, radius_variable_name)
@@ -618,7 +630,11 @@ function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_u
 		for i = 1, num_vfx do
 			local effect_name = vfx[i]
 
-			World.create_particles(world, effect_name, position, rotation)
+			if vfx_extension then
+				vfx_extension:spawn_particles(effect_name, position)
+			else
+				World.create_particles(world, effect_name, position, rotation)
+			end
 		end
 	end
 

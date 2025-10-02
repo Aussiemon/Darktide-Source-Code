@@ -687,7 +687,6 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_weapon_special",
@@ -835,7 +834,6 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_weapon_special",
@@ -985,7 +983,6 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_weapon_special",
@@ -1135,7 +1132,6 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6,
 			},
 			special_action = {
 				action_name = "action_weapon_special",

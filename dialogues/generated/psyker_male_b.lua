@@ -303,7 +303,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -540,7 +540,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -1537,7 +1537,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -1774,7 +1774,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -2249,7 +2249,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -2486,7 +2486,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -3776,7 +3776,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -4531,7 +4531,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -5531,7 +5531,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -5957,7 +5957,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -7092,7 +7092,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -8681,7 +8681,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -9980,7 +9980,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -11344,7 +11344,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -11931,7 +11931,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -12406,7 +12406,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -12841,7 +12841,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",
@@ -13078,7 +13078,7 @@ return function ()
 				"time_since_last_short_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				120,
+				100,
 			},
 			{
 				"faction_memory",

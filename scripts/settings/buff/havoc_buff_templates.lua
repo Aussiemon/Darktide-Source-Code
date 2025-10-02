@@ -815,6 +815,19 @@ local function _rotten_armor_stat_reduction(unit, index)
 	return rotten_armor_data.damage_thresholds[index]
 end
 
+local function _stop_rotten_armor_impact_effect(template_data)
+	local effect_id = template_data.effect_id
+	local fx_system = Managers.state.extension:system("fx_system")
+
+	if not effect_id or not fx_system:has_running_global_effect_id(effect_id) then
+		return
+	end
+
+	fx_system:stop_template_effect(effect_id)
+
+	template_data.effect_id = nil
+end
+
 templates.mutator_rotten_armor = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -878,11 +891,7 @@ templates.mutator_rotten_armor = {
 		local kill_time = template_data.kill_time
 
 		if kill_time < t then
-			local fx_system = Managers.state.extension:system("fx_system")
-
-			fx_system:stop_template_effect(effect_id)
-
-			template_data.effect_id = nil
+			_stop_rotten_armor_impact_effect(template_data)
 		end
 	end,
 	proc_func = function (params, template_data, template_context)
@@ -891,7 +900,12 @@ templates.mutator_rotten_armor = {
 		end
 
 		local unit = template_context.unit
-		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local health_extension = ScriptUnit.has_extension(unit, "health_system")
+
+		if not health_extension then
+			return
+		end
+
 		local current_health_percent = health_extension:current_health_percent()
 		local current_damage_threshold = template_data.current_damage_threshold
 		local current_index = template_data.current_index
@@ -929,6 +943,7 @@ templates.mutator_rotten_armor = {
 	stop_func = function (template_data, template_context)
 		if template_context.is_server then
 			_on_rotten_armor_death(template_data, template_context)
+			_stop_rotten_armor_impact_effect(template_data)
 		end
 	end,
 	minion_effects = {

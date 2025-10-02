@@ -30,10 +30,10 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._gear = params.gear
 	self._wait_for_character_profile_upload = false
 	self._wait_for_character_profile_delete = false
-	self._wait_for_character_profiles_refresh = false
 	self._wait_for_selected_profile = false
 	self._profiles = {}
 	self._selected_profile = nil
+	self._profiles_are_syncing = false
 	self._character_is_syncing = false
 	self._migration_data = params.migration_data
 
@@ -113,9 +113,9 @@ StateMainMenu.event_request_delete_character = function (self, character_id)
 	self._wait_for_character_profile_delete = true
 
 	Managers.data_service.profiles:delete_profile(character_id):next(function ()
-		self._wait_for_character_profile_delete = false
-
-		self:_refresh_profiles()
+		self:_refresh_profiles():next(function ()
+			self._wait_for_character_profile_delete = false
+		end)
 	end):catch(function ()
 		self._wait_for_character_profile_delete = false
 
@@ -188,11 +188,7 @@ StateMainMenu._skip_prologue = function (self)
 end
 
 StateMainMenu._refresh_profiles = function (self)
-	self._wait_for_character_profiles_refresh = true
-
-	Managers.data_service.profiles:fetch_all_profiles():next(function (profile_data)
-		self._wait_for_character_profiles_refresh = false
-
+	return Managers.data_service.profiles:fetch_all_profiles():next(function (profile_data)
 		local profiles = profile_data.profiles
 		local selected_profile = profile_data.selected_profile
 		local gear = profile_data.gear
@@ -201,8 +197,6 @@ StateMainMenu._refresh_profiles = function (self)
 		self:_set_selected_profile(selected_profile)
 
 		self._gear = gear
-	end):catch(function ()
-		self._wait_for_character_profiles_refresh = false
 	end)
 end
 
@@ -272,16 +266,15 @@ StateMainMenu.in_character_create_state = function (self)
 	return self._character_create ~= nil
 end
 
-StateMainMenu._waiting_for_profile_synchronization = function (self)
-	if self._wait_for_character_profile_upload or self._wait_for_character_profile_delete or self._wait_for_character_profiles_refresh or self._wait_for_selected_profile then
-		return true
-	else
-		return false
-	end
+StateMainMenu._waiting_for_synchronizations = function (self)
+	local modified_profiles = self._wait_for_character_profile_upload or self._wait_for_character_profile_delete
+	local waiting_for_selected_profile = self._wait_for_selected_profile
+
+	return modified_profiles, waiting_for_selected_profile
 end
 
 StateMainMenu.waiting_for_profile_synchronization = function (self)
-	return self:_waiting_for_profile_synchronization()
+	return self:_waiting_for_synchronizations()
 end
 
 StateMainMenu._previous_character_create_view = function (self)
@@ -535,9 +528,9 @@ StateMainMenu.update = function (self, main_dt, main_t)
 		end
 	end
 
-	local is_syncing = self:_waiting_for_profile_synchronization()
+	local profiles_syncing, character_syncing = self:_waiting_for_synchronizations()
 
-	if self._continue and not is_syncing then
+	if self._continue and not profiles_syncing and not character_syncing then
 		self._reconnect_pressed = false
 
 		local next_state, state_context
@@ -551,10 +544,16 @@ StateMainMenu.update = function (self, main_dt, main_t)
 		return next_state, state_context
 	end
 
-	if is_syncing ~= self._character_is_syncing then
-		Managers.event:trigger("update_character_sync_state", is_syncing)
+	if profiles_syncing ~= self._profiles_are_syncing then
+		Managers.event:trigger("update_profiles_sync_state", profiles_syncing)
 
-		self._character_is_syncing = is_syncing
+		self._profiles_are_syncing = profiles_syncing
+	end
+
+	if character_syncing ~= self._character_is_syncing then
+		Managers.event:trigger("update_character_sync_state", character_syncing)
+
+		self._character_is_syncing = character_syncing
 	end
 
 	if GameParameters.testify then

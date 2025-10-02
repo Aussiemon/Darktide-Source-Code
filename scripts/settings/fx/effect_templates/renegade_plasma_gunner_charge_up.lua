@@ -11,11 +11,9 @@ local resources = {
 	stop_sound_event = STOP_SOUND_EVENT,
 	muzzle_vfx = MUZZLE_VFX,
 }
-local MAX_INTENSITY_LUMEN = 45
-local GREEN = 0.09803921568627451
-local BLUE = 0
-local RED = 100
+local MAX_INTENSITY_LUMEN = 80
 local scalar_addative_value = 0.5
+local DEFAULT_LIGHT_INTENSITY = 5
 local var_name = "emissive_multiplier"
 local effect_template = {
 	name = "renegade_plasma_gunner_charge_up",
@@ -46,9 +44,9 @@ local effect_template = {
 		template_data.game_session, template_data.game_object_id = game_session, game_object_id
 		template_data.lumen = 0
 		template_data.material_scalar_variable = 0
-		template_data.delay_before_shoot = 1.5
+		template_data.delay_before_shoot = 2.3
 
-		local wanted_ticks = template_data.delay_before_shoot * 20
+		local wanted_ticks = template_data.delay_before_shoot * 50
 		local tick_delay = template_data.delay_before_shoot / wanted_ticks
 
 		template_data.tick_delay = tick_delay
@@ -69,7 +67,7 @@ local effect_template = {
 		end
 
 		if t > template_data.t_before_next_tick then
-			template_data.lumen = math.clamp(template_data.lumen + template_data.lumen_increase_per_tick, 0, MAX_INTENSITY_LUMEN)
+			template_data.lumen = math.clamp(template_data.lumen + template_data.lumen_increase_per_tick, DEFAULT_LIGHT_INTENSITY, MAX_INTENSITY_LUMEN)
 
 			local inventory_unit = template_data.inventory_unit
 
@@ -78,9 +76,7 @@ local effect_template = {
 			Unit.set_scalar_for_materials(inventory_unit, var_name, template_data.material_scalar_variable, true)
 
 			local light = template_data.light
-			local red = (100 + template_data.current_tick * 10) / 255
 
-			Light.set_color_filter(template_data.light, Vector3(red, GREEN, BLUE))
 			Light.set_intensity(light, template_data.lumen)
 
 			template_data.current_tick = template_data.current_tick + 1
@@ -89,11 +85,11 @@ local effect_template = {
 	stop = function (template_data, template_context)
 		local light = template_data.light
 
-		Light.set_intensity(light, 0)
+		Light.set_intensity(light, DEFAULT_LIGHT_INTENSITY)
 
 		local inventory_unit = template_data.inventory_unit
 
-		Unit.set_scalar_for_materials(inventory_unit, "emissive_multiplier", 1, true)
+		Unit.set_scalar_for_materials(inventory_unit, "emissive_multiplier", 6, true)
 
 		local wwise_world = template_context.wwise_world
 		local source_id = template_data.source_id

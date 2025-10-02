@@ -300,7 +300,7 @@ minion_difficulty_settings.health = {
 		1125,
 		1500,
 	},
-	renegade_plasma_gunner = _elite_health_steps(950),
+	renegade_plasma_gunner = _elite_health_steps(900),
 	renegade_twin_captain = _monster_health_steps(24000),
 	renegade_twin_captain_two = _monster_health_steps(24000),
 	renegade_gunner = {
@@ -518,7 +518,7 @@ minion_difficulty_settings.power_level = {
 	renegade_default_shot = _step_dmg_ranged(275),
 	renegade_executor_melee = _step_dmg_melee(300),
 	renegade_gunner_shot = _step_dmg_ranged(325),
-	renegade_plasma_gunner = _step_dmg_ranged(650),
+	renegade_plasma_gunner = _step_dmg_ranged(550),
 	renegade_radio_operator_shot = _step_dmg_ranged(325),
 	renegade_shotgun_shot = _step_dmg_ranged(300),
 	renegade_assault_shot = _step_dmg_ranged(225),
@@ -766,11 +766,11 @@ minion_difficulty_settings.shooting = {
 		shoot_dodge_window = _equal_difficulty_values(0.75, 0.75),
 	},
 	renegade_plasma_gunner = {
-		aim_durations = _shoot_steps_desc(0.3, 0.5),
-		shoot_cooldown = _shoot_steps_desc(1.75, 1.75),
+		aim_durations = _shoot_steps_desc(0.75, 0.75),
+		shoot_cooldown = _shoot_steps_desc(2.4, 2.4),
 		time_per_shot = _equal_difficulty_values(0, 0),
 		num_shots = _equal_difficulty_values(1, 1),
-		shoot_dodge_window = _equal_difficulty_values(0.5, 0.8),
+		shoot_dodge_window = _equal_difficulty_values(0.7, 0.7),
 	},
 	cultist_assault = {
 		aim_durations = _shoot_steps_desc(0.4, 0.5),

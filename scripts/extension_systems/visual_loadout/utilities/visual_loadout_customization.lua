@@ -423,12 +423,20 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		local attached_lod_object = Unit.lod_object(spawned_unit, "lod")
 
 		LODGroup.add_lod_object(settings.lod_group, attached_lod_object)
+
+		if settings.is_first_person or settings.force_highest_lod_step then
+			LODGroup.set_static_select(settings.lod_group, 0)
+		end
 	end
 
 	if settings.lod_shadow_group and Unit.has_lod_object(spawned_unit, "lod_shadow") and not settings.is_first_person then
 		local attached_lod_object = Unit.lod_object(spawned_unit, "lod_shadow")
 
 		LODGroup.add_lod_object(settings.lod_shadow_group, attached_lod_object)
+
+		if settings.is_first_person or settings.force_highest_lod_step then
+			LODGroup.set_static_select(settings.lod_shadow_group, 0)
+		end
 	end
 
 	if optional_mission_template then
