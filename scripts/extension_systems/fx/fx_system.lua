@@ -205,9 +205,9 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 
 		if not template_effect.is_running then
 			break
+		elseif i < max_num_template_effects then
+			global_effect_id = global_effect_id + 1
 		end
-
-		global_effect_id = global_effect_id + 1
 	end
 
 	if template_effect.is_running then

@@ -7,11 +7,14 @@ PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES = 64
 PackageManager.init = function (self)
 	self._packages = {}
 	self._async_packages = {}
+	self._async_processing_order = {}
 	self._queued_async_packages = {}
 	self._queue_order = {}
 	self._queued_callback_items = {}
-	self._packages_to_unload = {}
-	self._unloading_packages = {}
+	self._queued_unload_packages = {}
+	self._unload_queue = {}
+	self._async_unload_packages = {}
+	self._async_unload_processing_order = {}
 	self._shutdown_has_started = false
 	self._current_item = 1
 	self._load_call_data = {}
@@ -83,12 +86,24 @@ PackageManager._start_loading_package = function (self, package_name, use_reside
 	end
 
 	self._async_packages[package_name] = resource_handle
+
+	table.insert(self._async_processing_order, package_name)
 end
 
 PackageManager.load = function (self, package_name, reference_name, callback, prioritize, use_resident_loading)
 	local load_call_item = self:_new_load_call_item(package_name, reference_name, callback)
 
-	self._packages_to_unload[package_name] = nil
+	if self._queued_unload_packages[package_name] then
+		self._queued_unload_packages[package_name] = nil
+
+		local index = table.index_of_condition(self._unload_queue, function (unload_call_item)
+			return unload_call_item.package_name == package_name
+		end)
+
+		table.remove(self._unload_queue, index)
+
+		self._package_to_load_call_item[package_name] = {}
+	end
 
 	if self._package_to_load_call_item[package_name] then
 		table.insert(self._package_to_load_call_item[package_name], load_call_item)
@@ -110,8 +125,8 @@ PackageManager.load = function (self, package_name, reference_name, callback, pr
 		load_call_item,
 	}
 
-	local package_is_unloading = self._unloading_packages[package_name]
-	local num_used_slots = table.size(self._async_packages) + table.size(self._unloading_packages)
+	local package_is_unloading = self._async_unload_packages[package_name]
+	local num_used_slots = table.size(self._async_packages) + table.size(self._async_unload_packages)
 
 	if package_is_unloading or num_used_slots >= PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES then
 		self:_queue_package(package_name, prioritize, use_resident_loading)
@@ -144,7 +159,7 @@ end
 
 PackageManager._pop_queue = function (self)
 	if self._shutdown_has_started then
-		return
+		return false
 	end
 
 	local queued_package_name
@@ -166,13 +181,21 @@ PackageManager._pop_queue = function (self)
 	end
 
 	if queued_package_name then
+		if self._async_unload_packages[queued_package_name] then
+			return false
+		end
+
 		self:_start_loading_package(queued_package_name, use_resident_loading)
 
 		self._queued_async_packages[queued_package_name] = nil
 		self._queue_order = table.crop(self._queue_order, index + 1)
-	else
-		table.clear(self._queue_order)
+
+		return true
 	end
+
+	table.clear(self._queue_order)
+
+	return false
 end
 
 PackageManager.release = function (self, id)
@@ -181,20 +204,32 @@ PackageManager.release = function (self, id)
 
 	self:_remove_load_call_item(package_name, load_call_item)
 
-	if table.is_empty(self._package_to_load_call_item[package_name]) then
-		self._packages_to_unload[package_name] = load_call_item
+	local released = table.is_empty(self._package_to_load_call_item[package_name])
 
-		local package_is_loading = self._async_packages[package_name]
+	if released then
+		local package_is_queued_for_loading = self._queued_async_packages[package_name]
 
-		if package_is_loading then
-			self:_start_unloading_package(package_name)
+		if package_is_queued_for_loading then
+			self._queued_async_packages[package_name] = nil
 		else
-			local num_used_slots = table.size(self._async_packages) + table.size(self._unloading_packages)
+			local package_is_loading = self._async_packages[package_name]
 
-			if num_used_slots < PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES then
-				self:_start_unloading_package(package_name)
+			if package_is_loading then
+				self:_start_unloading_package(load_call_item)
+			else
+				local num_used_slots = table.size(self._async_packages) + table.size(self._async_unload_packages)
+
+				if num_used_slots < PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES then
+					self:_start_unloading_package(load_call_item)
+				else
+					table.insert(self._unload_queue, load_call_item)
+
+					self._queued_unload_packages[package_name] = true
+				end
 			end
 		end
+
+		self._package_to_load_call_item[package_name] = nil
 	end
 
 	self:_remove_queued_callback_item(load_call_item)
@@ -222,22 +257,35 @@ PackageManager._remove_queued_callback_item = function (self, load_call_item)
 	end
 end
 
-PackageManager._start_unloading_package = function (self, package_name)
-	local load_call_item = self._packages_to_unload[package_name]
+PackageManager._start_unloading_package = function (self, load_call_item)
+	local package_name = load_call_item.package_name
 	local reference_name = load_call_item.reference_name
 	local resource_handle = self._packages[package_name] or self._async_packages[package_name]
 
 	if resource_handle then
 		ResourcePackage.unload(resource_handle)
 
-		self._unloading_packages[package_name] = resource_handle
+		self._async_unload_packages[package_name] = {
+			resource_handle = resource_handle,
+			reference_name = reference_name,
+		}
+
+		table.insert(self._async_unload_processing_order, package_name)
 	end
 
 	self._packages[package_name] = nil
-	self._packages_to_unload[package_name] = nil
 	self._package_to_load_call_item[package_name] = nil
-	self._async_packages[package_name] = nil
 	self._queued_async_packages[package_name] = nil
+
+	if self._async_packages[package_name] then
+		self._async_packages[package_name] = nil
+
+		local index = table.index_of_condition(self._async_processing_order, function (loading_package_name)
+			return loading_package_name == package_name
+		end)
+
+		table.remove(self._async_processing_order, index)
+	end
 end
 
 PackageManager.shutdown_has_started = function (self)
@@ -247,25 +295,42 @@ PackageManager.shutdown_has_started = function (self)
 end
 
 PackageManager._flush_unloads = function (self)
-	for package_name, _ in pairs(self._packages_to_unload) do
-		self:_start_unloading_package(package_name)
+	local unload_queue = self._unload_queue
+	local queued_unload_packages = self._queued_unload_packages
+
+	for _, unload_call_item in ipairs(unload_queue) do
+		self:_start_unloading_package(unload_call_item)
+
+		queued_unload_packages[unload_call_item.package_name] = nil
 	end
 
-	local unloading_packages = self._unloading_packages
+	table.clear(unload_queue)
 
-	for package_name, resource_handle in pairs(unloading_packages) do
+	local async_unload_packages = self._async_unload_packages
+	local async_unload_processing_order = self._async_unload_processing_order
+
+	for _, package_name in ipairs(async_unload_processing_order) do
+		local unload_info = async_unload_packages[package_name]
+		local resource_handle = unload_info.resource_handle
+		local reference_name = unload_info.reference_name
 		local log_blocking_flush = false
 
 		ResourcePackage.flush(resource_handle, log_blocking_flush)
 		Application.release_resource_package(resource_handle)
 
-		unloading_packages[package_name] = nil
+		async_unload_packages[package_name] = nil
 	end
+
+	table.clear(async_unload_processing_order)
 end
 
 PackageManager.destroy = function (self)
-	for id, item in pairs(self._load_call_data) do
-		self:release(id)
+	local ids = table.keys(self._load_call_data)
+
+	table.sort(ids)
+
+	for i = #ids, 1, -1 do
+		self:release(ids[i])
 	end
 
 	self:_flush_unloads()
@@ -283,8 +348,8 @@ PackageManager.is_loading = function (self, package_name)
 	return self._async_packages[package_name] ~= nil or self._queued_async_packages[package_name] ~= nil
 end
 
-PackageManager.has_loaded = function (self, package)
-	return self._packages[package] ~= nil and self._async_packages[package] == nil and self._queued_async_packages[package] == nil
+PackageManager.has_loaded = function (self, package_name)
+	return self._packages[package_name] ~= nil and self._async_packages[package_name] == nil and self._queued_async_packages[package_name] == nil
 end
 
 PackageManager.has_loaded_id = function (self, id)
@@ -335,40 +400,83 @@ PackageManager.package_is_known = function (self, package_name)
 end
 
 local temp_callback_items = {}
+local temp_remove_list = Script.new_array(PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES)
 
 PackageManager.update = function (self, dt, t)
 	self._current_time = t
 
-	local unloading_packages = self._unloading_packages
+	local async_packages = self._async_packages
+	local async_processing_order = self._async_processing_order
+	local async_unload_packages = self._async_unload_packages
+	local async_unload_processing_order = self._async_unload_processing_order
 
-	for package_name, resource_handle in pairs(unloading_packages) do
+	for index, package_name in ipairs(async_unload_processing_order) do
+		local unload_info = async_unload_packages[package_name]
+		local resource_handle = unload_info.resource_handle
+		local reference_name = unload_info.reference_name
+
 		if ResourcePackage.has_unloaded(resource_handle) then
 			ResourcePackage.flush(resource_handle)
 			Application.release_resource_package(resource_handle)
 
-			unloading_packages[package_name] = nil
+			async_unload_packages[package_name] = nil
+
+			table.insert(temp_remove_list, index)
 		end
 	end
 
-	for package_name, resource_handle in pairs(self._async_packages) do
+	if #temp_remove_list > 0 then
+		for i = #temp_remove_list, 1, -1 do
+			table.remove(async_unload_processing_order, temp_remove_list[i])
+		end
+
+		table.clear(temp_remove_list)
+	end
+
+	for index, package_name in ipairs(async_processing_order) do
+		local resource_handle = async_packages[package_name]
+
 		if ResourcePackage.has_loaded(resource_handle) then
 			self:_bring_in(package_name)
+			table.insert(temp_remove_list, index)
 		end
 	end
 
-	local num_used_slots = math.min(table.size(self._async_packages) + table.size(unloading_packages), PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES)
+	if #temp_remove_list > 0 then
+		for i = #temp_remove_list, 1, -1 do
+			table.remove(async_processing_order, temp_remove_list[i])
+		end
+
+		table.clear(temp_remove_list)
+	end
+
+	local num_used_slots = math.min(table.size(async_packages) + table.size(async_unload_packages), PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES)
 	local num_free_slots = PackageManager.MAX_CONCURRENT_ASYNC_PACKAGES - num_used_slots
 
 	if num_free_slots > 0 then
-		for package_name, _ in pairs(self._packages_to_unload) do
+		local unload_queue = self._unload_queue
+		local queued_unload_packages = self._queued_unload_packages
+
+		for index, unload_call_item in ipairs(unload_queue) do
 			if num_free_slots == 0 then
 				break
 			end
 
-			self:_start_unloading_package(package_name)
+			self:_start_unloading_package(unload_call_item)
 
+			queued_unload_packages[unload_call_item.package_name] = nil
 			num_used_slots = num_used_slots + 1
 			num_free_slots = num_free_slots - 1
+
+			table.insert(temp_remove_list, index)
+		end
+
+		if #temp_remove_list > 0 then
+			for i = #temp_remove_list, 1, -1 do
+				table.remove(unload_queue, temp_remove_list[i])
+			end
+
+			table.clear(temp_remove_list)
 		end
 	end
 
@@ -376,7 +484,9 @@ PackageManager.update = function (self, dt, t)
 	local num_slots_to_pop = math.min(num_free_slots, num_packages_in_queue)
 
 	for i = 1, num_slots_to_pop do
-		self:_pop_queue()
+		if not self:_pop_queue() then
+			break
+		end
 	end
 
 	local queued_callback_items = self._queued_callback_items

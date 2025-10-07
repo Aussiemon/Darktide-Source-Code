@@ -124,6 +124,7 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 		table.clear(self._projectile_locomotion_extensions)
 
 		self._projectiles_paid_for = false
+		self._first_projectile_fired = false
 
 		local num_projectiles = action_settings.num_projectiles or 1
 		local spawn_second_projectile = is_critical_strike and self._buff_extension:has_keyword("critical_strike_second_projectile")
@@ -211,6 +212,7 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 				self:_fire_projectile(t, projectile_unit, time_diff_from_payment, projectile_locomotion_extensions[ii], spawn_offset)
 
 				projectiles_fired[ii] = true
+				self._first_projectile_fired = true
 			end
 		end
 	end
@@ -257,26 +259,34 @@ ActionSpawnProjectile.finish = function (self, reason, data, t, time_in_action)
 	if self._is_server then
 		local projectiles_fired = self._projectiles_fired
 		local projectile_units = self._projectile_units
-		local any_projectile_fired
-		local index = 1
+		local num_projectiles_fired = 0
 
-		repeat
-			any_projectile_fired = projectiles_fired[index]
-			index = index + 1
-		until any_projectile_fired or index >= #projectiles_fired
-
-		if any_projectile_fired then
-			if not self._projectiles_paid_for then
-				self:_pay_for_projectile(t)
+		for i = 1, #projectile_units do
+			if projectiles_fired[i] then
+				num_projectiles_fired = num_projectiles_fired + 1
 			end
-		else
-			for ii = 1, #projectiles_fired do
-				if not projectiles_fired[ii] then
-					local projectile_unit = projectile_units[ii]
+		end
 
-					Managers.state.player_unit_spawn:relinquish_unit_ownership(projectile_unit)
-					Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
-				end
+		local any_projectile_fired = num_projectiles_fired > 0
+
+		if not self._projectiles_paid_for and any_projectile_fired then
+			self:_pay_for_projectile(t)
+		elseif self._projectiles_paid_for and not any_projectile_fired then
+			local time_diff_from_payment = 0
+			local spawn_offset
+
+			self:_fire_projectile(t, projectile_units[1], time_diff_from_payment, self._projectile_locomotion_extensions[1], spawn_offset)
+
+			projectiles_fired[1] = true
+			self._first_projectile_fired = true
+		end
+
+		for ii = 1, #projectiles_fired do
+			if not projectiles_fired[ii] then
+				local projectile_unit = projectile_units[ii]
+
+				Managers.state.player_unit_spawn:relinquish_unit_ownership(projectile_unit)
+				Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
 			end
 		end
 	end

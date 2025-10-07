@@ -439,7 +439,6 @@ return {
 			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
 				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
@@ -927,8 +926,6 @@ return {
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
 				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
-				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
-				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
 			},
@@ -1334,7 +1331,6 @@ return {
 			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
-				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_0a263862-582d-4b55-80fa-6978c907efd5",
 			},
@@ -1643,7 +1639,6 @@ return {
 			requirements = {
 				all_parents_chosen = false,
 				children_unlock_points = 1,
-				exclusive_group = "snipers_focus_1",
 				min_points_spent = 0,
 			},
 		},

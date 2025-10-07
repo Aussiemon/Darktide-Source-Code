@@ -24,7 +24,6 @@ local MELEE_COMPOSITIONS = {
 		HordeCompositions.renegade_melee_terror_trickle,
 		HordeCompositions.infected_terror_trickle,
 		HordeCompositions.poxwalker_terror_trickle,
-		HordeCompositions.renegade_terror_trickle_elite,
 	},
 	cultist = {
 		HordeCompositions.cultist_melee_terror_trickle,

@@ -34,6 +34,7 @@ local DEFAULT_COLLISION_FILTER = "filter_player_character_shooting_raycast"
 local MAX_HITS = 256
 local HIT_UNITS = {}
 local SUPPRESSED_UNITS = {}
+local _RESULTS_PER_UNIT = {}
 local _block_position, _fetch_damage_type
 
 HitScan.raycast = function (physics_world, position, direction, max_distance, optional_test_against, optional_collision_filter, optional_rewind_ms, optional_is_local_unit, optional_player, optional_is_server)
@@ -49,13 +50,14 @@ HitScan.sphere_sweep = function (physics_world, position, direction, max_distanc
 	return hits
 end
 
-HitScan.process_hits = function (is_server, world, physics_world, attacker_unit, fire_configuration, hits, position, direction, power_level, charge_level, impact_fx_data, max_distance, optional_debug_drawer, optional_is_local_unit, optional_player, optional_instakill, optional_is_critical_strike, optional_weapon_item, optional_origin_slot)
+HitScan.process_hits = function (is_server, world, physics_world, attacker_unit, fire_configuration, hits, position, direction, power_level, charge_level, impact_fx_data, max_distance, optional_debug_drawer, optional_is_local_unit, optional_player, optional_instakill, optional_is_critical_strike, optional_weapon_item, optional_origin_slot, optional_get_results_per_unit)
 	if not hits then
 		return
 	end
 
 	table.clear(HIT_UNITS)
 	table.clear(SUPPRESSED_UNITS)
+	table.clear(_RESULTS_PER_UNIT)
 
 	HIT_UNITS[attacker_unit] = true
 
@@ -309,6 +311,13 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 			end
 
 			HIT_UNITS[hit_unit] = true
+
+			if optional_get_results_per_unit then
+				_RESULTS_PER_UNIT[#_RESULTS_PER_UNIT + 1] = {
+					hit_unit = hit_unit,
+					hit_result = hit_result,
+				}
+			end
 		until true
 
 		if stop then
@@ -316,7 +325,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 		end
 	end
 
-	return end_position, hit_weakspot, killing_blow, hit_minion, number_of_units_hit, hit_result
+	return end_position, hit_weakspot, killing_blow, hit_minion, number_of_units_hit, hit_result, _RESULTS_PER_UNIT
 end
 
 HitScan.inside_faded_player = function (breed_or_nil, hit_distance)

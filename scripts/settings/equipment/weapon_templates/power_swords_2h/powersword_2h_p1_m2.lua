@@ -2068,8 +2068,14 @@ weapon_template.actions = {
 				action_name = "action_unwield",
 			},
 			start_attack = {
-				action_name = "action_melee_start_sprint",
-				chain_time = 0.65,
+				{
+					action_name = "action_melee_start_sprint",
+					chain_time = 0.65,
+				},
+				{
+					action_name = "action_melee_start_left",
+					chain_time = 0.7,
+				},
 			},
 			block = {
 				action_name = "action_block",

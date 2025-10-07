@@ -34,9 +34,11 @@ ViewElementNewsSlide.init = function (self, parent, draw_layer, start_scale)
 	self._widgets_by_name.open_news_button.content.gamepad_action = self._input_action_open_news
 	self._widgets_by_name.open_news_button.content.hotspot.pressed_callback = view_request_callback
 	self._backend_promise = Managers.data_service.news:get_events():next(function (backend_data)
-		self._backend_promise = nil
+		self._backend_promise = Managers.data_service.player_survey:refresh_account_surveys():next(function (ok)
+			self._backend_promise = nil
 
-		self:_initialize_slides(backend_data)
+			self:_initialize_slides(backend_data)
+		end)
 	end):catch(function (error)
 		self._backend_promise = nil
 
@@ -76,6 +78,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 		local contents = raw_data.contents
 		local content_count = contents and #contents or 0
 		local title, image_url, body_text, body_number, slide_action, slide_button_cta
+		local should_skip = false
 
 		for j = 1, content_count do
 			local content = contents[j]
@@ -104,16 +107,23 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 					data = content.data,
 					style = content.style,
 				}
+				slide_button_cta = slide_button_cta or slide_action.data
 
-				if not slide_button_cta then
-					slide_button_cta = slide_action.data
+				if slide_action.action == "open_survey" then
+					local has_completed_achivement, _ = Managers.achievements:achievement_completed(Managers.player:local_player(1), "path_of_trust_5")
+
+					should_skip = not has_completed_achivement
+
+					if not should_skip then
+						should_skip = not Managers.data_service.player_survey:has_survey(slide_action.target)
+					end
 				end
 			elseif type == "cta_button" then
 				slide_button_cta = content.data
 			end
 		end
 
-		if title and image_url then
+		if title and image_url and not should_skip then
 			slides[#slides + 1] = {
 				id = raw_data.id,
 				title = title or "",

@@ -14,6 +14,7 @@ local SERVICES = {
 	news = require("scripts/managers/data_service/services/news_service"),
 	mastery = require("scripts/managers/data_service/services/mastery_service"),
 	penance_track = require("scripts/managers/data_service/services/penance_track_service"),
+	player_survey = require("scripts/managers/data_service/services/player_survey_service"),
 	havoc = require("scripts/managers/data_service/services/havoc_service"),
 	region_latency = require("scripts/managers/data_service/services/region_latency_service"),
 }

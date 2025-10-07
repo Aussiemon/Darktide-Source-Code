@@ -472,7 +472,14 @@ local horde_pacing_template = {
 								1,
 								2,
 							},
-							composition = HordeCompositions.havoc_coordinated_blockade_behind,
+							faction_composition = {
+								renegade = {
+									HordeCompositions.havoc_renegade_coordinated_blockade_behind,
+								},
+								cultist = {
+									HordeCompositions.havoc_cultist_coordinated_blockade_behind,
+								},
+							},
 						},
 						{
 							horde_type = "far_vector_horde",

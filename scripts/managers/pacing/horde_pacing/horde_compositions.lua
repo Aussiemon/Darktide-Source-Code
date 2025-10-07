@@ -17,4 +17,4 @@ _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositio
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/mutator_horde_compositions")
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/renegade_horde_compositions")
 
-return settings("HordeCompositions", horde_compositions)
+return settings("HordeCompositions", horde_compositions, true)

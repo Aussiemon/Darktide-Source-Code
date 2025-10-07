@@ -396,7 +396,7 @@ templates.psyker_shout_applies_warpfire = {
 			local buff_extension = ScriptUnit.has_extension(unit_hit, "buff_system")
 			local num_warpfire_stacks = template_data.stacks or 1
 
-			if buff_extension and HEALTH_ALIVE[unit_hit] and num_warpfire_stacks > 0 then
+			if buff_extension and HEALTH_ALIVE[unit_hit] and not MinionState.is_sleeping_deamonhost(unit_hit) and num_warpfire_stacks > 0 then
 				buff_extension:add_internally_controlled_buff_with_stacks("warp_fire", num_warpfire_stacks, t, "owner_unit", template_context.unit)
 			end
 		end,
@@ -1625,7 +1625,7 @@ templates.psyker_elite_kills_add_warpfire = {
 			local hit_unit = broadphase_results[ii]
 			local buff_extension = has_extension(hit_unit, "buff_system")
 
-			if buff_extension then
+			if buff_extension and not MinionState.is_sleeping_deamonhost(hit_unit) then
 				local t = FixedFrame.get_latest_fixed_time()
 				local num_stacks = talent_settings_2.offensive_1_3.num_stacks
 				local owner_unit = template_context.unit

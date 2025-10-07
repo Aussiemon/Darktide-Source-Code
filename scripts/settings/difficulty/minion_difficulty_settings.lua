@@ -767,10 +767,10 @@ minion_difficulty_settings.shooting = {
 	},
 	renegade_plasma_gunner = {
 		aim_durations = _shoot_steps_desc(0.75, 0.75),
-		shoot_cooldown = _shoot_steps_desc(2.4, 2.4),
-		time_per_shot = _equal_difficulty_values(0, 0),
+		shoot_cooldown = _shoot_steps_desc(2, 2.4),
+		time_per_shot = _equal_difficulty_values(2, 2),
 		num_shots = _equal_difficulty_values(1, 1),
-		shoot_dodge_window = _equal_difficulty_values(0.7, 0.7),
+		shoot_dodge_window = _equal_difficulty_values(0.6, 0.6),
 	},
 	cultist_assault = {
 		aim_durations = _shoot_steps_desc(0.4, 0.5),

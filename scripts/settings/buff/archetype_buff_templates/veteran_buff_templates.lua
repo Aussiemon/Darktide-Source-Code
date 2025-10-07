@@ -1148,8 +1148,9 @@ templates.veteran_invisibility = {
 	},
 	proc_func = function (params, template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
+		local damage = params.damage
 
-		if template_data.exit_grace and t < template_data.exit_grace then
+		if template_data.exit_grace and t < template_data.exit_grace and (not damage or damage <= 0) then
 			return
 		end
 
@@ -1164,7 +1165,6 @@ templates.veteran_invisibility = {
 			return
 		end
 
-		local damage = params.damage
 		local result = params.attack_result
 
 		if damage and damage <= 0 and (not result or result ~= attack_results.toughness_absorbed) then

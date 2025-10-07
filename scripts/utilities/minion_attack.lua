@@ -24,7 +24,7 @@ local attack_types = AttackSettings.attack_types
 local default_backstab_ranged_dot = MinionBackstabSettings.ranged_backstab_dot
 local default_backstab_ranged_event = MinionBackstabSettings.ranged_backstab_event
 local MINION_BREED_TYPE = BreedSettings.types.minion
-local _apply_debuff
+local _apply_debuff, _get_debuff
 local MinionAttack = {}
 local IMPACT_FX_DATA = {}
 local BACKSTAB_POSITION_OFFSET_DISTANCE = 2
@@ -292,12 +292,14 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 
 	local hits = HitScan.raycast(physics_world, from_position, spread_direction, range, nil, collision_filter)
 	local is_server = true
-	local end_position, hit_result, _
+	local end_position, hit_result, _, _result_per_unit
+	local optional_get_results_per_unit = action_data.get_results_per_unit
+	local attack_type = "ranged"
 
 	if should_hit then
-		end_position, _, _, _, _, hit_result = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		end_position, _, _, _, _, hit_result, _result_per_unit = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil, nil, optional_get_results_per_unit)
 
-		_apply_debuff(action_data, hit_result, target_unit)
+		_apply_debuff(action_data, hit_result, target_unit, _result_per_unit, attack_type)
 	elseif hits then
 		local diff_toughness_broken_grace_power_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(AttackIntensitySettings.toughness_broken_grace_power_multiplier)
 
@@ -1135,24 +1137,44 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		blocked_component.is_blocked = true
 	end
 
-	_apply_debuff(action_data, result, target_unit)
+	local debuff_attack_type = "melee"
+
+	_apply_debuff(action_data, result, target_unit, nil, debuff_attack_type)
 
 	return result
 end
 
-function _apply_debuff(action_data, result, target_unit)
-	local should_apply_debuff = action_data.apply_buff_to_target_unit and (result and result ~= "blocked" or action_data.ignore_blocked)
+function _apply_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
+	local should_apply_debuff = action_data.apply_buff_to_target_unit
 
-	if should_apply_debuff then
-		local buff_data = action_data.apply_buff_to_target_unit
-		local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-		local t = Managers.time:time("gameplay")
-		local buff_keyword = buff_data.buff_keyword
-		local buff_template_name = buff_data.buff_template_name
+	if not should_apply_debuff then
+		return
+	end
 
-		if not buff_extension:has_keyword(buff_keyword) then
-			buff_extension:add_internally_controlled_buff(buff_template_name, t)
+	if attack_type == "ranged" and _result_per_unit then
+		for i = 1, #_result_per_unit do
+			local hit_unit = _result_per_unit[i].hit_unit
+			local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+
+			if Breed.is_player(breed) and (result and result ~= "blocked" or action_data.ignore_blocked) then
+				_get_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
+			end
 		end
+	elseif attack_type == "melee" and (result and result ~= "blocked" or action_data.ignore_blocked) then
+		_get_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
+	end
+end
+
+function _get_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
+	local buff_data = action_data.apply_buff_to_target_unit
+	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+	local t = Managers.time:time("gameplay")
+	local buff_keyword = buff_data.buff_keyword
+	local buff_template_name = buff_data.buff_template_name
+
+	if not buff_extension:has_keyword(buff_keyword) then
+		buff_extension:add_internally_controlled_buff(buff_template_name, t)
 	end
 end
 
