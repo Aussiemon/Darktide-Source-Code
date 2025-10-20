@@ -11,6 +11,8 @@ local ExplosionTemplates = require("scripts/settings/damage/explosion_templates"
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
+local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slot_placement_functions")
+local Promise = require("scripts/foundation/utilities/promise")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
@@ -1829,6 +1831,102 @@ templates.drop_pickup_on_death = {
 		local pickup_system = Managers.state.extension:system("pickup_system")
 
 		pickup_system:spawn_pickup("skulls_01_pickup", position, rotation, nil, nil, nil, nil, "skull_reward")
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+}
+templates.drop_stolen_rations_01_pickup_small_on_death = {
+	class_name = "buff",
+	predicted = false,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local position = Unit.world_position(unit, 1)
+		local rotation = Unit.local_rotation(unit, 1)
+		local pickup_system = Managers.state.extension:system("pickup_system")
+
+		pickup_system:spawn_pickup("stolen_rations_01_pickup_small", position, rotation, nil, nil, nil, nil, "stolen_rations")
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+}
+templates.drop_stolen_rations_01_pickup_medium_on_death = {
+	class_name = "buff",
+	predicted = false,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local position = Unit.world_position(unit, 1)
+		local rotation = Unit.local_rotation(unit, 1)
+		local pickup_system = Managers.state.extension:system("pickup_system")
+
+		pickup_system:spawn_pickup("stolen_rations_01_pickup_medium", position, rotation, nil, nil, nil, nil, "stolen_rations")
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+}
+
+local drop_stolen_rations_01_pickup_medium_many_on_death_placement_settings = {
+	circle_radius = 0.75,
+	num_slots = 2,
+	position_offset = 0.2,
+	randomize_rotation = true,
+}
+
+templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
+	class_name = "buff",
+	predicted = false,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local base_position_boxed = Vector3Box(Unit.world_position(unit, 1))
+
+		Promise.delay(0):next(function ()
+			local pickup_system = Managers.state.extension:system("pickup_system")
+
+			if not pickup_system then
+				return
+			end
+
+			local nav_world = Managers.state.nav_mesh:nav_world()
+
+			if not nav_world then
+				return
+			end
+
+			local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, base_position_boxed, drop_stolen_rations_01_pickup_medium_many_on_death_placement_settings, nil)
+
+			for i = 1, #spawn_locations do
+				local spawn_location = spawn_locations[i].position:unbox()
+				local spawn_rotation = spawn_locations[i].rotation:unbox()
+
+				pickup_system:spawn_pickup("stolen_rations_01_pickup_medium", spawn_location, spawn_rotation, nil, nil, nil, nil, "stolen_rations")
+			end
+		end)
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		local unit = template_context.unit

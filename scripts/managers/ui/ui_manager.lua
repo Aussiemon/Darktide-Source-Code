@@ -762,7 +762,15 @@ UIManager.using_input = function (self, ignore_hud, ignore_views, ignore_constan
 		return self._hud:using_input()
 	end
 
+	if self._interaction_using_input then
+		return true
+	end
+
 	return false
+end
+
+UIManager.set_interaction_using_input = function (self, is_using)
+	self._interaction_using_input = is_using
 end
 
 UIManager.inputs_in_use = function (self)

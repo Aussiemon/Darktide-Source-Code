@@ -4,12 +4,8 @@ require("scripts/managers/mutator/mutators/mutator_base")
 
 local MutatorModifyPacing = class("MutatorModifyPacing", "MutatorBase")
 
-MutatorModifyPacing.init = function (self, is_server, network_event_delegate, mutator_template)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
-	self._is_active = false
-	self._buffs = {}
-	self._template = mutator_template
+MutatorModifyPacing.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorModifyPacing.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
 
 	local template = self._template
 	local init_modify_pacing = template.init_modify_pacing

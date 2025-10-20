@@ -1069,16 +1069,13 @@ HudElementPlayerPanelBase._unload_portrait_frame = function (self, ui_renderer)
 
 	local widget = self._widgets_by_name.player_icon
 
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	if not self.destroyed then
 		local material_values = widget.style.texture.material_values
 
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 		widget.dirty = true
-	end
-
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = frame_loaded_info.icon_load_id
@@ -1134,6 +1131,8 @@ HudElementPlayerPanelBase._unload_portrait_insignia = function (self, ui_rendere
 
 	local widget = self._widgets_by_name.player_icon
 
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	if not self.destroyed then
 		local insignia_style = widget.style.insignia
 		local material_values = insignia_style.material_values
@@ -1147,11 +1146,6 @@ HudElementPlayerPanelBase._unload_portrait_insignia = function (self, ui_rendere
 
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
 		widget.dirty = true
-	end
-
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = insignia_loaded_info.icon_load_id
@@ -1208,17 +1202,14 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
 end
 
 HudElementPlayerPanelBase._unload_portrait_icon = function (self, ui_renderer)
+	local widget = self._widgets_by_name.player_icon
+
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local portrait_loaded_info = self._portrait_loaded_info
 
 	if not portrait_loaded_info then
 		return
-	end
-
-	if ui_renderer then
-		local widget = self._widgets_by_name.player_icon
-
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = portrait_loaded_info.icon_load_id

@@ -10,18 +10,14 @@ local MutatorToxicGasVolumes = class("MutatorToxicGasVolumes", "MutatorBase")
 local GasPhases = table.enum("dormant", "activating", "active")
 local GAS_START_SOUND_EVENT = "wwise/events/world/play_event_toxic_gas_high_start"
 
-MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, level_seed)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorToxicGasVolumes.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
 	self._gas_clouds = {}
 	self._corals = {}
-	self._nav_world = nav_world
 	self._buff_affected_units = {}
 	self._active_gas_clouds = {}
-	self._seed = level_seed
 
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")

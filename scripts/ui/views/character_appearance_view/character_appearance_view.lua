@@ -2885,9 +2885,9 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 				local unload_func = template and template.unload_icon
 				local load_func = template and template.load_icon
 
-				if not visible and content.loads_icon and content.icon_load_id and unload_func then
+				if not visible and content.icon_load_id and unload_func then
 					unload_func(self, widget, element)
-				elseif visible and content.loads_icon and not content.icon_load_id and load_func then
+				elseif visible and not content.icon_load_id and load_func then
 					load_func(self, widget, element)
 				end
 
@@ -3251,10 +3251,15 @@ CharacterAppearanceView.on_exit = function (self)
 		self._fetch_all_profiles_promise = nil
 	end
 
-	CharacterAppearanceView.super.on_exit(self)
+	if self._page_grids then
+		for i = 1, #self._page_grids do
+			self:_destroy_page_grid(i)
+		end
+	end
+
 	self:_destroy_background()
 	self:_destroy_renderer()
-	Managers.event:unregister(self, "update_profiles_sync_state")
+	CharacterAppearanceView.super.on_exit(self)
 end
 
 CharacterAppearanceView._get_planet_options = function (self)
@@ -4261,11 +4266,12 @@ CharacterAppearanceView._destroy_page_grid = function (self, index)
 				local template = template_name and ContentBlueprints[template_name]
 				local unload_func = template and template.unload_icon
 
-				if content.loads_icon and content.icon_load_id and unload_func then
+				if content.icon_load_id and unload_func then
 					unload_func(self, widget, element)
 				end
 
 				self:_unregister_widget_name(widget_name)
+				UIWidget.destroy(self._offscreen_renderer, widget)
 			end
 		end
 
@@ -4279,6 +4285,7 @@ CharacterAppearanceView._destroy_page_grid = function (self, index)
 					local widget_name = widget.name
 
 					self:_unregister_widget_name(widget_name)
+					UIWidget.destroy(self._ui_renderer, widget)
 				end
 			end
 		end

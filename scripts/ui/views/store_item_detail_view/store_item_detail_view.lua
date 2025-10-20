@@ -1272,12 +1272,23 @@ StoreItemDetailView._destroy_grid = function (self)
 		return
 	end
 
-	local grid_widgets = self._grid_widgets
+	if self._grid_widgets then
+		local ui_renderer = self._ui_offscreen_renderer
+		local blueprints = self._content_blueprints
 
-	for i = 1, #grid_widgets do
-		local widget = grid_widgets[i]
+		for i = 1, #self._grid_widgets do
+			local widget = self._grid_widgets[i]
+			local widget_type = widget.type
+			local template = blueprints[widget_type]
+			local element = widget.content.element
 
-		self:_unregister_widget_name(widget.name)
+			if template and template.destroy then
+				template.destroy(self, widget, element, ui_renderer)
+			end
+
+			self:_unregister_widget_name(widget.name)
+			UIWidget.destroy(self._ui_offscreen_renderer, widget)
+		end
 	end
 
 	self._grid = nil
@@ -1766,6 +1777,7 @@ StoreItemDetailView.on_exit = function (self)
 	self._promise_container:delete()
 	self:_stop_current_voice()
 	self:_destroy_profile()
+	self:_destroy_grid()
 	self:_destroy_side_panel()
 
 	if self._world_spawner then

@@ -78,14 +78,23 @@ local item_slot_settings = {
 	slot_companion_body_skin_color = {
 		show_in_character_create = true,
 		slot_type = "body",
+		archetype_restrictions = {
+			"adamant",
+		},
 	},
 	slot_companion_body_fur_color = {
 		show_in_character_create = true,
 		slot_type = "body",
+		archetype_restrictions = {
+			"adamant",
+		},
 	},
 	slot_companion_body_coat_pattern = {
 		show_in_character_create = true,
 		slot_type = "body",
+		archetype_restrictions = {
+			"adamant",
+		},
 	},
 	slot_body_hair_color = {
 		show_in_character_create = true,
@@ -106,6 +115,9 @@ local item_slot_settings = {
 		show_in_character_create = true,
 		slot_type = "gear",
 		store_category = "companion_gear_full",
+		archetype_restrictions = {
+			"adamant",
+		},
 	},
 	slot_gear_head = {
 		display_icon = "content/ui/materials/icons/cosmetics/categories/headgear",
@@ -138,6 +150,9 @@ local item_slot_settings = {
 	slot_gear_material_override_decal = {
 		show_in_character_create = true,
 		slot_type = "material",
+		archetype_restrictions = {
+			"adamant",
+		},
 	},
 	slot_attachment_1 = {
 		display_name = "loc_inventory_title_slot_attachment_1",
@@ -269,14 +284,11 @@ local item_slot_settings = {
 	},
 	slot_trinket_1 = {
 		display_name = "loc_inventory_title_slot_trinket_1",
-		equipped_in_inventory = true,
 		ignore_character_spawning = true,
 		slot_type = "ui",
-		store_category = "boons",
 	},
 	slot_weapon_skin = {
 		display_name = "loc_inventory_title_slot_primary",
-		equipped_in_inventory = true,
 		ignore_character_spawning = true,
 		slot_type = "weapon",
 	},

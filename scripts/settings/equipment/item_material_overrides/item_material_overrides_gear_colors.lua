@@ -1912,6 +1912,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_3_colour_city_10 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_city_10",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_city_10",
+			},
+		},
+	},
 	color_3_colour_desert_01 = {
 		texture_overrides = {
 			color_gradient = {

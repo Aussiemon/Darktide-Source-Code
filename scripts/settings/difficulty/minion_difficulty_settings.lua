@@ -235,9 +235,9 @@ minion_difficulty_settings.health = {
 	cultist_mutant = _special_health_steps(2000),
 	cultist_mutant_mutator = _special_health_steps(1000),
 	cultist_captain = {
+		14000,
 		17500,
 		21000,
-		28000,
 		40000,
 		50000,
 	},
@@ -259,9 +259,9 @@ minion_difficulty_settings.health = {
 	chaos_daemonhost = _roamer_health_steps(16000),
 	chaos_mutator_daemonhost = _roamer_health_steps(16000),
 	renegade_captain = {
+		16000,
 		20000,
 		24000,
-		32000,
 		40000,
 		50000,
 	},

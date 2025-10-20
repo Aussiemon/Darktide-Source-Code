@@ -369,6 +369,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_rebreather_f = {
+		property_overrides = {
+			positive_mask = {
+				0.39,
+				0,
+				0.52,
+				1,
+			},
+			negative_mask = {
+				0.382,
+				0.5,
+				0.284,
+				0,
+			},
+		},
+	},
 	mask_face_hide_face = {
 		property_overrides = {
 			positive_mask = {
@@ -670,6 +686,38 @@ local material_overrides = {
 				0.251,
 				0.505,
 				0.498,
+			},
+		},
+	},
+	mask_face_both_ears_01 = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0.698,
+				0.43,
+				0,
+			},
+			negative_mask = {
+				0,
+				0.251,
+				0.434,
+				0.498,
+			},
+		},
+	},
+	mask_face_both_ears_and_chin = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0.717,
+				0.373,
+				0.724,
+			},
+			negative_mask = {
+				0,
+				0.251,
+				0.263,
+				0.32,
 			},
 		},
 	},

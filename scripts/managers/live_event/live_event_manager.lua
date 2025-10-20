@@ -4,12 +4,16 @@ local Items = require("scripts/utilities/items")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Text = require("scripts/utilities/ui/text")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local LiveEventManager = class("LiveEventManager")
 local REFRESH_TIMER_SUCCESS = 300
 local REFRESH_TIMER_FAILURE = 60
 local STATE_FAIL_DELAY = 60
 local CLIENT_RPCS = {
 	"rpc_live_event_trigger_combat_feed",
+	"rpc_player_collected_event_materials",
+	"rpc_show_live_event_notification",
 }
 
 LiveEventManager.init = function (self, is_host, event_delegate)
@@ -303,6 +307,14 @@ LiveEventManager._stop_current_event = function (self)
 
 		self._listener_id = nil
 	end
+
+	if self._listener_ids and #self._listener_ids > 0 then
+		for i = 1, #self._listener_ids do
+			Managers.stats:remove_listener(self._listener_ids[i])
+		end
+
+		self._listener_ids = nil
+	end
 end
 
 LiveEventManager._start_event = function (self, event_id)
@@ -311,9 +323,21 @@ LiveEventManager._start_event = function (self, event_id)
 	local combat_feed = template.combat_feed
 
 	if combat_feed and self._is_host then
-		self._listener_id = Managers.stats:add_listener("TEAM", {
-			combat_feed.stat_id,
-		}, callback(self, "_trigger_combat_feed", event_id))
+		if combat_feed.stat_id then
+			self._listener_id = Managers.stats:add_listener("TEAM", {
+				combat_feed.stat_id,
+			}, callback(self, "_trigger_combat_feed", event_id))
+		end
+
+		if combat_feed.stats then
+			self._listener_ids = {}
+
+			for i = 1, #combat_feed.stats do
+				self._listener_ids[i] = Managers.stats:add_listener("TEAM", {
+					combat_feed.stats[i].stat_id,
+				}, callback(self, "_trigger_combat_feed", event_id))
+			end
+		end
 	end
 
 	self._active_event_id = event_id
@@ -556,7 +580,7 @@ LiveEventManager.active_time_left = function (self, optional_t)
 	return (event_data.ends_at - t) / 1000
 end
 
-LiveEventManager._show_combat_feed_message = function (self, amount)
+LiveEventManager._show_combat_feed_message = function (self, amount, stat_id, optional_caused_by_peer_id)
 	local event_data = self:_active_event()
 
 	if not event_data then
@@ -571,9 +595,22 @@ LiveEventManager._show_combat_feed_message = function (self, amount)
 	end
 
 	local loc_key = combat_feed.loc_key
-	local message = Localize(loc_key, true, {
+
+	if not loc_key and combat_feed.stats then
+		for i = 1, #combat_feed.stats do
+			if combat_feed.stats[i].stat_id == stat_id then
+				loc_key = combat_feed.stats[i].loc_key
+			end
+		end
+	end
+
+	local localization_data = {
 		amount = amount,
-	})
+	}
+
+	localization_data.player_name = optional_caused_by_peer_id and Managers.player:player(optional_caused_by_peer_id, 1):name()
+
+	local message = Localize(loc_key, true, localization_data)
 	local notification_type = table.nested_get(Managers.save:account_data(), "interface_settings", "crafting_pickup_notification_type")
 
 	if notification_type == "combat_feed" then
@@ -583,14 +620,111 @@ LiveEventManager._show_combat_feed_message = function (self, amount)
 	end
 end
 
-LiveEventManager.rpc_live_event_trigger_combat_feed = function (self, channel_id, amount)
-	self:_show_combat_feed_message(amount)
+LiveEventManager.rpc_live_event_trigger_combat_feed = function (self, channel_id, amount, stat_id, optional_caused_by_peer_id)
+	self:_show_combat_feed_message(amount, stat_id, optional_caused_by_peer_id)
 end
 
-LiveEventManager._trigger_combat_feed = function (self, event_id, listener_id, stat_id, amount)
+LiveEventManager._trigger_combat_feed = function (self, event_id, listener_id, stat_id, amount, optional_caused_by_player)
+	local peer_id = optional_caused_by_player and optional_caused_by_player:peer_id()
+
 	if self._is_host then
-		Managers.state.game_session:send_rpc_clients("rpc_live_event_trigger_combat_feed", amount)
+		Managers.state.game_session:send_rpc_clients("rpc_live_event_trigger_combat_feed", amount, stat_id, peer_id)
 	end
+end
+
+LiveEventManager.get_active_event_name = function (self)
+	local active_template = self:active_template()
+
+	if not active_template then
+		return nil
+	end
+
+	return active_template.name
+end
+
+LiveEventManager.get_active_event_wallet_settings = function (self)
+	local active_template = self:active_template()
+
+	return active_template and active_template.event_material_wallet_settings
+end
+
+LiveEventManager.rpc_player_collected_event_materials = function (self, channel_id, peer_id, material_type_lookup, material_size_lookup, interaction_type_lookup)
+	local material_type = NetworkLookup.material_type_lookup[material_type_lookup]
+	local material_size = NetworkLookup.material_size_lookup[material_size_lookup]
+
+	self:_show_collected_materials_notification(self:active_template(), peer_id, material_type, material_size, interaction_type_lookup)
+end
+
+LiveEventManager._show_collected_materials_notification = function (self, event_template, peer_id, material_type, material_size, interaction_type_lookup)
+	local player_manager = Managers.player
+	local local_player_id = 1
+	local player = player_manager:player(peer_id, local_player_id)
+	local player_name = player and player:name()
+	local player_slot = player and player.slot and player:slot()
+	local player_slot_colors = UISettings.player_slot_colors
+	local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+	if player_name and player_slot_color then
+		player_name = Text.apply_color_to_text(player_name, player_slot_color)
+	end
+
+	local optional_localization_key
+
+	if event_template and event_template.interaction_type_loc_strings then
+		optional_localization_key = event_template.interaction_type_loc_strings[interaction_type_lookup]
+	end
+
+	optional_localization_key = optional_localization_key or "loc_tactical_overlay_crafting_mat_notification"
+
+	Managers.event:trigger("event_add_notification_message", "currency", {
+		use_player_portrait = true,
+		currency = material_type,
+		amount_size = material_size,
+		player_name = player_name,
+		optional_localization_key = optional_localization_key,
+	})
+end
+
+LiveEventManager.send_live_event_notification = function (self, key)
+	if not self._is_host then
+		return
+	end
+
+	local active_template = self:active_template()
+
+	if not active_template then
+		return
+	end
+
+	if not active_template.notifications then
+		return
+	end
+
+	if not active_template.notifications[key] then
+		return
+	end
+
+	Managers.state.game_session:send_rpc_clients("rpc_show_live_event_notification", key)
+end
+
+LiveEventManager.rpc_show_live_event_notification = function (self, channel_id, key)
+	local active_template = self:active_template()
+
+	if not active_template then
+		return
+	end
+
+	if not active_template.notifications then
+		return
+	end
+
+	local notification_data = active_template.notifications[key]
+
+	if not notification_data then
+		return
+	end
+
+	Managers.event:trigger("event_show_live_event_notification", notification_data.title, notification_data.subtitle, notification_data.sound_event)
 end
 
 return LiveEventManager

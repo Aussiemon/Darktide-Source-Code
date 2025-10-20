@@ -835,7 +835,7 @@ templates.veteran_damage_coherency = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.05,
+		[stat_buffs.damage] = 0.075,
 	},
 	start_func = _penance_start_func("veteran_damage_coherency_tracking_buff"),
 	related_talents = {
@@ -2264,7 +2264,7 @@ end
 
 templates.veteran_combat_ability_increase_toughness_to_coherency = {
 	class_name = "buff",
-	duration = 15,
+	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_combat_ability_increase_and_restore_toughness_to_coherency",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
@@ -3457,7 +3457,7 @@ templates.veteran_improved_tag_allied_buff = {
 	buff_category = buff_categories.talents_secondary,
 	max_stacks = tag_max_stacks,
 	stat_buffs = {
-		[stat_buffs.damage] = 0.02,
+		[stat_buffs.damage] = 0.025,
 	},
 	related_talents = {
 		"veteran_improved_tag_dead_bonus",

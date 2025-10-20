@@ -311,6 +311,22 @@ local default_ingame_input_settings = {
 			group = "input_group_movement",
 			sort_order = 12,
 		},
+		interact_primary = {
+			"keyboard_1",
+			"ps4_controller_d_left",
+			"xbox_controller_d_left",
+			description = "loc_ingame_interact",
+			group = "input_group_combat",
+			sort_order = 4,
+		},
+		interact_secondary = {
+			"keyboard_2",
+			"ps4_controller_d_right",
+			"xbox_controller_d_right",
+			description = "loc_ingame_interact",
+			group = "input_group_combat",
+			sort_order = 4,
+		},
 	},
 	settings = {
 		action_one_pressed = {
@@ -528,6 +544,22 @@ local default_ingame_input_settings = {
 		move_controller = {
 			key_alias = "move_controller",
 			type = "axis",
+		},
+		interact_primary_pressed = {
+			key_alias = "interact_primary",
+			type = "pressed",
+		},
+		interact_primary_hold = {
+			key_alias = "interact_primary",
+			type = "held",
+		},
+		interact_secondary_pressed = {
+			key_alias = "interact_secondary",
+			type = "pressed",
+		},
+		interact_secondary_hold = {
+			key_alias = "interact_secondary",
+			type = "held",
 		},
 	},
 }

@@ -674,6 +674,10 @@ CheckProcFunctions.is_backstab = function (params, template_data, template_conte
 	return params.is_backstab
 end
 
+CheckProcFunctions.is_damaging_backstab = function (params, template_data, template_context, t)
+	return params.is_backstab and (params.damage and params.damage > 0 or params.actual_damage_dealt and params.actual_damage_dealt > 0)
+end
+
 CheckProcFunctions.can_restore_dodges = function (params, template_data, template_context, t)
 	local unit = template_context.unit
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")

@@ -157,6 +157,12 @@ MinionSpawnerExtension.request_param_table = function (self)
 end
 
 MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_param_table)
+	if not breed_list or #breed_list == 0 then
+		Log.warning("[MinionSpawnerExtension]", "received an empty breed list")
+
+		return
+	end
+
 	local queue = self._spawn_queue
 	local spawn_data = optional_param_table
 

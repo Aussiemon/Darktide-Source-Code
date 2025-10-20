@@ -466,8 +466,6 @@ ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_
 end
 
 ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget, ui_renderer)
-	local previously_visible = widget.content.visible
-
 	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.portrait.material_values
@@ -478,10 +476,6 @@ ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget, ui_
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
-
-	if previously_visible then
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
@@ -492,18 +486,12 @@ ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item
 end
 
 ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui_renderer)
-	local previously_visible = widget.content.visible
-
 	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local widget_style = widget.style
 	local material_values = widget_style.portrait.material_values
 
 	material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
-
-	if previously_visible then
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 local _padding_item = {

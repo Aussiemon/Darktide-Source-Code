@@ -564,11 +564,10 @@ templates.ogryn_bracing_reduces_damage_taken = {
 		local player_unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 
-		template_data.weapon_action_component = unit_data_extension:read_component("weapon_action")
+		template_data.alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
-		local weapon_action_component = template_data.weapon_action_component
-		local braced = PlayerUnitAction.has_current_action_keyword(weapon_action_component, "braced")
+		local braced = template_data.alternate_fire_component.is_active
 
 		return braced
 	end,
@@ -609,7 +608,7 @@ templates.ogryn_carapace_armor_parent = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_keystone_carapace_armor",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	predicted = false,
-	restore_child_duration = 3,
+	restore_child_duration = 2,
 	start_at_max = true,
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
@@ -2341,8 +2340,8 @@ templates.ogryn_regen_toughness_on_braced = {
 
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local weapon_component = unit_data_extension:read_component("weapon_action")
-		local braced = PlayerUnitAction.has_current_action_keyword(weapon_component, "braced")
+		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		local braced = alternate_fire_component.is_active
 
 		template_data.braced = braced
 

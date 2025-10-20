@@ -205,16 +205,16 @@ local default_debug_input_settings = {
 			type = "pressed",
 			raw = {
 				"keyboard_b",
-				"xbox_controller_d_right",
-				"ps4_controller_d_right",
+				"xbox_controller_d_right+xbox_controller_d_up",
+				"ps4_controller_d_right+ps4_controller_d_up",
 			},
 		},
 		heal_damage = {
 			type = "pressed",
 			raw = {
 				"keyboard_left shift+keyboard_b",
-				"xbox_controller_d_left",
-				"ps4_controller_d_left",
+				"xbox_controller_d_left+xbox_controller_d_up",
+				"ps4_controller_d_left+ps4_controller_d_up",
 			},
 		},
 		permanent_damage_modifier = {

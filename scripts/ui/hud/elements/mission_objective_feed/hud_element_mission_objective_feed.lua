@@ -22,14 +22,69 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 	self._scan_delay_duration = 0
 	self._objective_widgets_counter = 0
 	self._event_objectives_to_add = {}
+	self._live_event_id = nil
+	self._live_event_widgets = {}
+	self._live_event_widgets_counter = 0
 
+	self:_set_live_event_visible(false)
 	self:_set_background_visibility(false)
 	self:_register_events()
 end
 
 HudElementMissionObjectiveFeed.destroy = function (self, ui_renderer)
+	self:_clear_live_event_widgets()
 	self:_unregister_events()
 	HudElementMissionObjectiveFeed.super.destroy(self, ui_renderer)
+end
+
+HudElementMissionObjectiveFeed._clear_live_event_widgets = function (self)
+	while self._live_event_widgets_counter > 0 do
+		self:_pop_live_event_widget()
+	end
+end
+
+HudElementMissionObjectiveFeed._set_live_event_visible = function (self, visible)
+	self._widgets_by_name.live_event_background.content.visible = visible
+	self._widgets_by_name.live_event_icon.content.visible = visible
+end
+
+HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_renderer)
+	local live_event_id = Managers.live_event:active_event_id()
+
+	if not force and self._live_event_id == live_event_id then
+		return
+	end
+
+	self._live_event_id = live_event_id
+
+	self:_clear_live_event_widgets()
+	self:_set_live_event_visible(false)
+
+	local game_mode = Managers.state.game_mode:game_mode_name()
+	local is_hub = game_mode == "hub"
+	local is_visible = live_event_id ~= nil and is_hub
+
+	if not is_visible then
+		return
+	end
+
+	local live_event_template = Managers.live_event:active_template()
+	local live_event_objective = live_event_template.objective
+
+	if not live_event_objective then
+		return
+	end
+
+	local widgets = live_event_objective.widgets
+	local widget_count = widgets and #widgets or 0
+
+	for i = 1, widget_count do
+		local widget_data = widgets[i]
+
+		self:_push_live_event_widget(widget_data.template, widget_data.context, ui_renderer)
+	end
+
+	self:_set_live_event_visible(widget_count > 0)
 end
 
 HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -40,6 +95,8 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 
 		self._scan_delay_duration = self._scan_delay
 	end
+
+	self:_update_live_event(false, ui_renderer)
 
 	if self._objective_widgets_counter > 0 then
 		self:_update_widgets(dt, t)
@@ -528,12 +585,61 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 	local background_scenegraph_id = "background"
 
 	self:_set_scenegraph_size(background_scenegraph_id, nil, total_background_height)
+	self:set_scenegraph_position("live_event_background", nil, total_background_height + (total_background_height > 0 and 10 or 0))
+end
+
+HudElementMissionObjectiveFeed._get_live_event_widget_name = function (self, index)
+	return string.format("live_event_%d", index)
+end
+
+HudElementMissionObjectiveFeed._update_live_event_size = function (self)
+	local total_height = 4
+
+	for i = 1, self._live_event_widgets_counter do
+		local widget = self._live_event_widgets[i]
+
+		widget.offset = {
+			0,
+			total_height,
+			0,
+		}
+		total_height = total_height + widget.content.size[2] + 6
+	end
+
+	total_height = total_height + 4
+
+	self:_set_scenegraph_size("live_event_background", nil, total_height)
+end
+
+HudElementMissionObjectiveFeed._push_live_event_widget = function (self, template_name, context, ui_renderer)
+	local widget_definition = Definitions.live_event_definition[template_name]
+
+	self._live_event_widgets_counter = self._live_event_widgets_counter + 1
+	self._live_event_widgets[self._live_event_widgets_counter] = self:_create_widget(self:_get_live_event_widget_name(self._live_event_widgets_counter), widget_definition)
+
+	for key, value in pairs(widget_definition) do
+		if type(value) == "function" then
+			self._live_event_widgets[self._live_event_widgets_counter][key] = value
+		end
+	end
+
+	self._live_event_widgets[self._live_event_widgets_counter]:init(context, ui_renderer)
+end
+
+HudElementMissionObjectiveFeed._pop_live_event_widget = function (self)
+	local widget = self._live_event_widgets[self._live_event_widgets_counter]
+
+	widget:destroy()
+	self:_unregister_widget_name(self:_get_live_event_widget_name(self._live_event_widgets_counter))
+
+	self._live_event_widgets[self._live_event_widgets_counter] = nil
+	self._live_event_widgets_counter = self._live_event_widgets_counter - 1
 end
 
 HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-	if self._objective_widgets_counter > 0 then
-		HudElementMissionObjectiveFeed.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+	HudElementMissionObjectiveFeed.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
+	if self._objective_widgets_counter > 0 then
 		local objective_widgets = self._objective_widgets
 
 		if objective_widgets then
@@ -541,6 +647,12 @@ HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_serv
 				UIWidget.draw(widget, ui_renderer)
 			end
 		end
+	end
+
+	self:_update_live_event_size()
+
+	for _, widget in ipairs(self._live_event_widgets) do
+		UIWidget.draw(widget, ui_renderer)
 	end
 end
 

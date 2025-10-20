@@ -56,7 +56,7 @@ local talent_settings = {
 			duration = 3,
 		},
 		clip_size = {
-			clip_size_modifier = 0.15,
+			clip_size_modifier = 0.25,
 		},
 	},
 	veteran_2 = {
@@ -149,7 +149,7 @@ local talent_settings = {
 		},
 		coop_3 = {
 			damage = 0.15,
-			duration = 3,
+			duration = 6,
 			range = 8,
 			toughness_percent = 0.15,
 		},

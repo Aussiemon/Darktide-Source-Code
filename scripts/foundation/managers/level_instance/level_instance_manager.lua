@@ -11,6 +11,7 @@ LevelInstanceManager.init = function (self, world, extension_manager, is_server,
 	self._main_level = ScriptWorld.level(world, level_name)
 	self._network_event_delegate = network_event_delegate
 	self._spawned_level_instances = {}
+	self._hotjoins_in_progress = {}
 
 	if not is_server then
 		local client_rpcs = LevelInstanceManagerSettings.client_rpcs
@@ -38,6 +39,44 @@ LevelInstanceManager.destroy = function (self)
 		end
 
 		self._network_event_delegate = nil
+	end
+end
+
+LevelInstanceManager.update = function (self, dt, t)
+	if not self._is_server then
+		return
+	end
+
+	local game_session_manager = Managers.state.game_session
+	local hotjoins_in_progress = self._hotjoins_in_progress
+
+	for i = #hotjoins_in_progress, 1, -1 do
+		local hotjoin = hotjoins_in_progress[i]
+		local channel_id = game_session_manager:peer_to_channel(hotjoin.peer_id)
+
+		if channel_id then
+			local level_instances = hotjoin.level_instances
+			local synced_hashes = {}
+
+			for hash, instance_data in pairs(level_instances) do
+				self:_server_sync_instanced_level_with_clients(instance_data, channel_id)
+				table.append(synced_hashes, hash)
+
+				if #synced_hashes >= 10 then
+					break
+				end
+			end
+
+			for j = 1, #synced_hashes do
+				table.remove(hotjoin.level_instances, synced_hashes[i])
+			end
+
+			if #hotjoin.level_instances == 0 then
+				table.remove(self._hotjoins_in_progress, i)
+			end
+		else
+			table.remove(self._hotjoins_in_progress, i)
+		end
 	end
 end
 
@@ -81,10 +120,11 @@ LevelInstanceManager.destroy_level_instance = function (self, instance_hash)
 	ScriptWorld.destroy_level_instance(self._world, level_instance_data.name, level_instance_data.instance_id)
 end
 
-LevelInstanceManager.hot_join_sync = function (self, sender, channel_id)
-	for hash, instance_data in pairs(self._spawned_level_instances) do
-		self:_server_sync_instanced_level_with_clients(instance_data, channel_id)
-	end
+LevelInstanceManager.hot_join_sync = function (self, peer_id, channel_id)
+	table.append(self._hotjoins_in_progress, {
+		peer_id = peer_id,
+		level_instances = table.clone(self._spawned_level_instances),
+	})
 end
 
 LevelInstanceManager._server_sync_instanced_level_with_clients = function (self, instance_data, optional_channel)

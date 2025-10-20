@@ -50,19 +50,19 @@ HudElementAreaNotificationPopup.event_player_set_new_location = function (self, 
 	end
 end
 
-HudElementAreaNotificationPopup._present_new_area = function (self, full_text_unlocalized, short_text_unlocalized)
+HudElementAreaNotificationPopup._present_new_area = function (self, full_text_unlocalized, short_text_unlocalized, optional_ui_sound_event)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.area_popup
 	local content = widget.content
 
-	content.title_text = self:_localize(full_text_unlocalized)
-	content.description_text = self:_localize(short_text_unlocalized)
+	content.title_text = full_text_unlocalized and self:_localize(full_text_unlocalized) or ""
+	content.description_text = short_text_unlocalized and self:_localize(short_text_unlocalized) or ""
 
 	local popup_animation_id = self:_start_animation("popup_enter", widgets_by_name)
 
 	self._popup_animation_id = popup_animation_id
 
-	self:_play_sound(UISoundEvents.area_notification_popup_enter)
+	self:_play_sound(optional_ui_sound_event or UISoundEvents.area_notification_popup_enter)
 end
 
 HudElementAreaNotificationPopup._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

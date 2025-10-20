@@ -480,6 +480,19 @@ local interaction_templates = {
 		taggable = false,
 		ui_interaction_type = "pickup",
 	},
+	stolen_rations = {
+		action_text = "loc_action_interaction_stolen_rations_recover",
+		description = "loc_stolen_rations_pickup",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
+		interaction_input = "interact_primary_pressed",
+		interaction_priority = 1,
+		secondary_action_text = "loc_action_interaction_stolen_rations_destroy",
+		secondary_interaction_input = "interact_secondary_pressed",
+		taggable = false,
+		ui_interaction_type = "pickup",
+	},
 }
 
 for interaction_type, template in pairs(interaction_templates) do

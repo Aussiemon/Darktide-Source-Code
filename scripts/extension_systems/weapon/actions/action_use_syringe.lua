@@ -224,6 +224,7 @@ ActionUseSyringe._report_use_to_stat_system = function (self, target)
 		syringe_data.used_on_ally = used_on_ally
 
 		Managers.stats:record_private("hook_on_syringe_use", player, syringe_data)
+		Managers.event:trigger("event_player_action_use_syringe", player, syringe_data)
 	end
 end
 

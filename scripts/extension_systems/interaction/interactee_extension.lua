@@ -8,6 +8,7 @@ local MasterItems = require("scripts/backend/master_items")
 local InteracteeExtension = class("InteracteeExtension")
 local emissive_colors = InteractionSettings.emissive_colors
 local interaction_results = InteractionSettings.results
+local interaction_success_flow_event_template = "lua_interaction_success_%s_%s"
 
 InteracteeExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, game_object_id)
 	local is_server = extension_init_context.is_server
@@ -338,6 +339,23 @@ InteracteeExtension.interaction_input = function (self)
 	return override_context.interaction_input or interaction:interaction_input()
 end
 
+InteracteeExtension.get_interaction_input_type = function (self)
+	return self._interaction_input_type
+end
+
+InteracteeExtension.secondary_interaction_input = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+	local interaction = self._interactions[active_interaction_type]
+
+	return override_context.secondary_interaction_input or interaction:secondary_interaction_input()
+end
+
 InteracteeExtension.ui_interaction_type = function (self)
 	local active_interaction_type = self._active_interaction_type
 
@@ -385,6 +403,29 @@ InteracteeExtension.action_text = function (self)
 	local interaction = self._interactions[active_interaction_type]
 
 	return override_context.action_text or interaction:action_text()
+end
+
+InteracteeExtension.set_secondary_action_text = function (self, text)
+	local active_interaction_type = self._active_interaction_type
+
+	if active_interaction_type then
+		local override_context = self._override_contexts[active_interaction_type]
+
+		override_context.secondary_action_text = text
+	end
+end
+
+InteracteeExtension.secondary_action_text = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+	local interaction = self._interactions[active_interaction_type]
+
+	return override_context.secondary_action_text or interaction:secondary_action_text()
 end
 
 InteracteeExtension.set_missing_players_text = function (self, text)
@@ -543,16 +584,17 @@ InteracteeExtension.ui_interaction = function (self)
 	return override_context.ui_view_name or interaction:ui_view_name()
 end
 
-InteracteeExtension.started = function (self, interactor_unit)
+InteracteeExtension.started = function (self, interactor_unit, interaction_input_type)
 	if self._is_server then
 		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 		local interactor_object_id = Managers.state.unit_spawner:game_object_id(interactor_unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id)
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id, interaction_input_type == "secondary" and 2 or 1)
 	end
 
 	self._is_being_used = true
 	self._interactor_unit = interactor_unit
+	self._interaction_input_type = interaction_input_type
 
 	Unit.set_flow_variable(self._unit, "lua_interactor_unit", interactor_unit)
 	self:_trigger_flow_event("lua_interaction_start")
@@ -569,12 +611,16 @@ InteracteeExtension.stopped = function (self, result)
 	if result == interaction_results.success then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 		local player = player_unit_spawn_manager:owner(self._interactor_unit)
+		local is_local = false
 
 		if player and not player.remote then
+			is_local = true
+
 			self:_trigger_flow_event("lua_interaction_success_local")
 		end
 
 		self:_trigger_flow_event("lua_interaction_success_network_synced")
+		self:_trigger_flow_event(string.format(interaction_success_flow_event_template, self._interaction_input_type, is_local and "local" or "network_synced"))
 
 		local active_interaction_type = self._active_interaction_type
 
@@ -593,6 +639,7 @@ InteracteeExtension.stopped = function (self, result)
 
 	self._interactor_unit = nil
 	self._is_being_used = false
+	self._interaction_input_type = nil
 end
 
 InteracteeExtension._trigger_flow_event = function (self, event_name)

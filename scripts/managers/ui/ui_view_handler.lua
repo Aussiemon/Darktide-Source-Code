@@ -507,7 +507,10 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 	self._any_view_using_input = any_view_using_input
 
 	if destroy_views then
-		for view_name, view_data in pairs(active_views_data) do
+		for i = num_active_views, 1, -1 do
+			local view_name = active_views_array[i]
+			local view_data = active_views_data[view_name]
+
 			if view_data.marked_for_destruction then
 				self:_force_close(view_name)
 			end

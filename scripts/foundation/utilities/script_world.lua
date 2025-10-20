@@ -589,6 +589,12 @@ ScriptWorld.spawn_level_instance = function (world, name, position, rotation, sp
 	unit_spawner_manager:register_runtime_loaded_level(level, level_instance_hash)
 	Level.trigger_level_spawned(level)
 
+	local sub_levels = Level.nested_levels(level)
+
+	for i = 1, #sub_levels do
+		Level.trigger_level_spawned(sub_levels[i])
+	end
+
 	return level, instance_id, level_instance_hash
 end
 

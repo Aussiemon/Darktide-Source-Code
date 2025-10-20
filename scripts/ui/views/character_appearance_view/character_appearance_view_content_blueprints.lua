@@ -643,7 +643,6 @@ local blueprints = {
 			local content = widget.content
 
 			content.hotspot.use_is_focused = true
-			content.loads_icon = true
 			content.option_value = option.value
 			content.element = element
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)

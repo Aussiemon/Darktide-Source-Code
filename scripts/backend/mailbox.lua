@@ -5,8 +5,8 @@ local BackendUtilities = require("scripts/foundation/managers/backend/utilities/
 local MailBox = class("MailBox")
 
 local function _decorate_mail(mail)
-	mail.mark_mail_read_and_claimed = function (self)
-		return Managers.backend.interfaces.mailbox:mark_mail_read_and_claimed(mail)
+	mail.mark_mail_read_and_claimed = function (self, reward_index)
+		return Managers.backend.interfaces.mailbox:mark_mail_read_and_claimed(mail, reward_index)
 	end
 
 	mail.mark_read = function (self)
@@ -68,18 +68,15 @@ MailBox.get_mail_paged = function (self, character_id, limit, include_unread_glo
 	end)
 end
 
-MailBox.mark_mail_read_and_claimed = function (self, mail)
-	if mail.isRead then
-		return Promise.resolved()
-	end
-
-	if mail.claimed then
+MailBox.mark_mail_read_and_claimed = function (self, mail, reward_index)
+	if mail.isRead or mail.claimed then
 		return Promise.resolved()
 	end
 
 	return _patch_mail(mail, {
 		claimed = true,
 		read = true,
+		rewardIndex = reward_index,
 	}):next(function (reward)
 		mail.isRead = true
 		mail.claimed = true
@@ -114,17 +111,17 @@ MailBox.mark_mail_unread = function (self, mail)
 	end)
 end
 
-MailBox.mark_mail_claimed = function (self, mail, reward_idx)
+MailBox.mark_mail_claimed = function (self, mail, reward_index)
 	if mail.claimed then
 		return Promise.resolved()
 	end
 
 	return _patch_mail(mail, {
 		claimed = true,
-		rewardIndex = reward_idx,
+		rewardIndex = reward_index,
 	}):next(function ()
 		mail.claimed = true
-		mail.rewardIndex = reward_idx
+		mail.rewardIndex = reward_index
 	end)
 end
 

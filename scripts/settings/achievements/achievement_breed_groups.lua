@@ -135,105 +135,105 @@ AchievementBreedGroups.renegade_elite = {
 	"renegade_shocktrooper",
 }
 AchievementBreedGroups.special_and_elite_breed_lookup = {
-	flamer = {
+	{
 		local_variable = "loc_breed_flamer_generic_desc",
 		name = "flamer",
 		title_local_variable = "loc_breed_flamer_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_flamer",
 		targets = breed_kill_targets.special,
 	},
-	grenadier = {
+	{
 		local_variable = "loc_breed_grenadier_generic_desc",
 		name = "grenadier",
 		title_local_variable = "loc_breed_grenadier_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_grenadier",
 		targets = breed_kill_targets.special,
 	},
-	berzerker = {
+	{
 		local_variable = "loc_breed_berzerker_generic_desc",
 		name = "berzerker",
 		title_local_variable = "loc_breed_berzerker_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_rager",
 		targets = breed_kill_targets.elite,
 	},
-	gunner = {
+	{
 		local_variable = "loc_breed_gunner_generic_desc",
 		name = "gunner",
 		title_local_variable = "loc_breed_gunner_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_gunner",
 		targets = breed_kill_targets.special,
 	},
-	renegade_netgunner = {
+	{
 		local_variable = "loc_breed_display_name_renegade_netgunner",
 		name = "renegade_netgunner",
 		title_local_variable = "loc_breed_display_name_renegade_netgunner",
 		icon = path .. "havoc_achievements/havoc_missions_trappers",
 		targets = breed_kill_targets.special,
 	},
-	renegade_sniper = {
+	{
 		local_variable = "loc_breed_display_name_renegade_sniper",
 		name = "renegade_sniper",
 		title_local_variable = "loc_breed_display_name_renegade_sniper",
 		icon = path .. "havoc_achievements/havoc_missions_sniper",
 		targets = breed_kill_targets.special,
 	},
-	renegade_executor = {
+	{
 		local_variable = "loc_breed_display_name_renegade_executor",
 		name = "renegade_executor",
 		title_local_variable = "loc_breed_display_name_renegade_executor",
 		icon = path .. "havoc_achievements/havoc_missions_mauler",
 		targets = breed_kill_targets.elite,
 	},
-	renegade_shocktrooper = {
+	{
 		local_variable = "loc_breed_shocktrooper_generic_desc",
 		name = "shocktrooper",
 		title_local_variable = "loc_breed_shocktrooper_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_shocktrooper",
 		targets = breed_kill_targets.elite,
 	},
-	cultist_mutant = {
+	{
 		local_variable = "loc_breed_display_name_cultist_mutant",
 		name = "cultist_mutant",
 		title_local_variable = "loc_breed_display_name_cultist_mutant",
 		icon = path .. "havoc_achievements/havoc_missions_charger",
 		targets = breed_kill_targets.special,
 	},
-	chaos_ogryn_bulwark = {
+	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_bulwark",
 		name = "chaos_ogryn_bulwark",
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_bulwark",
 		icon = path .. "havoc_achievements/havoc_missions_bulwark",
 		targets = breed_kill_targets.elite,
 	},
-	chaos_ogryn_executor = {
+	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_executor",
 		name = "chaos_ogryn_executor",
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_executor",
 		icon = path .. "havoc_achievements/havoc_missions_crusher_exec",
 		targets = breed_kill_targets.elite,
 	},
-	chaos_ogryn_gunner = {
+	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_gunner",
 		name = "chaos_ogryn_gunner",
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_gunner",
 		icon = path .. "havoc_achievements/havoc_missions_reaper",
 		targets = breed_kill_targets.elite,
 	},
-	chaos_hound = {
+	{
 		local_variable = "loc_breed_display_name_chaos_hound",
 		name = "chaos_hound",
 		title_local_variable = "loc_breed_display_name_chaos_hound",
 		icon = path .. "havoc_achievements/havoc_missions_pox_hound_penance",
 		targets = breed_kill_targets.special,
 	},
-	renegade_plasma_shocktrooper = {
+	{
 		local_variable = "loc_breed_display_name_renegade_plasma_gunner",
 		name = "renegade_plasma_gunner",
 		title_local_variable = "loc_breed_display_name_renegade_plasma_gunner",
 		icon = path .. "havoc_achievements/havoc_missions_plasma_gunner",
 		targets = breed_kill_targets.elite,
 	},
-	chaos_poxwalker_bomber = {
+	{
 		local_variable = "loc_breed_display_name_chaos_poxwalker_bomber",
 		name = "chaos_poxwalker_bomber",
 		title_local_variable = "loc_breed_display_name_chaos_poxwalker_bomber",

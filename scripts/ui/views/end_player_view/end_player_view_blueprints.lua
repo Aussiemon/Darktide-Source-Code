@@ -382,6 +382,8 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 end
 
 local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local widget_style = widget.style
 	local icon_style = widget_style.item_icon
 	local material_values = icon_style.material_values
@@ -389,11 +391,6 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
 	material_values.use_render_target = 0
-
-	if widget.content.visible then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 local function _reward_load_icon_func(parent, widget, config, optional_icon_size)

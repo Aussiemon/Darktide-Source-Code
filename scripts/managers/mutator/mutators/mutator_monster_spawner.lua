@@ -18,21 +18,10 @@ local AGGRO_STATES = {
 }
 local TARGET_SIDE_ID = 1
 
-MutatorMonsterSpawner.init = function (self, is_server, network_event_delegate, mutator_template, nav_world)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorMonsterSpawner.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorMonsterSpawner.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
-	self._nav_world = nav_world
-
-	local asset_package = self._template.spawner_template.asset_package
-
-	if asset_package then
-		local package_manager = Managers.package
-
-		self._package_id = package_manager:load(asset_package, "MutatorMonsterSpawner", nil, nil)
-	end
 
 	if not self._is_server then
 		return

@@ -7,14 +7,11 @@ local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_te
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MutatorToxicGas = class("MutatorToxicGas", "MutatorBase")
 
-MutatorToxicGas.init = function (self, is_server, network_event_delegate, mutator_template, nav_world)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorToxicGas.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorToxicGas.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
 	self._gas_clouds = {}
-	self._nav_world = nav_world
 
 	if not self._is_server then
 		return

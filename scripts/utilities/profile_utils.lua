@@ -899,8 +899,9 @@ ProfileUtils.add_profile_preset = function ()
 	local icon_index = math.index_wrapper(num_profile_presets + 1, #optional_preset_icon_reference_keys)
 	local icon_key = optional_preset_icon_reference_keys[icon_index]
 	local profile_preset_id = ProfileUtils.get_available_profile_preset_id()
+	local new_index = num_profile_presets + 1
 
-	profile_presets[num_profile_presets + 1] = {
+	profile_presets[new_index] = {
 		loadout = {},
 		talents = {},
 		custom_icon_key = icon_key,
@@ -909,7 +910,7 @@ ProfileUtils.add_profile_preset = function ()
 
 	Managers.save:queue_save()
 
-	return profile_preset_id, profile_presets[profile_preset_id]
+	return profile_preset_id, profile_presets[new_index]
 end
 
 ProfileUtils.remove_profile_preset = function (profile_preset_id)
@@ -961,10 +962,10 @@ ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
-		profile_presets[#profile_presets + 1] = {}
-	end
+		Log.error("ProfileUtils", "Tried to save item in preset id %s, but it does not exist", profile_preset_id)
 
-	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+		return
+	end
 
 	if not profile_preset.loadout then
 		profile_preset.loadout = {}
@@ -992,10 +993,10 @@ ProfileUtils.save_talent_id_for_profile_preset = function (profile_preset_id, ta
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
-		profile_presets[#profile_presets + 1] = {}
-	end
+		Log.error("ProfileUtils", "Tried to save talents in preset id %s, but it does not exist", profile_preset_id)
 
-	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+		return
+	end
 
 	if not profile_preset.talents then
 		profile_preset.talents = {}
@@ -1033,11 +1034,13 @@ ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id,
 
 	local talents = profile_preset.talents
 
-	for talent_node_name, points_spent in pairs(talent_nodes) do
-		talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
-	end
+	if talent_nodes then
+		for talent_node_name, points_spent in pairs(talent_nodes) do
+			talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
+		end
 
-	profile_preset.talents_version = talents_version
+		profile_preset.talents_version = talents_version
+	end
 
 	Managers.save:queue_save()
 end
@@ -1091,10 +1094,10 @@ ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_prese
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
-		profile_presets[#profile_presets + 1] = {}
-	end
+		Log.error("ProfileUtils", "Tried to clear all talents in preset id %s, but it does not exist", profile_preset_id)
 
-	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+		return
+	end
 
 	if not profile_preset.talents then
 		profile_preset.talents = {}

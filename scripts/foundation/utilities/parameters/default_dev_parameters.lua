@@ -1575,6 +1575,7 @@ params.debug_buffs_show_categories = {
 		"hordes_buff",
 		"hordes_sub_buff",
 		"aura",
+		"live_event",
 	},
 }
 params.debug_meta_buffs = {

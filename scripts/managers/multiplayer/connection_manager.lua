@@ -451,7 +451,7 @@ end
 
 ConnectionManager._shutdown_connection_host = function (self, is_error, game_reason, engine_reason)
 	for peer_id, _ in pairs(self._members) do
-		self:_remove_client(self:peer_to_channel(peer_id), peer_id, game_reason, engine_reason)
+		self:_remove_client(self:peer_to_channel(peer_id), peer_id, is_error, game_reason, engine_reason)
 	end
 
 	local source, reason = _source_reason(game_reason, engine_reason)
@@ -582,7 +582,7 @@ ConnectionManager._update_client = function (self, dt)
 		elseif event == "connected" then
 			self:_peer_connected(channel_id, peer_id)
 		elseif event == "disconnected" then
-			local is_error = not parameters.engine_reason or parameters.engine_reason ~= "closed_connection"
+			local is_error = not parameters.engine_reason or parameters.engine_reason ~= "remote_disconnected"
 			local host_peer_id = self._connection_client:host()
 
 			if peer_id == host_peer_id then
@@ -625,7 +625,9 @@ ConnectionManager._update_host = function (self, dt)
 
 			self:_add_client(channel_id, peer_id, player_sync_data)
 		elseif event == "disconnected" then
-			self:_remove_client(channel_id, peer_id, parameters.game_reason, parameters.engine_reason)
+			local is_error = not parameters.engine_reason or parameters.engine_reason ~= "remote_disconnected"
+
+			self:_remove_client(channel_id, peer_id, is_error, parameters.game_reason, parameters.engine_reason)
 		end
 	end
 end
@@ -728,7 +730,7 @@ ConnectionManager._add_client = function (self, channel_id, peer_id, player_sync
 	end
 end
 
-ConnectionManager._remove_client = function (self, channel_id, peer_id, game_reason, engine_reason)
+ConnectionManager._remove_client = function (self, channel_id, peer_id, is_error, game_reason, engine_reason)
 	local source, reason = _source_reason(game_reason, engine_reason)
 
 	_info("Peer %s was disconnected with %s reason %s", peer_id, source, reason)
@@ -748,7 +750,7 @@ ConnectionManager._remove_client = function (self, channel_id, peer_id, game_rea
 			game_session_manager:remove_peer(peer_id)
 		end
 
-		self._connection_host_event_object:client_disconnected(channel_id, peer_id, game_reason, engine_reason, table.is_empty(self._members))
+		self._connection_host_event_object:client_disconnected(channel_id, peer_id, is_error, source, reason, table.is_empty(self._members))
 		self:_call_event_listeners("client_disconnected", self, peer_id, channel_id)
 	end
 

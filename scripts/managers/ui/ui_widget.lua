@@ -9,6 +9,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local UIWidget = {}
 local GuiMaterialFlag = GuiMaterialFlag
 local bit_or = bit.bor
+local math_clamp01 = math.clamp01
 
 local function initialize_pass_definitions(pass_definitions, content, style, widget_name)
 	local passes = {}
@@ -72,7 +73,7 @@ UIWidget.stop_animations = function (widget)
 	table.clear(widget.animations)
 end
 
-UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_overrides, optional_size, style_overrides)
+UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_overrides, optional_size, style_overrides, definition_overrides)
 	local definition = {}
 
 	for i = 1, #pass_definitions do
@@ -112,6 +113,10 @@ UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_
 		local style = definition.style
 
 		table.merge_recursive(style, style_overrides)
+	end
+
+	if definition_overrides then
+		table.merge_recursive(definition, definition_overrides)
 	end
 
 	return definition
@@ -261,7 +266,56 @@ local function _handle_optional_scale(optional_width, optional_height, optional_
 	return optional_width, optional_height, optional_pos_x, optional_pos_y
 end
 
+local _free_pass_transforms = {
+	[0] = 0,
+}
+
+local function _rent_pass_transform()
+	local next_idx = _free_pass_transforms[0]
+
+	if next_idx > 0 then
+		_free_pass_transforms[0] = next_idx - 1
+
+		return _free_pass_transforms[next_idx]
+	end
+
+	return {
+		0,
+		0,
+		0,
+		0,
+		0,
+	}
+end
+
+local function _return_transforms(transforms)
+	local last_idx = _free_pass_transforms[0]
+
+	for _, transform in pairs(transforms) do
+		last_idx = last_idx + 1
+		_free_pass_transforms[last_idx] = transform
+	end
+
+	_free_pass_transforms[0] = last_idx
+end
+
+local PASSES_WITH_CLIP_SUPPORT = table.set({
+	"texture",
+	"texture_uv",
+	"rotated_texture",
+})
 local temp_render_settings = {}
+local temp_pass_transforms = {}
+local temp_clip_modified_uvs = {
+	{
+		0,
+		0,
+	},
+	{
+		0,
+		0,
+	},
+}
 
 local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local ui_scenegraph = ui_renderer.ui_scenegraph
@@ -340,6 +394,10 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 
 		size_x, size_y = size_x or w, size_y or h
 	end
+
+	local pass_transforms = temp_pass_transforms
+
+	table.clear(pass_transforms)
 
 	for i = 1, #passes do
 		repeat
@@ -420,8 +478,21 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 			end
 
 			if ui_pass.draw then
-				local pass_pos_x, pass_pos_y, pass_pos_z = pos_x, pos_y, pos_z
-				local pass_size_x, pass_size_y = size_x, size_y
+				local parent_size_x, parent_size_y, parent_pos_x, parent_pos_y, parent_pos_z
+				local inherit_pass_transform = style_data.inherit_pass_transform
+
+				if inherit_pass_transform then
+					local parent_transform = pass_transforms[inherit_pass_transform]
+
+					parent_pos_x, parent_pos_y, parent_pos_z = parent_transform[1], parent_transform[2], parent_transform[3]
+					parent_size_x, parent_size_y = parent_transform[4], parent_transform[5]
+				else
+					parent_pos_x, parent_pos_y, parent_pos_z = pos_x, pos_y, pos_z
+					parent_size_x, parent_size_y = size_x, size_y
+				end
+
+				local pass_pos_x, pass_pos_y, pass_pos_z = parent_pos_x, parent_pos_y, parent_pos_z
+				local pass_size_x, pass_size_y = parent_size_x, parent_size_y
 				local pass_scenegraph_id = style_data.scenegraph_id or pass_info.scenegraph_id
 
 				if pass_scenegraph_id then
@@ -453,6 +524,18 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 				if style_data_scale then
 					width = width * (style_data_scale[1] or 1)
 					height = height * (style_data_scale[2] or 1)
+				end
+
+				do
+					local aspect_ratio = style_data.aspect_ratio
+
+					if aspect_ratio then
+						if aspect_ratio < width / height then
+							width = height * aspect_ratio
+						else
+							height = width / aspect_ratio
+						end
+					end
 				end
 
 				local style_data_size_addition = style_data.size_addition
@@ -525,15 +608,90 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					pass_pos_z = pass_pos_z + (style_offset[3] or 0)
 				end
 
-				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y))
+				local style_offset_scale = style_data.offset_scale
+
+				if style_offset_scale then
+					pass_pos_x = pass_pos_x + (style_offset_scale[1] or 0) * parent_size_x
+					pass_pos_y = pass_pos_y + (style_offset_scale[2] or 0) * parent_size_y
+				end
+
+				if style_id then
+					local transform = _rent_pass_transform()
+
+					transform[1], transform[2], transform[3] = pass_pos_x, pass_pos_y, pass_pos_z
+					transform[4], transform[5] = pass_size_x, pass_size_y
+					pass_transforms[style_id] = transform
+				end
+
+				local clip_modified_uvs
+				local clip = style_data.clip
+
+				if clip then
+					local clip_pos_x, clip_pos_y, clip_size_x, clip_size_y
+
+					if clip == "parent" then
+						clip_pos_x, clip_pos_y, clip_size_x, clip_size_y = parent_pos_x, parent_pos_y, parent_size_x, parent_size_y
+					else
+						clip_pos_x, clip_pos_y, clip_size_x, clip_size_y = pos_x, pos_y, size_x, size_y
+					end
+
+					clip_modified_uvs = temp_clip_modified_uvs
+					pass_pos_x, pass_pos_y, pass_size_x, pass_size_y, clip_modified_uvs = UIWidget._get_clip_uv(clip_pos_x, clip_pos_y, clip_size_x, clip_size_y, pass_pos_x, pass_pos_y, pass_size_x, pass_size_y, style_data.uvs, clip_modified_uvs)
+				end
+
+				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y), clip_modified_uvs)
 			end
 		until true
 	end
+
+	_return_transforms(pass_transforms)
 
 	render_settings.alpha_multiplier = previous_render_settings_alpha_multiplier
 	render_settings.color_intensity_multiplier = previous_render_settings_color_intensity_multiplier
 	render_settings.material_flags = render_settings_material_flags
 	render_settings.world_target_position = render_settings_world_target_position or false
+end
+
+UIWidget._get_clip_uv = function (parent_pos_x, parent_pos_y, parent_size_x, parent_size_y, child_pos_x, child_pos_y, child_size_x, child_size_y, optional_child_uvs, out_uvs)
+	local parent_right = parent_pos_x + parent_size_x
+	local parent_bottom = parent_pos_y + parent_size_y
+	local child_right = child_pos_x + child_size_x
+	local child_bottom = child_pos_y + child_size_y
+	local clips = false
+
+	if child_pos_x < parent_pos_x or parent_right < child_right or child_pos_y < parent_pos_y or parent_bottom < child_bottom then
+		local child_size_x_inv = 1 / child_size_x
+		local child_size_y_inv = 1 / child_size_y
+		local override_ux = math_clamp01((parent_pos_x - child_pos_x) * child_size_x_inv)
+		local override_uy = math_clamp01((parent_bottom - child_bottom) * child_size_y_inv)
+		local override_vx = math_clamp01((parent_right - child_pos_x) * child_size_x_inv)
+		local override_vy = math_clamp01((child_bottom - parent_pos_y) * child_size_y_inv)
+
+		child_pos_x = child_pos_x + override_ux * child_size_x
+		child_pos_y = child_pos_y + override_uy * child_size_y
+		child_size_x = child_size_x * (override_vx - override_ux)
+		child_size_y = child_size_y * (override_vy - override_uy)
+
+		if optional_child_uvs then
+			local pass_ux, pass_uy = optional_child_uvs[1][1], optional_child_uvs[1][2]
+			local pass_vx, pass_vy = optional_child_uvs[2][1], optional_child_uvs[2][2]
+			local uv_width = pass_vx - pass_ux
+			local uv_height = pass_vy - pass_uy
+
+			override_ux = pass_ux + uv_width * override_ux
+			override_uy = pass_uy + uv_height * override_uy
+			override_vx = pass_ux + uv_width * override_vx
+			override_vy = pass_uy + uv_height * override_vy
+		end
+
+		out_uvs[1][1] = override_ux
+		out_uvs[1][2] = override_uy
+		out_uvs[2][1] = override_vx
+		out_uvs[2][2] = override_vy
+		clips = true
+	end
+
+	return child_pos_x, child_pos_y, child_size_x, child_size_y, clips and out_uvs or nil
 end
 
 UIWidget.draw = function (widget, ui_renderer)
@@ -576,28 +734,30 @@ UIWidget.draw = function (widget, ui_renderer)
 end
 
 UIWidget.set_visible = function (widget, ui_renderer, visible)
+	if not ui_renderer or not widget then
+		return
+	end
+
 	local passes = widget.passes
 
 	for i = 1, #passes do
 		local pass_info = passes[i]
 		local pass_data = pass_info.data
 
-		if pass_info.retained_mode or pass_data.material then
-			local visible_previous = pass_data.visible
+		pass_data.visible = visible
 
-			pass_data.visible = visible
+		if not visible then
+			local pass_type = pass_info.pass_type
+			local ui_pass = UIPasses[pass_type]
+			local destroy_function = ui_pass.destroy
 
-			if not visible or pass_data.material then
-				local pass_type = pass_info.pass_type
-				local ui_pass = UIPasses[pass_type]
-				local destroy_function = ui_pass.destroy
-
-				if destroy_function then
-					destroy_function(pass_info, ui_renderer)
-				end
-			elseif visible then
-				pass_data.dirty = true
+			if destroy_function then
+				destroy_function(pass_info, ui_renderer)
 			end
+		end
+
+		if pass_info.retained_mode then
+			pass_data.dirty = true
 		end
 	end
 end

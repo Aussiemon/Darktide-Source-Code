@@ -8,6 +8,7 @@ local SERVICES = {
 	account = require("scripts/managers/data_service/services/account_service"),
 	store = require("scripts/managers/data_service/services/store_service"),
 	gear = require("scripts/managers/data_service/services/gear_service"),
+	global_stats = require("scripts/managers/data_service/services/global_stats_service"),
 	social = require("scripts/managers/data_service/services/social_service"),
 	crafting = require("scripts/managers/data_service/services/crafting_service"),
 	contracts = require("scripts/managers/data_service/services/contracts_service"),

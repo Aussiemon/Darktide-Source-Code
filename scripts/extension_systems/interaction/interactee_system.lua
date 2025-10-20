@@ -22,12 +22,12 @@ InteracteeSystem.destroy = function (self, ...)
 	InteracteeSystem.super.destroy(self, ...)
 end
 
-InteracteeSystem.rpc_interaction_started = function (self, channel_id, unit_id, is_level_unit, game_object_id)
+InteracteeSystem.rpc_interaction_started = function (self, channel_id, unit_id, is_level_unit, game_object_id, interaction_input_type)
 	local interactor_unit = Managers.state.unit_spawner:unit(game_object_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:started(interactor_unit)
+	extension:started(interactor_unit, interaction_input_type == 1 and "primary" or "secondary")
 end
 
 InteracteeSystem.rpc_interaction_stopped = function (self, channel_id, unit_id, is_level_unit, result)

@@ -62,7 +62,7 @@ breed_terror_event_settings.renegade_gunner = {
 	point_cost = 5,
 }
 breed_terror_event_settings.renegade_plasma_gunner = {
-	point_cost = 5,
+	point_cost = 10,
 }
 breed_terror_event_settings.renegade_radio_operator = {
 	point_cost = math.huge,

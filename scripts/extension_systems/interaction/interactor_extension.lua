@@ -245,28 +245,76 @@ local ACTION_KINDS_TO_CONSUME = {
 	reload_shotgun = true,
 	reload_state = true,
 }
+local ACTIONS_TO_CONSUME = {
+	gamepad = {
+		kind = {
+			reload_shotgun = true,
+			reload_state = true,
+			unwield = true,
+			wield = true,
+		},
+		name = {
+			action_reload = true,
+			combat_ability = true,
+		},
+	},
+	kbm = {
+		kind = {
+			unwield = true,
+			wield = true,
+		},
+		name = {
+			combat_ability = true,
+		},
+	},
+	server = {
+		kind = {
+			reload_shotgun = true,
+			reload_state = true,
+			unwield = true,
+			wield = true,
+		},
+		name = {
+			action_reload = true,
+			combat_ability = true,
+		},
+	},
+}
 
-InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
-	if not Managers.input:device_in_use("gamepad") and not DEDICATED_SERVER then
-		return
+InteractorExtension._consume_conflicting_inputs = function (self, t, is_server)
+	local actions_to_consume
+
+	if is_server then
+		actions_to_consume = ACTIONS_TO_CONSUME.server
+	else
+		actions_to_consume = Managers.input:device_in_use("gamepad") and ACTIONS_TO_CONSUME.gamepad or ACTIONS_TO_CONSUME.kbm
 	end
 
 	local action_input_extension = self._action_input_extension
 	local weapon_extension = self._weapon_extension
 	local peek_input = action_input_extension:peek_next_input("weapon_action")
+
+	if not peek_input then
+		return
+	end
+
 	local action_settings = weapon_extension:action_settings_from_action_input(peek_input)
 
 	if not action_settings then
 		return
 	end
 
-	local action_kind = action_settings.kind
+	if actions_to_consume.name and actions_to_consume.name[action_settings.name] then
+		action_input_extension:consume_next_input("weapon_action", t)
 
-	if not ACTION_KINDS_TO_CONSUME[action_kind] then
 		return
 	end
 
-	action_input_extension:consume_next_input("weapon_action", t)
+	if actions_to_consume.kind and actions_to_consume.kind[action_settings.kind] then
+		action_input_extension:consume_next_input("weapon_action", t)
+
+		return
+	end
 end
 
 InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_target, state)
@@ -279,9 +327,20 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 		local interaction_button_pressed = input_extension:get(interaction_input)
 		local interaction_component = self._interaction_component
 		local action_happened = interaction_button_pressed and interaction:start(world, unit, interaction_component, t, is_server) ~= false
+		local interaction_input_type
 
 		if action_happened then
-			self:_consume_conflicting_gamepad_inputs(t)
+			interaction_input_type = "primary"
+		else
+			local secondary_interaction_input = interaction:secondary_interaction_input()
+			local secondary_interaction_button_pressed = secondary_interaction_input and input_extension:get(secondary_interaction_input) or false
+
+			action_happened = secondary_interaction_button_pressed and interaction:start(world, unit, interaction_component, t, is_server) ~= false
+			interaction_input_type = action_happened and "secondary" or nil
+		end
+
+		if action_happened then
+			self:_consume_conflicting_inputs(t, is_server)
 
 			local interaction_type = interaction_component.type
 			local target_unit = interaction_component.target_unit
@@ -289,7 +348,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 
 			Vo.interaction_start_event(unit, target_unit, interaction:type())
 			self:_start_interaction_timer(t)
-			interactee_extension:started(unit)
+			interactee_extension:started(unit, interaction_input_type)
 
 			if is_server then
 				Component.event(target_unit, "interaction_started", interaction_type, unit)
@@ -297,6 +356,10 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 
 			state = interaction_states.is_interacting
 			interaction_component.state = state
+
+			if not is_server then
+				Managers.ui:set_interaction_using_input(true)
+			end
 		end
 	end
 
@@ -311,6 +374,17 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 			local hold_required = interactee_extension:hold_required()
 			local ui_interaction = interactee_extension.ui_interaction and interactee_extension:ui_interaction()
 			local holding = input_extension:get("interact_hold")
+
+			if not holding then
+				local primary_interaction_input = interaction:interaction_input()
+
+				holding = primary_interaction_input and input_extension:get(primary_interaction_input) or holding
+
+				local secondary_interaction_input = interaction:secondary_interaction_input()
+
+				holding = secondary_interaction_input and input_extension:get(secondary_interaction_input) or holding
+			end
+
 			local can_interact = self:_check_valid_ongoing_interaction(target_unit, target_node)
 			local interaction_result
 
@@ -334,6 +408,10 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 				interaction:stop(world, unit, interaction_component, t, interaction_result, is_server)
 				self:reset_interaction()
 
+				if not is_server then
+					Managers.ui:set_interaction_using_input(false)
+				end
+
 				if is_server then
 					interactee_extension:stopped(interaction_result)
 
@@ -351,6 +429,10 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 
 			interaction:stop(world, unit, interaction_component, t, interaction_result, is_server)
 			self:reset_interaction()
+
+			if not is_server then
+				Managers.ui:set_interaction_using_input(false)
+			end
 		end
 	end
 end

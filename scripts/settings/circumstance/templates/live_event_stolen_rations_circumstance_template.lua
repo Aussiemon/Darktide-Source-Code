@@ -1,0 +1,80 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/live_event_stolen_rations_circumstance_template.lua
+
+local BaseLiveEventTemplate = require("scripts/settings/circumstance/templates/base_live_event_template")
+local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circumstance_utils")
+local core_mutators = {
+	"mutator_only_traitor_guard_faction",
+	"mutator_drop_stolen_rations_01_pickup_small_on_death",
+	"mutator_drop_stolen_rations_01_pickup_medium_on_death",
+	"mutator_drop_stolen_rations_01_pickup_medium_many_on_death",
+	"mutator_stat_trigger_stolen_rations_core",
+	"mutator_enable_twin_havoc_inventory",
+	"mutator_stolen_rations_main_path_pickup_spawns",
+}
+local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
+	"add_stolen_rations",
+}, "rations_core")
+
+base_templates.rations_core_darkness = nil
+base_templates.rations_core_gas = nil
+base_templates.rations_core_ventilation = nil
+
+local destroy_mutators = {
+	"mutator_more_hordes_relaxed",
+	"mutator_havoc_armored_infected",
+	"mutator_player_buff_stolen_rations_destroy",
+}
+local destroy_embers_templates = CircumstanceUtils.inherit(base_templates, destroy_mutators, nil, "rations_destroy_embers", "rations_core")
+
+CircumstanceUtils.set_theme_tag(destroy_embers_templates, "ember")
+CircumstanceUtils.set_wwise_state(destroy_embers_templates, "ember_01")
+CircumstanceUtils.set_dialogue_id(destroy_embers_templates, "circumstance_vo_ember")
+
+local destroy_templates = CircumstanceUtils.inherit(base_templates, destroy_mutators, nil, "rations_destroy", "rations_core")
+local recover_templates = CircumstanceUtils.inherit(base_templates, {
+	"mutator_live_abhuman_replacement",
+	"mutator_stolen_rations_headshot_parasite_enemies",
+	"mutator_stolen_rations_recover_mutant_waves",
+	"mutator_player_buff_stolen_rations_recover",
+}, nil, "rations_recover", "rations_core")
+local circumstance_templates = table.reduce({
+	base_templates,
+	destroy_templates,
+	destroy_embers_templates,
+	recover_templates,
+}, table.merge, {})
+
+circumstance_templates.rations_core.ui.display_name = "loc_circumstance_stolen_rations_core_default_title"
+circumstance_templates.rations_core.ui.description = "loc_circumstance_stolen_rations_core_default_description"
+circumstance_templates.rations_core_more_res.ui.display_name = "loc_circumstance_stolen_rations_core_increased_resistance_title"
+circumstance_templates.rations_core_more_res.ui.description = "loc_circumstance_stolen_rations_core_increased_resistance_description"
+circumstance_templates.rations_core_waves_spec.ui.display_name = "loc_circumstance_stolen_rations_core_waves_of_specials_title"
+circumstance_templates.rations_core_waves_spec.ui.description = "loc_circumstance_stolen_rations_core_waves_of_specials_description"
+circumstance_templates.rations_core_hunt_grou.ui.display_name = "loc_circumstance_stolen_rations_core_hunting_grounds_title"
+circumstance_templates.rations_core_hunt_grou.ui.description = "loc_circumstance_stolen_rations_core_hunting_grounds_description"
+circumstance_templates.rations_destroy_embers.ui.display_name = "loc_circumstance_stolen_rations_destroy_default_title"
+circumstance_templates.rations_destroy_embers.ui.description = "loc_circumstance_stolen_rations_destroy_default_description"
+circumstance_templates.rations_destroy_embers_more_res.ui.display_name = "loc_circumstance_stolen_rations_destroy_increased_resistance_title"
+circumstance_templates.rations_destroy_embers_more_res.ui.description = "loc_circumstance_stolen_rations_destroy_increased_resistance_description"
+circumstance_templates.rations_destroy_embers_waves_spec.ui.display_name = "loc_circumstance_stolen_rations_destroy_waves_of_specials_title"
+circumstance_templates.rations_destroy_embers_waves_spec.ui.description = "loc_circumstance_stolen_rations_destroy_waves_of_specials_description"
+circumstance_templates.rations_destroy_embers_hunt_grou.ui.display_name = "loc_circumstance_stolen_rations_destroy_hunting_grounds_title"
+circumstance_templates.rations_destroy_embers_hunt_grou.ui.description = "loc_circumstance_stolen_rations_destroy_hunting_grounds_description"
+circumstance_templates.rations_destroy.ui.display_name = "loc_circumstance_stolen_rations_destroy_default_title"
+circumstance_templates.rations_destroy.ui.description = "loc_circumstance_stolen_rations_destroy_default_description"
+circumstance_templates.rations_destroy_more_res.ui.display_name = "loc_circumstance_stolen_rations_destroy_increased_resistance_title"
+circumstance_templates.rations_destroy_more_res.ui.description = "loc_circumstance_stolen_rations_destroy_increased_resistance_description"
+circumstance_templates.rations_destroy_waves_spec.ui.display_name = "loc_circumstance_stolen_rations_destroy_waves_of_specials_title"
+circumstance_templates.rations_destroy_waves_spec.ui.description = "loc_circumstance_stolen_rations_destroy_waves_of_specials_description"
+circumstance_templates.rations_destroy_hunt_grou.ui.display_name = "loc_circumstance_stolen_rations_destroy_hunting_grounds_title"
+circumstance_templates.rations_destroy_hunt_grou.ui.description = "loc_circumstance_stolen_rations_destroy_hunting_grounds_description"
+circumstance_templates.rations_recover.ui.display_name = "loc_circumstance_stolen_rations_recover_default_title"
+circumstance_templates.rations_recover.ui.description = "loc_circumstance_stolen_rations_recover_default_description"
+circumstance_templates.rations_recover_more_res.ui.display_name = "loc_circumstance_stolen_rations_recover_increased_resistance_title"
+circumstance_templates.rations_recover_more_res.ui.description = "loc_circumstance_stolen_rations_recover_increased_resistance_description"
+circumstance_templates.rations_recover_waves_spec.ui.display_name = "loc_circumstance_stolen_rations_recover_waves_of_specials_title"
+circumstance_templates.rations_recover_waves_spec.ui.description = "loc_circumstance_stolen_rations_recover_waves_of_specials_description"
+circumstance_templates.rations_recover_hunt_grou.ui.display_name = "loc_circumstance_stolen_rations_recover_hunting_grounds_title"
+circumstance_templates.rations_recover_hunt_grou.ui.description = "loc_circumstance_stolen_rations_recover_hunting_grounds_description"
+
+return circumstance_templates

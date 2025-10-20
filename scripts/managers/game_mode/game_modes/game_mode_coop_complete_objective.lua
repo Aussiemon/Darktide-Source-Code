@@ -6,6 +6,7 @@ local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinemat
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local MissionBuffsManager = require("scripts/managers/mission_buffs/mission_buffs_manager")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local DEFAULT_RESPAWN_TIME = 30
 local GameModeCoopCompleteObjective = class("GameModeCoopCompleteObjective", "GameModeBase")
@@ -19,6 +20,24 @@ local function _log(...)
 	Log.info("GameModeCoopCompleteObjective", ...)
 end
 
+GameModeCoopCompleteObjective._init_buff_system = function (self, game_mode_name, network_event_delegate)
+	if game_mode_name == "hub" then
+		return
+	end
+
+	self._mission_buffs_manager = MissionBuffsManager:new(self._is_server, self, game_mode_name, network_event_delegate)
+end
+
+GameModeCoopCompleteObjective._destroy_buff_system = function (self, game_mode_name, network_event_delegate)
+	if not self._mission_buffs_manager then
+		return
+	end
+
+	self._mission_buffs_manager:destroy()
+
+	self._mission_buffs_manager = nil
+end
+
 GameModeCoopCompleteObjective.init = function (self, game_mode_context, game_mode_name, network_event_delegate)
 	GameModeCoopCompleteObjective.super.init(self, game_mode_context, game_mode_name, network_event_delegate)
 
@@ -26,6 +45,8 @@ GameModeCoopCompleteObjective.init = function (self, game_mode_context, game_mod
 	self._can_start_players_check = false
 	self._players_respawn_time = {}
 	self._end_t = nil
+
+	self:_init_buff_system(game_mode_name, network_event_delegate)
 
 	if self._is_server then
 		Managers.event:register(self, "in_safe_volume", "in_safe_volume")
@@ -41,6 +62,8 @@ GameModeCoopCompleteObjective.init = function (self, game_mode_context, game_mod
 end
 
 GameModeCoopCompleteObjective.destroy = function (self)
+	self:_destroy_buff_system()
+
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
 		Managers.event:unregister(self, "event_tag_remaining_enemies")
@@ -257,6 +280,7 @@ GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, uni
 	GameModeCoopCompleteObjective.super.on_player_unit_spawn(self, player)
 
 	if self._is_server then
+		Managers.event:trigger("mission_buffs_event_player_spawned", player, is_respawn)
 		self:_set_ready_time_to_spawn(player, nil)
 
 		if is_respawn then

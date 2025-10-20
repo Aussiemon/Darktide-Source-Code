@@ -20,10 +20,7 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 end
 
 local function _remove_live_item_icon_cb_func(widget, ui_renderer)
-	if widget.content.visible then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
+	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.icon.material_values
 

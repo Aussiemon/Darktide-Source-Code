@@ -41,10 +41,7 @@ local function _apply_package_item_icon_cb_func(widget, item)
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
+	UIWidget.set_visible(widget, ui_renderer, false)
 
 	if widget.content.old_icon then
 		widget.content.icon = widget.content.old_icon
@@ -70,16 +67,13 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 end
 
 local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local material_values = widget.style.icon.material_values
 
 	material_values.use_placeholder_texture = 1
 	material_values.texture_icon = nil
 	material_values.use_render_target = 0
-
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 local function _apply_player_portrait_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -94,16 +88,13 @@ local function _apply_player_portrait_icon_cb_func(widget, grid_index, rows, col
 end
 
 local function _remove_player_portrait_icon_cb_func(widget, ui_renderer)
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local material_values = widget.style.icon.material_values
 
 	material_values.use_placeholder_texture = 1
 	material_values.texture_icon = nil
 	widget.dirty = true
-
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 local function _add_player_frame_cb_func(widget, item)
@@ -122,15 +113,12 @@ local function _add_player_frame_cb_func(widget, item)
 end
 
 local function _remove_player_frame_cb_func(widget, ui_renderer)
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local material_values = widget.style.icon.material_values
 
 	material_values.portrait_frame_texture = nil
 	widget.dirty = true
-
-	if ui_renderer then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
@@ -600,11 +588,21 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local reason = data.reason
 		local optional_localization_key = data.optional_localization_key
 		local wallet_settings = WalletSettings[currency_type]
+
+		if currency_type == "event_material" then
+			wallet_settings = Managers.live_event:get_active_event_wallet_settings()
+		end
+
+		local icon_texture_for_size
 		local ignore_wallet_display_name = false
 
 		if amount_size and type(amount_size) == "string" and wallet_settings then
 			local pickup_localization_by_size = wallet_settings.pickup_localization_by_size
 			local localization_key = pickup_localization_by_size[amount_size]
+
+			if wallet_settings.pickup_icon_by_size then
+				icon_texture_for_size = wallet_settings.pickup_icon_by_size[amount_size]
+			end
 
 			amount_size = Localize(localization_key)
 			ignore_wallet_display_name = true
@@ -612,6 +610,11 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
+
+			if icon_texture_for_size then
+				icon_texture_large = icon_texture_for_size
+			end
+
 			local selected_color = Color.terminal_corner_selected(255, true)
 
 			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or Text.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")

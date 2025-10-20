@@ -5,12 +5,9 @@ require("scripts/managers/mutator/mutators/mutator_base")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MutatorStimmedMinions = class("MutatorStimmedMinions", "MutatorBase")
 
-MutatorStimmedMinions.init = function (self, is_server, network_event_delegate, mutator_template)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
-	self._is_active = false
-	self._buffs = {}
-	self._template = mutator_template
+MutatorStimmedMinions.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorStimmedMinions.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._breed_chances = self._template.breed_chances
 	self._units_to_buff = {}
 

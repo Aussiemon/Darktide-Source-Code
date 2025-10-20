@@ -536,6 +536,8 @@ EquipmentComponent.unequip_item = function (self, slot)
 		slot.attachments_by_unit_1p = nil
 	end
 
+	slot.hidden_3p = nil
+	slot.hidden_1p = nil
 	slot.parent_unit_1p = nil
 	slot.parent_unit_3p = nil
 end

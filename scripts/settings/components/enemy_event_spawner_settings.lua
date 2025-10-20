@@ -661,6 +661,128 @@ local enemy_event_spawner_compositions = {
 			},
 		},
 	},
+	live_event_stolen_rations_stat_recover_spawns = {
+		renegade = {
+			{
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								2,
+								2,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+	live_event_stolen_rations_stat_destroy_spawns = {
+		renegade = {
+			{
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "chaos_plague_ogryn",
+							amount = {
+								2,
+								2,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 }
 
 return enemy_event_spawner_compositions

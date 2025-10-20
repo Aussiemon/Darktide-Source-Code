@@ -37,8 +37,8 @@ local talent_settings = {
 			warp_generation = 0.8,
 		},
 		psyker_cooldown = {
-			cooldown = 1,
-			duration = 3,
+			cooldown = 0.6,
+			duration = 5,
 		},
 		coherency_aura_size_increase = {
 			radius = 0.75,
@@ -164,7 +164,7 @@ local talent_settings = {
 			max_charges = 1,
 		},
 		coherency = {
-			damage_vs_elites = 0.075,
+			damage_vs_elites = 0.1,
 			max_stacks = 1,
 		},
 		passive_1 = {
@@ -200,7 +200,7 @@ local talent_settings = {
 			damage_min = 0,
 		},
 		offensive_1_2 = {
-			warp_charge_capacity = 0.64,
+			warp_charge_capacity = 0.52,
 		},
 		offensive_1_3 = {
 			distance = 4,

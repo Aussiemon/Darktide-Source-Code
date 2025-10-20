@@ -225,6 +225,7 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 		self._widgets_by_name.background.content.use_minimal_presentation = self._use_minimal_presentation
 		self._widgets_by_name.frame.content.use_minimal_presentation = self._use_minimal_presentation
+		self._widgets_by_name.secondary_interact_text.content.text = ""
 
 		self:_update_tag_input_information(interactee_unit)
 
@@ -299,10 +300,19 @@ HudElementInteraction._update_interaction_input_text = function (self, interacte
 	local input_action_text = interactee_extension:action_text()
 	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
-	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.interact_text.content.text = input_text_interact
+	widgets_by_name.interact_text.content.text = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
+
+	local secondary_input_action_text = interactee_extension:secondary_action_text()
+	local secondary_interaction_input = interactee_extension:secondary_interaction_input() or "interact_pressed"
+	local secondary_interaction_input_alias_key = _get_alias_key(secondary_interaction_input)
+
+	if secondary_input_action_text and secondary_interaction_input then
+		widgets_by_name.secondary_interact_text.content.text = _get_input_text(secondary_interaction_input_alias_key, secondary_input_action_text or "n/a", hold_required)
+	else
+		widgets_by_name.secondary_interact_text.content.text = ""
+	end
 end
 
 HudElementInteraction._cb_world_markers_list_request = function (self, marker_list)

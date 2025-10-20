@@ -2,6 +2,7 @@
 
 local WARN_MISSING_CATCH = false
 local CAPTURE_PROMISE_DEBUG_DATA = true
+local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
 local queue = {}
 local State = {
 	CANCELED = "canceled",
@@ -399,21 +400,17 @@ Promise.race = function (...)
 	return promise
 end
 
-local delayed = {}
+local delayed = PriorityQueue:new()
 local latest_time = 0
 
 Promise._check_delayed = function (t)
 	latest_time = t
 
-	for i = #delayed, 1, -1 do
-		local p = delayed[i]
+	while not delayed:empty() and delayed:peek() and t >= delayed:peek() do
+		local _, promise = delayed:pop()
 
-		if latest_time > p.time then
-			if not p.promise:is_canceled() then
-				p.promise:resolve(nil)
-			end
-
-			table.remove(delayed, i)
+		if not promise:is_canceled() then
+			promise:resolve(nil)
 		end
 	end
 end
@@ -465,16 +462,36 @@ end
 Promise.delay = function (delta)
 	local promise = Promise:new()
 
-	table.insert(delayed, {
-		promise = promise,
-		time = latest_time + delta,
-	})
+	delayed:push(latest_time + delta, promise)
 
 	return promise
 end
 
 Promise.until_true = function (predicate)
 	return Promise.until_value_is_true(predicate)
+end
+
+Promise.chain = function (array, process)
+	local res = {}
+	local p = Promise.resolved()
+
+	for i = 1, #array do
+		local val = array[i]
+
+		local function forward()
+			return val
+		end
+
+		p = p:next(forward, forward):next(process)
+
+		p:next(function (data)
+			res[#res + 1] = data
+		end)
+	end
+
+	return p:next(function ()
+		return res
+	end)
 end
 
 Promise.until_value_is_true = function (predicate)
@@ -490,8 +507,9 @@ end
 
 Promise.reset = function ()
 	queue = {}
-	delayed = {}
 	predicates = {}
+
+	delayed:clear()
 end
 
 return Promise

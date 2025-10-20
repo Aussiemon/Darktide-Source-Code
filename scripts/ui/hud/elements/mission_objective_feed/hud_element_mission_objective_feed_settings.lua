@@ -32,6 +32,8 @@ local hud_element_mission_objective_feed_settings = {
 		warning = 4,
 	},
 	base_color = UIHudSettings.color_tint_main_1,
+	muted_color = UIHudSettings.color_tint_4,
+	darkened_color = Color.terminal_text_body_sub_header(255, true),
 	alert_color = {
 		230,
 		255,

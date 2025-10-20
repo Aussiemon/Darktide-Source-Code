@@ -166,7 +166,6 @@ local function generate_blueprints_function(grid_size)
 
 	local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
 
 		widget.content.icon = "content/ui/materials/icons/items/containers/item_container_square"
 
@@ -200,7 +199,6 @@ local function generate_blueprints_function(grid_size)
 
 	local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
 
 		local material_values = widget.style.icon.material_values
 

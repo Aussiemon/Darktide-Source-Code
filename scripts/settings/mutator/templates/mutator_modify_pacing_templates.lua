@@ -57,6 +57,12 @@ local mutator_templates = {
 			required_horde_travel_distance = 20,
 		},
 	},
+	mutator_more_hordes_relaxed = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			required_horde_travel_distance = 40,
+		},
+	},
 	mutator_more_monsters = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {

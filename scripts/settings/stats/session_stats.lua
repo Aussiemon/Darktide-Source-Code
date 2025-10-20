@@ -109,5 +109,13 @@ SessionStats.kill_boss = {
 		none = "session_boss_kills",
 	},
 }
+SessionStats.rations = {
+	fill_with_default = true,
+	type = BackendTypes.statistic_by,
+	stats = {
+		destroyed = "stolen_rations_destroyed",
+		recovered = "stolen_rations_recovered",
+	},
+}
 
 return SessionStats

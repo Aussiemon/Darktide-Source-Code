@@ -14,6 +14,7 @@ local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_po
 local Vo = require("scripts/utilities/vo")
 local perception_aggro_states = PerceptionSettings.aggro_states
 local MonsterPacing = class("MonsterPacing")
+local pacing_types = table.enum("timer_based", "default")
 
 MonsterPacing.init = function (self, nav_world)
 	self._fx_system = Managers.state.extension:system("fx_system")
@@ -42,17 +43,17 @@ end
 
 MonsterPacing.on_gameplay_post_init = function (self, level, template)
 	self._template = template
-	self._pacing_type = self._template.pacing_type or "default"
+	self._pacing_type = self._template.pacing_type or pacing_types.default
 
 	local pacing_type = self._pacing_type
 
-	if pacing_type == "default" then
+	if pacing_type == pacing_types.default then
 		local success = self:_generate_spawns(template)
 
 		if not success then
 			self._disabled = true
 		end
-	elseif pacing_type == "timer_based" then
+	elseif pacing_type == pacing_types.timer_based then
 		self._setup_timer_based_monsters = true
 		self._alive_monsters = {}
 	end
@@ -727,7 +728,7 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 	if monsters_allowed then
 		local pacing_type = self._pacing_type
 
-		if pacing_type == "default" then
+		if pacing_type == pacing_types.default then
 			local monsters = self._monsters
 			local num_monsters = #monsters
 
@@ -773,7 +774,7 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 					table.remove(self._main_path_sound_events, 1)
 				end
 			end
-		elseif pacing_type == "timer_based" then
+		elseif pacing_type == pacing_types.timer_based then
 			local allowed = self:_update_allowance(dt, t, side_id, target_side_id)
 
 			if allowed then
@@ -905,7 +906,7 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local minion_spawn_manager = Managers.state.minion_spawn
 	local param_table = minion_spawn_manager:request_param_table()
 	local pacing_type = self._pacing_type
-	local should_patrol = aggro_state == "passive" and pacing_type == "timer_based"
+	local should_patrol = aggro_state == perception_aggro_states.passive and pacing_type == pacing_types.timer_based
 
 	if should_patrol then
 		local group_system = Managers.state.extension:system("group_system")
@@ -945,7 +946,7 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 		buff_extension:add_internally_controlled_buff("empowered_twin", t)
 	end
 
-	if monster.stinger then
+	if monster.stinger and not pacing_type == pacing_types.timer_based then
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		fx_system:trigger_wwise_event(monster.stinger, spawn_position)
@@ -984,11 +985,11 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 
 	monster.spawned_unit = spawned_unit
 
-	if pacing_type == "default" then
+	if pacing_type == pacing_types.default then
 		self._alive_monsters[#self._alive_monsters + 1] = monster
 	end
 
-	if pacing_type == "timer_based" then
+	if pacing_type == pacing_types.timer_based then
 		self._currently_spawned_by_timer.monsters[#self._currently_spawned_by_timer.monsters + 1] = spawned_unit
 	end
 end
@@ -1007,7 +1008,7 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 	local below, above = 2, 2
 	local pacing_type = self._pacing_type
 
-	if pacing_type == "default" then
+	if pacing_type == pacing_types.default then
 		local spawn_point_travel_distance = boss_patrol.spawn_point_travel_distance
 		local spawn_point_main_path_position = MainPathQueries.position_from_distance(spawn_point_travel_distance)
 
@@ -1019,7 +1020,7 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 
 			flood_fill_positions[#flood_fill_positions + 1] = position
 		end
-	elseif pacing_type == "timer_based" then
+	elseif pacing_type == pacing_types.timer_based then
 		local spawn_position = boss_patrol.spawn_position:unbox()
 
 		walk_position = ahead_travel_distance
@@ -1030,7 +1031,7 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 	local group_id = group_system:generate_group_id()
 	local spawned_minions = {}
 
-	if pacing_type == "timer_based" then
+	if pacing_type == pacing_types.timer_based then
 		self._currently_spawned_by_timer.boss_patrols[#self._currently_spawned_by_timer.boss_patrols + 1] = group_id
 	end
 

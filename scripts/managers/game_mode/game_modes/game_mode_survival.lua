@@ -5,7 +5,7 @@ local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
-local MissionBuffsManager = require("scripts/managers/mission_buffs/mission_buffs_manager")
+local HordeMissionBuffsManager = require("scripts/managers/mission_buffs/horde_mission_buffs_manager")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -456,7 +456,7 @@ GameModeSurvival.cb_get_horde_setting_from_the_backend_failed = function (self, 
 end
 
 GameModeSurvival._init_buff_system = function (self, game_mode_name, network_event_delegate)
-	self._mission_buffs_manager = MissionBuffsManager:new(self._is_server, self, game_mode_name, network_event_delegate)
+	self._mission_buffs_manager = HordeMissionBuffsManager:new(self._is_server, self, game_mode_name, network_event_delegate)
 end
 
 GameModeSurvival._destroy_buff_system = function (self, game_mode_name, network_event_delegate)

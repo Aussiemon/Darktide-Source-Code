@@ -9,12 +9,10 @@ local MutatorPurpleStimmed = class("MutatorPurpleStimmed", "MutatorBase")
 local MINION_QUEUE_RING_BUFFER_SIZE = 256
 local MINION_QUEUE_PARAMETERS = table.enum("breed_name", "position", "rotation", "optional_aggro_state", "optional_target_unit", "buff_to_add")
 
-MutatorPurpleStimmed.init = function (self, is_server, network_event_delegate, mutator_template, nav_world)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorPurpleStimmed.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorPurpleStimmed.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
 
 	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)
 

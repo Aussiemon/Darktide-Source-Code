@@ -227,7 +227,7 @@ local function _resolve_minion_inventory_and_attacks(init_data, breed, game_obje
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
 
-	if breed.has_havoc_inventory_override and Managers.state.game_mode:game_mode():extension("havoc") then
+	if breed.has_havoc_inventory_override and (Managers.state.game_mode:game_mode():extension("havoc") or Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory")) then
 		zone_id = breed.has_havoc_inventory_override
 	end
 
@@ -249,7 +249,7 @@ local function _resolve_minion_husk_inventory(breed, game_session, game_object_i
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
 
-	if breed.has_havoc_inventory_override and Managers.state.game_mode:game_mode():extension("havoc") then
+	if breed.has_havoc_inventory_override and (Managers.state.game_mode:game_mode():extension("havoc") or Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory")) then
 		zone_id = breed.has_havoc_inventory_override
 	end
 

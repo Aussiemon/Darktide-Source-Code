@@ -1999,9 +1999,7 @@ Items.track_reward_item_to_gear = function (item)
 	return gear_id, gear
 end
 
-Items.register_track_reward = function (claimed_reward)
-	local item_id = claimed_reward.id
-	local reward_id = claimed_reward.gearId
+Items.register_reward = function (item_id, reward_id)
 	local rewarded_master_item = MasterItems.get_item(item_id)
 
 	rewarded_master_item.uuid = reward_id
@@ -2024,6 +2022,34 @@ Items.register_track_reward = function (claimed_reward)
 	end
 
 	return item
+end
+
+Items.register_track_reward = function (claimed_reward)
+	local item_id = claimed_reward.id
+	local reward_id = claimed_reward.gearId
+
+	return Items.register_reward(item_id, reward_id)
+end
+
+Items.advertise_reward = function (reason, item_id, reward_id)
+	local rewarded_master_item = Items.register_reward(item_id, reward_id)
+	local sound_event = UISoundEvents.character_news_feed_new_item
+
+	Managers.event:trigger("event_add_notification_message", "item_granted", {
+		reason = reason,
+		item = rewarded_master_item,
+	}, nil, sound_event)
+end
+
+Items.advertise_track_reward = function (claimed_reward)
+	local rewarded_master_item = Items.register_track_reward(claimed_reward)
+	local sound_event = UISoundEvents.character_news_feed_new_item
+	local reason = Localize("loc_item_rewarded_from_live_event")
+
+	Managers.event:trigger("event_add_notification_message", "item_granted", {
+		reason = reason,
+		item = rewarded_master_item,
+	}, nil, sound_event)
 end
 
 Items.set_item_id_as_favorite = function (item_gear_id, state)

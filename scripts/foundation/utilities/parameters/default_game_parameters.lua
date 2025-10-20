@@ -108,6 +108,7 @@ DefaultGameParameters.disable_all_dlc_checks = false
 DefaultGameParameters.allocators_to_track_telemetry = "lua_heap,D3D12Memory,page_allocator,render_page_allocator,resource_loader_page_allocator,physx_page_allocator,rrc_page_allocator,agc_page_allocator,Texture streaming buffer"
 DefaultGameParameters.disable_view_preload = false
 DefaultGameParameters.extra_persistent_package = ""
+DefaultGameParameters.persistent_breeds_lockhart = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 

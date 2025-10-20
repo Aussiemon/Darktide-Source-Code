@@ -12,12 +12,10 @@ local throw_config = {
 local allowed_spawns = 0
 local DELAY = 5
 
-MutatorPestilentBauble.init = function (self, is_server, network_event_delegate, mutator_template)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorPestilentBauble.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorPestilentBauble.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
 end
 
 MutatorPestilentBauble.update = function (self, dt, t)

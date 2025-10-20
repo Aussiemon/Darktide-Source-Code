@@ -3674,7 +3674,7 @@ templates.psyker_alternative_peril_explosion = {
 	},
 	specific_proc_func = {
 		on_action_finish = function (params, template_data, template_context, t)
-			if params.action_name ~= "action_warp_charge_explode" then
+			if params.action_name ~= "action_warp_charge_explode" or params.reason ~= "action_complete" then
 				return
 			end
 

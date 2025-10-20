@@ -52,6 +52,10 @@ BaseInteraction.interaction_input = function (self)
 	return self._template.interaction_input or "interact_pressed"
 end
 
+BaseInteraction.secondary_interaction_input = function (self)
+	return self._template.secondary_interaction_input
+end
+
 BaseInteraction.interaction_priority = function (self)
 	return self._template.interaction_priority or 1
 end
@@ -70,6 +74,10 @@ end
 
 BaseInteraction.action_text = function (self)
 	return self._template.action_text
+end
+
+BaseInteraction.secondary_action_text = function (self)
+	return self._template.secondary_action_text
 end
 
 BaseInteraction.ui_view_name = function (self)

@@ -15,8 +15,7 @@ add_overrides(MissionOverrides, HazardPropOverrides)
 add_overrides(MissionOverrides, HealthStationOverrides)
 add_overrides(MissionOverrides, PickupOverrides)
 
-MissionOverrides.merge = function (...)
-	local t = {}
+MissionOverrides.append = function (t, ...)
 	local arg_count = select("#", ...)
 
 	for i = 1, arg_count do
@@ -26,6 +25,12 @@ MissionOverrides.merge = function (...)
 	end
 
 	return t
+end
+
+MissionOverrides.merge = function (...)
+	local t = {}
+
+	return MissionOverrides.append(t, ...)
 end
 
 return settings("MissionOverrides", MissionOverrides)

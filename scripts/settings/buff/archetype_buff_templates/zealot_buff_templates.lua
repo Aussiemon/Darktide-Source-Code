@@ -3111,7 +3111,7 @@ templates.zealot_backstab_periodic_damage = {
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
-	check_proc_func = CheckProcFunctions.is_backstab,
+	check_proc_func = CheckProcFunctions.is_damaging_backstab,
 	proc_func = function (params, template_data, template_context)
 		return
 	end,

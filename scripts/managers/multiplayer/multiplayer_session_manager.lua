@@ -29,7 +29,37 @@ end
 MultiplayerSessionManager.init = function (self)
 	self._session = nil
 	self._session_boot = nil
-	self._breed_loader = BreedLoader:new()
+	self._persistent_breed_loader = self:_use_persistent_breed_loader()
+
+	if self._persistent_breed_loader then
+		self._breed_loader = BreedLoader:new(self._persistent_breed_loader)
+	end
+end
+
+MultiplayerSessionManager._use_persistent_breed_loader = function (self)
+	local is_lockhart = IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART
+
+	if is_lockhart and GameParameters.persistent_breeds_lockhart then
+		return false
+	else
+		return true
+	end
+end
+
+MultiplayerSessionManager.apply_backend_game_settings = function (self)
+	local persistent_breed_loader = self:_use_persistent_breed_loader()
+
+	if persistent_breed_loader ~= self._persistent_breed_loader then
+		if persistent_breed_loader then
+			self._breed_loader = BreedLoader:new(persistent_breed_loader)
+		else
+			self._breed_loader:delete()
+
+			self._breed_loader = nil
+		end
+
+		self._persistent_breed_loader = persistent_breed_loader
+	end
 end
 
 MultiplayerSessionManager.destroy = function (self)
@@ -37,7 +67,9 @@ MultiplayerSessionManager.destroy = function (self)
 		self._session_boot:delete()
 	end
 
-	self._breed_loader:delete()
+	if self._persistent_breed_loader then
+		self._breed_loader:delete()
+	end
 end
 
 MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_reason)
@@ -236,7 +268,11 @@ MultiplayerSessionManager._get_loaders = function (self)
 		loaders[#loaders + 1] = loader_class:new()
 	end
 
-	loaders[#loaders + 1] = self._breed_loader
+	if self._persistent_breed_loader then
+		loaders[#loaders + 1] = self._breed_loader
+	else
+		loaders[#loaders + 1] = BreedLoader:new()
+	end
 
 	return loaders
 end

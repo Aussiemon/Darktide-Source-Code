@@ -157,9 +157,8 @@ SaveData.populate = function (self, save_data)
 						for character_id, character_id_data in pairs(character_data) do
 							local new_character_data = table.clone_instance(default_character_data)
 
-							table.merge_recursive(new_character_data, character_id_data)
-
-							character_data[character_id] = new_character_data
+							character_data[character_id] = table.merge_recursive(new_character_data, character_id_data)
+							character_id_data = character_data[character_id]
 
 							if not character_id_data.group_finder_search_tags then
 								character_id_data.group_finder_search_tags = table.clone_instance(default_character_data.group_finder_search_tags)
@@ -175,6 +174,28 @@ SaveData.populate = function (self, save_data)
 
 								character_id_data.active_profile_preset_id = nil
 								character_id_data.profile_presets = table.clone_instance(default_character_data.profile_presets)
+							end
+
+							profile_presets = character_id_data.profile_presets
+
+							local found_active_profile_preset_id = false
+
+							for i = #profile_presets, 1, -1 do
+								local profile_preset = profile_presets[i]
+								local id = profile_preset.id
+
+								if not id or type(id) ~= "string" then
+									Log.info("SaveData", "Invalid profile preset with index %s detected.", i)
+									table.remove(profile_presets, i)
+								elseif id == character_id_data.active_profile_preset_id then
+									found_active_profile_preset_id = true
+								end
+							end
+
+							if character_id_data.active_profile_preset_id and not found_active_profile_preset_id then
+								Log.info("SaveData", "Current saved active profile preset id (%s) does not exist in profile presets", character_id_data.active_profile_preset_id)
+
+								character_id_data.active_profile_preset_id = nil
 							end
 						end
 					end

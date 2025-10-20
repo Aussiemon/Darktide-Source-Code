@@ -92,15 +92,11 @@ local MAINPATH_SOUND_EVENTS = {
 	},
 }
 
-MutatorToxicGasTwins.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, level_seed)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorToxicGasTwins.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorToxicGasTwins.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
-	self._nav_world = nav_world
 	self._buff_affected_units = {}
-	self._seed = level_seed
 	self._twin_spawn_data = {}
 	self._spawn_liquids = {}
 	self._fx_system = Managers.state.extension:system("fx_system")

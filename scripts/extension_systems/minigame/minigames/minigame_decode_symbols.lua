@@ -89,6 +89,10 @@ MinigameDecodeSymbols.stop = function (self)
 	local is_server = self._is_server
 
 	if is_server then
+		if not self._player_session_id then
+			return
+		end
+
 		local player = Managers.player:player_from_session_id(self._player_session_id)
 
 		if self:is_completed() then

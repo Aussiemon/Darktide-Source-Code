@@ -157,7 +157,13 @@ MissionBuffsPersistentData._add_buff_to_player_data = function (self, player, bu
 			buff_indexes = {},
 		}
 
-		local is_family_buff = HordesBuffsData[buff_name].is_family_buff
+		local horde_data = HordesBuffsData[buff_name]
+
+		if not horde_data then
+			return
+		end
+
+		local is_family_buff = horde_data.is_family_buff
 
 		if is_family_buff then
 			target_player_data.num_family_buffs_received = target_player_data.num_family_buffs_received + 1

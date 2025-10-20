@@ -5,11 +5,8 @@ require("scripts/managers/mutator/mutators/mutator_base")
 local HordePacingTemplates = require("scripts/managers/pacing/horde_pacing/horde_pacing_templates")
 local MutatorHordePacingOverride = class("MutatorHordePacingOverride", "MutatorBase")
 
-MutatorHordePacingOverride.init = function (self, is_server, network_event_delegate, mutator_template)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
-	self._is_active = false
-	self._template = mutator_template
+MutatorHordePacingOverride.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorHordePacingOverride.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
 
 	local template = self._template
 	local pacing_override = template.pacing_override

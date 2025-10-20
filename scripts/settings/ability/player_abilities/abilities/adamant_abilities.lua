@@ -108,6 +108,7 @@ local abilities = {
 		ability_type = "grenade_ability",
 		hud_icon = "content/ui/materials/icons/throwables/hud/adamant_whistle",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		stat_buff = "extra_max_amount_of_grenades",
 		hud_configuration = {
 			uses_ammunition = true,
 		},

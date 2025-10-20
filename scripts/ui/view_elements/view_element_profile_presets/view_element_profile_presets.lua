@@ -286,44 +286,53 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 	for i = num_profile_presets, 1, -1 do
 		local profile_preset = profile_presets[i]
 		local profile_preset_id = profile_preset and profile_preset.id
-		local custom_icon_key = profile_preset and profile_preset.custom_icon_key
-		local widget_name = "profile_button_" .. i
-		local widget = self:_create_widget(widget_name, profile_preset_button)
 
-		profile_buttons_widgets[i] = widget
+		if profile_preset_id then
+			local custom_icon_key = profile_preset and profile_preset.custom_icon_key
+			local widget_name = "profile_button_" .. i
+			local widget = self:_create_widget(widget_name, profile_preset_button)
 
-		local offset = widget.offset
+			profile_buttons_widgets[#profile_buttons_widgets + 1] = widget
 
-		offset[1] = -total_width
+			local offset = widget.offset
 
-		local content = widget.content
-		local hotspot = content.hotspot
+			offset[1] = -total_width
 
-		hotspot.pressed_callback = callback(self, "on_profile_preset_index_change", i)
-		hotspot.right_pressed_callback = callback(self, "on_profile_preset_index_customize", i)
+			local content = widget.content
+			local hotspot = content.hotspot
 
-		local is_selected = profile_preset_id == active_profile_preset_id
+			hotspot.pressed_callback = callback(self, "on_profile_preset_index_change", i)
+			hotspot.right_pressed_callback = callback(self, "on_profile_preset_index_customize", i)
 
-		if is_selected then
-			self._active_profile_preset_id = profile_preset_id
-		end
+			local is_selected = profile_preset_id == active_profile_preset_id
 
-		hotspot.is_selected = is_selected
+			if is_selected then
+				self._active_profile_preset_id = profile_preset_id
+			end
 
-		local default_icon_index = math.index_wrapper(i, #optional_preset_icon_reference_keys)
-		local default_icon_key = optional_preset_icon_reference_keys[default_icon_index]
-		local default_icon = optional_preset_icons_lookup[custom_icon_key or default_icon_key]
+			hotspot.is_selected = is_selected
 
-		content.icon = default_icon
-		content.profile_preset_id = profile_preset_id
-		total_width = total_width + button_width
+			local default_icon_index = math.index_wrapper(i, #optional_preset_icon_reference_keys)
+			local default_icon_key = optional_preset_icon_reference_keys[default_icon_index]
+			local default_icon = optional_preset_icons_lookup[custom_icon_key or default_icon_key]
 
-		if i > 1 then
-			total_width = total_width + button_spacing
+			content.icon = default_icon
+			content.profile_preset_id = profile_preset_id
+			total_width = total_width + button_width
+
+			if i > 1 then
+				total_width = total_width + button_spacing
+			end
 		end
 	end
 
-	self._profile_buttons_widgets = profile_buttons_widgets
+	local inverted_profile_buttons_widgets = {}
+
+	for i = #profile_buttons_widgets, 1, -1 do
+		inverted_profile_buttons_widgets[#inverted_profile_buttons_widgets + 1] = profile_buttons_widgets[i]
+	end
+
+	self._profile_buttons_widgets = inverted_profile_buttons_widgets
 
 	local panel_width = total_width + button_width + 45
 
@@ -682,15 +691,14 @@ end
 
 ViewElementProfilePresets.cycle_next_profile_preset = function (self)
 	local profile_buttons_widgets = self._profile_buttons_widgets
-	local has_profile_presets = self:has_profile_presets()
-	local active_profile_preset_id = self._active_profile_preset_id or has_profile_presets and 0
+	local active_profile_preset_id = self._active_profile_preset_id
 
-	if not active_profile_preset_id or not profile_buttons_widgets then
-		return
-	end
+	if not active_profile_preset_id then
+		local has_presets = self:has_profile_presets()
 
-	if active_profile_preset_id == 0 then
-		self:on_profile_preset_index_change(1)
+		if has_presets and profile_buttons_widgets then
+			self:on_profile_preset_index_change(1)
+		end
 
 		return
 	end
@@ -727,6 +735,24 @@ ViewElementProfilePresets._get_profile_preset_id_by_widget_index = function (sel
 	end
 end
 
+ViewElementProfilePresets.remove_active_profile_preset = function (self)
+	local profile_buttons_widgets = self._profile_buttons_widgets
+
+	if profile_buttons_widgets then
+		for i = 1, #profile_buttons_widgets do
+			local widget = profile_buttons_widgets[i]
+			local content = widget.content
+			local hotspot = content.hotspot
+
+			hotspot.is_selected = false
+		end
+	end
+
+	self._active_profile_preset_id = nil
+
+	ProfileUtils.save_active_profile_preset_id(nil)
+end
+
 ViewElementProfilePresets.on_profile_preset_index_change = function (self, index, ignore_activation, on_preset_deleted, ignore_sound)
 	local profile_preset_id
 	local profile_buttons_widgets = self._profile_buttons_widgets
@@ -741,7 +767,7 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 			hotspot.is_selected = is_selected
 
 			if is_selected then
-				profile_preset_id = content.profile_preset_id
+				profile_preset_id = profile_preset_id or content.profile_preset_id
 			end
 		end
 	end
@@ -941,8 +967,7 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 	if add_button_widget then
 		add_button_widget.content.hotspot.disabled = not self:can_add_profile_preset()
 
-		local index = self._active_profile_preset_id
-		local widget = self._profile_buttons_widgets[index]
+		local widget = self:_get_widget_by_preset_id(self._active_profile_preset_id)
 
 		if widget then
 			add_button_widget.content.missing_content = widget.content.missing_content or self._current_profile_loadout_warning

@@ -36,7 +36,7 @@ local talent_settings = {
 				ammo_icd = 1.5,
 				ammo_percent = 0.1,
 				companion_damage = 0.75,
-				cooldown = 45,
+				cooldown = 50,
 				cooldown_reduction = 0.05,
 				damage = 0.25,
 				damage_taken_multiplier = 0.2,
@@ -210,7 +210,7 @@ local talent_settings = {
 			toughness_percentage_per_second = 0.05,
 		},
 		perfect_block_damage_boost = {
-			attack_speed = 0.1,
+			attack_speed = 0.15,
 			block_cost = 0.85,
 			damage = 0.15,
 			duration = 8,
@@ -276,7 +276,7 @@ local talent_settings = {
 			stack_duration = 5,
 			stacks = 10,
 			strength = 0.025,
-			strength_duration = 10,
+			strength_duration = 12,
 			stun_immune_linger_time = 3,
 			toughness = 0.005,
 		},
@@ -466,7 +466,7 @@ local talent_settings = {
 		stamina_spent_replenish_toughness = {
 			duration = 3,
 			stamina = 1,
-			toughness = 0.15,
+			toughness = 0.1,
 		},
 		dodge_improvement = {
 			dodge = 1,

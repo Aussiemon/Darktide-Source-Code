@@ -289,10 +289,11 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 			local is_aura = buff_category == "aura"
 			local is_horde = buff_category == "hordes_buff"
 			local is_horde_sub_buff = buff_category == "hordes_sub_buff"
+			local is_live_event_buff = buff_category == "live_event"
 			local has_hud = buff:has_hud()
 			local is_active = buff_hud_data.show
 
-			if not is_generic and not is_weapon and not is_gadget and not is_aura and not is_talent and not is_horde_sub_buff or has_hud then
+			if not is_generic and not is_weapon and not is_gadget and not is_aura and not is_talent and not is_horde_sub_buff and not is_live_event_buff or has_hud then
 				local skip_buff = buff_template.skip_tactical_overlay
 				local material
 
@@ -324,7 +325,28 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 				local description = buff_description and buff_description ~= "" and buff_description or default_description
 				local category_id, sub_category_id, size, offset
 
-				if is_horde then
+				if is_live_event_buff then
+					category_id = "live_event"
+					material = "content/ui/materials/frames/talents/talent_icon_container"
+					material_values = {
+						intensity = 0,
+						saturation = 1,
+						texture_map = "",
+						icon = buff_hud_icon,
+						gradient_map = buff_hud_icon_gradient_map,
+						frame = buff_template.frame,
+						icon_mask = buff_template.icon_mask,
+					}
+					texture = ""
+					size = {
+						60,
+						60,
+					}
+					offset = {
+						-10,
+						-10,
+					}
+				elseif is_horde then
 					category_id = "horde"
 
 					local buff_data = HordeBuffsData[buff_name]
@@ -438,7 +460,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 					skip_buff = true
 				end
 
-				if not is_horde and is_active then
+				if not is_horde and not is_live_event_buff and is_active then
 					category_id = "active_buffs"
 					sub_category_id = sub_category_id or "other_buffs"
 				end
@@ -466,6 +488,7 @@ end
 HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs)
 	local buffs_category_prio = {
 		"horde",
+		"live_event",
 		"active_buffs",
 		"talents",
 		"items",
@@ -483,6 +506,7 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		items = Localize("loc_horde_tactical_overlay_category_loadout"),
 		talents = Localize("loc_horde_tactical_overlay_category_talents"),
 		default = Localize("loc_horde_tactical_overlay_category_misc"),
+		live_event = Localize(Managers.live_event:get_active_event_name()),
 	}
 	local buff_sub_title_display_name = {
 		default = "",

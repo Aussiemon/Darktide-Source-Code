@@ -89,8 +89,8 @@ templates.braced_damage_reduction = {
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local weapon_component = unit_data_extension:read_component("weapon_action")
-		local braced = PlayerUnitAction.has_current_action_keyword(weapon_component, "braced")
+		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		local braced = alternate_fire_component.is_active
 
 		return braced
 	end,

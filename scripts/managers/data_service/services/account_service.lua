@@ -39,6 +39,7 @@ local function _resolve_backend_game_settings()
 		ErrorCodes.apply_backend_game_settings()
 		Managers.telemetry:apply_backend_game_settings()
 		Managers.package:apply_backend_game_settings()
+		Managers.multiplayer_session:apply_backend_game_settings()
 
 		return nil
 	end)

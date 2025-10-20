@@ -143,6 +143,12 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local spawns_per_location = math.ceil(num_to_spawn / num_spawn_locations)
 
 	for i = 1, #nearby_spawners do
+		local spawns_left = num_to_spawn - num_spawned
+
+		if spawns_left <= 0 then
+			break
+		end
+
 		local spawner = nearby_spawners[i]
 		local breed_list = {}
 
@@ -261,13 +267,13 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local group_id = group_system:generate_group_id()
 
 	horde.group_id = group_id
-	horde.spawn_list = spawn_list
+	horde.spawn_list = table.clone(spawn_list)
 
 	group_system:lock_group_id(group_id)
 
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
-	local num_to_spawn = math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2])
+	local num_to_spawn = math.clamp(math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2]), 0, total_num_to_spawn)
 	local num_spawned = _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
 
 	horde.next_flood_spawn_at = math.random_range(horde_template.spawn_frequency[1], horde_template.spawn_frequency[2])
@@ -302,7 +308,8 @@ horde_template.update = function (horde, dt, t)
 
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
-	local num_to_spawn = math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2])
+	local remaining_spawns = horde.num_to_spawn - horde.num_spawned
+	local num_to_spawn = math.clamp(math.random(horde_template.num_minion_per_spawn[1], horde_template.num_minion_per_spawn[2]), 0, remaining_spawns)
 	local nav_world = horde.nav_world
 	local num_spawned = _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_points, path_position, num_groups, target_side_id, num_to_spawn, travel_distance)
 

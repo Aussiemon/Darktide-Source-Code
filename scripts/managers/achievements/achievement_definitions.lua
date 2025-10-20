@@ -3956,7 +3956,7 @@ do
 		},
 	}
 
-	for _, breed in pairs(AchievementBreedGroups.special_and_elite_breed_lookup) do
+	for _, breed in ipairs(AchievementBreedGroups.special_and_elite_breed_lookup) do
 		tiered_target_family("amount_of_" .. breed.name .. "_killed_{index:%d}", {
 			description = "loc_achievement_amount_of_x_description",
 			title = "loc_achievement_amount_of_x_name",

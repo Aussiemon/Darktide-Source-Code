@@ -186,21 +186,21 @@ local horde_compositions = {
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 		chaos_ogryn_gunner = _linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 		chaos_ogryn_bulwark = _linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 	},
 	mutator_live_rotten_armor = {
 		chaos_ogryn_executor = _linear({
@@ -209,21 +209,21 @@ local horde_compositions = {
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 		renegade_executor = _linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 		renegade_berzerker = _linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
-		}, 3),
+		}, 1),
 	},
 }
 

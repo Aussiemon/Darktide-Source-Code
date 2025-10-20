@@ -2243,10 +2243,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	end
 
 	local function _remove_package_item_icon_cb_func(widget, ui_renderer, optional_texture_id)
-		if widget.content.visible then
-			UIWidget.set_visible(widget, ui_renderer, false)
-			UIWidget.set_visible(widget, ui_renderer, true)
-		end
+		UIWidget.set_visible(widget, ui_renderer, false)
 
 		local material_values = widget.style.icon.material_values
 
@@ -2273,10 +2270,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	end
 
 	local function _remove_live_item_icon_cb_func(widget, ui_renderer)
-		if widget.content.visible then
-			UIWidget.set_visible(widget, ui_renderer, false)
-			UIWidget.set_visible(widget, ui_renderer, true)
-		end
+		UIWidget.set_visible(widget, ui_renderer, false)
 
 		local material_values = widget.style.icon.material_values
 

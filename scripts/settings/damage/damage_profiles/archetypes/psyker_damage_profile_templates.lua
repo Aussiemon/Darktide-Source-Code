@@ -514,7 +514,6 @@ damage_templates.psyker_protectorate_channel_chain_lightning_activated = {
 	},
 }
 damage_templates.psyker_heavy_swings_shock = {
-	chain_lightning = true,
 	ignore_hitzone_multiplier = true,
 	random_gib_hitzone = true,
 	stagger_category = "electrocuted",

@@ -890,8 +890,6 @@ SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, r
 end
 
 SocialMenuRosterView._cb_unset_player_icon = function (self, widget, ui_renderer)
-	local previously_visible = widget.content.visible
-
 	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.portrait.material_values
@@ -902,10 +900,6 @@ SocialMenuRosterView._cb_unset_player_icon = function (self, widget, ui_renderer
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
-
-	if previously_visible then
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
@@ -934,7 +928,6 @@ end
 SocialMenuRosterView._cb_unset_player_frame = function (self, widget, ui_renderer)
 	local widget_style = widget.style
 	local widget_content = widget.content
-	local previously_visible = widget.content.visible
 
 	UIWidget.set_visible(widget, ui_renderer, false)
 
@@ -942,10 +935,6 @@ SocialMenuRosterView._cb_unset_player_frame = function (self, widget, ui_rendere
 
 	material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
 	widget_content.portrait_frame_texture = RosterViewStyles.default_frame_material
-
-	if previously_visible then
-		UIWidget.set_visible(widget, ui_renderer, true)
-	end
 end
 
 SocialMenuRosterView._cb_set_player_insignia = function (self, widget, item)

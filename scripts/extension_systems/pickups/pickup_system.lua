@@ -918,6 +918,10 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 	local unit_template_name = pickup_settings.unit_template_name
 	local unit_name = pickup_settings.unit_name
 
+	if pickup_settings.unit_names then
+		unit_name = math.random_array_entry(pickup_settings.unit_names)
+	end
+
 	if pickup_settings.spawn_offset then
 		local spawn_offset = pickup_settings.spawn_offset:unbox()
 

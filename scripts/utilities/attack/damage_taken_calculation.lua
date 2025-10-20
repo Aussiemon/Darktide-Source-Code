@@ -331,7 +331,7 @@ function _calculate_health_damage_player(damage_amount, damage_profile, damage_t
 		local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit
 
 		permanent_damage = math.min(permanent_damage, limit)
-		health_damage = math.clamp(health_damage, 0, limit - permanent_damage)
+		health_damage = math.min(health_damage, limit)
 	end
 
 	local remaining_health = max_health - current_health_damage - health_damage

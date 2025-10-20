@@ -11,12 +11,10 @@ local MutatorNurgleWarp = class("MutatorNurgleWarp", "MutatorBase")
 local MINION_QUEUE_RING_BUFFER_SIZE = 256
 local MINION_QUEUE_PARAMETERS = table.enum("breed_name", "position", "rotation", "optional_aggro_state", "optional_target_unit", "buff_to_add")
 
-MutatorNurgleWarp.init = function (self, is_server, network_event_delegate, mutator_template, nav_world)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
+MutatorNurgleWarp.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+	MutatorNurgleWarp.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
+
 	self._is_active = true
-	self._buffs = {}
-	self._template = mutator_template
 	self._template_compositions = self._template.compositions
 
 	local spawn_queue = Script.new_array(MINION_QUEUE_RING_BUFFER_SIZE)

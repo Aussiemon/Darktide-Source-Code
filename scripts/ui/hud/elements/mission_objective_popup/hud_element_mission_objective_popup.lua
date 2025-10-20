@@ -129,6 +129,24 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	end
 end
 
+HudElementMissionObjectivePopup.event_show_live_event_notification = function (self, event_title, event_subtitle, ui_sound_event)
+	local widget = self._widgets_by_name.mission_popup
+	local popup_data = {
+		alert = true,
+		animation_event = "popup_start",
+		widget = widget,
+		title_text = event_subtitle and self:_localize(event_subtitle) or "",
+		description_text = event_title and self:_localize(event_title) or "",
+		sound_event = ui_sound_event,
+	}
+
+	if self._popup_animation_id then
+		table.insert(self._popup_queue, 1, popup_data)
+	else
+		self:_present_popup(popup_data)
+	end
+end
+
 HudElementMissionObjectivePopup.event_mission_objective_update = function (self, objective)
 	if not self:_can_present_mission(objective) then
 		return

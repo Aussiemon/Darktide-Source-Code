@@ -70,6 +70,18 @@ input_interact_text_style.size = {
 	input_box_height,
 }
 
+local secondary_input_interact_text_style = table.clone(input_interact_text_style)
+
+secondary_input_interact_text_style.horizontal_alignment = "right"
+secondary_input_interact_text_style.vertical_alignment = "top"
+secondary_input_interact_text_style.text_horizontal_alignment = "right"
+secondary_input_interact_text_style.text_vertical_alignment = "center"
+secondary_input_interact_text_style.offset = {
+	-edge_spacing[1],
+	0,
+	6,
+}
+
 local input_tag_text_style = table.clone(UIFontSettings.hud_body)
 
 input_tag_text_style.horizontal_alignment = "center"
@@ -494,6 +506,15 @@ local widget_definitions = {
 					20,
 				},
 			},
+		},
+	}, "background"),
+	secondary_interact_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "<text>",
+			value_id = "text",
+			style = secondary_input_interact_text_style,
 		},
 	}, "background"),
 }

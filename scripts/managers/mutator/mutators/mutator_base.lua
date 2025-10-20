@@ -2,14 +2,22 @@
 
 local Breed = require("scripts/utilities/breed")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local PackageScope = require("scripts/foundation/managers/package/utilities/package_scope")
 local MutatorBase = class("MutatorBase")
 
-MutatorBase.init = function (self, is_server, network_event_delegate, mutator_template)
+MutatorBase.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
 	self._is_server = is_server
 	self._network_event_delegate = network_event_delegate
 	self._is_active = false
 	self._buffs = {}
 	self._template = mutator_template
+	self._nav_world = nav_world
+	self._world = world
+	self._physics_world = World.physics_world(world)
+	self._seed = level_seed
+	self._package_scope = PackageScope:new(self.__class_name)
+
+	self:_load_all_asset_packages()
 end
 
 MutatorBase.destroy = function (self)
@@ -18,6 +26,8 @@ MutatorBase.destroy = function (self)
 	if is_server then
 		self:_remove_buffs()
 	end
+
+	self._package_scope:delete()
 end
 
 MutatorBase.hot_join_sync = function (self, sender, channel)
@@ -40,8 +50,34 @@ MutatorBase.is_active = function (self)
 	return self._is_active
 end
 
+MutatorBase.is_loading = function (self)
+	return not self._package_scope:are_all_packages_loaded()
+end
+
+MutatorBase._load_all_asset_packages = function (self)
+	local package_scope = self._package_scope
+
+	if self._template.asset_package then
+		package_scope:add_package(self._template.asset_package)
+	end
+
+	self:_load_subnode_packages(package_scope)
+end
+
+MutatorBase._load_subnode_packages = function (self, package_scope)
+	return
+end
+
 MutatorBase.activate = function (self)
+	if self._is_active then
+		Log.warning("[" .. self.__class_name .. "]", "attempting to activate an active mutator")
+
+		return
+	end
+
 	self._is_active = true
+
+	self:_register_event_listeners()
 
 	if self._is_server then
 		local template = self._template
@@ -99,11 +135,21 @@ MutatorBase._add_buffs_on_unit = function (self, buff_template_names, unit, opti
 end
 
 MutatorBase.deactivate = function (self)
+	if not self._is_active then
+		return
+	end
+
+	self:_remove_event_listeners()
+
 	if self._is_server then
 		self:_remove_buffs()
 	end
 
 	self._is_active = false
+end
+
+MutatorBase.reset = function (self)
+	return
 end
 
 MutatorBase._remove_buffs = function (self)
@@ -164,6 +210,42 @@ MutatorBase._on_minion_unit_spawned = function (self, unit)
 		if breed_chance and breed_chance > math.random() then
 			self:_add_buffs_on_unit(buffs, unit, random_spawn_buff_templates.ignored_buff_keyword)
 		end
+	end
+end
+
+MutatorBase._register_event_listeners = function (self)
+	if not self._is_server then
+		return
+	end
+
+	local event_listeners = self._template.trigger_on_events
+
+	if not event_listeners or #event_listeners == 0 then
+		return
+	end
+
+	for i = 1, #event_listeners do
+		local event_trigger = event_listeners[i]
+
+		Managers.event:register(self, event_trigger, "_on_" .. event_trigger)
+	end
+end
+
+MutatorBase._remove_event_listeners = function (self)
+	if not self._is_server then
+		return
+	end
+
+	local event_listeners = self._template.trigger_on_events
+
+	if not event_listeners or #event_listeners == 0 then
+		return
+	end
+
+	for i = 1, #event_listeners do
+		local event_trigger = event_listeners[i]
+
+		Managers.event:unregister(self, event_trigger)
 	end
 end
 

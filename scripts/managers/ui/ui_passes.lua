@@ -105,7 +105,7 @@ UIPasses.texture = {
 			pass_data.material = nil
 		end
 	end,
-	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
+	draw = function (pass, ui_renderer, ui_style, ui_content, position, size, clip_modified_uvs)
 		local pass_data = pass.data
 		local value_id = pass.value_id
 		local value = ui_content[value_id]
@@ -133,9 +133,16 @@ UIPasses.texture = {
 		if retained_mode then
 			local retained_id = pass_data.retained_id or true
 
-			retained_id = UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color, retained_id)
+			if clip_modified_uvs then
+				retained_id = UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, clip_modified_uvs, color, retained_id)
+			else
+				retained_id = UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color, retained_id)
+			end
+
 			pass_data.retained_id = retained_id or pass_data.retained_id
 			pass_data.dirty = false
+		elseif clip_modified_uvs then
+			UIRenderer.script_draw_bitmap_uv(ui_renderer, value, gui_position, gui_size, clip_modified_uvs, color)
 		else
 			UIRenderer.script_draw_bitmap(ui_renderer, value, gui_position, gui_size, color)
 		end
@@ -166,11 +173,11 @@ UIPasses.texture_uv = {
 			pass_data.material = nil
 		end
 	end,
-	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
+	draw = function (pass, ui_renderer, ui_style, ui_content, position, size, clip_modified_uvs)
 		local pass_data = pass.data
 		local value = ui_content[pass.value_id]
 		local color = ui_style.color
-		local uvs = ui_style.uvs
+		local uvs = clip_modified_uvs or ui_style.uvs
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
@@ -491,7 +498,7 @@ UIPasses.rotated_texture = {
 			pass_data.material = nil
 		end
 	end,
-	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
+	draw = function (pass, ui_renderer, ui_style, ui_content, position, size, clip_modified_uvs)
 		local pass_data = pass.data
 		local value_id = pass.value_id or "value_id"
 		local value = ui_content[value_id]
@@ -507,7 +514,7 @@ UIPasses.rotated_texture = {
 		end
 
 		local color = ui_style.color
-		local uvs = ui_style.uvs
+		local uvs = clip_modified_uvs or ui_style.uvs
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material

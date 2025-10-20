@@ -65,7 +65,7 @@ local talent_settings = {
 		zealot_stacking_melee_damage_after_dodge = {
 			duration = 8,
 			max_stacks = 5,
-			melee_damage = 0.04,
+			melee_damage = 0.03,
 		},
 		zealot_bled_enemies_take_more_damage = {
 			damage_taken_multiplier = 1.15,
@@ -173,7 +173,7 @@ local talent_settings = {
 			},
 		},
 		zealot_combat_ability_weakspot_backstab_hit_cooldown = {
-			cooldown = 1,
+			cooldown = 0.75,
 			duration = 2,
 		},
 		zealot_fotf_refund_cooldown = {
@@ -314,8 +314,8 @@ local talent_settings = {
 		},
 		offensive_2 = {
 			damage = 0.2,
-			duration = 5,
-			impact_modifier = 0.05,
+			duration = 8,
+			impact_modifier = 0.08,
 			max_stacks = 5,
 			min_hits = 3,
 		},

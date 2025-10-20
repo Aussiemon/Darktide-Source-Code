@@ -7290,6 +7290,161 @@ StatDefinitions.plasma_smugglers_captain_kills = {
 		return self.data.circumstances[circumstance_name]
 	end,
 }
+
+do
+	local stolen_rations_circumstances = {
+		rations_core = true,
+		rations_core_hunt_grou = true,
+		rations_core_more_res = true,
+		rations_core_waves_spec = true,
+		rations_destroy = true,
+		rations_destroy_embers = true,
+		rations_destroy_embers_hunt_grou = true,
+		rations_destroy_embers_more_res = true,
+		rations_destroy_embers_waves_spec = true,
+		rations_destroy_hunt_grou = true,
+		rations_destroy_more_res = true,
+		rations_destroy_waves_spec = true,
+		rations_recover = true,
+		rations_recover_hunt_grou = true,
+		rations_recover_more_res = true,
+		rations_recover_waves_spec = true,
+	}
+
+	StatDefinitions.hook_stolen_rations_destroyed = {
+		flags = {
+			StatFlags.hook,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.stolen_rations_destroyed = {
+		flags = {
+			StatFlags.no_sync,
+			StatFlags.never_log,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		triggers = {
+			{
+				id = "hook_stolen_rations_destroyed",
+				trigger = StatMacros.increment_by,
+			},
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.stolen_rations_destroyed_team = {
+		flags = {
+			StatFlags.team,
+			StatFlags.never_log,
+			StatFlags.no_sync,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		triggers = {
+			{
+				id = "hook_stolen_rations_destroyed",
+				trigger = StatMacros.forward,
+			},
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.hook_stolen_rations_recovered = {
+		flags = {
+			StatFlags.hook,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.stolen_rations_recovered_team = {
+		flags = {
+			StatFlags.team,
+			StatFlags.never_log,
+			StatFlags.no_sync,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		triggers = {
+			{
+				id = "hook_stolen_rations_recovered",
+				trigger = StatMacros.forward,
+			},
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.stolen_rations_recovered = {
+		flags = {
+			StatFlags.no_sync,
+			StatFlags.never_log,
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		triggers = {
+			{
+				id = "hook_stolen_rations_recovered",
+				trigger = StatMacros.increment_by,
+			},
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+	StatDefinitions.stolen_rations_handled = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		triggers = {
+			{
+				id = "hook_stolen_rations_destroyed",
+				trigger = StatMacros.increment_by,
+			},
+			{
+				id = "hook_stolen_rations_recovered",
+				trigger = StatMacros.increment_by,
+			},
+		},
+		data = {
+			circumstances = stolen_rations_circumstances,
+		},
+		include_condition = function (self, config)
+			local circumstance_name = config.circumstance_name
+
+			return self.data.circumstances[circumstance_name]
+		end,
+	}
+end
+
 StatDefinitions = _stat_data
 
 for _, stat in pairs(StatDefinitions) do

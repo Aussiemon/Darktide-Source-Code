@@ -4,45 +4,11 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local MutatorManager = class("MutatorManager")
 
-MutatorManager.init = function (self, is_server, nav_world, network_event_delegate, circumstance_name, level_seed)
+MutatorManager.init = function (self, is_server, world, nav_world, network_event_delegate, circumstance_name, level_seed)
 	self._is_server = is_server
 	self._network_event_delegate = network_event_delegate
 	self._mutators = {}
-	self._nav_world = nav_world
-	self._level_seed = level_seed
-
-	self:_load_mutators(circumstance_name)
-
-	if is_server then
-		local event_manager = Managers.event
-
-		event_manager:register(self, "player_unit_spawned", "_on_player_unit_spawned")
-		event_manager:register(self, "player_unit_despawned", "_on_player_unit_despawned")
-		event_manager:register(self, "minion_unit_spawned", "_on_minion_unit_spawned")
-	end
-end
-
-MutatorManager._load_mutators = function (self, circumstance_name)
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local mutators_to_load = circumstance_template.mutators
-	local is_server = self._is_server
-	local network_event_delegate = self._network_event_delegate
-	local mutators = self._mutators
-
-	if mutators_to_load then
-		for _, mutator_name in ipairs(mutators_to_load) do
-			local mutator_template = MutatorTemplates[mutator_name]
-			local mutator_class = require(mutator_template.class)
-
-			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._level_seed)
-		end
-	end
-end
-
-MutatorManager.init = function (self, is_server, nav_world, network_event_delegate, circumstance_name, level_seed)
-	self._is_server = is_server
-	self._network_event_delegate = network_event_delegate
-	self._mutators = {}
+	self._world = world
 	self._nav_world = nav_world
 	self._level_seed = level_seed
 
@@ -89,12 +55,30 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 			local mutator_template = MutatorTemplates[mutator_name]
 			local mutator_class = require(mutator_template.class)
 
-			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._level_seed)
+			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._world, self._level_seed)
+
+			if mutator_template.activate_on_load then
+				self:activate_mutator(mutator_name)
+			end
 		end
 	end
 end
 
+MutatorManager.is_loading = function (self)
+	for _, mutator in pairs(self._mutators) do
+		if mutator:is_loading() then
+			return true
+		end
+	end
+
+	return false
+end
+
 MutatorManager.destroy = function (self)
+	for name, _ in pairs(self._mutators) do
+		self:deactivate_mutator(name)
+	end
+
 	if self._is_server then
 		local event_manager = Managers.event
 
@@ -152,6 +136,10 @@ end
 
 MutatorManager.mutator = function (self, mutator_name)
 	return self._mutators[mutator_name]
+end
+
+MutatorManager.all_activated_mutators = function (self)
+	return self._mutators
 end
 
 MutatorManager._on_player_unit_spawned = function (self, player)

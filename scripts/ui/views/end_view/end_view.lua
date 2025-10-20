@@ -1113,7 +1113,6 @@ end
 
 EndView._unload_portrait_icon = function (self, widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, false)
-	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local widget_content = widget.content
 	local portrait_style = widget.style.character_portrait

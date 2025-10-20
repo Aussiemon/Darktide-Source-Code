@@ -61,6 +61,10 @@ GameplayInitStepManagers.on_enter = function (self, parent, params)
 end
 
 GameplayInitStepManagers.update = function (self, main_dt, main_t)
+	if Managers.state.mutator:is_loading() then
+		return false
+	end
+
 	self._shared_state.initialized_steps.GameplayInitStepMainPathOcclusion = true
 
 	local next_step_params = {
@@ -112,7 +116,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.attack_report = AttackReportManager:new(is_server, network_event_delegate)
 	Managers.state.rooms_and_portals = RoomsAndPortalsManager:new(world)
 	Managers.state.circumstance = CircumstanceManager:new(circumstance_name)
-	Managers.state.mutator = MutatorManager:new(is_server, nav_world, network_event_delegate, circumstance_name, level_seed)
+	Managers.state.mutator = MutatorManager:new(is_server, world, nav_world, network_event_delegate, circumstance_name, level_seed)
 	Managers.state.world_interaction = WorldInteractionManager:new(world)
 	Managers.state.emote = EmoteManager:new(is_server, network_event_delegate)
 	Managers.state.companion_interaction = CompanionInteractionsManager:new(is_server, network_event_delegate)

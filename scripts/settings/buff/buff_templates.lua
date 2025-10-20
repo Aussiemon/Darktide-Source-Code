@@ -104,6 +104,7 @@ _create_entry("scripts/settings/buff/archetype_buff_templates/psyker_buff_templa
 _create_entry("scripts/settings/buff/archetype_buff_templates/veteran_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/adamant_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/live_event_buff_templates/live_event_stolen_rations_buff_templates", buff_categories.live_event)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
 local TEMPLATE_LOOKUPS = {

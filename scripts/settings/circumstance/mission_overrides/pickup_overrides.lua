@@ -275,5 +275,21 @@ PickupOverrides.add_skulls_pickup = {
 		},
 	},
 }
+PickupOverrides.add_stolen_rations = {
+	pickup_settings = {
+		primary = {
+			rewards = {
+				stolen_rations_01_pickup_small = flat(20),
+				stolen_rations_01_pickup_medium = flat(10),
+			},
+		},
+		secondary = {
+			rewards = {
+				stolen_rations_01_pickup_small = flat(20),
+				stolen_rations_01_pickup_medium = flat(10),
+			},
+		},
+	},
+}
 
 return PickupOverrides

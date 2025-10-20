@@ -400,6 +400,9 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 			local buff_template = buff_instance:template()
 			local buff_category = buff_template.buff_category
 			local show_category = buff_category ~= buff_categories.aura or show_aura_category
+
+			show_category = show_category and buff_category ~= buff_categories.live_event
+
 			local show = buff_hud_data.show and show_category
 			local is_active = buff_hud_data.is_active
 			local icon = buff_hud_data.hud_icon

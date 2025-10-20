@@ -34,7 +34,7 @@ local talent_settings = {
 			ranged_damage_taken_multiplier = 0.25,
 		},
 		ogryn_protect_allies = {
-			cooldown_duration = 30,
+			cooldown_duration = 20,
 			duration = 10,
 			power_level_modifier = 0.1,
 			revive_speed_modifier = 0.25,
@@ -103,7 +103,7 @@ local talent_settings = {
 			toughness_melee_replenish = 0.15,
 		},
 		toughness_coherency_aura = {
-			toughness_replenish_modifier = 0.15,
+			toughness_replenish_modifier = 0.2,
 		},
 		special_ammo_armor_pen = {
 			damage = 0.15,
@@ -327,7 +327,7 @@ local talent_settings = {
 			coherency_aura_size_increase = 0.75,
 		},
 		coop_2 = {
-			duration = 4,
+			duration = 6,
 			max_stacks = 1,
 			movement_speed = 0.2,
 			on_lunge_start_proc_chance = 1,
@@ -339,8 +339,8 @@ local talent_settings = {
 			increased_cooldown_regeneration = 1,
 		},
 		defensive_1 = {
-			max = 0.68,
-			max_stacks = 4,
+			max = 0.7,
+			max_stacks = 6,
 			min = 1,
 			time = 1,
 		},

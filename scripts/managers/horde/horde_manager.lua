@@ -88,9 +88,8 @@ HordeManager.update = function (self, dt, t)
 	for horde_type, hordes in pairs(self._hordes) do
 		local total_alive_horde_minions = 0
 		local num_hordes = #hordes
-		local horde_index = 1
 
-		while horde_index <= num_hordes do
+		for horde_index = #hordes, 1, -1 do
 			local horde = hordes[horde_index]
 			local horde_template_name = horde.template_name
 			local horde_template = HordeTemplates[horde_template_name]
@@ -111,9 +110,10 @@ HordeManager.update = function (self, dt, t)
 				local num_group_members = #group_members
 
 				total_alive_horde_minions = total_alive_horde_minions + num_group_members
-				horde_index = horde_index + 1
-			else
-				horde_index = horde_index + 1
+			end
+
+			if horde.num_spawned and horde.num_to_spawn and horde.num_spawned >= horde.num_to_spawn then
+				table.remove(hordes, horde_index)
 			end
 		end
 

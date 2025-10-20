@@ -105,7 +105,18 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 			end
 		end
 
-		if table.size(values) > 0 then
+		local should_push = not table.is_empty(values)
+		local fill_with_default = session_stat_config.fill_with_default
+
+		if should_push and fill_with_default then
+			for specifier, _ in pairs(session_stat_config.stats) do
+				if values[specifier] == nil then
+					values[specifier] = 0
+				end
+			end
+		end
+
+		if should_push then
 			event_size = event_size + 1
 			events[event_size] = {
 				accountId = account_id,

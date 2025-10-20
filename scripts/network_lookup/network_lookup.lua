@@ -212,10 +212,12 @@ NetworkLookup.liquid_area_template_names = _create_lookup({}, LiquidAreaTemplate
 NetworkLookup.material_type_lookup = {
 	"diamantine",
 	"plasteel",
+	"event_material",
 }
 NetworkLookup.material_size_lookup = {
 	"large",
 	"small",
+	"medium",
 }
 NetworkLookup.collectible_type_lookup = {
 	"collectible",

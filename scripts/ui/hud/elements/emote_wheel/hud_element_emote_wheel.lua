@@ -134,7 +134,6 @@ end
 
 local function _remove_item_icon_load_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, false)
-	UIWidget.set_visible(widget, ui_renderer, true)
 
 	local material_values = widget.style.icon.material_values
 

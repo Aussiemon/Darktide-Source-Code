@@ -8,10 +8,11 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local BreedLoader = class("BreedLoader")
 local LOAD_STATES = table.enum("none", "packages_load", "done")
 
-BreedLoader.init = function (self)
+BreedLoader.init = function (self, is_persistent)
 	self._packages_to_load = {}
 	self._package_ids = {}
 	self._load_state = LOAD_STATES.none
+	self._is_persistent = is_persistent
 end
 
 BreedLoader.destroy = function (self)
@@ -98,7 +99,9 @@ BreedLoader.is_loading_done = function (self)
 end
 
 BreedLoader.cleanup = function (self)
-	return
+	if not self._is_persistent then
+		self:_cleanup()
+	end
 end
 
 BreedLoader._cleanup = function (self)
@@ -117,7 +120,7 @@ BreedLoader._cleanup = function (self)
 end
 
 BreedLoader.dont_destroy = function (self)
-	return true
+	return self._is_persistent
 end
 
 implements(BreedLoader, Loader)

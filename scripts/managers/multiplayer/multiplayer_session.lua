@@ -166,7 +166,19 @@ MultiplayerSession.client_joined = function (self, channel_id, peer_id, player_s
 	end
 end
 
-MultiplayerSession.client_disconnected = function (self, channel_id, peer_id, game_reason, engine_reason, host_became_empty)
+MultiplayerSession.client_disconnected = function (self, channel_id, peer_id, is_error, source, reason, host_became_empty)
+	if Managers.telemetry_events then
+		local disconnection_info = {
+			is_error = is_error,
+			source = source,
+			reason = reason,
+		}
+
+		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
+			Managers.telemetry_events:client_disconnected(player, disconnection_info)
+		end
+	end
+
 	local server_manager = Managers.hub_server or Managers.mission_server
 	local loading_manager = Managers.loading
 

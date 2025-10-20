@@ -107,6 +107,10 @@ MutatorMinionVisualOverride.is_loading_done = function (self)
 	return self._load_state == LOAD_STATES.done
 end
 
+MutatorMinionVisualOverride.is_loading = function (self)
+	return not self:is_loading_done()
+end
+
 MutatorMinionVisualOverride.cleanup = function (self)
 	return
 end

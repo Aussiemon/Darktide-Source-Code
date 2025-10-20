@@ -41,7 +41,6 @@ ViewElementWintrack.init = function (self, parent, draw_layer, start_scale, opti
 	self._points = 0
 	self._max_points = 0
 	self._visual_points = 0
-	self._loaded_icon_id_cache = {}
 	self._reward_offset_x = 0
 	self._handle_input = true
 	self._hint_upcoming_page = true
@@ -1120,10 +1119,13 @@ ViewElementWintrack._update_reward_widget = function (self, widget, new_reward_i
 	local new_widget_type = self._blueprint_widget_type_by_slot and self._blueprint_widget_type_by_slot[new_slot_name]
 	local template = self._content_blueprints[widget_type]
 	local new_template = self._content_blueprints[new_widget_type]
+	local ui_renderer = self._ui_reward_renderer
 
 	if template.unload_icon then
-		template.unload_icon(self, widget, element, self._ui_reward_renderer)
+		template.unload_icon(self, widget, element, ui_renderer)
 	end
+
+	UIWidget.destroy(ui_renderer, widget)
 
 	local index = element.index
 	local item_pass_template = new_template and new_template.pass_template
@@ -1133,14 +1135,12 @@ ViewElementWintrack._update_reward_widget = function (self, widget, new_reward_i
 		local content = widget.content
 		local visible = content.visible
 		local visible_last_frame = content.visible_last_frame
-		local render_icon = content.render_icon
 
 		self:_unregister_widget_name(reward_item_widget_name)
 
 		local new_item_widget_definition = UIWidget.create_definition(item_pass_template, "reward_item")
 		local new_item_widget = self:_create_widget(reward_item_widget_name, new_item_widget_definition)
 
-		self._reward_item_widgets[index] = new_item_widget
 		new_item_widget.type = widget_type
 
 		local new_element = table.clone_instance(element)
@@ -1148,10 +1148,6 @@ ViewElementWintrack._update_reward_widget = function (self, widget, new_reward_i
 		new_element.item = new_item
 		new_element.slot = ItemSlotSettings[new_slot_name]
 		new_element.item_index = item_index
-		new_item_widget.content.element = new_element
-		new_item_widget.content.visible = visible
-		new_item_widget.content.visible_last_frame = visible_last_frame
-		new_item_widget.content.render_icon = render_icon
 
 		if new_item_widget.content.hotspot and widget.content.hotspot then
 			local is_hover = widget.content.hotspot.is_hover
@@ -1163,11 +1159,19 @@ ViewElementWintrack._update_reward_widget = function (self, widget, new_reward_i
 			if self._currently_hovered_items and (is_hover or is_selected) then
 				self._currently_hovered_items = new_element.items
 			end
+
+			if self._currently_hovered_widget == widget then
+				self._currently_hovered_widget = new_item_widget
+			end
 		end
 
 		local callback_name, secondary_callback_name, double_click_callback
 
-		template.init(self, new_item_widget, new_element, callback_name, secondary_callback_name, self._ui_reward_renderer, double_click_callback)
+		template.init(self, new_item_widget, new_element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+
+		new_item_widget.content.visible = visible
+		new_item_widget.content.visible_last_frame = visible_last_frame
+		self._reward_item_widgets[index] = new_item_widget
 	end
 end
 
@@ -1266,13 +1270,11 @@ ViewElementWintrack._update_reward_widget_positions = function (self, dt, t)
 
 			content.visible_last_frame = content.visible
 			content.visible = visible
-			content.render_icon = visible
 
 			local item_widget_content = item_widget.content
 
 			item_widget_content.visible_last_frame = previous_visibility_state
 			item_widget_content.visible = visible
-			item_widget_content.render_icon = visible
 		end
 	end
 
@@ -1310,9 +1312,9 @@ ViewElementWintrack._update_reward_item_widgets_visibility = function (self, ui_
 				local content = widget.content
 				local element = content.element
 				local visible = content.visible
-				local render_icon = content.render_icon or visible
+				local icon_load_id = content.icon_load_id
 
-				if not render_icon and template.unload_icon then
+				if not visible and template.unload_icon and icon_load_id then
 					template.unload_icon(self, widget, element, ui_renderer)
 				end
 			end
@@ -1321,47 +1323,22 @@ ViewElementWintrack._update_reward_item_widgets_visibility = function (self, ui_
 		for i = num_widgets, 1, -1 do
 			local widget = widgets[i]
 			local widget_type = widget.type
+			local content = widget.content
+			local element = content.element
+			local visible = content.visible
+			local visible_last_frame = content.visible_last_frame
+			local icon_load_id = content.icon_load_id
 			local template = content_blueprints[widget_type]
 
-			if template then
-				local content = widget.content
-				local element = content.element
-				local visible = content.visible
-				local visible_last_frame = content.visible_last_frame
-				local render_icon = content.render_icon or visible
+			if template and template.load_icon and visible and not icon_load_id then
+				local profile = self._item_icon_profile
+				local prioritize = visible
 
-				if render_icon and template.load_icon then
-					local prioritize = visible
-
-					if content.icon_load_id and visible and not visible_last_frame then
-						update_visible_icon_prioritization_load = true
-					end
-
-					local profile = self._item_icon_profile
-
-					template.load_icon(self, widget, element, ui_renderer, profile, prioritize)
-
-					local icon_load_id = content.icon_load_id
-
-					if icon_load_id and self._cache_loaded_icons and not self._loaded_icon_id_cache[icon_load_id] then
-						self._loaded_icon_id_cache[icon_load_id] = Managers.ui:increment_item_icon_load_by_existing_id(icon_load_id)
-					end
-				end
+				template.load_icon(self, widget, element, ui_renderer, profile, prioritize)
 			end
-		end
 
-		if update_visible_icon_prioritization_load then
-			for j = #widgets, 1, -1 do
-				local widget = widgets[j]
-				local widget_type = widget.type
-				local template = content_blueprints[widget_type]
-				local content = widget.content
-				local element = content.element
-				local visible = content.visible
-
-				if visible and template.update_item_icon_priority then
-					template.update_item_icon_priority(self, widget, element, ui_renderer)
-				end
+			if visible and not visible_last_frame and template and template.update_item_icon_priority then
+				template.update_item_icon_priority(self, widget, element, ui_renderer)
 			end
 		end
 	end

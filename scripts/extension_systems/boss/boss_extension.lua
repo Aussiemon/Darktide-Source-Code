@@ -191,7 +191,7 @@ local ALLOWED_BREEDS = {
 }
 
 function _setup_twins_special_names(display_name, breed)
-	if not Managers.state.game_mode:game_mode():extension("havoc") then
+	if not Managers.state.game_mode:game_mode():extension("havoc") and not Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory") then
 		return display_name
 	end
 
