@@ -167,6 +167,7 @@ end
 
 TelemetryEvents.hub_session_started = function (self, session_id)
 	self._session.gameplay = session_id
+	self._session.hub_instance = session_id
 
 	local event = self:_create_event("hub_session_started")
 

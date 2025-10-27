@@ -129,11 +129,7 @@ InventoryBackgroundView._valid_slot_for_archetype = function (self, slot_name)
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 
-	if not ItemSlotSettings[slot_name].archetype_restrictions[archetype_name] then
-		return false
-	end
-
-	return true
+	return not not table.find(ItemSlotSettings[slot_name].archetype_restrictions, archetype_name)
 end
 
 InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id, item)

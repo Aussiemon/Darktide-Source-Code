@@ -506,8 +506,13 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		items = Localize("loc_horde_tactical_overlay_category_loadout"),
 		talents = Localize("loc_horde_tactical_overlay_category_talents"),
 		default = Localize("loc_horde_tactical_overlay_category_misc"),
-		live_event = Localize(Managers.live_event:get_active_event_name()),
 	}
+	local active_live_event_name = Managers.live_event:get_active_event_name()
+
+	if active_live_event_name then
+		buff_title_display_name.live_event = Localize(active_live_event_name)
+	end
+
 	local buff_sub_title_display_name = {
 		default = "",
 		hordes_major_buff = Localize("loc_horde_tactical_overlay_build_major"),
