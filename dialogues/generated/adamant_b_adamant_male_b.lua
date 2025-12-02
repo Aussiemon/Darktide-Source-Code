@@ -659,7 +659,7 @@ local adamant_b_adamant_male_b = {
 		},
 		sound_events_duration = {
 			8.654865,
-			6.696479,
+			6.69649,
 			3.521781,
 		},
 		randomize_indexes = {},

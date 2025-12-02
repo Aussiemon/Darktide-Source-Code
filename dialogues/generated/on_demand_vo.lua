@@ -124,6 +124,46 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
+		name = "com_wheel_vo_location_attention",
+		response = "com_wheel_vo_location_attention",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_com_wheel",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"location_over_here",
+			},
+			{
+				"user_memory",
+				"time_since_com_wheel_vo_over_here",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_com_wheel_vo_over_here",
+				OP.TIMESET,
+			},
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
 		name = "com_wheel_vo_location_ping",
 		response = "com_wheel_vo_location_ping",
 		wwise_route = 0,
@@ -364,46 +404,6 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
-		name = "com_wheel_vo_over_here",
-		response = "com_wheel_vo_over_here",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"on_demand_com_wheel",
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"location_over_here",
-			},
-			{
-				"user_memory",
-				"time_since_com_wheel_vo_over_here",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_com_wheel_vo_over_here",
-				OP.TIMESET,
-			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.15,
-			},
-		},
-	})
-	define_rule({
-		category = "player_on_demand_vo",
-		database = "on_demand_vo",
 		name = "com_wheel_vo_take_this_a",
 		response = "com_wheel_vo_take_this_a",
 		wwise_route = 0,
@@ -617,6 +617,66 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
+		name = "seen_netgunner_flee",
+		response = "seen_netgunner_flee",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"seen_netgunner_flee",
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_netgunner",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"seen_netgunner_flee",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
 		name = "smart_tag_stimm_concentration_a",
 		response = "smart_tag_stimm_concentration_a",
 		wwise_route = 0,
@@ -790,8 +850,11 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"cultist_berzerker",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_berzerker",
+					"cultist_berzerker",
+				},
 			},
 			{
 				"user_memory",
@@ -1104,7 +1167,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_chaos_ogryn_gunner",
+				"enemy_heavy_gunner",
 				OP.TIMESET,
 			},
 		},
@@ -1344,7 +1407,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_gunner",
+				"enemy_heavy_gunner",
 				OP.TIMESET,
 			},
 		},
@@ -1399,7 +1462,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_shocktrooper",
+				"enemy_shocktrooper",
 				OP.TIMESET,
 			},
 		},
@@ -1607,54 +1670,6 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
-		name = "smart_tag_vo_enemy_renegade_berserker",
-		response = "smart_tag_vo_enemy_renegade_berserker",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"on_demand_vo_tag_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"renegade_berzerker",
-			},
-			{
-				"user_memory",
-				"time_since_smart_tag",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_smart_tag",
-				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"enemy_berserker",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "self",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.15,
-			},
-		},
-	})
-	define_rule({
-		category = "player_on_demand_vo",
-		database = "on_demand_vo",
 		name = "smart_tag_vo_enemy_scab_flamer",
 		response = "smart_tag_vo_enemy_scab_flamer",
 		wwise_route = 0,
@@ -1834,7 +1849,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_gunner",
+				"enemy_heavy_gunner",
 				OP.TIMESET,
 			},
 		},
@@ -1889,7 +1904,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_renegade_shocktrooper",
+				"enemy_shocktrooper",
 				OP.TIMESET,
 			},
 		},
@@ -2483,66 +2498,6 @@ return function ()
 				"last_saw_side_mission_tome",
 				OP.TIMESET,
 			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.15,
-			},
-		},
-	})
-	define_rule({
-		category = "player_on_demand_vo",
-		database = "on_demand_vo",
-		name = "smart_tag_vo_seen_netgunner_flee",
-		response = "smart_tag_vo_seen_netgunner_flee",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"on_demand_vo_tag_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"seen_netgunner_flee",
-			},
-			{
-				"user_memory",
-				"time_since_smart_tag",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-			{
-				"faction_memory",
-				"seen_netgunner_flee",
-				OP.TIMEDIFF,
-				OP.GT,
-				30,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_smart_tag",
-				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"enemy_renegade_netgunner",
-				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"seen_netgunner_flee",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

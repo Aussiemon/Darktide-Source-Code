@@ -68,16 +68,14 @@ local mission_vo_dm_propaganda_veteran_male_a = {
 	},
 	mission_propaganda_elevator_conversation_two_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_veteran_female_a__mission_propaganda_elevator_conversation_two_a_01",
-			"loc_veteran_male_a__mission_propaganda_elevator_conversation_two_a_01",
-			"loc_veteran_male_a__mission_propaganda_elevator_conversation_two_a_02",
+			[1] = "loc_veteran_male_a__mission_propaganda_elevator_conversation_two_a_01",
+			[2] = "loc_veteran_male_a__mission_propaganda_elevator_conversation_two_a_02",
 		},
 		sound_events_duration = {
-			3.438125,
-			2.362438,
-			2.890229,
+			[1] = 2.362438,
+			[2] = 2.890229,
 		},
 		randomize_indexes = {},
 	},

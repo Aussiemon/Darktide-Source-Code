@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/adamant_ogryn_a.lua
 
 local adamant_ogryn_a = {
+	deployed_ammo_crate_adamant_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_01",
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_02",
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_03",
+			"loc_ogryn_a__found_ammo_adamant_low_on_ammo_04",
+		},
+		sound_events_duration = {
+			1.712583,
+			1.730813,
+			2.21576,
+			2.186104,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	found_ammo_adamant_low_on_ammo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -32,6 +55,29 @@ local adamant_ogryn_a = {
 			3.058813,
 			4.677531,
 			2.905104,
+		},
+		randomize_indexes = {},
+	},
+	found_health_station_adamant_low_on_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_01",
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_02",
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_03",
+			"loc_ogryn_a__found_health_booster_adamant_low_on_health_04",
+		},
+		sound_events_duration = {
+			1.520323,
+			3.058813,
+			4.677531,
+			2.905104,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
 		},
 		randomize_indexes = {},
 	},

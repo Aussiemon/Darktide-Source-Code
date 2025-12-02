@@ -323,6 +323,20 @@ local training_grounds_training_ground_psyker_a = {
 		},
 		randomize_indexes = {},
 	},
+	ranged_grenade_desc_a_broker_blitz = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_training_ground_psyker_a__ranged_grenade_desc_1_01",
+		},
+		sound_events_duration = {
+			[1] = 6.878,
+		},
+		sound_event_weights = {
+			[1] = 1,
+		},
+		randomize_indexes = {},
+	},
 	ranged_grenade_desc_a_maniac_blitz = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -751,6 +765,20 @@ local training_grounds_training_ground_psyker_a = {
 		},
 		sound_events_duration = {
 			[1] = 8.34,
+		},
+		randomize_indexes = {},
+	},
+	weapon_special_desc_a_broker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_training_ground_psyker_a__weapon_special_desc_a_01",
+		},
+		sound_events_duration = {
+			[1] = 8.34,
+		},
+		sound_event_weights = {
+			[1] = 1,
 		},
 		randomize_indexes = {},
 	},

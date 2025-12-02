@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/adamant_zealot_female_c.lua
 
 local adamant_zealot_female_c = {
+	deployed_ammo_crate_adamant_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__found_ammo_adamant_low_on_ammo_01",
+			"loc_zealot_female_c__found_ammo_adamant_low_on_ammo_02",
+			"loc_zealot_female_c__found_ammo_adamant_low_on_ammo_03",
+			"loc_zealot_female_c__found_ammo_adamant_low_on_ammo_04",
+		},
+		sound_events_duration = {
+			1.324313,
+			1.972615,
+			3.264417,
+			2.312229,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	found_ammo_adamant_low_on_ammo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -32,6 +55,29 @@ local adamant_zealot_female_c = {
 			1.893604,
 			2.566344,
 			1.310802,
+		},
+		randomize_indexes = {},
+	},
+	found_health_station_adamant_low_on_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__found_health_booster_adamant_low_on_health_01",
+			"loc_zealot_female_c__found_health_booster_adamant_low_on_health_02",
+			"loc_zealot_female_c__found_health_booster_adamant_low_on_health_03",
+			"loc_zealot_female_c__found_health_booster_adamant_low_on_health_04",
+		},
+		sound_events_duration = {
+			1.111542,
+			1.893604,
+			2.566344,
+			1.310802,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
 		},
 		randomize_indexes = {},
 	},

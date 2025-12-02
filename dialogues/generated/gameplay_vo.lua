@@ -204,6 +204,95 @@ return function ()
 		},
 	})
 	define_rule({
+		category = "enemy_alerts_prio_0",
+		database = "gameplay_vo",
+		name = "alerted_2_enemy_daemonhost",
+		response = "alerted_2_enemy_daemonhost",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"player_enemy_alert",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_daemonhost",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"aggroed",
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"lore_daemons_one_a",
+				OP.ADD,
+				1,
+			},
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.25,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_0",
+		database = "gameplay_vo",
+		name = "alerted_enemy_daemonhost",
+		response = "alerted_enemy_daemonhost",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"player_enemy_alert",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_daemonhost",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"alerted",
+			},
+			{
+				"faction_memory",
+				"chaos_daemonhost_alerted",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"chaos_daemonhost_alerted",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
 		category = "player_prio_0",
 		database = "gameplay_vo",
 		name = "almost_there",
@@ -757,146 +846,6 @@ return function ()
 		},
 	})
 	define_rule({
-		category = "enemy_alerts_prio_0",
-		database = "gameplay_vo",
-		name = "chaos_daemonhost_aggroed",
-		response = "chaos_daemonhost_aggroed",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"player_enemy_alert",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"chaos_daemonhost",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"aggroed",
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"lore_daemons_one_a",
-				OP.ADD,
-				1,
-			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.25,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_0",
-		database = "gameplay_vo",
-		name = "chaos_daemonhost_alerted",
-		response = "chaos_daemonhost_alerted",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"player_enemy_alert",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"chaos_daemonhost",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"alerted",
-			},
-			{
-				"faction_memory",
-				"chaos_daemonhost_alerted",
-				OP.TIMEDIFF,
-				OP.GT,
-				3,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"chaos_daemonhost_alerted",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_0",
-		database = "gameplay_vo",
-		name = "chaos_daemonhost_combo_attack",
-		response = "chaos_daemonhost_combo_attack",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"player_enemy_alert",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"chaos_daemonhost",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"combo_attack",
-			},
-			{
-				"faction_memory",
-				"time_since_chaos_daemonhost_aggroed",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-			{
-				"faction_memory",
-				"chaos_daemonhost_combo_attack",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"time_since_chaos_daemonhost_combo_attack",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-	})
-	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
 		name = "combat_monster_release_a",
@@ -996,6 +945,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -1030,6 +980,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -1331,7 +1282,7 @@ return function ()
 		},
 	})
 	define_rule({
-		category = "player_prio_1",
+		category = "conversations_prio_1",
 		database = "gameplay_vo",
 		name = "come_back_to_squad",
 		response = "come_back_to_squad",
@@ -1344,18 +1295,6 @@ return function ()
 				"heard_speak",
 			},
 			{
-				"user_context",
-				"friends_close",
-				OP.GTEQ,
-				0,
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				15,
-			},
-			{
 				"query_context",
 				"dialogue_name",
 				OP.SET_INCLUDES,
@@ -1365,6 +1304,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2146,6 +2088,8 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
+					"adamant",
+					"broker",
 				},
 			},
 			{
@@ -2806,6 +2750,7 @@ return function ()
 				args = {
 					"veteran_female_a",
 					"veteran_male_c",
+					"ogryn_d",
 				},
 			},
 			{
@@ -2881,6 +2826,7 @@ return function ()
 				args = {
 					"veteran_female_a",
 					"veteran_male_c",
+					"ogryn_d",
 				},
 			},
 		},
@@ -3202,6 +3148,7 @@ return function ()
 				args = {
 					"psyker_female_a",
 					"veteran_female_b",
+					"ogryn_d",
 				},
 			},
 			{
@@ -3326,6 +3273,7 @@ return function ()
 				args = {
 					"psyker_female_a",
 					"veteran_female_b",
+					"ogryn_d",
 				},
 			},
 			{
@@ -5123,6 +5071,7 @@ return function ()
 				args = {
 					"ogryn_c",
 					"psyker_male_a",
+					"ogryn_d",
 				},
 			},
 			{
@@ -5223,6 +5172,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_male_a",
 				},
 			},
@@ -6020,75 +5970,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled",
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "gameplay_vo",
-		name = "found_ammo_low_on_ammo",
-		response = "found_ammo_low_on_ammo",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at",
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"ammo",
-			},
-			{
-				"query_context",
-				"distance",
-				OP.GT,
-				0,
-			},
-			{
-				"query_context",
-				"distance",
-				OP.LT,
-				20,
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				30,
-			},
-			{
-				"user_context",
-				"total_ammo_percentage",
-				OP.LTEQ,
-				0.5,
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-				},
-			},
-			{
-				"user_memory",
-				"last_saw_ammo",
-				OP.TIMEDIFF,
-				OP.GT,
-				30,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"last_saw_ammo",
-				OP.TIMESET,
-			},
+			target = "mission_givers",
 		},
 	})
 	define_rule({
@@ -8632,6 +8514,9 @@ return function ()
 				OP.TIMESET,
 			},
 		},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
 	})
 	define_rule({
 		category = "player_prio_0",
@@ -9002,6 +8887,74 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
+		name = "look_at_ammo",
+		response = "look_at_ammo",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"ammo",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				0,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				20,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				30,
+			},
+			{
+				"user_context",
+				"total_ammo_percentage",
+				OP.LTEQ,
+				0.5,
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+				},
+			},
+			{
+				"user_memory",
+				"last_saw_ammo",
+				OP.TIMEDIFF,
+				OP.GT,
+				30,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_saw_ammo",
+				OP.TIMESET,
+			},
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "gameplay_vo",
 		name = "look_at_grenade",
 		response = "look_at_grenade",
 		wwise_route = 0,
@@ -9085,68 +9038,6 @@ return function ()
 				"look_at_grenade",
 				OP.TIMESET,
 			},
-		},
-	})
-	define_rule({
-		category = "player_prio_1",
-		database = "gameplay_vo",
-		name = "look_at_health_station_chargeable",
-		response = "look_at_health_station_chargeable",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"look_at",
-			},
-			{
-				"query_context",
-				"look_at_tag",
-				OP.EQ,
-				"chargeable_health_station",
-			},
-			{
-				"query_context",
-				"distance",
-				OP.GT,
-				1,
-			},
-			{
-				"query_context",
-				"distance",
-				OP.LT,
-				25,
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				5,
-			},
-			{
-				"user_context",
-				"health",
-				OP.LTEQ,
-				1,
-			},
-			{
-				"user_memory",
-				"last_saw_health",
-				OP.TIMEDIFF,
-				OP.GT,
-				180,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"last_saw_health",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "disabled",
 		},
 	})
 	define_rule({
@@ -9521,6 +9412,57 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_0",
+		database = "gameplay_vo",
+		name = "monster_combo_attack",
+		response = "monster_combo_attack",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"player_enemy_alert",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_daemonhost",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"combo_attack",
+			},
+			{
+				"faction_memory",
+				"time_since_chaos_daemonhost_aggroed",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+			{
+				"faction_memory",
+				"chaos_daemonhost_combo_attack",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_chaos_daemonhost_combo_attack",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
 		},
 	})
 	define_rule({
@@ -10399,6 +10341,7 @@ return function ()
 					"veteran",
 					"zealot",
 					"adamant",
+					"broker",
 				},
 			},
 			{
@@ -10957,6 +10900,9 @@ return function ()
 				"reload_failed_out_of_ammo",
 				OP.TIMESET,
 			},
+		},
+		heard_speak_routing = {
+			target = "mission_giver_default",
 		},
 	})
 	define_rule({
@@ -15915,6 +15861,11 @@ return function ()
 				"rapid_loosing_health_response",
 				OP.TIMESET,
 			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response_zealot",
+				OP.TIMESET,
+			},
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -16768,6 +16719,68 @@ return function ()
 	define_rule({
 		category = "player_prio_1",
 		database = "gameplay_vo",
+		name = "response_rechargable_for_look_at_healthstation",
+		response = "response_rechargable_for_look_at_healthstation",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"look_at",
+			},
+			{
+				"query_context",
+				"look_at_tag",
+				OP.EQ,
+				"chargeable_health_station",
+			},
+			{
+				"query_context",
+				"distance",
+				OP.GT,
+				1,
+			},
+			{
+				"query_context",
+				"distance",
+				OP.LT,
+				25,
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				5,
+			},
+			{
+				"user_context",
+				"health",
+				OP.LTEQ,
+				1,
+			},
+			{
+				"user_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.GT,
+				180,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_saw_health",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "player_prio_1",
+		database = "gameplay_vo",
 		name = "seen_barrel_exploded_a",
 		response = "seen_barrel_exploded_a",
 		wwise_route = 0,
@@ -16878,14 +16891,18 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"cultist_berzerker",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_berzerker",
+					"cultist_berzerker",
+				},
 			},
 			{
 				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
+					"low",
 					"medium",
 					"high",
 				},
@@ -16954,164 +16971,6 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_chaos_ogryn_bulwark",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
-		name = "seen_enemy_cultist_grenadier",
-		response = "seen_enemy_cultist_grenadier",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_grenadier",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_grenadier",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_grenadier",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
-		name = "seen_enemy_cultist_heavy_gunner",
-		response = "seen_enemy_cultist_heavy_gunner",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_gunner",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_cultist_gunner",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_cultist_gunner",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
-		name = "seen_enemy_cultist_shocktrooper",
-		response = "seen_enemy_cultist_shocktrooper",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_shocktrooper",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_cultist_shocktrooper",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_cultist_shocktrooper",
 				OP.TIMESET,
 			},
 		},
@@ -17242,8 +17101,11 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"renegade_grenadier",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_grenadier",
+					"cultist_grenadier",
+				},
 			},
 			{
 				"user_context",
@@ -17403,8 +17265,13 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"chaos_ogryn_gunner",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_gunner",
+					"renegade_plasma_gunner",
+					"chaos_ogryn_gunner",
+					"cultist_gunner",
+				},
 			},
 			{
 				"user_context",
@@ -17418,7 +17285,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_chaos_ogryn_gunner",
+				"enemy_heavy_gunner",
 				OP.TIMEDIFF,
 				OP.GT,
 				20,
@@ -17427,7 +17294,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_chaos_ogryn_gunner",
+				"enemy_heavy_gunner",
 				OP.TIMESET,
 			},
 		},
@@ -17555,110 +17422,6 @@ return function ()
 	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
-		name = "seen_enemy_renegade_berserker",
-		response = "seen_enemy_renegade_berserker",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"renegade_berzerker",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_berserker",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_berserker",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
-		name = "seen_enemy_renegade_shocktrooper",
-		response = "seen_enemy_renegade_shocktrooper",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"renegade_shocktrooper",
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_renegade_shocktrooper",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_renegade_shocktrooper",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
 		name = "seen_enemy_scab_flamer",
 		response = "seen_enemy_scab_flamer",
 		wwise_route = 0,
@@ -17697,6 +17460,62 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_renegade_flamer",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_1",
+		database = "gameplay_vo",
+		name = "seen_enemy_shocktrooper",
+		response = "seen_enemy_shocktrooper",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_shocktrooper",
+					"cultist_shocktrooper",
+				},
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
 				OP.TIMESET,
 			},
 		},
@@ -17805,62 +17624,6 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_cultist_flamer",
-				OP.TIMESET,
-			},
-		},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.5,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_1",
-		database = "gameplay_vo",
-		name = "seen_enemy_traitor_heavy_gunner",
-		response = "seen_enemy_traitor_heavy_gunner",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"seen_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.SET_INCLUDES,
-				args = {
-					"renegade_gunner",
-					"renegade_plasma_gunner",
-				},
-			},
-			{
-				"user_context",
-				"threat_level",
-				OP.SET_INCLUDES,
-				args = {
-					"low",
-					"medium",
-					"high",
-				},
-			},
-			{
-				"faction_memory",
-				"enemy_renegade_gunner",
-				OP.TIMEDIFF,
-				OP.GT,
-				20,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"enemy_renegade_gunner",
 				OP.TIMESET,
 			},
 		},

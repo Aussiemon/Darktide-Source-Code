@@ -551,6 +551,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_cargo_start_banter_d",
+					"start_zone_direction_b",
 				},
 			},
 			{

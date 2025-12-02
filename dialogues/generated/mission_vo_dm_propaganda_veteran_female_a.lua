@@ -68,12 +68,14 @@ local mission_vo_dm_propaganda_veteran_female_a = {
 	},
 	mission_propaganda_elevator_conversation_two_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
-			[1] = "loc_veteran_female_a__mission_propaganda_elevator_conversation_two_a_02",
+			[1] = "loc_veteran_female_a__mission_propaganda_elevator_conversation_two_a_01",
+			[2] = "loc_veteran_female_a__mission_propaganda_elevator_conversation_two_a_02",
 		},
 		sound_events_duration = {
-			[1] = 3.2165,
+			[1] = 3.438125,
+			[2] = 3.2165,
 		},
 		randomize_indexes = {},
 	},

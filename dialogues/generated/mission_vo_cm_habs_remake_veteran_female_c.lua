@@ -32,11 +32,11 @@ local mission_vo_cm_habs_remake_veteran_female_c = {
 		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_veteran_female_c__level_hab_block_apartments_response_01",
-			[2] = "loc_veteran_male_c__level_hab_block_apartments_response_02",
+			[2] = "loc_veteran_female_c__level_hab_block_apartments_response_02",
 		},
 		sound_events_duration = {
 			[1] = 1.838823,
-			[2] = 1.836552,
+			[2] = 2.125281,
 		},
 		randomize_indexes = {},
 	},

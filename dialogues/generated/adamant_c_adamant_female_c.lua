@@ -385,7 +385,7 @@ local adamant_c_adamant_female_c = {
 		},
 		sound_events_duration = {
 			3.102229,
-			4.300417,
+			4.300427,
 			4.374052,
 		},
 		randomize_indexes = {},

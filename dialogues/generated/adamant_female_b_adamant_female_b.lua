@@ -3037,6 +3037,28 @@ local adamant_female_b_adamant_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	broker_female_a_adamant_bonding_conversation_20_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__broker_female_a_adamant_bonding_conversation_20_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.311042,
+		},
+		randomize_indexes = {},
+	},
+	broker_female_a_adamant_bonding_conversation_20_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__broker_female_a_adamant_bonding_conversation_20_d_01",
+		},
+		sound_events_duration = {
+			[1] = 2.476354,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("adamant_female_b_adamant_female_b", adamant_female_b_adamant_female_b)

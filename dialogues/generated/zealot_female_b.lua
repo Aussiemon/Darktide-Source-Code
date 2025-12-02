@@ -7571,236 +7571,6 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "zealot_female_b",
-		name = "bonding_conversation_round_three_distance_d",
-		response = "bonding_conversation_round_three_distance_d",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_distance_c",
-				},
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"psyker_female_b",
-				},
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_distance_b_user",
-				OP.EQ,
-				1,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "zealot_female_b",
-		name = "bonding_conversation_round_three_distance_e",
-		response = "bonding_conversation_round_three_distance_e",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_distance_d",
-				},
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"zealot_female_b",
-				},
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_distance_a_user",
-				OP.EQ,
-				1,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "zealot_female_b",
-		name = "bonding_conversation_round_three_distance_f",
-		response = "bonding_conversation_round_three_distance_f",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_distance_e",
-				},
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"psyker_female_b",
-				},
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_distance_b_user",
-				OP.EQ,
-				1,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "zealot_female_b",
-		name = "bonding_conversation_round_three_distance_g",
-		response = "bonding_conversation_round_three_distance_g",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_distance_f",
-				},
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"zealot_female_b",
-				},
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_distance_a_user",
-				OP.EQ,
-				1,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
-	})
-	define_rule({
-		category = "conversations_prio_1",
-		database = "zealot_female_b",
-		name = "bonding_conversation_round_three_distance_h",
-		response = "bonding_conversation_round_three_distance_h",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak",
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_distance_g",
-				},
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"psyker_female_b",
-				},
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_distance_b_user",
-				OP.EQ,
-				1,
-			},
-		},
-		on_done = {},
-		heard_speak_routing = {
 			target = "disabled",
 		},
 		on_pre_rule_execution = {
@@ -14623,7 +14393,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -14714,7 +14486,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -14784,7 +14558,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -14855,7 +14631,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -14946,7 +14724,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",

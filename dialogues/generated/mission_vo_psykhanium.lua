@@ -574,6 +574,39 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "horde_mode_failed_a",
+		response = "horde_mode_failed_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"horde_mode_failed_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "horde_new_wave_start_post_upgrade_a",
 		response = "horde_new_wave_start_post_upgrade_a",
 		wwise_route = 42,
@@ -622,6 +655,39 @@ return function ()
 				"trigger_id",
 				OP.EQ,
 				"horde_objective_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "horde_objective_reminder_a",
+		response = "horde_objective_reminder_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"horde_objective_reminder_a",
 			},
 			{
 				"user_context",
@@ -27598,6 +27664,165 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "wave_start_armored_infected_a",
+		response = "wave_start_armored_infected_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_armored_infected_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_armored_infected_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_armored_infected_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "wave_start_chaos_ogryn_a",
+		response = "wave_start_chaos_ogryn_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_chaos_ogryn_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_chaos_ogryn_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_chaos_ogryn_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "wave_start_daemonhost_a",
+		response = "wave_start_daemonhost_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_daemonhost_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_daemonhost_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_daemonhost_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "wave_start_flamers_a",
 		response = "wave_start_flamers_a",
 		wwise_route = 42,
@@ -27704,6 +27929,59 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "wave_start_monsters_a",
+		response = "wave_start_monsters_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_monsters_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_monsters_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_monsters_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "wave_start_mutants_a",
 		response = "wave_start_mutants_a",
 		wwise_route = 42,
@@ -27757,6 +28035,59 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "wave_start_netgunner_a",
+		response = "wave_start_netgunner_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_netgunner_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_netgunner_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_netgunner_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "wave_start_poxbursters_a",
 		response = "wave_start_poxbursters_a",
 		wwise_route = 42,
@@ -27792,6 +28123,112 @@ return function ()
 			{
 				"faction_memory",
 				"wave_start_poxbursters_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "wave_start_snipers_a",
+		response = "wave_start_snipers_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_snipers_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_snipers_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_snipers_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.5,
+				hold_for = 0,
+				max_failed_tries = 0,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "wave_start_twins_a",
+		response = "wave_start_twins_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"wave_start_twins_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"wave_start_twins_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"wave_start_twins_a",
 				OP.ADD,
 				1,
 			},

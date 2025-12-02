@@ -384,9 +384,9 @@ local adamant_c_adamant_male_c = {
 			"loc_adamant_male_c__combat_pause_quirk_adamant_c_trait_01_a_03",
 		},
 		sound_events_duration = {
-			3.598521,
+			3.598531,
 			5.577271,
-			5.856229,
+			5.85624,
 		},
 		randomize_indexes = {},
 	},

@@ -3006,6 +3006,7 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
+					"adamant",
 				},
 			},
 		},

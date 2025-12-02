@@ -111,6 +111,39 @@ local adamant_male_b_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	adamant_male_b_psyker_bonding_conversation_18_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_male_b_psyker_bonding_conversation_18_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.042229,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_18_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_male_b_psyker_bonding_conversation_18_c_01",
+		},
+		sound_events_duration = {
+			[1] = 4.289583,
+		},
+		randomize_indexes = {},
+	},
+	adamant_male_b_psyker_bonding_conversation_18_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__adamant_male_b_psyker_bonding_conversation_18_e_01",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("adamant_male_b_psyker_male_b", adamant_male_b_psyker_male_b)

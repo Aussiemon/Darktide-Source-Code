@@ -1899,14 +1899,12 @@ local conversations_core_veteran_female_c = {
 	},
 	lore_hive_cities_one_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_veteran_female_c__lore_hive_cities_one_c_01",
-			[2] = "loc_veteran_female_c__lore_hive_cities_one_c_02",
+			[1] = "loc_veteran_female_c__lore_hive_cities_one_c_02",
 		},
 		sound_events_duration = {
-			[1] = 2.827104,
-			[2] = 4.580385,
+			[1] = 4.580385,
 		},
 		randomize_indexes = {},
 	},

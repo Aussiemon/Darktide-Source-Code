@@ -2033,7 +2033,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -2124,7 +2126,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -2214,7 +2218,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -2330,7 +2336,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -2401,7 +2409,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -2492,7 +2502,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -3041,7 +3053,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -3112,7 +3126,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -3662,7 +3678,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -3734,7 +3752,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -3825,7 +3845,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -4369,7 +4391,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -4448,7 +4472,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -4539,7 +4565,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -4697,11 +4725,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
 		},
 	})
 	define_rule({
@@ -6298,7 +6321,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -6369,7 +6394,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -6460,7 +6487,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -6814,7 +6843,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -6905,7 +6936,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -7933,7 +7966,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -8024,7 +8059,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -9007,7 +9044,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -9079,7 +9118,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -9170,7 +9211,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -12318,7 +12361,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -12390,7 +12435,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -12481,7 +12528,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",

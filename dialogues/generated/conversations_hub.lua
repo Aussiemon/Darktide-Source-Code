@@ -135,6 +135,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -215,6 +216,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -1959,6 +1961,7 @@ return function ()
 					"psyker_male_a",
 					"psyker_female_a",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_male_c",
 					"psyker_female_c",
 				},
@@ -10319,6 +10322,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -10400,6 +10404,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -10476,6 +10481,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",
@@ -14684,6 +14690,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 			{
@@ -14734,6 +14741,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -16394,6 +16402,92 @@ return function ()
 		heard_speak_routing = {
 			target = "disabled",
 		},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "live_event_generic_in_progress_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "live_event_generic_in_progress_a",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist",
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"live_event_generic_in_progress_a",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+		},
+		on_done = {},
+	})
+	define_rule({
+		category = "npc_prio_0",
+		database = "conversations_hub",
+		name = "live_event_generic_no_progress_a",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "live_event_generic_no_progress_a",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist",
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo",
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"live_event_generic_no_progress_a",
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"",
+				},
+			},
+		},
+		on_done = {},
 	})
 	define_rule({
 		category = "conversations_prio_0",
@@ -24025,6 +24119,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_female_b",
 					"psyker_female_c",

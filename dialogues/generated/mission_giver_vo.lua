@@ -1268,4 +1268,1680 @@ return function ()
 			},
 		},
 	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_01_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_01_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_01_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_02_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_02_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_02_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_03_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_03_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_03_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_04_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_04_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_04_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_05_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_05_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_05_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_06_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_06_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_06_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_07_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_07_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_07_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_08_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_08_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_08_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_09_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_09_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_09_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_10_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_10_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_10_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_11_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_11_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_11_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_12_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_12_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_12_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_13_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_13_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_13_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_14_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_14_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_14_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_15_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_15_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_15_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_16_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_16_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_16_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_17_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_17_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_17_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_18_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_18_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_18_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_19_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_19_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_19_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_20_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_20_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_20_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_21_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_21_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_21_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_22_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_22_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_22_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_23_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_23_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_23_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_24_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_24_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_24_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_25_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_25_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_25_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_26_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_26_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_26_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_27_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_27_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_27_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_28_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_28_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_28_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_29_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_29_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_29_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_31_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_31_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_31_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_32_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_32_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_32_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_33_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_33_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_33_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_34_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_34_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_34_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_35_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_35_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_35_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_36_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_36_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_36_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_37_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_37_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_37_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_38_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_38_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_38_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_39_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_39_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_39_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_40_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_40_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_40_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_41_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_41_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_41_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_42_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_42_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_42_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_43_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_43_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_43_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_44_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_44_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_44_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_45_b",
+		post_wwise_event = "play_radio_static_end",
+		response = "start_zone_direction_45_b",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_sergeant_a__start_zone_direction_45_a_01",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_giver_default",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_giver_vo",
+		name = "start_zone_direction_a",
+		pre_wwise_event = "play_radio_static_start",
+		response = "start_zone_direction_a",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"start_zone_direction_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+				},
+			},
+			{
+				"faction_memory",
+				"start_zone_direction_a",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"start_zone_direction_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+	})
 end

@@ -1061,6 +1061,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_forge_strategic_asset",
+					"start_zone_direction_b",
 				},
 			},
 			{
@@ -1454,6 +1455,7 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
+					"adamant",
 				},
 			},
 		},

@@ -147,14 +147,12 @@ local zealot_b_psyker_male_b = {
 	},
 	combat_pause_quirk_speed_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
 			[1] = "loc_psyker_male_b__combat_pause_quirk_speed_b_01",
-			[2] = "loc_psyker_male_b__combat_pause_quirk_speed_b_02",
 		},
 		sound_events_duration = {
 			[1] = 2.524521,
-			[2] = 4.673021,
 		},
 		randomize_indexes = {},
 	},

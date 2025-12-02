@@ -277,6 +277,28 @@ local conversations_hub_explicator_a = {
 		},
 		randomize_indexes = {},
 	},
+	hub_onboarding_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_explicator_a__hub_onboarding_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.975542,
+		},
+		randomize_indexes = {},
+	},
+	hub_onboarding_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_explicator_a__hub_onboarding_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 7.378729,
+		},
+		randomize_indexes = {},
+	},
 	hub_seasonal_kalyx_mid_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

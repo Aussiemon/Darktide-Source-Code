@@ -713,6 +713,51 @@ local mission_briefing_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_trenches_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_trenches_briefing_a_01",
+			"loc_tech_priest_a__mission_trenches_briefing_a_02",
+			"loc_tech_priest_a__mission_trenches_briefing_a_03",
+		},
+		sound_events_duration = {
+			10.6861,
+			12.65481,
+			14.03017,
+		},
+		randomize_indexes = {},
+	},
+	mission_trenches_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_trenches_briefing_b_01",
+			"loc_tech_priest_a__mission_trenches_briefing_b_02",
+			"loc_tech_priest_a__mission_trenches_briefing_b_03",
+		},
+		sound_events_duration = {
+			12.57229,
+			12.75908,
+			11.70606,
+		},
+		randomize_indexes = {},
+	},
+	mission_trenches_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_trenches_briefing_c_01",
+			"loc_tech_priest_a__mission_trenches_briefing_c_02",
+			"loc_tech_priest_a__mission_trenches_briefing_c_03",
+		},
+		sound_events_duration = {
+			10.78244,
+			13.73946,
+			11.01333,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_briefing_tech_priest_a", mission_briefing_tech_priest_a)

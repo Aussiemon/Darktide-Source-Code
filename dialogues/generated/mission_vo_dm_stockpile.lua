@@ -770,6 +770,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_stockpile_start_banter_c",
+					"start_zone_direction_b",
 				},
 			},
 			{

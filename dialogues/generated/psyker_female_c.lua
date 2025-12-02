@@ -10333,11 +10333,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -12950,11 +12945,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
 		},
 	})
 	define_rule({

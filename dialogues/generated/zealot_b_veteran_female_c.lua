@@ -12,17 +12,6 @@ local zealot_b_veteran_female_c = {
 		},
 		randomize_indexes = {},
 	},
-	combat_pause_limited_zealot_b_03_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1] = "loc_veteran_female_c__combat_pause_limited_zealot_b_03_b_01",
-		},
-		sound_events_duration = {
-			[1] = 2.073083,
-		},
-		randomize_indexes = {},
-	},
 	combat_pause_limited_zealot_b_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

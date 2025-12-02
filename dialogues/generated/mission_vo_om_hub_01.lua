@@ -28,6 +28,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 			{
@@ -77,6 +78,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -113,6 +115,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -149,6 +152,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -185,6 +189,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -221,6 +226,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},
@@ -258,6 +264,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"adamant_officer",
+					"explicator",
 				},
 			},
 		},

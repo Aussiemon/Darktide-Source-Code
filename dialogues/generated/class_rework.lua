@@ -243,9 +243,6 @@ return function ()
 			},
 		},
 		on_done = {},
-		heard_speak_routing = {
-			target = "disabled",
-		},
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -367,9 +364,6 @@ return function ()
 			},
 		},
 		on_done = {},
-		heard_speak_routing = {
-			target = "disabled",
-		},
 	})
 	define_rule({
 		category = "player_ability_vo",

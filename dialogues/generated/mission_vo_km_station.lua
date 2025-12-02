@@ -22,6 +22,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_station_tanks",
+					"start_zone_direction_b",
 				},
 			},
 			{

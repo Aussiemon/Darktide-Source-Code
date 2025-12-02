@@ -2533,6 +2533,7 @@ return function ()
 					"psyker",
 					"veteran",
 					"zealot",
+					"broker",
 				},
 			},
 		},

@@ -644,6 +644,7 @@ return function ()
 				args = {
 					"mission_strain_start_banter_c",
 					"mission_strain_safe_zone_d",
+					"start_zone_direction_b",
 				},
 			},
 			{

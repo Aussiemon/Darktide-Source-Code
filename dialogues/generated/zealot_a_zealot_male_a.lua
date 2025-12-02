@@ -75,6 +75,19 @@ local zealot_a_zealot_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_zealot_a_03_traitor_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_zealot_male_a__combat_pause_limited_zealot_b_03_a_01",
+			[2] = "loc_zealot_male_a__combat_pause_limited_zealot_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.77325,
+			[2] = 4.3325,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_a_04_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

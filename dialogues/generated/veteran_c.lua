@@ -60,6 +60,10 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
+					"broker_female_b",
+					"broker_female_c",
+					"broker_male_b",
+					"broker_male_c",
 				},
 			},
 			{
@@ -140,10 +144,17 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
+					"broker_female_b",
+					"broker_female_c",
+					"broker_male_b",
+					"broker_male_c",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -201,6 +212,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -283,6 +295,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -297,6 +310,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -359,6 +375,8 @@ return function ()
 					"veteran_male_b",
 					"zealot_female_a",
 					"zealot_male_a",
+					"broker_female_a",
+					"broker_male_a",
 				},
 			},
 			{
@@ -436,10 +454,15 @@ return function ()
 					"veteran_male_b",
 					"zealot_female_a",
 					"zealot_male_a",
+					"broker_female_a",
+					"broker_male_a",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -501,6 +524,10 @@ return function ()
 					"zealot_male_a",
 					"zealot_female_b",
 					"zealot_male_b",
+					"broker_female_a",
+					"broker_female_b",
+					"broker_male_a",
+					"broker_male_b",
 				},
 			},
 			{
@@ -579,6 +606,10 @@ return function ()
 					"zealot_male_a",
 					"zealot_female_b",
 					"zealot_male_b",
+					"broker_female_a",
+					"broker_female_b",
+					"broker_male_a",
+					"broker_male_b",
 				},
 			},
 		},
@@ -643,6 +674,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"veteran_female_a",
@@ -651,6 +683,8 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_b",
 					"adamant_female_b",
+					"broker_female_c",
+					"broker_male_c",
 				},
 			},
 			{
@@ -723,6 +757,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"veteran_female_a",
@@ -731,10 +766,15 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_b",
 					"adamant_female_b",
+					"broker_female_c",
+					"broker_male_c",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -878,6 +918,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1023,6 +1066,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1088,6 +1134,8 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
+					"broker_female_c",
+					"broker_male_c",
 				},
 			},
 			{
@@ -1168,10 +1216,15 @@ return function ()
 					"zealot_male_c",
 					"adamant_male_a",
 					"adamant_female_a",
+					"broker_female_c",
+					"broker_male_c",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1323,6 +1376,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1380,6 +1436,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"ogryn_c",
 					"psyker_female_b",
 					"psyker_male_b",
@@ -1387,6 +1444,8 @@ return function ()
 					"zealot_male_a",
 					"adamant_male_b",
 					"adamant_female_b",
+					"broker_female_a",
+					"broker_male_a",
 				},
 			},
 			{
@@ -1459,6 +1518,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"ogryn_c",
 					"psyker_female_b",
 					"psyker_male_b",
@@ -1466,10 +1526,15 @@ return function ()
 					"zealot_male_a",
 					"adamant_male_b",
 					"adamant_female_b",
+					"broker_female_a",
+					"broker_male_a",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1531,6 +1596,8 @@ return function ()
 					"zealot_male_a",
 					"zealot_female_b",
 					"zealot_male_b",
+					"broker_female_b",
+					"broker_male_b",
 				},
 			},
 			{
@@ -1609,10 +1676,15 @@ return function ()
 					"zealot_male_a",
 					"zealot_female_b",
 					"zealot_male_b",
+					"broker_female_b",
+					"broker_male_b",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1758,6 +1830,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -1815,6 +1890,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_c",
 					"psyker_male_c",
@@ -1894,6 +1970,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_c",
 					"psyker_male_c",
@@ -1905,6 +1982,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2052,6 +2132,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2193,6 +2276,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2256,6 +2342,10 @@ return function ()
 					"zealot_male_b",
 					"zealot_female_c",
 					"zealot_male_c",
+					"broker_female_b",
+					"broker_female_c",
+					"broker_male_b",
+					"broker_male_c",
 				},
 			},
 			{
@@ -2334,10 +2424,17 @@ return function ()
 					"zealot_male_b",
 					"zealot_female_c",
 					"zealot_male_c",
+					"broker_female_b",
+					"broker_female_c",
+					"broker_male_b",
+					"broker_male_c",
 				},
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2489,6 +2586,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2546,6 +2646,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"ogryn_c",
 					"psyker_female_a",
 					"psyker_male_a",
@@ -2625,6 +2726,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"ogryn_c",
 					"psyker_female_a",
 					"psyker_male_a",
@@ -2636,6 +2738,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2781,6 +2886,9 @@ return function ()
 			},
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players",
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2,
@@ -2838,33 +2946,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_male_a",
-					"psyker_female_b",
-					"psyker_male_b",
-					"psyker_female_c",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_male_a",
-					"veteran_female_b",
-					"veteran_male_b",
 					"veteran_female_c",
 					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_male_a",
-					"zealot_female_b",
-					"zealot_male_b",
-					"zealot_female_c",
-					"zealot_male_c",
-					"adamant_male_a",
-					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
-					"adamant_male_c",
-					"adamant_female_c",
 				},
 			},
 			{
@@ -2994,33 +3077,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_male_a",
-					"psyker_female_b",
-					"psyker_male_b",
-					"psyker_female_c",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_male_a",
-					"veteran_female_b",
-					"veteran_male_b",
 					"veteran_female_c",
 					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_male_a",
-					"zealot_female_b",
-					"zealot_male_b",
-					"zealot_female_c",
-					"zealot_male_c",
-					"adamant_male_a",
-					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
-					"adamant_male_c",
-					"adamant_female_c",
 				},
 			},
 			{
@@ -3150,33 +3208,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_male_a",
-					"psyker_female_b",
-					"psyker_male_b",
-					"psyker_female_c",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_male_a",
-					"veteran_female_b",
-					"veteran_male_b",
 					"veteran_female_c",
 					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_male_a",
-					"zealot_female_b",
-					"zealot_male_b",
-					"zealot_female_c",
-					"zealot_male_c",
-					"adamant_male_a",
-					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
-					"adamant_male_c",
-					"adamant_female_c",
 				},
 			},
 			{
@@ -3306,33 +3339,8 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_male_a",
-					"psyker_female_b",
-					"psyker_male_b",
-					"psyker_female_c",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_male_a",
-					"veteran_female_b",
-					"veteran_male_b",
 					"veteran_female_c",
 					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_male_a",
-					"zealot_female_b",
-					"zealot_male_b",
-					"zealot_female_c",
-					"zealot_male_c",
-					"adamant_male_a",
-					"adamant_female_a",
-					"adamant_male_b",
-					"adamant_female_b",
-					"adamant_male_c",
-					"adamant_female_c",
 				},
 			},
 			{
@@ -3521,6 +3529,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"zealot_female_a",
 					"zealot_female_b",
 					"zealot_female_c",
@@ -3774,6 +3783,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"zealot_female_a",
 					"zealot_female_b",
 					"zealot_female_c",
@@ -4027,6 +4037,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"zealot_female_a",
 					"zealot_female_b",
 					"zealot_female_c",

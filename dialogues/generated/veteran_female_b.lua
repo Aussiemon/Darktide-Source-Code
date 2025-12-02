@@ -2573,11 +2573,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -3172,11 +3167,6 @@ return function ()
 					"loc_adamant_male_c__away_from_squad_01",
 					"loc_adamant_male_c__away_from_squad_02",
 					"loc_adamant_male_c__away_from_squad_03",
-					"loc_adamant_male_c__away_from_squad_04",
-					"loc_adamant_male_c__away_from_squad_05",
-					"loc_adamant_male_c__away_from_squad_06",
-					"loc_adamant_male_c__away_from_squad_07",
-					"loc_adamant_male_c__away_from_squad_08",
 				},
 			},
 			{
@@ -3240,6 +3230,13 @@ return function ()
 				args = {
 					"adamant_male_c",
 				},
+			},
+			{
+				"user_memory",
+				"away_from_squad_user",
+				OP.TIMEDIFF,
+				OP.LT,
+				10,
 			},
 		},
 		on_done = {
@@ -8044,7 +8041,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -8135,7 +8134,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -8225,7 +8226,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -8925,7 +8928,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -8997,7 +9002,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -9088,7 +9095,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -9451,7 +9460,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -9523,7 +9534,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -9614,7 +9627,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -10278,11 +10293,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "conversations_prio_1",
@@ -10619,7 +10629,9 @@ return function ()
 				"global_context",
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"faction_memory",
@@ -10690,7 +10702,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -10781,7 +10795,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -10818,11 +10834,6 @@ return function ()
 				"sound_event",
 				OP.SET_INCLUDES,
 				args = {
-					"loc_psyker_male_b__away_from_squad_01",
-					"loc_psyker_male_b__away_from_squad_02",
-					"loc_psyker_male_b__away_from_squad_03",
-					"loc_psyker_male_b__away_from_squad_04",
-					"loc_psyker_male_b__away_from_squad_05",
 					"loc_psyker_male_b__away_from_squad_06",
 					"loc_psyker_male_b__away_from_squad_07",
 					"loc_psyker_male_b__away_from_squad_08",
@@ -10908,6 +10919,13 @@ return function ()
 				args = {
 					"psyker_male_b",
 				},
+			},
+			{
+				"user_memory",
+				"away_from_squad_user",
+				OP.TIMEDIFF,
+				OP.LT,
+				10,
 			},
 		},
 		on_done = {
@@ -11640,7 +11658,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 		},
 		on_done = {
@@ -11731,7 +11751,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -11821,7 +11843,9 @@ return function ()
 				"user_context",
 				"voice_template",
 				OP.SET_INCLUDES,
-				args = {},
+				args = {
+					"ogryn_d",
+				},
 			},
 			{
 				"user_memory",
@@ -12262,11 +12286,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
 		},
 	})
 	define_rule({

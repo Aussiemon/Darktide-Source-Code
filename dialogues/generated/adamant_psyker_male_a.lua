@@ -1,6 +1,29 @@
 ﻿-- chunkname: @dialogues/generated/adamant_psyker_male_a.lua
 
 local adamant_psyker_male_a = {
+	deployed_ammo_crate_adamant_low_on_ammo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_01",
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_02",
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_03",
+			"loc_psyker_male_a__found_ammo_adamant_low_on_ammo_04",
+		},
+		sound_events_duration = {
+			2.790417,
+			2.042813,
+			5.344563,
+			2.314333,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
+		},
+		randomize_indexes = {},
+	},
 	found_ammo_adamant_low_on_ammo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -32,6 +55,29 @@ local adamant_psyker_male_a = {
 			4.570083,
 			3.969313,
 			4.433875,
+		},
+		randomize_indexes = {},
+	},
+	found_health_station_adamant_low_on_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_01",
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_02",
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_03",
+			"loc_psyker_male_a__found_health_booster_adamant_low_on_health_04",
+		},
+		sound_events_duration = {
+			2.406313,
+			4.570083,
+			3.969313,
+			4.433875,
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25,
 		},
 		randomize_indexes = {},
 	},

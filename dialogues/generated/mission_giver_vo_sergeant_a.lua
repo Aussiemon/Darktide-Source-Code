@@ -418,6 +418,589 @@ local mission_giver_vo_sergeant_a = {
 		},
 		randomize_indexes = {},
 	},
+	start_zone_direction_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.113229,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.599979,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.360813,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.55925,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_05_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.270354,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_06_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_06_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.576354,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_07_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_07_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.418813,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_08_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_08_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.226771,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_09_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_09_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.401417,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.880333,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_11_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_11_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.623625,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_12_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_12_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.458479,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_13_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_13_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.846292,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_14_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_14_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.394958,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_15_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_15_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.212354,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_16_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_16_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.258646,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_17_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_17_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.667708,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_18_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_18_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.483354,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_19_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_19_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.634021,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_20_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_20_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.206333,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_21_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_21_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.68825,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_22_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_22_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.947917,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_23_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_23_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.486854,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_24_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_24_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.591292,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_25_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_25_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.537563,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_26_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_26_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.065083,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_27_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_27_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.263458,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_28_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_28_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.081625,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_29_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_29_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.458729,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_31_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_31_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.941563,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_32_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_32_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.945604,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_33_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_33_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.518063,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_34_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_34_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.996979,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_35_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_35_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.154833,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_36_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_36_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.135458,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_37_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_37_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.760021,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_38_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_38_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.293042,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_39_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_39_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.824667,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_40_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_40_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.12975,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_41_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_41_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.349813,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_42_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_42_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.950167,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_43_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_43_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.502083,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_44_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_44_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.933417,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_45_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_sergeant_a__start_zone_direction_45_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.557438,
+		},
+		randomize_indexes = {},
+	},
+	start_zone_direction_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 45,
+		sound_events = {
+			"loc_sergeant_a__start_zone_direction_01_a_01",
+			"loc_sergeant_a__start_zone_direction_02_a_01",
+			"loc_sergeant_a__start_zone_direction_03_a_01",
+			"loc_sergeant_a__start_zone_direction_04_a_01",
+			"loc_sergeant_a__start_zone_direction_05_a_01",
+			"loc_sergeant_a__start_zone_direction_06_a_01",
+			"loc_sergeant_a__start_zone_direction_07_a_01",
+			"loc_sergeant_a__start_zone_direction_08_a_01",
+			"loc_sergeant_a__start_zone_direction_09_a_01",
+			"loc_sergeant_a__start_zone_direction_10_a_01",
+			"loc_sergeant_a__start_zone_direction_11_a_01",
+			"loc_sergeant_a__start_zone_direction_12_a_01",
+			"loc_sergeant_a__start_zone_direction_13_a_01",
+			"loc_sergeant_a__start_zone_direction_14_a_01",
+			"loc_sergeant_a__start_zone_direction_15_a_01",
+			"loc_sergeant_a__start_zone_direction_16_a_01",
+			"loc_sergeant_a__start_zone_direction_17_a_01",
+			"loc_sergeant_a__start_zone_direction_18_a_01",
+			"loc_sergeant_a__start_zone_direction_19_a_01",
+			"loc_sergeant_a__start_zone_direction_20_a_01",
+			"loc_sergeant_a__start_zone_direction_21_a_01",
+			"loc_sergeant_a__start_zone_direction_22_a_01",
+			"loc_sergeant_a__start_zone_direction_23_a_01",
+			"loc_sergeant_a__start_zone_direction_24_a_01",
+			"loc_sergeant_a__start_zone_direction_25_a_01",
+			"loc_sergeant_a__start_zone_direction_26_a_01",
+			"loc_sergeant_a__start_zone_direction_27_a_01",
+			"loc_sergeant_a__start_zone_direction_28_a_01",
+			"loc_sergeant_a__start_zone_direction_29_a_01",
+			"loc_sergeant_a__start_zone_direction_30_a_01",
+			"loc_sergeant_a__start_zone_direction_31_a_01",
+			"loc_sergeant_a__start_zone_direction_32_a_01",
+			"loc_sergeant_a__start_zone_direction_33_a_01",
+			"loc_sergeant_a__start_zone_direction_34_a_01",
+			"loc_sergeant_a__start_zone_direction_35_a_01",
+			"loc_sergeant_a__start_zone_direction_36_a_01",
+			"loc_sergeant_a__start_zone_direction_37_a_01",
+			"loc_sergeant_a__start_zone_direction_38_a_01",
+			"loc_sergeant_a__start_zone_direction_39_a_01",
+			"loc_sergeant_a__start_zone_direction_40_a_01",
+			"loc_sergeant_a__start_zone_direction_41_a_01",
+			"loc_sergeant_a__start_zone_direction_42_a_01",
+			"loc_sergeant_a__start_zone_direction_43_a_01",
+			"loc_sergeant_a__start_zone_direction_44_a_01",
+			"loc_sergeant_a__start_zone_direction_45_a_01",
+		},
+		sound_events_duration = {
+			4.549021,
+			4.862667,
+			3.726042,
+			4.237125,
+			3.124438,
+			6.049979,
+			4.417542,
+			2.297313,
+			5.084896,
+			3.775854,
+			3.589188,
+			4.178729,
+			5.025083,
+			2.996875,
+			2.947104,
+			3.681083,
+			2.866167,
+			3.108292,
+			4.513271,
+			2.125958,
+			3.630208,
+			2.732479,
+			3.540042,
+			2.387458,
+			5.763771,
+			2.235958,
+			2.561708,
+			3.09425,
+			2.548521,
+			4.682667,
+			5.052958,
+			4.060292,
+			4.211438,
+			4.721771,
+			3.828563,
+			3.440667,
+			2.739583,
+			4.726417,
+			3.815104,
+			3.755938,
+			3.893938,
+			3.344854,
+			3.634521,
+			3.995542,
+			4.044604,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("mission_giver_vo_sergeant_a", mission_giver_vo_sergeant_a)

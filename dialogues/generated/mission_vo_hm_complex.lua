@@ -557,6 +557,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_complex_start_banter_c",
+					"start_zone_direction_b",
 				},
 			},
 			{

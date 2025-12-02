@@ -159,8 +159,11 @@ return function ()
 			{
 				"query_context",
 				"trigger_id",
-				OP.EQ,
-				"combat_ability_adamant_1",
+				OP.SET_INCLUDES,
+				args = {
+					"combat_ability_adamant_1",
+					"combat_ability_broker",
+				},
 			},
 			{
 				"user_context",
@@ -1445,6 +1448,57 @@ return function ()
 			{
 				"faction_memory",
 				"ranged_grenade_desc_a_bonebreaker_blitz",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_1",
+		database = "training_grounds",
+		name = "ranged_grenade_desc_a_broker_blitz",
+		response = "ranged_grenade_desc_a_broker_blitz",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"broker_blitz",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"ranged_grenade_desc_a_broker_blitz",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"ranged_grenade_desc_a_broker_blitz",
 				OP.ADD,
 				1,
 			},
@@ -3077,6 +3131,57 @@ return function ()
 			{
 				"faction_memory",
 				"weapon_special_desc_a",
+				OP.ADD,
+				1,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_1",
+		database = "training_grounds",
+		name = "weapon_special_desc_a_broker",
+		response = "weapon_special_desc_a_broker",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"weapon_special_dual_shivs",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+			{
+				"faction_memory",
+				"weapon_special_desc_a_broker",
+				OP.EQ,
+				0,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"weapon_special_desc_a_broker",
 				OP.ADD,
 				1,
 			},

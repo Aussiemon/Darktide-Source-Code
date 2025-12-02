@@ -674,6 +674,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"mission_rails_start_banter_c",
+					"start_zone_direction_b",
 				},
 			},
 			{

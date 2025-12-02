@@ -75,6 +75,28 @@ local zealot_a_zealot_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_zealot_a_03_traitor_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__combat_pause_limited_zealot_b_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.917354,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_zealot_a_03_traitor_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__combat_pause_limited_zealot_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.946771,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_a_04_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

@@ -2313,6 +2313,7 @@ return function ()
 					"mission_propaganda_safe_zone_01_e",
 					"mission_propaganda_safe_zone_02_e",
 					"mission_propaganda_safe_zone_03_e",
+					"start_zone_direction_b",
 				},
 			},
 			{

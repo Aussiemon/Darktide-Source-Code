@@ -925,6 +925,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"info_mission_cooling_vents_response",
+					"start_zone_direction_b",
 				},
 			},
 			{

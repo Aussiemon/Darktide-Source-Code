@@ -1735,14 +1735,12 @@ local conversations_core_ogryn_b = {
 	},
 	lore_hive_cities_one_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1] = "loc_ogryn_b__lore_hive_cities_one_b_01",
-			[2] = "loc_ogryn_b__lore_hive_cities_one_b_02",
+			[1] = "loc_ogryn_b__lore_hive_cities_one_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.345938,
-			[2] = 4.390385,
+			[1] = 4.390385,
 		},
 		randomize_indexes = {},
 	},
