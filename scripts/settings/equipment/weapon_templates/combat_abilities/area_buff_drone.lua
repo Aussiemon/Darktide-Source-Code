@@ -8,6 +8,7 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/adamant_drone"
 weapon_template.projectile_template = ProjectileTemplates.area_buff_drone
 weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/area_buff_drone"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_grenade"
 weapon_template.placement_preview_settings = {
 	action_name = "action_aim_drone",
 	vfx = "content/fx/particles/weapons/grenades/area_buff_drone/area_buff_drone_radius_indicator",

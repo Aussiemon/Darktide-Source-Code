@@ -31,6 +31,16 @@ ActionWeaponShout.init = function (self, action_context, action_params, action_s
 	local weapon_special_tweak_data = weapon_template and weapon_template.weapon_special_tweak_data
 
 	self._weapon_special_tweak_data = weapon_special_tweak_data
+
+	local weapon = action_params.weapon
+
+	self._fx_source_name = weapon.fx_sources._weapon_shout
+
+	local fx = self._action_settings.fx
+
+	if fx then
+		self._effect_name = fx.weapon_shout_effect
+	end
 end
 
 ActionWeaponShout.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -42,8 +52,9 @@ ActionWeaponShout.start = function (self, action_settings, t, time_scale, action
 	self._suppression_distance_traveled = 0
 
 	local shout_template = self._weapon_extension:weapon_shout_template()
+	local shout_time = action_settings.shout_time or action_settings.total_time
 
-	self._speed = shout_template.range / action_settings.total_time * 4
+	self._speed = shout_template.range / shout_time * 4
 	self._num_hits = 0
 	self._target_index = 0
 
@@ -103,8 +114,10 @@ ActionWeaponShout._start_shout = function (self, t)
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
 	local rotation = self._first_person_component.rotation
+	local reverse_direction = action_settings.reverse_direction
 	local attack_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
+	attack_direction = reverse_direction and -attack_direction or attack_direction
 	self._attack_position = Vector3Box(player_position)
 	self._attack_direction = Vector3Box(attack_direction)
 
@@ -122,6 +135,8 @@ ActionWeaponShout._start_shout = function (self, t)
 
 		inventory_slot_component.num_special_charges = math.max(num_special_charges - num_charges_to_consume_on_activation, 0)
 	end
+
+	self:_play_fx()
 end
 
 ActionWeaponShout._update_shout = function (self, dt)
@@ -141,27 +156,14 @@ ActionWeaponShout._update_shout = function (self, dt)
 		elseif target_distance_squared <= distance_traveled_squared then
 			local actual_distance = math.sqrt(target_distance_squared)
 			local scaled_power_level = power_level
-			local enemy_breed = ScriptUnit.extension(target_unit, "unit_data_system"):breed()
 			local target_index = self._target_index + 1
 
 			self._target_index = target_index
 
-			if enemy_breed.can_be_blinded then
-				local blackboard = BLACKBOARDS[target_unit]
-				local stagger_component = blackboard.stagger
-				local is_staggered = stagger_component.num_triggered_staggers > 0
+			local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
+			local dropoff_scalar = DamageProfile.dropoff_scalar(actual_distance, damage_profile, damage_profile_lerp_values)
 
-				if not is_staggered then
-					local random_duration_range = math.random_range(2.6666666666666665, 4)
-
-					Stagger.force_stagger(target_unit, "blinding", attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
-				end
-			else
-				local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
-				local dropoff_scalar = DamageProfile.dropoff_scalar(actual_distance, damage_profile, damage_profile_lerp_values)
-
-				Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit, "dropoff_scalar", dropoff_scalar)
-			end
+			Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit, "dropoff_scalar", dropoff_scalar)
 
 			local player_position = POSITION_LOOKUP[player_unit]
 
@@ -247,6 +249,22 @@ ActionWeaponShout._collect_targets = function (self, t, action_settings, side, a
 			done = shout_range <= distance_moved + initial_overlap_radius
 		until done
 	end
+end
+
+ActionWeaponShout._play_fx = function (self)
+	if self._unit_data_extension.is_resimulating then
+		return
+	end
+
+	if not self._effect_name or not self._fx_source_name then
+		return
+	end
+
+	local fx_extension = self._fx_extension
+	local link = true
+	local orphaned_policy = "stop"
+	local position_offset, rotation_offset, scale, all_clients, create_network_index
+	local particle_id = fx_extension:spawn_unit_particles(self._effect_name, self._fx_source_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index)
 end
 
 return ActionWeaponShout

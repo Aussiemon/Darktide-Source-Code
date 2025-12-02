@@ -12,6 +12,7 @@ RPCQueue.init = function (self, channel_id, settings)
 
 	for i = 1, max_rpcs do
 		self._queue[i] = {
+			name = nil,
 			args = {},
 		}
 	end

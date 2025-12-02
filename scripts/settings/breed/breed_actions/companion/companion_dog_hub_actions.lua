@@ -22,7 +22,10 @@ local move_to_position_default = {
 		right = "run_start_right",
 	},
 	start_move_anim_data = {
-		run_start_fwd = {},
+		run_start_fwd = {
+			rad = nil,
+			sign = nil,
+		},
 		run_start_bwd = {
 			sign = 1,
 			rad = math.pi,

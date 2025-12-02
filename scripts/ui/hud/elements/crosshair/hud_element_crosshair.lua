@@ -175,6 +175,8 @@ HudElementCrosshair.hit_indicator = function (self)
 		elseif attack_result == attack_results.damaged then
 			if is_critical_strike then
 				color = hit_indicator_colors.damage_crit
+			elseif damage_efficiency == damage_efficiencies.reduced then
+				color = hit_indicator_colors.damage_reduced
 			else
 				color = hit_indicator_colors.damage_normal
 			end
@@ -239,8 +241,10 @@ HudElementCrosshair._recoil_yaw_pitch = function (self, player_extensions)
 			local recoil_template = weapon_extension:recoil_template()
 			local recoil_component = unit_data_extension:read_component("recoil")
 			local movement_state_component = unit_data_extension:read_component("movement_state")
+			local locomotion_component = unit_data_extension:read_component("locomotion")
+			local inair_state_component = unit_data_extension:read_component("inair_state")
 
-			yaw, pitch = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
+			yaw, pitch = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component)
 		end
 	end
 

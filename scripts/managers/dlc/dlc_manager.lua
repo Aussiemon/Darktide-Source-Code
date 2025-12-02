@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/managers/dlc/dlc_manager.lua
 
-local DLCSettings = require("scripts/managers/dlc/dlc_settings")
+local DLCSettings = require("scripts/settings/dlc/dlc_settings")
+local DLCUtils = require("scripts/utilities/dlc_utils")
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -16,6 +17,12 @@ local function dprint(...)
 end
 
 local DLC_SUCCESS_CACHE_TIME_SECONDS = 60
+
+DLCManager.ITEM_TYPE_NOTIFICATION_BLACKLIST = {
+	"BODY_TATTOO",
+	"FACE_TATTOO",
+	"HAIR",
+}
 
 DLCManager.init = function (self)
 	self._state = "none"
@@ -71,17 +78,17 @@ DLCManager.evaluate_consumables = function (self)
 	self._evaluate_consumables = true
 end
 
-DLCManager.is_owner_of = function (self, dlc_settings)
+DLCManager.is_owner_of = function (self, dlc_id, force_refresh)
 	local current_time = Managers.time:time("main")
-	local cached_time = self._dlc_check_cache[dlc_settings.dlc_id]
+	local cached_time = self._dlc_check_cache[dlc_id]
 
-	if cached_time and current_time - cached_time < DLC_SUCCESS_CACHE_TIME_SECONDS then
+	if not force_refresh and cached_time and current_time - cached_time < DLC_SUCCESS_CACHE_TIME_SECONDS then
 		return Promise.resolved(true)
 	end
 
-	self._dlc_check_cache[dlc_settings.dlc_id] = nil
+	self._dlc_check_cache[dlc_id] = nil
 
-	local product_ids = dlc_settings:get_ids_for_auth_method(Backend:get_auth_method())
+	local product_ids = DLCUtils.get_ids_for_auth_method(dlc_id, Backend:get_auth_method())
 	local result_promises = {}
 
 	for k, v in pairs(product_ids) do
@@ -91,7 +98,7 @@ DLCManager.is_owner_of = function (self, dlc_settings)
 	return Promise.all(unpack(result_promises)):next(function (results)
 		for _, result in ipairs(results) do
 			if result.is_owner then
-				self._dlc_check_cache[dlc_settings.dlc_id] = current_time
+				self._dlc_check_cache[dlc_id] = current_time
 
 				return true
 			end
@@ -103,12 +110,14 @@ DLCManager.is_owner_of = function (self, dlc_settings)
 	end)
 end
 
-DLCManager.open_dlc_view = function (self, dlc_settings, on_flow_finished_callback)
+DLCManager.open_dlc_view = function (self, dlc_id, optional_deluxe_id, on_flow_finished_callback)
+	local dlc_settings = DLCSettings.dlcs[dlc_id]
 	local has_steam_overlay = Backend.get_auth_method() == Backend.AUTH_METHOD_STEAM and Steam.is_overlay_enabled()
 
 	if not has_steam_overlay then
 		Managers.ui:open_view("dlc_purchase_view", nil, false, false, nil, {
 			dlc_settings = dlc_settings,
+			dlc_settings_deluxe = DLCSettings.dlcs[optional_deluxe_id],
 			on_flow_finished_callback = on_flow_finished_callback,
 		})
 
@@ -208,6 +217,108 @@ DLCManager._try_evaluate_consumables = function (self, t)
 		self._evaluate_consumables_timer = t + EVALUATE_CONSUMABLES_TIMER
 		self._evaluate_consumables = false
 	end
+end
+
+DLCManager.xbs_get_and_inform_entitlements = function (self, store_ids)
+	return XboxLiveUtils.get_entitlements():next(callback(self, "_cb_process_xbs_entitlements", store_ids))
+end
+
+DLCManager._cb_process_xbs_entitlements = function (self, wanted_ids, entitlement_data)
+	local success = entitlement_data.success
+
+	if not success then
+		return Promise.rejected()
+	end
+
+	local store_ids = {}
+	local popup_data = {}
+	local results = entitlement_data.data or {}
+
+	for store_id, data in pairs(results) do
+		if table.array_contains(wanted_ids, store_id) then
+			local is_in_user_collection = data.isInUserCollection
+			local product_kinds = data.productKind
+			local is_consumable = false
+
+			for _, product_kind in ipairs(product_kinds) do
+				is_consumable = product_kind == "consumable" or product_kind == "unmanaged" or is_consumable
+			end
+
+			if is_in_user_collection and is_consumable then
+				local skus = data.skus
+
+				for _, sku_data in ipairs(skus) do
+					local collection_data = sku_data.collectionData
+
+					if collection_data.quantity > 0 then
+						for i = 1, collection_data.quantity do
+							popup_data[#popup_data + 1] = data
+						end
+
+						store_ids[#store_ids + 1] = data.storeId
+
+						break
+					end
+				end
+			end
+		end
+	end
+
+	local show_popup_function
+
+	if table.size(store_ids) > 0 then
+		function show_popup_function()
+			local popup_count = 0
+			local popup_done_promise = Promise.new()
+
+			Log.info("DLCManager", "************ Found new consumables ************")
+
+			for _, data in ipairs(popup_data) do
+				Log.info("DLCManager", "Name: %q StoreID: %q", data.title, data.storeId)
+			end
+
+			Log.info("DLCManager", "***********************************************")
+
+			for _, data in pairs(popup_data) do
+				popup_count = popup_count + 1
+
+				local context = {
+					description_text = "loc_dlc_installed",
+					title_text = "loc_popup_header_new_dlc_installed",
+					description_text_params = {
+						dlc_name = data.title,
+						dlc_description = data.description,
+					},
+					options = {
+						{
+							close_on_pressed = true,
+							text = "loc_popup_unavailable_view_button_confirm",
+							callback = function (popup_id)
+								self:_cb_popup_closed(popup_id)
+
+								popup_count = popup_count - 1
+
+								if popup_count <= 0 then
+									popup_done_promise:resolve(true)
+								end
+							end,
+						},
+					},
+				}
+
+				Managers.event:trigger("event_show_ui_popup", context, function (id)
+					self._popup_ids[#self._popup_ids + 1] = id
+				end)
+			end
+
+			return popup_done_promise
+		end
+	end
+
+	return {
+		product_ids = wanted_ids,
+		show_popup_function = show_popup_function,
+	}
 end
 
 local TEMP_STORE_IDS = {}
@@ -515,7 +626,7 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 		for i = 1, #item_rewards do
 			local reward = item_rewards[i]
 
-			ItemUtils.mark_item_id_as_new(reward)
+			ItemUtils.mark_item_id_as_new(reward, table.array_contains(Managers.dlc.ITEM_TYPE_NOTIFICATION_BLACKLIST, reward.item_type))
 		end
 	end
 

@@ -6,10 +6,10 @@ local Definitions = require("scripts/ui/views/credits_goods_vendor_view/credits_
 local InputUtils = require("scripts/managers/input/input_utils")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
+local Text = require("scripts/utilities/ui/text")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)
@@ -74,8 +74,7 @@ CreditsGoodsVendorView._setup_item_grid = function (self)
 		local content = title_text_widget.content
 		local style = title_text_widget.style
 		local text_style = style.text
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+		local height = Text.text_height(ui_renderer, content.text, text_style, text_style.size)
 
 		height = height + 10
 
@@ -95,8 +94,7 @@ CreditsGoodsVendorView._setup_item_grid = function (self)
 		local content = description_text_widget.content
 		local style = description_text_widget.style
 		local text_style = style.text
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+		local height = Text.text_height(ui_renderer, content.text, text_style, text_style.size)
 
 		height = height + 10
 
@@ -448,6 +446,43 @@ end
 CreditsGoodsVendorView.cb_switch_tab = function (self, index)
 	self._next_tab_index = index
 	self._next_tab_index_ignore_item_selection = true
+end
+
+CreditsGoodsVendorView._set_display_price = function (self, price_data)
+	local price = price_data and (price_data.discounted_price or price_data.amount)
+	local type = price_data and price_data.type
+	local can_afford = price and self:can_afford(price, type)
+	local price_text
+
+	price_text = price and Text.format_currency(price) or ""
+
+	local widgets_by_name = self._widgets_by_name
+	local price_text_widget = widgets_by_name.price_text
+	local price_text_widget_style = price_text_widget.style
+	local price_text_style = price_text_widget_style.text
+
+	price_text_widget.content.text = price_text
+
+	local wallet_settings = WalletSettings[type]
+
+	if wallet_settings then
+		price_text_widget.style.text.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+		widgets_by_name.price_icon.content.texture = wallet_settings.icon_texture_small
+	end
+
+	local text_width, _ = self:_text_size(price_text, price_text_style, {
+		1920,
+		1080,
+	})
+	local price_icon_widget = widgets_by_name.price_icon
+	local price_icon_scenegraph_id = price_icon_widget.scenegraph_id
+	local price_text_scenegraph_id = price_text_widget.scenegraph_id
+	local price_icon_width = self:_scenegraph_size(price_icon_scenegraph_id)
+	local _, price_text_height = self:_scenegraph_size(price_text_scenegraph_id)
+	local price_icon_spacing = 3
+	local total_size = price_icon_width + text_width + price_icon_spacing
+
+	self:_set_scenegraph_size(price_text_scenegraph_id, total_size, nil)
 end
 
 return CreditsGoodsVendorView

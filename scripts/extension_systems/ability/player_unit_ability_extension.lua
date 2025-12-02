@@ -98,6 +98,7 @@ PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_e
 		local ability_component = unit_data_extension:write_component(ability_type)
 
 		ability_component.cooldown = 0
+		ability_component.cooldown_regen_buffer = 0
 		ability_component.num_charges = 0
 		ability_component.active = false
 		ability_component.enabled = true
@@ -167,6 +168,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_context.locomotion_component = unit_data_extension:read_component("locomotion")
 	action_context.movement_state_component = unit_data_extension:read_component("movement_state")
 
+	action_handler:extensions_ready(world, unit)
 	action_handler:set_action_context(action_context)
 
 	self._pause_cooldown_context = {
@@ -467,12 +469,21 @@ PlayerUnitAbilityExtension.charge_replenished = function (self, ability_type)
 	return self._charge_replenished[ability_type]
 end
 
+local ability_rate_precision = 10000000
+local ability_recharge_rate = table.array_to_map(ability_types, function (_, ability_type)
+	return ability_type, 1
+end)
+
 PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 	table.clear(self._charge_replenished)
 
 	local ability_components = self._ability_components
 	local abilities = self._equipped_abilities
 	local pause_cooldown_context = self._pause_cooldown_context
+	local fixed_time_step = Managers.state.game_session.fixed_time_step
+	local stat_buffs = self._buff_extension:stat_buffs()
+
+	ability_recharge_rate.combat_ability = stat_buffs.combat_ability_cooldown_regen_modifier
 
 	for ability_type, component in pairs(ability_components) do
 		local ability = abilities[ability_type]
@@ -480,6 +491,7 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 		if ability and ability.cooldown then
 			local max_ability_cooldown = self:max_ability_cooldown(ability_type)
 			local cooldown = component.cooldown
+			local cooldown_regen_buffer = component.cooldown_regen_buffer
 			local in_cooldown = cooldown ~= 0
 
 			if in_cooldown and component.cooldown_paused then
@@ -502,15 +514,30 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 				end
 
 				local force_cooldown = false
+				local ability_rate = math.round((ability_recharge_rate[ability_type] - 1) * ability_rate_precision)
+
+				if ability_rate ~= 0 and (cooldown ~= 0 or ability_rate < 0) then
+					cooldown_regen_buffer = cooldown_regen_buffer + ability_rate
+
+					local regen_frames = cooldown_regen_buffer / ability_rate_precision
+					local floored_regen_frames = math.floor(regen_frames)
+
+					if floored_regen_frames > 0 then
+						cooldown = cooldown - floored_regen_frames * fixed_time_step
+						cooldown_regen_buffer = cooldown_regen_buffer - floored_regen_frames * ability_rate_precision
+					end
+				end
 
 				if in_cooldown and (cooldown <= t or force_cooldown) then
 					component.num_charges = math.max(0, math.min(max_charges, component.num_charges + 1))
 					cooldown = 0
+					cooldown_regen_buffer = 0
 					self._charge_replenished[ability_type] = true
 				end
 			end
 
 			component.cooldown = cooldown
+			component.cooldown_regen_buffer = cooldown_regen_buffer
 		end
 	end
 end
@@ -542,6 +569,7 @@ PlayerUnitAbilityExtension.can_be_scroll_wielded = function (self, slot_name)
 			local disable_scroll_wield = talent_extension:has_special_rule(special_rules.zealot_throwing_knives)
 
 			disable_scroll_wield = disable_scroll_wield or talent_extension:has_special_rule(special_rules.adamant_whistle)
+			disable_scroll_wield = disable_scroll_wield or talent_extension:has_special_rule(special_rules.quick_flash_grenade)
 
 			if disable_scroll_wield then
 				return false
@@ -635,6 +663,13 @@ PlayerUnitAbilityExtension.is_cooldown_paused = function (self, ability_type)
 	return component.cooldown_paused
 end
 
+PlayerUnitAbilityExtension.pause_cooldown = function (self, ability_type)
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	component.cooldown_paused = true
+end
+
 PlayerUnitAbilityExtension.remaining_ability_cooldown = function (self, ability_type)
 	local enabled = self:ability_enabled(ability_type)
 
@@ -668,6 +703,12 @@ PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)
 
 	if not base_cooldown then
 		return 0
+	end
+
+	if type(base_cooldown) == "table" then
+		local min, max = base_cooldown.min, base_cooldown.max
+
+		base_cooldown = ability.cooldown_lerp_func(self._player:profile(), min, max)
 	end
 
 	local stat_buffs = self._buff_extension:stat_buffs()
@@ -788,7 +829,7 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 
 	new_cooldown = math.max(new_cooldown, fixed_frame_t)
-	ability_component.cooldown = new_cooldown
+	ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
 end
 
 PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, optional_num_charges)
@@ -835,6 +876,13 @@ end
 
 PlayerUnitAbilityExtension.get_current_ability_name = function (self)
 	local name = self._equipped_abilities.combat_ability.name
+
+	return name
+end
+
+PlayerUnitAbilityExtension.get_current_grenade_ability_name = function (self)
+	local grenade_ability = self._equipped_abilities.grenade_ability
+	local name = grenade_ability and grenade_ability.name
 
 	return name
 end

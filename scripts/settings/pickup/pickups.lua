@@ -25,6 +25,10 @@ _create_pickup_entry("scripts/settings/pickup/pickups/consumable/hordes_mcguffin
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_clip_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_metal_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/large_platinum_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/consumable/paper_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/consumable/paper_pickup_02")
+_create_pickup_entry("scripts/settings/pickup/pickups/consumable/paper_pickup_03")
+_create_pickup_entry("scripts/settings/pickup/pickups/consumable/paper_pickup_04")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_clip_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_grenade_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_metal_pickup")
@@ -52,6 +56,9 @@ _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/communication
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/consumable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/grimoire_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/tome_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/reward/live_event_saints_01_pickup_small")
+_create_pickup_entry("scripts/settings/pickup/pickups/reward/live_event_saints_01_pickup_medium")
+_create_pickup_entry("scripts/settings/pickup/pickups/reward/live_event_saints_01_pickup_large")
 
 for group_name, group_pickup in pairs(pickups.by_group) do
 	for pickup_name, settings in pairs(group_pickup) do

@@ -13,7 +13,7 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ViewElementWintrackSettings = require("scripts/ui/view_elements/view_element_wintrack/view_element_wintrack_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ViewElementWintrack = class("ViewElementWintrack", "ViewElementBase")
 
@@ -832,7 +832,7 @@ ViewElementWintrack._update_reward_input_description = function (self)
 		local input = not self._using_cursor_navigation and gamepad_input or pc_input
 		local loc_string = "loc_account_profile_next_reward"
 		local input_service_name = "View"
-		local text = TextUtils.localize_with_button_hint(input, loc_string, nil, input_service_name, nil, nil, true)
+		local text = Text.localize_with_button_hint(input, loc_string, nil, input_service_name, nil, nil, true)
 
 		if not self._using_cursor_navigation then
 			local input_device_list = InputUtils.platform_device_list()

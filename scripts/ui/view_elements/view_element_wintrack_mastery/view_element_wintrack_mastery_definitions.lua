@@ -602,6 +602,7 @@ local widget_definitions = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
+			value = nil,
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",

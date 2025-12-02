@@ -536,9 +536,8 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 	local growing_vertically = direction == DIRECTION.UP or direction == DIRECTION.DOWN
 	local negative_direction = direction == DIRECTION.LEFT or direction == DIRECTION.UP
 	local use_limit_new_section_spacing = self._fill_section_spacing
-	local num_alignments = #alignment_list
 
-	for i, alignment in ipairs(alignment_list) do
+	for _, alignment in ipairs(alignment_list) do
 		local widget
 
 		if alignment.name then
@@ -553,148 +552,147 @@ UIWidgetGrid._align_grid_widgets = function (self, alignment_list)
 
 		widget = widget or alignment
 
-		local first_widget = i == 1
-		local last_widget = i == num_alignments
 		local alignment_same_as_widget = alignment == widget
 		local content = widget.content
-		local size = alignment.size or widget.size or content.size
 
-		if not size then
-			local scenegraph_id = widget.scenegraph_id
-			local widget_scenegraph = scenegraph[scenegraph_id]
+		if not content or content.hide_in_grid ~= false then
+			local size = alignment.size or widget.size or content.size
 
-			size = widget_scenegraph.size
-		end
+			if not size then
+				local scenegraph_id = widget.scenegraph_id
+				local widget_scenegraph = scenegraph[scenegraph_id]
 
-		local change_grid_section = position[stale_axis] + size[stale_axis] > area_size[stale_axis] or false
-
-		if change_grid_section then
-			if growing_vertically then
-				column = 1
-				row = row + 1
-			else
-				row = 1
-				column = column + 1
+				size = widget_scenegraph.size
 			end
 
-			local limit_new_section_spacing = use_limit_new_section_spacing
+			local change_grid_section = position[stale_axis] + size[stale_axis] > area_size[stale_axis] or false
 
-			if limit_new_section_spacing then
-				for i = 1, #grid_section_entry_sizes do
-					local previous_selection_entry_size = grid_section_entry_sizes[i]
-					local previous_selection_entry_position = grid_section_entry_positions[i]
+			if change_grid_section then
+				if growing_vertically then
+					column = 1
+					row = row + 1
+				else
+					row = 1
+					column = column + 1
+				end
 
-					if math.box_overlap_box(position, size, previous_selection_entry_position, previous_selection_entry_size) then
-						limit_new_section_spacing = false
+				local limit_new_section_spacing = use_limit_new_section_spacing
+
+				if limit_new_section_spacing then
+					for i = 1, #grid_section_entry_sizes do
+						local previous_selection_entry_size = grid_section_entry_sizes[i]
+						local previous_selection_entry_position = grid_section_entry_positions[i]
+
+						if math.box_overlap_box(position, size, previous_selection_entry_position, previous_selection_entry_size) then
+							limit_new_section_spacing = false
+						end
 					end
 				end
-			end
 
-			if limit_new_section_spacing then
-				local previous_selection_entry_size = grid_section_entry_sizes[1]
-				local direction_axis = previous_selection_entry_size and previous_selection_entry_size[axis] or 0
+				if limit_new_section_spacing then
+					local previous_selection_entry_size = grid_section_entry_sizes[1]
+					local direction_axis = previous_selection_entry_size and previous_selection_entry_size[axis] or 0
 
-				if negative_direction then
-					position[axis] = position[axis] - (direction_axis + spacing[axis])
+					if negative_direction then
+						position[axis] = position[axis] - (direction_axis + spacing[axis])
+					else
+						position[axis] = position[axis] + (direction_axis + spacing[axis])
+					end
+				elseif negative_direction then
+					position[axis] = position[axis] - (grid_section_largest_direction_axis + spacing[axis])
 				else
-					position[axis] = position[axis] + (direction_axis + spacing[axis])
+					position[axis] = position[axis] + (grid_section_largest_direction_axis + spacing[axis])
 				end
-			elseif negative_direction then
-				position[axis] = position[axis] - (grid_section_largest_direction_axis + spacing[axis])
-			else
-				position[axis] = position[axis] + (grid_section_largest_direction_axis + spacing[axis])
-			end
 
-			position[stale_axis] = 0
-			grid_section_largest_direction_axis = 0
+				position[stale_axis] = 0
+				grid_section_largest_direction_axis = 0
+
+				if use_limit_new_section_spacing then
+					table.clear(grid_section_entry_sizes)
+					table.clear(grid_section_entry_positions)
+				end
+			end
 
 			if use_limit_new_section_spacing then
-				table.clear(grid_section_entry_sizes)
-				table.clear(grid_section_entry_positions)
-			end
-		end
-
-		if use_limit_new_section_spacing then
-			grid_section_entry_sizes[#grid_section_entry_sizes + 1] = table.clone(size)
-			grid_section_entry_positions[#grid_section_entry_positions + 1] = table.clone(position)
-		end
-
-		widget.offset = widget.offset or {}
-
-		local offset = widget.offset
-		local alignment_offset = not alignment_same_as_widget and alignment.offset or {
-			0,
-			0,
-		}
-		local horizontal_alignment = alignment.horizontal_alignment or "left"
-		local vertical_alignment = alignment.vertical_alignment or "top"
-
-		offset[1] = position[1] + alignment_offset[1]
-		offset[2] = position[2] + alignment_offset[2]
-
-		if negative_direction then
-			offset[axis] = offset[axis] - size[axis]
-		end
-
-		if not alignment_same_as_widget then
-			local widget_size = widget.size or content.size
-
-			if horizontal_alignment == "center" then
-				offset[1] = offset[1] + (size[1] - widget_size[1]) * 0.5
-			elseif horizontal_alignment == "right" then
-				offset[1] = offset[1] + size[1] - widget_size[1]
+				grid_section_entry_sizes[#grid_section_entry_sizes + 1] = table.clone(size)
+				grid_section_entry_positions[#grid_section_entry_positions + 1] = table.clone(position)
 			end
 
-			if vertical_alignment == "center" then
-				offset[2] = offset[2] + (size[2] - widget_size[2]) * 0.5
-			elseif vertical_alignment == "bottom" then
-				offset[2] = offset[2] + size[2] - widget_size[2]
-			end
-		end
+			widget.offset = widget.offset or {}
 
-		local default_offset = widget.default_offset
+			local offset = widget.offset
+			local alignment_offset = not alignment_same_as_widget and alignment.offset or {
+				0,
+				0,
+			}
+			local horizontal_alignment = alignment.horizontal_alignment or "left"
+			local vertical_alignment = alignment.vertical_alignment or "top"
 
-		if default_offset then
-			default_offset[1] = offset[1]
-			default_offset[2] = offset[2]
-		else
-			default_offset = table.clone(offset)
-			widget.default_offset = default_offset
-		end
+			offset[1] = position[1] + alignment_offset[1]
+			offset[2] = position[2] + alignment_offset[2]
 
-		if content then
-			content.row = row
-			content.column = column
-
-			if content.hotspot then
-				first_interactable_widget = first_interactable_widget or widget
-				last_interactable_widget = widget
-			end
-		end
-
-		position[stale_axis] = position[stale_axis] + (size[stale_axis] + spacing[stale_axis])
-
-		if grid_section_largest_direction_axis < size[axis] then
-			grid_section_largest_direction_axis = size[axis]
-		end
-
-		if grid_smallest_direction_axis > size[axis] then
-			grid_smallest_direction_axis = size[axis]
-		end
-
-		if last_widget then
 			if negative_direction then
-				total_length = math.abs(position[axis]) + start_offset
+				offset[axis] = offset[axis] - size[axis]
+			end
+
+			if not alignment_same_as_widget then
+				local widget_size = widget.size or content.size
+
+				if horizontal_alignment == "center" then
+					offset[1] = offset[1] + (size[1] - widget_size[1]) * 0.5
+				elseif horizontal_alignment == "right" then
+					offset[1] = offset[1] + size[1] - widget_size[1]
+				end
+
+				if vertical_alignment == "center" then
+					offset[2] = offset[2] + (size[2] - widget_size[2]) * 0.5
+				elseif vertical_alignment == "bottom" then
+					offset[2] = offset[2] + size[2] - widget_size[2]
+				end
+			end
+
+			local default_offset = widget.default_offset
+
+			if default_offset then
+				default_offset[1] = offset[1]
+				default_offset[2] = offset[2]
 			else
-				total_length = math.abs(position[axis]) + grid_section_largest_direction_axis
+				default_offset = table.clone(offset)
+				widget.default_offset = default_offset
+			end
+
+			if content then
+				content.row = row
+				content.column = column
+
+				if content.hotspot then
+					first_interactable_widget = first_interactable_widget or widget
+					last_interactable_widget = widget
+				end
+			end
+
+			position[stale_axis] = position[stale_axis] + (size[stale_axis] + spacing[stale_axis])
+
+			if grid_section_largest_direction_axis < size[axis] then
+				grid_section_largest_direction_axis = size[axis]
+			end
+
+			if grid_smallest_direction_axis > size[axis] then
+				grid_smallest_direction_axis = size[axis]
+			end
+
+			if growing_vertically then
+				column = column + 1
+			else
+				row = row + 1
 			end
 		end
+	end
 
-		if growing_vertically then
-			column = column + 1
-		else
-			row = row + 1
-		end
+	if negative_direction then
+		total_length = math.abs(position[axis]) + start_offset
+	else
+		total_length = math.abs(position[axis]) + grid_section_largest_direction_axis
 	end
 
 	self._first_interactable_widget_index = self:index_by_widget(first_interactable_widget)
@@ -821,8 +819,44 @@ UIWidgetGrid.focus_grid_index = function (self, index, scrollbar_animation_progr
 	self:select_grid_index(index, scrollbar_animation_progress, is_instant, not self._use_select_on_focused)
 end
 
+UIWidgetGrid.focus_by_content = function (self, value, path, scrollbar_animation_progress, is_instant)
+	self:select_by_content(value, path, scrollbar_animation_progress, is_instant, not self._use_select_on_focused)
+end
+
 UIWidgetGrid.focused_grid_index = function (self)
 	return self._focused_grid_index
+end
+
+UIWidgetGrid.select_by_content = function (self, value, path, scrollbar_animation_progress, is_instant, use_is_focused)
+	local index
+	local widgets = self._widgets
+
+	if widgets then
+		local path_n = #path
+
+		for widget_i = 1, #widgets do
+			local widget = widgets[widget_i]
+			local content = widget.content
+
+			for path_i = 1, path_n do
+				if not content then
+					break
+				end
+
+				content = content[path[path_i]]
+			end
+
+			if content == value then
+				index = widget_i
+
+				break
+			end
+		end
+	end
+
+	if index then
+		self:select_grid_index(index, scrollbar_animation_progress, is_instant, use_is_focused)
+	end
 end
 
 UIWidgetGrid.select_grid_index = function (self, index, scrollbar_animation_progress, is_instant, use_is_focused)

@@ -86,6 +86,39 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		else
 			cooldown_progress = uses_charges and 1 or 0
 		end
+
+		local pause_cooldown_settings = ability_extension:ability_pause_cooldown_settings(ability_id)
+
+		if pause_cooldown_settings then
+			local duration_tracking_buff = pause_cooldown_settings.duration_tracking_buff
+
+			if duration_tracking_buff then
+				local buff_extension = parent:get_player_extension(player, "buff_system")
+
+				if buff_extension:current_stacks(duration_tracking_buff) > 0 then
+					cooldown_progress = buff_extension:buff_duration_progress(duration_tracking_buff)
+					in_process_of_going_on_cooldown = cooldown_progress > 0
+				end
+			end
+
+			local on_cooldown_tracking_buff = pause_cooldown_settings.on_cooldown_tracking_buff
+
+			if on_cooldown_tracking_buff then
+				local buff_extension = parent:get_player_extension(player, "buff_system")
+
+				if type(on_cooldown_tracking_buff) == "table" then
+					for i = 1, #on_cooldown_tracking_buff do
+						if buff_extension:current_stacks(on_cooldown_tracking_buff[i]) > 0 then
+							force_on_cooldown = true
+
+							break
+						end
+					end
+				else
+					force_on_cooldown = buff_extension:current_stacks(on_cooldown_tracking_buff) > 0
+				end
+			end
+		end
 	end
 
 	if cooldown_progress ~= self._ability_progress then

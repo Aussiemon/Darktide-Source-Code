@@ -12,7 +12,6 @@ local InteractionTemplates = require("scripts/settings/interaction/interaction_t
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerCharacterStateInteracting = class("PlayerCharacterStateInteracting", "PlayerCharacterStateBase")
 local DEFAULT_ITEM_SLOT_TO_WIELD = "slot_unarmed"
@@ -66,6 +65,8 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 
 	if template_wield_slot then
 		local movement_state_component = self._movement_state_component
+		local locomotion_component = self._locomotion_component
+		local inair_state_component = self._inair_state_component
 		local is_crouching = self._movement_state_component.is_crouching
 
 		if is_crouching then
@@ -76,7 +77,7 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 			local sway_component = self._sway_component
 			local spread_control_component = self._spread_control_component
 
-			Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+			Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 		end
 
 		local item = interactee_extension:interactor_item_to_equip()

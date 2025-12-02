@@ -56,6 +56,18 @@ weapon_movement_curve_modifier_templates.autopistol_p1_m1 = {
 		lerp_perfect = 1.5,
 	},
 }
+weapon_movement_curve_modifier_templates.dual_autopistols_p1 = {
+	modifier = {
+		lerp_basic = 0.5,
+		lerp_perfect = 1.2,
+	},
+}
+weapon_movement_curve_modifier_templates.dual_stubpistols_p1 = {
+	modifier = {
+		lerp_basic = 0.5,
+		lerp_perfect = 1.2,
+	},
+}
 weapon_movement_curve_modifier_templates.ogryn_club_p1_m1 = {
 	modifier = {
 		lerp_basic = 0.5,

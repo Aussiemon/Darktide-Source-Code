@@ -3,18 +3,20 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_definitions")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local TabbedMenuViewBase = require("scripts/ui/views/tabbed_menu_view_base")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Text = require("scripts/utilities/ui/text")
 local VendorInteractionViewBaseTestify = GameParameters.testify and require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_testify")
 local VendorInteractionViewBase = class("VendorInteractionViewBase", "TabbedMenuViewBase")
 
 VendorInteractionViewBase.init = function (self, definitions, settings, context)
+	self._promise_container = PromiseContainer:new()
+
 	if context and context.wallet_type then
 		self._wallet_type = context.wallet_type
 	end
@@ -48,7 +50,12 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 	self._current_vo_id = nil
 	self._character_cooldowns = {}
 	self._vo_unit = nil
-	self._vo_callback = callback(self, "_cb_on_play_vo")
+
+	self._vo_callback = function (...)
+		if not self.__deleted then
+			return self:_cb_on_play_vo(...)
+		end
+	end
 
 	VendorInteractionViewBase.super.init(self, self._base_definitions, settings, context)
 
@@ -151,9 +158,8 @@ VendorInteractionViewBase._text_widget_size = function (self, widget_name, optio
 	local widget = self._widgets_by_name[widget_name]
 	local content = widget.content[optional_id]
 	local style = widget.style[optional_id]
-	local text_options = UIFonts.get_font_options_by_style(style)
 
-	return self:_text_size(content, style.font_type, style.font_size, style.size, text_options)
+	return self:_text_size(content, style, style.size)
 end
 
 VendorInteractionViewBase._update_text_height = function (self)
@@ -451,14 +457,9 @@ VendorInteractionViewBase.on_option_button_pressed = function (self, index, opti
 	end
 end
 
-VendorInteractionViewBase.on_exit = function (self)
-	if self._wallet_promise then
-		self._wallet_promise:cancel()
-
-		self._wallet_promise = nil
-	end
-
-	VendorInteractionViewBase.super.on_exit(self)
+VendorInteractionViewBase.destroy = function (self)
+	self._promise_container:delete()
+	VendorInteractionViewBase.super.destroy(self)
 end
 
 VendorInteractionViewBase.draw = function (self, dt, t, input_service, layer)
@@ -540,7 +541,7 @@ VendorInteractionViewBase._update_wallets = function (self)
 		self._wallet_promise = nil
 	end)
 
-	self._wallet_promise = promise
+	self._wallet_promise = self._promise_container:cancel_on_destroy(promise)
 end
 
 VendorInteractionViewBase._update_wallets_presentation = function (self, wallets_data)
@@ -579,14 +580,17 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 			amount = balance and balance.amount or 0
 		end
 
-		local text = TextUtilities.format_currency(amount)
+		local text = Text.format_currency(amount)
 
 		self._current_balance[wallet_type] = amount
 		widget.content.text = text
 
 		local style = widget.style
 		local text_style = style.text
-		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
+		local text_width = self:_text_size(text, text_style, {
+			1000,
+			100,
+		})
 		local texture_width = widget.style.texture.size[1]
 		local text_offset = widget.style.text.original_offset
 		local texture_offset = widget.style.texture.original_offset

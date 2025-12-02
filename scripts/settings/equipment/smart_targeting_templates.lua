@@ -11,6 +11,7 @@ local TORSO = "enemy_aim_target_02"
 local smart_targeting_templates = {}
 
 smart_targeting_templates.killshot = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -32,6 +33,7 @@ smart_targeting_templates.killshot = {
 	},
 }
 smart_targeting_templates.alternate_fire_killshot = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -53,6 +55,7 @@ smart_targeting_templates.alternate_fire_killshot = {
 	},
 }
 smart_targeting_templates.assault = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -74,6 +77,7 @@ smart_targeting_templates.assault = {
 	},
 }
 smart_targeting_templates.alternate_fire_assault = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -95,6 +99,7 @@ smart_targeting_templates.alternate_fire_assault = {
 	},
 }
 smart_targeting_templates.spray_n_pray = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -109,6 +114,7 @@ smart_targeting_templates.spray_n_pray = {
 	},
 }
 smart_targeting_templates.alternate_fire_snp = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -123,6 +129,8 @@ smart_targeting_templates.alternate_fire_snp = {
 	},
 }
 smart_targeting_templates.alternate_fire_bfg = {
+	proximity = nil,
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -137,6 +145,7 @@ smart_targeting_templates.alternate_fire_bfg = {
 	},
 }
 smart_targeting_templates.alternate_fire_slow_brace = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -151,6 +160,7 @@ smart_targeting_templates.alternate_fire_slow_brace = {
 	},
 }
 smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -172,6 +182,7 @@ smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
 	},
 }
 smart_targeting_templates.ogryn_heavystubber_p2_braced = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -193,6 +204,7 @@ smart_targeting_templates.ogryn_heavystubber_p2_braced = {
 	},
 }
 smart_targeting_templates.default_melee = {
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -215,6 +227,7 @@ smart_targeting_templates.default_melee = {
 	},
 }
 smart_targeting_templates.tank = {
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -237,6 +250,7 @@ smart_targeting_templates.tank = {
 	},
 }
 smart_targeting_templates.force_staff_single_target = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -258,6 +272,7 @@ smart_targeting_templates.force_staff_single_target = {
 	},
 }
 smart_targeting_templates.force_staff_p1_single_target = {
+	proximity = nil,
 	precision_target = {
 		max_range = 25,
 		min_range = 1,
@@ -279,6 +294,7 @@ smart_targeting_templates.force_staff_p1_single_target = {
 	},
 }
 smart_targeting_templates.force_sword_single_target = {
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 10,
 		min_range = 1,
@@ -301,6 +317,7 @@ smart_targeting_templates.force_sword_single_target = {
 	},
 }
 smart_targeting_templates.smite = {
+	proximity = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -373,6 +390,7 @@ smart_targeting_templates.smite = {
 	},
 }
 smart_targeting_templates.chain_lightning_single_target = {
+	proximity = nil,
 	precision_target = {
 		max_range = 15,
 		min_range = 1,
@@ -445,6 +463,7 @@ smart_targeting_templates.chain_lightning_single_target = {
 	},
 }
 smart_targeting_templates.target_ally = {
+	proximity = nil,
 	precision_target = {
 		collision_filter = "filter_player_unit",
 		max_range = 100,
@@ -468,6 +487,7 @@ smart_targeting_templates.target_ally = {
 	},
 }
 smart_targeting_templates.target_ally_close = {
+	proximity = nil,
 	precision_target = {
 		collision_filter = "filter_player_unit",
 		max_range = 2,
@@ -491,6 +511,9 @@ smart_targeting_templates.target_ally_close = {
 	},
 }
 smart_targeting_templates.throwing_knives_default = {
+	aim_assist = nil,
+	proximity = nil,
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -500,6 +523,9 @@ smart_targeting_templates.throwing_knives_default = {
 	},
 }
 smart_targeting_templates.throwing_knifes_single_target = {
+	aim_assist = nil,
+	proximity = nil,
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 50,
 		min_range = 1,
@@ -509,6 +535,9 @@ smart_targeting_templates.throwing_knifes_single_target = {
 	},
 }
 smart_targeting_templates.smart_tag_target = {
+	aim_assist = nil,
+	proximity = nil,
+	trajectory_assist = nil,
 	precision_target = {
 		max_range = 100,
 		max_unit_range = 100,

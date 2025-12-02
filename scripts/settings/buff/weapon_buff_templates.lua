@@ -5,6 +5,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
+local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffUtils = require("scripts/settings/buff/buff_utils")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
@@ -20,6 +21,9 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
+local Explosion = require("scripts/utilities/attack/explosion")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
@@ -160,7 +164,7 @@ templates.warp_fire = {
 					local side = side_system.side_by_unit[owner_unit]
 					local enemy_side_names = side:relation_side_names("enemy")
 					local victim_unit = template_context.unit
-					local position = POSITION_LOOKUP[victim_unit]
+					local position = Unit.world_position(victim_unit, 1)
 					local distance = 5
 					local num_results = broadphase.query(broadphase, position, distance, _warpfire_broadphase_results, enemy_side_names)
 
@@ -341,6 +345,21 @@ templates.rending_burn_debuff = {
 	stat_buffs = {
 		[buff_stat_buffs.rending_multiplier] = 0.01,
 	},
+}
+templates.saw_rending_debuff = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 15,
+	max_stacks_cap = 15,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.toxin,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.rending_multiplier] = 0.025,
+	},
+	minion_effects = minion_burning_buff_effects.broker_brittleness,
 }
 templates.shock_grenade_interval = {
 	buff_id = "shock_grenade_shock",
@@ -1207,6 +1226,786 @@ templates.suppression_immune_while_blocking = {
 		buff_keywords.suppression_immune,
 	},
 	conditional_keywords_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.is_blocking),
+}
+templates.needlepistol_p1_toxins = {
+	class_name = "proc_buff",
+	extra_dots_crit = 2,
+	extra_dots_weakspots = 2,
+	number_of_dots = 6,
+	number_of_dots_special = 2,
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+	},
+	special_disabled_hit_debuffs = {
+		"neurotoxin_interval_buff3",
+	},
+	special_enabled_hit_debuffs = {
+		"neurotoxin_interval_buff3",
+		"toxin_death_explosion",
+	},
+	start_func = function (template_data, template_context)
+		local slot = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot)
+		template_data.special_disabled_hit_debuffs = template_context.template.special_disabled_hit_debuffs
+		template_data.special_enabled_hit_debuffs = template_context.template.special_enabled_hit_debuffs
+	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			if not CheckProcFunctions.on_ranged_hit(params, template_data, template_context) then
+				return false
+			end
+
+			if params.hit_zone_name == "shield" then
+				return false
+			end
+
+			local attacking_item = params.attacking_item
+
+			if not attacking_item or attacking_item.name ~= template_context.source_item.name then
+				return
+			end
+
+			return true
+		end,
+	},
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local special_active = template_data.inventory_slot_component.special_active
+		local target_unit = params.attacked_unit
+
+		if HEALTH_ALIVE[target_unit] then
+			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+				local template = template_context.template
+				local num_dots_to_add = special_active and template.number_of_dots_special or template.number_of_dots
+
+				if params.is_critical_strike then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_crit
+				end
+
+				if params.hit_weakspot then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_weakspots
+				end
+
+				local buffs_to_add = special_active and template_data.special_enabled_hit_debuffs or template_data.special_disabled_hit_debuffs
+
+				for i = 1, num_dots_to_add do
+					for j = 1, #buffs_to_add do
+						buff_extension:add_internally_controlled_buff(buffs_to_add[j], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.m2_toxins = table.clone(templates.needlepistol_p1_toxins)
+templates.m2_toxins.special_disabled_hit_debuffs = {
+	"neurotoxin_interval_buff3",
+}
+templates.m2_toxins.special_enabled_hit_debuffs = {
+	"neurotoxin_interval_buff3",
+	"toxin_death_explosion_gas",
+}
+templates.m2_toxins.number_of_dots = 6
+templates.m2_toxins.number_of_dots_special = 2
+templates.m2_toxins.extra_dots_weakspots = 1
+templates.m2_toxins.extra_dots_crit = 1
+templates.m3_toxins = table.clone(templates.needlepistol_p1_toxins)
+templates.m3_toxins.special_disabled_hit_debuffs = {
+	"neurotoxin_interval_buff2",
+}
+templates.m3_toxins.special_enabled_hit_debuffs = {
+	"neurotoxin_interval_buff2",
+}
+templates.m3_toxins.number_of_dots = 6
+templates.m3_toxins.number_of_dots_special = 3
+templates.m3_toxins.extra_dots_weakspots = 3
+templates.m3_toxins.extra_dots_crit = 3
+templates.neurotoxin_interval_buff = {
+	class_name = "interval_buff",
+	duration = 4,
+	interval = 0.5,
+	interval_stack_removal = true,
+	max_stacks = 30,
+	max_stacks_cap = 30,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.toxin,
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.toxin_variant_1
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local power_level = stack_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
+		end
+	end,
+}
+templates.neurotoxin_interval_buff2 = {
+	class_name = "interval_buff",
+	duration = 0.35,
+	interval = 0.35,
+	interval_stack_removal = true,
+	max_stacks = 30,
+	max_stacks_cap = 30,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.toxin,
+	},
+	ragdoll_push_force = {
+		1,
+		2,
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.toxin_variant_2
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local power_level = stack_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.broker_toxin_gas,
+}
+templates.neurotoxin_interval_buff3 = {
+	class_name = "interval_buff",
+	duration = 2.6,
+	interval = 0.35,
+	interval_stack_removal = true,
+	max_stacks = 30,
+	max_stacks_cap = 30,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.toxin,
+	},
+	ragdoll_push_force = {
+		50,
+		150,
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.toxin_variant_3
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local power_level = stack_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.broker_toxin_gas,
+}
+templates.broker_tox_grenade_in_liquid_buff = {
+	class_name = "interval_buff",
+	duration = nil,
+	interval_stack_removal = true,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = false,
+	toxin_max_stacks = 6,
+	interval = templates.neurotoxin_interval_buff3.interval,
+	toxins = {
+		"neurotoxin_interval_buff3",
+		"toxin_death_explosion",
+		"hit_mass_reduction_debuff",
+	},
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local t = FixedFrame.get_latest_fixed_time()
+			local buff_extension = template_context.buff_extension
+			local toxins = template_context.template.toxins
+
+			if buff_extension then
+				for i = 1, #toxins do
+					local toxin_max_stacks = template_context.template.toxin_max_stacks
+					local current_stacks = template_context.buff_extension:current_stacks(toxins[i])
+
+					if current_stacks < toxin_max_stacks then
+						buff_extension:add_internally_controlled_buff(toxins[i], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.hit_mass_reduction_debuff = {
+	class_name = "buff",
+	duration = 1,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[buff_stat_buffs.hit_mass_multiplier_vs_melee] = 0.5,
+	},
+}
+templates.exploding_toxin_interval_buff = {
+	buff_id = "exploding_toxin_interval_buff",
+	class_name = "interval_buff",
+	duration = 4,
+	interval = 0.5,
+	interval_stack_removal = true,
+	max_stacks = 31,
+	max_stacks_cap = 31,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.toxin_variant_3
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+			local power_level = smoothstep_multiplier * 500
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "item", source_item, "attack_type", attack_types.buff)
+		end
+	end,
+}
+templates.toxin_death_explosion = {
+	buff_id = "toxin_death_explosion",
+	class_name = "proc_buff",
+	duration = 12,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	proc_events = {
+		[buff_proc_events.on_minion_damage_taken] = 1,
+	},
+	check_proc_func = function (params, template_data, template_context, t)
+		if not template_context.is_server then
+			return false
+		elseif template_context.unit ~= params.attacked_unit then
+			return false
+		elseif params.attack_results ~= "died" then
+			return false
+		elseif template_data.done then
+			return false
+		end
+
+		return true
+	end,
+	explosion_template = ExplosionTemplates.primer_explosion,
+	start_func = function (template_data, template_context)
+		template_data.explosion_template = template_context.template.explosion_template
+	end,
+	proc_func = function (params, template_data, template_context)
+		local dying_unit_position = Unit.world_position(template_context.unit, 1)
+		local explosion_position = dying_unit_position + Vector3.up() * 0.75
+		local explosion_template = template_data.explosion_template
+
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+
+		template_data.done = true
+	end,
+}
+templates.toxin_death_explosion_gas = table.clone(templates.toxin_death_explosion)
+templates.toxin_death_explosion_gas.explosion_template = ExplosionTemplates.primer_gas
+templates.toxin_death_explosion_stun = table.clone(templates.toxin_death_explosion)
+templates.toxin_death_explosion_stun.explosion_template = ExplosionTemplates.primer_stun
+templates.toxin_special_stun = {
+	class_name = "interval_buff",
+	duration = 0.6,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	interval = {
+		0.8,
+		3.7,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if ALIVE[unit] and HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.primer_stun
+			local owner_unit = template_context.owner_unit
+			local stack_multiplier = template_context.stack_count / template.max_stacks
+			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
+			local power_level = smoothstep_multiplier * 500
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+
+			local buff_extension = template_context.buff_extension
+
+			if buff_extension then
+				buff_extension:add_internally_controlled_buff("shock_effect", t)
+			end
+		end
+	end,
+}
+templates.saw_p1_coating_poison_burn_plus_brittleness = {
+	class_name = "proc_buff",
+	extra_dots_crit = 1,
+	extra_dots_weakspots = 0,
+	number_of_dots = 1,
+	number_of_dots_special = 3,
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_damage_dealt] = 1,
+	},
+	special_enabled_hit_debuffs = {
+		"flamer_assault",
+		"rending_debuff",
+	},
+	special_disabled_hit_debuffs = {
+		"neurotoxin_interval_buff3",
+	},
+	start_func = function (template_data, template_context)
+		local slot = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot)
+		template_data.apply_debuffs_func = template_context.template.apply_debuffs
+		template_data.special_disabled_hit_debuffs = template_context.template.special_disabled_hit_debuffs
+		template_data.special_enabled_hit_debuffs = template_context.template.special_enabled_hit_debuffs
+	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			if not CheckProcFunctions.on_melee_hit(params, template_data, template_context) then
+				return false
+			end
+
+			if params.hit_zone_name == "shield" then
+				return false
+			end
+
+			return true
+		end,
+	},
+	specific_proc_func = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			template_data.apply_debuffs_func(params, template_data, template_context)
+		end,
+		[buff_proc_events.on_damage_dealt] = function (params, template_data, template_context)
+			if params.sticky_attack then
+				template_data.apply_debuffs_func(params, template_data, template_context)
+			end
+		end,
+	},
+	apply_debuffs = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local special_active = template_data.inventory_slot_component.special_active
+		local target_unit = params.attacked_unit
+
+		if HEALTH_ALIVE[target_unit] then
+			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+				local template = template_context.template
+				local num_dots_to_add = special_active and template.number_of_dots_special or template.number_of_dots
+
+				if params.is_critical_strike then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_crit
+				end
+
+				if params.hit_weakspot then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_weakspots
+				end
+
+				local buffs_to_add = special_active and template_data.special_enabled_hit_debuffs or template_data.special_disabled_hit_debuffs
+
+				for i = 1, num_dots_to_add do
+					for j = 1, #buffs_to_add do
+						buff_extension:add_internally_controlled_buff(buffs_to_add[j], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.saw_p1_coating_poison_bleed_plus_brittleness = {
+	class_name = "proc_buff",
+	extra_dots_crit = 1,
+	extra_dots_weakspots = 0,
+	number_of_dots = 1,
+	number_of_dots_special = 3,
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_damage_dealt] = 1,
+	},
+	special_enabled_hit_debuffs = {
+		"bleed",
+		"rending_debuff",
+	},
+	special_disabled_hit_debuffs = {
+		"neurotoxin_interval_buff3",
+	},
+	start_func = function (template_data, template_context)
+		local slot = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot)
+		template_data.apply_debuffs_func = template_context.template.apply_debuffs
+		template_data.special_disabled_hit_debuffs = template_context.template.special_disabled_hit_debuffs
+		template_data.special_enabled_hit_debuffs = template_context.template.special_enabled_hit_debuffs
+	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			if not CheckProcFunctions.on_melee_hit(params, template_data, template_context) then
+				return false
+			end
+
+			if params.hit_zone_name == "shield" then
+				return false
+			end
+
+			return true
+		end,
+	},
+	specific_proc_func = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			template_data.apply_debuffs_func(params, template_data, template_context)
+		end,
+		[buff_proc_events.on_damage_dealt] = function (params, template_data, template_context)
+			if params.sticky_attack then
+				template_data.apply_debuffs_func(params, template_data, template_context)
+			end
+		end,
+	},
+	apply_debuffs = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local special_active = template_data.inventory_slot_component.special_active
+		local target_unit = params.attacked_unit
+
+		if HEALTH_ALIVE[target_unit] then
+			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+				local template = template_context.template
+				local num_dots_to_add = special_active and template.number_of_dots_special or template.number_of_dots
+
+				if params.is_critical_strike then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_crit
+				end
+
+				if params.hit_weakspot then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_weakspots
+				end
+
+				local buffs_to_add = special_active and template_data.special_enabled_hit_debuffs or template_data.special_disabled_hit_debuffs
+
+				for i = 1, num_dots_to_add do
+					for j = 1, #buffs_to_add do
+						buff_extension:add_internally_controlled_buff(buffs_to_add[j], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.saw_p1_coating_poison_brittleness = {
+	class_name = "proc_buff",
+	extra_dots_crit = 1,
+	extra_dots_weakspots = 0,
+	number_of_dots = 1,
+	number_of_dots_special = 3,
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_damage_dealt] = 1,
+	},
+	special_enabled_hit_debuffs = {
+		"saw_rending_debuff",
+	},
+	special_disabled_hit_debuffs = {
+		"neurotoxin_interval_buff3",
+	},
+	start_func = function (template_data, template_context)
+		local slot = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot)
+		template_data.apply_debuffs_func = template_context.template.apply_debuffs
+		template_data.special_disabled_hit_debuffs = template_context.template.special_disabled_hit_debuffs
+		template_data.special_enabled_hit_debuffs = template_context.template.special_enabled_hit_debuffs
+	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			if not CheckProcFunctions.on_melee_hit(params, template_data, template_context) then
+				return false
+			end
+
+			if params.hit_zone_name == "shield" then
+				return false
+			end
+
+			return true
+		end,
+	},
+	specific_proc_func = {
+		[buff_proc_events.on_hit] = function (params, template_data, template_context)
+			template_data.apply_debuffs_func(params, template_data, template_context)
+		end,
+		[buff_proc_events.on_damage_dealt] = function (params, template_data, template_context)
+			if params.sticky_attack then
+				template_data.apply_debuffs_func(params, template_data, template_context)
+			end
+		end,
+	},
+	apply_debuffs = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local special_active = template_data.inventory_slot_component.special_active
+		local target_unit = params.attacked_unit
+
+		if HEALTH_ALIVE[target_unit] then
+			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+				local template = template_context.template
+				local num_dots_to_add = special_active and template.number_of_dots_special or template.number_of_dots
+
+				if params.is_critical_strike then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_crit
+				end
+
+				if params.hit_weakspot then
+					num_dots_to_add = num_dots_to_add + template.extra_dots_weakspots
+				end
+
+				local buffs_to_add = special_active and template_data.special_enabled_hit_debuffs or template_data.special_disabled_hit_debuffs
+
+				for i = 1, num_dots_to_add do
+					for j = 1, #buffs_to_add do
+						buff_extension:add_internally_controlled_buff(buffs_to_add[j], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.dual_shivs_p1_throwing_knives_poison = {
+	class_name = "proc_buff",
+	extra_dots_crit = 2,
+	extra_dots_weakspots = 2,
+	number_of_dots = 4,
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+		[buff_proc_events.on_damage_dealt] = 1,
+	},
+	debuffs_to_add = {
+		"neurotoxin_interval_buff3",
+	},
+	start_func = function (template_data, template_context)
+		local slot = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		local template = template_context.template
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot)
+		template_data.apply_debuffs_func = template.apply_debuffs
+		template_data.debuffs_to_add = template.debuffs_to_add
+		template_data.number_of_dots = template.number_of_dots
+	end,
+	check_proc_func = function (params, template_data, template_context)
+		local projectile_name = params.damage_profile and params.damage_profile.name
+
+		if projectile_name ~= "dual_shivs_throwing_knives" then
+			return false
+		end
+
+		if params.hit_zone_name == "shield" then
+			return false
+		end
+
+		return true
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		template_data.apply_debuffs_func(params, template_data, template_context)
+	end,
+	apply_debuffs = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local target_unit = params.attacked_unit
+
+		if HEALTH_ALIVE[target_unit] then
+			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+				local buffs_to_add = template_data.debuffs_to_add
+				local template = template_context.template
+				local num_dots = template_data.number_of_dots
+
+				num_dots = num_dots + (params.is_critical_strike and template.extra_dots_crit or 0)
+				num_dots = num_dots + (params.hit_weakspot and template.extra_dots_weakspots or 0)
+
+				for i = 1, num_dots do
+					for j = 1, #buffs_to_add do
+						buff_extension:add_internally_controlled_buff(buffs_to_add[j], t, "owner_unit", template_context.owner_unit)
+					end
+				end
+			end
+		end
+	end,
+}
+templates.dual_shivs_regain_weapon_special_charges_on_backstab_kill = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_backstab_kill,
+	start_func = function (template_data, template_context)
+		local player_unit = template_context.unit
+		local slot_name = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:write_component(slot_name)
+
+		local weapon_template = WeaponTemplates.dual_shivs_p1_m1
+
+		template_data.breed_tags = weapon_template.weapon_special_tweak_data.breed_tag_charges
+		template_data.max_charges = weapon_template.weapon_special_tweak_data.max_charges
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local breed = Breeds[params.breed_name]
+
+		if breed and breed.tags then
+			for k, _ in pairs(breed.tags) do
+				if template_data.breed_tags[k] then
+					return
+				end
+			end
+		end
+
+		local num_charges = template_data.inventory_slot_component.num_special_charges
+
+		if num_charges and num_charges < template_data.max_charges then
+			template_data.inventory_slot_component.num_special_charges = num_charges + 1
+		end
+	end,
+}
+
+local windup_increases_power_valid_actions = {
+	character_state_change = true,
+	sweep = true,
+	targeted_dash_aim = true,
+}
+
+templates.windup_increases_power_default_parent = {
+	allow_proc_while_active = true,
+	child_buff_template = "windup_increases_power_default_child",
+	class_name = "weapon_trait_parent_proc_buff",
+	description = "Windup Desc",
+	display_description = "loc_weapon_keyword_heavy_windup_mouseover",
+	display_title = "loc_weapon_keyword_heavy_windup",
+	hud_icon = "content/ui/textures/icons/traits/weapon_trait_247",
+	max_stacks = 3,
+	predicted = false,
+	show_in_hud_if_slot_is_wielded = true,
+	stack_offset = -1,
+	stacks_to_remove = 3,
+	title = "Windup",
+	proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+		[buff_proc_events.on_sweep_finish] = 1,
+		[buff_proc_events.on_action_start] = 1,
+		[buff_proc_events.on_wield] = 1,
+	},
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_windup_trigger] = function (params, template_data, template_context)
+			return ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
+		end,
+		[buff_proc_events.on_action_start] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local kind = action_settings.kind
+
+			return not windup_increases_power_valid_actions[kind]
+		end,
+	},
+	add_child_proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+	},
+	clear_child_stacks_proc_events = {
+		[buff_proc_events.on_sweep_finish] = true,
+		[buff_proc_events.on_action_start] = true,
+		[buff_proc_events.on_wield] = true,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_power_default_child = {
+	class_name = "buff",
+	hide_icon_in_hud = true,
+	max_stacks = 3,
+	predicted = false,
+	stack_offset = -1,
+	conditional_stat_buffs = {
+		[buff_stat_buffs.melee_power_level_modifier] = 0.075,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
 
 return templates

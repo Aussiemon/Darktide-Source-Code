@@ -70,6 +70,7 @@ end
 
 PlayerUnitLedgeFinderExtension._new_ledge_data = function (self)
 	local ledge_data = {
+		material_or_nil = nil,
 		left = Vector3Box(),
 		right = Vector3Box(),
 		forward = Vector3Box(),

@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_throwing_knives_effects.lua
 
 local Component = require("scripts/utilities/component")
-local Vo = require("scripts/utilities/vo")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local _components
 local RECOVER_SOUND_ALIAS = "charge_ready_indicator"
@@ -84,7 +83,6 @@ PsykerThrowingKnivesEffects.update_first_person_mode = function (self, first_per
 end
 
 PsykerThrowingKnivesEffects.wield = function (self)
-	Vo.play_combat_ability_event(self._owner_unit, "ability_gunslinger")
 	self:_hide_all_ammo()
 	self:_update_ammo_count(self._t)
 end

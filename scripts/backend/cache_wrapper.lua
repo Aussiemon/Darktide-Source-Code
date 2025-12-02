@@ -14,7 +14,9 @@ CacheWrapper.init = function (self, metadata_fn, refresh_fn, fallback_fn)
 	self._metadata_fn = metadata_fn
 	self._refresh_fn = refresh_fn
 	self._fallback_fn = fallback_fn
-	self._current_metadata = {}
+	self._current_metadata = {
+		version = nil,
+	}
 	self._current_value = nil
 	self._listeners = {}
 end

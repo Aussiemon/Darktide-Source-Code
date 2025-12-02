@@ -99,4 +99,18 @@ TerrorEventQueries.num_aggroed_minions_in_level_by_tag = function (tag, optional
 	return num_aggroed_by_tag
 end
 
+TerrorEventQueries.min_difficulty_requirement = function (min_difficulty)
+	local current_difficulty_settings = Managers.state.difficulty:get_danger_settings()
+	local current_difficulty = current_difficulty_settings and current_difficulty_settings.difficulty or 1
+
+	return min_difficulty <= current_difficulty
+end
+
+TerrorEventQueries.is_in_target_difficulty = function (target_difficulty)
+	local current_difficulty_settings = Managers.state.difficulty:get_danger_settings()
+	local current_difficulty = current_difficulty_settings and current_difficulty_settings.difficulty or 1
+
+	return target_difficulty == current_difficulty
+end
+
 return TerrorEventQueries

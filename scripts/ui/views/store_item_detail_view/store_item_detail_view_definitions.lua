@@ -1128,6 +1128,7 @@ local widget_definitions = {
 		{
 			pass_type = "texture",
 			style_id = "price_icon",
+			value = nil,
 			value_id = "price_icon",
 			style = {
 				horizontal_alignment = "right",
@@ -1313,6 +1314,7 @@ local widget_definitions = {
 				},
 				material_values = {
 					gradient_map = "content/ui/textures/masks/blur_straight",
+					texture_map = nil,
 				},
 			},
 			visibility_function = function (content, style)
@@ -1544,7 +1546,9 @@ local bundle_button_definition = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
 			color = Color.white(255, true),
-			material_values = {},
+			material_values = {
+				texture_map = nil,
+			},
 			uvs = {
 				{
 					0,
@@ -1720,6 +1724,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",

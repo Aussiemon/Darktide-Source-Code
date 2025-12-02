@@ -183,6 +183,7 @@ local temp_position = {
 	0,
 	0,
 }
+local temp_text_options = {}
 
 SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	SplashView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
@@ -261,11 +262,14 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 					if entry_type == "text" then
 						local style = entry.style
-						local text_options = UIFonts.get_font_options_by_style(style)
+
+						table.clear(temp_text_options)
+						UIFonts.get_font_options_by_style(style, temp_text_options)
+
 						local text = self:_localize(value)
 						local font_size = UIFonts.scaled_size(style.font_size, scale)
 
-						UIRenderer.draw_text(ui_renderer, text, font_size, style.font_type, temp_position, size, color, text_options)
+						UIRenderer.draw_text(ui_renderer, text, font_size, style.font_type, temp_position, size, color, temp_text_options)
 					elseif entry_type == "rect" then
 						UIRenderer.draw_rect(ui_renderer, Vector3(temp_position[1], temp_position[2], temp_position[3]), Vector2(size[1], size[2]), color)
 					elseif entry_type == "texture" then

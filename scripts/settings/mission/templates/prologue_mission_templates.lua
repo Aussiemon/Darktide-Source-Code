@@ -8,6 +8,7 @@ local mission_templates = {
 		level = "content/levels/prologue/missions/prologue",
 		mechanism_name = "onboarding",
 		mission_name = "loc_mission_name_prologue",
+		not_available_on_mission_board = true,
 		not_needed_for_penance = true,
 		objectives = "prologue",
 		wwise_state = "prologue",

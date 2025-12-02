@@ -326,6 +326,83 @@ local growing_up_options = {
 			},
 		},
 	},
+	{
+		description = "loc_character_growing_up_23_description",
+		display_name = "loc_character_growing_up_23_name",
+		name = "Broker 1",
+		story_snippet = "loc_character_growing_up_23_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_24_description",
+		display_name = "loc_character_growing_up_24_name",
+		name = "Broker 2",
+		story_snippet = "loc_character_growing_up_24_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_25_description",
+		display_name = "loc_character_growing_up_25_name",
+		name = "Broker 3",
+		story_snippet = "loc_character_growing_up_25_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_26_description",
+		display_name = "loc_character_growing_up_26_name",
+		name = "Broker 4",
+		story_snippet = "loc_character_growing_up_26_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_27_description",
+		display_name = "loc_character_growing_up_27_name",
+		name = "Broker 5",
+		story_snippet = "loc_character_growing_up_27_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_28_description",
+		display_name = "loc_character_growing_up_28_name",
+		name = "Broker 6",
+		story_snippet = "loc_character_growing_up_28_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_growing_up_29_description",
+		display_name = "loc_character_growing_up_29_name",
+		name = "Broker 7",
+		story_snippet = "loc_character_growing_up_29_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
 }
 local growing_up_options_by_id = {}
 

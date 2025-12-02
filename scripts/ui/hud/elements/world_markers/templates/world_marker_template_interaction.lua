@@ -1,10 +1,8 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/world_markers/templates/world_marker_template_interaction.lua
 
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local InputUtils = require("scripts/managers/input/input_utils")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local USE_HDR = true
 local template = {}
@@ -140,6 +138,43 @@ local template_visual_definitions = {
 	},
 	pickup = {
 		template_settings_overrides = {
+			position_offset = {
+				0,
+				0,
+				0.8,
+			},
+		},
+		colors = {
+			background = Color.terminal_background(200, true),
+			ring = {
+				255,
+				226,
+				199,
+				126,
+			},
+			line = Color.ui_interaction_pickup(255, true),
+			ping = Color.ui_terminal(200, true),
+			arrow = Color.ui_hud_green_super_light(255, true),
+			icon = Color.ui_hud_green_super_light(255, true),
+		},
+		textures = {
+			arrow = "content/ui/materials/hud/interactions/frames/direction",
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+		},
+	},
+	pickup_hidden = {
+		template_settings_overrides = {
+			fade_settings = {
+				default_fade = 1,
+				distance_max = 5,
+				fade_from = 0,
+				fade_to = 1,
+				distance_min = 5 - template.evolve_distance,
+				easing_function = math.easeCubic,
+			},
 			position_offset = {
 				0,
 				0,

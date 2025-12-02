@@ -8,8 +8,7 @@ local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local grid_size = InventoryWeaponDetailsViewSettings.grid_size
 local grid_content_edge_margin = InventoryWeaponDetailsViewSettings.grid_content_edge_margin
 local max_width = grid_size[1] - grid_content_edge_margin * 2
@@ -117,8 +116,7 @@ local blueprints = {
 			local text_style = style.text
 			local ui_renderer = parent._ui_renderer
 			local size = content.size
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local _, height = UIRenderer.text_size(ui_renderer, localized_text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, localized_text, text_style, size)
 
 			widget.content.size[2] = height
 		end,

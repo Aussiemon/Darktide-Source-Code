@@ -40,6 +40,13 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	self._weapon_unit = weapon.weapon_unit
 	self._weapon_template = weapon.weapon_template
 	self._inventory_slot_component = weapon.inventory_slot_component
+
+	local ability_type = self._action_settings.ability_type
+
+	if ability_type then
+		self._ability_type = ability_type
+		self._ability_pause_cooldown_setting = self._ability_extension:ability_pause_cooldown_settings(ability_type)
+	end
 end
 
 ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -83,6 +90,10 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	end
 
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
+
+	if self._ability_pause_cooldown_setting then
+		self._ability_extension:pause_cooldown(self._ability_type)
+	end
 end
 
 ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)

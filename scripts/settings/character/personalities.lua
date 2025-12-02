@@ -569,6 +569,150 @@ local personality_options = {
 			},
 		},
 	},
+	{
+		character_voice = "broker_male_a",
+		description = "loc_broker_male_a__intro_a_01",
+		display_name = "loc_personality_name_male_broker_1",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_male_a",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_male_a",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"male",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "broker_male_b",
+		description = "loc_broker_male_b__intro_a_01",
+		display_name = "loc_personality_name_male_broker_2",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_male_b",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_male_b",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"male",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "broker_male_c",
+		description = "loc_broker_male_c__intro_a_01",
+		display_name = "loc_personality_name_male_broker_3",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_male_c",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_male_c",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"male",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "broker_female_a",
+		description = "loc_broker_female_a__intro_a_01",
+		display_name = "loc_personality_name_female_broker_1",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_female_a",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_female_a",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"female",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "broker_female_b",
+		description = "loc_broker_female_b__intro_a_01",
+		display_name = "loc_personality_name_female_broker_2",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_female_b",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_female_b",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"female",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "broker_female_c",
+		description = "loc_broker_female_c__intro_a_01",
+		display_name = "loc_personality_name_female_broker_3",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_broker_female_c",
+		sample_sound_event = "wwise/events/vo/play_preview_broker_female_c",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			genders = {
+				"female",
+			},
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		character_voice = "ogryn_d",
+		description = "loc_ogryn_d__intro_01",
+		display_name = "loc_personality_name_ogryn_4",
+		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_d",
+		sample_sound_event = "wwise/events/vo/play_preview_ogryn_d",
+		unlocks = {
+			{
+				text = "loc_personality_effect_description",
+				type = "text",
+			},
+		},
+		visibility = {
+			archetypes = {
+				"ogryn",
+			},
+		},
+	},
 }
 local personality_options_by_id = {}
 

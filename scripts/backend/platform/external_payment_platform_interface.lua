@@ -14,6 +14,7 @@ local ExternalPaymentPlatformInterface = {
 	"fail_txn",
 	"show_empty_store_error",
 	"query_license_token",
+	"invalidate_cache",
 }
 
 return ExternalPaymentPlatformInterface

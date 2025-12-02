@@ -56,6 +56,7 @@ dialogue_lookup_concept_names.all_concepts = {
 	"seen_enemy_group_far_range_shooting_behind_cover",
 	"seen_horde",
 	"seen_killstreak_adamant",
+	"seen_killstreak_broker",
 	"seen_killstreak_ogryn",
 	"seen_killstreak_psyker",
 	"seen_killstreak_veteran",

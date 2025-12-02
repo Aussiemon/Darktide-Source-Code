@@ -368,11 +368,9 @@ local archetype_talents = {
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_outlines",
 					"veteran_combat_ability_ranged_roamer_outlines",
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_ranged_roamer_outlines,
 				},
 			},
@@ -403,11 +401,9 @@ local archetype_talents = {
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_outlines",
 					"veteran_combat_ability_ogryn_outlines",
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_ogryn_outlines,
 				},
 			},
@@ -429,11 +425,9 @@ local archetype_talents = {
 			},
 			special_rule = {
 				identifier = {
-					"veteran_combat_ability_outlines",
 					"veteran_combat_ability_coherency_outlines",
 				},
 				special_rule_name = {
-					special_rules.veteran_combat_ability_outlines,
 					special_rules.veteran_combat_ability_coherency_outlines,
 				},
 			},
@@ -1492,8 +1486,8 @@ local archetype_talents = {
 						buff_template_name = "veteran_increased_explosion_radius",
 						find_value_type = "buff_template",
 						path = {
-							"proc_stat_buffs",
-							stat_buffs.spread_modifier,
+							"stat_buffs",
+							stat_buffs.explosion_radius_modifier,
 						},
 					},
 					value_manipulation = function (value)

@@ -7,6 +7,7 @@ UrlLoaderManager.init = function (self)
 	self._cached_textures = {}
 	self._cached_promises = {}
 	self._reference_count = {}
+	self._url_to_context = {}
 end
 
 UrlLoaderManager._on_load_texture_ok = function (self, url, backend_data)
@@ -18,6 +19,7 @@ UrlLoaderManager._on_load_texture_ok = function (self, url, backend_data)
 	}
 
 	self._cached_promises[url] = nil
+	self._url_to_context[url] = nil
 	self._cached_textures[url] = texture_data
 
 	return texture_data
@@ -28,17 +30,26 @@ UrlLoaderManager._on_load_texture_error = function (self, url, backend_error)
 
 	Log.warning("UrlLoaderManager", "Failed to load texture data for url '%s' with error: %s", url, error_string)
 
+	local context = self._url_to_context[url]
+
+	if context then
+		context.time = Managers.time:time("main") - context.time
+
+		Managers.telemetry_events:image_request_failed(url, context)
+	end
+
 	local texture_data = {
 		url = url,
 	}
 
 	self._cached_promises[url] = nil
+	self._url_to_context[url] = nil
 	self._cached_textures[url] = texture_data
 
 	return texture_data
 end
 
-UrlLoaderManager.load_texture = function (self, url, require_auth)
+UrlLoaderManager.load_texture = function (self, url, require_auth, optional_reason)
 	self._reference_count[url] = (self._reference_count[url] or 0) + 1
 
 	local cached_promise = self._cached_promises[url]
@@ -52,6 +63,11 @@ UrlLoaderManager.load_texture = function (self, url, require_auth)
 	if texture_data then
 		return Promise.resolved(texture_data)
 	end
+
+	self._url_to_context[url] = {
+		reason = optional_reason or "unknown",
+		time = Managers.time:time("main"),
+	}
 
 	local promise = Managers.backend:url_request(url, {
 		require_auth = require_auth ~= false,

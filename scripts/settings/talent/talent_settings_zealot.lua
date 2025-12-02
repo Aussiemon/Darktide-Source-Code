@@ -134,7 +134,6 @@ local talent_settings = {
 			sprint_cost = 0.9,
 			sprint_speed = 0.1,
 		},
-		zealot_weakspot_kills_restore_dodge = {},
 		zealot_push_attacks_attack_speed = {
 			duration = 5,
 			melee_attack_speed = 0.1,

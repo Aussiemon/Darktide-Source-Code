@@ -24,7 +24,10 @@ local action_data = {
 			right = "change_target_right",
 		},
 		change_target_anim_data = {
-			change_target_fwd = {},
+			change_target_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			change_target_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -84,7 +87,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -277,6 +283,7 @@ local action_data = {
 		min_time_navigating = 0.5,
 		min_time_spent_charging = 1,
 		power_level = 150,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 4,
 		push_minions_side_relation = "allied",
@@ -295,7 +302,10 @@ local action_data = {
 			right = "attack_charge_start_right",
 		},
 		start_move_anim_data = {
-			attack_charge_start_fwd = {},
+			attack_charge_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_charge_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -311,11 +321,13 @@ local action_data = {
 		},
 		start_move_rotation_timings = {
 			attack_charge_start_bwd = 0.16,
+			attack_charge_start_fwd = nil,
 			attack_charge_start_left = 0.16,
 			attack_charge_start_right = 0.16,
 		},
 		start_rotation_durations = {
 			attack_charge_start_bwd = 0.96,
+			attack_charge_start_fwd = nil,
 			attack_charge_start_left = 0.5333333333333333,
 			attack_charge_start_right = 0.6933333333333334,
 		},
@@ -670,6 +682,7 @@ local action_data = {
 		stagger_immune = true,
 	},
 	smash_obstacle = {
+		damage_type = nil,
 		rotation_duration = 0.1,
 		attack_anim_events = {
 			"attack_slam",

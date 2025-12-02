@@ -18,12 +18,6 @@ EventSynchronizerBaseExtension.init = function (self, extension_init_context, un
 		self._setup_seed = math.random_seed()
 		self._seed = math.random_seed()
 	end
-
-	local level = Unit.level(unit)
-
-	if level then
-		self._group_id = Managers.state.unit_spawner:index_by_level(level)
-	end
 end
 
 EventSynchronizerBaseExtension.setup_from_component = function (self)

@@ -131,9 +131,7 @@ local function interface_limit_reached(fgrl_stats, limits, interface_name, funct
 end
 
 local function fgrl_failed(error_message, ...)
-	if rawget(_G, "Log") then
-		Log.error("FGRLLimits", error_message)
-	end
+	Log.error("FGRLLimits", error_message)
 
 	return nil, nil, error_message
 end
@@ -206,9 +204,7 @@ if IS_XBS or IS_GDK then
 		if not FGRLLimits.tracked_interfaces[interface_name] then
 			FGRLLimits.tracked_interfaces[interface_name] = true
 
-			if rawget(_G, "Log") then
-				Log.info("TRACKING FGRL", "###### Started tracking %q ######", interface_name)
-			end
+			Log.info("TRACKING FGRL", "###### Started tracking %q ######", interface_name)
 
 			for function_name, _ in pairs(interface_tracking_data.functions) do
 				local limits = interface_tracking_data.limits[function_name] or interface_tracking_data.limits
@@ -217,9 +213,7 @@ if IS_XBS or IS_GDK then
 					limits = interface_tracking_data.limit_groups[limits.limit_group]
 				end
 
-				if rawget(_G, "Log") then
-					Log.info("TRACKING FGRL", "- function: %q (Burst Limit: %d / Sustain Limit: %d)", function_name, limits.burst_limit, limits.sustain_limit)
-				end
+				Log.info("TRACKING FGRL", "- function: %q (Burst Limit: %d / Sustain Limit: %d)", function_name, limits.burst_limit, limits.sustain_limit)
 			end
 
 			local metatable = {

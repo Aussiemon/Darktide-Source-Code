@@ -12,6 +12,7 @@ local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
@@ -48,21 +49,8 @@ local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
 local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
-local GRENADE_IMPACT_DAMAGE_TEMPLATES = {
-	fire_grenade_impact = true,
-	frag_grenade_impact = true,
-	krak_grenade_impact = true,
-	ogryn_grenade_box_cluster_impact = true,
-	ogryn_grenade_box_impact = true,
-	ogryn_grenade_impact = true,
-}
-local GRENADE_EXPLOSION_DAMAGE_TYPES = {
-	[damage_types.grenade_frag] = true,
-	[damage_types.electrocution] = true,
-	[damage_types.plasma] = true,
-	[damage_types.physical] = true,
-	[damage_types.laser] = true,
-}
+local grenade_impact_damage_templates = DamageProfileSettings.grenade_impact_damage_templates
+local grenade_explosion_damage_types = DamageProfileSettings.grenade_explosion_damage_types
 local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
 local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
 local BROADPHASE_RESULTS = {}
@@ -290,7 +278,7 @@ templates.hordes_buff_grenade_explosion_applies_elemental_weakness = {
 		[proc_events.on_hit] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
-		return params.attack_type == attack_types.explosion and GRENADE_EXPLOSION_DAMAGE_TYPES[params.damage_type]
+		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
 	end,
 	proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
@@ -338,7 +326,7 @@ templates.hordes_buff_grenade_explosion_applies_rending_debuff = {
 		[proc_events.on_hit] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
-		return params.attack_type == attack_types.explosion and GRENADE_EXPLOSION_DAMAGE_TYPES[params.damage_type]
+		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
 	end,
 	proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
@@ -487,7 +475,7 @@ templates.hordes_buff_grenade_explosion_kill_replenish_grenades = {
 		[proc_events.on_kill] = percent_chance_grenade_kill_replenishes_grenade,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
-		return params.attack_type == attack_types.explosion and GRENADE_EXPLOSION_DAMAGE_TYPES[params.damage_type]
+		return params.attack_type == attack_types.explosion and grenade_explosion_damage_types[params.damage_type]
 	end,
 	proc_func = function (params, template_data, template_context)
 		local player_unit = template_context.unit
@@ -539,7 +527,7 @@ templates.hordes_buff_coherency_shock_on_grenade_impact_effect = {
 
 		local damage_profile_name = params.damage_profile.name
 
-		return GRENADE_IMPACT_DAMAGE_TEMPLATES[damage_profile_name]
+		return grenade_impact_damage_templates[damage_profile_name]
 	end,
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then

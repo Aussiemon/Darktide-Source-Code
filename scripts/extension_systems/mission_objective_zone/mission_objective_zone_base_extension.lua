@@ -12,7 +12,7 @@ MissionObjectiveZoneBaseExtension.init = function (self, extension_init_context,
 	self._unit = unit
 	self._activated = false
 	self._mission_objective_target_extension = nil
-	self._zone_type = ""
+	self._zone_type = "base"
 
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 
@@ -25,7 +25,25 @@ MissionObjectiveZoneBaseExtension.setup_from_component = function (self)
 end
 
 MissionObjectiveZoneBaseExtension.extensions_ready = function (self, world, unit)
-	self._mission_objective_target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
+	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+
+	self._mission_objective_target_extension = mission_objective_target_extension
+end
+
+MissionObjectiveZoneBaseExtension.on_gameplay_post_init = function (self, world, unit)
+	local mission_objective_target_extension = self._mission_objective_target_extension
+	local objective_name = mission_objective_target_extension:objective_name()
+
+	self._objective_name = objective_name
+
+	local objective_group = mission_objective_target_extension:objective_group_id()
+
+	self._objective_group = objective_group
+
+	local mission_objective_system = self._mission_objective_system
+	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name, objective_group)
+
+	self._synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 end
 
 MissionObjectiveZoneBaseExtension.point_in_zone = function (self, position)
@@ -36,9 +54,8 @@ MissionObjectiveZoneBaseExtension.zone_finished = function (self)
 	if self._is_server then
 		local unit = self._unit
 		local level_object_id = Managers.state.unit_spawner:level_index(unit)
-		local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 
-		mission_objective_zone_system:register_finished_zone()
+		self._synchronizer_extension:register_finished_zone()
 
 		local game_session_manager = Managers.state.game_session
 
@@ -68,6 +85,14 @@ end
 
 MissionObjectiveZoneBaseExtension.zone_type = function (self)
 	return self._zone_type
+end
+
+MissionObjectiveZoneBaseExtension.objective_name = function (self)
+	return self._objective_name
+end
+
+MissionObjectiveZoneBaseExtension.objective_group_id = function (self)
+	return self._objective_group
 end
 
 MissionObjectiveZoneBaseExtension.is_scanning_zone = function (self)

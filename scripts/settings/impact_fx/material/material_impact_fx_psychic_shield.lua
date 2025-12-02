@@ -3,6 +3,7 @@
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local hit_types = SurfaceMaterialSettings.hit_types
 local stop = {
+	sfx = nil,
 	vfx = {
 		{
 			normal_rotation = true,
@@ -13,6 +14,7 @@ local stop = {
 	},
 }
 local entry = {
+	sfx = nil,
 	vfx = {
 		{
 			normal_rotation = true,
@@ -28,6 +30,7 @@ local entry = {
 	},
 }
 local exit = {
+	sfx = nil,
 	vfx = {
 		{
 			normal_rotation = true,

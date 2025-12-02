@@ -88,6 +88,9 @@ local unarmored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -139,6 +142,10 @@ local unarmored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -247,6 +254,9 @@ local armored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -298,6 +308,10 @@ local armored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -406,6 +420,9 @@ local super_armor = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -457,6 +474,10 @@ local super_armor = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -676,6 +697,11 @@ local disgustingly_resilient = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = disgusting_blood_ball,
 		died = disgusting_blood_ball,
 		weakspot_damage = disgusting_blood_ball,
@@ -689,6 +715,7 @@ local player
 local surface_fx = {}
 local default_surface_fx = {
 	[hit_types.stop] = {
+		vfx = nil,
 		sfx = {
 			{
 				append_husk_to_event_name = true,
@@ -707,6 +734,7 @@ ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 local surface_decal = {}
 
 return {
+	surface_overrides = nil,
 	armor = {
 		[armor_types.armored] = armored,
 		[armor_types.berserker] = berserker,

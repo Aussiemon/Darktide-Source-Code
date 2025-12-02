@@ -175,6 +175,12 @@ Characters.get_talents_v2 = function (self, character_id)
 	return self:get_data(character_id, "vocation", "talents")
 end
 
+Characters.set_specialization_talents = function (self, character_id, specialization_talents)
+	return self:set_data(character_id, "vocation", {
+		expertise = specialization_talents,
+	})
+end
+
 Characters.set_character_height = function (self, character_id, value)
 	return self:set_data(character_id, "personal", {
 		character_height = value,

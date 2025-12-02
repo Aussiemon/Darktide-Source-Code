@@ -11,14 +11,6 @@ local SERVER_RPCS = {
 	"rpc_server_mission_buffs_player_buff_choice",
 }
 
-MissionBuffsSelector._register_events = function (self)
-	return
-end
-
-MissionBuffsSelector._unregister_events = function (self)
-	return
-end
-
 MissionBuffsSelector._register_rpcs = function (self, network_event_delegate)
 	network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
 end
@@ -32,7 +24,6 @@ MissionBuffsSelector.init = function (self, mission_buffs_manager, mission_buffs
 	self._mission_buffs_manager = mission_buffs_manager
 	self._mission_buffs_handler = mission_buffs_handler
 
-	self:_register_events()
 	self:_register_rpcs(network_event_delegate)
 
 	self._network_event_delegate = network_event_delegate
@@ -42,7 +33,6 @@ MissionBuffsSelector.destroy = function (self)
 	self._mission_buffs_manager = nil
 	self._mission_buffs_handler = nil
 
-	self:_unregister_events()
 	self:_unregister_rpcs(self._network_event_delegate)
 
 	self._network_event_delegate = nil

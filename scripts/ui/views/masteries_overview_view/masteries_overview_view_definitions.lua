@@ -655,6 +655,9 @@ local widget_definitions = {
 				},
 				material_values = {
 					lerp_t = 1,
+					weapon_texture_complete = nil,
+					weapon_texture_incomplete = nil,
+					weapon_texture_mask = nil,
 				},
 			},
 			visibility_function = function (content, style)
@@ -805,7 +808,9 @@ local widget_definitions = {
 		gamepad_action = "confirm_pressed",
 		visible = false,
 		original_text = Utf8.upper(Localize("loc_mastery_button_mastery_unlocks")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 }
 

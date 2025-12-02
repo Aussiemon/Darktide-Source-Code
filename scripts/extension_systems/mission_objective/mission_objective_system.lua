@@ -54,6 +54,7 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	self._objective_groups = {
 		[GLOBAL_GROUP_ID] = create_objective_group(),
 	}
+	self._objective_end_cb = {}
 	self._active_objectives = {}
 	self._synced_progressions = {}
 	self._synced_second_progressions = {}
@@ -83,7 +84,6 @@ end
 function create_objective_group()
 	return {
 		active_objectives = {},
-		completed_objectives = {},
 		level_end_objectives = {},
 		objective_registered_synchronizer = {},
 		objective_registered_units = {},
@@ -120,13 +120,19 @@ MissionObjectiveSystem.objective_definition = function (self, objective_name)
 end
 
 MissionObjectiveSystem.get_objective_group_id_from_unit = function (self, unit)
-	if not self._support_objective_groups or not unit then
-		return GLOBAL_GROUP_ID
+	if self._support_objective_groups and unit then
+		local level = Unit.level(unit)
+
+		if level then
+			return Managers.state.unit_spawner:index_by_level(level)
+		end
 	end
 
-	local level = Unit.level(unit)
+	return GLOBAL_GROUP_ID
+end
 
-	if level then
+MissionObjectiveSystem.get_objective_group_id_from_level = function (self, level)
+	if self._support_objective_groups and level then
 		return Managers.state.unit_spawner:index_by_level(level)
 	end
 
@@ -228,6 +234,8 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 	self._active_objectives[objective] = false
 
 	local mission_objective_type = mission_objective_data.mission_objective_type
+
+	return objective
 end
 
 MissionObjectiveSystem._setup_mission_objective = function (self, objective_name, group_id)
@@ -305,9 +313,14 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, g
 	objective:end_objective()
 	objective:delete()
 
-	objective_group.completed_objectives[objective_name] = active_objectives[objective_name]
 	active_objectives[objective_name] = nil
 	self._active_objectives[objective] = nil
+
+	if self._objective_end_cb[objective] then
+		self._objective_end_cb[objective]()
+
+		self._objective_end_cb[objective] = nil
+	end
 
 	if self._is_server then
 		self._objective_start_times[objective] = nil
@@ -441,19 +454,12 @@ MissionObjectiveSystem.active_objectives = function (self)
 end
 
 MissionObjectiveSystem.objective_progress = function (self, objective_name, group_id)
-	local is_objective_complete = false
 	local progression = 0
 	local max_progression = 0
 	local objective_group = self:_get_objective_group(group_id)
 
 	if objective_group then
-		local objective = objective_group.completed_objectives[objective_name]
-
-		if objective then
-			is_objective_complete = true
-		else
-			objective = objective_group.active_objectives[objective_name]
-		end
+		local objective = objective_group.active_objectives[objective_name]
 
 		if objective then
 			progression = objective:incremented_progression()
@@ -461,7 +467,7 @@ MissionObjectiveSystem.objective_progress = function (self, objective_name, grou
 		end
 	end
 
-	return is_objective_complete, progression, max_progression
+	return progression, max_progression
 end
 
 MissionObjectiveSystem.override_ui_string = function (self, objective_name, group_id, new_ui_header, new_ui_description)
@@ -743,6 +749,8 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 	local synchronizer = objective_group.objective_registered_synchronizer[objective_name]
 
 	objective_group.objective_registered_synchronizer[objective_name] = objective_unit
+
+	return group_id
 end
 
 MissionObjectiveSystem.objective_synchronizer_unit = function (self, objective_name, group_id)
@@ -1006,7 +1014,7 @@ MissionObjectiveSystem.flow_callback_register_objective_unit = function (self, o
 	end
 end
 
-MissionObjectiveSystem.flow_callback_start_mission_objective = function (self, objective_name, group_id)
+MissionObjectiveSystem.flow_callback_start_mission_objective = function (self, objective_name, group_id, end_callback)
 	group_id = group_id or GLOBAL_GROUP_ID
 
 	local objective_group = self:_get_objective_group(group_id, true)
@@ -1016,7 +1024,11 @@ MissionObjectiveSystem.flow_callback_start_mission_objective = function (self, o
 		return
 	end
 
-	self:start_mission_objective(objective_name, group_id)
+	local objective = self:start_mission_objective(objective_name, group_id)
+
+	if objective and end_callback then
+		self._objective_end_cb[objective] = end_callback
+	end
 end
 
 MissionObjectiveSystem.flow_callback_update_mission_objective = function (self, objective_name, group_id)

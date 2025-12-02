@@ -79,7 +79,7 @@ ProximityAreaBuffDrone.unit_entered_proximity = function (self, t, unit)
 	self:_add_buff_to_unit(t, unit)
 end
 
-ProximityAreaBuffDrone.unit_left_proximity = function (self, unit)
+ProximityAreaBuffDrone.unit_left_proximity = function (self, t, unit)
 	self:_remove_buff_from_unit(unit)
 end
 

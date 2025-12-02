@@ -7,13 +7,12 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
 local Promise = require("scripts/foundation/utilities/promise")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
+local Text = require("scripts/utilities/ui/text")
 local FALLBACK_TEXTURE = "core/fallback_resources/missing_texture"
 local MasteriesOverviewView = class("MasteriesOverviewView", "BaseView")
 
@@ -372,8 +371,7 @@ MasteriesOverviewView._setup_patterns_grid = function (self)
 		local content = title_text_widget.content
 		local style = title_text_widget.style
 		local text_style = style.text
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+		local height = Text.text_height(ui_renderer, content.text, text_style)
 
 		height = height + 10
 
@@ -464,6 +462,7 @@ MasteriesOverviewView._setup_menu_tabs = function (self, content)
 	local tab_button_template = table.clone(tab_menu_settings.button_template or ButtonPassTemplates.item_category_sort_button)
 
 	tab_button_template[1].style = {
+		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}

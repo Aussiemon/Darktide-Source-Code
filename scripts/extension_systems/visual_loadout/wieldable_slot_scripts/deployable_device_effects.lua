@@ -23,7 +23,7 @@ DeployableDeviceEffects.wield = function (self)
 end
 
 DeployableDeviceEffects.unwield = function (self)
-	self._fx_extension:trigger_gear_wwise_event_with_source(SFX_STOP_ALIAS, true, self._fx_source_name, true)
+	self._fx_extension:trigger_gear_wwise_event_with_source(SFX_STOP_ALIAS, true, self._fx_source_name, true, false)
 end
 
 DeployableDeviceEffects.fixed_update = function (self, unit, dt, t, frame)

@@ -180,6 +180,37 @@ allowed_buffs.legendary_buffs.adamant = {
 	},
 }
 allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade_improved = table.clone(allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade)
+allowed_buffs.legendary_buffs.broker = {
+	generic = {},
+	grenade_ability = {
+		broker_missile_launcher = {
+			"hordes_buff_broker_missile_launcher_special_kill_restores_grenade",
+		},
+		broker_tox_grenade = {
+			"hordes_buff_broker_tox_grenade_applies_self_propagating_toxin",
+			"hordes_buff_grenade_heals_on_explosion",
+			"hordes_buff_grenade_explosion_applies_elemental_weakness",
+			"hordes_buff_grenade_explosion_applies_rending_debuff",
+			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
+		},
+		broker_flash_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
+			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
+			"hordes_buff_broker_flash_grenade_increase_damage_taken",
+		}),
+	},
+	combat_ability = {
+		broker_focus_stance = {
+			"hordes_buff_broker_damage_increase_over_time_during_focus_stance",
+		},
+		broker_punk_rage_stance = {
+			"hordes_buff_broker_health_regen_during_punk_rage",
+		},
+		broker_stimm_field = {
+			"hordes_buff_broker_stimm_field_shock_on_interval",
+		},
+	},
+}
+allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade_improved = table.clone(allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade)
 allowed_buffs.available_family_builds = {
 	"fire",
 	"unkillable",

@@ -841,6 +841,156 @@ local material_overrides = {
 			},
 		},
 	},
+	body_tattoo_broker_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_01/body_tattoo_broker_01",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_02/body_tattoo_broker_02",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_03/body_tattoo_broker_03",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_04/body_tattoo_broker_04",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_05 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_05/body_tattoo_broker_05",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_06 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_06/body_tattoo_broker_06",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_cartel_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_cartel_01/body_tattoo_broker_cartel_01",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_cartel_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_cartel_02/body_tattoo_broker_cartel_02",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_cartel_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_cartel_03/body_tattoo_broker_cartel_03",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	body_tattoo_broker_cartel_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_broker_cartel_04/body_tattoo_broker_cartel_04",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
 	face_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -2840,6 +2990,156 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_psyker_05/face_tattoo_psyker_05_tier_02",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_01/face_tattoo_broker_01",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_02/face_tattoo_broker_02",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_03/face_tattoo_broker_03",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_04/face_tattoo_broker_04",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_05 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_05/face_tattoo_broker_05",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_06 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_06/face_tattoo_broker_06",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_cartel_01 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_cartel_01/face_tattoo_broker_cartel_01",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_cartel_02 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_cartel_02/face_tattoo_broker_cartel_02",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_cartel_03 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_cartel_03/face_tattoo_broker_cartel_03",
+			},
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5,
+			},
+		},
+	},
+	face_tattoo_broker_cartel_04 = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_broker_cartel_04/face_tattoo_broker_cartel_04",
 			},
 		},
 		property_overrides = {

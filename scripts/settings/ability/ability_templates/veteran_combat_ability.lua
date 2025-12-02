@@ -79,7 +79,7 @@ ability_template.actions = {
 		start_input = "combat_ability_pressed",
 		total_time = 0,
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "combat_ability_released",
 			},
 		},

@@ -554,6 +554,9 @@ XboxLiveUtils.get_associated_products = function ()
 		async_job, error_code, error_message = XStore.query_associated_products_async({
 			"consumable",
 			"unmanaged",
+			"durable",
+			"game",
+			"pass",
 		})
 
 		if not async_job then

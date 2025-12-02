@@ -2640,12 +2640,6 @@ local archetype_talents = {
 				identifier = "ogryn_weakspot_damage",
 			},
 		},
-		ogryn_frag_bomb_smoke = {
-			description = "loc_talent_ogryn_frag_bomb_smoke_desc",
-			display_name = "loc_talent_ogryn_frag_bomb_smoke",
-			name = "ogryn_frag_bomb_smoke",
-			format_values = {},
-		},
 		ogryn_big_box_of_hurt_more_bombs = {
 			description = "loc_talent_ogryn_big_box_of_hurt_more_bombs_desc",
 			display_name = "loc_talent_ogryn_big_box_of_hurt_more_bombs",

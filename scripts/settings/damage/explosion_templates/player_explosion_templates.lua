@@ -8,6 +8,7 @@ local explosion_templates = {
 		close_radius = 1.5,
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = true,
+		damage_type = nil,
 		radius = 10,
 		static_power_level = 500,
 		damage_profile = DamageProfileTemplates.plasma_overheat,
@@ -51,8 +52,10 @@ local explosion_templates = {
 		},
 	},
 	ogryn_charge_impact_damage = {
+		close_damage_type = nil,
 		close_radius = 2.5,
 		collision_filter = "filter_player_character_lunge",
+		damage_type = nil,
 		min_close_radius = 2,
 		min_radius = 1.9,
 		radius = 2.5,
@@ -82,8 +85,10 @@ local explosion_templates = {
 		},
 	},
 	zealot_charge_impact_with_burning = {
+		close_damage_type = nil,
 		close_radius = 2.5,
 		collision_filter = "filter_player_character_lunge",
+		damage_type = nil,
 		min_close_radius = 2,
 		min_radius = 1.9,
 		on_hit_buff_template_name = "flamer_assault",
@@ -199,6 +204,18 @@ local explosion_templates = {
 		},
 		sfx = {
 			"wwise/events/player/play_horde_mode_buff_big_boom",
+		},
+	},
+	broker_vultures_mark_aoe_stagger = {
+		collision_filter = "filter_player_character_explosion",
+		min_radius = 3,
+		radius = 3,
+		scalable_radius = true,
+		skip_ragdoll_interaction = true,
+		damage_profile = DamageProfileTemplates.broker_vultures_mark_aoe_stagger,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"villains",
 		},
 	},
 }

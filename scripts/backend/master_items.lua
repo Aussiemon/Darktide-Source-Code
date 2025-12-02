@@ -49,6 +49,7 @@ local FALLBACK_ITEMS_BY_SLOT = {
 	slot_body_face = "content/items/characters/player/human/attachments_default/slot_body_face",
 	slot_body_face_hair = "content/items/characters/player/human/attachments_default/slot_body_face",
 	slot_body_face_implant = "content/items/characters/player/human/attachments_default/slot_body_face",
+	slot_body_face_makeup = "content/items/characters/player/human/face_makeup/empty_face_makeup",
 	slot_body_face_scar = "content/items/characters/player/human/attachments_default/slot_body_face",
 	slot_body_face_tattoo = "content/items/characters/player/human/attachments_default/slot_body_face",
 	slot_body_hair = "content/items/characters/player/human/attachments_default/slot_body_hair",
@@ -84,6 +85,7 @@ if BUILD == "release" then
 	FALLBACK_ITEMS_BY_SLOT.slot_body_face_tattoo = "content/items/characters/player/human/face_tattoo/empty_face_tattoo"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_face_scar = "content/items/characters/player/human/face_scars/empty_face_scar"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_face_hair = "content/items/characters/player/human/face_hair/empty_face_hair"
+	FALLBACK_ITEMS_BY_SLOT.slot_body_face_makeup = "content/items/characters/player/human/face_makeup/empty_face_makeup"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_hair = "content/items/characters/player/human/hair/empty_hair"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_tattoo = "content/items/characters/player/human/body_tattoo/empty_body_tattoo"
 	FALLBACK_ITEMS_BY_SLOT.slot_body_eye_color = "content/items/characters/player/eye_colors/eye_color_blue_01"

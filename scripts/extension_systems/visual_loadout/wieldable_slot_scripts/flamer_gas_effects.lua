@@ -37,6 +37,8 @@ FlamerGasEffects.init = function (self, context, slot, weapon_template, fx_sourc
 
 	for i = 1, 50 do
 		self._impact_data[i] = {
+			effect_name = nil,
+			time = nil,
 			position = Vector3Box(),
 			normal = Vector3Box(),
 		}

@@ -5,6 +5,14 @@ local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local unarmored = {
 	sfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,

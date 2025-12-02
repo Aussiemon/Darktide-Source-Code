@@ -12,6 +12,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 	base_template.action_inputs = {
 		combat_ability = {
 			buffer_time = 0,
+			input_sequence = nil,
 		},
 		aim_force_field = {
 			buffer_time = 0,
@@ -45,6 +46,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 		instant_place_force_field = {
 			buffer_time = 0,
 			dont_queue = true,
+			input_sequence = nil,
 		},
 		cancel = {
 			buffer_time = 0,
@@ -67,6 +69,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 		},
 		unwield_to_previous = {
 			buffer_time = 0,
+			input_sequence = nil,
 		},
 		grenade_ability = {
 			buffer_time = 0,
@@ -166,7 +169,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			total_time = 0.25,
 			uninterruptible = true,
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "aim_force_field",
 				},
 			},
@@ -225,7 +228,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				sound_position_offset = Vector3Box(Vector3.up() * 1.5),
 			},
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "instant_place_force_field",
 				},
 			},
@@ -277,7 +280,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				start_modifier = 0.3,
 			},
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -311,7 +314,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				start_modifier = 0.8,
 			},
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},

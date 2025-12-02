@@ -6,6 +6,7 @@ local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_t
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Text = require("scripts/utilities/ui/text")
 local ButtonPassTemplates = {}
 local color_lerp = Colors.color_lerp
 local color_copy = Colors.color_copy
@@ -191,6 +192,7 @@ ButtonPassTemplates.terminal_list_button_text_change_function = function (conten
 end
 
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 }
 local simple_button_font_setting_name = "button_medium"
@@ -342,7 +344,7 @@ ButtonPassTemplates.url_button = {
 }
 
 ButtonPassTemplates.url_button.size_function = function (parent, config, ui_renderer)
-	local text_width, text_height = UIRenderer.text_size(ui_renderer, Localize(config.text), url_text_style.font_type, url_text_style.font_size)
+	local text_width, text_height = Text.text_size(ui_renderer, Localize(config.text), url_text_style)
 
 	return {
 		text_width,
@@ -686,6 +688,7 @@ ButtonPassTemplates.aquila_button = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		content = {
+			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.default_click,
 		},
@@ -3149,7 +3152,20 @@ menu_panel_button_style.offset = {
 	3,
 }
 
+local menu_panel_context_style = table.clone(UIFontSettings.header_5)
+
+menu_panel_context_style.text_horizontal_alignment = "center"
+menu_panel_context_style.text_vertical_alignment = "center"
+menu_panel_context_style.offset = {
+	0,
+	25,
+	3,
+}
+menu_panel_context_style.font_size = 17
+
 local menu_panel_button_hotspot_content = {
+	on_pressed_sound = nil,
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.tab_button_hovered,
 }
 
@@ -3222,6 +3238,25 @@ ButtonPassTemplates.menu_panel_button = {
 		style_id = "text",
 		value_id = "text",
 		style = menu_panel_button_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = hotspot.disabled and style.disabled_color or style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_input_progress)
+
+			color_lerp(default_text_color, hover_color, progress, text_color)
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "context_text",
+		value = "",
+		value_id = "context_text",
+		style = menu_panel_context_style,
+		visibility_function = function (content, style)
+			return content.context_text and content.context_text ~= ""
+		end,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			local default_text_color = hotspot.disabled and style.disabled_color or style.default_color

@@ -1394,34 +1394,6 @@ local archetype_talents = {
 				identifier = "psyker_coherency_aura_size_increase",
 			},
 		},
-		psyker_1_tier_3_name_2 = {
-			description = "loc_talent_psyker_improved_coherency_efficiency_description",
-			display_name = "loc_talent_psyker_improved_coherency_efficiency",
-			icon = "content/ui/textures/icons/talents/psyker_1/psyker_1_tier_3_2",
-			name = "psyker_aura_crit_chance_aura_improved",
-			format_values = {
-				crit_chance = {
-					format_type = "percentage",
-					prefix = "+",
-					find_value = {
-						buff_template_name = "psyker_aura_crit_chance_aura_improved",
-						find_value_type = "buff_template",
-						path = {
-							"stat_buffs",
-							stat_buffs.critical_strike_chance,
-						},
-					},
-				},
-				talent_name = {
-					format_type = "loc_string",
-					value = "loc_ability_psyker_gunslinger_aura",
-				},
-			},
-			coherency = {
-				buff_template_name = "psyker_aura_crit_chance_aura_improved",
-				identifier = "psyker_aura",
-			},
-		},
 		psyker_aura_souls_on_kill = {
 			description = "loc_talent_psyker_souls_on_kill_coop_desc",
 			display_name = "loc_talent_psyker_souls_on_kill_coop",
@@ -1486,27 +1458,6 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "psyker_aura_toughness_on_ally_knocked_down",
 				identifier = "psyker_aura_toughness_on_ally_knocked_down",
-			},
-		},
-		psyker_3_tier_3_name_2 = {
-			description = "loc_talent_psyker_increased_aura_efficiency_description",
-			display_name = "loc_talent_psyker_increased_aura_efficiency",
-			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_4_2",
-			name = "Increased the efficiency of your aura",
-			format_values = {
-				cooldown_reduction = {
-					format_type = "percentage",
-					prefix = "-",
-					value = talent_settings_3.coop_2.ability_cooldown_modifier,
-				},
-				talent_name = {
-					format_type = "loc_string",
-					value = "loc_talent_psyker_3_passive_2",
-				},
-			},
-			coherency = {
-				buff_template_name = "psyker_aura_ability_cooldown_improved",
-				identifier = "psyker_aura",
 			},
 		},
 		psyker_dodge_after_crits = {

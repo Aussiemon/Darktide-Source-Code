@@ -152,13 +152,27 @@ ProfileUtils.character_names = {
 local function _fill_talents_and_selected_nodes(profile, character, archetype_name)
 	local archetype = Archetypes[archetype_name]
 	local talents = profile.talents
-	local talent_layout_file_path = archetype.talent_layout_file_path
-	local active_layout = require(talent_layout_file_path)
-	local backend_talents = character.vocation and character.vocation.talents or ""
 	local selected_nodes = profile.selected_nodes
 
-	TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
-	TalentLayoutParser.selected_talents_from_selected_nodes(active_layout, selected_nodes, talents)
+	do
+		local talent_layout_file_path = archetype.talent_layout_file_path
+		local active_layout = require(talent_layout_file_path)
+		local backend_talents = character.vocation and character.vocation.talents or ""
+
+		TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
+		TalentLayoutParser.selected_talents_from_selected_nodes(active_layout, selected_nodes, talents)
+	end
+
+	local specialization_talents_path = archetype.specialization_talent_layout_file_path
+
+	if specialization_talents_path then
+		local active_layout = require(specialization_talents_path)
+		local backend_talents = character.vocation and character.vocation.expertise or ""
+
+		TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
+		TalentLayoutParser.selected_talents_from_selected_nodes(active_layout, selected_nodes, talents)
+	end
+
 	PlayerTalents.add_archetype_base_talents(archetype, talents)
 end
 
@@ -169,6 +183,7 @@ local function profile_from_backend_data(backend_profile_data)
 	local progression = backend_profile_data.progression
 	local current_level = progression and progression.currentLevel or 1
 	local talent_points = progression and progression.talentPoints or 0
+	local expertise_points = progression and progression.expertisePoints or 0
 	local item_ids = character.inventory
 	local backend_profile = {
 		character_id = character.id,
@@ -185,6 +200,7 @@ local function profile_from_backend_data(backend_profile_data)
 		talents = {},
 		current_level = current_level,
 		talent_points = talent_points,
+		expertise_points = expertise_points,
 		name = character.name,
 		personal = character.personal,
 		companion = character.companion,
@@ -231,7 +247,7 @@ end
 
 local _combine_item
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face, mask_face_accessory)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -276,6 +292,10 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 			if data.item.mask_face then
 				mask_face[1] = mask_face[1] or data.item.mask_face
 			end
+
+			if data.item.mask_face_accessory then
+				mask_face_accessory[1] = mask_face_accessory[1] or data.item.mask_face_accessory
+			end
 		end
 	end
 end
@@ -286,7 +306,7 @@ local function _generate_visual_loadout(visual_items)
 
 	for slot_name, data in pairs(visual_items) do
 		local entry = {}
-		local parent_slot_names = data.item.parent_slot_names
+		local parent_slot_names = ItemSlotSettings[slot_name].forced_parent_slot_names or data.item.parent_slot_names
 
 		if parent_slot_names and next(parent_slot_names) then
 			entry.parent_slot_names = parent_slot_names
@@ -337,8 +357,9 @@ local function _generate_visual_loadout(visual_items)
 			local mask_hair = {}
 			local mask_hair_override = {}
 			local mask_face = {}
+			local mask_face_accessory = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face, mask_face_accessory)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -392,6 +413,11 @@ local function _generate_visual_loadout(visual_items)
 			if mask_face then
 				overrides = overrides or {}
 				overrides.mask_face = mask_face[1]
+			end
+
+			if mask_face_accessory then
+				overrides = overrides or {}
+				overrides.mask_face_accessory = mask_face_accessory[1]
 			end
 
 			gear.masterDataInstance.overrides = overrides
@@ -644,12 +670,14 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	local archetype = Archetypes[archetype_name]
 	local current_level = progression and progression.currentLevel or 1
 	local talent_points = progression and progression.talentPoints or 0
+	local expertise_points = progression and progression.expertisePoints or 0
 	local item_ids = character.inventory
 	local profile = {
 		character_id = character.id,
 		archetype = archetype,
 		current_level = current_level,
 		talent_points = talent_points,
+		expertise_points = expertise_points,
 		gender = character.gender,
 		selected_voice = character.selected_voice,
 		skin_color = character.skin_color,
@@ -1079,7 +1107,7 @@ ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, 
 	Managers.save:queue_save()
 end
 
-ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_preset_id)
+ProfileUtils.clear_layout_talent_nodes_for_profile_preset = function (profile_preset_id, layout)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -1090,7 +1118,6 @@ ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_prese
 		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
-	local profile_presets = character_data.profile_presets
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
@@ -1099,10 +1126,18 @@ ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_prese
 		return
 	end
 
-	if not profile_preset.talents then
+	local preset_talents = profile_preset.talents
+
+	if not preset_talents then
 		profile_preset.talents = {}
 	else
-		table.clear(profile_preset.talents)
+		local nodes = layout.nodes
+
+		for i = 1, #nodes do
+			local node_name = nodes[i].widget_name
+
+			preset_talents[node_name] = nil
+		end
 	end
 
 	Managers.save:queue_save()

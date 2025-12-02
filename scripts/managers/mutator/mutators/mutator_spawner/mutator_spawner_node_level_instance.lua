@@ -43,12 +43,7 @@ MutatorSpawnerNodeLevelInstance._do_spawn = function (self, spawn_position, ahea
 end
 
 MutatorSpawnerNodeLevelInstance.destroy = function (self)
-	for i = 1, #self._spawned_instanced_levels do
-		local current_level_instance = self._spawned_instanced_levels[i]
-		local instance_hash = current_level_instance.instance_hash
-
-		Managers.state.level_instance:destroy_level_instance(instance_hash)
-	end
+	Managers.state.level_instance:cleanup()
 end
 
 return MutatorSpawnerNodeLevelInstance

@@ -144,7 +144,7 @@ DestructibleExtension.setup_stages = function (self)
 end
 
 DestructibleExtension.hot_join_sync = function (self, unit, peer_id, channel_id)
-	local is_level_unit, unit_id, level_name_hash = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
+	local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 	local destruction_info = self._destruction_info
 
 	if destruction_info then
@@ -161,16 +161,16 @@ DestructibleExtension.hot_join_sync = function (self, unit, peer_id, channel_id)
 				local channel = game_session_manager:peer_to_channel(peer_id)
 
 				if max_health > destruction_info.health then
-					RPC.rpc_destructible_damage_taken(channel, unit_id, is_level_unit, level_name_hash)
+					RPC.rpc_destructible_damage_taken(channel, unit_id, is_level_unit)
 				end
 
-				RPC.rpc_sync_destructible(channel, unit_id, is_level_unit, current_stage_index, visible, from_hot_join_sync, level_name_hash)
+				RPC.rpc_sync_destructible(channel, unit_id, is_level_unit, current_stage_index, visible, from_hot_join_sync)
 			else
 				if max_health > destruction_info.health then
-					game_session_manager:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit, level_name_hash)
+					game_session_manager:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit)
 				end
 
-				game_session_manager:send_rpc_clients("rpc_sync_destructible", unit_id, is_level_unit, current_stage_index, visible, from_hot_join_sync, level_name_hash)
+				game_session_manager:send_rpc_clients("rpc_sync_destructible", unit_id, is_level_unit, current_stage_index, visible, from_hot_join_sync)
 			end
 		end
 	end
@@ -225,7 +225,7 @@ DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, att
 
 	if old_stage_index ~= new_stage_index then
 		local unit_object_id = Managers.state.unit_spawner:game_object_id(unit)
-		local unit_level_id, level_name_hash = Managers.state.unit_spawner:level_index(unit)
+		local unit_level_id = Managers.state.unit_spawner:level_index(unit)
 		local is_level_unit = unit_object_id == nil and unit_level_id ~= nil
 		local unit_id = unit_object_id or unit_level_id or NetworkConstants.invalid_level_unit_id
 		local visible = true
@@ -234,7 +234,7 @@ DestructibleExtension.add_damage = function (self, damage_amount, hit_actor, att
 		self:_handle_stage_zero(new_stage_index)
 
 		if unit_id ~= nil then
-			Managers.state.game_session:send_rpc_clients("rpc_sync_destructible", unit_id, is_level_unit, new_stage_index, visible, from_hot_join_sync, level_name_hash)
+			Managers.state.game_session:send_rpc_clients("rpc_sync_destructible", unit_id, is_level_unit, new_stage_index, visible, from_hot_join_sync)
 		end
 	end
 end
@@ -382,9 +382,9 @@ DestructibleExtension._dequeue_stage = function (self, attack_direction, from_ho
 			if self._is_server then
 				Unit.flow_event(unit, "lua_last_destruction")
 
-				local is_level_unit, unit_id, level_name_hash = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
+				local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
-				Managers.state.game_session:send_rpc_clients("rpc_destructible_last_destruction", unit_id, is_level_unit, level_name_hash)
+				Managers.state.game_session:send_rpc_clients("rpc_destructible_last_destruction", unit_id, is_level_unit)
 			end
 		end
 
@@ -424,9 +424,9 @@ DestructibleExtension._add_damage = function (self, damage_amount, attack_direct
 		elseif self._is_server then
 			Unit.flow_event(unit, "lua_damage_taken")
 
-			local is_level_unit, unit_id, level_name_hash = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
+			local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
-			Managers.state.game_session:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit, level_name_hash)
+			Managers.state.game_session:send_rpc_clients("rpc_destructible_damage_taken", unit_id, is_level_unit)
 		end
 	end
 end

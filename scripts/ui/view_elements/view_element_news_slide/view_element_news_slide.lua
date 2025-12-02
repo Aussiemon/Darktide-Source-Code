@@ -2,9 +2,7 @@
 
 local Definitions = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_definitions")
 local Settings = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
 local ViewElementNewsSlide = class("ViewElementNewsSlide", "ViewElementBase")
@@ -99,7 +97,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				local server_time = Managers.backend:get_server_time(Managers.time:time("main"))
 				local time_left = math.max(tonumber(content.data) - server_time, 0) / 1000
 
-				body_number = TextUtils.format_time_span_localized(time_left, true)
+				body_number = Text.format_time_span_localized(time_left, true)
 			elseif type == "button" then
 				slide_action = {
 					action = content.action,
@@ -141,7 +139,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 	table.sort(slides, _compare_slides)
 
 	for url, _ in pairs(self._textures) do
-		Managers.url_loader:load_texture(url):next(function (data)
+		Managers.url_loader:load_texture(url, nil, "view_element_news_slide"):next(function (data)
 			self._textures[url] = data
 		end)
 	end
@@ -392,9 +390,8 @@ end
 ViewElementNewsSlide._get_text_dimensions = function (self, pass_name, ui_renderer)
 	local news_button = self._widgets_by_name.news_button
 	local style = news_button.style[pass_name]
-	local text_options = UIFonts.get_font_options_by_style(style)
 
-	return UIRenderer.text_size(ui_renderer, news_button.content[pass_name], style.font_type, style.font_size, style.size, text_options)
+	return Text.text_size(ui_renderer, news_button.content[pass_name], style, style.size)
 end
 
 ViewElementNewsSlide._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

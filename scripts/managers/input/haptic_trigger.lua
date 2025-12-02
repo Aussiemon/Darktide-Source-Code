@@ -47,10 +47,6 @@ HapticTrigger.init = function (self, trigger_side)
 end
 
 HapticTrigger.update = function (self, dt, t)
-	self:_update_vibration(dt, t)
-end
-
-HapticTrigger._update_vibration = function (self, dt, t)
 	if self._haptics_suppressed then
 		return
 	end
@@ -129,6 +125,12 @@ HapticTrigger.trigger_vibration = function (self, frequency)
 			end
 
 			self:_set_multi_position_vibration_effect(settings_type, frequency_to_use, amplitude)
+		end
+
+		local optional_wwise_vibration_event = haptics_settings.optional_wwise_vibration_event
+
+		if use_vibration and optional_wwise_vibration_event then
+			Managers.ui:play_2d_sound(optional_wwise_vibration_event)
 		end
 	else
 		frequency_to_use = 0

@@ -1,10 +1,9 @@
 ﻿-- chunkname: @scripts/ui/weapon_icon_ui.lua
 
-local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
-local UISettings = require("scripts/settings/ui/ui_settings")
-
 require("scripts/ui/render_target_icon_generator_base")
 
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local WeaponIconUI = class("WeaponIconUI", "RenderTargetIconGeneratorBase")
 
 WeaponIconUI.init = function (self, render_settings)
@@ -208,12 +207,12 @@ WeaponIconUI._camera_unit = function (self)
 	return camera_unit
 end
 
-local function get_real_item(item)
+local function _get_real_item(item)
 	if item then
 		if item.attachments and type(item.attachments) == "table" then
 			for _, attachment in pairs(item.attachments) do
 				if attachment.item and type(attachment.item) == "table" then
-					return get_real_item(attachment.item)
+					return _get_real_item(attachment.item)
 				end
 			end
 		end
@@ -245,9 +244,7 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 		alignment_key = render_context.alignment_key
 	end
 
-	local item_base_unit_name = item.base_unit
-	local ui_alignment_tag = item.ui_alignment_tag
-	local alignment_key_value = ui_alignment_tag or item_base_unit_name
+	local alignment_key_value = item.ui_alignment_tag
 
 	if render_context and render_context.alignment_key_value then
 		alignment_key_value = render_context.alignment_key_value
@@ -261,22 +258,24 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 	local force_highest_mip = true
 
 	if item.item_type == "GADGET" then
-		local real_item = get_real_item(item)
+		local real_item = _get_real_item(item)
 
 		if real_item then
-			item.icon_render_unit_rotation_offset = real_item.icon_render_unit_rotation_offset or nil
-			item.icon_render_camera_position_offset = real_item.icon_render_camera_position_offset or nil
-			item.icon_render_camera_rotation_offset = real_item.icon_render_camera_rotation_offset or nil
+			item.icon_render_unit_rotation_offset = real_item.icon_render_unit_rotation_offset
+			item.icon_render_camera_position_offset = real_item.icon_render_camera_position_offset
+			item.icon_render_camera_rotation_offset = real_item.icon_render_camera_rotation_offset
 		end
 	end
 
-	local unit_rotation_offset = item.icon_render_unit_rotation_offset
+	local item_rotation_offset = item.icon_render_unit_rotation_offset
 
-	if unit_rotation_offset then
-		spawn_rotation = Quaternion.multiply(spawn_rotation, Quaternion.from_euler_angles_xyz(unit_rotation_offset[1] or 0, unit_rotation_offset[2] or 0, unit_rotation_offset[3] or 0))
+	if item_rotation_offset then
+		local offset_rotation = Quaternion.from_euler_angles_xyz(item_rotation_offset[1] or 0, item_rotation_offset[2] or 0, item_rotation_offset[3] or 0)
+
+		spawn_rotation = Quaternion.multiply(spawn_rotation, offset_rotation)
 	end
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, nil, force_highest_mip)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, false, nil, force_highest_mip)
 
 	local breed = "human"
 	local camera_settings = self._breed_camera_settings[breed]
@@ -284,16 +283,20 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 	if camera_settings then
 		local camera_position = Vector3.from_array(camera_settings.boxed_camera_start_position)
 		local camera_rotation = camera_settings.boxed_camera_start_rotation:unbox()
-		local position_offset = item.icon_render_camera_position_offset
+		local item_camera_position_offset = item.icon_render_camera_position_offset
 
-		if position_offset then
-			camera_position = Vector3(camera_position.x + (position_offset[1] or 0), camera_position.y + (position_offset[2] or 0), camera_position.z + (position_offset[3] or 0))
+		if item_camera_position_offset then
+			local offset_position = Vector3(item_camera_position_offset[1] or 0, item_camera_position_offset[2] or 0, item_camera_position_offset[3] or 0)
+
+			camera_position = camera_position + offset_position
 		end
 
-		local rotation_offset = item.icon_render_camera_rotation_offset
+		local item_camera_rotation_offset = item.icon_render_item_camera_rotation_offset
 
-		if rotation_offset then
-			camera_rotation = Quaternion.multiply(camera_rotation, Quaternion.from_euler_angles_xyz(rotation_offset[1] or 0, rotation_offset[2] or 0, rotation_offset[3] or 0))
+		if item_camera_rotation_offset then
+			local offset_rotation = Quaternion.from_euler_angles_xyz(item_camera_rotation_offset[1] or 0, item_camera_rotation_offset[2] or 0, item_camera_rotation_offset[3] or 0)
+
+			camera_rotation = Quaternion.multiply(camera_rotation, offset_rotation)
 		end
 
 		world_spawner:set_camera_position(camera_position)

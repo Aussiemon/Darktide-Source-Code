@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/video_view/video_view_settings.lua
 
-local VideoViewSettings = {
+local video_view_settings = {
 	level_name = "content/levels/ui/video_view/video_view",
 	timer_name = "ui",
 	viewport_layer = 1,
@@ -20,6 +20,7 @@ local function _extract_cinematic_video_templates(path)
 end
 
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/adamant_intro")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/broker_intro")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cs06")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_01")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_02")
@@ -38,6 +39,9 @@ _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/d
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_15")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_16")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_17")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_01")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_02")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_nml_03")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cin_nox_alpha")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/s1_intro")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/core_research_intro")
@@ -50,6 +54,6 @@ _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/h
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_gun_shop")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_penances")
 
-VideoViewSettings.templates = cinematic_video_templates
+video_view_settings.templates = cinematic_video_templates
 
-return settings("VideoViewSettings", VideoViewSettings)
+return settings("VideoViewSettings", video_view_settings)

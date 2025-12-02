@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/smart_tag/smart_tag_settings.lua
 
-local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -290,19 +289,13 @@ local templates = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		replies = {
-			replies.ok,
-		},
-		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+		voice_tag_concept = vo_concepts.generic_mission_vo,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_medical_crate,
 	},
 	deployed_ammo_cache_over_here = {
 		group = "object",
 		is_cancelable = true,
 		lifetime = 10,
-		replies = {
-			replies.ok,
-		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate,
 	},

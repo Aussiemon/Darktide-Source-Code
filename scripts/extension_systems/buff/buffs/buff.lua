@@ -5,12 +5,13 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local stat_buff_types = BuffSettings.stat_buff_types
 local stat_buff_base_values = BuffSettings.stat_buff_base_values
 local Buff = class("Buff")
 
-local function _update_conditional_exit_func(self, template, template_data, template_context)
-	if template.conditional_exit_func(template_data, template_context) then
+local function _update_conditional_exit_func(self, template, template_data, template_context, t, dt, fixed_frame)
+	if template.conditional_exit_func(template_data, template_context, dt, t, fixed_frame) then
 		self._finished = true
 	end
 end
@@ -27,6 +28,11 @@ end
 
 local function _update_duration(self, template, template_data, template_context, t, dt)
 	local duration = self:duration()
+
+	if duration == nil then
+		return true
+	end
+
 	local total_duration = duration
 	local start_time = self._start_time
 
@@ -39,6 +45,10 @@ end
 
 local function _update_buff_func(self, template, template_data, template_context, t, dt)
 	template.update_func(template_data, template_context, dt, t, template)
+end
+
+local function _default_conditional_keywords_func()
+	return true
 end
 
 local EMPTY_TABLE = {}
@@ -58,6 +68,8 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		breed = context.breed,
 		template = template,
 		buff = self,
+		start_frame = FixedFrame.get_latest_fixed_frame(),
+		added_during_server_correction = context.undergoing_server_correction,
 	}
 	local additional_arguments = {}
 
@@ -87,12 +99,6 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		self._talent_resource_component = unit_data_extension:read_component("talent_resource")
 	end
 
-	local start_function = template.start_func
-
-	if start_function then
-		start_function(self._template_data, self._template_context)
-	end
-
 	local update_funcs = {}
 	local num_update_funcs = 0
 
@@ -118,12 +124,20 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 
 	self._update_funcs = update_funcs
 	self._num_update_funcs = #update_funcs
+
+	local start_function = template.start_func
+
+	if start_function then
+		start_function(self._template_data, self._template_context)
+	end
+
 	self._num_constant_keywords = template.keywords and #template.keywords
 
 	local conditional_keywords_func = template.conditional_keywords_func or template.conditional_stat_buffs_func
-	local conditional_keywords = conditional_keywords_func and template.conditional_keywords
+	local conditional_keywords = template.conditional_keywords
 
-	self._conditional_keywords_func = conditional_keywords_func
+	self._conditional_keywords_func = conditional_keywords_func or _default_conditional_keywords_func
+	self._conditional_keywords_funcs = template.conditional_keywords_funcs or EMPTY_TABLE
 	self._num_conditional_keywords = conditional_keywords and #conditional_keywords
 end
 
@@ -134,7 +148,7 @@ Buff._calculate_template_override_data = function (self, template_context)
 
 	if item_slot_name then
 		self:_calculate_override_data(override_data, item_slot_name, template_context.parent_buff_template)
-	elseif from_talent then
+	elseif from_talent and from_talent ~= "n/a" then
 		self:_calculate_talent_override_data(override_data, template_context.parent_buff_template)
 	end
 
@@ -231,13 +245,15 @@ Buff._calculate_talent_override_data = function (self, override_data, parent_buf
 		tier = talent_extension:buff_template_tier(template.name)
 	end
 
+	tier = tier or 1
+
 	local override_index = math.min(tier, num_talent_overrides)
 	local override_def = talent_overrides[override_index]
 
 	table.merge_recursive(override_data, override_def)
 end
 
-Buff.set_buff_component = function (self, buff_component, component_keys, component_index)
+Buff.set_buff_component = function (self, buff_component, component_keys, component_index, predicted_params)
 	local template = self._template
 	local start_time = self._start_time
 
@@ -248,13 +264,21 @@ Buff.set_buff_component = function (self, buff_component, component_keys, compon
 	local template_name_key = component_keys.template_name_key
 	local start_time_key = component_keys.start_time_key
 	local stack_count_key = component_keys.stack_count_key
+	local extra_duration_key = component_keys.extra_duration_key
 
 	buff_component[template_name_key] = template.name
 	buff_component[start_time_key] = start_time
+	buff_component[extra_duration_key] = self._template_data.extra_duration or 0
 
 	local stack_count = self:stack_count()
 
 	buff_component[stack_count_key] = stack_count
+
+	for param, value in pairs(predicted_params) do
+		local key = component_keys[param]
+
+		buff_component[key] = value ~= BuffArgs.nil_value() and value or nil
+	end
 end
 
 Buff.remove_buff_component = function (self)
@@ -265,15 +289,19 @@ Buff.remove_buff_component = function (self)
 	local active_start_time_key = component_keys.active_start_time_key
 	local stack_count_key = component_keys.stack_count_key
 	local proc_count_key = component_keys.proc_count_key
+	local extra_duration_key = component_keys.extra_duration_key
 
 	buff_component[template_name_key] = "none"
 	buff_component[start_time_key] = 0
 	buff_component[active_start_time_key] = 0
 	buff_component[stack_count_key] = 0
 	buff_component[proc_count_key] = 0
+	buff_component[extra_duration_key] = 0
 end
 
-Buff.update = function (self, dt, t, portable_random)
+local _funcs_to_remove_scratch = {}
+
+Buff.update = function (self, dt, t, portable_random, fixed_frame)
 	local num_update_funcs = self._num_update_funcs
 
 	if num_update_funcs > 0 then
@@ -281,9 +309,19 @@ Buff.update = function (self, dt, t, portable_random)
 		local template_data = self._template_data
 		local template_context = self._template_context
 		local update_funcs = self._update_funcs
+		local removed = 0
 
 		for i = 1, num_update_funcs do
-			update_funcs[i](self, template, template_data, template_context, t, dt)
+			if update_funcs[i](self, template, template_data, template_context, t, dt, fixed_frame) then
+				removed = removed + 1
+				_funcs_to_remove_scratch[removed] = i
+			end
+		end
+
+		for i = removed, 1, -1 do
+			table.swap_delete(update_funcs, _funcs_to_remove_scratch[i])
+
+			_funcs_to_remove_scratch[i] = nil
 		end
 	end
 end
@@ -351,6 +389,10 @@ Buff.remove_on_proc = function (self)
 	return self._template.remove_on_proc
 end
 
+Buff.remove_stack_on_proc = function (self)
+	return self._template.remove_stack_on_proc
+end
+
 Buff.stack_count = function (self)
 	local template_context = self._template_context
 	local stack_count = template_context.stack_count
@@ -371,6 +413,11 @@ Buff.max_stacks = function (self)
 	local template = self._template
 	local template_override_data = self._template_override_data
 	local max_stacks = template_override_data and template_override_data.max_stacks or template.max_stacks
+	local extra_stacks = self._template_data.extra_max_stacks
+
+	if extra_stacks and extra_stacks ~= 0 then
+		max_stacks = (max_stacks or 0) + extra_stacks
+	end
 
 	if max_stacks then
 		local stack_offset = template.stack_offset or 0
@@ -379,6 +426,27 @@ Buff.max_stacks = function (self)
 	end
 
 	return max_stacks
+end
+
+Buff.max_stacks_cap = function (self)
+	local template = self._template
+	local template_override_data = self._template_override_data
+	local max_stacks_cap = template_override_data and template_override_data.max_stacks_cap or template.max_stacks_cap
+	local extra_stacks = self._template_data.extra_max_stacks_cap
+
+	if extra_stacks and extra_stacks ~= 0 then
+		max_stacks_cap = (max_stacks_cap or 0) + extra_stacks
+	end
+
+	return max_stacks_cap
+end
+
+Buff.add_max_stacks = function (self, value)
+	self._template_data.extra_max_stacks = (self._template_data.extra_max_stacks or 0) + value
+end
+
+Buff.add_max_stacks_cap = function (self, value)
+	self._template_data.extra_max_stacks_cap = (self._template_data.extra_max_stacks_cap or 0) + value
 end
 
 Buff.add_stack = function (self)
@@ -454,17 +522,54 @@ Buff.duration = function (self)
 		local stack_count = self:stack_count()
 
 		duration = duration * stack_count
+	end
 
-		local extra_duration = self._template_data.extra_duration or 0
+	local extra_duration = self._template_data.extra_duration
 
-		duration = duration + extra_duration
+	if extra_duration then
+		duration = (duration or 0) + extra_duration
 	end
 
 	return duration
 end
 
 Buff.add_duration = function (self, amount)
-	self._template_data.extra_duration = (self._template_data.extra_duration or 0) + amount
+	local extra_duration = (self._template_data.extra_duration or 0) + amount
+
+	self._template_data.extra_duration = extra_duration ~= 0 and extra_duration or nil
+
+	local update_funcs = self._update_funcs
+
+	if self:duration() and not table.find(update_funcs, _update_duration) then
+		local num_update_funcs = self._num_update_funcs + 1
+
+		update_funcs[num_update_funcs] = _update_duration
+		self._num_update_funcs = num_update_funcs
+	end
+
+	local template = self._template
+
+	if template.predicted then
+		local buff_component, component_keys = self._buff_component, self._component_keys
+
+		if buff_component then
+			buff_component[component_keys.extra_duration_key] = extra_duration or 0
+		end
+	elseif self._player and self._player.remote then
+		self:set_need_to_sync_extra_duration(true)
+	end
+end
+
+Buff.clear_extra_duration = function (self)
+	self:add_duration(-(self._template_data.extra_duration or 0))
+end
+
+Buff.extra_duration = function (self)
+	return self._template_data.extra_duration
+end
+
+Buff.set_extra_duration = function (self, extra_duration)
+	self:add_duration(extra_duration - (self:extra_duration() or 0))
 end
 
 Buff.duration_progress = function (self)
@@ -478,6 +583,20 @@ Buff.duration_progress = function (self)
 	end
 
 	return inverse_duration_progress and 1 - duration_progress or duration_progress
+end
+
+Buff.refresh_duration_on_remove_stack = function (self)
+	local override = self._template_override_data.refresh_duration_on_remove_stack
+
+	if override ~= nil then
+		return override
+	end
+
+	return self._template.refresh_duration_on_remove_stack
+end
+
+Buff.set_refresh_duration_on_remove_stack = function (self, value)
+	self._template_override_data.refresh_duration_on_remove_stack = value
 end
 
 Buff.template_name = function (self)
@@ -509,8 +628,12 @@ Buff.set_start_time = function (self, start_time)
 		self._finished = false
 	end
 
-	if self._player and (self._player.remote or template.predicted) then
-		self._need_to_sync_start_time = true
+	if template.predicted then
+		local buff_component, component_keys = self._buff_component, self._component_keys
+
+		buff_component[component_keys.start_time_key] = start_time
+	elseif self._player and self._player.remote then
+		self:set_need_to_sync_start_time(true)
 	end
 end
 
@@ -524,6 +647,14 @@ end
 
 Buff.set_need_to_sync_start_time = function (self, sync)
 	self._need_to_sync_start_time = sync
+end
+
+Buff.need_to_sync_extra_duration = function (self)
+	return self._need_to_sync_extra_duration
+end
+
+Buff.set_need_to_sync_extra_duration = function (self, sync)
+	self._need_to_sync_extra_duration = sync
 end
 
 Buff.buff_lerp_value = function (self)
@@ -546,11 +677,15 @@ Buff.parent_buff_template = function (self)
 	return self._template_context.parent_buff_template
 end
 
-local function _default_conditional_stat_buff_multiplier(value)
+local function _default_stat_buff_multiplier(value)
 	return 1
 end
 
-Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
+local function _default_conditional_stat_buffs_func()
+	return true
+end
+
+Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs, conditional)
 	if not stat_buffs then
 		return
 	end
@@ -559,27 +694,40 @@ Buff._calculate_stat_buffs = function (self, current_stat_buffs, stat_buffs)
 	local template_override_data = self._template_override_data
 	local stat_buff_overrides = template_override_data and template_override_data.stat_buffs
 	local template_data, template_context = self._template_data, self._template_context
-	local conditional_stat_buff_multiplier = self._template.conditional_stat_buff_multiplier or _default_conditional_stat_buff_multiplier
+	local stat_buff_multiplier = self._template.stat_buff_multiplier or _default_stat_buff_multiplier
+	local stat_buff_multipliers = self._template.stat_buff_multipliers or EMPTY_TABLE
+	local stat_buffs_condition = conditional and self._template.conditional_stat_buffs_func or _default_conditional_stat_buffs_func
+	local stat_buffs_conditions = conditional and self._template.conditional_stat_buffs_funcs or EMPTY_TABLE
 
-	for key, value in pairs(stat_buffs) do
-		value = stat_buff_overrides and stat_buff_overrides[key] or value
-		value = value * conditional_stat_buff_multiplier(value, template_data, template_context)
+	if stat_buffs_condition(template_data, template_context) then
+		for key, value in pairs(stat_buffs) do
+			local conditional_func = stat_buffs_conditions[key]
 
-		local current_value = current_stat_buffs[key]
-		local stat_buff_type = stat_buff_types[key]
+			if not conditional_func or conditional_func(template_data, template_context) then
+				value = stat_buff_overrides and stat_buff_overrides[key] or value
 
-		for _ = 1, stat_buff_stacking_count do
-			if stat_buff_type == "multiplicative_multiplier" then
-				current_value = current_value * value
-			elseif stat_buff_type == "max_value" then
-				current_value = math.max(current_value, value)
-			else
-				current_value = current_value + value
+				local conditional_multiplier_func = stat_buff_multipliers[key] or stat_buff_multiplier
+
+				value = value * conditional_multiplier_func(template_data, template_context)
+
+				local current_value = current_stat_buffs[key]
+				local stat_buff_type = stat_buff_types[key]
+
+				for _ = 1, stat_buff_stacking_count do
+					if stat_buff_type == "multiplicative_multiplier" then
+						current_value = current_value * value
+					elseif stat_buff_type == "max_value" then
+						current_value = math.max(current_value, value)
+					else
+						current_value = current_value + value
+					end
+				end
+
+				current_stat_buffs[key] = current_value
 			end
-		end
 
-		current_stat_buffs[key] = current_value
-		current_stat_buffs._modified_stats[key] = true
+			current_stat_buffs._modified_stats[key] = true
+		end
 	end
 end
 
@@ -587,24 +735,21 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 	local template = self._template
 	local base_stat_buffs = template.stat_buffs or EMPTY_TABLE
 
-	self:_calculate_stat_buffs(current_stat_buffs, base_stat_buffs)
+	self:_calculate_stat_buffs(current_stat_buffs, base_stat_buffs, false)
 
-	local conditional_stat_buffs_func = template.conditional_stat_buffs_func
+	local template_override_data = self._template_override_data
+	local override_conditional_state_buffs = template_override_data and template_override_data.conditional_stat_buffs
+	local conditional_stat_buffs = override_conditional_state_buffs or template.conditional_stat_buffs
 
-	if conditional_stat_buffs_func and conditional_stat_buffs_func(self._template_data, self._template_context) then
-		local template_override_data = self._template_override_data
-		local override_conditional_state_buffs = template_override_data and template_override_data.conditional_stat_buffs
-		local conditional_stat_buffs = override_conditional_state_buffs or template.conditional_stat_buffs
-
-		self:_calculate_stat_buffs(current_stat_buffs, conditional_stat_buffs)
+	if conditional_stat_buffs then
+		self:_calculate_stat_buffs(current_stat_buffs, conditional_stat_buffs, true)
 	end
 
 	local lerped_stat_buffs = template.lerped_stat_buffs
 
 	if lerped_stat_buffs then
 		local start_time = self._start_time
-		local duration = template.duration
-		local template_override_data = self._template_override_data
+		local duration = self:duration()
 		local lerped_stat_buffs_overrides = template_override_data and template_override_data.lerped_stat_buffs
 
 		lerped_stat_buffs = lerped_stat_buffs_overrides or lerped_stat_buffs
@@ -622,18 +767,17 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 			self._lerped_stat_buffs[key] = lerped_value
 		end
 
-		self:_calculate_stat_buffs(current_stat_buffs, self._lerped_stat_buffs)
+		self:_calculate_stat_buffs(current_stat_buffs, self._lerped_stat_buffs, false)
 	end
 
 	local conditional_lerped_stat_buffs = template.conditional_lerped_stat_buffs
 
 	if conditional_lerped_stat_buffs then
 		local start_time = self._start_time
-		local duration = template.duration
+		local duration = self:duration()
 		local conditional_lerped_stat_buffs_func = template.conditional_lerped_stat_buffs_func
 
 		if not conditional_lerped_stat_buffs_func or conditional_lerped_stat_buffs_func(self._template_data, self._template_context) then
-			local template_override_data = self._template_override_data
 			local lerped_stat_buffs_overrides = template_override_data and template_override_data.conditional_lerped_stat_buffs
 
 			conditional_lerped_stat_buffs = lerped_stat_buffs_overrides or conditional_lerped_stat_buffs
@@ -651,9 +795,13 @@ Buff.update_stat_buffs = function (self, current_stat_buffs, t)
 				self._lerped_stat_buffs[key] = lerped_value
 			end
 
-			self:_calculate_stat_buffs(current_stat_buffs, self._lerped_stat_buffs)
+			self:_calculate_stat_buffs(current_stat_buffs, self._lerped_stat_buffs, false)
 		end
 	end
+end
+
+local function _default_conditional_keyword_func(keyword)
+	return true
 end
 
 Buff.update_keywords = function (self, current_key_words, t)
@@ -670,11 +818,21 @@ Buff.update_keywords = function (self, current_key_words, t)
 
 	local num_conditional_keywords = self._num_conditional_keywords
 
-	if num_conditional_keywords and self._conditional_keywords_func(self._template_data, self._template_context) then
-		local keywords = template.conditional_keywords
+	if num_conditional_keywords then
+		local template_data, template_context = self._template_data, self._template_context
 
-		for i = 1, num_conditional_keywords do
-			current_key_words[keywords[i]] = true
+		if self._conditional_keywords_func(template_data, template_context) then
+			local keywords = template.conditional_keywords
+			local keywords_funcs = self._conditional_keywords_funcs
+
+			for i = 1, num_conditional_keywords do
+				local keyword = keywords[i]
+				local keyword_condition = keywords_funcs[keyword] or _default_conditional_keyword_func
+
+				if keyword_condition(template_data, template_context) then
+					current_key_words[keywords[i]] = true
+				end
+			end
 		end
 	end
 

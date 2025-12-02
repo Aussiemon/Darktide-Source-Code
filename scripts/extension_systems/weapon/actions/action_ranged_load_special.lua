@@ -60,6 +60,7 @@ ActionRangedLoadSpecial._reload = function (self, t, time_in_action)
 	local scaled_refill_at_time = refill_at_time / time_scale
 
 	if scaled_refill_at_time < time_in_action and not has_refilled_ammunition then
+		local weapon_template = self._weapon_template
 		local cost = reload_settings.cost
 
 		if cost and cost > 0 then
@@ -76,7 +77,6 @@ ActionRangedLoadSpecial._reload = function (self, t, time_in_action)
 
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
 
-		local weapon_template = self._weapon_template
 		local param_table_on_reload_start = self._buff_extension:request_proc_event_param_table()
 
 		if param_table_on_reload_start then

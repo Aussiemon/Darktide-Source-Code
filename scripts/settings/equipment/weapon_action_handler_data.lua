@@ -77,11 +77,12 @@ weapon_action_data.actions = {
 	unwield = _require_weapon_action("action_unwield"),
 	unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
 	unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
-	use_auspex = _require_weapon_action("action_use_auspex"),
+	focus_auspex = _require_weapon_action("action_focus_auspex"),
 	use_syringe = _require_weapon_action("action_use_syringe"),
 	vent_overheat = _require_weapon_action("action_vent_overheat"),
 	vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
 	weapon_shout = _require_weapon_action("action_weapon_shout"),
+	weapon_throw = _require_weapon_action("action_weapon_throw"),
 	wield = _require_weapon_action("action_wield"),
 	windup = _require_weapon_action("action_windup"),
 	zealot_channel = _require_weapon_action("action_zealot_channel"),
@@ -99,7 +100,9 @@ local function _ammo_check(action_settings, condition_func_params)
 	local policy_fulfilled = reload_policy == "empty" and empty_clip or reload_policy == "always" and not full_clip or reload_policy == "always_with_clip"
 	local fulfill_reload_requirements
 
-	if reload_policy == "always_with_clip" then
+	if inventory_slot_component.free_ammunition_transfer then
+		fulfill_reload_requirements = policy_fulfilled
+	elseif reload_policy == "always_with_clip" then
 		fulfill_reload_requirements = ammo_reserve + current_clip_amount > 0 and policy_fulfilled
 	else
 		fulfill_reload_requirements = ammo_reserve > 0 and policy_fulfilled
@@ -480,7 +483,7 @@ local function _no_ammo(condition_func_params, action_params, remaining_time)
 	local weapon = action_params.weapon
 	local inventory_slot_component = weapon.inventory_slot_component
 	local no_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component) == 0
-	local has_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve > 0
+	local has_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve > 0 or inventory_slot_component.free_ammunition_transfer
 	local buff_keywords = BuffSettings.keywords
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local no_ammo_consumption = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
@@ -610,10 +613,13 @@ weapon_action_data.conditional_state_functions = {
 
 		return test
 	end,
-	auto_chain = function (condition_func_params, action_params, remaining_time, t)
+	action_end = function (condition_func_params, action_params, remaining_time, t)
 		local no_time_left = remaining_time <= 0
 
 		return no_time_left
+	end,
+	auto_chain = function ()
+		return true
 	end,
 	no_mission_zone = function (condition_func_params, action_params, remaining_time, t)
 		return not Scanning.has_active_scanning_zone()

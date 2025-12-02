@@ -35,7 +35,9 @@ local function _fetch_all_backend_profiles(backend_interface)
 
 		if not characters or #characters == 0 then
 			return Promise.resolved({
+				selected_profile = nil,
 				profiles = {},
+				gear = gear_list,
 			})
 		end
 
@@ -135,6 +137,11 @@ end
 
 ProfilesService.create_profile = function (self, profile)
 	return _invalidate_gear_cache(self._backend_interface.characters:create(profile)):catch(function (error)
+		if error.code == 400 and string.find(error.description, "owned") then
+			Managers.data_service.gear:invalidate_gear_cache()
+			Managers.data_service.gear:fetch_gear()
+		end
+
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})

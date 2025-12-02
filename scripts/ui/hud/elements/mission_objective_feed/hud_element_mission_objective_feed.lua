@@ -1,18 +1,18 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed.lua
 
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local Definitions = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_definitions")
 local HudElementMissionObjective = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective")
 local HudElementMissionObjectiveFeedSettings = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
+local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
 local HudElementMissionObjectiveFeed = class("HudElementMissionObjectiveFeed", "HudElementBase")
 
 HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_scale, definitions)
 	HudElementMissionObjectiveFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
 
+	self._hud_objective_id_counter = 0
 	self._hud_objectives = {}
 	self._hud_objectives_sorted = {}
 	self._objective_widgets = {}
@@ -25,6 +25,7 @@ HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_
 	self._live_event_id = nil
 	self._live_event_widgets = {}
 	self._live_event_widgets_counter = 0
+	self._hazard_stripes_active = false
 
 	self:_set_live_event_visible(false)
 	self:_set_background_visibility(false)
@@ -87,6 +88,83 @@ HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_re
 	self:_set_live_event_visible(widget_count > 0)
 end
 
+HudElementMissionObjectiveFeed._create_local_objective = function (self, objective_name, objective_type, sort_order)
+	objective_type = objective_type or "default"
+
+	local objective_data = {
+		locally_added = true,
+		marker_type = "hub_objective",
+		name = objective_name,
+		objective_category = objective_type,
+		hud_sort_order = sort_order,
+	}
+	local objective = MissionObjectiveGoal:new()
+
+	objective:start_objective(objective_data)
+
+	return objective
+end
+
+HudElementMissionObjectiveFeed._update_hazard_stripes_and_alert = function (self, ui_renderer)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local hud_objectives = self._hud_objectives
+	local objective_widgets = self._objective_widgets
+	local alert = false
+	local hazard_stripes = false
+
+	for objective, hud_objective in pairs(hud_objectives) do
+		local ui_state = hud_objective:state()
+		local category = hud_objective:objective_category()
+
+		if category == "overarching" and objective:use_hud() then
+			hazard_stripes = true
+
+			if ui_state == "alert" then
+				alert = true
+
+				break
+			end
+		end
+	end
+
+	if self._hazard_stripes_active ~= hazard_stripes then
+		self._hazard_stripes_active = hazard_stripes
+
+		if hazard_stripes then
+			self._hazard_objective_top = self:_create_local_objective("hazard_top", "warning", -10)
+
+			self:_add_objective(self._hazard_objective_top, ui_renderer, true)
+
+			self._hazard_objective_bottom = self:_create_local_objective("hazard_bottom", "warning", -1)
+
+			self:_add_objective(self._hazard_objective_bottom, ui_renderer, true)
+		else
+			self:_remove_objective(self._hazard_objective_top)
+			self._hazard_objective_top:destroy()
+			self:_remove_objective(self._hazard_objective_bottom)
+			self._hazard_objective_bottom:destroy()
+		end
+	end
+
+	for objective, hud_objective in pairs(self._hud_objectives) do
+		local category = hud_objective:objective_category()
+		local widget = objective_widgets[objective]
+
+		if widget and category == "warning" then
+			local style = widget.style
+
+			if alert then
+				style.hazard_above.color = HudElementMissionObjectiveFeedSettings.alert_color
+			else
+				style.hazard_above.color = style.hazard_above.base_color
+			end
+		end
+	end
+end
+
 HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	if self._scan_delay_duration > 0 then
 		self._scan_delay_duration = self._scan_delay_duration - dt
@@ -97,6 +175,7 @@ HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, rend
 	end
 
 	self:_update_live_event(false, ui_renderer)
+	self:_update_hazard_stripes_and_alert(ui_renderer)
 
 	if self._objective_widgets_counter > 0 then
 		self:_update_widgets(dt, t)
@@ -184,8 +263,11 @@ HudElementMissionObjectiveFeed._mission_objectives_scan = function (self, ui_ren
 		local objective_data = table.remove(event_objectives_to_add, i)
 		local objective = objective_data.objective
 		local locally_added = objective_data.locally_added
+		local should_show = locally_added or objective and objective:use_hud()
 
-		self:_add_objective(objective, ui_renderer, locally_added)
+		if should_show then
+			self:_add_objective(objective, ui_renderer, locally_added)
+		end
 	end
 
 	local hud_objectives = self._hud_objectives
@@ -234,7 +316,9 @@ HudElementMissionObjectiveFeed.event_add_objective = function (self, objective, 
 end
 
 HudElementMissionObjectiveFeed._add_objective = function (self, objective, ui_renderer, locally_added)
-	local new_hud_objective = HudElementMissionObjective:new(objective)
+	self._hud_objective_id_counter = self._hud_objective_id_counter + 1
+
+	local new_hud_objective = HudElementMissionObjective:new(objective, self._hud_objective_id_counter)
 
 	self._hud_objectives[objective] = new_hud_objective
 	self._hud_objectives_sorted[#self._hud_objectives_sorted + 1] = new_hud_objective
@@ -270,8 +354,7 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 			header_text_style.size[1],
 			1000,
 		}
-		local text_options = UIFonts.get_font_options_by_style(header_text_style)
-		local _, text_height = UIRenderer.text_size(ui_renderer, header_text, header_text_style.font_type, header_text_style.font_size, text_size, text_options)
+		local _, text_height = self:_text_size(ui_renderer, header_text, header_text_style, text_size)
 		local header_height = text_height + 5
 
 		if hud_objective:progress_bar() then
@@ -305,10 +388,7 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 		widget_height = widget_height + style.alert_background.size[2]
 	end
 
-	if content.category == "overarching" then
-		widget_height = widget_height + 20
-	end
-
+	widget_height = widget_height + hud_objective:additional_height()
 	content.size[2] = widget_height
 end
 
@@ -415,17 +495,7 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	end
 
 	if objective_category == "overarching" then
-		local alert = state == "alert"
-
-		content.show_alert = alert
-
-		if alert then
-			style.hazard_above.color = HudElementMissionObjectiveFeedSettings.alert_color
-		else
-			style.hazard_above.color = style.hazard_above.base_color
-		end
-	else
-		content.show_alert = false
+		content.show_alert = state == "alert"
 	end
 
 	local colors_by_category = HudElementMissionObjectiveFeedSettings.colors_by_category
@@ -487,7 +557,7 @@ HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_obje
 		local allow_skip = false
 		local max_detail
 
-		text = TextUtilities.format_time_span_localized(time_left, use_short, allow_skip, max_detail)
+		text = Text.format_time_span_localized(time_left, use_short, allow_skip, max_detail)
 	elseif show_minutes then
 		local millis = math.floor(time_left % 1 * 100)
 
@@ -514,7 +584,7 @@ HudElementMissionObjectiveFeed._update_timer_progress = function (self, hud_obje
 			40,
 		}
 		local ui_renderer = self._parent:ui_renderer()
-		local width = self:_text_size_for_style(ui_renderer, realignment_text, text_style, optional_size)
+		local width = self:_text_size(ui_renderer, realignment_text, text_style, optional_size)
 
 		text_style.offset[1] = text_style.default_offset[1] - width
 	end
@@ -544,7 +614,7 @@ HudElementMissionObjectiveFeed._align_objective_widgets = function (self)
 		local b_priority = b_objective:sort_order() or entry_order_by_objective_category[b_objective:objective_category()]
 
 		if a_priority == b_priority then
-			return false
+			return a_objective:id() < b_objective:id()
 		elseif b_priority < a_priority then
 			return false
 		end

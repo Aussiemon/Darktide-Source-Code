@@ -11,6 +11,11 @@ local UIManagerTestify = {
 	is_view_active = function (ui_manager, view_name)
 		return ui_manager:view_active(view_name)
 	end,
+	wait_until_view_is_done_closing = function (ui_manager, view_name)
+		if ui_manager:is_view_closing(view_name) then
+			return Testify.RETRY
+		end
+	end,
 	open_view = function (ui_manager, view)
 		local context = view.dummy_data or {
 			can_exit = true,

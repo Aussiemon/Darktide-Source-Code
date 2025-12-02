@@ -296,11 +296,10 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 			if density_zone_count == 0 then
 				local new_density_type
 				local has_randomized_encampment = self:_random() <= (self._override_chance_of_encampment or roamer_template.chance_of_encampment)
-				local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment
+				local encampment_types = roamer_template.encampment_types
+				local should_spawn_encampment = num_encampment_blocked_zones == 0 and num_encampments < num_encampments_to_spawn and has_randomized_encampment and encampment_types and #encampment_types > 0
 
 				if should_spawn_encampment then
-					local encampment_types = roamer_template.encampment_types
-
 					new_density_type = encampment_types[self:_random(1, #encampment_types)]
 					num_encampments = num_encampments + 1
 					num_encampment_blocked_zones = roamer_template.num_encampment_blocked_zones

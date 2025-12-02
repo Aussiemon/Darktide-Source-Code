@@ -41,7 +41,6 @@ HeresyFinaleMaterialVariables.start_effect = function (self)
 
 	Unit.set_scalar_for_material(self._unit, self._material_slot_name, self._start_effect_time_variable_name, t)
 	Unit.set_scalar_for_material(self._unit, self._material_slot_name, self._start_effect_duration_variable_name, self._start_effect_duration)
-	Log.info("hello")
 end
 
 HeresyFinaleMaterialVariables.stage2_effect = function (self)
@@ -49,7 +48,6 @@ HeresyFinaleMaterialVariables.stage2_effect = function (self)
 
 	Unit.set_scalar_for_material(self._unit, self._material_slot_name, self._stage2_effect_time_variable_name, t)
 	Unit.set_scalar_for_material(self._unit, self._material_slot_name, self._stage2_effect_duration_variable_name, self._stage2_effect_duration)
-	Log.info("hello")
 end
 
 HeresyFinaleMaterialVariables.stage3_effect = function (self)

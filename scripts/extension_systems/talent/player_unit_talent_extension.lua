@@ -70,7 +70,7 @@ PlayerUnitTalentExtension.game_object_initialized = function (self, game_object_
 end
 
 PlayerUnitTalentExtension.buff_template_tier = function (self, buff_template_name)
-	return self._buff_template_tiers[buff_template_name] or 1
+	return self._buff_template_tiers[buff_template_name]
 end
 
 PlayerUnitTalentExtension.update = function (self, unit, dt, t)
@@ -129,9 +129,8 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 	else
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local profile = self._player:profile()
-		local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
+		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, talents)
 
 		passives = class_loadout.passives
 		coherency_buffs = class_loadout.coherency
@@ -168,20 +167,24 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 	local passive_buff_indices = self._passive_buff_indices
 
-	for _, buff_template_name in pairs(passives) do
-		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, fixed_t, "from_talent", true)
+	for talent_name, buff_template_names in pairs(passives) do
+		for i = 1, #buff_template_names do
+			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_names[i], fixed_t, "from_talent", talent_name)
 
-		passive_buff_indices[#passive_buff_indices + 1] = {
-			local_index = local_index,
-			component_index = component_index,
-		}
+			passive_buff_indices[#passive_buff_indices + 1] = {
+				local_index = local_index,
+				component_index = component_index,
+			}
+		end
 	end
 
 	local coherency_system = self._coherency_system
 	local coherency_external_buff_indices = self._coherency_external_buff_indices
 
-	for _, buff_template_name in pairs(coherency_buffs) do
-		coherency_external_buff_indices[#coherency_external_buff_indices + 1] = coherency_system:add_external_buff(unit, buff_template_name, "from_talent", true)
+	for talent_name, buff_template_names in pairs(coherency_buffs) do
+		for i = 1, #buff_template_names do
+			coherency_external_buff_indices[#coherency_external_buff_indices + 1] = coherency_system:add_external_buff(unit, buff_template_names[i], "from_talent", talent_name)
+		end
 	end
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()

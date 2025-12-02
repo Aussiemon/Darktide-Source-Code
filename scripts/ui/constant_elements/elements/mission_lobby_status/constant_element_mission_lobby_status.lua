@@ -3,7 +3,6 @@
 local definition_path = "scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_definitions"
 local ConstantMissionLobbyStatusSettings = require("scripts/ui/constant_elements/elements/mission_lobby_status/constant_element_mission_lobby_status_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ConstantMissionLobbyStatus = class("ConstantMissionLobbyStatus", "ConstantElementBase")

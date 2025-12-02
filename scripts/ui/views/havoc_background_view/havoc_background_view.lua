@@ -27,16 +27,15 @@ HavocBackgroundView.init = function (self, settings, context)
 
 		Managers.data_service.havoc:set_show_promotion_info()
 	end
-
-	self:_register_event("event_havoc_background_on_end_time_met")
-	self:_register_event("event_revoke_havoc_mission", "revoke_mission")
-	self:_register_event("event_auto_cancel_havoc_mission", "auto_cancel_mission")
 end
 
 HavocBackgroundView.auto_cancel_mission = function (self)
 	self._rewards = {
 		type = "promotion",
-		current = {},
+		current = {
+			charges = nil,
+			rank = nil,
+		},
 		previous = {
 			rank = self.havoc_order.data.rank,
 			charges = self.havoc_order.charges,
@@ -68,7 +67,10 @@ end
 HavocBackgroundView.revoke_mission = function (self)
 	self._rewards = {
 		type = "promotion",
-		current = {},
+		current = {
+			charges = nil,
+			rank = nil,
+		},
 		previous = {
 			rank = self.havoc_order.data.rank,
 			charges = self.havoc_order.charges,
@@ -249,6 +251,9 @@ HavocBackgroundView.on_enter = function (self)
 	end
 
 	self:_register_event("event_reset_havoc_background_view")
+	self:_register_event("event_havoc_background_on_end_time_met")
+	self:_register_event("event_revoke_havoc_mission", "revoke_mission")
+	self:_register_event("event_auto_cancel_havoc_mission", "auto_cancel_mission")
 end
 
 HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callback)

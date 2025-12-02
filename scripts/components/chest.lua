@@ -35,6 +35,14 @@ Chest.destroy = function (self, unit)
 	return
 end
 
+Chest.chest_open = function (self, unit)
+	local chest_extension = self._chest_extension
+
+	if chest_extension then
+		chest_extension:open()
+	end
+end
+
 Chest.chest_lock = function (self, unit)
 	local chest_extension = self._chest_extension
 
@@ -63,6 +71,10 @@ Chest.component_data = {
 		value = false,
 	},
 	inputs = {
+		chest_open = {
+			accessibility = "public",
+			type = "event",
+		},
 		chest_lock = {
 			accessibility = "public",
 			type = "event",

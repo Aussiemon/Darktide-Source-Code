@@ -105,6 +105,9 @@ local unarmored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -156,6 +159,10 @@ local unarmored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -166,6 +173,7 @@ local unarmored = {
 }
 local armored = {
 	sfx = {
+		blocked = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
@@ -274,6 +282,9 @@ local armored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -325,6 +336,10 @@ local armored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -336,6 +351,7 @@ local armored = {
 local super_armor = table.clone(armored)
 local disgustingly_resilient = {
 	sfx = {
+		blocked = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
@@ -560,6 +576,10 @@ local disgustingly_resilient = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = disgusting_blood_ball,
 		died = disgusting_blood_ball,
 		weakspot_damage = disgusting_blood_ball,

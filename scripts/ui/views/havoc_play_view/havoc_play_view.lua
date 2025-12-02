@@ -9,7 +9,6 @@ local Promise = require("scripts/foundation/utilities/promise")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -67,43 +66,39 @@ HavocPlayView._setup_text_positions = function (self)
 	local reward_title_widget = self._widgets_by_name.reward_title
 	local reward_title_text = reward_title_widget.content.text
 	local reward_title_style = reward_title_widget.style.text
-	local reward_title_text_options = UIFonts.get_font_options_by_style(reward_title_style)
 	local reward_title_width = self:_scenegraph_size(reward_title_widget.scenegraph_id)
 	local reward_title_size = {
 		reward_title_width,
 		2000,
 	}
-	local _, reward_title_height = UIRenderer.text_size(self._ui_renderer, reward_title_text, reward_title_style.font_type, reward_title_style.font_size, reward_title_size, reward_title_text_options)
+	local reward_title_height = Text.text_height(self._ui_renderer, reward_title_text, reward_title_style, reward_title_size)
 	local reward_description_widget = self._widgets_by_name.reward_description
 	local reward_description_text = reward_description_widget.content.text
 	local reward_description_style = reward_description_widget.style.text
-	local reward_description_text_options = UIFonts.get_font_options_by_style(reward_description_style)
 	local reward_description_width = self:_scenegraph_size(reward_description_widget.scenegraph_id)
 	local reward_description_size = {
 		reward_description_width,
 		2000,
 	}
-	local _, reward_description_height = UIRenderer.text_size(self._ui_renderer, reward_description_text, reward_description_style.font_type, reward_description_style.font_size, reward_description_size, reward_description_text_options)
+	local reward_description_height = Text.text_height(self._ui_renderer, reward_description_text, reward_description_style, reward_description_size)
 	local reward_objective_1_widget = self._widgets_by_name.reward_objective_1
 	local reward_objective_1_text = reward_objective_1_widget.content.text
 	local reward_objective_1_style = reward_objective_1_widget.style.text
-	local reward_objective_1_text_options = UIFonts.get_font_options_by_style(reward_objective_1_style)
 	local reward_objective_1_width = self:_scenegraph_size(reward_objective_1_widget.scenegraph_id) + reward_objective_1_style.size_addition[1]
 	local reward_objective_1_size = {
 		reward_objective_1_width,
 		2000,
 	}
-	local _, reward_objective_1_height = UIRenderer.text_size(self._ui_renderer, reward_objective_1_text, reward_objective_1_style.font_type, reward_objective_1_style.font_size, reward_objective_1_size, reward_objective_1_text_options)
+	local reward_objective_1_height = Text.text_height(self._ui_renderer, reward_objective_1_text, reward_objective_1_style, reward_objective_1_size)
 	local reward_objective_2_widget = self._widgets_by_name.reward_objective_2
 	local reward_objective_2_text = reward_objective_2_widget.content.text
 	local reward_objective_2_style = reward_objective_2_widget.style.text
-	local reward_objective_2_text_options = UIFonts.get_font_options_by_style(reward_objective_2_style)
 	local reward_objective_2_width = self:_scenegraph_size(reward_objective_2_widget.scenegraph_id) + reward_objective_2_style.size_addition[1]
 	local reward_objective_2_size = {
 		reward_objective_2_width,
 		2000,
 	}
-	local _, reward_objective_2_height = UIRenderer.text_size(self._ui_renderer, reward_objective_2_text, reward_objective_2_style.font_type, reward_objective_2_style.font_size, reward_objective_2_size, reward_objective_2_text_options)
+	local reward_objective_2_height = Text.text_height(self._ui_renderer, reward_objective_2_text, reward_objective_2_style, reward_objective_2_size)
 	local reward_objective_margin = 40
 	local reward_objective_1_height = reward_objective_1_height + reward_objective_margin
 	local reward_objective_2_height = reward_objective_2_height + reward_objective_margin
@@ -560,13 +555,12 @@ HavocPlayView._update_mission_participants = function (self, participants)
 
 				widget_style.offset[2] = current_offset
 
-				local widget_text_options = UIFonts.get_font_options_by_style(widget_style)
 				local widget_width = self:_scenegraph_size(widget.scenegraph_id) + widget_style.size_addition[1]
 				local widget_size = {
 					widget_width,
 					2000,
 				}
-				local _, widget_text_height = UIRenderer.text_size(self._ui_renderer, widget_text, widget_style.font_type, widget_style.font_size, widget_size, widget_text_options)
+				local widget_text_height = Text.text_height(self._ui_renderer, widget_text, widget_style, widget_size)
 
 				current_offset = current_offset + widget_text_height + 5
 			end
@@ -895,8 +889,6 @@ HavocPlayView._handle_input = function (self, input_service, dt, t)
 end
 
 HavocPlayView.on_exit = function (self)
-	self._promise_container:delete()
-
 	if self._mission_detail_grid then
 		self._mission_detail_grid:set_visibility(false)
 	end
@@ -921,6 +913,11 @@ HavocPlayView.on_exit = function (self)
 
 	self:_destroy_forward_gui()
 	HavocPlayView.super.on_exit(self)
+end
+
+HavocPlayView.destroy = function (self)
+	self._promise_container:delete()
+	HavocPlayView.super.destroy(self)
 end
 
 HavocPlayView.ui_renderer = function (self)

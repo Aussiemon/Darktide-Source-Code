@@ -750,6 +750,7 @@ local option_button_settings = {
 		{
 			pass_type = "texture_uv",
 			style_id = "icon",
+			value = nil,
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",

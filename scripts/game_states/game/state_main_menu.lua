@@ -55,7 +55,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 
 	self._full_frame_rate_enabled = true
 
-	Managers.backend.interfaces.region_latency:pre_get_region_latencies()
+	Managers.data_service.region_latency:reload_cache()
 
 	local local_player = Managers.player:local_player(1)
 	local account_id = local_player:account_id()
@@ -341,12 +341,13 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 		local selection_promise = self:_set_selected_profile(created_profile)
 		local promises = {}
 
-		promises[1] = Managers.data_service.account:set_selected_character_id(character_id)
-		promises[2] = selection_promise
+		promises[#promises + 1] = selection_promise
 
 		if self._force_create_first_character then
 			self._force_create_first_character = nil
-			promises[3] = Managers.data_service.account:set_has_created_first_character()
+			promises[#promises + 1] = Managers.data_service.account:set_has_created_first_character(character_id):next(callback(Managers.data_service.account, "set_selected_character_id", character_id))
+		else
+			promises[#promises + 1] = Managers.data_service.account:set_selected_character_id(character_id)
 		end
 
 		Promise.all(unpack(promises)):next(function (_)
@@ -361,6 +362,11 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 			self:_set_view_state_cb("main_menu")
 		end)
 	else
+		Managers.data_service.gear:fetch_gear():next(function (gear)
+			self._gear = gear
+		end, function (error)
+			Log.error("StateMainMenu", "error fetching gear '%s'", error)
+		end)
 		Managers.time:unregister_timer("character_creation_timer")
 		self:_set_view_state_cb("main_menu")
 	end
@@ -537,8 +543,10 @@ StateMainMenu.update = function (self, main_dt, main_t)
 
 		if self._onboarding_mission_name then
 			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name, SINGLEPLAY_TYPES.onboarding)
-		else
+		elseif not Managers.multiplayer_session:has_session() then
 			next_state, state_context = Managers.multiplayer_session:find_available_session()
+		else
+			next_state, state_context = Managers.multiplayer_session:poll_available_session()
 		end
 
 		return next_state, state_context

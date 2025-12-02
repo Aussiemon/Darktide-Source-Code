@@ -4,8 +4,7 @@ local definition_path = "scripts/ui/views/loading_view/loading_view_definitions"
 local InputUtils = require("scripts/managers/input/input_utils")
 local LoadingViewSettings = require("scripts/ui/views/loading_view/loading_view_settings")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local LoadingView = class("LoadingView", "BaseView")
 local Views = require("scripts/ui/views/views")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -93,13 +92,12 @@ LoadingView._widget_text_length = function (self, widget_id)
 	local widget_width, widget_height = self:_scenegraph_size(scenegraph_id)
 	local text = widget.content.text
 	local text_style = widget.style.text
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local text_length, _ = UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, {
+	local text_width = Text.text_width(self._ui_renderer, text, text_style, {
 		widget_width,
 		widget_height,
-	}, text_options)
+	})
 
-	return text_length
+	return text_width
 end
 
 LoadingView._handle_input = function (self, input_service)

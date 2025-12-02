@@ -15,7 +15,10 @@ MinionBuffExtension.init = function (self, extension_init_context, unit, extensi
 	self._owner_system = extension_init_context.owner_system
 	self._active_material_vector_effects = {}
 	self._current_material_vector_effect = {
+		buff_template_name = nil,
+		name = nil,
 		priority = 0,
+		value = nil,
 	}
 
 	MinionBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, false)
@@ -45,20 +48,23 @@ MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 	end
 
 	local game_object_id = self._game_object_id
+	local unit_spawner_manager = Managers.state.unit_spawner
 
 	for buff_instance, index_array in pairs(buffs_to_sync) do
+		local owner_unit_id = unit_spawner_manager:game_object_id(buff_instance:owner_unit())
 		local template = buff_instance:template()
 		local template_name = template.name
 		local buff_template_id = network_lookup_buff_templates[template_name]
 		local optional_lerp_value = buff_instance:buff_lerp_value()
+		local talent_id = NetworkLookup.archetype_talent_names["n/a"]
 		local num_index_array = #index_array
 
 		if num_index_array == 1 then
 			local index = index_array[1]
 
-			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
+			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, owner_unit_id, optional_lerp_value, nil, nil, talent_id)
 		else
-			RPC.rpc_add_buff_with_stacks(channel, game_object_id, buff_template_id, index_array, optional_lerp_value, nil, nil, false)
+			RPC.rpc_add_buff_with_stacks(channel, game_object_id, buff_template_id, index_array, owner_unit_id, optional_lerp_value, nil, nil, talent_id)
 		end
 	end
 end
@@ -69,15 +75,18 @@ MinionBuffExtension.game_object_initialized = function (self, game_session, game
 	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
 	if buffs_added_before_game_object_creation then
+		local unit_spawner_manager = Managers.state.unit_spawner
+
 		for i = 1, #buffs_added_before_game_object_creation do
 			local buff_added_before_game_object_creation = buffs_added_before_game_object_creation[i]
 			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
 			local index = buff_added_before_game_object_creation.index
+			local owner_unit_id = unit_spawner_manager:game_object_id(buff_added_before_game_object_creation.owner_unit)
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
 			local optional_slot_id, optional_parent_buff_template_id
-			local from_talent = false
+			local from_talent = NetworkLookup.archetype_talent_names[buff_added_before_game_object_creation.from_talent]
 
-			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
+			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, owner_unit_id, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -205,7 +214,7 @@ MinionBuffExtension.add_internally_controlled_buff = function (self, template_na
 
 	if can_add_internally_controlled_buff then
 		if is_local_unit then
-			self:_add_buff(template, t, ...)
+			self:_add_buff(template, t, false, ...)
 		else
 			self:_add_rpc_synced_buff(template, t, ...)
 		end
@@ -232,7 +241,7 @@ MinionBuffExtension.add_externally_controlled_buff = function (self, template_na
 		local_index = self:_next_local_index()
 		self._muted_external_buffs[local_index] = template
 	elseif is_local_unit then
-		local_index = self:_add_buff(template, t, ...)
+		local_index = self:_add_buff(template, t, false, ...)
 	else
 		local_index = self:_add_rpc_synced_buff(template, t, ...)
 	end
@@ -275,21 +284,29 @@ MinionBuffExtension._remove_internally_controlled_buff = function (self, local_i
 end
 
 MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
-	local index = self:_add_buff(template, t, ...)
+	local index = self:_add_buff(template, t, false, ...)
 	local game_object_id = self._game_object_id
 	local template_name = template.name
 	local buff_template_id = NetworkLookup.buff_templates[template_name]
 	local buff_instance = self._buffs_by_index[index]
+	local owner_unit = buff_instance:owner_unit()
 	local optional_lerp_value = buff_instance:buff_lerp_value()
+	local from_talent = "n/a"
 
 	if game_object_id then
-		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
+		local talent_id = NetworkLookup.archetype_talent_names[from_talent]
+		local owner_unit_id = Managers.state.unit_spawner:game_object_id(owner_unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, owner_unit_id, optional_lerp_value, nil, nil, talent_id)
 	else
 		local buff_added_before_game_object_creation = {
-			from_talent = false,
+			optional_parent_buff_template_id = nil,
+			optional_slot_id = nil,
 			buff_template_id = buff_template_id,
 			index = index,
 			optional_lerp_value = optional_lerp_value,
+			from_talent = from_talent,
+			owner_unit = owner_unit,
 		}
 		local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 

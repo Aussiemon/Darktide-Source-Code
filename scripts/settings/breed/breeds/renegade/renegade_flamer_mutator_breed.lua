@@ -423,7 +423,9 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.renegade_flamer_mutator,
-	tokens = {},
+	tokens = {
+		pounced = nil,
+	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
 		pounce_anim_event = "leap_attack",

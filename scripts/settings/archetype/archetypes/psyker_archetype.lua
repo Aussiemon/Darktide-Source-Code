@@ -7,7 +7,6 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
 local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
-local Promise = require("scripts/foundation/utilities/promise")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/psyker",
 	archetype_badge = "content/ui/materials/icons/class_badges/psyker_01_01",
@@ -17,15 +16,19 @@ local archetype_data = {
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/psyker_terminal_shadow",
 	archetype_name = "loc_class_psyker_name",
 	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/psyker",
-	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/class_selection_top_psyker",
-	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/class_selection_top_psyker_unselected",
+	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/psyker/class_selection_top_psyker",
+	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/psyker/class_selection_top_psyker_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 	archetype_title = "loc_class_psyker_title",
-	archetype_video = "content/videos/class_selection/psyker_2",
+	archetype_video = "content/videos/class_selection/psyker",
 	base_critical_strike_chance = 0.075,
 	breed = "human",
+	companion_breed = nil,
+	deluxe_dlc = nil,
 	health = 150,
 	knocked_down_health = 1000,
+	requires_dlc = nil,
+	requires_dlc_reconciliation = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/psyker_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/psyker",
 	toughness = ArchetypeToughnessTemplates.psyker,
@@ -50,15 +53,6 @@ local archetype_data = {
 			item = "content/items/weapons/player/ranged/forcestaff_p1_m1",
 		},
 	},
-	is_available = function (archetype_ref)
-		return Promise.resolved({
-			available = true,
-			archetype = archetype_ref,
-		})
-	end,
-	acquire_callback = function (archetype_ref, on_flow_finished_callback)
-		return
-	end,
 }
 
 return archetype_data

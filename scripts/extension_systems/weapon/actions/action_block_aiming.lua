@@ -22,7 +22,7 @@ ActionBlockAiming.start = function (self, action_settings, t, time_scale, action
 	ActionBlockAiming.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	if not action_settings.skip_enter_alternate_fire and not self._alternate_fire_component.is_active then
-		AlternateFire.start(self._alternate_fire_component, self._weapon_tweak_templates_component, self._spread_control_component, self._sway_control_component, self._sway_component, self._movement_state_component, self._peeking_component, self._first_person_extension, self._animation_extension, self._weapon_extension, self._weapon_template, self._player_unit, t)
+		AlternateFire.start(self._alternate_fire_component, self._weapon_tweak_templates_component, self._spread_control_component, self._sway_control_component, self._sway_component, self._movement_state_component, self._locomotion_component, self._inair_state_component, self._peeking_component, self._first_person_extension, self._animation_extension, self._weapon_extension, self._weapon_template, self._player_unit, t)
 	end
 end
 

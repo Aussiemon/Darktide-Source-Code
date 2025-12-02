@@ -73,6 +73,14 @@ local unarmored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -89,6 +97,10 @@ local unarmored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -189,6 +201,14 @@ local armored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -205,6 +225,10 @@ local armored = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -301,6 +325,14 @@ local super_armor = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -317,6 +349,10 @@ local super_armor = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -389,6 +425,14 @@ local disgustingly_resilient = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -405,6 +449,11 @@ local disgustingly_resilient = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = disgusting_blood_ball,
 		died = disgusting_blood_ball,
 		weakspot_damage = disgusting_blood_ball,

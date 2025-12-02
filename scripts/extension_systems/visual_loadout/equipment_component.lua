@@ -2,6 +2,7 @@
 
 local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
 local Component = require("scripts/utilities/component")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
 local MasterItems = require("scripts/backend/master_items")
@@ -57,6 +58,7 @@ local function _create_slot_from_configuration(configuration, breed_settings, sl
 	slot.attachment_spawn_status = nil
 	slot.equipped_t = nil
 	slot.deform_overrides = nil
+	slot.deform_override_items = nil
 	slot.breed_name = nil
 	slot.hide_unit_in_slot = configuration.hide_unit_in_slot
 	slot.skip_link_children = not not slot_options.skip_link_children
@@ -170,7 +172,7 @@ EquipmentComponent._fill_attach_settings_1p = function (self, owner_unit, attach
 	attach_settings.skip_link_children = nil
 end
 
-EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, optional_breed_name, optional_mission_template, optional_equipment, optional_companion_unit_3p)
+EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, deform_override_items, optional_breed_name, optional_mission_template, optional_equipment, optional_companion_unit_3p)
 	if not item or table.is_empty(item) then
 		return
 	end
@@ -178,6 +180,7 @@ EquipmentComponent.equip_item = function (self, unit_3p, unit_1p, slot, item, op
 	slot.equipped = true
 	slot.item = item
 	slot.deform_overrides = deform_overrides
+	slot.deform_override_items = deform_override_items
 	slot.breed_name = optional_breed_name
 	slot.parent_unit_3p = unit_3p
 	slot.parent_unit_1p = unit_1p
@@ -570,16 +573,19 @@ EquipmentComponent.unequip_slot_dependencies = function (self, slot_config, equi
 	return dependent_items
 end
 
-EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equip_order, items, body_deform_overrides, breed_name, character_unit_3p, character_unit_1p, companion_unit_3p)
+EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equip_order, items, body_deform_overrides, body_deform_override_items, breed_name, character_unit_3p, character_unit_1p, companion_unit_3p)
+	local attach_settings = self:_attach_settings()
+
 	for i = 1, #slot_equip_order do
 		local slot_name = slot_equip_order[i]
 		local item = items[slot_name]
 
 		if item then
 			local deform_overrides = body_deform_overrides or {}
+			local deform_override_items = body_deform_override_items or {}
 			local parent_unit_3p = character_unit_3p
 			local parent_unit_1p = character_unit_1p
-			local parent_slot_names = item.parent_slot_names or {}
+			local parent_slot_names = ItemSlotSettings[slot_name].forced_parent_slot_names or item.parent_slot_names or {}
 
 			for _, parent_slot_name in pairs(parent_slot_names) do
 				local parent_slot = equipment[parent_slot_name]
@@ -589,6 +595,12 @@ EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equ
 
 				for _, parent_item_deform_override in pairs(parent_item_deform_overrides) do
 					deform_overrides[#deform_overrides + 1] = parent_item_deform_override
+				end
+
+				local parent_item_deform_override_items = parent_item.deform_override_items or {}
+
+				for _, parent_item_deform_override_item in pairs(parent_item_deform_override_items) do
+					deform_override_items[#deform_override_items + 1] = parent_item_deform_override_item
 				end
 
 				if parent_slot_unit_3p then
@@ -602,6 +614,12 @@ EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equ
 						for _, material_override in ipairs(material_overrides) do
 							VisualLoadoutCustomization.apply_material_override(parent_unit_3p, nil, false, material_override, false)
 						end
+
+						local material_override_items = item.material_override_items
+
+						for _, material_override_item in ipairs(material_override_items) do
+							VisualLoadoutCustomization.apply_material_override_item(parent_unit_3p, nil, false, material_override_item, false, attach_settings.item_definitions)
+						end
 					end
 				else
 					Log.warning("EquipmentComponent", "Item %s cannot attach to unit in slot %s as it is spawned in the wrong order. Fix the slot priority configuration", item.name, parent_slot_name)
@@ -610,7 +628,7 @@ EquipmentComponent.equip_slot_dependencies = function (self, equipment, slot_equ
 
 			local slot = equipment[slot_name]
 
-			self:equip_item(parent_unit_3p, parent_unit_1p, slot, item, nil, body_deform_overrides, breed_name, nil, nil, companion_unit_3p)
+			self:equip_item(parent_unit_3p, parent_unit_1p, slot, item, nil, body_deform_overrides, deform_override_items, breed_name, nil, nil, companion_unit_3p)
 		end
 	end
 end
@@ -819,7 +837,7 @@ EquipmentComponent.resolve_profile_properties = function (equipment, wielded_slo
 	return properties
 end
 
-EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, unit_3p, unit_1p, first_person_mode)
+EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, unit_3p, unit_1p, first_person_mode, item_definitions)
 	local unit_showing = first_person_mode and unit_1p or unit_3p
 	local unit_hidden = first_person_mode and unit_3p or unit_1p
 	local player_visibility = ScriptUnit.has_extension(unit_3p, "player_visibility_system")
@@ -848,6 +866,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 	if slot_body_face_unit then
 		VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, "mask_face_none", false)
+		VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, "mask_accessory_none", false)
 		VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, "hair_no_mask", false)
 		VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, "facial_hair_no_mask", false)
 	end
@@ -935,6 +954,16 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				end
 
 				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_face, false)
+			end
+
+			if item and item.mask_face_accessory ~= nil then
+				local mask_face_accessory = item.mask_face_accessory
+
+				if mask_face_accessory == "" or mask_face_accessory == nil then
+					mask_face_accessory = "mask_accessory_none"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_face_accessory, false)
 			end
 		end
 

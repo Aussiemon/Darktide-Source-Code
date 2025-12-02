@@ -63,6 +63,9 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
 
 	self._footstep_context = {
+		foley_source_id = nil,
+		fx_extension = nil,
+		locomotion_extension = nil,
 		unit = unit,
 		breed = breed,
 		alternate_fire_component = alternate_fire_component,

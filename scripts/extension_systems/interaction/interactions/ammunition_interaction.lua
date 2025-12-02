@@ -4,11 +4,8 @@ require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
-local Vo = require("scripts/utilities/vo")
-local buff_proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
 local _can_interact, _can_refill_grenades, _can_refill_weapon_special_charges
@@ -49,48 +46,18 @@ AmmunitionInteraction.hud_block_text = function (self, interactor_unit, interact
 end
 
 AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
-	local unit_data_ext = ScriptUnit.extension(interactor_unit, "unit_data_system")
-	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
-	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
 	local ammo_modifier = Managers.state.difficulty:get_ammo_modifier()
 
 	pickup_data.modifier = ammo_modifier
 
+	Ammo.add_ammo_using_pickup_data(interactor_unit, pickup_data, false)
+
+	local unit_data_ext = ScriptUnit.extension(interactor_unit, "unit_data_system")
+	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
+	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local inventory_slot_component = unit_data_ext:write_component(slot_name)
-
-		if inventory_slot_component.max_ammunition_reserve > 0 then
-			local ammo_reserve = inventory_slot_component.current_ammunition_reserve
-			local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
-			local ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
-			local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
-			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
-			local missing_clip = max_ammo_clip - ammo_clip
-			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
-
-			inventory_slot_component.current_ammunition_reserve = new_ammo_amount
-
-			local missing_player_ammo = max_ammo_reserve - ammo_reserve
-
-			if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
-				Vo.ammo_hog_event(interactor_unit, inventory_slot_component, pickup_data)
-			end
-
-			local buff_extension = ScriptUnit.has_extension(interactor_unit, "buff_system")
-
-			if buff_extension then
-				local param_table = buff_extension:request_proc_event_param_table()
-
-				if param_table then
-					param_table.pickup_amount = pickup_amount
-					param_table.pickup_name = pickup_data.name
-					param_table.new_ammo_amount = new_ammo_amount
-
-					buff_extension:add_proc_event(buff_proc_events.on_ammo_pickup, param_table)
-				end
-			end
-		end
-
 		local can_refill_weapon_special_charges = _can_refill_weapon_special_charges(interactor_unit, slot_name)
 
 		if can_refill_weapon_special_charges then

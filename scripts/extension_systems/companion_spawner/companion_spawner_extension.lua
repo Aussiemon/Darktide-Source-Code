@@ -3,6 +3,7 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local Breeds = require("scripts/settings/breed/breeds")
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local CompanionSpawnerExtension = class("CompanionSpawnerExtension")
@@ -16,6 +17,7 @@ CompanionSpawnerExtension.init = function (self, extension_init_context, unit, e
 	self._archetype = extension_init_data.archetype
 	self._is_local_unit = extension_init_data.is_local_unit
 	self._spawned_unit = nil
+	self._world = extension_init_context.world
 	self._current_position = nil
 	self._unstuck_timer = nil
 	self._initialized = false
@@ -34,9 +36,10 @@ CompanionSpawnerExtension._initialize = function (self)
 	local player_unit = owner_player.player_unit
 	local profile = owner_player:profile()
 	local archetype = profile.archetype
-	local companion_breed = archetype.companion_breed
+	local companion_breed_name = archetype.companion_breed
 
-	self._companion_breed = companion_breed
+	self._companion_breed_name = companion_breed_name
+	self._companion_breed = Breeds[companion_breed_name]
 
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[player_unit]
@@ -68,7 +71,7 @@ CompanionSpawnerExtension.update = function (self, unit, dt, t)
 	if not blackboard or not navigation_extension then
 		blackboard = BLACKBOARDS[self._spawned_unit]
 		self._blackboard = blackboard
-		self._navigation_extension = ScriptUnit.extension(self._spawned_unit, "navigation_system")
+		self._navigation_extension = ScriptUnit.has_extension(self._spawned_unit, "navigation_system")
 
 		return
 	end
@@ -123,7 +126,7 @@ CompanionSpawnerExtension.spawn_unit = function (self, optional_position, option
 		return
 	end
 
-	if not self._side_id or not self._companion_breed then
+	if not self._side_id or not self._companion_breed_name then
 		return
 	end
 
@@ -143,7 +146,7 @@ CompanionSpawnerExtension.despawn_unit = function (self)
 		return
 	end
 
-	if not self._side_id or not self._companion_breed then
+	if not self._side_id or not self._companion_breed_name then
 		return
 	end
 
@@ -161,18 +164,18 @@ CompanionSpawnerExtension._spawn_unit = function (self, optional_position, optio
 	param_table.optional_owner_player_unit = player_unit
 	param_table.optional_owner_player = owner_player
 
-	local spawned_unit = minion_spawn_manager:spawn_minion(self._companion_breed, position, rotation, self._side_id, param_table)
+	local spawned_unit = minion_spawn_manager:spawn_minion(self._companion_breed_name, position, rotation, self._side_id, param_table)
 
 	self._spawned_unit = spawned_unit
 
 	if player_unit then
-		self:_proc_owner_companion_spawn_event(player_unit, self._companion_breed, spawned_unit)
+		self:_proc_owner_companion_spawn_event(player_unit, self._companion_breed_name, spawned_unit)
 	end
 
 	local blackboard = BLACKBOARDS[spawned_unit]
 
 	self._blackboard = blackboard
-	self._navigation_extension = ScriptUnit.extension(spawned_unit, "navigation_system")
+	self._navigation_extension = ScriptUnit.has_extension(spawned_unit, "navigation_system")
 end
 
 CompanionSpawnerExtension._despawn_unit = function (self)
@@ -203,7 +206,7 @@ CompanionSpawnerExtension._despawn_unit = function (self)
 	end
 end
 
-CompanionSpawnerExtension._proc_owner_companion_spawn_event = function (self, player_unit, companion_breed, spawned_unit)
+CompanionSpawnerExtension._proc_owner_companion_spawn_event = function (self, player_unit, companion_breed_name, spawned_unit)
 	if not self._is_server then
 		return
 	end
@@ -213,7 +216,7 @@ CompanionSpawnerExtension._proc_owner_companion_spawn_event = function (self, pl
 
 	if proc_event_param_table then
 		proc_event_param_table.owner_unit = player_unit
-		proc_event_param_table.companion_breed = companion_breed
+		proc_event_param_table.companion_breed_name = companion_breed_name
 		proc_event_param_table.companion_unit = spawned_unit
 
 		player_unit_buff_extension:add_proc_event(proc_events.on_player_companion_spawn, proc_event_param_table)
@@ -230,9 +233,9 @@ end
 
 CompanionSpawnerExtension.should_have_companion = function (self)
 	local archetype = self._archetype
-	local companion_breed = archetype.companion_breed
+	local companion_breed_name = archetype.companion_breed
 
-	if not companion_breed then
+	if not companion_breed_name then
 		return false
 	end
 

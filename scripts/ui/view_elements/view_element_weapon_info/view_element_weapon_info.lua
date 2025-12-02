@@ -7,9 +7,9 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Item = require("scripts/utilities/items")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local ItemUtils = require("scripts/utilities/items")
+local Text = require("scripts/utilities/ui/text")
 
 require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 
@@ -510,15 +510,13 @@ ViewElementWeaponInfo._create_bar_breakdown_widgets = function (self, bar_data)
 	local stripped_bar_data = self:_strip_redundant_stats(bar_data)
 	local num_entries = #stripped_bar_data
 	local old_desc = content.description
-	local new_desc = Localize((bar_data.description or display_name) .. "_desc")
+	local new_desc_id = bar_data.description or display_name and display_name .. "_desc"
+	local new_desc = new_desc_id and Localize(new_desc_id) or ""
 	local ui_renderer = self._ui_grid_renderer
 	local text_style = style.description
-	local text_font_data = UIFonts.data_by_type(text_style.font_type)
-	local text_font = text_font_data.path
 	local text_size = text_style.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, old_text_height = UIRenderer.text_size(ui_renderer, old_desc, text_style.font_type, text_style.font_size, text_size, text_options)
-	local _, new_text_height = UIRenderer.text_size(ui_renderer, new_desc, text_style.font_type, text_style.font_size, text_size, text_options)
+	local old_text_height = Text.text_height(ui_renderer, old_desc, text_style, text_size)
+	local new_text_height = Text.text_height(ui_renderer, new_desc, text_style, text_size)
 
 	description_offset = math.max(new_text_height - old_text_height, 0) + 20
 	content.description = new_desc

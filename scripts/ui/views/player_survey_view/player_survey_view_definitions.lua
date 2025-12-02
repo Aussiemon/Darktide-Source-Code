@@ -251,6 +251,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_cb_on_back_pressed",
+		visibility_function = nil,
 	},
 }
 local animations = {}

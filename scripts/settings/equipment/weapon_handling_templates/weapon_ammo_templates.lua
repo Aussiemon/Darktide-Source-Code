@@ -7,6 +7,12 @@ local weapon_ammo_templates = {
 			0,
 		},
 	},
+	grenade = {
+		ammunition_reserve = 0,
+		ammunition_clips = {
+			1,
+		},
+	},
 	bolter_p1_m1 = {
 		ammunition_clips = {
 			{
@@ -112,7 +118,7 @@ local weapon_ammo_templates = {
 		},
 		ammunition_reserve = {
 			lerp_basic = 270,
-			lerp_perfect = 450,
+			lerp_perfect = 405,
 		},
 	},
 	autogun_p3_m2 = {
@@ -124,7 +130,7 @@ local weapon_ammo_templates = {
 		},
 		ammunition_reserve = {
 			lerp_basic = 150,
-			lerp_perfect = 200,
+			lerp_perfect = 180,
 		},
 	},
 	autogun_p3_m3 = {
@@ -136,7 +142,7 @@ local weapon_ammo_templates = {
 		},
 		ammunition_reserve = {
 			lerp_basic = 162,
-			lerp_perfect = 300,
+			lerp_perfect = 270,
 		},
 	},
 	autopistol_p1_m1 = {
@@ -149,6 +155,51 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_basic = 400,
 			lerp_perfect = 600,
+		},
+	},
+	dual_autopistols_p1_m1 = {
+		force_even_numbers = true,
+		ammunition_clips = {
+			{
+				lerp_basic = 40,
+				lerp_perfect = 64,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 400,
+			lerp_perfect = 660,
+		},
+	},
+	dual_shivs_p1_m1 = {
+		ammunition_reserve = 0,
+		force_even_numbers = true,
+		ammunition_clips = {
+			3,
+		},
+	},
+	dual_stubpistols_p1_m1 = {
+		force_even_numbers = true,
+		ammunition_clips = {
+			{
+				lerp_basic = 10,
+				lerp_perfect = 18,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 220,
+			lerp_perfect = 280,
+		},
+	},
+	needle_pistol_p1_m1 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 5,
+				lerp_perfect = 7,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 70,
+			lerp_perfect = 110,
 		},
 	},
 	flamer_p1_m1 = {

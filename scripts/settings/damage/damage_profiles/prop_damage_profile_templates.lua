@@ -425,6 +425,64 @@ damage_templates.interrupted_flamer_backpack_explosion.power_distribution = {
 	impact = 25,
 }
 
+local tank_wall_explosion_close_admr = {
+	attack = {
+		[armor_types.unarmored] = 2,
+		[armor_types.armored] = 2,
+		[armor_types.resistant] = 10,
+		[armor_types.player] = 0.25,
+		[armor_types.berserker] = 2,
+		[armor_types.super_armor] = 3,
+		[armor_types.disgustingly_resilient] = 3,
+		[armor_types.void_shield] = 0.75,
+	},
+	impact = {
+		[armor_types.unarmored] = 2,
+		[armor_types.armored] = 2,
+		[armor_types.resistant] = 10,
+		[armor_types.player] = 2,
+		[armor_types.berserker] = 2,
+		[armor_types.super_armor] = 5,
+		[armor_types.disgustingly_resilient] = 2,
+		[armor_types.void_shield] = 2,
+	},
+}
+
+damage_templates.no_mans_land_tank_wall_explosion = {
+	disorientation_type = "grenadier",
+	ignore_stagger_reduction = true,
+	ignore_stun_immunity = true,
+	ignore_toughness = false,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 3,
+	power_distribution = {
+		attack = 100,
+		impact = 4,
+	},
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = tank_wall_explosion_close_admr,
+		far = tank_wall_explosion_close_admr,
+	},
+	targets = {
+		default_target = {
+			armor_damage_modifier_ranged = {
+				near = tank_wall_explosion_close_admr,
+				far = tank_wall_explosion_close_admr,
+			},
+		},
+	},
+	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.breach_charge_catapult,
+}
+
 return {
 	base_templates = damage_templates,
 	overrides = overrides,

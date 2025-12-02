@@ -26,6 +26,7 @@ local action_data = {
 		max_pounce_dot = 0.1,
 		push_enemies_power_level = 2000,
 		push_enemies_radius = 1,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -90,7 +91,10 @@ local action_data = {
 			right = "run_start_right",
 		},
 		start_move_anim_data = {
-			run_start_fwd = {},
+			run_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -150,7 +154,10 @@ local action_data = {
 			right = "run_start_right",
 		},
 		start_move_anim_data = {
-			run_start_fwd = {},
+			run_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -206,7 +213,10 @@ local action_data = {
 			right = "run_start_right",
 		},
 		start_move_anim_data = {
-			run_start_fwd = {},
+			run_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_start_bwd = {
 				sign = 1,
 				rad = math.pi,

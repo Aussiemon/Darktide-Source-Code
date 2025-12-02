@@ -251,16 +251,18 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 end
 
 local function _create_surface_impact_fx_templates(lookup_table, templates_table, damage_type, damage_type_fx_config)
-	local surface_fx = damage_type_fx_config.surface or EMPTY_TABLE
-	local surface_decal = damage_type_fx_config.surface_decal or EMPTY_TABLE
+	local damage_surface_fx = damage_type_fx_config.surface or EMPTY_TABLE
+	local damage_surface_fx_overrides = damage_type_fx_config.surface_overrides or EMPTY_TABLE
+	local damage_surface_decal = damage_type_fx_config.surface_decal or EMPTY_TABLE
 
 	for material_type, surface_material_fx_config in pairs(surface_material_fx_configs) do
-		local surface_material_fx = surface_fx[material_type] or EMPTY_TABLE
-		local surface_material_decal = surface_decal[material_type] or EMPTY_TABLE
+		local surface_material_fx = damage_surface_fx[material_type] or EMPTY_TABLE
+		local surface_material_fx_damage_overrides = damage_surface_fx_overrides[material_type]
+		local surface_material_decal = damage_surface_decal[material_type] or EMPTY_TABLE
 
 		for hit_type, _ in pairs(surface_hit_types) do
 			local damage_fx = surface_material_fx[hit_type]
-			local material_fx = surface_material_fx_config[hit_type]
+			local material_fx = surface_material_fx_damage_overrides and surface_material_fx_damage_overrides[hit_type] or surface_material_fx_config[hit_type]
 			local decal = surface_material_decal[hit_type]
 			local fx_table = _create_surface_impact_fx_entry(material_type, damage_fx, material_fx, decal)
 

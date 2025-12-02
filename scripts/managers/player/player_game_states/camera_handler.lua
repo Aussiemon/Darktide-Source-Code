@@ -522,6 +522,10 @@ CameraHandler.camera_follow_unit = function (self)
 	return self._camera_follow_unit
 end
 
+CameraHandler.mood_handler = function (self)
+	return self._mood_handler
+end
+
 CameraHandler.destroy_camera = function (self)
 	local viewport = self._viewport
 

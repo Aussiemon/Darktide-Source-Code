@@ -94,7 +94,11 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	local NO_RAW_INPUT = self._NO_RAW_INPUT
 
 	for i = 1, BOT_REQUEST_RING_BUFFER_MAX do
-		local entry = {}
+		local entry = {
+			action_input = nil,
+			global_bot_request_id = nil,
+			raw_input = nil,
+		}
 
 		_reset_bot_request_entry(entry, NO_ACTION_INPUT, NO_RAW_INPUT)
 

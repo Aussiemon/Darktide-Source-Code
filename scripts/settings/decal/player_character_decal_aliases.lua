@@ -120,7 +120,9 @@ local decals = {
 			"footstep_type_left",
 		},
 		default_switch_properties = {
+			breed = nil,
 			footstep_type_left = "boot",
+			material = nil,
 		},
 		decals = {
 			human = {
@@ -167,7 +169,9 @@ local decals = {
 			"footstep_type_right",
 		},
 		default_switch_properties = {
+			breed = nil,
 			footstep_type_right = "boot",
+			material = nil,
 		},
 		decals = {
 			human = {
@@ -214,7 +218,9 @@ local decals = {
 			"companion_footstep_type_front_left",
 		},
 		default_switch_properties = {
+			breed = nil,
 			companion_footstep_type_front_left = "organic",
+			material = nil,
 		},
 		decals = {
 			companion_dog = {
@@ -245,7 +251,9 @@ local decals = {
 			"companion_footstep_type_front_right",
 		},
 		default_switch_properties = {
+			breed = nil,
 			companion_footstep_type_front_right = "organic",
+			material = nil,
 		},
 		decals = {
 			companion_dog = {
@@ -276,7 +284,9 @@ local decals = {
 			"companion_footstep_type_rear_left",
 		},
 		default_switch_properties = {
+			breed = nil,
 			companion_footstep_type_rear_left = "organic",
+			material = nil,
 		},
 		decals = {
 			companion_dog = {
@@ -307,7 +317,9 @@ local decals = {
 			"companion_footstep_type_rear_right",
 		},
 		default_switch_properties = {
+			breed = nil,
 			companion_footstep_type_rear_right = "organic",
+			material = nil,
 		},
 		decals = {
 			companion_dog = {

@@ -13,7 +13,6 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -470,11 +469,10 @@ CosmeticsVendorView._setup_side_panel = function (self, item)
 		widget.offset[2] = y_offset
 
 		local widget_text_style = widget.style.text
-		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+		local _, text_height = self:_text_size(text, widget_text_style, {
 			max_width,
 			math.huge,
-		}, text_options)
+		})
 
 		y_offset = y_offset + text_height
 		widget.content.size[2] = text_height
@@ -1374,7 +1372,10 @@ CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)
 
 		local style = widget.style
 		local text_style = style.text
-		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
+		local text_width, _ = self:_text_size(text, text_style, {
+			2000,
+			100,
+		})
 		local texture_width = widget.style.texture.size[1]
 		local text_offset = widget.style.text.original_offset
 		local texture_offset = widget.style.texture.original_offset

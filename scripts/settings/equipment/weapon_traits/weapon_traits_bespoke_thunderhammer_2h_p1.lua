@@ -20,6 +20,9 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reductio
 					stat_buffs.consumed_hit_mass_modifier,
 				},
 			},
+			value_manipulation = function (value)
+				return (1 - value) * 100
+			end,
 		},
 		time = {
 			format_type = "number",

@@ -42,6 +42,9 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/autogun_pistol"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/dual_autopistols"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/ogryn/first_person/animations/rippergun"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
@@ -67,6 +70,15 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/human/first_person/animations/assault_shield_shotpistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/dual_stubgun_pistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/missile_launcher"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/needle_pistol"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 

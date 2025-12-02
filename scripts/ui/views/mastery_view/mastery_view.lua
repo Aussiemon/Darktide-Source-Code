@@ -9,7 +9,6 @@ local Mastery = require("scripts/utilities/mastery")
 local MasteryViewBlueprints = require("scripts/ui/views/mastery_view/mastery_view_blueprints")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -17,6 +16,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementTutorialOverlay = require("scripts/ui/view_elements/view_element_tutorial_overlay/view_element_tutorial_overlay")
 local ViewElementWintrackMastery = require("scripts/ui/view_elements/view_element_wintrack_mastery/view_element_wintrack_mastery")
+local Text = require("scripts/utilities/ui/text")
 local PI = math.pi
 local TWO_PI = PI * 2
 local MAX_RARITY_LEVEL = 4
@@ -680,8 +680,6 @@ MasteryView._tooltip_update = function (self)
 
 			local rarity_title_style = tooltip_widget.style.rarity_title
 			local rarity_description_style = tooltip_widget.style.rarity_description
-			local rarity_title_font_style_options = UIFonts.get_font_options_by_style(rarity_title_style)
-			local rarity_description_font_style_options = UIFonts.get_font_options_by_style(rarity_description_style)
 			local title_text_size = {
 				rarity_title_style.size[1],
 				5000,
@@ -696,8 +694,8 @@ MasteryView._tooltip_update = function (self)
 			tooltip_widget.content.rarity_title = rarity_title
 			tooltip_widget.content.rarity_description = rarity_description
 
-			local _, rarity_title_height = UIRenderer.text_size(self._ui_renderer, rarity_title, rarity_title_style.font_type, rarity_title_style.font_size, title_text_size, rarity_title_font_style_options)
-			local _, rarity_description_height = UIRenderer.text_size(self._ui_renderer, rarity_description, rarity_description_style.font_type, rarity_description_style.font_size, description_text_size, rarity_description_font_style_options)
+			local rarity_title_height = Text.text_height(self._ui_renderer, rarity_title, rarity_title_style, title_text_size)
+			local rarity_description_height = Text.text_height(self._ui_renderer, rarity_description, rarity_description_style, description_text_size)
 
 			rarity_title_style.offset[2] = start_offset + height_margin + trait_header_size
 			tooltip_widget.style.rarity_icon.offset[2] = rarity_title_style.offset[2]
@@ -719,8 +717,6 @@ MasteryView._tooltip_update = function (self)
 
 			local next_rarity_title_style = tooltip_widget.style.next_rarity_title
 			local next_rarity_description_style = tooltip_widget.style.next_rarity_description
-			local next_rarity_title_font_style_options = UIFonts.get_font_options_by_style(next_rarity_title_style)
-			local next_rarity_description_font_style_options = UIFonts.get_font_options_by_style(next_rarity_description_style)
 			local next_title_text_size = {
 				next_rarity_title_style.size[1],
 				5000,
@@ -735,8 +731,8 @@ MasteryView._tooltip_update = function (self)
 			tooltip_widget.content.next_rarity_title = next_rarity_title
 			tooltip_widget.content.next_rarity_description = next_rarity_description
 
-			local _, next_rarity_title_height = UIRenderer.text_size(self._ui_renderer, next_rarity_title, next_rarity_title_style.font_type, next_rarity_title_style.font_size, next_title_text_size, next_rarity_title_font_style_options)
-			local _, next_rarity_description_height = UIRenderer.text_size(self._ui_renderer, next_rarity_description, next_rarity_description_style.font_type, next_rarity_description_style.font_size, next_description_text_size, next_rarity_description_font_style_options)
+			local next_rarity_title_height = Text.text_height(self._ui_renderer, next_rarity_title, next_rarity_title_style, next_title_text_size)
+			local next_rarity_description_height = Text.text_height(self._ui_renderer, next_rarity_description, next_rarity_description_style, next_description_text_size)
 
 			tooltip_widget.style.next_rarity_header.offset[2] = rarity_content_size + tooltip_widget.style.divider.size[2]
 

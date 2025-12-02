@@ -199,7 +199,7 @@ PowerWeaponChargesEffects._start_vfx_loop = function (self, effect_type)
 		local world = self._world
 		local fx_source_name = self._fx_sources[THRESHOLD_FX_SOURCE]
 		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(fx_source_name)
-		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+		local new_effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

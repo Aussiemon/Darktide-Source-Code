@@ -73,6 +73,14 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.maniac_blitz,
 		},
 	},
+	broker_blitz = {
+		description = "loc_ability_flash_grenade_description",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
+		objectives = {
+			TrainingGroundsObjectivesLookup.broker_blitz,
+		},
+	},
 	biomancer_blitz = {
 		description = "loc_psyker_ability_desc",
 		title = "loc_talents_category_tactical",
@@ -190,6 +198,14 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.combat_ability_adamant_2,
 		},
 	},
+	combat_ability_broker = {
+		description = "loc_combat_ability_tutorial_broker_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_broker,
+		},
+	},
 	adamant_companion_targeting = {
 		description = "loc_companion_tutorial_adamant_desc",
 		title = "loc_companion_tutorial_adamant_name",
@@ -204,6 +220,14 @@ local step_info_lookup = {
 		input_descriptions = TrainingGroundsActionsLookup.weapon_special_chainsword,
 		objectives = {
 			TrainingGroundsObjectivesLookup.weapon_special,
+		},
+	},
+	weapon_special_dual_shivs = {
+		description = "loc_weapon_special_desc",
+		title = "loc_weapon_special",
+		input_descriptions = TrainingGroundsActionsLookup.weapon_special_dual_shivs,
+		objectives = {
+			TrainingGroundsObjectivesLookup.weapon_special_dual_shivs,
 		},
 	},
 	weapon_special_forcesword = {

@@ -120,6 +120,8 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 	local slot_extension = ScriptUnit.extension(self._unit, "slot_system")
 	local num_occupied_slots = slot_extension.num_occupied_slots
 	local toughness_regen_disabled = self:_toughness_regen_disabled()
+	local regen_rate = 0
+	local buffs = self._buff_extension:stat_buffs()
 
 	if num_occupied_slots == 0 and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
 		local weapon_toughness_template = self._weapon_extension:toughness_template()
@@ -127,7 +129,6 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local locomotion_component = unit_data_extension:read_component("locomotion")
 		local velocity_magnitude = Vector3.length_squared(locomotion_component.velocity_current)
 		local standing_still = velocity_magnitude < STANDING_STILL_EPSILON
-		local buffs = self._buff_extension:stat_buffs()
 		local base_rate = standing_still and toughness_template.regeneration_speed.moving or toughness_template.regeneration_speed.still
 		local weapon_rate_modifier = weapon_toughness_template and (standing_still and weapon_toughness_template.regeneration_speed_modifier.moving or weapon_toughness_template.regeneration_speed_modifier.still) or 1
 		local buff_rate_modifier = buffs.toughness_regen_rate_modifier * buffs.toughness_regen_rate_multiplier
@@ -138,18 +139,7 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local coherency_rate_multiplier = buffs.toughness_coherency_regen_rate_multiplier
 
 		coherency_rate_modifier = coherency_rate_modifier * coherency_rate_multiplier
-
-		local regen_rate = base_rate * weapon_rate_modifier * buff_rate_modifier * coherency_rate_modifier
-		local wanted_regen_amount = regen_rate * dt
-		local regen_amount = math.min(wanted_regen_amount, self._toughness_damage)
-
-		self._toughness_damage = self._toughness_damage - regen_amount
-
-		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._toughness_damage)
-
-		self._stat_coherency_tougness_counter = self._stat_coherency_tougness_counter + regen_amount
-
-		self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
+		regen_rate = base_rate * weapon_rate_modifier * buff_rate_modifier * coherency_rate_modifier
 	elseif self._stat_coherency_tougness_counter > 0 then
 		local player = Managers.state.player_unit_spawn:owner(self._unit)
 
@@ -158,6 +148,33 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		end
 
 		self._stat_coherency_tougness_counter = 0
+	end
+
+	if toughness_damage > 0 and not toughness_regen_disabled then
+		local buff_regen = buffs.toughness_regen_percent * self:max_toughness()
+
+		regen_rate = regen_rate + buff_regen
+
+		local prevent_when_depleted = false
+
+		prevent_when_depleted = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_regen_when_depleted)
+
+		if prevent_when_depleted and self:current_toughness_percent() <= 0 then
+			regen_rate = 0
+		end
+
+		if regen_rate ~= 0 then
+			local wanted_regen_amount = regen_rate * dt
+			local regen_amount = math.min(wanted_regen_amount, self._toughness_damage)
+
+			self._toughness_damage = self._toughness_damage - regen_amount
+
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._toughness_damage)
+
+			self._stat_coherency_tougness_counter = self._stat_coherency_tougness_counter + regen_amount
+
+			self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
+		end
 	end
 end
 

@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/extension_systems/first_person/player_unit_first_person_extension.lua
 
-local CameraSettings = require("scripts/settings/camera/camera_settings")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local FirstPersonAnimationVariables = require("scripts/utilities/first_person_animation_variables")
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
@@ -146,6 +145,9 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
 
 	self._footstep_context = {
+		foley_source_id = nil,
+		fx_extension = nil,
+		locomotion_extension = nil,
 		unit = unit,
 		breed = breed,
 		alternate_fire_component = alternate_fire_component,
@@ -286,17 +288,18 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 	local fp_component = self._first_person_component
 	local height = _calculate_base_player_height(fp_component, t)
 	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local locomotion_position = locomotion_component.position
 	local position = locomotion_position + Vector3(0, 0, height)
 	local input_ext = self._input_extension
 	local yaw, pitch, roll = input_ext:get_orientation()
 	local recoil_template = self._weapon_extension:recoil_template()
-	local pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, self._recoil_component, self._movement_state_component)
+	local pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, self._recoil_component, self._movement_state_component, locomotion_component, inair_state_component)
 	local look_rotation = Quaternion.from_yaw_pitch_roll(yaw + yaw_offset, pitch + pitch_offset, roll)
 	local unmodified_look_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
 	local base_position_offset
 
-	if self._inair_state_component.on_ground then
+	if inair_state_component.on_ground then
 		base_position_offset = Vector3.up() * 0.2
 	else
 		base_position_offset = -Vector3.up() * 0.2
@@ -366,7 +369,7 @@ PlayerUnitFirstPersonExtension._update_rotation = function (self, unit, dt, t)
 	if self._is_local_unit then
 		local orientation = self._player:get_orientation()
 		local recoil_template = self._weapon_extension:recoil_template()
-		local pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, self._recoil_component, self._movement_state_component)
+		local pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, self._recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 		local yaw = orientation.yaw + yaw_offset
 		local pitch = orientation.pitch + pitch_offset
 		local roll = orientation.roll

@@ -85,6 +85,7 @@ MissionBoard.init = function (self)
 	self._progression_unlock_data = {}
 	self._cached_progression_data = false
 	self._cached_highest_difficulty = {}
+	self._campaigns_data = {}
 end
 
 MissionBoard.fetch_mission = function (self, mission_id)
@@ -127,6 +128,17 @@ MissionBoard.get_rewards = function (self, on_expiry, pause_time)
 		method = "GET",
 	}):next(function (data)
 		return data.body
+	end)
+end
+
+MissionBoard.get_campaigns = function (self)
+	local data_path = BackendUtilities.url_builder():path("/data/campaigns")
+	local request_option = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(data_path:to_string(), request_option):next(function (data)
+		return data.body and data.body.campaigns or {}
 	end)
 end
 
@@ -206,7 +218,7 @@ MissionBoard.skip_and_unlock_campaign = function (self, account_id, character_id
 	end):catch(function (error)
 		local error_string = tostring(error)
 
-		Log.error("MissionBoard:unlock_campaign: error unlocking campaign", error_string)
+		Log.error("MissionBoard", "MissionBoard:unlock_campaign: error unlocking campaign", error_string)
 
 		return BackendError:new(error_string)
 	end)
@@ -220,7 +232,7 @@ MissionBoard.set_character_has_been_shown_skip_campaign_popup = function (self, 
 	return Managers.backend.interfaces.characters:set_data(character_id, "narrative|events", body):catch(function (error)
 		local error_string = tostring(error)
 
-		Log.error("MissionBoard:set_character_has_been_shown_skip_campaign_popup: error setting data", error_string)
+		Log.error("MissionBoard", "MissionBoard:set_character_has_been_shown_skip_campaign_popup: error setting data", error_string)
 
 		return BackendError:new(error_string)
 	end)
@@ -234,7 +246,7 @@ MissionBoard.fetch_player_journey_data = function (self, account_id, character_i
 	force_refresh = force_refresh ~= false
 
 	if not account_id or not character_id then
-		Log.error("MissionBoard:fetch_player_journey_data: account_id or character_id is nil")
+		Log.error("MissionBoard", "MissionBoard:fetch_player_journey_data: account_id or character_id is nil")
 
 		return nil
 	end
@@ -249,12 +261,13 @@ MissionBoard.fetch_player_journey_data = function (self, account_id, character_i
 
 	local difficulty_progression_data_promise = self._promise_container:cancel_on_destroy(self:get_difficulty_progress(account_id, character_id))
 	local progression_unlock_data_promise = self._promise_container:cancel_on_destroy(self:get_unlocked_missions(account_id, character_id))
+	local campaigns_data_promise = self._promise_container:cancel_on_destroy(self:get_campaigns())
 
-	return Promise.all(difficulty_progression_data_promise, progression_unlock_data_promise):next(function (data)
-		local difficulty_progression_data, progression_unlock_data = unpack(data)
+	return Promise.all(difficulty_progression_data_promise, progression_unlock_data_promise, campaigns_data_promise):next(function (data)
+		local difficulty_progression_data, progression_unlock_data, campaigns_data = unpack(data)
 
 		if not difficulty_progression_data or not progression_unlock_data then
-			Log.error("MissionBoard:fetch_player_journey_data: error fetching data")
+			Log.error("MissionBoard", "MissionBoard:fetch_player_journey_data: error fetching data")
 
 			return nil
 		end
@@ -270,11 +283,12 @@ MissionBoard.fetch_player_journey_data = function (self, account_id, character_i
 		local filtered_progression_data = _filter_backend_unlock_data(progression_unlock_data)
 
 		self._filtered_progression_data = filtered_progression_data
+		self._campaigns_data = campaigns_data
 		self._cached_progression_data = true
 	end):catch(function (error)
 		local error_string = tostring(error)
 
-		Log.error("MissionBoard:fetch_player_journey_data: error fetching data", error_string)
+		Log.error("MissionBoard", "MissionBoard:fetch_player_journey_data: error fetching data", error_string)
 
 		return BackendError:new(error_string)
 	end)
@@ -282,7 +296,7 @@ end
 
 MissionBoard.fetch_character_campaign_skip_data = function (self, account_id, character_id)
 	if not account_id or not character_id then
-		Log.error("MissionBoard:fetch_character_allowed_to_skip_campaign: account_id or character_id is nil")
+		Log.error("MissionBoard", "MissionBoard:fetch_character_allowed_to_skip_campaign: account_id or character_id is nil")
 
 		return nil
 	end
@@ -345,6 +359,10 @@ end
 
 MissionBoard.get_is_character_eligible_to_skip_campaign = function (self)
 	return self._is_character_eligible_to_skip_campaign
+end
+
+MissionBoard.get_campaigns_data = function (self)
+	return self._campaigns_data
 end
 
 implements(MissionBoard, Interface)

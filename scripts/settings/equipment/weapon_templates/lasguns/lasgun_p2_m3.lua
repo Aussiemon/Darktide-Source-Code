@@ -449,7 +449,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "shoot_release_charged",
 			},
 		},
@@ -470,10 +470,12 @@ weapon_template.actions = {
 		ammunition_usage = 4,
 		ammunition_usage_max = 9,
 		ammunition_usage_min = 2,
+		anim_event = nil,
 		dont_clear_num_shots = true,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.25,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		total_time = 0.65,
 		use_charge = true,
 		weapon_handling_template = "immediate_single_shot",
@@ -649,7 +651,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "zoom_shoot_release_charged",
 			},
 		},
@@ -673,10 +675,12 @@ weapon_template.actions = {
 		ammunition_usage = 4,
 		ammunition_usage_max = 9,
 		ammunition_usage_min = 2,
+		anim_event = nil,
 		charge_template = "lasgun_p2_m3_charge_up",
 		dont_clear_num_shots = true,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.5,
+		start_input = nil,
 		total_time = 0.65,
 		use_charge = true,
 		weapon_handling_template = "immediate_single_shot",
@@ -995,7 +999,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "special_action_heavy",
 			},
 		},
@@ -1013,10 +1017,12 @@ weapon_template.actions = {
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		prevent_sprint = true,
 		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		stop_alternate_fire = true,
 		total_time = 1.1,
 		uninterruptible = true,

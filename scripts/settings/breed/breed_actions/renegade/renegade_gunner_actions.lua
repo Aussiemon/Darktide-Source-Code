@@ -129,7 +129,10 @@ local action_data = {
 				sign = -1,
 				rad = math.pi,
 			},
-			alerted_fwd = {},
+			alerted_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_left = {
 				sign = 1,
 				rad = math.pi / 2,
@@ -141,11 +144,13 @@ local action_data = {
 		},
 		start_move_rotation_timings = {
 			alerted_bwd = 0,
+			alerted_fwd = nil,
 			alerted_left = 0,
 			alerted_right = 0,
 		},
 		start_rotation_durations = {
 			alerted_bwd = 1.0333333333333334,
+			alerted_fwd = nil,
 			alerted_left = 1,
 			alerted_right = 0.9666666666666667,
 		},
@@ -326,7 +331,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -372,7 +380,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -415,7 +426,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -607,7 +621,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,

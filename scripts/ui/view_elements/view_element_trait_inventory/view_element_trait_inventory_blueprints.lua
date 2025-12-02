@@ -50,6 +50,7 @@ ViewElementTraitInventoryBlueprints.trait = {
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_click,
 			},

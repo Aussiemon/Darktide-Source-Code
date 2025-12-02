@@ -76,6 +76,17 @@ ActionReloadState.finish = function (self, reason, data, t, time_in_action)
 	self:_update_functionality(reload_state, time_in_action, time_scale, 0, t)
 	self:_handle_state_transition(reload_template, inventory_slot, time_in_action, time_scale)
 	self._animation_extension:anim_event_1p("reload_finished")
+
+	if self._action_reload_component.has_refilled_ammunition then
+		local param_table_on_reload = self._buff_extension:request_proc_event_param_table()
+
+		if param_table_on_reload then
+			param_table_on_reload.weapon_template = self._weapon_template
+			param_table_on_reload.shotgun = false
+
+			self._buff_extension:add_proc_event(buff_proc_events.on_reload_finished, param_table_on_reload)
+		end
+	end
 end
 
 ActionReloadState._update_functionality = function (self, reload_state, time_in_action, time_scale, dt, t)

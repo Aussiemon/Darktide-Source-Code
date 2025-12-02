@@ -15,6 +15,9 @@ local disgusting_blood_ball = {
 }
 local unarmored = {
 	sfx = {
+		blocked = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = false,
@@ -71,6 +74,9 @@ local unarmored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -142,6 +148,11 @@ local unarmored = {
 		},
 	},
 	linked_decal = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = default_armor_decal,
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
@@ -149,6 +160,12 @@ local unarmored = {
 		damage_reduced = default_armor_decal,
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 		weakspot_damage = blood_ball,
@@ -157,6 +174,7 @@ local unarmored = {
 }
 local armored = {
 	sfx = {
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = false,
@@ -217,6 +235,9 @@ local armored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -293,6 +314,11 @@ local armored = {
 		},
 	},
 	linked_decal = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = default_armor_decal,
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
@@ -300,6 +326,14 @@ local armored = {
 		damage_reduced = default_armor_decal,
 	},
 	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = blood_ball,
 		died = blood_ball,
 	},
@@ -307,6 +341,9 @@ local armored = {
 local super_armor = table.clone(armored)
 local disgustingly_resilient = {
 	sfx = {
+		blocked = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = false,
@@ -359,6 +396,9 @@ local disgustingly_resilient = {
 		},
 	},
 	vfx = {
+		damage_reduced = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -403,6 +443,11 @@ local disgustingly_resilient = {
 		},
 	},
 	linked_decal = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = default_armor_decal,
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
@@ -410,6 +455,14 @@ local disgustingly_resilient = {
 		damage_reduced = default_armor_decal,
 	},
 	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
 		weakspot_died = disgusting_blood_ball,
 		died = disgusting_blood_ball,
 	},
@@ -418,6 +471,10 @@ local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local player = {
 	sfx = {
+		blocked = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = false,
@@ -456,6 +513,14 @@ local player = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				effects = {
@@ -471,8 +536,30 @@ local player = {
 			},
 		},
 	},
-	linked_decal = {},
-	blood_ball = {},
+	linked_decal = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local surface_fx = {}
 local default_surface_fx = {
@@ -522,6 +609,7 @@ local surface_decal = {}
 ImpactFxHelper.create_missing_surface_decals(surface_decal)
 
 return {
+	surface_overrides = nil,
 	armor = {
 		[armor_types.armored] = armored,
 		[armor_types.berserker] = berserker,

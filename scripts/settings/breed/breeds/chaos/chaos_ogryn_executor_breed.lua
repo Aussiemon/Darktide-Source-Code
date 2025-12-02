@@ -26,6 +26,7 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_executor"
 local breed_data = {
 	accumulative_stagger_multiplier = 0.1,
+	achievement_breed_group = "chaos_ogryn_executor",
 	activate_slot_system_on_spawn = true,
 	aggro_inventory_slot = "slot_melee_weapon",
 	base_height = 2.9,

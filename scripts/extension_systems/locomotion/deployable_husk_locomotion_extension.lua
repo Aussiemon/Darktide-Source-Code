@@ -2,11 +2,28 @@
 
 local DeployableHuskLocomotionExtension = class("DeployableHuskLocomotionExtension")
 
+DeployableHuskLocomotionExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
 DeployableHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
 	self._world = extension_init_context.world
+	self._owner_system = extension_init_context.owner_system
 
 	local unit_id = GameSession.game_object_field(game_session, game_object_id, "placed_on_unit_id")
+
+	if unit_id and unit_id ~= 0 then
+		if Managers.state.unit_spawner:unit_exists(unit_id, true) then
+			self:_attach_to_unit(unit_id)
+		else
+			self._attach_later_on_id = unit_id
+
+			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+		end
+	end
+end
+
+DeployableHuskLocomotionExtension._attach_to_unit = function (self, unit_id)
+	local unit = self._unit
 	local placed_on_unit = unit_id and unit_id ~= 0 and Managers.state.unit_spawner:unit(unit_id, true)
 	local moveable_platform_extension = placed_on_unit and ScriptUnit.has_extension(placed_on_unit, "moveable_platform_system")
 
@@ -34,7 +51,12 @@ DeployableHuskLocomotionExtension.fixed_update = function (self, unit, dt, t)
 end
 
 DeployableHuskLocomotionExtension.update = function (self, unit, dt, t)
-	return
+	local unit_attach_id = self._attach_later_on_id
+
+	if self._attach_later_on_id and Managers.state.unit_spawner:unit_exists(unit_attach_id, true) then
+		self:_attach_to_unit(unit_attach_id)
+		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+	end
 end
 
 DeployableHuskLocomotionExtension.current_state = function (self)

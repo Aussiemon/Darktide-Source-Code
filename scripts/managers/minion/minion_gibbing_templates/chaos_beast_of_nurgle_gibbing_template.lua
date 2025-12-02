@@ -29,8 +29,10 @@ local gibbing_template = {
 	},
 	head = {
 		default = {
+			scale_node = nil,
 			gib_settings = {
 				gib_actor = "rp_bon_head_gib",
+				gib_flesh_unit = nil,
 				gib_spawn_node = "j_neck",
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_head_gib",
 				override_push_force = {
@@ -43,8 +45,10 @@ local gibbing_template = {
 	},
 	tongue = {
 		default = {
+			scale_node = nil,
 			gib_settings = {
 				gib_actor = "rp_bon_tongue_gib",
+				gib_flesh_unit = nil,
 				gib_spawn_node = "j_neck",
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_tongue_gib",
 				override_push_force = {
@@ -57,8 +61,10 @@ local gibbing_template = {
 	},
 	lower_left_arm = {
 		default = {
+			scale_node = nil,
 			gib_settings = {
 				gib_actor = "rp_bon_left_arm_gib",
+				gib_flesh_unit = nil,
 				gib_spawn_node = "j_leftshoulder",
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_left_arm_gib",
 				override_push_force = {
@@ -71,8 +77,10 @@ local gibbing_template = {
 	},
 	lower_right_arm = {
 		default = {
+			scale_node = nil,
 			gib_settings = {
 				gib_actor = "rp_bon_right_arm_gib",
+				gib_flesh_unit = nil,
 				gib_spawn_node = "j_rightshoulder",
 				gib_unit = "content/characters/enemy/chaos_beast_of_nurgle/gibbing/bon_right_arm_gib",
 				override_push_force = {

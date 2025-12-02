@@ -638,10 +638,7 @@ EndView._setup_background_world = function (self)
 
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
-	local level_name
-	local target_level = self._level
-
-	level_name = self._level.level_name
+	local level_name = self._level.level_name
 
 	self._world_spawner:spawn_level(level_name)
 	self:_register_event("end_of_round_blur_background_world", "_end_of_round_blur_background_world")
@@ -695,6 +692,8 @@ EndView._setup_spawn_slots = function (self, players)
 		end
 
 		local spawn_slot = {
+			boxed_position = nil,
+			boxed_rotation = nil,
 			occupied = false,
 			index = player_index,
 			profile_spawner = profile_spawner,
@@ -946,6 +945,49 @@ EndView._set_character_names = function (self)
 	end
 end
 
+EndView._get_live_event_header = function (self, team_session_report, stat_color)
+	if not team_session_report then
+		return nil
+	end
+
+	local active_live_event_template = Managers.live_event:active_template()
+
+	if not active_live_event_template then
+		return nil
+	end
+
+	local config = active_live_event_template.eor
+
+	if not config then
+		return nil
+	end
+
+	local entries = {}
+	local should_display = false
+
+	for i, c in ipairs(config) do
+		local real_value = table.nested_get(team_session_report, unpack(c.path))
+
+		should_display = should_display or real_value ~= nil
+
+		local value = tostring(real_value or 0)
+
+		if stat_color then
+			value = Text.apply_color_to_text(value, stat_color)
+		end
+
+		entries[i] = Localize(c.loc_key, true, {
+			value = value,
+		})
+	end
+
+	if #entries == 0 or not should_display then
+		return nil
+	end
+
+	return table.concat(entries, "\t")
+end
+
 EndView._set_mission_key = function (self, mission_key, session_report, render_scale)
 	local mission_settings = Missions[mission_key]
 	local display_name = mission_settings.mission_name
@@ -954,22 +996,28 @@ EndView._set_mission_key = function (self, mission_key, session_report, render_s
 
 	widget_content.mission_header = self:_localize(display_name)
 
+	local mission_sub_header_style = widget.style.mission_sub_header
+	local stats_text_color = mission_sub_header_style.stats_text_color
 	local team_session_report = session_report and session_report.team
 
 	if self._round_won and team_session_report then
 		local mission_time_in_sec = team_session_report.play_time_seconds
 		local game_mode_completion_time_seconds = team_session_report.game_mode_completion_time_seconds or nil
-		local mission_sub_header_style = widget.style.mission_sub_header
-		local stats_text_color = mission_sub_header_style.stats_text_color
 		local text_params = {
-			total_kills = team_session_report.total_kills,
-			total_deaths = team_session_report.total_deaths,
+			total_kills = team_session_report.team_kills,
+			total_deaths = team_session_report.team_deaths,
 			mission_time = Text.format_time_span_long_form_localized(game_mode_completion_time_seconds or mission_time_in_sec),
 			font_size = mission_sub_header_style.stats_font_size * render_scale,
 			font_color = string.format("%d,%d,%d", stats_text_color[2], stats_text_color[3], stats_text_color[4]),
 		}
 
 		widget_content.mission_sub_header = Localize("loc_end_view_mission_sub_header_victory", true, text_params)
+
+		local live_event_header = self:_get_live_event_header(team_session_report, stats_text_color)
+
+		if live_event_header then
+			widget_content.mission_sub_header = string.format("%s\n%s", widget_content.mission_sub_header or "", live_event_header)
+		end
 
 		local narrative_story = mission_settings.narrative_story
 
@@ -1035,7 +1083,7 @@ EndView._load_portrait_icon = function (self, widget, profile)
 		self:_unload_widget_portrait(widget)
 	end
 
-	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget)
+	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget, profile)
 
 	widget_content.awaiting_portrait_callback = true
 	widget_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback)
@@ -1188,8 +1236,11 @@ EndView._cb_on_stay_in_party_pressed = function (self)
 	self:_update_buttons()
 end
 
-EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+EndView._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.character_portrait
+
+	widget.content.portrait = self:_get_player_portrait_frame_material(profile)
+
 	local material_values = portrait_style.material_values
 
 	material_values.use_placeholder_texture = 0
@@ -1200,9 +1251,18 @@ EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns,
 end
 
 EndView._cb_set_player_frame = function (self, widget, item)
-	local portrait_style = widget.style.character_portrait
+	local material_values = widget.style.character_portrait.material_values
 
-	portrait_style.material_values.portrait_frame_texture = item.icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.character_portrait = item.icon_material
+	else
+		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 EndView._cb_set_player_insignia = function (self, widget, item)
@@ -1224,6 +1284,24 @@ EndView._cb_set_player_insignia = function (self, widget, item)
 
 		material_values.texture_map = item.icon
 	end
+end
+
+EndView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 EndView.can_skip = function (self)

@@ -451,7 +451,7 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 						end
 
 						local temp_event_data = {
-							dialogue_name = result,
+							dialogue_name = DialogueSettings.grouped_heard_speak_rules[result] or result,
 							speaker_class = extension:vo_class_name(),
 							sound_event = extension:get_last_query_sound_event(),
 							voice_profile = extension:get_voice_profile(),

@@ -94,8 +94,9 @@ MeleeIdlingEffects._start_vfx_loop = function (self)
 
 	if resolved then
 		local world = self._world
-		local effect_id = World.create_particles(world, effect_name, Vector3.zero())
-		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._fx_source_name)
+		local fx_extension = self._fx_extension
+		local effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
+		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(self._fx_source_name)
 
 		World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

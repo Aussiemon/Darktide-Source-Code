@@ -48,21 +48,6 @@ local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
 local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
-local GRENADE_IMPACT_DAMAGE_TEMPLATES = {
-	fire_grenade_impact = true,
-	frag_grenade_impact = true,
-	krak_grenade_impact = true,
-	ogryn_grenade_box_cluster_impact = true,
-	ogryn_grenade_box_impact = true,
-	ogryn_grenade_impact = true,
-}
-local GRENADE_EXPLOSION_DAMAGE_TYPES = {
-	[damage_types.grenade_frag] = true,
-	[damage_types.electrocution] = true,
-	[damage_types.plasma] = true,
-	[damage_types.physical] = true,
-	[damage_types.laser] = true,
-}
 local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
 local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
 local BROADPHASE_RESULTS = {}
@@ -108,7 +93,7 @@ templates.hordes_buff_increase_super_armor_impact_on_crit = {
 	predicted = false,
 	buff_category = buff_categories.hordes_buff,
 	stat_buffs = {
-		[stat_buffs.super_armor_impact_on_crit] = percent_increase_super_armor_impact_on_crit,
+		[stat_buffs.super_armor_crit_impact_modifier] = percent_increase_super_armor_impact_on_crit,
 	},
 }
 

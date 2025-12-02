@@ -41,7 +41,7 @@ EventManager.unregister = function (self, object, event_name)
 	end
 end
 
-EventManager.register_with_parameters = function (self, object, function_name, event_name, ...)
+EventManager.register_with_parameters = function (self, object, event_name, function_name, ...)
 	local cb = callback(object, function_name, ...)
 
 	self._callbacks[event_name] = self._callbacks[event_name] or {}

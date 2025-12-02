@@ -6,6 +6,7 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
+local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Vo = require("scripts/utilities/vo")
 local BtSummonMinionsAction = class("BtSummonMinionsAction", "BtNode")
@@ -50,6 +51,8 @@ BtSummonMinionsAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 	scratchpad.summoned_minions_extension = ScriptUnit.extension(unit, "summon_minions_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+	scratchpad.perception_component = blackboard.perception
+	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 end
 
 BtSummonMinionsAction.init_values = function (self, blackboard)
@@ -60,7 +63,11 @@ BtSummonMinionsAction.init_values = function (self, blackboard)
 end
 
 BtSummonMinionsAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	return
+	local summoned_success = scratchpad.summoned_success
+
+	if not summoned_success then
+		self:_summon_minions(unit, breed, blackboard, scratchpad, action_data, nil, t)
+	end
 end
 
 BtSummonMinionsAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -72,6 +79,10 @@ BtSummonMinionsAction.run = function (self, unit, breed, blackboard, scratchpad,
 		scratchpad.delay = t + stinger_delay
 
 		return "running"
+	end
+
+	if not action_data.ignore_rotate_towards_target then
+		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 	end
 
 	local active_timer = _has_active_minions_and_refill(blackboard, action_data)

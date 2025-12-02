@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/managers/ui/ui_manager.lua
 
-local Archetypes = require("scripts/settings/archetype/archetypes")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputHoldTracker = require("scripts/managers/input/input_hold_tracker")
 local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
@@ -298,6 +297,7 @@ UIManager._load_ui_element_packages = function (self, element_definitions, refer
 
 		if package then
 			package_references[reference_name] = {
+				id = nil,
 				loaded = false,
 				package = package,
 			}

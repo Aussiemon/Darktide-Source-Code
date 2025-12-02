@@ -87,7 +87,10 @@ local action_data = {
 			right = "alerted_right",
 		},
 		start_move_anim_data = {
-			alerted_fwd = {},
+			alerted_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -103,11 +106,13 @@ local action_data = {
 		},
 		start_move_rotation_timings = {
 			alerted_bwd = 1.6333333333333333,
+			alerted_fwd = nil,
 			alerted_left = 0.5,
 			alerted_right = 0.8666666666666667,
 		},
 		start_rotation_durations = {
 			alerted_bwd = 1.4333333333333333,
+			alerted_fwd = nil,
 			alerted_left = 0.5666666666666667,
 			alerted_right = 1.0666666666666667,
 		},
@@ -230,7 +235,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -283,7 +291,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -373,6 +384,7 @@ local action_data = {
 			attack_02 = "sweep",
 			attack_03 = "sweep",
 			attack_down_01 = "sweep",
+			attack_reach_up = nil,
 		},
 		weapon_reach = {
 			attack_reach_up = 4,
@@ -919,6 +931,7 @@ local action_data = {
 		},
 	},
 	smash_obstacle = {
+		damage_type = nil,
 		rotation_duration = 0.1,
 		attack_anim_events = {
 			"attack_01",

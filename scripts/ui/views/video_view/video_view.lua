@@ -168,7 +168,6 @@ VideoView.on_exit = function (self)
 	self:_remove_subtitles()
 	self:_remove_input_legend()
 	VideoView.super.on_exit(self)
-	self:_unload_packages()
 
 	local context = self._context
 	local close_callback = context and context.close_callback
@@ -186,6 +185,11 @@ VideoView.on_exit = function (self)
 	if self._post_video_action and (self._widgets_by_name.video.content.video_completed or self._player_skipped) then
 		self:_trigger_action(self._post_video_action)
 	end
+end
+
+VideoView.destroy = function (self)
+	VideoView.super.destroy(self)
+	self:_unload_packages()
 end
 
 VideoView._trigger_action = function (self, action)

@@ -527,6 +527,35 @@ templates.player_melee_toughness_damage_reduction_node_buff_medium_2 = table.clo
 templates.player_melee_toughness_damage_reduction_node_buff_medium_3 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_4 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
 templates.player_melee_toughness_damage_reduction_node_buff_medium_5 = table.clone(templates.player_melee_toughness_damage_reduction_node_buff_medium_1)
+templates.player_melee_toughness_damage_reduction_node_buff_medium_old = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_toughness_damage_taken_multiplier] = 0.9,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.melee_toughness_damage_taken_multiplier] = 0.9,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_toughness_damage_taken_multiplier] = 0.8,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_toughness_damage_taken_multiplier] = 0.7,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_toughness_damage_taken_multiplier] = 0.6,
+			},
+		},
+	},
+}
 templates.reduced_stamina_regen_delay_1 = {
 	class_name = "buff",
 	predicted = false,
@@ -1129,6 +1158,39 @@ templates.player_ranged_damage_node_buff_medium_2 = table.clone(templates.player
 templates.player_ranged_damage_node_buff_medium_3 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_medium_4 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
 templates.player_ranged_damage_node_buff_medium_5 = table.clone(templates.player_ranged_damage_node_buff_medium_1)
+templates.base_toxin_power_boost_1 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.toxin_power] = 0.1,
+	},
+	talent_overrides = {
+		{
+			stat_buffs = {
+				[stat_buffs.toxin_power] = 0.1,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toxin_power] = 0.2,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toxin_power] = 0.3,
+			},
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.toxin_power] = 0.4,
+			},
+		},
+	},
+}
+templates.base_toxin_power_boost_2 = table.clone(templates.base_toxin_power_boost_1)
+templates.base_toxin_power_boost_3 = table.clone(templates.base_toxin_power_boost_1)
+templates.base_toxin_power_boost_4 = table.clone(templates.base_toxin_power_boost_1)
+templates.base_toxin_power_boost_5 = table.clone(templates.base_toxin_power_boost_1)
 templates.player_reload_speed_node_buff_low_1 = {
 	class_name = "buff",
 	predicted = false,

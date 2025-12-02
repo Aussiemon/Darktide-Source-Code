@@ -23,6 +23,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_sniper"
 local breed_data = {
+	achievement_breed_group = "renegade_sniper",
 	base_height = 2,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	bone_lod_radius = 1.2,
@@ -409,7 +410,9 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.sniper,
-	tokens = {},
+	tokens = {
+		pounced = nil,
+	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
 		pounce_anim_event = "leap_attack",

@@ -24,7 +24,7 @@ CommunicationWheelPlayerOrientation.orientation_offset = function (self)
 	if recoil_component then
 		local recoil_template = self._weapon_extension:recoil_template()
 
-		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component)
+		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 	end
 
 	return yaw_offset, pitch_offset, 0

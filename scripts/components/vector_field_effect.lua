@@ -154,6 +154,8 @@ VectorFieldEffect.component_data = {
 	},
 	speed = {
 		decimals = 2,
+		max = 100,
+		min = -100,
 		step = 0.01,
 		ui_name = "Speed",
 		ui_type = "slider",
@@ -161,6 +163,8 @@ VectorFieldEffect.component_data = {
 	},
 	whirl_speed = {
 		decimals = 2,
+		max = 100,
+		min = -100,
 		step = 0.01,
 		ui_name = "Whirl Speed",
 		ui_type = "slider",
@@ -168,6 +172,8 @@ VectorFieldEffect.component_data = {
 	},
 	pull_speed = {
 		decimals = 2,
+		max = 100,
+		min = -100,
 		step = 0.01,
 		ui_name = "Pull Speed",
 		ui_type = "slider",
@@ -192,10 +198,30 @@ VectorFieldEffect.component_data = {
 		ui_type = "slider",
 		value = 0,
 	},
-	effect_resources = {
+	effect_resource_01 = {
 		filter = "vector_field",
 		ui_name = "Effect Resource",
-		ui_type = "resource_array",
+		ui_type = "resource",
+	},
+	effect_resource_02 = {
+		filter = "vector_field",
+		ui_name = "Effect Resource",
+		ui_type = "resource",
+	},
+	effect_resource_03 = {
+		filter = "vector_field",
+		ui_name = "Effect Resource",
+		ui_type = "resource",
+	},
+	effect_resource_04 = {
+		filter = "vector_field",
+		ui_name = "Effect Resource",
+		ui_type = "resource",
+	},
+	effect_resource_05 = {
+		filter = "vector_field",
+		ui_name = "Effect Resource",
+		ui_type = "resource",
 	},
 }
 

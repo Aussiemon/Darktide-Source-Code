@@ -36,6 +36,17 @@ Log.LOG_TYPE_ERROR = {
 }
 Log.DEFAULT_CATEGORY = "Uncategorized"
 Log.INTERNAL_CATEGORY = "Log Internal"
+Log._types = {
+	Log.LOG_TYPE_DEBUG,
+	Log.LOG_TYPE_INFO,
+	Log.LOG_TYPE_WARNING,
+	Log.LOG_TYPE_EXCEPTION,
+	Log.LOG_TYPE_ERROR,
+}
+Log._lowest_category_level = #Log._types
+Log._category_levels = Log._category_levels or {}
+Log._has_crashify = false
+Log._output_errors_as_crashify_exceptions = false
 __print_error = __print_error or print_error
 __print_warning = __print_warning or print_warning
 __print = __print or print
@@ -43,24 +54,28 @@ Log.DEFAULT_LOG_LEVEL = 2
 
 local temp_args = {}
 
-Log.init = function (global_log_level)
-	if Crashify then
-		Log._info(Log.INTERNAL_CATEGORY, "Exceptions will be handled by Crashify")
-	else
-		Log._info(Log.INTERNAL_CATEGORY, "Crashify not found, exceptions will be handled as warnings")
+Log.load_config_from_parameters = function (GameParameters, DevParameters)
+	Log.set_global_log_level(GameParameters.log_level or Log.DEFAULT_LOG_LEVEL)
+
+	local log_levels = DevParameters.category_log_levels
+
+	for i = 1, #log_levels, 2 do
+		local category, level = log_levels[i], log_levels[i + 1]
+
+		Log.set_category_log_level(category, level)
 	end
 
-	Log._types = {
-		Log.LOG_TYPE_DEBUG,
-		Log.LOG_TYPE_INFO,
-		Log.LOG_TYPE_WARNING,
-		Log.LOG_TYPE_EXCEPTION,
-		Log.LOG_TYPE_ERROR,
-	}
-	Log._lowest_category_level = #Log._types
-	Log._category_levels = Log._category_levels or {}
+	Log._output_errors_as_crashify_exceptions = GameParameters.testify
+end
 
-	Log.set_global_log_level(global_log_level or Log.DEFAULT_LOG_LEVEL)
+Log.set_has_crashify = function (bool)
+	Log._has_crashify = bool
+
+	if bool then
+		Log._info(Log.INTERNAL_CATEGORY, "Exceptions will be handled by Crashify")
+	else
+		Log._info(Log.INTERNAL_CATEGORY, "Exceptions will be handled as warnings")
+	end
 end
 
 Log.set_global_log_level = function (level)
@@ -190,7 +205,7 @@ Log._void = function (category, message, ...)
 end
 
 Log._error = function (category, message, ...)
-	if Crashify and GameParameters.testify then
+	if Log._has_crashify and Log._output_errors_as_crashify_exceptions then
 		Crashify.print_exception(category, Log._format_message(message, ...), __print)
 
 		return
@@ -201,7 +216,7 @@ end
 
 Log._error_category = function (category, message, ...)
 	if Log.LOG_TYPE_ERROR.active_categories[category] then
-		if Crashify and GameParameters.testify then
+		if Log._has_crashify and Log._output_errors_as_crashify_exceptions then
 			Crashify.print_exception(category, Log._format_message(message, ...), __print)
 
 			return
@@ -213,7 +228,7 @@ end
 
 Log._exception_category = function (category, message, ...)
 	if Log.LOG_TYPE_EXCEPTION.active_categories[category] then
-		if Crashify then
+		if Log._has_crashify then
 			Crashify.print_exception(category, Log._format_message(message, ...), __print)
 		else
 			__print_warning(Log._format_log_category_message(Log.LOG_TYPE_EXCEPTION.tag, category, message, ...))
@@ -222,7 +237,7 @@ Log._exception_category = function (category, message, ...)
 end
 
 Log._exception = function (category, message, ...)
-	if Crashify then
+	if Log._has_crashify then
 		Crashify.print_exception(category, Log._format_message(message, ...), __print)
 	else
 		__print_warning(Log._format_log_category_message(Log.LOG_TYPE_EXCEPTION.tag, category, message, ...))
@@ -273,21 +288,11 @@ Log._msg_print_warning = function (...)
 	ferror("print_warning() is deprecated use Log.warning instead")
 end
 
-Log.init(GameParameters.log_level)
-
-local log_levels
-
-if log_levels ~= Log.__old_log_levels then
-	Log._info(Log.INTERNAL_CATEGORY, "Reloading log levels.")
-
-	for i = 1, #log_levels, 2 do
-		local category, level = log_levels[i], log_levels[i + 1]
-
-		Log.set_category_log_level(category, level)
-	end
-
-	Log.__old_log_levels = log_levels
+if not rawget(_G, "GameParameters") then
+	Log.set_global_log_level(1)
+	Log.set_has_crashify(false)
 end
 
 print_error = Log._msg_print_error
 print_warning = Log._msg_print_warning
+print = Log._default_print

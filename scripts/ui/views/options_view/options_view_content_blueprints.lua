@@ -7,9 +7,8 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local KeybindPassTemplates = require("scripts/ui/pass_templates/keybind_pass_templates")
 local OptionsViewSettings = require("scripts/ui/views/options_view/options_view_settings")
 local SliderPassTemplates = require("scripts/ui/pass_templates/slider_pass_templates")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local grid_size = OptionsViewSettings.grid_size
 local grid_width = grid_size[1]
 local settings_grid_width = 1000
@@ -974,8 +973,7 @@ blueprints.description = {
 		local localized_text = Managers.localization:localize(display_name, display_params ~= nil, display_params)
 		local ui_renderer = parent._ui_renderer
 		local size = content.size
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, height = UIRenderer.text_size(ui_renderer, localized_text, text_style.font_type, text_style.font_size, size, text_options)
+		local height = Text.text_height(ui_renderer, localized_text, text_style, size)
 		local override_style = entry.style
 
 		if override_style then

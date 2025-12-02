@@ -137,6 +137,7 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action, frame
 				param_table.attacking_unit = self._player_unit
 				param_table.attack_instigator_unit = self._player_unit
 				param_table.damage = 0
+				param_table.overkill_damage = 0
 				param_table.attack_result = attack_results.died
 				param_table.attack_type = attack_types.ranged
 				param_table.damage_type = damage_types.smite

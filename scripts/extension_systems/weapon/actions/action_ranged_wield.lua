@@ -9,6 +9,7 @@ local ActionRangedWield = class("ActionRangedWield", "ActionWeaponBase")
 ActionRangedWield.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionRangedWield.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	local inventory_slot_component = self._inventory_slot_component
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local weapon_template = self._weapon_template
 	local reload_template = weapon_template.reload_template
@@ -17,7 +18,12 @@ ActionRangedWield.start = function (self, action_settings, t, time_scale, action
 	anim = action_settings.wield_anim_event
 	anim_3p = action_settings.wield_anim_event_3p or anim
 
-	local inventory_slot_component = self._inventory_slot_component
+	local wield_anim_event_func = action_settings.wield_anim_event_func
+
+	if wield_anim_event_func then
+		anim, anim_3p = wield_anim_event_func(inventory_slot_component)
+		anim_3p = anim_3p or anim
+	end
 
 	if ReloadStates.uses_reload_states(inventory_slot_component) then
 		local started_reload = ReloadStates.started_reload(reload_template, inventory_slot_component)

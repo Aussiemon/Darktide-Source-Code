@@ -247,6 +247,7 @@ local function construct_interface_settings_dropdown(template)
 end
 
 local template_functions = {
+	group_header = nil,
 	boolean = construct_interface_settings_boolean,
 	percent_slider = construct_interface_settings_percent_slider,
 	value_slider = construct_interface_settings_value_slider,

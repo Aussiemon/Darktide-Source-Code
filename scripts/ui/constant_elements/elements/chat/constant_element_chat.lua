@@ -8,9 +8,8 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local StringVerification = require("scripts/managers/localization/string_verification")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local Text = require("scripts/utilities/ui/text")
 local ConstantElementChat = class("ConstantElementChat", "ConstantElementBase")
 local States = table.enum("hidden", "idle", "active")
 local StateSettings = {
@@ -988,7 +987,7 @@ ConstantElementChat._calculate_widget_size = function (self, widget, ui_renderer
 	local widget_style = widget.style
 	local message_style = widget_style.message
 	local widget_max_size = self:scenegraph_size("chat_message_area")
-	local _, message_height, min = self:_text_size(ui_renderer, widget_content.message, message_style, widget_max_size)
+	local _, message_height, min = self:_text_size(ui_renderer, widget_content.message, message_style, widget_max_size[1])
 
 	message_style.offset = {
 		-min.x,
@@ -1181,10 +1180,22 @@ end
 
 ConstantElementChat._text_size = function (self, ui_renderer, text, font_style, max_width)
 	local scale = ui_renderer.scale or 1
-	local scaled_font_size = UIFonts.scaled_size(font_style.font_size, scale)
-	local sender_font_options = UIFonts.get_font_options_by_style(font_style)
 
-	return UIRenderer.text_size(ui_renderer, text, font_style.font_type, scaled_font_size, max_width, sender_font_options)
+	if not font_style.default_font_size then
+		font_style.default_font_size = font_style.font_size
+	end
+
+	local scaled_font_size = Text.scaled_size(font_style.default_font_size, scale)
+	local size
+
+	if max_width then
+		size = {
+			max_width,
+			0,
+		}
+	end
+
+	return Text.text_size(ui_renderer, text, font_style, size)
 end
 
 ConstantElementChat._cancel_animations_if_necessary = function (self, force_cancellation)

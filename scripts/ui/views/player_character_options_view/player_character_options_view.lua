@@ -163,12 +163,16 @@ end
 
 PlayerCharacterOptionsView.on_exit = function (self)
 	PlayerCharacterOptionsView.super.on_exit(self)
+end
 
+PlayerCharacterOptionsView.destroy = function (self)
 	if self._player_icon_load_id then
 		Managers.ui:unload_profile_portrait(self._player_icon_load_id)
 
 		self._player_icon_load_id = nil
 	end
+
+	PlayerCharacterOptionsView.super.destroy(self)
 end
 
 PlayerCharacterOptionsView.draw = function (self, dt, t, input_service, layer)

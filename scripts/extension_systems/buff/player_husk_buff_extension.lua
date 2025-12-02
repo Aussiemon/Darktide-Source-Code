@@ -77,6 +77,10 @@ PlayerHuskBuffExtension.rpc_buff_set_start_time = function (self, channel_id, ga
 	return
 end
 
+PlayerHuskBuffExtension.rpc_buff_set_extra_duration = function (self, channel_id, game_object_id, server_index, extra_duration)
+	return
+end
+
 PlayerHuskBuffExtension.stat_buffs = function (self)
 	return EMPTY_TABLE
 end
@@ -114,19 +118,11 @@ PlayerHuskBuffExtension.remove_externally_controlled_buff = function (self)
 end
 
 PlayerHuskBuffExtension.request_proc_event_param_table = function (self)
-	ferror("[PlayerHuskBuffExtension] request_proc_event_param_table can only be called on server!")
+	return nil
 end
 
 PlayerHuskBuffExtension.set_frame_unique_proc = function (self)
 	ferror("[PlayerHuskBuffExtension] set_frame_unique_proc can only be called on server!")
-end
-
-PlayerHuskBuffExtension.add_inherited_buff_owner = function (self)
-	ferror("[PlayerHuskBuffExtension] add_inherited_buff_owner can only be called on server!")
-end
-
-PlayerHuskBuffExtension.get_inherited_buff_owner = function (self)
-	ferror("[PlayerHuskBuffExtension] get_inherited_buff_owner can only be called on server!")
 end
 
 implements(PlayerHuskBuffExtension, BuffExtensionInterface)

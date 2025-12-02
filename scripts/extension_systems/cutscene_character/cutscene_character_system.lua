@@ -154,7 +154,7 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 			elseif i <= 4 then
 				player_loadouts[unique_id].items.slot_secondary = nil
 			else
-				Log.warning("More than 4 players added to cutscene. This could cause duplicate walking animations")
+				Log.warning("CutsceneCharacterSystem", "More than 4 players added to cutscene. This could cause duplicate walking animations")
 
 				if math.random() < 0.5 then
 					player_loadouts[unique_id].items.slot_primary = nil

@@ -65,7 +65,6 @@ local lobby_view_settings = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
-		"slot_support_ability",
 		"slot_combat_ability",
 		"slot_grenade_ability",
 	},

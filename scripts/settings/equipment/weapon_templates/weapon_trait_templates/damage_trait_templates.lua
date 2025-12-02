@@ -5524,6 +5524,100 @@ damage_trait_templates.shotpistol_shield_p1_m1_crit_stat = {
 		},
 	},
 }
+damage_trait_templates.saw_p1_m1_crit_stat = {
+	{
+		"crit_mod",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.void_shield,
+		{
+			max = 0.6,
+			min = 0,
+		},
+	},
+}
+damage_trait_templates.saw_p1_m1_finesse_stat = {
+	{
+		"targets",
+		1,
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+	{
+		"targets",
+		2,
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+}
 damage_trait_templates.powermaul_cleave_damage_stat = {
 	{
 		"targets",

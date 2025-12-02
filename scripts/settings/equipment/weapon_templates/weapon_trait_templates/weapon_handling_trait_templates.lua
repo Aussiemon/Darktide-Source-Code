@@ -232,5 +232,14 @@ weapon_handling_trait_templates.max_reload_speed_modify = {
 		},
 	},
 }
+weapon_handling_trait_templates.saw_p1_m1_finesse_stat = {
+	{
+		"time_scale",
+		{
+			max = 0.4,
+			min = 0.15,
+		},
+	},
+}
 
 return weapon_handling_trait_templates

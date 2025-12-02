@@ -32,12 +32,6 @@ local generic_broadphase_filter = {
 local destructibles_only_filter = {
 	"destructibles",
 }
-local USE_PHYSICS_OVERLAP = true
-local USE_SEPERATE_QUERY_FOR_DESTRUCTIBLES = true
-
-local function attack_units_sort_function(a, b)
-	return attack_units_distance_sq[a] < attack_units_distance_sq[b]
-end
 
 Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted)
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
@@ -80,29 +74,19 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	local broadphase = broadphase_system.broadphase
 	local num_hits = 0
 	local destructibles_num_hits = 0
+	local broadphase_categories = explosion_template.broadphase_explosion_filter or generic_broadphase_filter
+	local target_destructibles = table.index_of(broadphase_categories, "destructibles")
 
-	if not USE_PHYSICS_OVERLAP then
-		local broadphase_categories = explosion_template.broadphase_explosion_filter or generic_broadphase_filter
-		local target_destructibles = table.index_of(broadphase_categories, "destructibles")
+	if target_destructibles >= 1 then
+		broadphase_categories = table.shallow_copy(broadphase_categories)
 
-		if USE_SEPERATE_QUERY_FOR_DESTRUCTIBLES and target_destructibles >= 1 then
-			broadphase_categories = table.shallow_copy(broadphase_categories)
-
-			table.swap_delete(broadphase_categories, target_destructibles)
-		end
-
-		num_hits = broadphase.query(broadphase, source_position, radius, broadphase_results, broadphase_categories)
-
-		if USE_SEPERATE_QUERY_FOR_DESTRUCTIBLES and close_radius > 0 and target_destructibles then
-			destructibles_num_hits = broadphase.query(broadphase, source_position, close_radius, destructible_broadphase_results, destructibles_only_filter)
-		end
+		table.swap_delete(broadphase_categories, target_destructibles)
 	end
 
-	local collision_filter = explosion_template.collision_filter
-	local hit_actors, num_actors = {}, 0
+	num_hits = broadphase.query(broadphase, source_position, radius, broadphase_results, broadphase_categories)
 
-	if USE_PHYSICS_OVERLAP then
-		hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", source_position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
+	if close_radius > 0 and target_destructibles then
+		destructibles_num_hits = broadphase.query(broadphase, source_position, close_radius, destructible_broadphase_results, destructibles_only_filter)
 	end
 
 	local weapon_system = Managers.state.extension:system("weapon_system")
@@ -137,99 +121,48 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		end
 	end
 
-	if not USE_PHYSICS_OVERLAP then
-		for i = 1, num_hits do
-			local hit_unit = broadphase_results[i]
+	for i = 1, num_hits do
+		local hit_unit = broadphase_results[i]
 
-			if not hit_units[hit_unit] then
-				local hit_actor
-				local center_mass_actor_names = HitZone.get_actor_names(hit_unit, HitZone.hit_zone_names.center_mass)
+		if not hit_units[hit_unit] then
+			local hit_actor
+			local center_mass_actor_names = HitZone.get_actor_names(hit_unit, HitZone.hit_zone_names.center_mass)
 
-				if center_mass_actor_names then
-					local center_mass_actor_name = center_mass_actor_names[1]
+			if center_mass_actor_names then
+				local center_mass_actor_name = center_mass_actor_names[1]
 
-					hit_actor = center_mass_actor_name and Unit.actor(hit_unit, center_mass_actor_name)
-				else
-					local destructible_actor_index = Unit.find_actor(hit_unit, "c_destructible") or 1
+				hit_actor = center_mass_actor_name and Unit.actor(hit_unit, center_mass_actor_name)
+			else
+				local destructible_actor_index = Unit.find_actor(hit_unit, "c_destructible") or 1
 
-					hit_actor = Unit.actor(hit_unit, destructible_actor_index)
-				end
-
-				local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
-				local is_ragdolled = Health.is_ragdolled(hit_unit)
-				local is_valid_target = is_ragdolled or hit_actor
-
-				if not hit_actor then
-					Log.error("Explosion", string.format("Explosion hit a unit without a suitable actor (unit: %s)", hit_unit))
-
-					is_valid_target = false
-				end
-
-				if is_valid_target then
-					hit_units[hit_unit] = true
-
-					if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
-						local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
-						local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
-
-						if damage_allowed and has_health then
-							attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
-							attack_units_hit_actors[hit_unit] = hit_actor
-							number_of_attack_units = number_of_attack_units + 1
-							attack_units_array[number_of_attack_units] = hit_unit
-
-							if optional_hit_units_table then
-								optional_hit_units_table[hit_unit] = true
-							end
-						end
-					end
-				end
+				hit_actor = Unit.actor(hit_unit, destructible_actor_index)
 			end
-		end
 
-		if USE_SEPERATE_QUERY_FOR_DESTRUCTIBLES then
-			for i = 1, destructibles_num_hits do
-				local hit_unit = destructible_broadphase_results[i]
+			local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
+			local is_ragdolled = Health.is_ragdolled(hit_unit)
+			local is_valid_target = is_ragdolled or hit_actor
 
-				if not hit_units[hit_unit] then
-					local hit_actor
-					local center_mass_actor_names = HitZone.get_actor_names(hit_unit, HitZone.hit_zone_names.center_mass)
+			if not hit_actor then
+				Log.error("Explosion", string.format("Explosion hit a unit without a suitable actor (unit: %s)", hit_unit))
 
-					if center_mass_actor_names then
-						local center_mass_actor_name = center_mass_actor_names[1]
+				is_valid_target = false
+			end
 
-						hit_actor = center_mass_actor_name and Unit.actor(hit_unit, center_mass_actor_name)
-					else
-						local destructible_actor_index = Unit.find_actor(hit_unit, "c_destructible") or 1
+			if is_valid_target then
+				hit_units[hit_unit] = true
 
-						hit_actor = Unit.actor(hit_unit, destructible_actor_index)
-					end
+				if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
+					local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
+					local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
 
-					local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
-					local is_ragdolled = Health.is_ragdolled(hit_unit)
-					local is_valid_target = is_ragdolled or hit_actor
+					if damage_allowed and has_health then
+						attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
+						attack_units_hit_actors[hit_unit] = hit_actor
+						number_of_attack_units = number_of_attack_units + 1
+						attack_units_array[number_of_attack_units] = hit_unit
 
-					if not hit_actor then
-						Log.error("Explosion", string.format("Explosion hit a destructible unit without a suitable actor (unit: %s)", hit_unit))
-					end
-
-					if is_valid_target then
-						hit_units[hit_unit] = true
-
-						if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
-							local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
-							local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
-
-							if damage_allowed and has_health then
-								attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
-								attack_units_hit_actors[hit_unit] = hit_actor
-								number_of_attack_units = number_of_attack_units + 1
-								attack_units_array[number_of_attack_units] = hit_unit
-
-								if optional_hit_units_table then
-									optional_hit_units_table[hit_unit] = true
-								end
-							end
+						if optional_hit_units_table then
+							optional_hit_units_table[hit_unit] = true
 						end
 					end
 				end
@@ -237,39 +170,51 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		end
 	end
 
-	if USE_PHYSICS_OVERLAP then
-		for i = 1, num_actors do
-			local hit_actor = hit_actors[i]
-			local hit_unit = Actor.unit(hit_actor)
+	for i = 1, destructibles_num_hits do
+		local hit_unit = destructible_broadphase_results[i]
 
-			if not hit_units[hit_unit] then
-				local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
-				local is_ragdolled = Health.is_ragdolled(hit_unit)
-				local is_valid_target = is_ragdolled or not hit_zone_or_nil or hit_zone_or_nil.name == HitZone.hit_zone_names.center_mass
+		if not hit_units[hit_unit] then
+			local hit_actor
+			local center_mass_actor_names = HitZone.get_actor_names(hit_unit, HitZone.hit_zone_names.center_mass)
 
-				if is_valid_target then
-					hit_units[hit_unit] = true
+			if center_mass_actor_names then
+				local center_mass_actor_name = center_mass_actor_names[1]
 
-					if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
-						local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
-						local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
+				hit_actor = center_mass_actor_name and Unit.actor(hit_unit, center_mass_actor_name)
+			else
+				local destructible_actor_index = Unit.find_actor(hit_unit, "c_destructible") or 1
 
-						if damage_allowed and has_health then
-							attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
-							attack_units_hit_actors[hit_unit] = hit_actor
-							number_of_attack_units = number_of_attack_units + 1
-							attack_units_array[number_of_attack_units] = hit_unit
+				hit_actor = Unit.actor(hit_unit, destructible_actor_index)
+			end
 
-							if optional_hit_units_table then
-								optional_hit_units_table[hit_unit] = true
-							end
+			local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
+			local is_ragdolled = Health.is_ragdolled(hit_unit)
+			local is_valid_target = is_ragdolled or hit_actor
+
+			if not hit_actor then
+				Log.error("Explosion", string.format("Explosion hit a destructible unit without a suitable actor (unit: %s)", hit_unit))
+			end
+
+			if is_valid_target then
+				hit_units[hit_unit] = true
+
+				if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
+					local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
+					local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
+
+					if damage_allowed and has_health then
+						attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
+						attack_units_hit_actors[hit_unit] = hit_actor
+						number_of_attack_units = number_of_attack_units + 1
+						attack_units_array[number_of_attack_units] = hit_unit
+
+						if optional_hit_units_table then
+							optional_hit_units_table[hit_unit] = true
 						end
 					end
 				end
 			end
 		end
-
-		table.sort(attack_units_array, attack_units_sort_function)
 	end
 
 	for i = 1, number_of_attack_units do

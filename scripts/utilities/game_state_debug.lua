@@ -6,21 +6,13 @@ GameStateDebug.DEBUG = false
 
 local function _debug_print(format, ...)
 	if GameStateDebug.DEBUG then
-		if rawget(_G, "Log") then
-			Log.info("GameStateDebug", format, ...)
-		else
-			print(string.format("[GameStateDebug] " .. format, ...))
-		end
+		Log.info("GameStateDebug", format, ...)
 	end
 end
 
 local function _debug_warn(format, ...)
 	if GameStateDebug.DEBUG then
-		if rawget(_G, "Log") then
-			Log.warning("GameStateDebug", format, ...)
-		else
-			print(string.format("[GameStateDebug] WARNING: " .. format, ...))
-		end
+		Log.warning("GameStateDebug", format, ...)
 	end
 end
 

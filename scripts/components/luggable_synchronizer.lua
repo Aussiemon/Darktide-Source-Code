@@ -12,8 +12,9 @@ LuggableSynchronizer.init = function (self, unit, is_server)
 	if luggable_synchronizer_extension then
 		local objective_name = self:get_data(unit, "objective_name")
 		local objective_stages = self:get_data(unit, "objective_stages")
-		local shuffle_stages = self:get_data(unit, "shuffle_stages")
 		local auto_start = self:get_data(unit, "automatic_start")
+		local shuffle_stages = self:get_data(unit, "shuffle_stages")
+		local use_safe_zone = self:get_data(unit, "use_safe_zone")
 		local manual_luggable_spawn = self:get_data(unit, "manual_luggable_spawn")
 		local max_socket_target = self:get_data(unit, "max_socket_target")
 		local keep_unused_sockets = self:get_data(unit, "keep_unused_sockets")
@@ -24,7 +25,7 @@ LuggableSynchronizer.init = function (self, unit, is_server)
 		local is_side_mission_synchronizer = self:get_data(unit, "is_side_mission_synchronizer")
 		local automatic_start_on_level_spawned = self:get_data(unit, "automatic_start_on_level_spawned")
 
-		luggable_synchronizer_extension:setup_from_component(objective_name, objective_stages, shuffle_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
+		luggable_synchronizer_extension:setup_from_component(objective_name, objective_stages, auto_start, shuffle_stages, use_safe_zone, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
 
 		self._luggable_synchronizer_extension = luggable_synchronizer_extension
 	end
@@ -86,11 +87,6 @@ LuggableSynchronizer.component_data = {
 		ui_type = "text_box",
 		value = "default",
 	},
-	shuffle_stages = {
-		ui_name = "Shuffle Stages",
-		ui_type = "check_box",
-		value = false,
-	},
 	objective_stages = {
 		decimals = 0,
 		min = 1,
@@ -102,6 +98,16 @@ LuggableSynchronizer.component_data = {
 		ui_name = "Auto Start On Mission Start",
 		ui_type = "check_box",
 		value = false,
+	},
+	shuffle_stages = {
+		ui_name = "Shuffle Stages",
+		ui_type = "check_box",
+		value = false,
+	},
+	use_safe_zone = {
+		ui_name = "Use Safe Zone",
+		ui_type = "check_box",
+		value = true,
 	},
 	manual_luggable_spawn = {
 		ui_name = "Spawn Luggable Manually",

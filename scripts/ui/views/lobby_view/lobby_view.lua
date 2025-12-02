@@ -15,7 +15,6 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -36,6 +35,7 @@ local loadout_presentation_order = {
 local class_loadout = {
 	ability = {},
 	blitz = {},
+	pocketable = {},
 	aura = {},
 }
 local loadout_to_type = {
@@ -99,7 +99,7 @@ LobbyView.init = function (self, settings, context)
 	self._can_exit = not context or context.can_exit
 	self._allow_close_hotkey = self._debug_preview
 
-	self:_register_event("event_lobby_vote_started")
+	Managers.event:register(self, "event_lobby_vote_started", "event_lobby_vote_started")
 end
 
 LobbyView.on_enter = function (self)
@@ -156,9 +156,23 @@ LobbyView._setup_havoc_info = function (self)
 	end
 
 	local havoc_title_content = widgets.havoc_title.content
+	local havoc_title_style = widgets.havoc_title.style
 
 	havoc_title_content.havoc_rank = Utf8.upper(havoc_data.level)
 
+	local havoc_title_width = self:_scenegraph_size("havoc_title")
+	local havoc_title_text_width = self:_text_size(havoc_title_content.havoc_rank, havoc_title_style.havoc_rank, {
+		havoc_title_width,
+	})
+	local havoc_title_text_margin = 5
+	local havoc_title_full_width = havoc_title_style.havoc_icon.size[1] + havoc_title_text_margin + havoc_title_text_width
+
+	havoc_title_style.havoc_icon.offset[1] = -(havoc_title_full_width * 0.5) + havoc_title_style.havoc_icon.size[1] * 0.5
+	havoc_title_style.havoc_icon_drop_shadow.offset[1] = havoc_title_style.havoc_icon.offset[1] + 1
+	havoc_title_style.havoc_rank.offset[1] = havoc_title_style.havoc_icon.offset[1] + havoc_title_text_margin + havoc_title_text_width * 0.5 + havoc_title_style.havoc_icon.size[1] * 0.5
+
+	local margin = 20
+	local offset = havoc_title_style.havoc_icon.size[2] + margin * 2
 	local num_displayed_mutators = 0
 
 	for i = 1, #havoc_data.circumstances do
@@ -170,11 +184,34 @@ LobbyView._setup_havoc_info = function (self)
 		local widget_name = "havoc_circumstance_0" .. i
 		local widget = self._widgets_by_name[widget_name]
 		local widget_content = widget.content
+		local widget_style = widget.style
 
-		widget.offset[2] = (i - 1) * 113
 		widget_content.icon = circumstance_ui_settings.icon
 		widget_content.circumstance_name = Localize(circumstance_ui_settings.display_name)
 		widget_content.circumstance_description = Localize(circumstance_ui_settings.description)
+		widget.offset[2] = offset
+
+		local icon_height = widget_style.icon.size[2]
+		local title_height = self:_get_text_height(widget_content.circumstance_name, widget_style.circumstance_name, {
+			widget_style.circumstance_name.size[1],
+		})
+
+		title_height = math.max(icon_height, title_height)
+
+		local description_height = self:_get_text_height(widget_content.circumstance_description, widget_style.circumstance_description, {
+			widget_style.circumstance_description.size[1],
+		})
+		local description_margin = 0
+
+		widget_style.circumstance_description.offset[2] = title_height + description_margin
+
+		local total_size = title_height + description_margin + description_height
+
+		widget.content.size = {
+			havoc_title_width,
+			total_size,
+		}
+		offset = offset + total_size + margin
 	end
 
 	if num_displayed_mutators ~= 4 then
@@ -260,10 +297,7 @@ LobbyView._initialize_background_world = function (self)
 
 	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
-	local level_name
-	local target_level = self._level
-
-	level_name = self._level.level_name
+	local level_name = self._level.level_name
 
 	self._world_spawner:spawn_level(level_name)
 
@@ -282,7 +316,7 @@ LobbyView.event_register_lobby_camera = function (self, camera_unit)
 end
 
 LobbyView.event_lobby_vote_started = function (self, context)
-	self:_unregister_event("event_lobby_vote_started")
+	Managers.event:unregister(self, "event_lobby_vote_started")
 
 	self._preview = false
 	self._context = context
@@ -323,7 +357,10 @@ LobbyView._setup_mission_descriptions = function (self)
 		widgets_by_name.mission_title.content.title = mission_display_name and self:_localize(mission_display_name) or "N/A"
 		widgets_by_name.mission_title.content.sub_title = sub_title or "N/A"
 
-		local title_width = self:_text_size(widgets_by_name.mission_title.content.title, widgets_by_name.mission_title.style.title.font_type, widgets_by_name.mission_title.style.title.font_size)
+		local title_width = self:_text_size(widgets_by_name.mission_title.content.title, widgets_by_name.mission_title.style.title, {
+			1920,
+			1080,
+		})
 		local end_margin = 10
 
 		widgets_by_name.mission_title.style.divider.size[1] = title_width + end_margin
@@ -728,10 +765,7 @@ LobbyView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	if self._entered then
-		Managers.frame_rate:relinquish_request("lobby_view")
-	end
-
+	Managers.frame_rate:relinquish_request("lobby_view")
 	LobbyView.super.on_exit(self)
 end
 
@@ -986,7 +1020,6 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local profile_size = profile.personal and profile.personal.character_height
 	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = slot.profile_spawner
-	local selected_archetype = profile.archetype
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 	local slot_name = slot.default_slot
@@ -1057,7 +1090,16 @@ end
 LobbyView._cb_set_player_frame = function (self, widget, item)
 	local material_values = widget.style.character_portrait.material_values
 
-	material_values.portrait_frame_texture = item.icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.character_portrait = item.icon_material
+	else
+		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 LobbyView._cb_set_player_insignia = function (self, widget, item)
@@ -1176,8 +1218,9 @@ end
 
 LobbyView._cb_set_player_icon = function (self, slot, grid_index, rows, columns, render_target)
 	local widget = slot.panel_widget
+	local profile = slot.profile
 
-	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.character_portrait = self:_get_player_portrait_frame_material(profile)
 
 	local material_values = widget.style.character_portrait.material_values
 
@@ -1198,6 +1241,24 @@ LobbyView._cb_unset_player_icon = function (self, slot)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+end
+
+LobbyView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 LobbyView._sync_local_player = function (self)
@@ -1324,7 +1385,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 							local profile = slot.player:profile()
 
-							CharacterSheet.class_loadout(profile, class_loadout)
+							CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
 
 							local loadout_id = talent_widget.content.loadout_id
 							local loadout = class_loadout[loadout_id]
@@ -1457,6 +1518,14 @@ end
 
 LobbyView._set_own_player_ready_status = function (self, is_ready)
 	if self._preview then
+		local spawn_slots = self._spawn_slots
+
+		for i = 1, #spawn_slots do
+			local slot = spawn_slots[i]
+
+			self:_set_slot_ready_status(slot, is_ready)
+		end
+
 		return
 	end
 
@@ -1547,8 +1616,6 @@ LobbyView.set_own_player_ready_status = function (self, is_ready)
 end
 
 LobbyView._check_loadout_changes = function (self)
-	local talents
-
 	for i = 1, #self._spawn_slots do
 		local spawn_slot = self._spawn_slots[i]
 
@@ -1588,7 +1655,7 @@ LobbyView._check_loadout_changes = function (self)
 				end
 			end
 
-			CharacterSheet.class_loadout(profile, class_loadout)
+			CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
 
 			if not table.is_empty(spawn_slot.talent_widgets) then
 				for f = 1, #spawn_slot.talent_widgets do
@@ -1659,8 +1726,6 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 
 		self:_unregister_widget_name(talent_widgets.name)
 	end
-
-	CharacterSheet.class_loadout(profile, class_loadout)
 
 	local settings_by_node_type = TalentBuilderViewSettings.settings_by_node_type
 
@@ -1804,7 +1869,6 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	local profile_size = profile.personal and profile.personal.character_height
 	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
 	local profile_spawner = spawn_slot.profile_spawner
-	local selected_archetype = profile.archetype
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
 	local slot_name = spawn_slot.default_slot
@@ -1969,7 +2033,7 @@ LobbyView._setup_tooltip_info = function (self, talent_hover_data)
 		text_vertical_offset = text_vertical_offset + talent_type_title_height
 
 		local description = TalentLayoutParser.talent_description(talent, points_spent, Color.ui_terminal(255, true))
-		local localized_title = self:_localize(talent.display_name)
+		local localized_title = TalentLayoutParser.talent_title(talent, points_spent, Color.ui_terminal(255, true))
 
 		content.title = localized_title
 		content.description = description
@@ -1998,9 +2062,7 @@ LobbyView._setup_tooltip_info = function (self, talent_hover_data)
 end
 
 LobbyView._get_text_height = function (self, text, text_style, optional_text_size)
-	local ui_renderer = self._ui_renderer
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local text_height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, optional_text_size or text_style.size, text_options)
+	local _, text_height = self:_text_size(text, text_style, optional_text_size or text_style.size, true)
 
 	return text_height
 end

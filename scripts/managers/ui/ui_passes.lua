@@ -84,6 +84,7 @@ UIPasses.texture = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -113,7 +114,8 @@ UIPasses.texture = {
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
-		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+		local strict_lifetime = ui_style.strict_lifetime
+		local gui_material = (material_values or scale_to_material or strict_lifetime) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
 
 		value = gui_material or value
 
@@ -152,6 +154,7 @@ UIPasses.texture_uv = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -181,7 +184,8 @@ UIPasses.texture_uv = {
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
-		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+		local strict_lifetime = ui_style.strict_lifetime
+		local gui_material = (material_values or scale_to_material or strict_lifetime) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
 
 		value = gui_material or value
 
@@ -213,6 +217,7 @@ UIPasses.multi_texture = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -267,6 +272,7 @@ UIPasses.slug_icon = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -301,6 +307,7 @@ UIPasses.slug_picture = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -334,6 +341,7 @@ UIPasses.multi_slug_icon = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -372,6 +380,7 @@ UIPasses.shader_tiled_texture = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -432,6 +441,7 @@ UIPasses.rotated_slug_icon = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -477,6 +487,7 @@ UIPasses.rotated_texture = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -518,7 +529,8 @@ UIPasses.rotated_texture = {
 		local retained_mode = use_retained_mode(pass, ui_renderer.render_settings)
 		local material_values = ui_style.material_values
 		local scale_to_material = ui_style.scale_to_material
-		local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
+		local strict_lifetime = ui_style.strict_lifetime
+		local gui_material = (material_values or scale_to_material or strict_lifetime) and get_pass_material(ui_renderer, value, pass_data, retained_mode)
 
 		value = gui_material or value
 
@@ -547,6 +559,7 @@ UIPasses.rect = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -597,6 +610,7 @@ UIPasses.triangle = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -626,6 +640,7 @@ UIPasses.circle = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_id = nil,
 		}
 	end,
 	destroy = function (pass, ui_renderer)
@@ -698,6 +713,7 @@ UIPasses.text = {
 	init = function (pass)
 		return {
 			dirty = true,
+			retained_ids = nil,
 			value_id = pass.value_id,
 		}
 	end,
@@ -749,7 +765,8 @@ UIPasses.text = {
 		if optional_material then
 			local material_values = ui_style.material_values
 			local scale_to_material = ui_style.scale_to_material
-			local gui_material = (material_values or scale_to_material) and get_pass_material(ui_renderer, optional_material, pass_data, retained_mode)
+			local strict_lifetime = ui_style.strict_lifetime
+			local gui_material = (material_values or scale_to_material or strict_lifetime) and get_pass_material(ui_renderer, optional_material, pass_data, retained_mode)
 
 			if material_values then
 				apply_material_values(gui_material, material_values)
@@ -885,6 +902,21 @@ local cursor_value_type_name = "Vector3"
 UIPasses.hotspot = {
 	init = function (pass, content)
 		return
+	end,
+	update = function (pass, ui_renderer, ui_style, ui_content, pass_visibility)
+		if not pass_visibility then
+			local was_hover = ui_content.is_hover
+
+			if was_hover then
+				ui_content.on_hover_exit = false
+				ui_content.on_hover_enter = false
+				ui_content.force_hover = false
+				ui_content.internal_is_hover = false
+				ui_content.is_hover = false
+				ui_content._input_pressed = false
+				ui_content.is_held = false
+			end
+		end
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
 		local dt = ui_renderer.dt

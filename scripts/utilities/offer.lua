@@ -35,25 +35,11 @@ local function _extract_item(description)
 	return item, visual_item
 end
 
-Offer.extract_items = function (offer)
+Offer.extract_items = function (offer, follow_nested)
 	local offer_type = offer.description.type
 	local items = {}
 
-	if offer_type == "bundle" then
-		local bundle_info = offer.bundleInfo
-
-		for i = 1, #bundle_info do
-			local bundle_offer = bundle_info[i]
-			local real_item, item = _extract_item(bundle_offer.description)
-
-			items[#items + 1] = {
-				real_item = real_item,
-				gearId = bundle_offer.description.gearId,
-				item = item,
-				offer = bundle_offer,
-			}
-		end
-	else
+	if offer_type ~= "bundle" then
 		local real_item, item = _extract_item(offer.description)
 
 		items[#items + 1] = {
@@ -62,9 +48,50 @@ Offer.extract_items = function (offer)
 			item = item,
 			offer = offer,
 		}
+
+		return items
+	end
+
+	local bundle_info = offer.bundleInfo
+
+	for i = 1, #bundle_info do
+		local bundle_offer = bundle_info[i]
+
+		if bundle_offer.description.type ~= "bundle" then
+			local real_item, item = _extract_item(bundle_offer.description)
+
+			items[#items + 1] = {
+				real_item = real_item,
+				gearId = bundle_offer.description.gearId,
+				item = item,
+				offer = bundle_offer,
+			}
+		elseif follow_nested then
+			items = table.append(items, Offer.extract_items(bundle_offer, follow_nested))
+		else
+			items[#items + 1] = {
+				gearId = bundle_offer.description.gearId,
+				offer = bundle_offer,
+			}
+		end
 	end
 
 	return items
+end
+
+Offer.find_media_url = function (offer, predicate)
+	local media_array = offer.media
+	local media_array_count = media_array and #media_array or 0
+
+	for i = 1, media_array_count do
+		local media = media_array[i]
+
+		if predicate(media) then
+			return media.url
+		end
+	end
+
+	return nil
 end
 
 return Offer

@@ -168,6 +168,27 @@ weapon_stamina_templates.combat_knife_p1 = {
 		lerp_perfect = 0.75,
 	},
 }
+weapon_stamina_templates.dual_shivs_p1 = {
+	stamina_modifier = 1,
+	sprint_cost_per_second = {
+		lerp_basic = 0.85,
+		lerp_perfect = 0.35,
+	},
+	block_cost_default = {
+		inner = {
+			lerp_basic = 0.75,
+			lerp_perfect = 0.25,
+		},
+		outer = {
+			lerp_basic = 1.5,
+			lerp_perfect = 0.5,
+		},
+	},
+	push_cost = {
+		lerp_basic = 2,
+		lerp_perfect = 1,
+	},
+}
 weapon_stamina_templates.luggable = {
 	stamina_modifier = 2,
 	sprint_cost_per_second = {

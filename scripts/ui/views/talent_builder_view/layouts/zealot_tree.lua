@@ -9,6 +9,7 @@ return {
 	version = 24,
 	nodes = {
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_more_toughness_on_melee",
 			max_points = 1,
@@ -35,6 +36,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_crits_apply_bleed",
 			max_points = 1,
@@ -57,6 +59,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_backstab_damage",
 			max_points = 1,
@@ -79,6 +82,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_resist_death",
 			max_points = 1,
 			talent = "zealot_resist_death",
@@ -103,6 +107,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_multi_hits_increase_damage",
 			max_points = 1,
@@ -126,6 +131,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_damage_vs_resilient",
 			max_points = 1,
@@ -151,6 +157,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_hits_grant_stacking_damage",
 			max_points = 1,
@@ -173,6 +180,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_blitz_fire_grenade",
 			max_points = 1,
@@ -195,6 +203,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_blitz_throwing_knife",
 			max_points = 1,
@@ -217,6 +226,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_crits_reduce_toughness_damage",
 			max_points = 1,
@@ -239,6 +249,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_toughness_on_dodge",
 			max_points = 1,
@@ -265,6 +276,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
 			max_points = 1,
 			talent = "base_melee_damage_node_buff_medium_1",
@@ -289,6 +301,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
 			max_points = 1,
@@ -312,6 +325,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_heal_part_of_damage_taken",
 			max_points = 1,
@@ -335,6 +349,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_reduced_damage_on_wound",
 			max_points = 1,
@@ -357,6 +372,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_toughness_on_heavy_kills",
 			max_points = 1,
@@ -380,6 +396,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
@@ -408,6 +425,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_aura_the_emperor_demand",
 			max_points = 1,
@@ -431,6 +449,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_crit_and_weakspot_damage_after_dodge",
 			max_points = 1,
@@ -456,6 +475,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_aura_cleansing_prayer",
 			max_points = 1,
@@ -478,6 +498,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_ability_bolstering_prayer",
 			max_points = 1,
@@ -502,6 +523,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_ally_damage_taken_reduced",
 			max_points = 1,
@@ -523,6 +545,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_attack_speed_post_ability",
 			max_points = 1,
@@ -549,6 +572,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_resist_death",
 			max_points = 1,
@@ -573,6 +597,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_channel_grants_toughness_damage_reduction",
 			max_points = 1,
@@ -593,6 +618,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_channel_grants_damage",
 			max_points = 1,
@@ -613,6 +639,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_multi_hits_grant_impact_and_uninterruptible",
 			max_points = 1,
@@ -634,6 +661,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_more_damage_when_low_on_stamina",
 			max_points = 1,
@@ -655,6 +683,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			group_name = "",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_additional_charge_of_ability",
@@ -677,6 +706,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_damage_boosts_movement",
 			max_points = 1,
@@ -699,6 +729,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_ability_stealth",
 			max_points = 1,
@@ -727,6 +758,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_damage_boosts_movement",
 			max_points = 1,
@@ -756,6 +788,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_duration",
 			max_points = 1,
@@ -777,6 +810,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_stagger_on_weakspot_melee",
 			max_points = 1,
@@ -796,6 +830,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_reduced_damage_after_dodge",
 			max_points = 1,
@@ -822,7 +857,8 @@ return {
 			},
 		},
 		{
-			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
+			cost = 0,
+			icon = "content/ui/materials/frames/talents/starting_points/starting_point_zealot",
 			max_points = 1,
 			type = "start",
 			widget_name = "node_2e95d28a-ee00-43d3-8bff-5b2461aa8ecf",
@@ -841,6 +877,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_toughness_in_melee",
 			max_points = 1,
@@ -867,6 +904,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_leaving_stealth_restores_toughness",
 			max_points = 1,
@@ -888,6 +926,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_attack_speed",
 			max_points = 1,
@@ -914,6 +953,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_restore_stealth_cd_on_damage",
 			max_points = 1,
@@ -937,6 +977,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_additional_wounds",
 			max_points = 1,
@@ -964,6 +1005,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_keystone_martyrdom",
 			max_points = 1,
@@ -992,6 +1034,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_martyrdom_grants_toughness",
 			max_points = 1,
@@ -1013,6 +1056,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_martyrdom_grants_attack_speed",
 			max_points = 1,
@@ -1034,6 +1078,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increase_ranged_close_damage",
 			max_points = 1,
@@ -1056,6 +1101,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_backstab_kills_restore_cd",
 			max_points = 1,
@@ -1078,6 +1124,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_keystone_quickness",
 			max_points = 1,
@@ -1103,6 +1150,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_quickness_toughness_per_stack",
 			max_points = 1,
@@ -1124,6 +1172,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_03",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_quickness_passive_dodge_stacks",
 			max_points = 1,
@@ -1145,6 +1194,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_crits_grant_cd",
 			max_points = 1,
@@ -1167,6 +1217,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_resist_death_healing",
 			max_points = 1,
@@ -1190,6 +1241,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_keystone_fanatic_rage",
 			max_points = 1,
@@ -1215,6 +1267,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_fanatic_rage_toughness_on_max",
 			max_points = 1,
@@ -1236,6 +1289,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_fanatic_rage_improved",
 			max_points = 1,
@@ -1257,6 +1311,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_01",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_shared_fanatic_rage",
 			max_points = 1,
@@ -1278,6 +1333,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			gradient_color = "content/ui/textures/color_ramps/class_node_colors/zealot_02",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_improved_stun_grenade",
 			max_points = 1,
@@ -1300,6 +1356,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "",
 			icon = "content/ui/textures/icons/talents/zealot/zealot_dash_increased_duration",
 			max_points = 1,
@@ -1319,6 +1376,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_default_general_talent",
 			max_points = 1,
 			talent = "zealot_stamina_cost_multiplier_aura",
@@ -1341,6 +1399,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_uninterruptible_no_slow_heavies",
 			max_points = 1,
 			talent = "zealot_uninterruptible_no_slow_heavies",
@@ -1363,6 +1422,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_stacking_melee_damage_after_dodge",
 			max_points = 1,
 			talent = "zealot_stacking_melee_damage_after_dodge",
@@ -1385,6 +1445,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_improved_sprint",
 			max_points = 1,
 			talent = "zealot_sprint_improvements",
@@ -1411,6 +1472,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_damage_vs_nonthreat",
 			max_points = 1,
 			talent = "zealot_damage_vs_nonthreat",
@@ -1431,6 +1493,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_defensive_knockback",
 			max_points = 1,
 			talent = "zealot_defensive_knockback",
@@ -1449,6 +1512,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_bleed_kills_stacking_damage",
 			max_points = 1,
 			talent = "zealot_martyrdom_toughness_modifier",
@@ -1469,6 +1533,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_always_in_coherency",
 			max_points = 1,
 			talent = "zealot_quickness_increased_duration",
@@ -1488,6 +1553,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_bled_enemies_take_more_damage",
 			max_points = 1,
 			talent = "zealot_bled_enemies_take_more_damage",
@@ -1510,6 +1576,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_cleave_impact_post_push",
 			max_points = 1,
 			talent = "zealot_push_attacks_attack_speed",
@@ -1531,6 +1598,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_melee_crits_restore_stamina",
 			max_points = 1,
 			talent = "zealot_melee_crits_restore_stamina",
@@ -1553,6 +1621,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_revive_speed",
 			max_points = 1,
 			talent = "zealot_revive_speed",
@@ -1580,6 +1649,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_damage_vs_elites",
 			max_points = 1,
 			talent = "zealot_damage_vs_elites",
@@ -1598,6 +1668,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_weakspot_damage_reduction",
 			max_points = 1,
 			talent = "zealot_weakspot_damage_reduction",
@@ -1619,6 +1690,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_improved_weapon_handling_after_dodge",
 			max_points = 1,
 			talent = "zealot_improved_weapon_handling_after_dodge",
@@ -1637,6 +1709,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_multihits_restore_stamina",
 			max_points = 1,
 			talent = "zealot_stamina_on_block_break",
@@ -1655,6 +1728,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_movement_speed_node_buff_low_4",
 			type = "stat",
@@ -1678,6 +1752,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_elite_kills_empowers",
 			max_points = 1,
 			talent = "zealot_elite_kills_empowers",
@@ -1704,6 +1779,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_stealth_more_cd_more_damage",
 			max_points = 1,
 			talent = "zealot_stealth_cooldown_regeneration",
@@ -1724,6 +1800,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_heavy_multihits_increase_melee_damage",
 			max_points = 1,
 			talent = "zealot_suppress_on_backstab_kill",
@@ -1746,6 +1823,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_dodge_improvements",
 			max_points = 1,
 			talent = "zealot_block_dodging_synergy",
@@ -1764,6 +1842,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_reload_speed_on_melee_kills",
 			max_points = 1,
 			talent = "zealot_reload_from_backstab",
@@ -1784,6 +1863,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_reduced_corruption_damage_taken",
 			max_points = 1,
 			talent = "zealot_corruption_resistance_stacking",
@@ -1804,6 +1884,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_crits_rend",
 			max_points = 1,
 			talent = "zealot_backstab_periodic_damage",
@@ -1825,6 +1906,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_damage_after_heavy_attack",
 			max_points = 1,
 			talent = "zealot_offensive_vs_many",

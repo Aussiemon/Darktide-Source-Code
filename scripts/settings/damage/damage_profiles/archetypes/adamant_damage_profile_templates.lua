@@ -20,6 +20,7 @@ table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 damage_templates.adamant_shout = {
+	damage_type = nil,
 	ignore_shield = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
@@ -57,6 +58,7 @@ damage_templates.adamant_shout = {
 	},
 }
 damage_templates.adamant_shout_damage = {
+	damage_type = nil,
 	ignore_shield = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",

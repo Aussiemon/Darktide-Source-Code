@@ -26,6 +26,7 @@ LocalProfileBackendParser.parse_profile = function (profile, character_id)
 	end
 
 	profile.talent_points = profile.talent_points or 0
+	profile.expertise_points = profile.expertise_points or 0
 
 	if not profile.talents then
 		profile.talents = {}
@@ -34,17 +35,6 @@ LocalProfileBackendParser.parse_profile = function (profile, character_id)
 	local archetype_name = profile.archetype
 	local talents = profile.talents
 	local archetype = Archetypes[archetype_name]
-	local num_talents = #talents
-
-	for ii = num_talents, 1, -1 do
-		local talent_name = talents[ii]
-		local segments = string.split(talent_name, "--")
-		local selected_name = segments[1] or talent_name
-		local tier = tonumber(segments[2]) or 0
-
-		talents[selected_name] = tier
-		talents[ii] = nil
-	end
 
 	PlayerTalents.add_archetype_base_talents(archetype, talents)
 end

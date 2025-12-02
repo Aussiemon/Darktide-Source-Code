@@ -2,10 +2,6 @@
 
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
-local Fov = require("scripts/utilities/camera/fov")
-local Orientation = require("scripts/utilities/orientation")
-local PlayerOrientationSettings = require("scripts/settings/player_character/player_orientation_settings")
-local _look_delta
 local WeaponForceViewPlayerOrientation = class("WeaponForceViewPlayerOrientation", "BasePlayerOrientation")
 
 WeaponForceViewPlayerOrientation.init = function (self, player, orientation)

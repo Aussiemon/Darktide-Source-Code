@@ -24,7 +24,6 @@ local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 
 damage_templates.zealot_channel_stagger = {
 	ignore_stagger_reduction = true,
-	no_stagger_breed_tag = "ogryn",
 	stagger_category = "melee",
 	stagger_override = "light",
 	suppression_type = "ability",
@@ -32,6 +31,9 @@ damage_templates.zealot_channel_stagger = {
 	power_distribution = {
 		attack = 0,
 		impact = 1,
+	},
+	no_stagger_breed_tags = {
+		"ogryn",
 	},
 	armor_damage_modifier = {
 		attack = {

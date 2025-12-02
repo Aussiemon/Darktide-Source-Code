@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/ammo.lua
 
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Ammo = {}
 
 Ammo.ammo_is_full = function (unit)
@@ -180,7 +180,23 @@ end
 Ammo.clip_in_use = function (inventory_slot_component, clip_index)
 	local current_clips_in_use = inventory_slot_component.current_ammunition_clips_in_use
 
-	return bit.band(bit.lshift(1, clip_index - 1), current_clips_in_use) ~= 0
+	return current_clips_in_use[clip_index] or false
+end
+
+Ammo.clips_in_use = function (inventory_slot_component, out_clips)
+	local any_clip_in_use = false
+	local clips_in_use = inventory_slot_component.current_ammunition_clips_in_use
+
+	for i = 1, NetworkConstants.clips_in_use.max_size do
+		if clips_in_use[i] then
+			any_clip_in_use = true
+			out_clips[i] = true
+		else
+			out_clips[i] = false
+		end
+	end
+
+	return any_clip_in_use
 end
 
 Ammo.missing_ammo_in_clips = function (inventory_slot_component, optional_clip_index)
@@ -192,19 +208,16 @@ Ammo.missing_ammo_in_clips = function (inventory_slot_component, optional_clip_i
 end
 
 Ammo.current_ammo_in_clips = function (inventory_slot_component, optional_clip_index)
-	local current_clip_fields = PlayerCharacterConstants.current_ammo_clip_fields
-
 	if optional_clip_index then
-		return inventory_slot_component[current_clip_fields[optional_clip_index]]
+		return inventory_slot_component.current_ammunition_clip[optional_clip_index] or 0
 	end
 
 	local current_ammo_in_clips = 0
+	local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 
-	for i = 1, #current_clip_fields do
+	for i = 1, max_num_clips do
 		if Ammo.clip_in_use(inventory_slot_component, i) then
-			local current_field = current_clip_fields[i]
-
-			current_ammo_in_clips = current_ammo_in_clips + inventory_slot_component[current_field]
+			current_ammo_in_clips = current_ammo_in_clips + inventory_slot_component.current_ammunition_clip[i]
 		end
 	end
 
@@ -212,19 +225,16 @@ Ammo.current_ammo_in_clips = function (inventory_slot_component, optional_clip_i
 end
 
 Ammo.max_ammo_in_clips = function (inventory_slot_component, optional_clip_index)
-	local max_clip_fields = PlayerCharacterConstants.max_ammo_clip_fields
-
 	if optional_clip_index then
-		return inventory_slot_component[max_clip_fields[optional_clip_index]]
+		return inventory_slot_component.max_ammunition_clip[optional_clip_index] or 0
 	end
 
 	local max_ammo_in_clips = 0
+	local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 
-	for i = 1, #max_clip_fields do
+	for i = 1, max_num_clips do
 		if Ammo.clip_in_use(inventory_slot_component, i) then
-			local current_field = max_clip_fields[i]
-
-			max_ammo_in_clips = max_ammo_in_clips + inventory_slot_component[current_field]
+			max_ammo_in_clips = max_ammo_in_clips + inventory_slot_component.max_ammunition_clip[i]
 		end
 	end
 
@@ -232,13 +242,19 @@ Ammo.max_ammo_in_clips = function (inventory_slot_component, optional_clip_index
 end
 
 Ammo.set_max_ammo_in_clips = function (inventory_slot_component, amount, optional_clip_index)
-	local max_clip_fields = PlayerCharacterConstants.max_ammo_clip_fields
+	local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 
-	for i = optional_clip_index or 1, optional_clip_index or #max_clip_fields do
-		local current_field = max_clip_fields[i]
-
-		inventory_slot_component[current_field] = amount
+	for i = optional_clip_index or 1, optional_clip_index or max_num_clips do
+		inventory_slot_component.max_ammunition_clip[i] = amount
 	end
+end
+
+Ammo.current_ammo_in_reserve = function (inventory_slot_component)
+	return inventory_slot_component.current_ammunition_reserve
+end
+
+Ammo.max_ammo_in_reserve = function (inventory_slot_component)
+	return inventory_slot_component.max_ammunition_reserve
 end
 
 local _set_clip_fields_scratch = {}
@@ -256,19 +272,16 @@ local function _set_clip_sort_percentage_remove(a, b)
 end
 
 Ammo.set_current_ammo_in_clips = function (inventory_slot_component, amount, optional_clip_index)
-	local current_fields = PlayerCharacterConstants.current_ammo_clip_fields
-
 	if optional_clip_index then
-		local field = current_fields[optional_clip_index]
-
-		inventory_slot_component[field] = amount
+		inventory_slot_component.current_ammunition_clip[optional_clip_index] = amount
 	else
 		table.clear(_set_clip_fields_scratch)
 
+		local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 		local current_total = 0
 		local n_fields = 0
 
-		for i = 1, #current_fields do
+		for i = 1, max_num_clips do
 			if Ammo.clip_in_use(inventory_slot_component, i) then
 				n_fields = n_fields + 1
 				_set_clip_fields_scratch[n_fields] = i
@@ -334,9 +347,8 @@ Ammo.set_current_ammo_in_clips = function (inventory_slot_component, amount, opt
 				end
 
 				local new_amount = field_current + to_add
-				local field_name = current_fields[field_i]
 
-				inventory_slot_component[field_name] = new_amount
+				inventory_slot_component.current_ammunition_clip[field_i] = new_amount
 				_set_clip_current_scratch[field_i] = new_amount
 				_set_clip_percentage_scratch[field_i] = new_amount / field_max
 				diff = diff - to_add
@@ -413,12 +425,12 @@ Ammo.current_total_percentage = function (unit)
 	end
 end
 
-Ammo.add_to_clip = function (inventory_slot_component, ammunition_to_add)
-	local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
-	local current_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+Ammo.add_to_clip = function (inventory_slot_component, ammunition_to_add, optional_clip_index)
+	local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_component, optional_clip_index)
+	local current_ammo_in_clip = Ammo.current_ammo_in_clips(inventory_slot_component, optional_clip_index)
 	local new_ammo_clip_size = math.clamp(math.min(ammunition_to_add + current_ammo_in_clip, max_ammo_in_clip), 0, max_ammo_in_clip)
 
-	Ammo.set_current_ammo_in_clips(inventory_slot_component, new_ammo_clip_size)
+	Ammo.set_current_ammo_in_clips(inventory_slot_component, new_ammo_clip_size, optional_clip_index)
 
 	local actual_ammo_added = new_ammo_clip_size - current_ammo_in_clip
 
@@ -437,27 +449,30 @@ Ammo.add_to_reserve = function (inventory_slot_component, ammunition_to_add)
 	return actual_ammo_added
 end
 
-Ammo.transfer_from_reserve_to_clip = function (inventory_slot_component, ammunition_to_transfer)
+Ammo.transfer_from_reserve_to_clip = function (inventory_slot_component, ammunition_to_transfer, optional_clip_index)
 	if Managers.state.game_mode:infinite_ammo_reserve() then
 		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve + Ammo.max_ammo_in_clips(inventory_slot_component)
 	end
 
+	local free_transfer = inventory_slot_component.free_ammunition_transfer
 	local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
-	local actual_ammo_to_transfer = math.min(ammunition_to_transfer, current_ammo_in_reserve)
-	local actual_ammo_added = Ammo.add_to_clip(inventory_slot_component, actual_ammo_to_transfer)
+	local actual_ammo_to_transfer = free_transfer and ammunition_to_transfer or math.min(ammunition_to_transfer, current_ammo_in_reserve)
+	local actual_ammo_added = Ammo.add_to_clip(inventory_slot_component, actual_ammo_to_transfer, optional_clip_index)
 
-	inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammo_added
+	if not free_transfer then
+		inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammo_added
+	end
 end
 
 Ammo.remove_from_reserve = function (inventory_slot_component, ammunition_to_remove)
-	if Managers.state.game_mode:infinite_ammo_reserve() then
-		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
-	end
-
 	local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
 	local actual_ammunition_to_remove = math.min(ammunition_to_remove, current_ammo_in_reserve)
 
 	inventory_slot_component.current_ammunition_reserve = current_ammo_in_reserve - actual_ammunition_to_remove
+
+	if Managers.state.game_mode:infinite_ammo_reserve() then
+		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
+	end
 
 	return actual_ammunition_to_remove
 end
@@ -511,6 +526,64 @@ Ammo.add_to_all_slots = function (unit, percent)
 	end
 
 	return ammo_gained
+end
+
+Ammo.add_ammo_using_pickup_data = function (unit, pickup_data, skip_proc)
+	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
+
+	if not visual_loadout_extension or not visual_loadout_extension.slot_configuration_by_type then
+		return 0
+	end
+
+	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+	local total_ammo_restored = 0
+
+	for slot_name, config in pairs(weapon_slot_configuration) do
+		local inventory_slot_component = unit_data_ext:write_component(slot_name)
+
+		if inventory_slot_component.max_ammunition_reserve > 0 then
+			local ammo_reserve = inventory_slot_component.current_ammunition_reserve
+			local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
+			local ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+			local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
+			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
+			local missing_clip = max_ammo_clip - ammo_clip
+			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)
+
+			inventory_slot_component.current_ammunition_reserve = new_ammo_amount
+			total_ammo_restored = total_ammo_restored + (new_ammo_amount - ammo_reserve)
+
+			if not skip_proc then
+				local missing_player_ammo = max_ammo_reserve - ammo_reserve
+
+				if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
+					local Vo = require("scripts/utilities/vo")
+
+					Vo.ammo_hog_event(unit, inventory_slot_component, pickup_data)
+				end
+
+				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				if buff_extension then
+					local param_table = buff_extension:request_proc_event_param_table()
+
+					if param_table then
+						local BuffSettings = require("scripts/settings/buff/buff_settings")
+						local buff_proc_events = BuffSettings.proc_events
+
+						param_table.pickup_amount = pickup_amount
+						param_table.pickup_name = pickup_data.name
+						param_table.new_ammo_amount = new_ammo_amount
+
+						buff_extension:add_proc_event(buff_proc_events.on_ammo_pickup, param_table)
+					end
+				end
+			end
+		end
+	end
+
+	return total_ammo_restored
 end
 
 return Ammo

@@ -58,6 +58,7 @@ local default_color = get_hud_color("color_tint_main_2", 255)
 local icon_hover_color = get_hud_color("color_tint_main_2", 255)
 local icon_default_color = get_hud_color("color_tint_main_3", 255)
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select,
 }

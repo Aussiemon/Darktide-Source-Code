@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/spectator/hud_element_spectator_text.lua
 
 local Definitions = require("scripts/ui/hud/elements/spectator/hud_element_spectator_text_definitions")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
 local HudElementSpectatorText = class("HudElementSpectatorText", "HudElementBase")
 
@@ -29,7 +28,10 @@ HudElementSpectatorText.update = function (self, dt, t, ui_renderer, render_sett
 		local rescued_text_widget = self._widgets_by_name.rescued_text
 		local rescued_text_widget_text_style = rescued_text_widget.style.text
 		local rescued_text = rescued_text_widget.content.text
-		local text_width, text_height = UIRenderer.text_size(ui_renderer, rescued_text, rescued_text_widget_text_style.font_type, rescued_text_widget_text_style.font_size)
+		local rescued_text_scenegraph = self._widgets_by_name.rescued_text.scenegraph_id
+		local scale = ui_renderer.scale
+		local size = self:scenegraph_size(rescued_text_scenegraph, scale)
+		local text_width, text_height = self:_text_size(ui_renderer, rescued_text, rescued_text_widget_text_style, size)
 
 		rescued_text_widget.style.background.size[1] = text_width + 60
 		rescued_text_widget.style.background_overlay.size[1] = text_width + 60

@@ -82,15 +82,17 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	alternate_fire_component.start_t = 0
 	self._alternate_fire_write_component = alternate_fire_component
 	self._alternate_fire_read_component = unit_data:read_component("alternate_fire")
-	self._peeking_component = unit_data:write_component("peeking")
-	self._stamina_read_component = unit_data:read_component("stamina")
 	self._character_state_component = unit_data:read_component("character_state")
-	self._stunned_character_state_component = unit_data:read_component("stunned_character_state")
+	self._inair_state_component = unit_data:read_component("inair_state")
+	self._locomotion_component = unit_data:read_component("locomotion")
 	self._movement_state_component = unit_data:read_component("movement_state")
 	self._sprint_character_state_component = unit_data:read_component("sprint_character_state")
+	self._stamina_read_component = unit_data:read_component("stamina")
+	self._stunned_character_state_component = unit_data:read_component("stunned_character_state")
 	self._weapon_action_component = unit_data:read_component("weapon_action")
-	self._spread_control_component = unit_data:write_component("spread_control")
+	self._peeking_component = unit_data:write_component("peeking")
 	self._recoil_control_component = unit_data:write_component("recoil_control")
+	self._spread_control_component = unit_data:write_component("spread_control")
 	self._sway_control_component = unit_data:write_component("sway_control")
 
 	local shooting_status_component = unit_data:write_component("shooting_status")
@@ -210,6 +212,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_shoot.shooting_position = Vector3.zero()
 	action_shoot.shooting_rotation = Quaternion.identity()
 	action_shoot.current_fire_config = 1
+	self._action_shoot_component = action_shoot
 
 	local action_shoot_pellets = unit_data_extension:write_component("action_shoot_pellets")
 
@@ -366,11 +369,13 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	action_context.first_person_component = unit_data_ext:read_component("first_person")
 	action_context.sprint_character_state_component = unit_data_ext:read_component("sprint_character_state")
 	action_context.locomotion_component = self._locomotion_component
+	action_context.inair_state_component = self._inair_state_component
 	action_context.inventory_component = self._inventory_component
 	action_context.movement_state_component = unit_data_ext:read_component("movement_state")
 	action_context.weapon_lock_view_component = self._weapon_lock_view_component
 	action_context.critical_strike_component = self._critical_strike_component
 
+	self._action_handler:extensions_ready(world, unit)
 	self._action_handler:set_action_context(action_context)
 	self._sway_weapon_module:extensions_ready(world, unit)
 
@@ -485,7 +490,9 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 
 	local shooting_status_component = self._shooting_status_component
 	local movement_state_component = self._movement_state_component
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local spread_template = self:spread_template()
 	local num_shots_clear_time = 0
 
@@ -504,16 +511,6 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	end
 
 	AimAssist.update_ramp_multiplier(dt, t, self._aim_assist_ramp_component)
-end
-
-local _ammo_clip_component_fields = {}
-
-for i = 1, #PlayerCharacterConstants.current_ammo_clip_fields do
-	_ammo_clip_component_fields[PlayerCharacterConstants.current_ammo_clip_fields[i]] = i
-end
-
-for i = 1, #PlayerCharacterConstants.max_ammo_clip_fields do
-	_ammo_clip_component_fields[PlayerCharacterConstants.max_ammo_clip_fields[i]] = i
 end
 
 PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slot_name, weapon_unit, fx_sources, t, optional_existing_unit_3p, from_server_correction_occurred)
@@ -541,29 +538,37 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	local slot_component_data = inventory_slot_component_data[config.slot_type]
 	local base_ammo = {}
 	local base_clip, clips_in_use
+	local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 
 	for key, data in pairs(slot_component_data) do
-		if _ammo_clip_component_fields[key] then
-			local clip_index = _ammo_clip_component_fields[key]
-			local clip_size = 0
-			local template_name = weapon_template.ammo_template or "none"
+		if key == "current_ammunition_clip" or key == "max_ammunition_clip" then
+			for i = 1, max_num_clips do
+				local clip_size = 0
+				local template_name = weapon_template.ammo_template or "none"
 
-			if template_name ~= "none" then
-				local weapon_tweak_templates = weapon.weapon_tweak_templates
-				local templates = weapon_tweak_templates[template_types.ammo]
-				local ammo_template = templates[template_name]
+				if template_name ~= "none" then
+					local weapon_tweak_templates = weapon.weapon_tweak_templates
+					local templates = weapon_tweak_templates[template_types.ammo]
+					local ammo_template = templates[template_name]
 
-				if ammo_template.ammunition_clips[clip_index] then
-					clip_size = math.floor(ammo_template.ammunition_clips[clip_index] or 0)
-					clips_in_use = bit.bor(clips_in_use or 0, bit.lshift(1, clip_index - 1))
+					if ammo_template.ammunition_clips[i] then
+						if ammo_template.force_even_numbers then
+							ammo_template.ammunition_clips[i] = math.round_to_closest_multiple(ammo_template.ammunition_clips[i], 2)
+						end
+
+						clip_size = math.floor(ammo_template.ammunition_clips[i] or 0)
+						clips_in_use = clips_in_use or {}
+						clips_in_use[i] = clip_size > 0
+					end
 				end
-			end
 
-			base_clip = base_clip or {}
-			base_clip[key] = clip_size
-			inventory_slot_component[key] = clip_size
-		elseif key == "current_ammunition_clips_in_use" then
-			clips_in_use = clips_in_use or 0
+				if key == "current_ammunition_clip" then
+					base_clip = base_clip or {}
+					base_clip[i] = clip_size
+				end
+
+				inventory_slot_component[key][i] = clip_size
+			end
 		elseif key == "current_ammunition_reserve" or key == "max_ammunition_reserve" then
 			local reserve_size = 0
 			local template_name = weapon_template.ammo_template or "none"
@@ -599,6 +604,10 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 	self._base_clip_by_slot[slot_name] = base_clip
 
 	if clips_in_use then
+		for i = 1, max_num_clips do
+			clips_in_use[i] = clips_in_use[i] or false
+		end
+
 		inventory_slot_component.current_ammunition_clips_in_use = clips_in_use
 	end
 
@@ -643,6 +652,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 			inventory_slot_component[key] = data.default_value
 		end
 	end
+
+	self._base_ammo_by_slot[slot_name] = nil
+	self._base_clip_by_slot[slot_name] = nil
 
 	weapon:delete()
 
@@ -754,16 +766,12 @@ PlayerUnitWeaponExtension.can_wield = function (self, slot_name)
 	return true
 end
 
-local action_params = {}
+local action_params_temp = {}
 
 PlayerUnitWeaponExtension._start_action = function (self, action_name, action_settings, t, used_input, transition_type)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local action_objects = weapon.actions
-
-	table.clear(action_params)
-
-	action_params.weapon = weapon
-
+	local action_params = self:_fill_action_params(weapon, self._unit)
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
 	local condition_func_params = self:condition_func_params(wielded_slot)
@@ -772,16 +780,15 @@ PlayerUnitWeaponExtension._start_action = function (self, action_name, action_se
 end
 
 PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
-	table.clear(action_params)
-
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local action_objects, actions
 
 	if weapon then
-		action_params.weapon = weapon
 		action_objects = weapon.actions
 		actions = weapon.weapon_template.actions
 	end
+
+	local action_params = self:_fill_action_params(weapon, self._unit)
 
 	self._action_handler:server_correction_occurred("weapon_action", action_objects, action_params, actions)
 end
@@ -807,10 +814,7 @@ PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_r
 		local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 		local actions = weapon.weapon_template.actions
 		local action_objects = weapon.actions
-
-		table.clear(action_params)
-
-		action_params.weapon = weapon
+		local action_params = self:_fill_action_params(weapon, self._unit)
 
 		self._action_handler:stop_action("weapon_action", reason, data, t, actions, action_objects, action_params, condition_func_params)
 	end
@@ -993,6 +997,7 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.visual_loadout_extension = self._visual_loadout_extension
 	temp_table.weapon_extension = self
 	temp_table.action_place_component = self._action_place_component
+	temp_table.action_shoot_component = self._action_shoot_component
 	temp_table.alternate_fire_component = self._alternate_fire_read_component
 	temp_table.block_component = self._block_component
 	temp_table.character_state_component = self._character_state_component
@@ -1022,11 +1027,7 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 	local wielded_weapon = self:_wielded_weapon(inventory_component, self._weapons)
 	local actions = wielded_weapon.weapon_template.actions
 	local action_objects = wielded_weapon.actions
-
-	table.clear(action_params)
-
-	action_params.weapon = wielded_weapon
-	action_params.player_unit = self._unit
+	local action_params = self:_fill_action_params(wielded_weapon, self._unit)
 
 	self:update_weapon_special_implementation(fixed_frame)
 	self._action_handler:update_actions(fixed_frame, "weapon_action", condition_func_params, actions, action_objects, action_params)
@@ -1241,16 +1242,12 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 		inventory_slot_component.current_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.current_ammunition_reserve * capacity_modifier), 0, ammo_large_hard_limit)
 		inventory_slot_component.max_ammunition_reserve = math.clamp(math.floor(inventory_slot_component.max_ammunition_reserve * capacity_modifier), 0, ammo_large_hard_limit)
 
+		local num_clip_fields = NetworkConstants.ammunition_clip_array.max_size
 		local ammo_small_hard_limit = NetworkConstants.ammunition_small.max
-		local current_ammo_fields = PlayerCharacterConstants.current_ammo_clip_fields
-		local max_ammo_fields = PlayerCharacterConstants.max_ammo_clip_fields
 
-		for i = 1, #current_ammo_fields do
-			local current_field = current_ammo_fields[i]
-			local max_field = max_ammo_fields[i]
-
-			inventory_slot_component[current_field] = math.clamp(math.floor(inventory_slot_component[current_field] * clip_size_modifier), 0, ammo_small_hard_limit)
-			inventory_slot_component[max_field] = math.clamp(math.floor(inventory_slot_component[max_field] * clip_size_modifier), 0, ammo_small_hard_limit)
+		for i = 1, num_clip_fields do
+			inventory_slot_component.current_ammunition_clip[i] = math.clamp(math.floor(inventory_slot_component.current_ammunition_clip[i] * clip_size_modifier), 0, ammo_small_hard_limit)
+			inventory_slot_component.max_ammunition_clip[i] = math.clamp(math.floor(inventory_slot_component.max_ammunition_clip[i] * clip_size_modifier), 0, ammo_small_hard_limit)
 		end
 	end
 end
@@ -1338,12 +1335,11 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 		local base_clip = self._base_clip_by_slot[slot_name]
 
 		if base_clip then
-			local max_fields = PlayerCharacterConstants.max_ammo_clip_fields
+			local max_num_clips = NetworkConstants.ammunition_clip_array.max_size
 			local inventory_slot_component = slot.inventory_slot_component
 
-			for i = 1, #max_fields do
-				local max_field = max_fields[i]
-				local base_max_clip = base_clip[max_field]
+			for i = 1, max_num_clips do
+				local base_max_clip = base_clip[i]
 
 				if base_max_clip then
 					local clip_size = Ammo.max_ammo_in_clips(inventory_slot_component, i)
@@ -1691,6 +1687,13 @@ PlayerUnitWeaponExtension.action_input_is_currently_valid = function (self, comp
 	local condition_func_params = self:condition_func_params(wielded_slot)
 
 	return self._action_handler:action_input_is_currently_valid(component_name, actions, condition_func_params, current_fixed_t, action_input, used_input)
+end
+
+PlayerUnitWeaponExtension._fill_action_params = function (self, weapon, player_unit)
+	action_params_temp.weapon = weapon
+	action_params_temp.player_unit = player_unit
+
+	return action_params_temp
 end
 
 return PlayerUnitWeaponExtension

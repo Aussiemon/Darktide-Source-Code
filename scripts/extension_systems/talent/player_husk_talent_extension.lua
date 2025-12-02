@@ -72,7 +72,7 @@ PlayerHuskTalentExtension.extensions_ready = function (self, world, unit)
 end
 
 PlayerHuskTalentExtension.buff_template_tier = function (self, buff_template_name)
-	return self._buff_template_tiers[buff_template_name] or 1
+	return self._buff_template_tiers[buff_template_name]
 end
 
 PlayerHuskTalentExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
@@ -121,9 +121,8 @@ PlayerHuskTalentExtension._update_talents = function (self, talents)
 		local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
 		local player = self._player
 		local profile = player:profile()
-		local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
+		CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, talents)
 
 		special_rules = class_loadout.special_rules
 		buff_template_tiers = class_loadout.buff_template_tiers

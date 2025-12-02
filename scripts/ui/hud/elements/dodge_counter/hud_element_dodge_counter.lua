@@ -69,6 +69,7 @@ HudElementDodgeCounter._add_dodge_bar = function (self)
 	end
 
 	local new_bar = {
+		animation_id = nil,
 		status = starting_status,
 		widget_name = dodge_bar_widget_name,
 		widget = self:_create_widget(dodge_bar_widget_name, Definitions.dodge_bar_definition),

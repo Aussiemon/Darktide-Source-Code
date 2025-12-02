@@ -95,6 +95,23 @@ SweepTrail._update_trail_status = function (self, t, action_settings)
 		local end_offset = weapon_template.damage_window_end_sweep_trail_offset or 0
 		local damage_window_start = (action_settings.sweep_trail_window_start or action_settings.damage_window_start + start_offset) * time_scale
 		local damage_window_end = (action_settings.sweep_trail_window_end or action_settings.damage_window_end + end_offset) * time_scale
+
+		if action_settings.sweeps and #action_settings.sweeps > 1 then
+			local attachment_id = self:_get_attachment_id(action_settings)
+			local sweep_trail_window_start_id = "sweep_trail_window_start_" .. attachment_id
+			local sweep_trail_window_end_id = "sweep_trail_window_end_" .. attachment_id
+			local sweep_trail_window_start = action_settings[sweep_trail_window_start_id]
+			local sweep_trail_window_end = action_settings[sweep_trail_window_end_id]
+
+			if sweep_trail_window_start then
+				damage_window_start = sweep_trail_window_start * time_scale
+			end
+
+			if sweep_trail_window_end then
+				damage_window_start = sweep_trail_window_end * time_scale
+			end
+		end
+
 		local start_t = weapon_action_component.start_t or t
 		local action_time_offset = action_settings.action_time_offset or 0
 		local time_in_action = t - start_t + action_time_offset
@@ -125,6 +142,22 @@ SweepTrail._update_trail_status = function (self, t, action_settings)
 	_update_status(self._sweep_trail_components_3p, is_critical, is_powered, is_visible, visibility_changed, in_3p)
 
 	self._trail_visible = is_visible
+end
+
+SweepTrail._get_attachment_id = function (self, action_settings)
+	local sweeps = action_settings and action_settings.sweeps
+
+	if not sweeps then
+		return
+	end
+
+	for i = 1, #sweeps do
+		local attachment_id = sweeps[i].reference_attachment_id
+
+		if attachment_id and self._visual_loadout_extension:is_unit_part_of_attachment(self._unit_1p, self._slot_name, attachment_id) then
+			return attachment_id
+		end
+	end
 end
 
 SweepTrail._is_child_of_sweep_reference = function (self, action_settings)

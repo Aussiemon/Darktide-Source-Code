@@ -11,7 +11,6 @@ local BUFF_TARGETS = BuffSettings.targets
 local MIN_PROC_EVENTS_SIZE = BuffSettings.min_proc_events_size
 local MAX_PROC_EVENTS = BuffSettings.max_proc_events
 local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
-local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local BuffExtensionBase = class("BuffExtensionBase")
 local Unit_world_position = Unit.world_position
 local Unit_node = Unit.node
@@ -22,6 +21,7 @@ local RPCS = {
 	"rpc_remove_buff",
 	"rpc_buff_proc_set_active_time",
 	"rpc_buff_set_start_time",
+	"rpc_buff_set_extra_duration",
 	"rpc_add_buff_with_stacks",
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
@@ -82,8 +82,8 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		self._proc_events = Script.new_array(MAX_PROC_EVENTS * PROC_EVENTS_STRIDE)
 		self._proc_events_backup = Script.new_array(MAX_PROC_EVENTS * PROC_EVENTS_STRIDE)
 
-		for i = 1, MAX_PROC_EVENTS do
-			self._proc_event_param_tables[i] = {}
+		for ii = 1, MAX_PROC_EVENTS do
+			self._proc_event_param_tables[ii] = {}
 		end
 	else
 		self._proc_events = Script.new_array(MIN_PROC_EVENTS_SIZE * PROC_EVENTS_STRIDE)
@@ -164,12 +164,12 @@ BuffExtensionBase.hot_join_sync = function (self, unit, sender, channel)
 	ferror("Buff extension is using base implementation of hot_join_sync, it shouldn't")
 end
 
-BuffExtensionBase._update_buffs = function (self, dt, t)
+BuffExtensionBase._update_buffs = function (self, dt, t, fixed_frame)
 	local buffs = self._buffs
 	local portable_random = self._portable_random
 
 	for i = 1, #buffs do
-		buffs[i]:update(dt, t, portable_random)
+		buffs[i]:update(dt, t, portable_random, fixed_frame)
 	end
 
 	for index, buff_instance in pairs(self._buffs_by_index) do
@@ -241,7 +241,9 @@ BuffExtensionBase._update_proc_events = function (self, t)
 						self:_set_proc_active_start_time(server_index, t, skip_send_active_time_rpc)
 					end
 
-					if buff:remove_on_proc() then
+					if buff:remove_stack_on_proc() then
+						buff:request_remove_stack()
+					elseif buff:remove_on_proc() then
 						buff:force_finish()
 					end
 				end
@@ -382,7 +384,11 @@ BuffExtensionBase._next_local_index = function (self)
 	return local_index
 end
 
-BuffExtensionBase._add_buff = function (self, template, t, ...)
+BuffExtensionBase._add_buff = function (self, template, t, from_server_correction, ...)
+	if not self._is_server and template.predicted and self._buff_context.undergoing_server_correction and not from_server_correction then
+		ferror("[BuffExtensionBase] Client attempted to add a predicted buff %s during server correction", template.name)
+	end
+
 	local local_index = self:_next_local_index()
 	local template_name = template.name
 	local can_stack = not not template.max_stacks
@@ -397,7 +403,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			existing_buff_instance:add_stack()
 			self:_on_add_buff_stack(existing_buff_instance, previous_stack_count)
 
-			if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
+			if template.refresh_duration_on_stack or template.refresh_start_time_on_stack or template.refresh_duration_on_stacks_increased then
 				existing_buff_instance:set_start_time(t)
 				existing_buff_instance:refresh_func(t, previous_stack_count)
 				existing_buff_instance:set_need_to_sync_start_time(false)
@@ -447,8 +453,10 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			local weapon_template_name = target_weapon_template and target_weapon_template.name
 			local breed_name = self._buff_context.breed.name
 			local stack_count = template_context.stack_count
+			local source_player_buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+			local source_player_buff_keywords = source_player_buff_extension and source_player_buff_extension:keywords()
 
-			Managers.stats:record_private("hook_buff", source_player, breed_name, template_name, stack_count, weapon_template_name)
+			Managers.stats:record_private("hook_buff", source_player, breed_name, template_name, stack_count, weapon_template_name, source_player_buff_keywords)
 		end
 	end
 
@@ -503,11 +511,16 @@ BuffExtensionBase._handle_unique_buffs = function (self, new_template)
 end
 
 BuffExtensionBase._check_max_stacks_cap = function (self, template, t)
-	local max_stacks_cap = template.max_stacks_cap
 	local template_name = template.name
 	local buff_instance = self._stacking_buffs[template_name]
 
-	if not max_stacks_cap or not buff_instance then
+	if not buff_instance then
+		return true
+	end
+
+	local max_stacks_cap = buff_instance:max_stacks_cap()
+
+	if not max_stacks_cap then
 		return true
 	end
 
@@ -586,7 +599,7 @@ BuffExtensionBase._remove_buff = function (self, index, extension_destroyed)
 		buff_instance:remove_stack()
 		self:_on_remove_buff_stack(buff_instance, current_stack_count)
 
-		if template.refresh_duration_on_remove_stack then
+		if buff_instance:refresh_duration_on_remove_stack() then
 			local max_stacks = buff_instance:max_stacks()
 
 			if current_stack_count <= max_stacks then
@@ -1308,23 +1321,25 @@ BuffExtensionBase._clear_param_tables = function (self, number_of_elements_to_cl
 	self._param_tables_start_index_reference = (param_table_index + number_of_elements_to_clear - 1) % MAX_PROC_EVENTS + 1
 end
 
-BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_talent)
+BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, owner_unit_id, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_talent)
 	local template_name = NetworkLookup.buff_templates[buff_template_id]
 	local template = BuffTemplates[template_name]
 	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
-	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_talent", from_talent)
+	local owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
+	local index = self:_add_buff(template, t, false, "owner_unit", owner_unit, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_talent", from_talent)
 
 	self._buff_index_map[server_index] = index
 end
 
-BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_object_id, buff_template_id, server_index_array, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id)
+BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_object_id, buff_template_id, server_index_array, owner_unit_id, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id)
 	local template_name = NetworkLookup.buff_templates[buff_template_id]
 	local template = BuffTemplates[template_name]
 	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
+	local owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
 	local num_index = #server_index_array
 
 	if num_index == 0 then
@@ -1333,7 +1348,7 @@ BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_ob
 
 	for i = 1, num_index do
 		local server_index = server_index_array[i]
-		local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
+		local index = self:_add_buff(template, t, false, "owner_unit", owner_unit, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
 
 		self._buff_index_map[server_index] = index
 	end
@@ -1371,8 +1386,18 @@ BuffExtensionBase.rpc_buff_set_start_time = function (self, channel_id, game_obj
 	self:_set_start_time_from_rpc(index, start_time)
 end
 
+BuffExtensionBase.rpc_buff_set_extra_duration = function (self, channel_id, game_object_id, server_index, extra_duration)
+	local index = self._buff_index_map[server_index]
+
+	self:_set_extra_duration_from_rpc(index, extra_duration)
+end
+
 BuffExtensionBase._set_start_time_from_rpc = function (self, index, start_time)
 	ferror("Buff extension is using base implementation of _set_start_time_from_rpc, it shouldn't")
+end
+
+BuffExtensionBase._set_extra_duration_from_rpc = function (self, index, extra_duration)
+	ferror("Buff extension is using base implementation of _set_extra_duration_from_rpc, it shouldn't")
 end
 
 implements(BuffExtensionBase, BuffExtensionInterface)

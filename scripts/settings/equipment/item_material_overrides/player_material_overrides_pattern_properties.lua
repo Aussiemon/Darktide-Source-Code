@@ -582,6 +582,76 @@ local material_overrides = {
 			},
 		},
 	},
+	pattern_01_opacity_01 = {
+		property_overrides = {
+			pattern_1_opacity = {
+				0.5,
+			},
+		},
+	},
+	pattern_01_opacity_02 = {
+		property_overrides = {
+			pattern_1_opacity = {
+				0.797,
+			},
+		},
+	},
+	pattern_01_opacity_03 = {
+		property_overrides = {
+			pattern_1_opacity = {
+				0.8,
+			},
+		},
+	},
+	pattern_01_opacity_04 = {
+		property_overrides = {
+			pattern_1_opacity = {
+				0.83,
+			},
+		},
+	},
+	pattern_01_opacity_05 = {
+		property_overrides = {
+			pattern_1_opacity = {
+				1,
+			},
+		},
+	},
+	pattern_02_opacity_01 = {
+		property_overrides = {
+			pattern_2_opacity = {
+				0.5,
+			},
+		},
+	},
+	pattern_02_opacity_02 = {
+		property_overrides = {
+			pattern_2_opacity = {
+				0.797,
+			},
+		},
+	},
+	pattern_02_opacity_03 = {
+		property_overrides = {
+			pattern_2_opacity = {
+				0.8,
+			},
+		},
+	},
+	pattern_02_opacity_04 = {
+		property_overrides = {
+			pattern_2_opacity = {
+				0.83,
+			},
+		},
+	},
+	pattern_02_opacity_05 = {
+		property_overrides = {
+			pattern_2_opacity = {
+				1,
+			},
+		},
+	},
 }
 
 return material_overrides

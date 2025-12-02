@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_definitions.lua
 
+local Date = require("scripts/foundation/utilities/date")
 local HudElementMissionObjectiveFeedSettings = require("scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed_settings")
+local Promise = require("scripts/foundation/utilities/promise")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local header_size = HudElementMissionObjectiveFeedSettings.header_size
@@ -87,22 +87,6 @@ local scenegraph_definition = {
 		},
 	},
 }
-
-local function text_height(ui_renderer, text, style, optional_size, use_max_extents)
-	local text_options = UIFonts.get_font_options_by_style(style, {})
-
-	return UIRenderer.text_height(ui_renderer, text, style.font_type, style.font_size, optional_size, text_options)
-end
-
-local function color_copy(target, source, alpha)
-	target[1] = alpha or source[1]
-	target[2] = source[2]
-	target[3] = source[3]
-	target[4] = source[4]
-
-	return target
-end
-
 local alert_size = {
 	header_size[1] - 10,
 	30,
@@ -333,10 +317,6 @@ local function create_mission_objective_overarching(scenegraph_id)
 	local header_font_settings = UIFontSettings.hud_body
 	local drop_shadow = false
 	local header_font_color = HudElementMissionObjectiveFeedSettings.base_color
-	local icon_size = {
-		32,
-		32,
-	}
 	local bar_icon_size = {
 		24,
 		24,
@@ -563,45 +543,6 @@ local function create_mission_objective_overarching(scenegraph_id)
 		},
 		{
 			pass_type = "texture",
-			style_id = "hazard_above",
-			value = "content/ui/materials/patterns/diagonal_lines_pattern_01",
-			style = {
-				offset = {
-					0,
-					0,
-					1,
-				},
-				size = {
-					alert_size[1],
-					15,
-				},
-				base_color = UIHudSettings.color_tint_main_2,
-			},
-		},
-		{
-			pass_type = "texture",
-			style_id = "hazard_below",
-			value = "content/ui/materials/patterns/diagonal_lines_pattern_01",
-			style = {
-				horizontal_alignment = "left",
-				vertical_alignment = "bottom",
-				offset = {
-					0,
-					0,
-					1,
-				},
-				size = {
-					alert_size[1],
-					15,
-				},
-				color = UIHudSettings.color_tint_main_2,
-			},
-			visibility_function = function (content)
-				return content.category == "overarching" and not content.show_alert
-			end,
-		},
-		{
-			pass_type = "texture",
 			style_id = "overarching_background",
 			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
 			style = {
@@ -636,7 +577,23 @@ local function create_mission_objective_warning(scenegraph_id)
 				size = {
 					alert_size[1],
 				},
+				base_color = UIHudSettings.color_tint_main_2,
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "overarching_background",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
+			style = {
+				size = {
+					alert_size[1],
+				},
 				color = UIHudSettings.color_tint_main_2,
+				offset = {
+					0,
+					0,
+					0,
+				},
 			},
 		},
 	}
@@ -667,19 +624,59 @@ local live_event_title = UIWidget.create_definition({
 			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
 		},
 	},
+	{
+		pass_type = "text",
+		style_id = "timer",
+		value = "",
+		value_id = "timer",
+		style = {
+			drop_shadow = true,
+			font_size = 20,
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "top",
+			offset = {
+				0,
+				0,
+				6,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
+		},
+	},
 }, "live_event_text_area", nil, {
 	live_event_text_width,
 	32,
 }, nil, {
 	init = function (self, context, ui_renderer)
 		self.content.text = Localize(context.text)
-		self.content.size[2] = 8 + text_height(ui_renderer, self.content.text, self.style.text, {
+		self.content.size[2] = 8 + Text.text_height(ui_renderer, self.content.text, self.style.text, {
 			live_event_text_width,
-			9999,
 		})
+		self._resets_at = context.resets_at or {}
+
+		self:_update_timer()
+	end,
+	_update_timer = function (self)
+		local epoch_time = Managers.backend:get_server_time() / 1000
+		local min_seconds_until_reset
+
+		for _, time in ipairs(self._resets_at) do
+			local seconds_until_reset = Date.seconds_until_time(epoch_time, time)
+
+			if seconds_until_reset and (not min_seconds_until_reset or seconds_until_reset < min_seconds_until_reset) then
+				min_seconds_until_reset = seconds_until_reset
+			end
+		end
+
+		self.content.timer = min_seconds_until_reset and Text.format_time_span_localized(min_seconds_until_reset, true) or ""
+		self._hearthbeat = Promise.delay(1)
+
+		self._hearthbeat:next(callback(self, "_update_timer"))
 	end,
 	destroy = function (self)
-		return
+		if self._hearthbeat then
+			self._hearthbeat:cancel()
+		end
 	end,
 })
 local live_event_dynamic_description = UIWidget.create_definition({
@@ -762,9 +759,8 @@ local live_event_dynamic_description = UIWidget.create_definition({
 
 			if not condition or self:_evaluate(condition) then
 				self.content.text = Localize(entry.text)
-				self.content.size[2] = text_height(self._ui_renderer, self.content.text, self.style.text, {
+				self.content.size[2] = Text.text_height(self._ui_renderer, self.content.text, self.style.text, {
 					live_event_text_width,
-					9999,
 				})
 
 				return
@@ -1100,41 +1096,43 @@ local tug_o_war = UIWidget.create_definition({
 		self:_update_progress()
 	end,
 	_update_progress = function (self)
-		self.content.left_number = tostring(self.content.left_value)
-		self.content.right_number = tostring(self.content.right_value)
+		local content, style = self.content, self.style
 
-		local left_value = self.content.left_value
-		local right_value = self.content.right_value
+		content.left_number = Text.format_large_number(content.left_value, 4)
+		content.right_number = Text.format_large_number(content.right_value, 4)
 
-		if left_value == 0 and right_value == 0 then
+		local left_value = content.left_value
+		local right_value = content.right_value
+
+		if left_value + right_value == 0 then
 			left_value, right_value = 1, 1
 		end
 
-		local percent = left_value / (left_value + right_value)
+		local percent = math.clamp(left_value / (left_value + right_value), 0, 1)
 
-		self.style.bar.scale = {
+		style.bar.scale = {
 			percent,
 			1,
 		}
 
-		local cap_width = self.style.bar_cap.size[1]
+		local cap_width = style.bar_cap.size[1]
 
-		self.style.bar_cap.offset[1] = percent * (live_event_text_width - cap_width)
+		style.bar_cap.offset[1] = percent * (live_event_text_width - cap_width)
+		style.left_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		style.right_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		style.left_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		style.right_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		style.bar.color = HudElementMissionObjectiveFeedSettings.darkened_color
+		style.bar_background.color = HudElementMissionObjectiveFeedSettings.darkened_color
 
 		if percent > 0.5 then
-			self.style.left_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
-			self.style.right_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
-			self.style.left_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
-			self.style.right_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
-			self.style.bar.color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
-			self.style.bar_background.color = HudElementMissionObjectiveFeedSettings.darkened_color
-		else
-			self.style.left_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
-			self.style.right_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
-			self.style.left_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
-			self.style.right_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
-			self.style.bar.color = HudElementMissionObjectiveFeedSettings.darkened_color
-			self.style.bar_background.color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+			style.left_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+			style.left_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+			style.bar.color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
+		elseif percent < 0.5 then
+			style.right_team.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+			style.right_number.text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text
+			style.bar_background.color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar
 		end
 	end,
 })

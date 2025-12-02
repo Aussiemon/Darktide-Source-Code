@@ -37,13 +37,15 @@ AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_s
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
-	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._character_state_component = unit_data_extension:read_component("character_state")
-	self._recoil_component = unit_data_extension:read_component("recoil")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._recoil_component = unit_data_extension:read_component("recoil")
 	self._sway_component = unit_data_extension:read_component("sway")
+	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._weapon_extension = ScriptUnit.extension(owner_unit, "weapon_system")
 	self._integration_data = ProjectileIntegrationData.allocate_integration_data()
@@ -186,11 +188,13 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 		local recoil_template = weapon_extension:recoil_template()
 		local sway_template = weapon_extension:sway_template()
 		local movement_state_component = self._movement_state_component
+		local locomotion_component = self._locomotion_component
+		local inair_state_component = self._inair_state_component
 		local recoil_component = self._recoil_component
 		local sway_component = self._sway_component
 
-		start_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, start_rotation)
-		start_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, start_rotation)
+		start_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component, start_rotation)
+		start_rotation = Sway.apply_sway_rotation(sway_template, sway_component, start_rotation)
 	end
 
 	local aim_parameters = AimProjectile.aim_parameters(start_position, rotation, start_rotation, projectile_locomotion_template, throw_type, time_in_action)

@@ -83,23 +83,9 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 end
 
 DefaultPlayerOrientation.orientation_offset = function (self)
-	local recoil_component = self._recoil_component
-	local pitch_offset, yaw_offset = 0, 0
+	local yaw_offset, pitch_offset, roll_offset = Orientation.recoil_offset(self._orientation, self._min_pitch, self._max_pitch, self._weapon_extension, self._recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 
-	if recoil_component then
-		local recoil_template = self._weapon_extension:recoil_template()
-
-		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component)
-	end
-
-	local current_pitch = self._orientation.pitch
-	local min_pitch = self._min_pitch
-	local max_pitch = self._max_pitch
-	local clamped_pitch = math.clamp((current_pitch + pitch_offset + PI) % PI_2 - PI, min_pitch, max_pitch) % PI_2
-
-	pitch_offset = clamped_pitch - current_pitch
-
-	return yaw_offset, pitch_offset, 0
+	return yaw_offset, pitch_offset, roll_offset
 end
 
 return DefaultPlayerOrientation

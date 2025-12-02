@@ -101,6 +101,10 @@ local function _check_hit_zone_actor_index_boundaries(unit, hit_zone_lookup)
 end
 
 local function _hit_zone_tests(unit, breed, world)
+	if breed.no_hit_zones then
+		return
+	end
+
 	local hit_zone_lookup = HitZone.initialize_lookup(unit, breed.hit_zones)
 	local error_msg = "HitZoneTests failed for unit %s using breed %q. %s"
 	local s, m = _check_for_unassigned_actors(unit, world, hit_zone_lookup, breed)

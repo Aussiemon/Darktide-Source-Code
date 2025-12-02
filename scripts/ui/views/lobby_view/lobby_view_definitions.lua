@@ -479,7 +479,7 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				color = Color.golden_rod(255, true),
 				offset = {
-					-53,
+					0,
 					16,
 					11,
 				},
@@ -498,7 +498,7 @@ local widget_definitions = {
 				vertical_alignment = "top",
 				color = Color.black(255, true),
 				offset = {
-					-52,
+					1,
 					16,
 					10,
 				},
@@ -520,7 +520,7 @@ local widget_definitions = {
 				text_vertical_alignment = "top",
 				vertical_alignment = "top",
 				offset = {
-					0,
+					53,
 					21,
 					10,
 				},
@@ -743,8 +743,8 @@ for i = 1, 4 do
 				vertical_alignment = "top",
 				color = Color.golden_rod(255, true),
 				offset = {
-					16,
-					82,
+					32,
+					-5,
 					5,
 				},
 				size = {
@@ -764,12 +764,12 @@ for i = 1, 4 do
 				text_vertical_alignment = "top",
 				vertical_alignment = "top",
 				size = {
-					355,
+					326,
 					20,
 				},
 				offset = {
-					54,
-					87,
+					67,
+					0,
 					10,
 				},
 				text_color = Color.golden_rod(255, true),
@@ -786,12 +786,12 @@ for i = 1, 4 do
 				text_vertical_alignment = "top",
 				vertical_alignment = "top",
 				size = {
-					393,
+					361,
 					51,
 				},
 				offset = {
-					16,
-					120,
+					32,
+					20,
 					10,
 				},
 				text_color = {
@@ -869,7 +869,9 @@ local panel_definition = UIWidget.create_definition({
 				0,
 				2,
 			},
-			material_values = {},
+			material_values = {
+				texture_map = nil,
+			},
 			color = {
 				0,
 				255,
@@ -1103,6 +1105,7 @@ local legend_inputs = {
 		display_name = "loc_input_legend_inventory",
 		input_action = "lobby_open_inventory",
 		on_pressed_callback = "cb_on_inventory_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",

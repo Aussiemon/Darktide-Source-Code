@@ -302,9 +302,7 @@ function _validate_chain_actions(weapon_template, action_settings)
 	end
 
 	local kind = action_settings.kind
-	local make_ability_check = not _skip_ability_check_action_kinds[kind]
-
-	make_ability_check = make_ability_check and not action_settings.skip_ability_chain_action_check
+	local make_ability_check = not _skip_ability_check_action_kinds[kind] and not action_settings.skip_ability_chain_action_check
 
 	if is_weapon and make_ability_check then
 		if not has_grenade_ability then

@@ -77,7 +77,7 @@ ProjectileUnitBuffExtension.is_frame_unique_proc = function (self, event, unique
 end
 
 ProjectileUnitBuffExtension.current_stacks = function (self, buff_name)
-	return
+	return 0
 end
 
 ProjectileUnitBuffExtension.request_proc_event_param_table = function (self)
@@ -126,6 +126,10 @@ end
 
 ProjectileUnitBuffExtension.rpc_buff_set_start_time = function (self, channel_id, game_object_id, server_index, activation_frame)
 	ferror("ProjectileUnitBuffExtension can't start a buff")
+end
+
+ProjectileUnitBuffExtension.rpc_buff_set_extra_duration = function (self, channel_id, game_object_id, server_index, activation_frame)
+	ferror("ProjectileUnitBuffExtension can't add extra duration")
 end
 
 implements(ProjectileUnitBuffExtension, BuffExtensionInterface)

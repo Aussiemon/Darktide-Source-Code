@@ -67,7 +67,7 @@ BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scrat
 	local follow_vo_interval_t = action_data.follow_vo_interval_t
 
 	if follow_vo_interval_t then
-		scratchpad.next_follow_vo_t = t + follow_vo_interval_t
+		scratchpad.next_follow_vo_t = t
 	end
 
 	if action_data.effect_template then

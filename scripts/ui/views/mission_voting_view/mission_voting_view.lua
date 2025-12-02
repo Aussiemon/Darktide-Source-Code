@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/ui/views/mission_voting_view/mission_voting_view.lua
 
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Danger = require("scripts/utilities/danger")
+local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Definitions = require("scripts/ui/views/mission_voting_view/mission_voting_view_definitions")
 local Havoc = require("scripts/utilities/havoc")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -11,13 +11,13 @@ local MissionDetailsBlueprints = require("scripts/ui/views/mission_voting_view/m
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local Zones = require("scripts/settings/zones/zones")
+local Text = require("scripts/utilities/ui/text")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionVotingViewTestify = GameParameters.testify and require("scripts/ui/views/mission_voting_view/mission_voting_view_testify")
 
@@ -166,17 +166,6 @@ end
 
 MissionVotingView.on_exit = function (self)
 	MissionVotingView.super.on_exit(self)
-
-	local havoc_promise = self._havoc_promise
-
-	if havoc_promise then
-		if havoc_promise:is_pending() then
-			havoc_promise:cancel()
-		end
-
-		self._havoc_promise = nil
-	end
-
 	self:_destroy_renderer()
 
 	local presence_promise = self._presence_promise
@@ -188,6 +177,20 @@ MissionVotingView.on_exit = function (self)
 
 		self._presence_promise = nil
 	end
+end
+
+MissionVotingView.destroy = function (self)
+	local havoc_promise = self._havoc_promise
+
+	if havoc_promise then
+		if havoc_promise:is_pending() then
+			havoc_promise:cancel()
+		end
+
+		self._havoc_promise = nil
+	end
+
+	MissionVotingView.super.destroy(self)
 end
 
 MissionVotingView.update = function (self, dt, t, input_service)
@@ -331,7 +334,7 @@ MissionVotingView._update_timer_bar = function (self, dt)
 	local timer_bar_widget = self._widgets_by_name.timer_bar
 	local _, time_left_normalized = Managers.voting:time_left(self._voting_id)
 
-	time_left_normalized = time_left_normalized or 0
+	time_left_normalized = not time_left_normalized and 0 or math.clamp(time_left_normalized, 0, 1)
 
 	local style = timer_bar_widget.style.timer_bar
 	local bar_width, _ = self:_scenegraph_size(timer_bar_widget.scenegraph_id)
@@ -565,13 +568,13 @@ MissionVotingView._handle_gamepad_input = function (self, input_service, dt)
 	end
 end
 
-local function calculate_danger_level(mission_data)
+local function _calculate_danger_level(mission_data)
 	local danger_setting = Danger.danger_by_mission(mission_data)
 
 	return danger_setting.index, danger_setting.display_name
 end
 
-local function calculate_quickplay_danger_level(qp_string)
+local function _calculate_quickplay_danger_level(qp_string)
 	local danger_setting = Danger.danger_by_qp_code(qp_string)
 
 	return danger_setting.index, danger_setting.display_name
@@ -581,18 +584,9 @@ MissionVotingView._populate_quickplay_data = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local quickplay_settings = MissionDetailsBlueprints.quickplay_data
 	local zone_image_widget = widgets_by_name.zone_image
+	local zone_image_material_values = zone_image_widget.style.zone_image.material_values
 
-	zone_image_widget.content.texture = "content/ui/materials/missions/quickplay"
-	zone_image_widget.style.texture.uvs = {
-		{
-			0,
-			0.25,
-		},
-		{
-			1,
-			1,
-		},
-	}
+	zone_image_material_values.texture_map = "content/ui/textures/icons/zones/zone_quickplay"
 
 	local details_button = widgets_by_name.toggle_details_button
 
@@ -615,7 +609,7 @@ MissionVotingView._populate_quickplay_data = function (self)
 	danger_level_widget.style.danger_icon.visible = false
 	danger_level_widget.style.danger_icon_drop_shadow.visible = false
 
-	local danger_level, danger_level_text = calculate_quickplay_danger_level(self._backend_mission_id)
+	local danger_level, danger_level_text = _calculate_quickplay_danger_level(self._backend_mission_id)
 
 	self:_set_difficulty_icons(danger_level_widget.style, danger_level)
 
@@ -637,10 +631,9 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	local zone_settings = Zones[zone_id]
 	local zone_image_widget = self._widgets_by_name.zone_image
 	local zone_images = zone_settings.images
+	local zone_image_material_values = zone_image_widget.style.zone_image.material_values
 
-	if zone_images then
-		zone_image_widget.content.texture = zone_images.mission_vote
-	end
+	zone_image_material_values.texture_map = zone_images.mission_vote
 
 	local mission_info_widget = self._widgets_by_name.mission_info
 	local mission_info_widget_content = mission_info_widget.content
@@ -686,7 +679,7 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 		danger_level_widget.style.danger_icon.visible = false
 		danger_level_widget.style.danger_icon_drop_shadow.visible = false
 
-		local danger_level, danger_level_text = calculate_danger_level(mission_data)
+		local danger_level, danger_level_text = _calculate_danger_level(mission_data)
 
 		self:_set_difficulty_icons(danger_level_widget.style, danger_level)
 
@@ -1122,12 +1115,11 @@ end
 MissionVotingView._calc_text_size = function (self, widget, text_and_style_id)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local size = text_style.size or widget.content.size or {
 		self:_scenegraph_size(widget.scenegraph_id),
 	}
 
-	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+	return Text.text_size(self._ui_renderer, text, text_style, size)
 end
 
 return MissionVotingView

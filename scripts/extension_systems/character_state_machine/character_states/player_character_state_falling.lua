@@ -117,7 +117,7 @@ PlayerCharacterStateFalling.on_exit = function (self, unit, t, next_state)
 
 	local movement_state_component = self._movement_state_component
 	local was_crouching = movement_state_component.is_crouching
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t, false)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t, false)
 
 	if was_crouching and is_crouching then
 		animation_ext:anim_event("to_crouch")
@@ -133,7 +133,7 @@ PlayerCharacterStateFalling.on_exit = function (self, unit, t, next_state)
 	animation_ext:anim_event_1p("landing")
 
 	if next_state == "sliding" then
-		Crouch.enter(unit, self._first_person_extension, animation_ext, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+		Crouch.enter(unit, self._first_person_extension, animation_ext, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 	end
 
 	Fall.trigger_impact_sound(unit, fx_extension, constants, locomotion_component, inair_state_component)

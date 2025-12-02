@@ -3,10 +3,13 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
+local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
 local ActionToggleWeaponSpecial = class("ActionToggleWeaponSpecial", "ActionWeaponBase")
 
 ActionToggleWeaponSpecial.init = function (self, action_context, action_params, action_settings)
 	ActionToggleWeaponSpecial.super.init(self, action_context, action_params, action_settings)
+
+	self._visual_loadout_extension = ScriptUnit.has_extension(action_params.player_unit, "visual_loadout_system")
 end
 
 ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
@@ -26,6 +29,12 @@ ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
 			self:trigger_anim_event(activate_anim_event, activate_anim_event_3p)
 		end
 	end
+
+	local wieldable_slot_scripts = self._visual_loadout_extension:current_wielded_slot_scripts()
+
+	if wieldable_slot_scripts then
+		WieldableSlotScripts.on_weapon_special_toggle(wieldable_slot_scripts)
+	end
 end
 
 ActionToggleWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)
@@ -39,6 +48,16 @@ ActionToggleWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "manual_toggle")
 	elseif not should_deactivate and should_toggle then
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
+	end
+end
+
+ActionToggleWeaponSpecial.finish = function (self, reason, data, t, time_in_action, action_settings, next_action_params)
+	ActionToggleWeaponSpecial.super.finish(self, reason, data, t, time_in_action, action_settings, next_action_params)
+
+	local wieldable_slot_scripts = self._visual_loadout_extension:current_wielded_slot_scripts()
+
+	if wieldable_slot_scripts then
+		WieldableSlotScripts.on_weapon_special_toggle_finished(wieldable_slot_scripts, reason)
 	end
 end
 

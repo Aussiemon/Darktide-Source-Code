@@ -16,6 +16,7 @@ SplineFollowerExtension.init = function (self, extension_init_context, unit, ext
 	self._spline_follower_system = Managers.state.extension:system("spline_follower_system")
 	self._is_moving = false
 	self._objective_name = nil
+	self._objective_group = nil
 	self._connect_spline_distance = nil
 	self._follow_unit_default_speed = 0
 	self._follow_unit_default_acceleration = 0
@@ -243,17 +244,18 @@ SplineFollowerExtension._init_movement_spline = function (self, world, unit, spl
 	return spline_curve
 end
 
-SplineFollowerExtension.follow_spline = function (self, name)
-	self._objective_name = name
+SplineFollowerExtension.follow_spline = function (self, objective_name, group_id)
+	self._objective_name = objective_name
+	self._objective_group = group_id
 
 	local current_spline_index = self._current_spline_index
 	local spline_follower_system = self._spline_follower_system
 
-	if spline_follower_system:has_connected_spline(name, current_spline_index) then
-		local spline = spline_follower_system:get_connected_spline(name, current_spline_index)
+	if spline_follower_system:has_objective_connected_spline(objective_name, group_id, current_spline_index) then
+		local spline = spline_follower_system:get_objective_connected_spline(objective_name, group_id, current_spline_index)
 
 		current_spline_index = current_spline_index + 1
-		self._last_spline = not spline_follower_system:has_connected_spline(name, current_spline_index)
+		self._last_spline = not spline_follower_system:has_objective_connected_spline(objective_name, group_id, current_spline_index)
 
 		local unit = self._unit
 		local follower_unit_position = Unit.world_position(unit, 1)
@@ -293,7 +295,11 @@ SplineFollowerExtension.objective_name = function (self)
 	return self._objective_name
 end
 
-SplineFollowerExtension.hot_join_sync = function (self, current_spline_index, is_moving, objective_name)
+SplineFollowerExtension.objective_group_id = function (self)
+	return self._objective_group
+end
+
+SplineFollowerExtension.hot_join_sync = function (self, current_spline_index, is_moving, objective_name, group_id)
 	if current_spline_index > 1 then
 		local position, rotation = self:_position_rotation_from_game_object()
 		local unit = self._unit
@@ -304,7 +310,7 @@ SplineFollowerExtension.hot_join_sync = function (self, current_spline_index, is
 		self._current_spline_index = is_moving and current_spline_index - 1 or current_spline_index
 
 		if is_moving then
-			self:follow_spline(objective_name)
+			self:follow_spline(objective_name, group_id)
 		end
 	end
 end

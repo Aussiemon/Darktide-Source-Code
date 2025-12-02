@@ -39,6 +39,10 @@ local smoldering_red = {
 	0.02,
 	0.8,
 }
+local toxin_green = {
+	0.15,
+	0.5,
+}
 local flash_quick = {
 	0.35,
 	0.35,
@@ -85,6 +89,36 @@ wounds_templates.laser = {
 					5.25,
 				},
 				color_brightness = laser_red,
+				duration = linger_medium,
+			},
+		},
+	},
+}
+wounds_templates.needle = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					0,
+					5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_light,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					5,
+					5.25,
+				},
+				color_brightness = toxin_green,
 				duration = linger_medium,
 			},
 		},
@@ -458,6 +492,108 @@ wounds_templates.chain_heavy = {
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick,
+			},
+		},
+	},
+}
+wounds_templates.chain_toxin = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_green,
+				duration = linger_medium,
 			},
 		},
 	},
@@ -1351,6 +1487,7 @@ wounds_templates.chainsword = table.clone(wounds_templates.chain_light)
 wounds_templates.chainsword_sawing = table.clone(wounds_templates.chain_light)
 wounds_templates.chainaxe = table.clone(wounds_templates.chain_light)
 wounds_templates.chainaxe_sawing = table.clone(wounds_templates.chain_light)
+wounds_templates.saw = table.clone(wounds_templates.chain_toxin)
 wounds_templates.thunder_hammer = table.clone(wounds_templates.blunt)
 wounds_templates.thunder_hammer_active = table.clone(wounds_templates.energy_blunt)
 wounds_templates.power_maul = table.clone(wounds_templates.shock_blunt)
@@ -1374,6 +1511,7 @@ wounds_templates.ogryn_shovel = table.clone(wounds_templates.blunt)
 wounds_templates.ogryn_club = table.clone(wounds_templates.blunt)
 wounds_templates.heavy_stubber = table.clone(wounds_templates.stubber)
 wounds_templates.shovel = table.clone(wounds_templates.blunt)
+wounds_templates.needle = table.clone(wounds_templates.needle)
 
 for template_name, template in pairs(wounds_templates) do
 	template.name = template_name

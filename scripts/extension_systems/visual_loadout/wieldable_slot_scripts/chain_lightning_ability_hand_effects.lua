@@ -45,8 +45,17 @@ ChainLightningAbilityHandEffects.init = function (self, context, slot, weapon_te
 	self._first_person_unit = context.first_person_unit
 	self._fx_sources = fx_sources
 	self._is_in_first_person = nil
-	self._cage_particle_ids = {}
-	self._charge_particle_ids = {}
+	self._cage_particle_ids = {
+		left = nil,
+		right = nil,
+	}
+	self._charge_particle_ids = {
+		index = nil,
+		middle = nil,
+		pinky = nil,
+		ring = nil,
+		thumb = nil,
+	}
 
 	local owner_unit = context.owner_unit
 

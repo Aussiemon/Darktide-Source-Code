@@ -34,6 +34,12 @@ AchievementWeaponGroups.weapons = {
 		pattern = "combatsword_p3",
 	},
 	{
+		pattern = "crowbar_p1",
+	},
+	{
+		pattern = "dual_shivs_p1",
+	},
+	{
 		pattern = "forcesword_p1",
 	},
 	{
@@ -46,10 +52,10 @@ AchievementWeaponGroups.weapons = {
 		pattern = "powermaul_p2",
 	},
 	{
-		pattern = "powermaul_2h_p1",
+		pattern = "powermaul_shield_p1",
 	},
 	{
-		pattern = "powermaul_shield_p1",
+		pattern = "powermaul_2h_p1",
 	},
 	{
 		pattern = "powersword_p1",
@@ -59,6 +65,9 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "powersword_2h_p1",
+	},
+	{
+		pattern = "saw_p1",
 	},
 	{
 		pattern = "thunderhammer_2h_p1",
@@ -106,6 +115,12 @@ AchievementWeaponGroups.weapons = {
 		pattern = "bolter_p1",
 	},
 	{
+		pattern = "dual_autopistols_p1",
+	},
+	{
+		pattern = "dual_stubpistols_p1",
+	},
+	{
 		pattern = "flamer_p1",
 	},
 	{
@@ -119,6 +134,9 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "forcestaff_p4",
+	},
+	{
+		pattern = "needlepistol_p1",
 	},
 	{
 		pattern = "laspistol_p1",

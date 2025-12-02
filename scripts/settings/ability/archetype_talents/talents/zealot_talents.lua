@@ -88,7 +88,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_bolstering_prayer = {
-			description = "loc_talent_zealot_bolstering_prayer_combined_description",
+			description = "loc_talent_zealot_bolstering_prayer_variant_two_description",
 			display_name = "loc_talent_zealot_bolstering_prayer",
 			large_icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_combat",
 			name = "Bolstering Prayer",
@@ -442,13 +442,7 @@ local archetype_talents = {
 				},
 				duration = {
 					format_type = "number",
-					find_value = {
-						buff_template_name = "zealot_invisibility_increased_duration",
-						find_value_type = "buff_template",
-						path = {
-							"duration",
-						},
-					},
+					value = 2,
 				},
 				buff_duration = {
 					format_type = "number",
@@ -585,10 +579,6 @@ local archetype_talents = {
 					format_type = "percentage",
 					value = talent_settings.zealot_leave_stealth_toughness_regen.toughness_to_restore,
 				},
-				duration = {
-					format_type = "value",
-					value = talent_settings.zealot_leave_stealth_toughness_regen.damage_reduction_duration,
-				},
 				dr = {
 					format_type = "percentage",
 					prefix = "+",
@@ -596,6 +586,10 @@ local archetype_talents = {
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
 					end,
+				},
+				duration = {
+					format_type = "value",
+					value = talent_settings.zealot_leave_stealth_toughness_regen.damage_reduction_duration,
 				},
 				talent_name = {
 					format_type = "loc_string",
@@ -2372,12 +2366,6 @@ local archetype_talents = {
 				buff_template_name = "zealot_sprint_improvements",
 				identifier = "zealot_sprint_improvements",
 			},
-		},
-		zealot_weakspot_kills_restore_dodge = {
-			description = "loc_talent_zealot_weakspot_kills_restore_dodge_desc",
-			display_name = "loc_talent_zealot_backstabs_increase_backstab_damage",
-			name = "",
-			format_values = {},
 		},
 		zealot_push_attacks_attack_speed = {
 			description = "loc_talent_zealot_push_attacks_attack_speed_desc",

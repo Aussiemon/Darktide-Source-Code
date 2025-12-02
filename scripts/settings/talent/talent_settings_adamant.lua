@@ -199,6 +199,8 @@ local talent_settings = {
 			blitz_replenish_time = 60,
 			damage = 0.1,
 			extra_max_amount_of_grenades = 1,
+			grenade_blitz_replenish_time = 45,
+			mine_blitz_replenish_time = 90,
 			tdr = -0.15,
 		},
 		damage_reduction_after_elite_kill = {

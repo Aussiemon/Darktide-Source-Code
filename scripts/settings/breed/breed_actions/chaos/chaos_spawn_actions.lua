@@ -24,7 +24,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		change_target_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -61,6 +64,7 @@ local action_data = {
 		landing_duration = 0.6944444444444444,
 		push_enemies_power_level = 2000,
 		push_enemies_radius = 2,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -115,7 +119,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -128,7 +135,10 @@ local action_data = {
 				sign = -1,
 				rad = math.pi / 2,
 			},
-			walk_start_fwd = {},
+			walk_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			walk_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -558,7 +568,10 @@ local action_data = {
 			},
 		},
 		anim_data = {
-			attack_grabbed_throw = {},
+			attack_grabbed_throw = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_grabbed_throw_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -668,6 +681,7 @@ local action_data = {
 		push_enemies_include_target_unit = true,
 		push_enemies_power_level = 2000,
 		push_enemies_radius = 2.25,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -696,7 +710,10 @@ local action_data = {
 			attack_turn_right = 0.4,
 		},
 		melee_rotation_anim_data = {
-			attack_melee_combo = {},
+			attack_melee_combo = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_turn_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -836,19 +853,23 @@ local action_data = {
 		attack_override_damage_data = {
 			attack_melee_combo = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 				[4] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_melee_combo_2 = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_melee_combo_3 = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
@@ -864,11 +885,13 @@ local action_data = {
 			},
 			attack_turn_left = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_turn_right = {
 				{
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
@@ -975,6 +998,7 @@ local action_data = {
 		push_enemies_include_target_unit = true,
 		push_enemies_power_level = 2000,
 		push_enemies_radius = 2.25,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -1003,7 +1027,10 @@ local action_data = {
 			attack_turn_right = 0.4,
 		},
 		melee_rotation_anim_data = {
-			attack_melee_combo = {},
+			attack_melee_combo = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_turn_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -1143,19 +1170,23 @@ local action_data = {
 		attack_override_damage_data = {
 			attack_melee_combo = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 				[4] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_melee_combo_2 = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_melee_combo_3 = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
@@ -1171,11 +1202,13 @@ local action_data = {
 			},
 			attack_turn_left = {
 				[2] = {
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
 			attack_turn_right = {
 				{
+					override_damage_profile = nil,
 					override_damage_type = damage_types.minion_monster_blunt,
 				},
 			},
@@ -1431,6 +1464,7 @@ local action_data = {
 		stagger_immune = true,
 	},
 	smash_obstacle = {
+		damage_type = nil,
 		rotation_duration = 0.1,
 		attack_anim_events = {
 			"attack_melee_claw",
@@ -1463,7 +1497,10 @@ local action_data = {
 			right = "turn_right",
 		},
 		start_move_anim_data = {
-			walk_fwd = {},
+			walk_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			turn_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -1481,11 +1518,13 @@ local action_data = {
 			turn_bwd = 0.13333333333333333,
 			turn_left = 0.1,
 			turn_right = 0.1,
+			walk_fwd = nil,
 		},
 		start_rotation_durations = {
 			turn_bwd = 0.4666666666666667,
 			turn_left = 0.5,
 			turn_right = 0.5,
+			walk_fwd = nil,
 		},
 		alerted_durations = {
 			turn_bwd = 0.6666666666666666,

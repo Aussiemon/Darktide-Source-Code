@@ -645,7 +645,7 @@ weapon_template.breed_anim_state_machine_1p = {
 	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
 }
 weapon_template.alternate_fire_settings = {
-	spread_template = "psyker_smite",
+	spread_template = "no_spread",
 	start_anim_event = "attack_charge",
 	stop_anim_event = "attack_charge_cancel",
 	action_movement_curve = {
@@ -676,7 +676,7 @@ weapon_template.alternate_fire_settings = {
 		start_modifier = 1,
 	},
 }
-weapon_template.spread_template = "psyker_smite"
+weapon_template.spread_template = "no_spread"
 weapon_template.ammo_template = "no_ammo"
 weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
@@ -700,7 +700,7 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "psyker_smite"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/smite"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_psyker"
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"

@@ -14,8 +14,8 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 	SplineFollowerSystem.super.init(self, context, system_init_data, ...)
 
 	self._is_server = context.is_server
-	self._splines_by_name = {}
-	self._spline_path_indices_by_name = {}
+	self._objective_splines = {}
+	self._objective_spline_path_indices = {}
 	self._start_spline_indices = {}
 	self._spline_connection_radius = LevelEventSettings.spline_follower.spline_connection_radius
 	self._seed = self._is_server and system_init_data.level_seed or nil
@@ -29,7 +29,7 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 end
 
 SplineFollowerSystem.on_gameplay_post_init = function (self, level)
-	self:_setup_splines(level)
+	self:_setup_splines()
 
 	if self._is_server then
 		self:_setup_spline_paths()
@@ -52,9 +52,10 @@ SplineFollowerSystem.hot_join_sync = function (self, sender, channel)
 		local current_spline_index = extension:current_spline_index()
 		local is_moving = extension:is_moving()
 		local objective_name = extension:objective_name()
+		local objective_group_id = extension:objective_group_id()
 		local objective_name_id = objective_name and NetworkLookup.mission_objective_names[objective_name] or 1
 
-		RPC.rpc_spline_follower_hot_join_sync(channel, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id)
+		RPC.rpc_spline_follower_hot_join_sync(channel, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id, objective_group_id)
 	end
 end
 
@@ -66,14 +67,23 @@ SplineFollowerSystem.update = function (self, unit, dt, t)
 	end
 end
 
-SplineFollowerSystem._setup_splines = function (self, level)
+SplineFollowerSystem._setup_splines = function (self)
 	local spline_group_system = Managers.state.extension:system("spline_group_system")
-	local spline_names_by_objective_name = spline_group_system:spline_names()
+	local spline_names_by_level = spline_group_system:spline_names()
+	local objective_splines = self._objective_splines
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-	for objective_name, spline_names in pairs(spline_names_by_objective_name) do
-		local splines = self:_retrieve_splines_from_level(spline_names, level)
+	for level, spline_names_by_objective_name in pairs(spline_names_by_level) do
+		local objective_group = mission_objective_system:get_objective_group_id_from_level(level)
+		local group_splines = objective_splines[objective_group] or {}
 
-		self._splines_by_name[objective_name] = splines
+		objective_splines[objective_group] = group_splines
+
+		for objective_name, spline_names in pairs(spline_names_by_objective_name) do
+			local splines = self:_retrieve_splines_from_level(spline_names, level)
+
+			group_splines[objective_name] = splines
+		end
 	end
 end
 
@@ -96,22 +106,28 @@ SplineFollowerSystem._retrieve_splines_from_level = function (self, spline_names
 	return splines
 end
 
-local TEMP_KEYS = {}
+local TEMP_GROUP_KEYS = {}
+local TEMP_NAME_KEYS = {}
 
 SplineFollowerSystem._setup_spline_paths = function (self)
-	local splines = self._splines_by_name
+	local splines = self._objective_splines
 	local seed = self._seed
-	local spline_path_indices_by_name = self._spline_path_indices_by_name
+	local objective_spline_path_indices = self._objective_spline_path_indices
 
-	for objective_name, spline in table.sorted(splines, TEMP_KEYS) do
-		local graph, start_spline_indices = self:_setup_graph_with_connected_splines(spline)
+	for objective_group, spline_group in table.sorted(splines, TEMP_GROUP_KEYS) do
+		local group_spline_path_indices = objective_spline_path_indices[objective_group] or {}
 
-		spline_path_indices_by_name[objective_name], seed = self:_new_random_spline_path_index(graph, start_spline_indices, seed)
+		objective_spline_path_indices[objective_group] = group_spline_path_indices
+
+		for objective_name, spline in table.sorted(spline_group, TEMP_NAME_KEYS) do
+			local graph, start_spline_indices = self:_setup_graph_with_connected_splines(spline)
+
+			group_spline_path_indices[objective_name], seed = self:_new_random_spline_path_index(graph, start_spline_indices, seed)
+		end
 	end
 
-	self._spline_path_indices_by_name = spline_path_indices_by_name
-
-	table.clear(TEMP_KEYS)
+	table.clear(TEMP_GROUP_KEYS)
+	table.clear(TEMP_NAME_KEYS)
 end
 
 SplineFollowerSystem._setup_graph_with_connected_splines = function (self, splines)
@@ -189,13 +205,21 @@ SplineFollowerSystem._next_random_spline_index = function (self, spline_indices,
 	return new_seed, spline_indices[rnd_num]
 end
 
-SplineFollowerSystem.has_spline_path = function (self, name)
-	return self._spline_path_indices_by_name[name] and true or false
+SplineFollowerSystem.has_objective_spline_path = function (self, objective_name, group_id)
+	local group = self._objective_spline_path_indices[group_id]
+
+	if not group then
+		return false
+	end
+
+	return group[objective_name] and true or false
 end
 
-SplineFollowerSystem.spline_path_start_position_and_rotation = function (self, name)
-	local spline_path_indices = self._spline_path_indices_by_name[name]
-	local splines = self._splines_by_name[name]
+SplineFollowerSystem.objective_spline_path_start_position_and_rotation = function (self, objective_name, group_id)
+	local indice_group = self._objective_spline_path_indices[group_id]
+	local spline_path_indices = indice_group[objective_name]
+	local spline_group = self._objective_splines[group_id]
+	local splines = spline_group[objective_name]
 	local connected_spline = spline_path_indices[1]
 	local spline = splines[connected_spline]
 	local first_pos, second_pos = spline[1]:unbox(), spline[2]:unbox()
@@ -206,9 +230,11 @@ SplineFollowerSystem.spline_path_start_position_and_rotation = function (self, n
 	return first_pos, rotation
 end
 
-SplineFollowerSystem.spline_path_end_positions = function (self, name)
-	local spline_path_indices = self._spline_path_indices_by_name[name]
-	local splines = self._splines_by_name[name]
+SplineFollowerSystem.objective_spline_path_end_positions = function (self, objective_name, group_id)
+	local indice_group = self._objective_spline_path_indices[group_id]
+	local spline_path_indices = indice_group[objective_name]
+	local spline_group = self._objective_splines[group_id]
+	local splines = spline_group[objective_name]
 	local spline_path_end_positions = {}
 
 	for i = 1, #spline_path_indices do
@@ -221,8 +247,9 @@ SplineFollowerSystem.spline_path_end_positions = function (self, name)
 	return spline_path_end_positions
 end
 
-SplineFollowerSystem.has_connected_spline = function (self, name, spline_index)
-	local spline_path_indices = self._spline_path_indices_by_name[name]
+SplineFollowerSystem.has_objective_connected_spline = function (self, objective_name, group_id, spline_index)
+	local group = self._objective_spline_path_indices[group_id]
+	local spline_path_indices = group[objective_name]
 
 	if spline_index <= #spline_path_indices then
 		return true
@@ -231,9 +258,11 @@ SplineFollowerSystem.has_connected_spline = function (self, name, spline_index)
 	return false
 end
 
-SplineFollowerSystem.get_connected_spline = function (self, name, spline_index)
-	local spline_path_indices = self._spline_path_indices_by_name[name]
-	local splines = self._splines_by_name[name]
+SplineFollowerSystem.get_objective_connected_spline = function (self, objective_name, group_id, spline_index)
+	local indice_group = self._objective_spline_path_indices[group_id]
+	local spline_path_indices = indice_group[objective_name]
+	local spline_group = self._objective_splines[group_id]
+	local splines = spline_group[objective_name]
 
 	if spline_index <= #spline_path_indices then
 		local connected_spline = spline_path_indices[spline_index]
@@ -249,12 +278,12 @@ SplineFollowerSystem.rpc_spline_follower_system_seed_sync = function (self, chan
 	self:_setup_spline_paths()
 end
 
-SplineFollowerSystem.rpc_spline_follower_hot_join_sync = function (self, channel_id, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id)
+SplineFollowerSystem.rpc_spline_follower_hot_join_sync = function (self, channel_id, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id, objective_group_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local unit_extension = self._unit_to_extension_map[unit]
 	local objective_name = is_moving and NetworkLookup.mission_objective_names[objective_name_id] or ""
 
-	unit_extension:hot_join_sync(current_spline_index, is_moving, objective_name)
+	unit_extension:hot_join_sync(current_spline_index, is_moving, objective_name, objective_group_id)
 end
 
 return SplineFollowerSystem

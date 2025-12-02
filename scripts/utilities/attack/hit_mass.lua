@@ -11,12 +11,28 @@ local _target_breed, _hit_mass_from_breed, _hit_mass_from_object
 
 HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot, is_critical_strike, attack_type)
 	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 	local use_reduced_hit_mass = attacker_buff_extension and attacker_buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local hit_mass
 	local breed = _target_breed(target_unit)
 
 	if breed then
 		hit_mass = _hit_mass_from_breed(target_unit, breed, use_reduced_hit_mass, attacker_unit)
+
+		if target_buff_extension then
+			local stat_buffs = target_buff_extension:stat_buffs()
+			local hit_mass_multiplier = stat_buffs.hit_mass_multiplier or 1
+			local hit_mass_multiplier_vs_melee = stat_buffs.hit_mass_multiplier_vs_melee or 1
+			local hit_mass_multiplier_vs_ranged = stat_buffs.hit_mass_multiplier_vs_ranged or 1
+
+			if attack_type == attack_types.melee then
+				hit_mass = hit_mass * hit_mass_multiplier_vs_melee
+			elseif attack_type == attack_types.ranged then
+				hit_mass = hit_mass * hit_mass_multiplier_vs_ranged
+			end
+
+			hit_mass = hit_mass * hit_mass_multiplier
+		end
 	else
 		hit_mass = _hit_mass_from_object(target_unit)
 	end

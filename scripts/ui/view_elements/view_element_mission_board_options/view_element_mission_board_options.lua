@@ -7,11 +7,10 @@ local WalletSettings = require("scripts/settings/wallet_settings")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local DropdownPassTemplates = require("scripts/ui/pass_templates/dropdown_pass_templates")
 local CheckboxPassTemplates = require("scripts/ui/pass_templates/checkbox_pass_templates")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ViewElemenMissionBoardOptions = class("ViewElemenMissionBoardOptions", "ViewElementBase")
 local widget_update_functions = {
@@ -616,7 +615,10 @@ ViewElemenMissionBoardOptions.update = function (self, dt, t, input_service)
 		local is_active = hotspot.is_focused or hotspot.is_selected or hotspot.is_hover or content.exclusive_focus
 
 		if not is_active then
-			self._tooltip_data = {}
+			self._tooltip_data = {
+				text = nil,
+				widget = nil,
+			}
 			self._widgets_by_name.tooltip.content.visible = false
 		end
 	end
@@ -806,11 +808,10 @@ ViewElemenMissionBoardOptions._set_tooltip_data = function (self, widget)
 		local text_style = self._widgets_by_name.tooltip.style.text
 		local x_pos = starting_point[1] + widget.offset[1]
 		local width = widget.content.size[1] * 0.5
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, text_height = UIRenderer.text_size(self._ui_default_renderer, localized_text, text_style.font_type, text_style.font_size, {
+		local text_height = Text.text_height(self._ui_default_renderer, localized_text, text_style, {
 			width,
 			0,
-		}, text_options)
+		})
 		local height = text_height
 
 		self._widgets_by_name.tooltip.content.visible = true

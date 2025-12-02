@@ -7,6 +7,8 @@ local replenish_types = ToughnessSettings.replenish_types
 local gunlugger_talent_settings = TalentSettings.ogryn_1
 
 weapon_toughness_templates.default = {
+	optional_on_depleted_function_name_override = nil,
+	optional_on_hit_function_name_override = nil,
 	regeneration_delay_modifier = {
 		lerp_basic = 1,
 		lerp_perfect = 0,
@@ -30,6 +32,7 @@ weapon_toughness_templates.default = {
 weapon_toughness_templates.auspex = {
 	melee_damage_modifier = 0.25,
 	optional_on_depleted_function_name_override = "block",
+	optional_on_hit_function_name_override = nil,
 	toughness_damage_modifier = 0.5,
 	regeneration_delay_modifier = {
 		lerp_basic = 1,
@@ -54,6 +57,7 @@ weapon_toughness_templates.auspex = {
 weapon_toughness_templates.luggable = {
 	melee_damage_modifier = 0.25,
 	optional_on_depleted_function_name_override = "block",
+	optional_on_hit_function_name_override = nil,
 	toughness_damage_modifier = 1,
 	regeneration_delay_modifier = {
 		lerp_basic = 2,
@@ -76,6 +80,8 @@ weapon_toughness_templates.luggable = {
 	},
 }
 weapon_toughness_templates.assault = {
+	optional_on_depleted_function_name_override = nil,
+	optional_on_hit_function_name_override = nil,
 	regeneration_delay_modifier = {
 		lerp_basic = 1,
 		lerp_perfect = 0,

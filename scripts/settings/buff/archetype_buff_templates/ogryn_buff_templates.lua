@@ -4,6 +4,7 @@ local Action = require("scripts/utilities/action/action")
 local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
@@ -16,7 +17,6 @@ local ExplosionTemplates = require("scripts/settings/damage/explosion_templates"
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local PlayerUnitAction = require("scripts/extension_systems/visual_loadout/utilities/player_unit_action")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
@@ -1448,23 +1448,21 @@ templates.ogryn_cooldown_on_elite_kills_buff = {
 			return
 		end
 
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
+	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
 		end
 
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
-		end
-
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings_2.coop_3.increased_cooldown_regeneration)
 		end
@@ -2081,19 +2079,25 @@ templates.ogryn_no_ammo_consumption_passive_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings_1.spec_passive_1.duration,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings_1.spec_passive_1.increased_cooldown_regeneration)
 		end
@@ -2334,10 +2338,6 @@ templates.ogryn_regen_toughness_on_braced = {
 	hud_priority = 4,
 	predicted = false,
 	update_func = function (template_data, template_context, dt, t)
-		if not template_context.is_server then
-			return
-		end
-
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
@@ -2345,7 +2345,7 @@ templates.ogryn_regen_toughness_on_braced = {
 
 		template_data.braced = braced
 
-		if braced then
+		if template_context.is_server and braced then
 			Toughness.replenish_percentage(unit, talent_settings_1.defensive_3.braced_toughness_regen * dt)
 		end
 	end,
@@ -3130,7 +3130,7 @@ local function dodge_update(template_data, template_context)
 		local hit_unit = Actor.unit(hit_actor)
 		local unit_data_extension = hit_unit and ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()
-		local invalid = not breed or not breed.tags or breed.tags.elite or breed.tags.ogryn or breed.tags.special or breed.tags.monster
+		local invalid = not breed or not breed.tags or breed.tags.elite or breed.tags.special or not Breed.human_sized(breed)
 
 		if not invalid and template_data.side_system:is_enemy(unit, hit_unit) and not hit_enemy_units[hit_unit] then
 			local hit_position = POSITION_LOOKUP[hit_unit]

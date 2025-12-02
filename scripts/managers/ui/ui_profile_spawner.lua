@@ -3,11 +3,13 @@
 local Breeds = require("scripts/settings/breed/breeds")
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemSlotUtils = require("scripts/utilities/item_slot_utils")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local Promise = require("scripts/foundation/utilities/promise")
 local UIProfileSpawner = class("UIProfileSpawner")
 local available_companions = {
 	companion_dog = "slot_companion_gear_full",
@@ -15,6 +17,7 @@ local available_companions = {
 local COMPANION_SLOTS_BY_BREED = {}
 local COMPANION_BREED_BY_SLOT = {}
 local COMPANION_SLOTS = {}
+local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
 
 for breed, main_slot in pairs(available_companions) do
 	local slot_depedencies = PlayerCharacterConstants.slot_configuration[main_slot].slot_dependencies
@@ -52,6 +55,8 @@ UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spaw
 	else
 		self._force_highest_lod_step = force_highest_lod_step
 	end
+
+	self._stream_promises = {}
 
 	self:reset()
 end
@@ -408,67 +413,111 @@ UIProfileSpawner._assign_face_state_machine = function (self, loadout, slots, fa
 	end
 end
 
-UIProfileSpawner._change_slot_item = function (self, slot_id, item, loadout, visual_loadout)
-	local character_spawn_data = self._character_spawn_data
-	local loading_profile_data = self._loading_profile_data
-	local use_loader_version = loading_profile_data ~= nil
-	local loading_items = use_loader_version and loading_profile_data.loading_items or character_spawn_data.loading_items
+local function _check_dirty_children_recursive(changed_items, slot_id, slot_item_or_attachment, visual_slot_ids, depth)
+	depth = depth or 0
 
-	loading_items[slot_id] = item and item.name or nil
+	local child_dirty = false
 
-	local profile_loader = use_loader_version and loading_profile_data.profile_loader or self._single_item_profile_loader
-	local profile = use_loader_version and loading_profile_data.profile or character_spawn_data.profile
-	local visual_slot_ids = {}
-
-	for visual_loadout_slot_id, visual_loadout_item in pairs(visual_loadout) do
-		if visual_loadout_slot_id == slot_id then
-			visual_slot_ids[visual_loadout_slot_id] = true
-		end
-
-		if visual_loadout_item.attachments then
-			for attachment_slot_id, attachment_data in pairs(visual_loadout_item.attachments) do
-				if attachment_slot_id == slot_id then
-					visual_slot_ids[visual_loadout_slot_id] = true
-				elseif attachment_data.children then
-					for child_slot_id, child_data in pairs(attachment_data.children) do
-						if child_slot_id == slot_id then
-							visual_slot_ids[visual_loadout_slot_id] = true
-						end
-					end
-				end
-			end
+	if slot_item_or_attachment.attachments then
+		for attachment_slot_id, attachment_data in pairs(slot_item_or_attachment.attachments) do
+			child_dirty = _check_dirty_children_recursive(changed_items, attachment_slot_id, attachment_data, visual_slot_ids, depth + 1) or child_dirty
 		end
 	end
 
+	if slot_item_or_attachment.children then
+		for child_slot_id, child_item in pairs(slot_item_or_attachment.children) do
+			child_dirty = _check_dirty_children_recursive(changed_items, child_slot_id, child_item, visual_slot_ids, depth + 1) or child_dirty
+		end
+	end
+
+	if depth == 0 and (child_dirty or changed_items[slot_id]) then
+		visual_slot_ids[slot_id] = true
+
+		return true
+	end
+
+	return false
+end
+
+local function _mark_parent_dirty_recursive(visual_loadout, changed_items, loadout, equipped_items_or_nil, equipped_slot_id, visual_slot_ids)
+	local item = changed_items[equipped_slot_id] or equipped_items_or_nil and equipped_items_or_nil[equipped_slot_id] or loadout[equipped_slot_id]
+
+	if not item then
+		return
+	end
+
+	local parent_slot_names = item.parent_slot_names
+
+	if parent_slot_names then
+		for i = 1, #parent_slot_names do
+			_mark_parent_dirty_recursive(visual_loadout, changed_items, loadout, equipped_items_or_nil, parent_slot_names[i], visual_slot_ids)
+		end
+	end
+
+	if visual_loadout[equipped_slot_id] then
+		visual_slot_ids[equipped_slot_id] = true
+	end
+end
+
+local updated_slots_scratch = {}
+
+UIProfileSpawner._change_slot_items = function (self, changed_items, loadout, visual_loadout, equipped_items_or_nil)
+	local character_spawn_data = self._character_spawn_data
+	local loading_profile_data = self._loading_profile_data
+	local use_loader_version = loading_profile_data ~= nil
 	local updated_slots = {}
+	local visual_slot_ids = {}
+	local loading_items = use_loader_version and loading_profile_data.loading_items or character_spawn_data.loading_items
+
+	for slot_id, item in pairs(changed_items) do
+		loading_items[slot_id] = item and item.name or nil
+		visual_slot_ids[slot_id] = true
+		updated_slots[slot_id] = {
+			item = item or nil,
+			visual_item = visual_loadout[slot_id],
+		}
+	end
+
+	local profile_loader = use_loader_version and loading_profile_data.profile_loader or self._single_item_profile_loader
+
+	for visual_loadout_slot_id, visual_loadout_item in pairs(visual_loadout) do
+		_check_dirty_children_recursive(changed_items, visual_loadout_slot_id, visual_loadout_item, visual_slot_ids)
+	end
+
+	for changed_slot_id in pairs(changed_items) do
+		_mark_parent_dirty_recursive(visual_loadout, changed_items, loadout, equipped_items_or_nil, changed_slot_id, visual_slot_ids)
+	end
 
 	for visual_slot_id, _ in pairs(visual_slot_ids) do
-		local are_same_slot = slot_id == visual_slot_id
-
-		if not are_same_slot then
+		if not updated_slots[visual_slot_id] then
 			updated_slots[visual_slot_id] = {
-				item = loadout[visual_slot_id],
+				item = loadout[visual_slot_id] or nil,
 				visual_item = visual_loadout[visual_slot_id],
 			}
 		end
 	end
 
-	updated_slots[slot_id] = {
-		item = item,
-		visual_item = visual_loadout[slot_id],
-	}
+	local visual_items, non_visual_items = table.partition_map(updated_slots, 2, function (value, visual_items, non_visual_items)
+		return value.visual_item and visual_items or non_visual_items
+	end)
+	local updated_non_visual_slot_ids = ItemSlotUtils.slot_keys_by_priority(non_visual_items, updated_slots_scratch)
 
-	for update_slot_id, updated_items in pairs(updated_slots) do
-		local updated_item = updated_items.item
+	for i = 1, #updated_non_visual_slot_ids do
+		local updated_slot_id = updated_non_visual_slot_ids[i]
+		local updated_items = updated_slots[updated_slot_id]
+
+		self:cb_on_single_slot_item_loaded(updated_slot_id, updated_items.item)
+	end
+
+	local updated_visual_slot_ids = ItemSlotUtils.slot_keys_by_priority(visual_items, updated_slots_scratch)
+
+	for i = 1, #updated_visual_slot_ids do
+		local updated_slot_id = updated_visual_slot_ids[i]
+		local updated_items = updated_slots[updated_slot_id]
 		local updated_visual_item = updated_items.visual_item
-		local display_item = updated_visual_item
-		local on_complete_callback = callback(self, "cb_on_single_slot_item_loaded", update_slot_id, updated_item, updated_visual_item)
+		local on_complete_callback = callback(self, "cb_on_single_slot_item_loaded", updated_slot_id, updated_items.item, updated_visual_item)
 
-		if display_item then
-			profile_loader:load_slot_item(update_slot_id, display_item, on_complete_callback)
-		else
-			on_complete_callback()
-		end
+		profile_loader:load_slot_item(updated_slot_id, updated_visual_item, on_complete_callback)
 	end
 end
 
@@ -511,7 +560,11 @@ UIProfileSpawner.destroy = function (self)
 
 		self._loading_profile_data = nil
 	end
+
+	self:_update_and_remove_stream_promises(nil, true)
 end
+
+local changed_slot_keys_scratch = {}
 
 UIProfileSpawner._sync_profile_changes = function (self)
 	local loading_profile_data = self._loading_profile_data
@@ -579,11 +632,7 @@ UIProfileSpawner._sync_profile_changes = function (self)
 
 			local visual_loadout = ProfileUtils.generate_visual_loadout(modified_loadout)
 
-			for slot_id, item in pairs(changed_slots) do
-				item = item or nil
-
-				self:_change_slot_item(slot_id, item, loadout, visual_loadout)
-			end
+			self:_change_slot_items(changed_slots, loadout, visual_loadout, equipped_items or nil)
 		end
 	end
 end
@@ -652,6 +701,34 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 
 			if offset then
 				self:set_companion_position(offset)
+			end
+		end
+	end
+
+	self:_update_and_remove_stream_promises(dt)
+end
+
+UIProfileSpawner._update_and_remove_stream_promises = function (self, dt, force_remove_all)
+	if self._stream_promises then
+		local limit = FORCE_STREAM_TIMEOUT + 1
+
+		for stream_promise, stream_data in pairs(self._stream_promises) do
+			local time = stream_promise.time or 0
+			local added_time = dt or 0
+			local on_complete_callback = stream_data.on_complete_callback
+
+			stream_data.time = time + added_time
+
+			if limit <= stream_data.time or force_remove_all then
+				if not stream_promise:is_fulfilled() and not stream_promise:is_canceled() then
+					stream_promise:cancel()
+
+					if on_complete_callback then
+						on_complete_callback()
+					end
+				end
+
+				self._stream_promises[stream_promise] = nil
 			end
 		end
 	end
@@ -875,13 +952,15 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 
 		local gender = profile.gender
 		local deform_overrides = {}
+		local deform_override_items = {}
 
 		if gender == "female" then
 			deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
+			deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 		end
 
 		local parent_unit_3p = unit_3p
-		local parent_slot_names = display_item.parent_slot_names or {}
+		local parent_slot_names = ItemSlotSettings[slot_id].forced_parent_slot_names or display_item.parent_slot_names or {}
 
 		for _, parent_slot_name in pairs(parent_slot_names) do
 			local parent_slot_unit_3p = slots[parent_slot_name].unit_3p
@@ -890,6 +969,12 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 
 			for _, deform_override in pairs(parent_item_deform_overrides) do
 				deform_overrides[#deform_overrides + 1] = deform_override
+			end
+
+			local parent_item_deform_override_items = parent_item and parent_item.deform_override_items or {}
+
+			for _, deform_override_item in pairs(parent_item_deform_override_items) do
+				deform_override_items[#deform_override_items + 1] = deform_override_item
 			end
 
 			if parent_slot_unit_3p then
@@ -904,6 +989,12 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 					for _, material_override in ipairs(material_overrides) do
 						VisualLoadoutCustomization.apply_material_override(parent_unit_3p, nil, false, material_override, false)
 					end
+
+					local material_override_items = display_item.material_override_items
+
+					for _, material_override_item in ipairs(material_override_items) do
+						VisualLoadoutCustomization.apply_material_override_item(parent_unit_3p, nil, false, material_override_item, false, self._item_definitions)
+					end
 				end
 			else
 				Log.warning("UIProfileSpawner", "Item %s cannot attach to unit in slot %s as it is spawned in the wrong order. Fix the slot priority configuration", item.name, parent_slot_name)
@@ -916,10 +1007,16 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 			deform_overrides[#deform_overrides + 1] = deform_override
 		end
 
-		equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, breed_name, nil, nil, companion_unit_3p)
+		local item_deform_override_items = item.deform_override_items or {}
+
+		for _, deform_override_item in pairs(item_deform_override_items) do
+			deform_override_items[#deform_override_items + 1] = deform_override_item
+		end
+
+		equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, deform_override_items, breed_name, nil, nil, companion_unit_3p)
 
 		if slot_dependency_items then
-			equipment_component:equip_slot_dependencies(slots, slot_equip_order, slot_dependency_items, deform_overrides, breed_name, unit_3p, nil, companion_unit_3p)
+			equipment_component:equip_slot_dependencies(slots, slot_equip_order, slot_dependency_items, deform_overrides, deform_override_items, breed_name, unit_3p, nil, companion_unit_3p)
 		end
 
 		if parent_item_unit then
@@ -929,7 +1026,7 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 		local on_complete_callback = callback(self, "cb_on_unit_3p_streaming_complete_equip_item", parent_item_unit)
 
 		if force_highest_mip then
-			Unit.force_stream_meshes(unit_3p, on_complete_callback, true, GameParameters.force_stream_mesh_timeout)
+			self:_force_stream(unit_3p, on_complete_callback)
 		else
 			on_complete_callback()
 		end
@@ -1063,13 +1160,15 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 			if not skip_slot then
 				local gender = profile.gender
 				local deform_overrides = {}
+				local deform_override_items = {}
 
 				if gender == "female" then
 					deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
+					deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 				end
 
 				local parent_unit_3p = unit_3p
-				local parent_slot_names = display_item.parent_slot_names or {}
+				local parent_slot_names = ItemSlotSettings[slot_id].forced_parent_slot_names or display_item.parent_slot_names or {}
 
 				for _, parent_slot_name in pairs(parent_slot_names) do
 					local slot = slots[parent_slot_name]
@@ -1079,6 +1178,12 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 					for _, parent_item_deform_override in pairs(parent_item_deform_overrides) do
 						deform_overrides[#deform_overrides + 1] = parent_item_deform_override
+					end
+
+					local parent_item_deform_override_items = parent_item and parent_item.deform_override_items or {}
+
+					for _, deform_override_item in pairs(parent_item_deform_override_items) do
+						deform_override_items[#deform_override_items + 1] = deform_override_item
 					end
 
 					if parent_slot_unit_3p then
@@ -1092,6 +1197,12 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 							for _, material_override in ipairs(material_overrides) do
 								VisualLoadoutCustomization.apply_material_override(parent_unit_3p, nil, false, material_override, false)
 							end
+
+							local material_override_items = display_item.material_override_items
+
+							for _, material_override_item in ipairs(material_override_items) do
+								VisualLoadoutCustomization.apply_material_override_item(parent_unit_3p, nil, false, material_override_item, false, self._item_definitions)
+							end
 						end
 					else
 						Log.warning("UIProfileSpawner", "Item %s cannot attach to unit in slot %s as it is spawned in the wrong order. Fix the slot priority configuration", item.name, parent_slot_name)
@@ -1104,7 +1215,13 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 					deform_overrides[#deform_overrides + 1] = deform_override
 				end
 
-				equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, breed_name, nil, nil, companion_unit_3p)
+				local item_deform_override_items = item.deform_override_items or {}
+
+				for _, deform_override_item in pairs(item_deform_override_items) do
+					deform_override_items[#deform_override_items + 1] = deform_override_item
+				end
+
+				equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, deform_override_items, breed_name, nil, nil, companion_unit_3p)
 			end
 		end
 
@@ -1184,10 +1301,37 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local on_complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", unit_3p)
 
 	if force_highest_mip then
-		Unit.force_stream_meshes(unit_3p, on_complete_callback, true, GameParameters.force_stream_mesh_timeout)
+		self:_force_stream(unit_3p, on_complete_callback)
 	else
 		on_complete_callback()
 	end
+end
+
+UIProfileSpawner._force_stream = function (self, unit_3p, on_complete_callback)
+	local mesh_complete_promise = Promise.new()
+	local texture_complete_promise = Promise.new()
+
+	Unit.force_stream_meshes(unit_3p, function (timeout)
+		return mesh_complete_promise:resolve(timeout)
+	end, true, FORCE_STREAM_TIMEOUT)
+	Unit.force_stream_textures(unit_3p, function (timeout)
+		return texture_complete_promise:resolve(timeout)
+	end, true, FORCE_STREAM_TIMEOUT)
+
+	local stream_promise = Promise.all(mesh_complete_promise, texture_complete_promise)
+
+	stream_promise:next(function (timeouts)
+		local timeout_mesh, timeout_texture = unpack(timeouts)
+		local timeout = timeout_mesh or timeout_texture
+
+		self._stream_promises[stream_promise] = nil
+
+		return on_complete_callback(timeout)
+	end)
+
+	self._stream_promises[stream_promise] = {
+		on_complete_callback = on_complete_callback,
+	}
 end
 
 UIProfileSpawner.cb_on_unit_3p_streaming_complete_equip_item = function (self, unit_3p, timeout)
@@ -1300,7 +1444,7 @@ UIProfileSpawner._update_items_visibility = function (self)
 	local first_person_mode = spawn_data.first_person_mode
 
 	if self._visible then
-		equipment_component.update_item_visibility(slots, wielded_slot_name, unit_3p, unit_1p, first_person_mode)
+		equipment_component.update_item_visibility(slots, wielded_slot_name, unit_3p, unit_1p, first_person_mode, self._item_definitions)
 
 		if companion_unit_3p then
 			Unit.set_unit_visibility(companion_unit_3p, true, true)

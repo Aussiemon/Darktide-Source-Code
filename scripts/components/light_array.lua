@@ -74,6 +74,7 @@ LightArray.init = function (self, unit)
 	self._effect_index = 1
 
 	local effects = {
+		none = nil,
 		cycle = self._effect_cycle,
 		cycle_inverse = self._effect_cycle_inverse,
 		ping_pong = self._effect_ping_pong,
@@ -156,7 +157,7 @@ LightArray.editor_validate = function (self, unit)
 end
 
 LightArray.update = function (self, unit, dt, t)
-	if self._effect_active then
+	if self._effect_active and dt ~= nil then
 		if self._effect_time_between == 0 then
 			if self._effect_time > self._effect_time_on then
 				self:_effect()

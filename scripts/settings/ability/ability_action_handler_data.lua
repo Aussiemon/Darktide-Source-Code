@@ -111,7 +111,7 @@ ability_action_data.action_kind_condition_funcs = {
 }
 ability_action_data.action_kind_total_time_funcs = {}
 ability_action_data.conditional_state_functions = {
-	auto_chain = function (condition_func_params, action_params, remaining_time, t)
+	action_end = function (condition_func_params, action_params, remaining_time, t)
 		local no_time_left = remaining_time <= 0
 
 		return no_time_left

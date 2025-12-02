@@ -482,10 +482,20 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 					impact_result = "continue_straight"
 				end
 
+				local dropoff_scalar = false
+				local owner_weapon_extension = ScriptUnit.has_extension(owner_unit, "weapon_system")
+
+				if owner_weapon_extension then
+					local distance = Vector3.distance(hit_position, Unit.world_position(owner_unit, 1))
+					local damage_profile_lerp_values = owner_weapon_extension:damage_profile_lerp_values(impact_damage_profile)
+
+					dropoff_scalar = DamageProfile.dropoff_scalar(distance, impact_damage_profile, damage_profile_lerp_values)
+				end
+
 				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot
 
 				if should_deal_damage then
-					damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_type, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+					damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "dropoff_scalar", dropoff_scalar, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_type, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 				end
 
 				self._impact_hit = true

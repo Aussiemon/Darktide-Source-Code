@@ -23,6 +23,7 @@ local default_armor_decal = {
 }
 local unarmored = {
 	sfx = {
+		shove = nil,
 		weakspot_died = {
 			{
 				append_husk_to_event_name = true,
@@ -78,15 +79,42 @@ local unarmored = {
 			},
 		},
 	},
-	vfx = {},
+	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 	linked_decal = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = default_armor_decal,
 		died = default_armor_decal,
 		weakspot_damage = default_armor_decal,
 		damage = default_armor_decal,
 		damage_reduced = default_armor_decal,
 	},
-	blood_ball = {},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local armored = table.clone(unarmored)
 local super_armor = table.clone(unarmored)
@@ -97,6 +125,7 @@ local player = table.clone(unarmored)
 local surface_fx = {
 	snow = {
 		[hit_types.stop] = {
+			sfx = nil,
 			vfx = {
 				{
 					normal_rotation = true,
@@ -109,6 +138,7 @@ local surface_fx = {
 	},
 	snow_frosty = {
 		[hit_types.stop] = {
+			sfx = nil,
 			vfx = {
 				{
 					normal_rotation = true,
@@ -122,6 +152,7 @@ local surface_fx = {
 }
 local default_surface_fx = {
 	[hit_types.stop] = {
+		vfx = nil,
 		sfx = {
 			{
 				append_husk_to_event_name = true,
@@ -138,6 +169,8 @@ local default_surface_fx = {
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 
 return {
+	surface_decal = nil,
+	surface_overrides = nil,
 	armor = {
 		[armor_types.armored] = armored,
 		[armor_types.berserker] = berserker,

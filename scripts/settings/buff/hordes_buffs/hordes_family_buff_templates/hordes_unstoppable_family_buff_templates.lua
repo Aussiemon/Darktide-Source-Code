@@ -50,21 +50,6 @@ local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
 local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
-local GRENADE_IMPACT_DAMAGE_TEMPLATES = {
-	fire_grenade_impact = true,
-	frag_grenade_impact = true,
-	krak_grenade_impact = true,
-	ogryn_grenade_box_cluster_impact = true,
-	ogryn_grenade_box_impact = true,
-	ogryn_grenade_impact = true,
-}
-local GRENADE_EXPLOSION_DAMAGE_TYPES = {
-	[damage_types.grenade_frag] = true,
-	[damage_types.electrocution] = true,
-	[damage_types.plasma] = true,
-	[damage_types.physical] = true,
-	[damage_types.laser] = true,
-}
 local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
 local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
 local BROADPHASE_RESULTS = {}
@@ -539,9 +524,9 @@ templates.hordes_buff_damage_per_full_stamina_bar = {
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
 		local unit = template_context.unit
-		local current_stamina, _ = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.base_stamina_template)
-		local full_stamina_bars = math.floor(current_stamina)
-		local lerp_t = math.min(full_stamina_bars / max_num_bars_for_damage_gained_per_full_stamina_bar, 1)
+		local current_stamina, max_stamina = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.base_stamina_template)
+		local missing_stamina_bars = math.floor(max_stamina - current_stamina)
+		local lerp_t = math.min(missing_stamina_bars / max_num_bars_for_damage_gained_per_full_stamina_bar, 1)
 
 		return lerp_t
 	end,

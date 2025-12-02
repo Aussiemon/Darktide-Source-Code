@@ -2,8 +2,6 @@
 
 local Definitions = require("scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup_definitions")
 local HudElementMissionObjectivePopupSettings = require("scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -114,6 +112,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
 		animation_event = "popup_start",
+		update_text = nil,
 		widget = widget,
 		alert = alert,
 		title_text = title_text,
@@ -129,12 +128,14 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	end
 end
 
-HudElementMissionObjectivePopup.event_show_live_event_notification = function (self, event_title, event_subtitle, ui_sound_event)
+HudElementMissionObjectivePopup.event_show_live_event_notification = function (self, event_title, event_subtitle, ui_sound_event, style)
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
-		alert = true,
 		animation_event = "popup_start",
+		icon = nil,
+		update_text = nil,
 		widget = widget,
+		alert = style == "alert",
 		title_text = event_subtitle and self:_localize(event_subtitle) or "",
 		description_text = event_title and self:_localize(event_title) or "",
 		sound_event = ui_sound_event,
@@ -206,6 +207,7 @@ HudElementMissionObjectivePopup.event_mission_objective_complete = function (sel
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
 		animation_event = "popup_start",
+		update_text = nil,
 		widget = widget,
 		title_text = title_text,
 		alert = alert,
@@ -232,8 +234,7 @@ HudElementMissionObjectivePopup._setup_mission_update_texts = function (self, wi
 	local icon_style = style.icon
 	local update_text_style = style.update_text
 	local text_size = update_text_style.size
-	local text_options = UIFonts.get_font_options_by_style(update_text_style)
-	local text_width, _, _, _ = UIRenderer.text_size(ui_renderer, update_text, update_text_style.font_type, update_text_style.font_size, text_size, text_options)
+	local text_width = self:_text_size(ui_renderer, update_text, update_text_style, text_size)
 	local icon_width = icon_style.size[1]
 	local spacing = 5
 	local total_width = text_width + icon_width + spacing
@@ -253,8 +254,7 @@ HudElementMissionObjectivePopup._setup_mission_popup_texts = function (self, wid
 	content.description_text = description_text
 
 	local text_size = description_text_style.size
-	local text_options = UIFonts.get_font_options_by_style(description_text_style)
-	local _, height, _, _ = UIRenderer.text_size(ui_renderer, description_text, description_text_style.font_type, description_text_style.font_size, text_size, text_options)
+	local _, height = self:_text_size(ui_renderer, description_text, description_text_style, text_size)
 end
 
 HudElementMissionObjectivePopup._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)

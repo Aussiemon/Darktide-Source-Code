@@ -15,7 +15,6 @@ local cinematic_scene_templates = {
 			"slot_pocketable",
 			"slot_pocketable_small",
 			"slot_luggable",
-			"slot_support_ability",
 			"slot_combat_ability",
 			"slot_grenade_ability",
 			"slot_attachment_1",

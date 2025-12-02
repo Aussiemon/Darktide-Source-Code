@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/weapon.lua
 
+require("scripts/extension_systems/weapon/special_classes/weapon_special_activate_toggle")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_block_charges")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_charging")
 require("scripts/extension_systems/weapon/special_classes/weapon_special_deactivate_after_num_activations")

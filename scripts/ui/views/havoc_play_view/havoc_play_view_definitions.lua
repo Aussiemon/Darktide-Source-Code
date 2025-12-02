@@ -4,10 +4,9 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
+local Text = require("scripts/utilities/ui/text")
 local column_width = 483
 local column_spacing = 100
 local mission_detail_background_size = {
@@ -1102,12 +1101,16 @@ local widget_definitions = {
 	play_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_story_mission_play_menu_button_start_mission")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 	party_finder_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "party_finder_button", {
 		gamepad_action = "mission_board_group_finder_open",
 		original_text = Utf8.upper(Localize("loc_group_finder_menu_title")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 	page_header = UIWidget.create_definition({
 		{
@@ -1758,8 +1761,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -1945,7 +1947,6 @@ local grid_blueprints = {
 
 			if header then
 				local text_style = style.header
-				local text_options = UIFonts.get_font_options_by_style(text_style)
 				local text_size = {
 					size[1],
 					size[2],
@@ -1957,14 +1958,13 @@ local grid_blueprints = {
 					text_size[2] = text_size[2] + size_addition[2]
 				end
 
-				local height = UIRenderer.text_height(ui_renderer, header, text_style.font_type, text_style.font_size, text_size, text_options)
+				local height = Text.text_height(ui_renderer, header, text_style, text_size, true)
 
 				total_text_height = total_text_height + height
 			end
 
 			if text then
 				local text_style = style.text
-				local text_options = UIFonts.get_font_options_by_style(text_style)
 				local text_size = {
 					size[1],
 					size[2],
@@ -1976,7 +1976,7 @@ local grid_blueprints = {
 					text_size[2] = text_size[2] + size_addition[2]
 				end
 
-				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, text_size, text_options)
+				local height = Text.text_height(ui_renderer, text, text_style, text_size, true)
 
 				text_style.offset[2] = total_text_height
 				total_text_height = total_text_height + height
@@ -2029,8 +2029,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,

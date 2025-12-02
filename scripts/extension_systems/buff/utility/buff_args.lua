@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/buff/utility/buff_args.lua
 
 local BuffArgs = {}
+local NIL_VALUE = "__NIL_VALUE__"
 local ARGS = {
 	{
 		block_prediction = true,
@@ -15,13 +16,30 @@ local ARGS = {
 		name = "parent_buff_template",
 	},
 	{
+		block_prediction = true,
+		name = "skip_talent",
+		default_value = NIL_VALUE,
+	},
+	{
+		component_type = "Unit",
 		name = "owner_unit",
+		default_value = NIL_VALUE,
 	},
 	{
+		default_value = "not_equipped",
 		name = "source_item",
+		component_type = {
+			network_type = "player_item_name",
+			use_network_lookup = "player_item_names",
+		},
 	},
 	{
+		default_value = "n/a",
 		name = "from_talent",
+		component_type = {
+			network_type = "talent_name_id",
+			use_network_lookup = "archetype_talent_names",
+		},
 	},
 }
 local NUM_ARGS = #ARGS
@@ -67,6 +85,30 @@ BuffArgs.is_only_predictable_data = function (...)
 	end
 
 	return all_ok
+end
+
+local PREDICTABLE_ARGS = table.array_to_map(ARGS, function (_, v)
+	if not v.block_prediction then
+		return v.name, v.default_value
+	end
+end)
+
+BuffArgs.predictable_default_values = function ()
+	return PREDICTABLE_ARGS
+end
+
+local COMPONENT_TYPES = table.array_to_map(ARGS, function (_, v)
+	if not v.block_prediction then
+		return v.name, v.component_type
+	end
+end)
+
+BuffArgs.predictable_component_types = function ()
+	return COMPONENT_TYPES
+end
+
+BuffArgs.nil_value = function ()
+	return NIL_VALUE
 end
 
 return BuffArgs

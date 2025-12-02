@@ -328,8 +328,24 @@ AchievementMissionGroups.missions = {
 			puzzle = "exploration_operations",
 		},
 		icon = {
+			challange = nil,
+			collectible = nil,
 			mission_default = path .. "mission_achievements/missions_achievement_0040",
 			auric = path .. "mission_achievements/missions_achievement_0039",
+		},
+	},
+	{
+		local_variable = "loc_mission_name_op_no_mans_land",
+		name = "op_no_mans_land",
+		category = {
+			default = "endeavours_operations",
+			puzzle = "exploration_operations",
+		},
+		icon = {
+			challange = nil,
+			collectible = nil,
+			mission_default = path .. "mission_achievements/missions_achievement_op_no_mans_land",
+			auric = path .. "mission_achievements/missions_achievement_op_no_mans_land_hard",
 		},
 	},
 	{
@@ -339,7 +355,12 @@ AchievementMissionGroups.missions = {
 			default = "endeavours_psykhanium",
 			puzzle = "exploration_psykhanium",
 		},
-		icon = {},
+		icon = {
+			auric = nil,
+			challange = nil,
+			collectible = nil,
+			mission_default = nil,
+		},
 	},
 }
 AchievementMissionGroups.level_overview_meta = {
@@ -611,6 +632,7 @@ AchievementMissionGroups.zones = {
 		local_variable = "loc_zone_name_operations_short",
 		name = "operations",
 		icon = {
+			destructible = nil,
 			zone_default = path .. "mission_achievements/missions_achievement_0038",
 		},
 	},
@@ -618,7 +640,10 @@ AchievementMissionGroups.zones = {
 		category = "exploration_horde",
 		local_variable = "loc_zone_name_horde_short",
 		name = "horde",
-		icon = {},
+		icon = {
+			destructible = nil,
+			zone_default = nil,
+		},
 	},
 }
 AchievementMissionGroups.zone_meta = {
@@ -702,12 +727,14 @@ AchievementMissionGroups.zone_meta = {
 	},
 	{
 		category = "exploration_operations",
+		icon = nil,
 		local_variable = "loc_zone_name_operations_short",
 		name = "operations",
 		achievements = {},
 	},
 	{
 		category = "exploration_horde",
+		icon = nil,
 		local_variable = "loc_zone_name_horde_short",
 		name = "horde",
 		achievements = {},

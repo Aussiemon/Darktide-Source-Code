@@ -1,23 +1,34 @@
 ﻿-- chunkname: @scripts/settings/buff/havoc_buff_templates.lua
 
-local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local HavocMutatorLocalSettings = require("scripts/settings/havoc/havoc_mutator_local_settings")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
+local mutator_havoc_enemies_corrupted_config_settings = HavocMutatorLocalSettings.mutator_havoc_enemies_corrupted.buff_settings
+local rotten_armor_config_settings = HavocMutatorLocalSettings.mutator_havoc_rotten_armor.buff_settings
+local bolstering_minions_01_config_settings = HavocMutatorLocalSettings.bolstering_minions_01.buff_settings
+local mutator_encroaching_garden_config_settings = HavocMutatorLocalSettings.mutator_encroaching_garden.buff_settings
+local mutator_havoc_enraged_config_settings = HavocMutatorLocalSettings.mutator_havoc_enraged.buff_settings
+local mutator_stimmed_minions_config_settings = HavocMutatorLocalSettings.mutator_stimmed_minions.buff_settings
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local stat_buff_types = BuffSettings.stat_buff_types
-local stat_buff_base_values = BuffSettings.stat_buff_base_values
+local buff_targets = BuffSettings.targets
 local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local proc_events = BuffSettings.proc_events
+
+local function _position(unit)
+	local position = POSITION_LOOKUP[unit]
+
+	return position
+end
+
 local templates = {}
 
 table.make_unique(templates)
@@ -180,27 +191,14 @@ local function _bolstering_stop_function(template_context, template_data)
 	end
 end
 
-local BOLSTERING_MULTIPLIER = {
-	captain = -0.02,
-	default = -0.1,
-	elite = -0.05,
-	monster = -0.03,
-	special = -0.06,
-}
-local BOLSTERING_STAT_BUFFS = {
-	"unarmored_damage",
-	"resistant_damage",
-	"disgustingly_resilient_damage",
-	"berserker_damage",
-	"armored_damage",
-	"super_armor_damage",
-}
+local BOLSTERING_MULTIPLIER = bolstering_minions_01_config_settings.bolstering_multiplier
+local BOLSTERING_STAT_BUFFS = bolstering_minions_01_config_settings.bolstering_stat_buffs
 
 local function _get_breed_bolstering_multiplier(template_data, template_context)
 	local multiplier
 	local breed = template_context.breed
 	local tags = breed.tags
-	local captain_tag = tags.captain
+	local captain_tag = tags.captain or tags.cultist_captain
 
 	if captain_tag then
 		multiplier = BOLSTERING_MULTIPLIER.captain
@@ -306,12 +304,9 @@ templates.havoc_bolstering = {
 	},
 }
 
-local CORRUPTED_COLOR = {
-	0.37254901960784315,
-	0.6823529411764706,
-	0,
-}
-local CORRUPTION_RADIUS = 3
+local CORRUPTED_COLOR = mutator_havoc_enemies_corrupted_config_settings.corruption_color
+local CORRUPTION_RADIUS = mutator_havoc_enemies_corrupted_config_settings.corruption_radius
+local CORRUPTED_RANK_MULTIPLIE = mutator_havoc_enemies_corrupted_config_settings.rank_multipler
 local DPLUS_RESULTS_2 = {}
 
 local function _corruption_stop_function(template_context, template_data)
@@ -319,17 +314,18 @@ local function _corruption_stop_function(template_context, template_data)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
 	local target_side_names = side:relation_side_names("allied")
+	local nav_world = template_data.nav_world
 
 	table.clear(DPLUS_RESULTS_2)
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
-	local buff_template_name = "havoc_corrupted_enemies"
+	local buff_template_name = mutator_havoc_enemies_corrupted_config_settings.buff_template_name
 	local broadphase = broadphase_system.broadphase
-	local position = POSITION_LOOKUP[unit]
+	local position = _position(unit)
 	local num_results = broadphase.query(broadphase, position, CORRUPTION_RADIUS, DPLUS_RESULTS_2, target_side_names)
 	local current_time = FixedFrame.get_latest_fixed_time()
 	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
-	local threshold = rank * 0.01
+	local threshold = rank * CORRUPTED_RANK_MULTIPLIE
 	local t = Managers.time:time("gameplay")
 
 	for i = 1, num_results do
@@ -349,14 +345,17 @@ local function _corruption_stop_function(template_context, template_data)
 		end
 	end
 
-	local nav_world = template_data.nav_world
-	local vfx_name = "content/fx/particles/impacts/flesh/nurgle_corruption_death"
-	local node_position = position + Vector3(0, 0, 0.25)
+	local vfx_name = mutator_havoc_enemies_corrupted_config_settings.vfx_name
+	local node_offset = mutator_havoc_enemies_corrupted_config_settings.node_offset
+	local node_position = position + Vector3(0, 0, node_offset)
 	local fx_system = Managers.state.extension:system("fx_system")
 	local rotation = Unit.local_rotation(unit, 1)
 
 	fx_system:trigger_vfx(vfx_name, node_position, rotation)
-	LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates.havoc_enemy_corruption_liquid, nil, nil, true)
+
+	local liquid_area_template_name = mutator_havoc_enemies_corrupted_config_settings.liquid_area_template_name
+
+	LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates[liquid_area_template_name], nil, nil, true)
 end
 
 templates.havoc_corrupted_enemies = {
@@ -433,158 +432,6 @@ templates.havoc_corrupted_enemies = {
 			},
 		},
 	},
-}
-
-local breedlookup = {
-	chaos_ogryn_bulwark = {
-		"renegade_berzerker",
-		"renegade_gunner",
-		"renegade_executor",
-	},
-	chaos_ogryn_executor = {
-		"renegade_berzerker",
-		"renegade_gunner",
-		"renegade_executor",
-	},
-	chaos_ogryn_gunner = {
-		"renegade_berzerker",
-		"renegade_gunner",
-		"renegade_executor",
-	},
-	renegade_berzerker = {
-		"renegade_assault",
-		"renegade_melee",
-		"renegade_rifleman",
-	},
-	renegade_executor = {
-		"renegade_assault",
-		"renegade_melee",
-		"renegade_rifleman",
-	},
-	renegade_gunner = {
-		"renegade_assault",
-		"renegade_melee",
-		"renegade_rifleman",
-	},
-	renegade_shocktrooper = {
-		"renegade_assault",
-		"renegade_melee",
-		"renegade_rifleman",
-	},
-	cultist_berzerker = {
-		"cultist_melee",
-		"cultist_assault",
-	},
-	cultist_gunner = {
-		"cultist_melee",
-		"cultist_assault",
-	},
-	cultist_shocktrooper = {
-		"cultist_melee",
-		"cultist_assault",
-	},
-	renegade_assault = {
-		"chaos_poxwalker",
-		"chaos_newly_infected",
-	},
-	renegade_melee = {
-		"chaos_poxwalker",
-		"chaos_newly_infected",
-	},
-	renegade_rifleman = {
-		"chaos_poxwalker",
-		"chaos_newly_infected",
-	},
-	cultist_melee = {
-		"chaos_poxwalker",
-		"chaos_newly_infected",
-	},
-	cultist_assault = {
-		"chaos_poxwalker",
-		"chaos_newly_infected",
-	},
-	chaos_plague_ogryn = {
-		"cultist_mutant",
-	},
-	chaos_spawn = {
-		"cultist_mutant",
-	},
-	renegade_captain = {
-		"chaos_daemonhost",
-	},
-}
-
-local function _duplicating_enemies_stop_function(template_context, template_data)
-	local unit = template_context.unit
-	local blackboard = template_data.blackboard
-	local perception_component = blackboard.perception
-	local owner_breed = template_context.breed.name
-	local breed = "chaos_poxwalker"
-	local possible_breeds
-
-	if breedlookup[owner_breed] then
-		possible_breeds = breedlookup[owner_breed]
-
-		local value_check = math.random(1, #possible_breeds)
-
-		breed = possible_breeds[value_check]
-	end
-
-	local position = Unit.world_position(unit, 1)
-	local rotation = Unit.local_rotation(unit, 1)
-	local vfx_name = "content/fx/particles/enemies/twin_disappear_cloud"
-	local node_position = Unit.world_position(unit, 1) + Vector3(0, 0, 0.25)
-	local fx_system = Managers.state.extension:system("fx_system")
-
-	fx_system:trigger_vfx(vfx_name, node_position, rotation)
-
-	for i = 1, 2 do
-		local right = Quaternion.right(Unit.local_rotation(unit, 1))
-
-		if i % 2 == 0 then
-			position = position + right
-		else
-			position = position + -right
-		end
-
-		local mutator_manager = Managers.state.mutator
-		local nurgle_warp_mutator = mutator_manager:mutator("mutator_duplicating_enemies")
-
-		nurgle_warp_mutator:add_split_spawn(position, rotation, breed, nil, perception_component.target_unit)
-
-		local minion_death_manager = Managers.state.minion_death
-		local minion_ragdoll = minion_death_manager:minion_ragdoll()
-
-		minion_ragdoll:remove_ragdoll_safe(unit)
-	end
-end
-
-templates.havoc_duplicating_enemies = {
-	class_name = "buff",
-	max_stacks = 1,
-	predicted = false,
-	keywords = {},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-
-		if not template_context.is_server then
-			return
-		end
-
-		template_data.blackboard = BLACKBOARDS[unit]
-
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-
-		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		template_data.nav_world = navigation_extension:nav_world()
-	end,
-	stop_func = function (template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		_duplicating_enemies_stop_function(template_context, template_data)
-	end,
 }
 templates.common_minion_on_fire = {
 	class_name = "interval_buff",
@@ -753,39 +600,12 @@ templates.havoc_sticky_poxburster = {
 	end,
 }
 
-local rotten_armor_data = {
-	kill_time = 1.5,
-	reduction_threshold = {
-		0.25,
-		0.5,
-		0.75,
-		1.25,
-	},
-	damage_thresholds = {
-		0.9,
-		0.75,
-		0.5,
-		0.25,
-	},
-	specific_head_gib_settings = {
-		random_radius = 2,
-		hit_zones = {
-			"head",
-			"lower_right_leg",
-			"lower_left_leg",
-			"lower_right_arm",
-			"lower_left_arm",
-		},
-		damage_profile = DamageProfileTemplates.havoc_self_gib,
-	},
-}
+local rotten_armor_data = rotten_armor_config_settings
 
 local function _on_rotten_armor_death(template_data, template_context)
 	local unit = template_context.unit
 	local nav_world = template_data.nav_world
-	local vfx_name = "content/fx/particles/enemies/rotten_armor_death"
-	local sfx_death_name = "wwise/events/minions/play_nurgle_corpse_explode_rotten"
-	local position = POSITION_LOOKUP[unit]
+	local position = _position(unit)
 
 	if not position then
 		return
@@ -795,37 +615,55 @@ local function _on_rotten_armor_death(template_data, template_context)
 	local fx_system = Managers.state.extension:system("fx_system")
 	local rotation = Unit.local_rotation(unit, 1)
 
-	fx_system:trigger_vfx(vfx_name, node_position, rotation)
-	fx_system:trigger_wwise_event(sfx_death_name, position)
+	fx_system:trigger_vfx(rotten_armor_data.vfx_name, node_position, rotation)
+	fx_system:trigger_wwise_event(rotten_armor_data.sfx_death_name, position)
 	LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates.rotten_armor, nil, nil, true)
 end
 
-local function _rotten_armor_stat_reduction(unit, index)
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local stat_buffs = buff_extension:stat_buffs()
-	local value = rotten_armor_data.reduction_threshold[index]
+local function _rotten_armor_stat_reduction(unit, template_data, optional_first_start)
+	local index = template_data.index
+	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-	stat_buffs.ranged_damage_taken_multiplier = value
-	stat_buffs.ranged_damage_taken_multiplier = value
-
-	local current_time = FixedFrame.get_latest_fixed_time()
-
-	buff_extension:_update_stat_buffs_and_keywords(current_time)
-
-	return rotten_armor_data.damage_thresholds[index]
-end
-
-local function _stop_rotten_armor_impact_effect(template_data)
-	local effect_id = template_data.effect_id
-	local fx_system = Managers.state.extension:system("fx_system")
-
-	if not effect_id or not fx_system:has_running_global_effect_id(effect_id) then
+	if not health_extension then
 		return
 	end
 
-	fx_system:stop_template_effect(effect_id)
+	local current_health_percent = health_extension:current_health_percent()
+	local damage_thresholds = rotten_armor_data.damage_thresholds
+	local target_index = index
 
-	template_data.effect_id = nil
+	for i = #damage_thresholds, 1, -1 do
+		local damage_threshold = damage_thresholds[i]
+
+		if current_health_percent <= damage_threshold then
+			target_index = i
+
+			break
+		end
+	end
+
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if optional_first_start or index < target_index then
+		local t = Managers.time:time("gameplay")
+		local damage_reduction_template_names = rotten_armor_data.damage_reduction_template_names
+		local current_index = index
+		local current_buff_template_name = damage_reduction_template_names[current_index]
+
+		if current_buff_template_name and template_data.buff_index then
+			buff_extension:remove_externally_controlled_buff(template_data.buff_index)
+
+			template_data.buff_index = nil
+		end
+
+		local new_buff_template_name = damage_reduction_template_names[target_index]
+
+		if new_buff_template_name and not buff_extension:has_buff_using_buff_template(current_buff_template_name) then
+			local _, buff_index = buff_extension:add_externally_controlled_buff(new_buff_template_name, t)
+
+			template_data.buff_index = buff_index
+		end
+	end
 end
 
 templates.mutator_rotten_armor = {
@@ -833,6 +671,9 @@ templates.mutator_rotten_armor = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_minion_damage_taken] = 1,
+	},
+	keywords = {
+		buff_keywords.rotten_armor,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -857,8 +698,9 @@ templates.mutator_rotten_armor = {
 
 		local start_index = 1
 
-		template_data.current_index = start_index
-		template_data.current_damage_threshold = _rotten_armor_stat_reduction(unit, start_index)
+		template_data.index = start_index
+
+		_rotten_armor_stat_reduction(unit, template_data, true)
 
 		local fx_system = Managers.state.extension:system("fx_system")
 		local effect_template = EffectTemplates.mutator_rotten_armor_stages
@@ -876,74 +718,29 @@ templates.mutator_rotten_armor = {
 			gib_override.override_hit_zone_name = "center_mass"
 		end
 	end,
-	update_func = function (template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		local effect_id = template_data.effect_id
-
-		if not effect_id then
-			return
-		end
-
-		local t = Managers.time:time("gameplay")
-		local kill_time = template_data.kill_time
-
-		if kill_time < t then
-			_stop_rotten_armor_impact_effect(template_data)
-		end
-	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
 			return
 		end
 
-		local unit = template_context.unit
-		local health_extension = ScriptUnit.has_extension(unit, "health_system")
-
-		if not health_extension then
+		template_data.update_stat_reduction = true
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
 			return
 		end
 
-		local current_health_percent = health_extension:current_health_percent()
-		local current_damage_threshold = template_data.current_damage_threshold
-		local current_index = template_data.current_index
+		local unit = template_context.unit
 
-		if current_health_percent <= current_damage_threshold then
-			current_index = current_index + 1
-			template_data.current_damage_threshold = _rotten_armor_stat_reduction(unit, current_index)
+		if template_data.update_stat_reduction and HEALTH_ALIVE[unit] then
+			_rotten_armor_stat_reduction(unit, template_data)
 
-			local hit_zone = params.hit_zone_name_or_nil
-			local attacking_unit = params.attacking_unit
-
-			if hit_zone and attacking_unit then
-				local hit_zone_id = NetworkLookup.hit_zones[hit_zone]
-
-				if hit_zone_id then
-					local node_name = HitZone.get_actor_names(unit, hit_zone)
-					local Unit_index = Unit.node(unit, node_name[1])
-					local unit_position = Unit.world_position(unit, Unit_index)
-					local attacking_unit_position = POSITION_LOOKUP[attacking_unit]
-					local look_at_vector = attacking_unit_position - unit_position
-					local fx_system = Managers.state.extension:system("fx_system")
-					local effect_template = EffectTemplates.mutator_rotten_armor_impact
-
-					if not template_data.effect_id then
-						template_data.effect_id = fx_system:start_template_effect(effect_template, unit, hit_zone_id, look_at_vector)
-
-						local t = Managers.time:time("gameplay")
-
-						template_data.kill_time = t + 1.5
-					end
-				end
-			end
+			template_data.update_stat_reduction = false
 		end
 	end,
 	stop_func = function (template_data, template_context)
 		if template_context.is_server then
 			_on_rotten_armor_death(template_data, template_context)
-			_stop_rotten_armor_impact_effect(template_data)
 		end
 	end,
 	minion_effects = {
@@ -958,54 +755,10 @@ templates.mutator_rotten_armor = {
 		},
 	},
 }
-templates.havoc_thorny_armor = {
-	class_name = "proc_buff",
-	predicted = false,
-	proc_events = {
-		[proc_events.on_minion_damage_taken] = 1,
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local color = Vector3(TOUGHNED_SKIN_COLOR[1], TOUGHNED_SKIN_COLOR[2], TOUGHNED_SKIN_COLOR[3])
 
-		Unit.set_vector3_for_materials(unit, "stimmed_color", color, true)
-	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		local player_unit = params.attacking_unit
-
-		if not HEALTH_ALIVE[player_unit] then
-			return
-		end
-
-		local attack_type = params.attack_type
-
-		if not attack_type == "ranged" then
-			return
-		end
-
-		local damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid
-		local power_level_table = MinionDifficultySettings.power_level.cultist_flamer_on_hit_fire
-		local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-		local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
-
-		Attack.execute(player_unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-
-		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
-
-		if not template_context.is_server then
-			return
-		end
-	end,
-}
-
-local GARDEN_BUFF_RADIUS = 5
+local ENCROACHING_GARDEN_RADIUS = mutator_encroaching_garden_config_settings.healing_radius
+local ENCROACHING_GARDEN_COLOR = mutator_encroaching_garden_config_settings.havoc_encroaching_garden_color
+local ENCROACHING_GARDEN_HEALING_AMOUNT = mutator_encroaching_garden_config_settings.healing_amount_by_armor_type
 local GARDEN_HAVOC_RESULTS_ENEMIES = {}
 
 local function _healed_by_the_garden(template_data, template_context)
@@ -1019,12 +772,11 @@ local function _healed_by_the_garden(template_data, template_context)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
 	local target_side_names = side:relation_side_names("allied")
-	local player_side_names = side:relation_side_names("enemy")
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local buff_template_name = "blessed_by_the_garden"
 	local broadphase = broadphase_system.broadphase
 	local position = POSITION_LOOKUP[unit]
-	local allied_sied_num_results = broadphase.query(broadphase, position, GARDEN_BUFF_RADIUS, GARDEN_HAVOC_RESULTS_ENEMIES, target_side_names)
+	local allied_sied_num_results = broadphase.query(broadphase, position, ENCROACHING_GARDEN_RADIUS, GARDEN_HAVOC_RESULTS_ENEMIES, target_side_names)
 	local current_time = FixedFrame.get_latest_fixed_time()
 	local t = Managers.time:time("gameplay")
 
@@ -1056,10 +808,12 @@ templates.havoc_encroaching_garden = {
 		buff_keywords.havoc_gardens_embrace,
 	},
 	stat_buffs = {
-		[buff_stat_buffs.max_health_modifier] = 100,
+		[buff_stat_buffs.max_health_modifier] = mutator_encroaching_garden_config_settings.stat_buff_settings.max_health_modifier,
+		[buff_stat_buffs.impact_modifier] = mutator_encroaching_garden_config_settings.stat_buff_settings.impact_modifier,
+		[buff_stat_buffs.suppressor_decay_multiplier] = mutator_encroaching_garden_config_settings.stat_buff_settings.suppressor_decay_multiplier,
 	},
 	start_func = function (template_data, template_context)
-		local time_variation = 2
+		local time_variation = mutator_encroaching_garden_config_settings.healing_frequency
 
 		template_data.parasite_interval_time = time_variation
 	end,
@@ -1096,15 +850,6 @@ templates.havoc_encroaching_garden = {
 		},
 	},
 }
-
-local NURGLE_ENCROACHING_COLOR = {
-	0.5568627450980392,
-	0.6313725490196078,
-	0.3215686274509804,
-}
-local NURGLE_PERCENTAGE_DEFAULT = 0.02
-local DEFAULT_MAX_DAMAGE_ALLOWED = 0.1
-
 templates.blessed_by_the_garden = {
 	class_name = "interval_buff",
 	duration = 2,
@@ -1119,10 +864,13 @@ templates.blessed_by_the_garden = {
 		end
 
 		local unit = template_context.unit
-		local health_extension = ScriptUnit.extension(unit, "health_system")
-		local max_health = health_extension:max_health()
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-		template_data.heal_percentage = max_health * NURGLE_PERCENTAGE_DEFAULT
+		if unit_data_extension then
+			local breed = unit_data_extension:breed()
+
+			template_data.breed_armor_type = breed.armor_type
+		end
 	end,
 	interval_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -1131,8 +879,9 @@ templates.blessed_by_the_garden = {
 
 		local unit = template_context.unit
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local healing_amount = ENCROACHING_GARDEN_HEALING_AMOUNT[template_data.breed_armor_type]
 
-		health_extension:add_heal(1200)
+		health_extension:add_heal(healing_amount)
 	end,
 	stop_func = function (template_data, template_context)
 		return
@@ -1150,17 +899,17 @@ templates.blessed_by_the_garden = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 					},
 				},
@@ -1175,17 +924,17 @@ templates.blessed_by_the_garden = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = NURGLE_ENCROACHING_COLOR,
+							value = ENCROACHING_GARDEN_COLOR,
 						},
 					},
 				},
@@ -1418,13 +1167,9 @@ templates.blessed_by_nurgle_parasite = {
 	},
 }
 
-local DEFAULT_DAMAGE_REQUIRED = 0.5
-local ENRAGED_TEMPLATE_NAME = "havoc_enraged_enemies"
-local ENRAGED_COLOR = {
-	1,
-	0,
-	0,
-}
+local MUTATOR_ENRAGED_DEFAULT_DAMAGE_REQUIRED = mutator_havoc_enraged_config_settings.damage_required_to_trigger
+local MUTATOR_ENRAGED_TEMPLATE_NAME = mutator_havoc_enraged_config_settings.enraged_buff_template_name
+local MUTATOR_ENRAGED_COLOR = mutator_havoc_enraged_config_settings.enraged_color
 
 templates.havoc_enraged_enemies_trigger = {
 	class_name = "proc_buff",
@@ -1440,7 +1185,7 @@ templates.havoc_enraged_enemies_trigger = {
 		local unit = template_context.unit
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 		local current_health_percent = health_extension:current_health_percent()
-		local is_under_threshold = current_health_percent < DEFAULT_DAMAGE_REQUIRED
+		local is_under_threshold = current_health_percent < MUTATOR_ENRAGED_DEFAULT_DAMAGE_REQUIRED
 
 		if is_under_threshold and HEALTH_ALIVE[unit] and not template_data.triggered then
 			template_data.triggered = true
@@ -1449,7 +1194,7 @@ templates.havoc_enraged_enemies_trigger = {
 			local t = Managers.time:time("gameplay")
 			local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-			buff_extension:add_internally_controlled_buff(ENRAGED_TEMPLATE_NAME, t)
+			buff_extension:add_internally_controlled_buff(MUTATOR_ENRAGED_TEMPLATE_NAME, t)
 			buff_extension:_update_stat_buffs_and_keywords(current_time)
 		end
 	end,
@@ -1458,15 +1203,15 @@ templates.havoc_enraged_enemies = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.melee_attack_speed] = 0.4,
-		[buff_stat_buffs.stagger_duration_multiplier] = 0.1,
+		[buff_stat_buffs.melee_attack_speed] = mutator_havoc_enraged_config_settings.stat_buff_settings.melee_attack_speed,
+		[buff_stat_buffs.stagger_duration_multiplier] = mutator_havoc_enraged_config_settings.stat_buff_settings.stagger_duration_multiplier,
 	},
 	keywords = {
 		"no_stagger",
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		local color = Vector3(ENRAGED_COLOR[1], ENRAGED_COLOR[2], ENRAGED_COLOR[3])
+		local color = Vector3(MUTATOR_ENRAGED_COLOR[1], MUTATOR_ENRAGED_COLOR[2], MUTATOR_ENRAGED_COLOR[3])
 
 		Unit.set_vector3_for_materials(unit, "stimmed_color", color, true)
 
@@ -1484,7 +1229,7 @@ templates.havoc_enraged_enemies = {
 
 		template_data.old_hit_mass = hit_mass
 
-		local new_hit_mass = hit_mass * 1.5
+		local new_hit_mass = hit_mass * mutator_havoc_enraged_config_settings.hit_mass_multiplier
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 
 		health_extension:set_hit_mass(new_hit_mass)
@@ -1494,7 +1239,7 @@ templates.havoc_enraged_enemies = {
 		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
 			local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
-			animation_extension:set_variable(variable_name, 1.25)
+			animation_extension:set_variable(variable_name, mutator_havoc_enraged_config_settings.move_variable_override)
 		end
 
 		local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
@@ -1517,13 +1262,17 @@ templates.havoc_enraged_enemies = {
 		local tags = breed.tags
 		local scale
 
-		scale = tags.ogryn and 1.1 or 1.2
+		if tags.ogryn then
+			scale = mutator_havoc_enraged_config_settings.scale.ogryn
+		else
+			scale = mutator_havoc_enraged_config_settings.scale.human
+		end
 
 		Unit.set_local_scale(unit, 1, Vector3(1, 1, 1) * scale)
 
 		local position = POSITION_LOOKUP[unit]
 		local fx_system = Managers.state.extension:system("fx_system")
-		local sfx_shout = "wwise/events/minions/play_havoc_mutator_enraging_elites_buff_stinger"
+		local sfx_shout = mutator_havoc_enraged_config_settings.sfx_shout
 
 		fx_system:trigger_wwise_event(sfx_shout, position)
 	end,
@@ -1553,17 +1302,17 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 					},
 				},
@@ -1578,17 +1327,17 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 					},
 				},
@@ -1603,17 +1352,17 @@ templates.havoc_enraged_enemies = {
 						{
 							material_name = "eye_flash_init",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_glow",
 							variable_name = "trail_color",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 						{
 							material_name = "eye_socket",
 							variable_name = "material_variable_21872256",
-							value = ENRAGED_COLOR,
+							value = MUTATOR_ENRAGED_COLOR,
 						},
 					},
 				},
@@ -1627,12 +1376,219 @@ local GREEN_STIM_COLOR = {
 	0.75,
 	0.005,
 }
+local BLUE_STIM_COLOR = {
+	0,
+	0.75,
+	0.75,
+}
+local RED_STIM_COLOR = {
+	0.9,
+	0,
+	0.005,
+}
+local YELLOW_STIM_COLOR = {
+	0.7843137254901961,
+	0.8745098039215686,
+	0.0784313725490196,
+}
+local green_stimm_settings = mutator_stimmed_minions_config_settings.green_stimm_settings
+local blue_stimm_settings = mutator_stimmed_minions_config_settings.blue_stimm_settings
+local yellow_stimm_settings = mutator_stimmed_minions_config_settings.yellow_stimm_settings
+local red_stimm_settings = mutator_stimmed_minions_config_settings.red_stimm_settings
 
-templates.havoc_green_eyes = {
+templates.mutator_stimmed_minion_blue = {
 	class_name = "buff",
 	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+		buff_keywords.super_armor_override,
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+
+		local new_hit_mass = hit_mass * blue_stimm_settings.hit_mass_multiplier
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+	end,
+	stat_buffs = {
+		[buff_stat_buffs.unarmored_damage] = blue_stimm_settings.stat_buff_settings.unarmored_damage,
+		[buff_stat_buffs.resistant_damage] = -blue_stimm_settings.stat_buff_settings.resistant_damage,
+		[buff_stat_buffs.disgustingly_resilient_damage] = blue_stimm_settings.stat_buff_settings.disgustingly_resilient_damage,
+		[buff_stat_buffs.berserker_damage] = blue_stimm_settings.stat_buff_settings.berserker_damage,
+		[buff_stat_buffs.armored_damage] = blue_stimm_settings.stat_buff_settings.armored_damage,
+		[buff_stat_buffs.super_armor_damage] = blue_stimm_settings.stat_buff_settings.super_armor_damage,
+	},
 	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
 		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_speed",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = BLUE_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = BLUE_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = BLUE_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.mutator_stimmed_minion_green = {
+	class_name = "proc_buff",
+	duration = 100,
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_from_burning] = green_stimm_settings.stat_buff_settings.damage_taken_from_burning,
+		[buff_stat_buffs.damage_taken_from_bleeding] = green_stimm_settings.stat_buff_settings.damage_taken_from_bleeding,
+		[buff_stat_buffs.damage_taken_from_electrocution] = green_stimm_settings.stat_buff_settings.damage_taken_from_electrocution,
+		[buff_stat_buffs.warp_damage] = green_stimm_settings.stat_buff_settings.warp_damage,
+		[buff_stat_buffs.impact_modifier] = green_stimm_settings.stat_buff_settings.impact_modifier,
+	},
+	proc_events = {
+		[proc_events.on_minion_damage_taken] = 1,
+	},
+	start_func = function (template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		if not Managers.state.difficulty then
+			return
+		end
+
+		local heal_multipliers = green_stimm_settings.heal_multipliers
+		local heal_multiplier_scaled_by_challange = Managers.state.difficulty:get_table_entry_by_challenge(heal_multipliers)
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local max_health = health_extension:max_health()
+
+		template_data.health_pool = max_health * heal_multiplier_scaled_by_challange
+	end,
+	proc_func = function (params, template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		if HEALTH_ALIVE[template_context.unit] then
+			local unit = template_context.unit
+			local health_pool = template_data.health_pool
+			local damage_amount = params.damage_amount
+
+			if health_pool > 0 then
+				local heal_amount = math.min(health_pool, damage_amount)
+				local health_extension = ScriptUnit.extension(unit, "health_system")
+
+				health_extension:add_heal(heal_amount)
+
+				template_data.health_pool = template_data.health_pool - heal_amount
+			end
+		end
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		if template_data.health_pool == 0 then
+			return true
+		else
+			return false
+		end
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_heal",
+					stop_type = "destroy",
+				},
+			},
 			{
 				node_name = "j_lefteye",
 				vfx = {
@@ -1684,10 +1640,475 @@ templates.havoc_green_eyes = {
 				},
 			},
 		},
-		material_vector = {
-			name = "stimmed_color",
-			value = GREEN_STIM_COLOR,
-			priority = minion_effects_priorities.mutators,
+	},
+}
+templates.mutator_stimmed_minion_red = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.melee_attack_speed] = red_stimm_settings.stat_buff_settings.melee_attack_speed,
+		[buff_stat_buffs.stagger_duration_multiplier] = red_stimm_settings.stat_buff_settings.stagger_duration_multiplier,
+		[buff_stat_buffs.impact_modifier] = red_stimm_settings.stat_buff_settings.impact_modifier,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
+
+		if attack_intensity_extension then
+			attack_intensity_extension:set_allow_all_attacks_duration(999)
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		return
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_power",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = RED_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = RED_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = RED_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.mutator_stimmed_minion_yellow = {
+	class_name = "buff",
+	predicted = false,
+	target = buff_targets.minion_only,
+	keywords = {
+		buff_keywords.stimmed,
+	},
+	stat_buffs = {
+		[buff_stat_buffs.weakspot_damage_taken] = yellow_stimm_settings.stat_buff_settings.weakspot_damage_taken,
+		[buff_stat_buffs.unarmored_damage] = yellow_stimm_settings.stat_buff_settings.unarmored_damage,
+		[buff_stat_buffs.resistant_damage] = yellow_stimm_settings.stat_buff_settings.disgustingly_resilient_damage,
+		[buff_stat_buffs.disgustingly_resilient_damage] = yellow_stimm_settings.stat_buff_settings.berserker_damage,
+		[buff_stat_buffs.berserker_damage] = yellow_stimm_settings.stat_buff_settings.armored_damage,
+		[buff_stat_buffs.armored_damage] = yellow_stimm_settings.stat_buff_settings.super_armor_damage,
+		[buff_stat_buffs.super_armor_damage] = yellow_stimm_settings.stat_buff_settings.impact_modifier,
+		[buff_stat_buffs.impact_modifier] = yellow_stimm_settings.stat_buff_settings.ranged_attack_speed,
+		[buff_stat_buffs.ranged_attack_speed] = yellow_stimm_settings.stat_buff_settings.ranged_attack_speed,
+		[buff_stat_buffs.minion_num_shots_modifier] = yellow_stimm_settings.stat_buff_settings.minion_num_shots_modifier,
+		[buff_stat_buffs.melee_attack_speed] = yellow_stimm_settings.stat_buff_settings.melee_attack_speed,
+	},
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local hit_mass = breed.hit_mass
+
+		if type(hit_mass) == "table" then
+			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+		end
+
+		template_data.old_hit_mass = hit_mass
+
+		local new_hit_mass = hit_mass * yellow_stimm_settings.hit_mass_multiplier
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(new_hit_mass)
+	end,
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(template_data.old_hit_mass)
+	end,
+	minion_effects = {
+		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed_ability",
+					stop_type = "destroy",
+				},
+			},
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = YELLOW_STIM_COLOR,
+						},
+					},
+				},
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy",
+					material_variables = {
+						{
+							material_name = "eye_socket",
+							variable_name = "material_variable_21872256",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "trail_color",
+							value = YELLOW_STIM_COLOR,
+						},
+						{
+							material_name = "eye_glow",
+							variable_name = "material_variable_21872256_69bf7e2a",
+							value = YELLOW_STIM_COLOR,
+						},
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_red = table.clone(templates.mutator_stimmed_minion_red)
+templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_power",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = RED_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = RED_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = RED_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_green = table.clone(templates.mutator_stimmed_minion_green)
+templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_heal",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = GREEN_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = GREEN_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = GREEN_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_blue = table.clone(templates.mutator_stimmed_minion_blue)
+templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_speed",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = BLUE_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = BLUE_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = BLUE_STIM_COLOR,
+					},
+				},
+			},
+		},
+	},
+}
+templates.ogryn_mutator_stimmed_minion_yellow = table.clone(templates.mutator_stimmed_minion_yellow)
+templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
+	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects = {
+		{
+			node_name = "j_spine",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/buff_stimmed_ogryn_ability",
+				stop_type = "destroy",
+			},
+		},
+		{
+			node_name = "j_lefteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = YELLOW_STIM_COLOR,
+					},
+				},
+			},
+		},
+		{
+			node_name = "j_righteye",
+			vfx = {
+				orphaned_policy = "stop",
+				particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+				stop_type = "destroy",
+				material_variables = {
+					{
+						material_name = "eye_socket",
+						variable_name = "material_variable_21872256",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "trail_color",
+						value = YELLOW_STIM_COLOR,
+					},
+					{
+						material_name = "eye_glow",
+						variable_name = "material_variable_21872256_69bf7e2a",
+						value = YELLOW_STIM_COLOR,
+					},
+				},
+			},
 		},
 	},
 }
@@ -1696,6 +2117,46 @@ templates.havoc_no_stagger = {
 	predicted = false,
 	keywords = {
 		"no_stagger",
+	},
+}
+templates.havoc_rotten_armor_dr_01 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.25,
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.25,
+	},
+}
+templates.havoc_rotten_armor_dr_02 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.5,
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.5,
+	},
+}
+templates.havoc_rotten_armor_dr_03 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ranged_damage_taken_multiplier] = 0.75,
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 0.75,
+	},
+}
+templates.havoc_rotten_armor_dr_04 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ranged_damage_taken_multiplier] = 1,
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 1,
+	},
+}
+templates.havoc_rotten_armor_dr_05 = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.ranged_damage_taken_multiplier] = 1.25,
+		[buff_stat_buffs.melee_damage_taken_multiplier] = 1.25,
 	},
 }
 templates.havoc_toughness_modifier_1 = {

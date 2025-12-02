@@ -229,6 +229,10 @@ ScriptWorld.deactivate_viewport = function (world, viewport)
 	ScriptWorld._update_render_queue(world)
 end
 
+ScriptWorld.viewport_active = function (viewport)
+	return Viewport.get_data(viewport, "active")
+end
+
 ScriptWorld.update = function (world, dt, anim_callback, scene_callback)
 	if World.get_data(world, "active") then
 		if World.get_data(world, "paused") then
@@ -534,16 +538,26 @@ ScriptWorld.optimize_level_units = function (level)
 	end
 end
 
-ScriptWorld.spawn_level_instance = function (world, name, position, rotation, spawn_units, optional_instance_hash)
+ScriptWorld.spawn_level_instance = function (world, name, position, rotation, spawn_units, optional_wanted_level_id)
 	local level_instances = World.get_data(world, "level_instances")
 
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 
-	local rot_angle = math.abs(Quaternion.angle(rotation, Quaternion.identity()))
+	local euler_angles = {
+		Quaternion.to_euler_angles_xyz(rotation),
+	}
+	local did_modify = false
 
-	if rot_angle < 4 * math.pi / 360 then
-		rotation = Quaternion.identity()
+	for i = 1, 3 do
+		if math.abs(euler_angles[i]) < 3 then
+			euler_angles[i] = 0
+			did_modify = true
+		end
+	end
+
+	if did_modify then
+		rotation = Quaternion.from_euler_angles_xyz(unpack(euler_angles))
 	end
 
 	local scale = Vector3(1, 1, 1)
@@ -555,47 +569,18 @@ ScriptWorld.spawn_level_instance = function (world, name, position, rotation, sp
 		level = World.spawn_level_time_sliced(world, name, position, rotation, scale)
 	end
 
+	local wanted_level_id = optional_wanted_level_id or Managers.state.unit_spawner:current_level_id() + 1
 	local level_instance_array = level_instances[name] or {}
 	local instance_id = #level_instance_array + 1
-	local level_instance_hash = optional_instance_hash
 
-	if not level_instance_hash then
-		level_instance_hash = Application.make_hash(name, instance_id)
-		level_instance_hash = string.sub(level_instance_hash, 1, 7)
-	elseif type(level_instance_hash) == "number" then
-		level_instance_hash = string.format("%x", level_instance_hash)
-	end
-
-	Level.set_data(level, "instance_hash", level_instance_hash)
 	Level.set_data(level, "runtime_loaded_level", true)
-
-	level_instance_hash = tonumber(level_instance_hash, 16)
-
 	table.insert(level_instance_array, level)
 
 	level_instances[name] = level_instance_array
 
-	Log.info("ScriptWorld", "Registering level instance named: '%q' with id: '%d' and hash '%s'", name, instance_id, level_instance_hash)
 	World.set_data(world, "level_instances", level_instances)
 
-	local level_units = Level.units(level, true)
-	local category_name = "level_spawned"
-	local extension_manager = Managers.state.extension
-
-	extension_manager:add_and_register_units(world, level_units, nil, category_name)
-
-	local unit_spawner_manager = Managers.state.unit_spawner
-
-	unit_spawner_manager:register_runtime_loaded_level(level, level_instance_hash)
-	Level.trigger_level_spawned(level)
-
-	local sub_levels = Level.nested_levels(level)
-
-	for i = 1, #sub_levels do
-		Level.trigger_level_spawned(sub_levels[i])
-	end
-
-	return level, instance_id, level_instance_hash
+	return level, instance_id, wanted_level_id
 end
 
 ScriptWorld.destroy_level_instance = function (world, name, instance_id)
@@ -606,11 +591,6 @@ ScriptWorld.destroy_level_instance = function (world, name, instance_id)
 		return
 	end
 
-	local instance_hash = Level.get_data(level_instance, "instance_hash")
-
-	instance_hash = tonumber(instance_hash, 16)
-
-	Log.info("ScriptWorld", "Destroying level instance named: '%q' with id: '%d' and hash '%s'", name, instance_id, instance_hash)
 	Level.trigger_level_shutdown(level_instance)
 
 	local level_units = Level.units(level_instance, true)
@@ -620,7 +600,7 @@ ScriptWorld.destroy_level_instance = function (world, name, instance_id)
 
 	local unit_spawner_manager = Managers.state.unit_spawner
 
-	unit_spawner_manager:unregister_runtime_loaded_level(level_instance, instance_hash)
+	unit_spawner_manager:unregister_spawned_level(level_instance)
 
 	for i = 1, #level_units do
 		World.destroy_unit(world, level_units[i])

@@ -1,27 +1,24 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay.lua
 
-local Blueprints = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_blueprints")
-local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local HavocSettings = require("scripts/settings/havoc_settings")
 local Definitions = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_definitions")
+local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local Blueprints = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_blueprints")
+local CharacterSheet = require("scripts/utilities/character_sheet")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")
+local HordeBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local InputDevice = require("scripts/managers/input/input_device")
+local Items = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local MissionBuffsParser = require("scripts/ui/constant_elements/elements/mission_buffs/utilities/mission_buffs_parser")
 local MissionTypes = require("scripts/settings/mission/mission_types")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
+local Text = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local InputUtils = require("scripts/managers/input/input_utils")
-local HordeBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
-local MissionBuffsParser = require("scripts/ui/constant_elements/elements/mission_buffs/utilities/mission_buffs_parser")
-local CharacterSheet = require("scripts/utilities/character_sheet")
-local MasterItems = require("scripts/backend/master_items")
-local Items = require("scripts/utilities/items")
-local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
-local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
-local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
 local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_side"
 local default_material = "content/ui/materials/base/ui_default_base"
@@ -29,18 +26,6 @@ local default_texture = "content/ui/textures/placeholder_texture"
 local default_gradient = "content/ui/textures/color_ramps/talent_ability"
 local default_title = ""
 local default_description = ""
-local _text_extra_options = {}
-
-local function _text_width(ui_renderer, text, style)
-	local text_extra_options = _text_extra_options
-
-	table.clear(text_extra_options)
-	UIFonts.get_font_options_by_style(style, text_extra_options)
-
-	local width = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, style.size, text_extra_options)
-
-	return math.round(width)
-end
 
 HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale, optional_context)
 	HudElementTacticalOverlay.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -120,6 +105,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 	local class_loadout = {
 		ability = {},
 		blitz = {},
+		pocketable = {},
 		aura = {},
 		passives = {},
 		coherency = {},
@@ -129,7 +115,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 		modifiers = {},
 	}
 
-	CharacterSheet.class_loadout(profile, class_loadout)
+	CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
 
 	local category_id = "talents"
 
@@ -146,7 +132,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 			if settings_by_node_type then
 				local frame = settings_by_node_type.frame
 				local icon_mask = settings_by_node_type.icon_mask
-				local title = talent_data.talent and talent_data.talent.display_name and Localize(talent_data.talent.display_name)
+				local title = talent_data.talent and TalentLayoutParser.talent_title(talent_data.talent, 1)
 				local description = talent_data.talent and TalentLayoutParser.talent_description(talent_data.talent, 1)
 				local modifiers = class_loadout.modifiers[talent_type]
 				local icon = talent_data.icon or talent_data.large_icon
@@ -177,7 +163,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 				if modifiers then
 					for i = 1, #modifiers do
 						local modifier_talent = modifiers[i]
-						local modifier_title = modifier_talent.display_name and Localize(modifier_talent.display_name)
+						local modifier_title = TalentLayoutParser.talent_title(modifier_talent, 1)
 						local modifier_description = TalentLayoutParser.talent_description(modifier_talent, 1)
 						local modifier_icon = modifier_talent.icon or modifier_talent.large_icon
 
@@ -383,7 +369,7 @@ HudElementTacticalOverlay._add_player_buffs = function (self)
 							local talent_buff_coherency_template_name = definition.coherency and definition.coherency.buff_template_name
 
 							if talent_buff_passive_template_name == buff_name or talent_buff_coherency_template_name == buff_name or talent_name == buff_related_talent then
-								title = definition.display_name and Localize(definition.display_name) or title
+								title = TalentLayoutParser.talent_title(definition, 1) or title
 								description = TalentLayoutParser.talent_description(definition, 1) or description
 
 								for j = 1, #display_buffs do
@@ -631,6 +617,8 @@ HudElementTacticalOverlay._setup_buffs_presentation = function (self, ui_rendere
 
 				Managers.ui:add_inputs_in_use_by_ui("tactical_overlay_scroll_down", ingame_service_name)
 				Managers.ui:add_inputs_in_use_by_ui("tactical_overlay_scroll_up", ingame_service_name)
+				Managers.ui:add_inputs_in_use_by_ui("tactical_overlay_controller_scroll_down", ingame_service_name)
+				Managers.ui:add_inputs_in_use_by_ui("tactical_overlay_controller_scroll_up", ingame_service_name)
 			end
 
 			self._widgets_by_name.buff_panel_background.content.visible = true
@@ -667,6 +655,8 @@ HudElementTacticalOverlay._remove_buffs_presentation = function (self)
 
 		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_down", ingame_service_name)
 		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_scroll_up", ingame_service_name)
+		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_controller_scroll_down", ingame_service_name)
+		Managers.ui:remove_inputs_in_use_by_ui("tactical_overlay_controller_scroll_up", ingame_service_name)
 
 		self._widgets_by_name.buff_panel_scrollbar_input_icon.content.visible = false
 		self._widgets_by_name.buff_panel_background.content.visible = false
@@ -759,16 +749,16 @@ HudElementTacticalOverlay._buffs_navigation = function (self, dt, t, input_servi
 		local using_controler = not Managers.ui:using_cursor_navigation()
 
 		if using_controler then
-			if input_service:get("tactical_overlay_scroll_down") then
+			if input_service:get("tactical_overlay_controller_scroll_down") then
 				scroll_axis = -1
-			elseif input_service:get("tactical_overlay_scroll_up") then
+			elseif input_service:get("tactical_overlay_controller_scroll_up") then
 				scroll_axis = 1
 			end
 
 			scroll_multiplier = 0.2
-		elseif input_service:get("wield_scroll_down") then
+		elseif input_service:get("tactical_overlay_scroll_down") then
 			scroll_axis = -1
-		elseif input_service:get("wield_scroll_up") then
+		elseif input_service:get("tactical_overlay_scroll_up") then
 			scroll_axis = 1
 		end
 
@@ -897,18 +887,16 @@ end
 
 HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_renderer)
 	local margin = 20
-	local scenegraph = self._ui_scenegraph
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
 
 	if circumstance_info_widget.visible == true then
 		local title_margin = 20
 		local circumstance_info_content = circumstance_info_widget.content
 		local circumstance_name_style = circumstance_info_widget.style.circumstance_name
-		local circumstance_name_font_options = UIFonts.get_font_options_by_style(circumstance_name_style)
-		local _, circumstance_name_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_name, circumstance_name_style.font_type, circumstance_name_style.font_size, {
+		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_name, circumstance_name_style, {
 			circumstance_name_style.size[1],
 			1000,
-		}, circumstance_name_font_options)
+		})
 		local description_margin = 5
 		local min_height = circumstance_info_widget.style.icon.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
@@ -916,11 +904,10 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		circumstance_name_style.size[2] = title_height
 
 		local circumstance_description_style = circumstance_info_widget.style.circumstance_description
-		local circumstance_description_font_options = UIFonts.get_font_options_by_style(circumstance_description_style)
-		local _, circumstance_description_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style.font_type, circumstance_description_style.font_size, {
+		local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style, {
 			circumstance_description_style.size[1],
 			1000,
-		}, circumstance_description_font_options)
+		})
 
 		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
 		circumstance_description_style.size[2] = circumstance_description_height
@@ -936,11 +923,10 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 		local title_margin = 20
 		local circumstance_info_content = havoc_circumstance_info.content
 		local circumstance_name_style = havoc_circumstance_info.style.circumstance_name_01
-		local circumstance_name_font_options = UIFonts.get_font_options_by_style(circumstance_name_style)
-		local _, circumstance_name_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_name_01, circumstance_name_style.font_type, circumstance_name_style.font_size, {
+		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_name_01, circumstance_name_style, {
 			circumstance_name_style.size[1],
 			1000,
-		}, circumstance_name_font_options)
+		})
 		local description_margin = 5
 		local min_height = havoc_circumstance_info.style.icon_01.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
@@ -1020,7 +1006,7 @@ HudElementTacticalOverlay._update_right_hint = function (self)
 	local content = self._widgets_by_name.right_input_hint.content
 
 	if table.size(entries) > 1 then
-		content.hint = TextUtils.localize_with_button_hint("tactical_overlay_swap", "loc_hud_tactical_overlay_cycle_tab", nil, "Ingame", nil, nil, true)
+		content.hint = Text.localize_with_button_hint("tactical_overlay_swap", "loc_hud_tactical_overlay_cycle_tab", nil, "Ingame", nil, nil, true)
 	else
 		content.hint = ""
 	end
@@ -1042,7 +1028,7 @@ HudElementTacticalOverlay._update_right_timer_text = function (self, dt, t, ui_r
 		local timer_text
 
 		if timer_value >= 0 then
-			timer_text = TextUtils.format_time_span_localized(timer_value, true)
+			timer_text = Text.format_time_span_localized(timer_value, true)
 		else
 			timer_text = Localize("loc_live_event_expired")
 		end
@@ -1050,7 +1036,7 @@ HudElementTacticalOverlay._update_right_timer_text = function (self, dt, t, ui_r
 		local timer_widget = self._widgets_by_name.right_timer
 
 		timer_widget.content.time_left = timer_text
-		timer_widget.style.time_name.offset[1] = -(2 * ElementSettings.buffer + _text_width(ui_renderer, timer_text, timer_widget.style.time_name))
+		timer_widget.style.time_name.offset[1] = -(2 * ElementSettings.buffer + self:_text_size(ui_renderer, timer_text, timer_widget.style.time_name))
 	end
 end
 
@@ -1809,7 +1795,7 @@ HudElementTacticalOverlay._total_materials_collected = function (self, material_
 	local small_count = collected_materials[material_type] and collected_materials[material_type].small or 0
 	local large_count = collected_materials[material_type] and collected_materials[material_type].large or 0
 
-	return TextUtils.format_currency(small_count * small_value + large_count * large_value)
+	return Text.format_currency(small_count * small_value + large_count * large_value)
 end
 
 HudElementTacticalOverlay._update_materials_collected = function (self)

@@ -4,12 +4,12 @@ local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/
 local Sway = {}
 local _sway_values
 
-Sway.add_immediate_sway = function (sway_template, sway_control_component, sway_component, movement_state_component, sway_type, optional_num_hits)
+Sway.add_immediate_sway = function (sway_template, sway_control_component, sway_component, movement_state_component, locomotion_component, inair_state_component, sway_type, optional_num_hits)
 	if not sway_template then
 		return
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local movement_state_settings = sway_template[weapon_movement_state]
 	local new_immediate_pitch, new_immediate_yaw = _sway_values(movement_state_settings, sway_control_component, sway_component, sway_type, optional_num_hits)
 
@@ -22,7 +22,7 @@ Sway.add_fixed_immediate_sway = function (sway_control_component, immediate_pitc
 	sway_control_component.immediate_yaw = immediate_yaw
 end
 
-Sway.apply_sway_rotation = function (sway_template, sway_component, movement_state_component, rotation)
+Sway.apply_sway_rotation = function (sway_template, sway_component, rotation)
 	if not sway_template then
 		return rotation
 	end
@@ -35,12 +35,12 @@ Sway.apply_sway_rotation = function (sway_template, sway_component, movement_sta
 	return combined_rotation
 end
 
-Sway.movement_state_settings = function (sway_template, movement_state_component)
+Sway.movement_state_settings = function (sway_template, movement_state_component, locomotion_component, inair_state_component)
 	if not sway_template then
 		return nil
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local movement_state_settings = sway_template[weapon_movement_state]
 
 	return movement_state_settings

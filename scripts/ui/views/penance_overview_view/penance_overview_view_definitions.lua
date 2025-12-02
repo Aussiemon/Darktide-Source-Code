@@ -761,6 +761,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		display_name = "loc_achievements_view_button_hint_favorite_achievement",

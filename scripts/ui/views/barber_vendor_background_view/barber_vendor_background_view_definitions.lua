@@ -40,6 +40,7 @@ local function button_options_definitions()
 						{
 							blur_background = false,
 							display_name = "loc_credits_vendor_view_title",
+							input_legend_buttons = nil,
 							view = "character_appearance_view",
 							context_function = function ()
 								return {
@@ -68,6 +69,7 @@ local function button_options_definitions()
 							{
 								blur_background = false,
 								display_name = "loc_credits_vendor_view_title",
+								input_legend_buttons = nil,
 								view = "character_appearance_view",
 								context_function = function ()
 									return {
@@ -142,6 +144,7 @@ local function button_options_definitions()
 						{
 							blur_background = false,
 							display_name = "loc_credits_vendor_view_title",
+							input_legend_buttons = nil,
 							view = "character_appearance_view",
 							context_function = function ()
 								return {

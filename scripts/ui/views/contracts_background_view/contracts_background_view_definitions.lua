@@ -2,6 +2,7 @@
 
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 }
@@ -114,6 +115,38 @@ local button_options_definitions = {
 				hide_price = true,
 			})
 		end,
+	},
+	{
+		blur_background = false,
+		display_name = "loc_live_events_view_title",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
+					{
+						view = "live_events_view",
+					},
+				},
+			}
+
+			self:_setup_tab_bar(tab_bar_params)
+		end,
+		button_template = {
+			pass_template = ButtonPassTemplates.list_button_with_background,
+			init = function (parent, widget, element, callback_function)
+				local style = widget.style
+				local content = widget.content
+
+				content.text = Localize("loc_live_events_view_title")
+
+				if not Managers.live_event:active_event_id() then
+					content.hotspot.disabled = true
+				else
+					content.hotspot.pressed_callback = callback_function
+				end
+			end,
+		},
 	},
 }
 local background_world_params = {

@@ -2,6 +2,7 @@
 
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local GameModeTrainingGrounds = class("GameModeTrainingGrounds", "GameModeBase")
 
 local function _log(...)
@@ -96,7 +97,7 @@ end
 GameModeTrainingGrounds._force_base_talents = function (self, player)
 	local profile = player:profile()
 	local fixed_t = FixedFrame.get_latest_fixed_time()
-	local base_talents = profile.archetype.base_talents
+	local base_talents = PlayerTalents.base_talents(profile.archetype, nil)
 	local talent_extension = ScriptUnit.extension(player.player_unit, "talent_system")
 
 	talent_extension:select_new_talents(base_talents, fixed_t)

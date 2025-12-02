@@ -140,6 +140,7 @@ local cinematic_video_template = {
 			},
 			{
 				currently_playing_subtitle = "loc_adamant_officer_a__adamant_cinematic_u_01",
+				speaker_name = nil,
 				subtitle_duration = 2.44,
 				subtitle_start = 93.74,
 			},

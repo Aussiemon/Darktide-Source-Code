@@ -47,6 +47,8 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	locomotion_steering_component.disable_push_velocity = true
 
 	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local is_crouching = self._movement_state_component.is_crouching
 
 	if is_crouching then
@@ -57,7 +59,7 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 		local sway_component = self._sway_component
 		local spread_control_component = self._spread_control_component
 
-		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 	end
 
 	self:_queue_minigame_initialization()
@@ -77,6 +79,7 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	self._previous_action_one_hold = false
 	self._previous_jump_held = false
 	self._previous_interact_hold = false
+	self._force_cancel = false
 end
 
 PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
@@ -94,10 +97,11 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
+	local keep_equipped = minigame and not minigame:unequip_on_exit()
 
-	PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
+	if not keep_equipped then
+		PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
 
-	if minigame and minigame:unequip_on_exit() then
 		local is_completed = minigame and minigame:is_completed()
 
 		if wielded_slot == "slot_device" and PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_device") then
@@ -125,18 +129,18 @@ PlayerCharacterStateMinigame.on_enter_server_corrected_state = function (self, u
 end
 
 PlayerCharacterStateMinigame.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	if self._setup_minigame then
-		self:_initialize_minigame()
+	if self._setup_minigame and (self:_check_initialize_minigame_from_unit() or self:_check_initialize_minigame_from_gamemode()) then
+		self._setup_minigame = false
 	end
 
 	local input_extension = self._input_extension
-	local cancelled = self:_update_input(t, input_extension)
+	local cancelled = self:_update_input(t, fixed_frame, input_extension) or self._force_cancel
 	local transition = self:_check_transition(unit, t, next_state_params, cancelled, input_extension)
 
 	return transition
 end
 
-PlayerCharacterStateMinigame._update_input = function (self, t, input_extension)
+PlayerCharacterStateMinigame._update_input = function (self, t, fixed_frame, input_extension)
 	local action_one_hold = input_extension:get("action_one_hold")
 	local interact_hold = input_extension:get("interact_hold")
 	local jump_held = input_extension:get("jump_held")
@@ -155,8 +159,13 @@ PlayerCharacterStateMinigame._update_input = function (self, t, input_extension)
 	local primary_input = self._previous_input
 	local action_two_pressed = input_extension:get("action_two_pressed")
 	local cancel = action_two_pressed
+	local block_weapon_actions = false
 	local animation_extension = self._animation_extension
 	local minigame = self._minigame
+
+	if not self:_is_wielding_minigame_device() then
+		return true
+	end
 
 	if minigame then
 		if minigame:uses_action() and minigame:action(primary_input, t) then
@@ -182,6 +191,13 @@ PlayerCharacterStateMinigame._update_input = function (self, t, input_extension)
 		end
 
 		cancel = minigame:escape_action(action_two_pressed)
+		block_weapon_actions = minigame:blocks_weapon_actions()
+	end
+
+	if not cancel and not block_weapon_actions then
+		local weapon_extension = self._weapon_extension
+
+		weapon_extension:update_weapon_actions(fixed_frame)
 	end
 
 	return cancel
@@ -304,28 +320,28 @@ PlayerCharacterStateMinigame._queue_minigame_initialization = function (self)
 	self._setup_minigame = true
 end
 
-PlayerCharacterStateMinigame.external_initialize_minigame = function (self, minigame)
-	if not self._setup_minigame then
-		return
-	end
-
-	self._minigame = minigame
-
-	if self._is_server then
-		minigame:setup_game()
-	end
-
-	minigame:start(self._player)
-
-	self._setup_minigame = false
+PlayerCharacterStateMinigame.force_cancel = function (self)
+	self._force_cancel = true
 end
 
-PlayerCharacterStateMinigame._initialize_minigame = function (self)
+PlayerCharacterStateMinigame.minigame = function (self)
+	return self._minigame
+end
+
+PlayerCharacterStateMinigame._check_initialize_minigame_from_gamemode = function (self)
+	local game_mode = Managers.state.game_mode:game_mode()
+
+	if not game_mode.map_minigame then
+		return false
+	end
+end
+
+PlayerCharacterStateMinigame._check_initialize_minigame_from_unit = function (self)
 	local minigame_character_state = self._minigame_character_state_component
 	local is_unit_synced = minigame_character_state.interface_level_unit_id ~= NetworkConstants.invalid_level_unit_id or minigame_character_state.interface_game_object_id ~= NetworkConstants.invalid_game_object_id
 
 	if not is_unit_synced then
-		return
+		return false
 	end
 
 	local is_level_unit = minigame_character_state.interface_is_level_unit
@@ -345,7 +361,7 @@ PlayerCharacterStateMinigame._initialize_minigame = function (self)
 		minigame:start(self._player)
 	end
 
-	self._setup_minigame = false
+	return true
 end
 
 PlayerCharacterStateMinigame._deinitialize_minigame = function (self)

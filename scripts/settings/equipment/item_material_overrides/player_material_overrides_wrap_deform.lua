@@ -476,6 +476,44 @@ local material_overrides = {
 			},
 		},
 	},
+	human_facial_hair_male_face_broker_01 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/male_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.00759448051453,
+				-0.00807532310486,
+				-0.0189587402344,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00765203475952,
+				0.0129247045517,
+				0.00454513549805,
+			},
+		},
+	},
+	human_facial_hair_male_face_broker_02 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/male_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.00713608264923,
+				-0.00940757751465,
+				-0.0152445983887,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00598967552185,
+				0.00682311534882,
+				0.00625595092773,
+			},
+		},
+	},
 	human_facial_hair_female_face_middle_eastern_01 = {
 		texture_overrides = {
 			facial_hair_wrap_deform_map = {
@@ -758,6 +796,44 @@ local material_overrides = {
 				0.00512167930603,
 				0.0032127904892,
 				0.0022265625,
+			},
+		},
+	},
+	human_facial_hair_female_face_broker_01 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/female_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.00361194849014,
+				-0.00213010787964,
+				-0.00416198730469,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00481235027313,
+				0.00426483154297,
+				0.00269500732422,
+			},
+		},
+	},
+	human_facial_hair_female_face_broker_02 = {
+		texture_overrides = {
+			facial_hair_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/facial_hair/female_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			facial_hair_wrap_deform_min = {
+				-0.0036545419693,
+				-0.00328267097473,
+				-0.00407989501953,
+			},
+			facial_hair_wrap_deform_max = {
+				0.00400002241135,
+				0.0023886013031,
+				0.00477966308594,
 			},
 		},
 	},
@@ -1521,6 +1597,82 @@ local material_overrides = {
 			},
 		},
 	},
+	human_scars_female_face_broker_01 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/female_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.0139652109146,
+				-0.0167484951019,
+				-0.0127105712891,
+			},
+			scars_wrap_deform_max = {
+				0.0141025876999,
+				0.0122414708138,
+				0.0089599609375,
+			},
+		},
+	},
+	human_scars_male_face_broker_01 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/male_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.00703417778015,
+				-0.0073846244812,
+				-0.018500213623,
+			},
+			scars_wrap_deform_max = {
+				0.00726331710815,
+				0.0130222558975,
+				0.00444564819336,
+			},
+		},
+	},
+	human_scars_female_face_broker_02 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/female_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.0139656639099,
+				-0.0153990387917,
+				-0.0102850341797,
+			},
+			scars_wrap_deform_max = {
+				0.014103717804,
+				0.0122405481339,
+				0.00737091064453,
+			},
+		},
+	},
+	human_scars_male_face_broker_02 = {
+		texture_overrides = {
+			scars_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/scars/male_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			scars_wrap_deform_min = {
+				-0.0069650554657,
+				-0.00904323577881,
+				-0.0147439575195,
+			},
+			scars_wrap_deform_max = {
+				0.00593885421753,
+				0.00680215835571,
+				0.00622375488281,
+			},
+		},
+	},
 	ogryn_headgear_face_caucasian_03 = {
 		texture_overrides = {
 			headgear_wrap_deform_map = {
@@ -2278,6 +2430,82 @@ local material_overrides = {
 				0.0088601064682,
 				0.00834927558899,
 				0.00600189208984,
+			},
+		},
+	},
+	human_headgear_female_face_broker_01 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/female_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00901781797409,
+				-0.0169616699219,
+				-0.0121153259277,
+			},
+			headgear_wrap_deform_max = {
+				0.00886920928955,
+				0.00950711250305,
+				0.00809753417969,
+			},
+		},
+	},
+	human_headgear_male_face_broker_01 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/male_face_broker_01_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00710128307343,
+				-0.00843461990356,
+				-0.0184967041016,
+			},
+			headgear_wrap_deform_max = {
+				0.00733840942383,
+				0.0118727493286,
+				0.00339126586914,
+			},
+		},
+	},
+	human_headgear_female_face_broker_02 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/female_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00983445644379,
+				-0.0161391568184,
+				-0.0102348327637,
+			},
+			headgear_wrap_deform_max = {
+				0.00964509010315,
+				0.00817657470703,
+				0.00594207763672,
+			},
+		},
+	},
+	human_headgear_male_face_broker_02 = {
+		texture_overrides = {
+			headgear_wrap_deform_map = {
+				resource = "content/characters/player/human/deformers/headgear/male_face_broker_02_di",
+			},
+		},
+		property_overrides = {
+			headgear_wrap_deform_min = {
+				-0.00784890174866,
+				-0.00964028358459,
+				-0.0107403564453,
+			},
+			headgear_wrap_deform_max = {
+				0.00611845970154,
+				0.00643416881561,
+				0.00400039672852,
 			},
 		},
 	},

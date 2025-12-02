@@ -18,20 +18,37 @@ MutatorSpawnerNode.CIRCLE_PLACEMENT = RoamerSlotPlacementFunctions.circle_placem
 MutatorSpawnerNode.FLOOD_FILL_PLACEMENT = RoamerSlotPlacementFunctions.flood_fill
 
 MutatorSpawnerNode.init = function (self, template)
-	self._spawners = template.spawners or {}
 	self._run_on_init = template.run_on_init or false
 	self._asset_package = template.asset_package
 	self._placement_method = template.placement_method or MutatorSpawnerNode.SINGLE_PLACEMENT
 	self._spawn_settings = template.spawn_settings or {}
 	self._use_raycast = template.use_raycast
+	self._spawners = {}
+
+	local template_spawners = template.spawners or {}
+
+	for i = 1, #template_spawners do
+		local spawner_template = template_spawners[i]
+		local class = require(spawner_template.class)
+
+		table.insert(self._spawners, class:new(spawner_template.template))
+	end
 end
 
-MutatorSpawnerNode.asset_package = function (self)
-	return self._asset_package
+MutatorSpawnerNode.placement_logic_functions = function (self)
+	local placement_logic_functions = {
+		_random = function (seed, ...)
+			local _, value = math.next_random(Managers.state.pacing:level_seed(), ...)
+
+			return value
+		end,
+	}
+
+	return placement_logic_functions
 end
 
-MutatorSpawnerNode.children = function (self)
-	return self._spawners
+MutatorSpawnerNode.destroy = function (self)
+	return
 end
 
 MutatorSpawnerNode.should_run_on_init = function (self)
@@ -42,7 +59,7 @@ MutatorSpawnerNode.is_runtime = function (self)
 	return not self._run_on_init
 end
 
-local RAY_LENGTH = 0.5
+local RAY_LENGTH = 2
 
 MutatorSpawnerNode.trigger_spawn = function (self, raycast_object, spawn_position, ahead_target_unit, optional_spawn_rotation, optional_level_size)
 	local nav_mesh_manager = Managers.state.nav_mesh

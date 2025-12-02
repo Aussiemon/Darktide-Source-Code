@@ -14,6 +14,7 @@ LoadingRemoteStateMachine.TIMEOUT = 30
 LoadingRemoteStateMachine.init = function (self, network_delegate, client_channel_id, spawn_queue, done_loading_level_func, mission_seed)
 	local shared_state = {
 		added_to_game_session = false,
+		spawn_group = nil,
 		state = "loading",
 		network_delegate = network_delegate,
 		client_channel_id = client_channel_id,

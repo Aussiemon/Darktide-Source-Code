@@ -23,6 +23,7 @@ dialogue_breed_settings.voice_classes_2d = {
 	"travelling_salesman",
 	"commissar",
 	"adamant_officer",
+	"tank_commander",
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
 dialogue_breed_settings.chaos_hound = {
@@ -33,6 +34,8 @@ dialogue_breed_settings.chaos_hound = {
 	trigger_seen_vo = true,
 	vo_class_name = "chaos_hound",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_hound_mutator = table.clone(dialogue_breed_settings.chaos_hound)
 dialogue_breed_settings.chaos_plague_ogryn = {
@@ -43,6 +46,8 @@ dialogue_breed_settings.chaos_plague_ogryn = {
 	trigger_seen_vo = true,
 	vo_class_name = "chaos_plague_ogryn",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_beast_of_nurgle = {
 	dialogue_memory_faction_name = "enemy",
@@ -52,6 +57,8 @@ dialogue_breed_settings.chaos_beast_of_nurgle = {
 	trigger_seen_vo = true,
 	vo_class_name = "chaos_beast_of_nurgle",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -61,6 +68,8 @@ dialogue_breed_settings.chaos_poxwalker = {
 	trigger_seen_vo = false,
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_mutated_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -70,6 +79,8 @@ dialogue_breed_settings.chaos_mutated_poxwalker = {
 	trigger_seen_vo = false,
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_lesser_mutated_poxwalker = {
 	dialogue_memory_faction_name = "enemy",
@@ -79,6 +90,8 @@ dialogue_breed_settings.chaos_lesser_mutated_poxwalker = {
 	trigger_seen_vo = false,
 	vo_class_name = "chaos_poxwalker",
 	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.voice_preview = {
 	dialogue_memory_faction_name = "npc",
@@ -89,6 +102,7 @@ dialogue_breed_settings.voice_preview = {
 	trigger_seen_vo = false,
 	vo_class_name = "voice_preview",
 	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = nil,
 	wwise_voices = {
 		"voice_preview",
 	},
@@ -101,6 +115,8 @@ dialogue_breed_settings.chaos_poxwalker_bomber = {
 	trigger_seen_vo = true,
 	vo_class_name = "chaos_poxwalker_bomber",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_newly_infected = {
 	dialogue_memory_faction_name = "enemy",
@@ -173,6 +189,8 @@ dialogue_breed_settings.chaos_spawn = {
 	trigger_seen_vo = true,
 	vo_class_name = "chaos_spawn",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.human = {
 	dialogue_memory_faction_name = "player",
@@ -199,6 +217,7 @@ dialogue_breed_settings.human = {
 		"ogryn_a",
 		"ogryn_b",
 		"ogryn_c",
+		"ogryn_d",
 		"zealot_female_a",
 		"zealot_female_b",
 		"zealot_female_c",
@@ -211,6 +230,12 @@ dialogue_breed_settings.human = {
 		"adamant_female_a",
 		"adamant_female_b",
 		"adamant_female_c",
+		"broker_male_a",
+		"broker_male_b",
+		"broker_male_c",
+		"broker_female_a",
+		"broker_female_b",
+		"broker_female_c",
 	},
 }
 dialogue_breed_settings.mission_giver = {
@@ -254,6 +279,8 @@ dialogue_breed_settings.mission_giver = {
 		"cargo_pilot_a",
 		"commissar_a",
 		"adamant_officer_a",
+		"traitor_gunner_a",
+		"tank_commander_a",
 	},
 }
 dialogue_breed_settings.sergeant = {
@@ -352,9 +379,16 @@ dialogue_breed_settings.purser = {
 		adamant_male_a = "likes_character",
 		adamant_male_b = "likes_character",
 		adamant_male_c = "likes_character",
+		broker_female_a = "likes_character",
+		broker_female_b = "likes_character",
+		broker_female_c = "likes_character",
+		broker_male_a = "likes_character",
+		broker_male_b = "likes_character",
+		broker_male_c = "likes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "likes_character",
 		ogryn_c = "likes_character",
+		ogryn_d = "likes_character",
 		psyker_female_a = "likes_character",
 		psyker_female_b = "likes_character",
 		psyker_female_c = "likes_character",
@@ -423,9 +457,16 @@ dialogue_breed_settings.boon_vendor = {
 		adamant_male_a = "likes_character",
 		adamant_male_b = "likes_character",
 		adamant_male_c = "likes_character",
+		broker_female_a = "dislikes_character",
+		broker_female_b = "dislikes_character",
+		broker_female_c = "dislikes_character",
+		broker_male_a = "dislikes_character",
+		broker_male_b = "dislikes_character",
+		broker_male_c = "dislikes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "likes_character",
+		ogryn_d = "dislikes_character",
 		psyker_female_a = "dislikes_character",
 		psyker_female_b = "dislikes_character",
 		psyker_female_c = "dislikes_character",
@@ -491,6 +532,7 @@ dialogue_breed_settings.enemy_wolfer_adjutant = {
 		"enemy_wolfer_adjutant_c",
 		"enemy_wolfer_adjutant_d",
 		"enemy_wolfer_adjutant_e",
+		"traitor_gunner_a",
 	},
 }
 dialogue_breed_settings.dreg_lector = {
@@ -597,6 +639,7 @@ dialogue_breed_settings.ogryn = {
 		"ogryn_a",
 		"ogryn_b",
 		"ogryn_c",
+		"ogryn_d",
 	},
 }
 dialogue_breed_settings.renegade_assault = {
@@ -903,12 +946,15 @@ dialogue_breed_settings.renegade_flamer_mutator = {
 	},
 }
 dialogue_breed_settings.unknown_breed_name = {
+	dialogue_memory_faction_name = nil,
 	has_dialogue_extension = false,
 	is_network_synced = false,
 	trigger_heard_vo = false,
 	trigger_seen_vo = false,
 	vo_class_name = "unknown",
 	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 dialogue_breed_settings.cultist_shocktrooper = {
 	dialogue_memory_faction_name = "enemy",
@@ -1005,6 +1051,7 @@ dialogue_breed_settings.cultist_mutant = {
 	vo_class_name = "cultist_mutant",
 	vo_triggers_enemy_kill_query = true,
 	wwise_voice_switch_group = "enemy_voice_profile",
+	wwise_voices = nil,
 }
 dialogue_breed_settings.cultist_mutant_mutator = table.clone(dialogue_breed_settings.cultist_mutant)
 dialogue_breed_settings.cultist_berzerker = {
@@ -1056,9 +1103,16 @@ dialogue_breed_settings.contract_vendor = {
 		adamant_male_a = "likes_character",
 		adamant_male_b = "likes_character",
 		adamant_male_c = "likes_character",
+		broker_female_a = "dislikes_character",
+		broker_female_b = "dislikes_character",
+		broker_female_c = "dislikes_character",
+		broker_male_a = "dislikes_character",
+		broker_male_b = "dislikes_character",
+		broker_male_c = "dislikes_character",
 		ogryn_a = "dislikes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "likes_character",
+		ogryn_d = "likes_character",
 		psyker_female_a = "likes_character",
 		psyker_female_b = "dislikes_character",
 		psyker_female_c = "likes_character",
@@ -1095,6 +1149,20 @@ dialogue_breed_settings.credit_store_servitor = {
 		"credit_store_servitor_c",
 	},
 }
+dialogue_breed_settings.tank_commander = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "tank_commander",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"tank_commander_a",
+	},
+}
 dialogue_breed_settings.training_ground_psyker = {
 	dialogue_memory_faction_name = "npc",
 	has_dialogue_extension = true,
@@ -1116,9 +1184,16 @@ dialogue_breed_settings.training_ground_psyker = {
 		adamant_male_a = "dislikes_character",
 		adamant_male_b = "dislikes_character",
 		adamant_male_c = "dislikes_character",
+		broker_female_a = "likes_character",
+		broker_female_b = "likes_character",
+		broker_female_c = "likes_character",
+		broker_male_a = "likes_character",
+		broker_male_b = "likes_character",
+		broker_male_c = "likes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "dislikes_character",
+		ogryn_d = "likes_character",
 		psyker_female_a = "likes_character",
 		psyker_female_b = "likes_character",
 		psyker_female_c = "likes_character",
@@ -1191,6 +1266,10 @@ dialogue_breed_settings.mourningstar_soldier = {
 		"mourningstar_officer_male_b",
 		"steelhead_a",
 		"steelhead_b",
+		"steelhead_c",
+		"steelhead_d",
+		"steelhead_e",
+		"steelhead_f",
 	},
 }
 dialogue_breed_settings.barber = {
@@ -1362,9 +1441,16 @@ dialogue_breed_settings.adamant_officer = {
 		adamant_male_a = "likes_character",
 		adamant_male_b = "likes_character",
 		adamant_male_c = "likes_character",
+		broker_female_a = "dislikes_character",
+		broker_female_b = "dislikes_character",
+		broker_female_c = "dislikes_character",
+		broker_male_a = "dislikes_character",
+		broker_male_b = "dislikes_character",
+		broker_male_c = "dislikes_character",
 		ogryn_a = "dislikes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "dislikes_character",
+		ogryn_d = "dislikes_character",
 		psyker_female_a = "dislikes_character",
 		psyker_female_b = "dislikes_character",
 		psyker_female_c = "dislikes_character",
@@ -1393,6 +1479,8 @@ dialogue_breed_settings.companion_dog = {
 	trigger_seen_vo = true,
 	vo_class_name = "companion_dog",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
 }
 
 return settings("DialogueBreedSettings", dialogue_breed_settings)

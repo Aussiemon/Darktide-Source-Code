@@ -848,6 +848,7 @@ end
 
 local TEMP_ALREADY_CHECKED_UNITS = {}
 local BROADPHASE_RESULTS = {}
+local STAT_TRACKING_TABLE = {}
 
 LiquidAreaExtension._update_collision_detection = function (self, t)
 	local in_liquid_buff_template_name = self._in_liquid_buff_template_name
@@ -875,6 +876,20 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 
 				if leaving_liquid_buff_template_name then
 					buff_extension:add_internally_controlled_buff(leaving_liquid_buff_template_name, t, "owner_unit", self._source_unit, "source_item", self._optional_source_item)
+
+					local player = self._source_unit and Managers.state.player_unit_spawn:owner(self._source_unit) or nil
+
+					if player then
+						table.clear(STAT_TRACKING_TABLE)
+
+						STAT_TRACKING_TABLE.area_template_name = self._area_template_name
+						STAT_TRACKING_TABLE.buff_template_name = in_liquid_buff_template_name
+						STAT_TRACKING_TABLE.source_unit = self._source_unit
+						STAT_TRACKING_TABLE.source_item = self._optional_source_item
+						STAT_TRACKING_TABLE.affected_unit = unit
+
+						Managers.stats:record_private("hook_liquid_area_exiting_buff_added_on_enemy", player, STAT_TRACKING_TABLE)
+					end
 				end
 			end
 
@@ -896,6 +911,19 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 
 		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) and not is_companion_unit then
 			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(in_liquid_buff_template_name, t, "owner_unit", self._source_unit, "source_item", self._optional_source_item)
+			local player = self._source_unit and Managers.state.player_unit_spawn:owner(self._source_unit) or nil
+
+			if player then
+				table.clear(STAT_TRACKING_TABLE)
+
+				STAT_TRACKING_TABLE.area_template_name = self._area_template_name
+				STAT_TRACKING_TABLE.buff_template_name = in_liquid_buff_template_name
+				STAT_TRACKING_TABLE.source_unit = self._source_unit
+				STAT_TRACKING_TABLE.source_item = self._optional_source_item
+				STAT_TRACKING_TABLE.affected_unit = unit
+
+				Managers.stats:record_private("hook_liquid_area_entering_buff_added_on_enemy", player, STAT_TRACKING_TABLE)
+			end
 
 			buff_affected_units[unit] = {
 				local_index = local_index,

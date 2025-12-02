@@ -6,11 +6,7 @@ GameStateMachine.DEBUG = true
 
 local function _debug_print(format, ...)
 	if GameStateMachine.DEBUG then
-		if rawget(_G, "Log") then
-			Log.info("GameStateMachine", format, ...)
-		else
-			print(string.format("[GameStateMachine] " .. format, ...))
-		end
+		Log.info("GameStateMachine", format, ...)
 	end
 
 	if rawget(_G, "Managers") and Managers.server_metrics then
@@ -159,11 +155,7 @@ GameStateMachine.destroy = function (self, ...)
 
 	if not table.is_empty(state_change_callbacks) then
 		for reference_name, _ in pairs(state_change_callbacks) do
-			if rawget(_G, "Log") then
-				Log.warning("GameStateMachine", "Found unregistered callback for state change by name: (%s)", reference_name)
-			else
-				_debug_print("Found unregistered callback for state change by name: (%s)", reference_name)
-			end
+			Log.warning("GameStateMachine", "Found unregistered callback for state change by name: (%s)", reference_name)
 		end
 
 		ferror("[GameStateMachine] - Trying to terminate state machine without cleaning up registered callbacks.")

@@ -2,10 +2,12 @@
 
 local templates = {}
 
-local function _create_entry(path)
+local function _create_entry(path, optional_num_levels)
 	local entry_templates = require(path)
 
 	for name, template in upairs(entry_templates) do
+		local needed_num_levels = optional_num_levels or 4
+
 		for buff_name, buff_values in pairs(template.buffs) do
 			local num_levels = #buff_values
 		end
@@ -31,6 +33,11 @@ _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_co
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatsword_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatsword_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combatsword_p3")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_crowbar_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_dual_shivs_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_needlepistol_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_dual_autopistols_p1")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_dual_stubpistols_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_flamer_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p2")
@@ -62,6 +69,7 @@ _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_po
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_2h_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powersword_p2")
+_create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_saw_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p1")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p2")
 _create_entry("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_shotgun_p4")

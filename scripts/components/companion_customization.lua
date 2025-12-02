@@ -45,6 +45,7 @@ CompanionCustomization._construct_attach_settings = function (self, unit, world,
 		from_ui_profile_spawner = false,
 		is_first_person = false,
 		is_minion = true,
+		item_definitions = nil,
 		world = world,
 		character_unit = unit,
 		in_editor = in_editor,
@@ -106,6 +107,12 @@ CompanionCustomization._customize = function (self, unit, item_definitions)
 		end
 	end
 
+	if item_data.material_overrides_items then
+		for _, material_override_item in pairs(item_data.material_overrides_items) do
+			VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override_item, self._in_editor, attach_settings.item_definitions)
+		end
+	end
+
 	if attach_settings.lod_group then
 		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
 
@@ -126,6 +133,12 @@ CompanionCustomization._customize = function (self, unit, item_definitions)
 
 	for _, material_override in pairs(material_override_table) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+	end
+
+	local material_override_items = self:get_data(unit, "material_override_items")
+
+	for _, material_override in pairs(material_override_items) do
+		VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override, self._in_editor, attach_settings.item_definitions)
 	end
 end
 
@@ -243,6 +256,13 @@ CompanionCustomization.component_data = {
 		ui_name = "Material Override",
 		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+	},
+	material_override_items = {
+		category = "Attachment Item Material Overrides",
+		filter = "item",
+		size = 1,
+		ui_name = "Material Override Items",
+		ui_type = "resource_array",
 	},
 }
 

@@ -126,6 +126,12 @@ local function _archetype_has_onboarding_intro_video(player_profile)
 	return onboarding_intro_video_template_name ~= nil
 end
 
+local function _should_skip_onboarding_intro_video(player_profile)
+	local archetype = player_profile.archetype
+
+	return archetype.onboarding_skip_intro_video or false
+end
+
 local function achievement_unlocked(achievement_name)
 	return function ()
 		local player = Managers.player:local_player(1)
@@ -158,7 +164,7 @@ local function set_account_has_completed_onboarding()
 	end
 end
 
-local narrative = {
+local narrative_stories = {
 	stories = {
 		main_story = {
 			{
@@ -341,6 +347,8 @@ local narrative = {
 					if archetype_custom_intro_video ~= nil then
 						Managers.narrative:complete_event("onboarding_step_archetype_intro_video_viewed")
 						Managers.video:queue_video(archetype_custom_intro_video)
+					elseif _should_skip_onboarding_intro_video(player_profile) then
+						Managers.narrative:complete_event("onboarding_step_chapel_video_viewed")
 					end
 				end,
 			},
@@ -530,6 +538,7 @@ local narrative = {
 			{
 				backend_id = 4,
 				name = "level_unlock_talent_tier_1",
+				requirement = nil,
 			},
 			{
 				backend_id = 5,
@@ -544,6 +553,7 @@ local narrative = {
 			{
 				backend_id = 7,
 				name = "level_unlock_talent_tier_2",
+				requirement = nil,
 			},
 			{
 				backend_id = 8,
@@ -563,10 +573,12 @@ local narrative = {
 			{
 				backend_id = 11,
 				name = "level_unlock_talent_tier_3",
+				requirement = nil,
 			},
 			{
 				backend_id = 12,
 				name = "level_unlock_talent_tier_4",
+				requirement = nil,
 			},
 			{
 				backend_id = 13,
@@ -576,10 +588,12 @@ local narrative = {
 			{
 				backend_id = 14,
 				name = "level_unlock_talent_tier_5",
+				requirement = nil,
 			},
 			{
 				backend_id = 15,
 				name = "level_unlock_talent_tier_6",
+				requirement = nil,
 			},
 		},
 		unlock_havoc = {
@@ -645,10 +659,10 @@ local narrative = {
 	},
 }
 
-for _, chapters in pairs(narrative.stories) do
-	for i = 1, #chapters do
-		chapters[i].index = i
+for _, chapters in pairs(narrative_stories.stories) do
+	for ii = 1, #chapters do
+		chapters[ii].index = ii
 	end
 end
 
-return settings("NarrativeStories", narrative)
+return settings("NarrativeStories", narrative_stories)

@@ -4,8 +4,6 @@ local ConstantElementPopupHandlerSettings = require("scripts/ui/constant_element
 local Definitions = require("scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_definitions")
 local ConstantElementPopupHandlerTestify = GameParameters.testify and require("scripts/ui/constant_elements/elements/popup_handler/constant_element_popup_handler_testify")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
@@ -14,7 +12,7 @@ local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pas
 local InputDevice = require("scripts/managers/input/input_device")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local BLUR_TIME = 0.3
 local ConstantElementPopupHandler = class("ConstantElementPopupHandler", "ConstantElementBase")
@@ -23,6 +21,23 @@ ConstantElementPopupHandler.INPUT_DIR_UP = 1
 ConstantElementPopupHandler.INPUT_DIR_DOWN = 2
 ConstantElementPopupHandler.INPUT_DIR_LEFT = 3
 ConstantElementPopupHandler.INPUT_DIR_RIGHT = 4
+
+local dummy_text_size = {
+	ConstantElementPopupHandlerSettings.text_max_width,
+	20,
+}
+
+local function _get_text_height(text, text_style, ui_renderer)
+	local text_height = Text.text_height(ui_renderer, text, text_style, dummy_text_size)
+
+	return text_height
+end
+
+local function _get_text_width(text, text_style, ui_renderer)
+	local text_width = Text.text_width(ui_renderer, text, text_style, dummy_text_size)
+
+	return text_width
+end
 
 ConstantElementPopupHandler.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementPopupHandler.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -195,13 +210,16 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 			widget.content.texture = icon_texture_small
 
 			local amount = offer_price.amount
-			local text = TextUtils.format_currency(amount)
+			local text = Text.format_currency(amount)
 
 			widget.content.text = text
 
 			local style = widget.style
 			local text_style = style.text
-			local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
+			local text_width = Text.text_width(ui_renderer, text, text_style, {
+				2000,
+				100,
+			})
 			local texture_width = widget.style.texture.size[1]
 			local text_margin = 5
 
@@ -216,26 +234,24 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 
 		local title_style = item_title_widget.style.text
 		local sub_title_style = item_title_widget.style.sub_text
-		local title_options = UIFonts.get_font_options_by_style(title_style)
-		local sub_title_options = UIFonts.get_font_options_by_style(sub_title_style)
 		local max_width = self._ui_scenegraph.offer_text.size[1]
-		local title_width, title_height = UIRenderer.text_size(ui_renderer, item_title_widget.content.text, title_style.font_type, title_style.font_size, {
+		local title_width, title_height = Text.text_size(ui_renderer, item_title_widget.content.text, title_style, {
 			max_width,
-			math.huge,
-		}, title_options)
-		local sub_title_width, sub_title_height = UIRenderer.text_size(ui_renderer, item_title_widget.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
+			2000,
+		})
+		local sub_title_width, sub_title_height = Text.text_size(ui_renderer, item_title_widget.content.sub_text, sub_title_style, {
 			max_width,
-			math.huge,
-		}, sub_title_options)
+			2000,
+		})
 		local sub_title_margin = 10
-		local price_margin = 10
-		local bottom_margin = 10
+		local price_margin = 20
+		local bottom_margin = 20
 
 		sub_title_style.offset[2] = sub_title_margin + title_height
 
 		local title_total_size = sub_title_style.offset[2] + sub_title_height
 		local price_height = price_widgets[1].style and price_widgets[1].style.texture.size[2] or 0
-		local total_offer_text_height = title_total_size + sub_title_height + price_margin + price_height + bottom_margin
+		local total_offer_text_height = title_total_size + price_margin + price_height + bottom_margin
 
 		self:_set_scenegraph_size("offer_price_text", total_prices_width, price_height + bottom_margin)
 		self:_set_scenegraph_size("offer_text", nil, total_offer_text_height)
@@ -391,11 +407,10 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 
 			text = option.no_localization and text or Localize(text)
 
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, {
+			local text_height = Text.text_height(ui_renderer, text, text_style, {
 				ConstantElementPopupHandlerSettings.text_max_width,
-				math.huge,
-			}, text_options)
+				2000,
+			})
 			local pass = {
 				{
 					pass_type = "text",
@@ -480,7 +495,7 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			local text_style = widget.style.text
 			local shrink_to_fit = option.shrink_to_fit
 
-			text_length = self:_get_text_width(text, text_style, ui_renderer) + 2 * total_width_spacing
+			text_length = _get_text_width(text, text_style, ui_renderer) + 2 * total_width_spacing
 
 			if not shrink_to_fit then
 				local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
@@ -617,7 +632,7 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	local title_text_widget = widgets_by_name.title_text
 	local title_text = title_text_widget.content.text
 	local title_text_style = title_text_widget.style.text
-	local title_height = self:_get_text_height(title_text, title_text_style, ui_renderer)
+	local title_height = _get_text_height(title_text, title_text_style, ui_renderer)
 	local title_text_block_height = title_height + ConstantElementPopupHandlerSettings.title_offset_height
 
 	total_text_height = total_text_height + title_text_block_height
@@ -625,7 +640,7 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	local description_text_widget = widgets_by_name.description_text
 	local description_text = description_text_widget.content.text
 	local description_text_style = description_text_widget.style.text
-	local description_height = self:_get_text_height(description_text, description_text_style, ui_renderer)
+	local description_height = _get_text_height(description_text, description_text_style, ui_renderer)
 	local description_text_block_height = description_height
 
 	if description_text_block_height > 0 then
@@ -774,25 +789,6 @@ ConstantElementPopupHandler.on_resolution_modified = function (self, scale)
 		self:_update_description_grid_position()
 		self._description_grid:set_render_scale(scale)
 	end
-end
-
-local dummy_text_size = {
-	ConstantElementPopupHandlerSettings.text_max_width,
-	20,
-}
-
-ConstantElementPopupHandler._get_text_height = function (self, text, text_style, ui_renderer)
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, text_height, _, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
-
-	return text_height
-end
-
-ConstantElementPopupHandler._get_text_width = function (self, text, text_style, ui_renderer)
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local text_width, _, _, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
-
-	return text_width
 end
 
 ConstantElementPopupHandler._find_closest_neighbour_button_index = function (self, starting_index, direction)

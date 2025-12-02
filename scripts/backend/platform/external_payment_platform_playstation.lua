@@ -3,6 +3,11 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
 local ExternalPaymentPlatformPlaystation = class("ExternalPaymentPlatformPlaystation", "ExternalPaymentPlatformBase")
+local sku_annotation_names = {
+	BLUE_BAG = "BLUE_BAG",
+	NONE = "NONE",
+	RED_BAG = "RED_BAG",
+}
 
 ExternalPaymentPlatformPlaystation.get_payment_platform = function (self)
 	return "psn"
@@ -50,7 +55,7 @@ ExternalPaymentPlatformPlaystation.get_platform_token = function (self, retry_de
 	end)
 end
 
-local function _show_commerce_dialogue(product_id)
+local function _show_commerce_dialogue(product_id, mode)
 	return Promise.until_value_is_true(function ()
 		local status = NpCommerceDialog.update()
 
@@ -61,7 +66,7 @@ local function _show_commerce_dialogue(product_id)
 		end
 
 		if status == NpCommerceDialog.INITIALIZED then
-			NpCommerceDialog.open2(NpCommerceDialog.MODE_PRODUCT, PS5.initial_user_id(), product_id)
+			NpCommerceDialog.open2(mode, PS5.initial_user_id(), product_id)
 
 			return false
 		end
@@ -87,7 +92,7 @@ local function _show_commerce_dialogue(product_id)
 end
 
 ExternalPaymentPlatformPlaystation.show_commerce_dialogue = function (self, product_id)
-	return _show_commerce_dialogue(product_id)
+	return _show_commerce_dialogue(product_id, NpCommerceDialog.MODE_PRODUCT)
 end
 
 ExternalPaymentPlatformPlaystation.update_account_store_status = function (self)
@@ -256,7 +261,7 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 	local web_api = WebApi
 	local user_id = PS5.initial_user_id()
 	local api_group = "inGameCatalog"
-	local path = string.format("/v5/container?serviceLabel=%s&containerIds=%s", 0, "DTVCAQUILAS")
+	local path = string.format("/v5/container?serviceLabel=%s&containerIds=%s", 0, "DTVCAQUILAS:DTDLCCOSMETICS:DTDLCCLASSES")
 	local method = WebApi.GET
 	local content
 	local id = web_api.send_request(user_id, api_group, path, method, content)
@@ -280,9 +285,25 @@ ExternalPaymentPlatformPlaystation._get_entitlements = function (self)
 			for i, v in ipairs(parsed[1].children) do
 				local product = {}
 
+				product.raw = v
+				product.raw.category_label = parsed[1].label
 				product.displayPrice = v.skus[1].displayPrice
 				result_by_id[v.label] = product
 				item_count = item_count + 1
+			end
+
+			for i = 2, #parsed do
+				if parsed[i] ~= nil then
+					for j, v in ipairs(parsed[i].children) do
+						local product = {}
+
+						product.raw = v
+						product.raw.category_label = parsed[i].label
+						product.displayPrice = v.skus[1].displayPrice
+						result_by_id[v.label] = product
+						item_count = item_count + 1
+					end
+				end
 			end
 
 			if item_count == 0 then
@@ -320,6 +341,7 @@ ExternalPaymentPlatformPlaystation._decorate_option = function (self, option, pl
 	local offer = platform_entitlements[offer_id]
 
 	if offer then
+		option.raw = offer.raw
 		option.price.amount.formattedPrice = offer.displayPrice
 	end
 
@@ -374,7 +396,7 @@ ExternalPaymentPlatformPlaystation._decorate_option = function (self, option, pl
 			local product_id = self.psn and self.psn.productId
 
 			if product_id then
-				_show_commerce_dialogue(product_id):next(function (status)
+				_show_commerce_dialogue(product_id, NpCommerceDialog.MODE_PRODUCT):next(function (status)
 					if status.success then
 						return Managers.backend.interfaces.external_payment:finalize_txn(order_id):next(function (data)
 							self.pending_txn_promise:resolve(data)
@@ -421,6 +443,60 @@ ExternalPaymentPlatformPlaystation._decorate_option = function (self, option, pl
 	end
 end
 
+ExternalPaymentPlatformPlaystation._clean_options = function (self, options)
+	for i, v in ipairs(options) do
+		local clean_offer
+		local psn_data = v.psn or v.productIds and v.productIds.psn
+
+		if v.raw and psn_data then
+			clean_offer = {
+				base_price = v.raw.skus[1].originalPrice and v.raw.skus[1].originalPrice or v.raw.skus[1].price,
+				discount_price = v.raw.skus[1].originalPrice and v.raw.skus[1].price,
+				item_id = psn_data.productId,
+				entitlement_id = psn_data.entitlementId,
+				product_id = psn_data.productId,
+				description = v.raw.description,
+				formatted_price = v.raw.skus[1].displayPrice,
+				formatted_original_price = v.raw.skus[1].displayOriginalPrice,
+				is_platform_option = v.description.type == "platform_option",
+				metadata = v.metadata or {},
+			}
+		end
+
+		options[i].clean_offer = clean_offer
+	end
+
+	return options
+end
+
+ExternalPaymentPlatformPlaystation._is_platform_option_owned = function (self, offer, platform_entitlement)
+	if offer.productIds.psn then
+		local skus = platform_entitlement.raw.skus
+
+		for i = 1, #skus do
+			if skus[i].annotationName == sku_annotation_names.NONE or skus[i].annotationName == sku_annotation_names.BLUE_BAG then
+				return Promise.resolved({
+					is_owner = false,
+				})
+			end
+		end
+
+		return Promise.resolved({
+			is_owner = true,
+		})
+	end
+
+	return Promise.resolved({
+		is_owner = false,
+	})
+end
+
+ExternalPaymentPlatformPlaystation._offer_id_from_option = function (self, option)
+	local option_data = option.psn or option.productIds.psn
+
+	return option_data and option_data.productId
+end
+
 ExternalPaymentPlatformPlaystation.show_empty_store_error = function (self)
 	return Promise.until_value_is_true(function ()
 		local status = MsgDialog.update()
@@ -447,6 +523,10 @@ ExternalPaymentPlatformPlaystation.show_empty_store_error = function (self)
 			success = true,
 		}
 	end)
+end
+
+ExternalPaymentPlatformPlaystation.invalidate_cache = function (self)
+	self._platform_entitlements = nil
 end
 
 return ExternalPaymentPlatformPlaystation

@@ -189,6 +189,14 @@ ValkyrieCustomization.VFX_ignition_off = function (self)
 	Unit.flow_event(self._body_unit, "VFX_ignition_off")
 end
 
+ValkyrieCustomization.VFX_burning_start = function (self)
+	Unit.flow_event(self._body_unit, "VFX_burning_start")
+end
+
+ValkyrieCustomization.VFX_burning_stop = function (self)
+	Unit.flow_event(self._body_unit, "VFX_burning_stop")
+end
+
 ValkyrieCustomization.SFX_lift = function (self)
 	Unit.flow_event(self._body_unit, "SFX_lift")
 end
@@ -223,6 +231,14 @@ end
 
 ValkyrieCustomization.SFX_rocket_launch = function (self)
 	Unit.flow_event(self._body_unit, "SFX_rocket_launch")
+end
+
+ValkyrieCustomization.SFX_burning_start = function (self)
+	Unit.flow_event(self._body_unit, "SFX_burning_start")
+end
+
+ValkyrieCustomization.SFX_burning_stop = function (self)
+	Unit.flow_event(self._body_unit, "SFX_burning_stop")
 end
 
 ValkyrieCustomization.SFX_off = function (self)
@@ -556,6 +572,14 @@ ValkyrieCustomization.component_data = {
 			accessibility = "public",
 			type = "event",
 		},
+		VFX_burning_start = {
+			accessibility = "public",
+			type = "event",
+		},
+		VFX_burning_stop = {
+			accessibility = "public",
+			type = "event",
+		},
 		SFX_lift = {
 			accessibility = "public",
 			type = "event",
@@ -589,6 +613,14 @@ ValkyrieCustomization.component_data = {
 			type = "event",
 		},
 		SFX_rocket_launch = {
+			accessibility = "public",
+			type = "event",
+		},
+		SFX_burning_start = {
+			accessibility = "public",
+			type = "event",
+		},
+		SFX_burning_stop = {
 			accessibility = "public",
 			type = "event",
 		},

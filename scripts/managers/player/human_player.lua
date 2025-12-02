@@ -129,7 +129,7 @@ HumanPlayer.profile = function (self)
 end
 
 HumanPlayer.has_local_profile = function (self)
-	return self._account_id == PlayerManager.NO_ACCOUNT_ID or type(self:character_id()) == "number"
+	return self._account_id == PlayerManager.NO_ACCOUNT_ID or not math.is_uuid(self:character_id())
 end
 
 HumanPlayer.archetype_name = function (self)

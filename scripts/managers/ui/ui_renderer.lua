@@ -228,9 +228,9 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 	local gui = retained_mode and self.gui_retained or self.gui
 
 	if retained_id then
-		local id = Gui2_update_bitmap(gui, retained_id, material, material_flags, gui_position, gui_size, optional_gui_args)
+		Gui2_update_bitmap(gui, retained_id, material, material_flags, gui_position, gui_size, optional_gui_args)
 
-		return id
+		return nil
 	else
 		local id = Gui2_bitmap(gui, material, material_flags, gui_position, gui_size, optional_gui_args)
 
@@ -1076,14 +1076,13 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 
 	local additional_settings
 
-	if not options then
-		table.clear(optional_gui_args)
+	table.clear(optional_gui_args)
 
-		additional_settings = optional_gui_args
-	else
-		additional_settings = options
+	if options then
+		UIFonts.get_font_options_by_style(options, optional_gui_args)
 	end
 
+	additional_settings = optional_gui_args
 	additional_settings.flags = flags
 	additional_settings.optional_size = optional_size
 
@@ -1099,23 +1098,57 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 	local font_data = UIFonts.data_by_type(font_type)
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
-
-	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
-
 	local additional_settings
 
-	if not options then
-		table.clear(optional_gui_args)
+	table.clear(optional_gui_args)
 
-		additional_settings = optional_gui_args
-	else
-		additional_settings = options
+	if options then
+		for name, data in pairs(options) do
+			optional_gui_args[name] = data
+		end
 	end
 
-	additional_settings.flags = flags
-	additional_settings.optional_size = optional_size
+	if optional_gui_args.vertical_alignment == Gui.VerticalAlignCenter then
+		optional_size = {
+			optional_size and optional_size[1] or 1920,
+			optional_size and optional_size[2] or 1080,
+		}
+	end
 
-	local min, max, caret = (use_max_extents and Gui2_slug_text_max_extents or Gui2_slug_text_extents)(self.gui, text, font, font_size, additional_settings)
+	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
+	optional_gui_args.flags = flags
+	optional_gui_args.optional_size = optional_size
+
+	local min, max, caret = (use_max_extents and Gui2_slug_text_max_extents or Gui2_slug_text_extents)(self.gui, text, font, font_size, optional_gui_args)
+	local min_x, min_y = Vector3.to_elements(min)
+	local max_x, max_y = Vector3.to_elements(max)
+	local width = max_x - min_x
+	local height = max_y - min_y
+
+	return width, height, min, caret
+end
+
+UIRenderer.styled_text_size = function (self, text, style, optional_size, use_max_extents)
+	local font_data = UIFonts.data_by_type(style.font_type)
+	local font = font_data.path
+	local flags = font_data.render_flags or 0
+	local font_size = style.font_size
+
+	table.clear(optional_gui_args)
+	UIFonts.get_font_options_by_style(style, optional_gui_args)
+
+	if optional_gui_args.vertical_alignment == Gui.VerticalAlignCenter then
+		optional_size = {
+			optional_size and optional_size[1] or 1920,
+			optional_size and optional_size[2] or 1080,
+		}
+	end
+
+	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
+	optional_gui_args.flags = flags
+	optional_gui_args.optional_size = optional_size
+
+	local min, max, caret = (use_max_extents and Gui2_slug_text_max_extents or Gui2_slug_text_extents)(self.gui, text, font, font_size, optional_gui_args)
 	local min_x, min_y = Vector3.to_elements(min)
 	local max_x, max_y = Vector3.to_elements(max)
 	local width = max_x - min_x
@@ -1266,6 +1299,54 @@ UIRenderer.crop_text_width = function (self, text, font_type, font_size, max_wid
 			end
 
 			text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size, nil, options, use_max_extents)
+			text_width = math.floor(text_width)
+		until text_width <= max_width
+
+		if crop_from_left then
+			local crop_prefix = crop_suffix
+
+			text = crop_prefix .. text
+			caret[1] = caret[1] + suffix_caret[1]
+		else
+			text = text .. crop_suffix
+		end
+	end
+
+	return text, caret[1]
+end
+
+UIRenderer.styled_crop_text_width = function (self, text, style, max_width, crop_from_left, use_max_extents)
+	local scale = self.scale or 1
+	local font_size = style.font_size
+	local scaled_font_size = UIFonts.scaled_size(font_size, scale)
+	local font_type = style.font_type
+	local font_options = {}
+
+	UIFonts.get_font_options_by_style(style, font_options)
+
+	local text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size, nil, font_options, use_max_extents)
+	local crop_suffix_width, _1, _2, suffix_caret = UIRenderer.text_size(self, crop_suffix, font_type, scaled_font_size, nil, font_options, use_max_extents)
+
+	if max_width < text_width then
+		repeat
+			local width_percent = 1 - (1 - (max_width - crop_suffix_width) / text_width) * 0.5
+			local num_char = Utf8.string_length(text)
+			local number_of_characters_to_show = math.floor(num_char * width_percent)
+			local start_index = 1
+			local last_index = number_of_characters_to_show
+
+			if crop_from_left then
+				start_index = num_char - number_of_characters_to_show + 1
+				last_index = num_char
+			end
+
+			text = Utf8.sub_string(text, start_index, last_index)
+
+			if num_char <= 0 then
+				return text, caret[1]
+			end
+
+			text_width, _1, _2, caret = UIRenderer.text_size(self, text, font_type, scaled_font_size, nil, font_options, use_max_extents)
 			text_width = math.floor(text_width)
 		until text_width <= max_width
 

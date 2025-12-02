@@ -24,6 +24,7 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_gunner"
 local breed_data = {
 	accumulative_stagger_multiplier = 0.25,
+	achievement_breed_group = "chaos_ogryn_gunner",
 	base_height = 2.5,
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	bone_lod_radius = 1.7,

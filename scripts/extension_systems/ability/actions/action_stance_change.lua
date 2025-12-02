@@ -103,10 +103,6 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		buff_extension:add_internally_controlled_buff(buff_to_add, t)
 	end
 
-	if self._ability_pause_cooldown_setting then
-		self._ability_component.cooldown_paused = true
-	end
-
 	local reload_weapon = talent_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
 
 	if reload_secondary or reload_weapon then

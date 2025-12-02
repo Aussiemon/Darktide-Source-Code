@@ -1,0 +1,326 @@
+﻿-- chunkname: @scripts/ui/views/live_events_view/live_events_view_styles.lua
+
+require("scripts/foundation/utilities/color")
+
+local Styles = {}
+local sizes = {
+	entry_width = 1420,
+	text_max_width = 1240,
+	reward_size = {
+		105,
+		105,
+	},
+	reward_icon_size = {
+		104,
+		88,
+	},
+	reward_currency_icon_size = {
+		67.60000000000001,
+		57.2,
+	},
+	reward_icon_size_addition = {
+		0,
+		0,
+	},
+	event_button_size = {
+		380,
+		50,
+	},
+}
+local spacing = {
+	button_spacing = 60,
+	entry_padding = 60,
+	event_name_height = 60,
+	reward_track_spacing = 260,
+	text_top_padding = 30,
+}
+
+Styles.texts = {}
+Styles.texts.event_name = {
+	font_size = 36,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "top",
+	text_color = Color.terminal_text_header(255, true),
+	offset = {
+		0,
+		spacing.text_top_padding,
+		10,
+	},
+	size = {
+		sizes.text_max_width,
+		50,
+	},
+}
+Styles.texts.event_lore = {
+	font_size = 18,
+	font_type = "proxima_nova_medium",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "top",
+	text_color = Color.terminal_text_body(255, true),
+	offset = {
+		0,
+		spacing.text_top_padding + 70,
+		10,
+	},
+	size = {
+		sizes.text_max_width,
+		1000,
+	},
+}
+Styles.texts.event_context = {
+	font_size = 18,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "lwft",
+	text_vertical_alignment = "center",
+	vertical_alignment = "top",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		0,
+		spacing.text_top_padding + 60,
+		10,
+	},
+	size = {
+		sizes.text_max_width,
+		1000,
+	},
+}
+Styles.texts.event_description = {
+	font_size = 20,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "top",
+	vertical_alignment = "top",
+	text_color = Color.terminal_text_body(255, true),
+	offset = {
+		0,
+		spacing.entry_padding + 200,
+		10,
+	},
+	size = {
+		sizes.text_max_width,
+		400,
+	},
+}
+Styles.texts.rewards_track_text = {
+	font_size = 28,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "top",
+	text_color = Color.terminal_text_header(255, true),
+	offset = {
+		0,
+		0,
+		10,
+	},
+	size = {
+		sizes.text_max_width,
+		50,
+	},
+}
+Styles.entry = {}
+Styles.entry.background = {
+	horizontal_alignment = "center",
+	color = Color.terminal_grid_background(nil, true),
+	offset = {
+		0,
+		0,
+		-5,
+	},
+}
+Styles.entry.top_detail = {
+	horizontal_alignment = "center",
+	vertical_alignment = "top",
+	size = {
+		nil,
+		32,
+	},
+	color = Color.white(255, true),
+	offset = {
+		0,
+		-14,
+		2,
+	},
+}
+Styles.entry.bottom_detail = {
+	horizontal_alignment = "center",
+	vertical_alignment = "bottom",
+	size = {
+		nil,
+		32,
+	},
+	color = Color.white(255, true),
+	offset = {
+		0,
+		14,
+		2,
+	},
+}
+Styles.reward = {}
+Styles.reward.background = {
+	horizontal_alignment = "left",
+	size = sizes.reward_size,
+	offset = {
+		0,
+		0,
+		10,
+	},
+	color = Color.black(120, true),
+}
+Styles.reward.frame = {
+	horizontal_alignment = "left",
+	size = sizes.reward_size,
+	offset = {
+		0,
+		0,
+		11,
+	},
+	color = Color.terminal_frame(255, true),
+}
+Styles.reward.icon = {
+	horizontal_alignment = "left",
+	size = sizes.reward_icon_size,
+	offset = {
+		0,
+		8,
+		12,
+	},
+	color = {
+		255,
+		255,
+		255,
+		255,
+	},
+	size_addition = sizes.reward_icon_size_addition,
+	material_values = {},
+}
+Styles.reward.currency_icon = {
+	horizontal_alignment = "left",
+	size = sizes.reward_currency_icon_size,
+	offset = {
+		16,
+		8,
+		12,
+	},
+	color = {
+		255,
+		255,
+		255,
+		255,
+	},
+	size_addition = sizes.reward_icon_size_addition,
+	material_values = {},
+}
+Styles.reward.amount = {
+	font_size = 22,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "center",
+	vertical_alignment = "center",
+	text_color = {
+		255,
+		255,
+		255,
+		255,
+	},
+	offset = {
+		0,
+		sizes.reward_size[2] - 36,
+		15,
+	},
+	size = {
+		sizes.reward_size[1],
+		40,
+	},
+}
+Styles.reward.bar_connection_line = {
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	size = {
+		2,
+		50,
+	},
+	color = Color.terminal_text_body(200, true),
+	offset = {
+		sizes.reward_size[1] * 0.5 - 2,
+		sizes.reward_size[2] + 8,
+		2,
+	},
+}
+Styles.event_progress_bar = {}
+Styles.event_progress_bar.background = {
+	horizontal_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		1200,
+		40,
+	},
+	color = Color.black(200, true),
+	offset = {
+		0,
+		0,
+		0,
+	},
+}
+Styles.event_progress_bar.fill = {
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	size = {
+		0,
+		32,
+	},
+	default_size = {
+		1192,
+		32,
+	},
+	color = Color.terminal_text_header(255, true),
+	offset = {
+		4,
+		0,
+		1,
+	},
+}
+Styles.event_progress_bar.progress_text = {
+	font_size = 20,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		0,
+		0,
+		2,
+	},
+	size = {
+		200,
+		40,
+	},
+}
+Styles.event_progress_bar.frame = {
+	horizontal_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		1200,
+		40,
+	},
+	color = Color.terminal_frame(255, true),
+	offset = {
+		0,
+		0,
+		2,
+	},
+}
+Styles.sizes = sizes
+Styles.spacing = spacing
+
+return settings("LiveEventsViewStyles", Styles)

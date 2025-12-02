@@ -21,6 +21,7 @@ ViewElementWeaponPatterns.init = function (self, parent, draw_layer, start_scale
 	self._chain_index = 1
 	self._ui_animations = {}
 	self._alpha_multiplier = 1
+	self._current_height = 0
 
 	self:_hide_dividers()
 end
@@ -50,6 +51,13 @@ ViewElementWeaponPatterns.present_item = function (self, item)
 			item = item,
 		},
 		{
+			widget_type = "dynamic_spacing",
+			size = {
+				self._default_grid_size[1],
+				40,
+			},
+		},
+		{
 			widget_type = "damage_grid",
 			item = item,
 		},
@@ -70,15 +78,7 @@ ViewElementWeaponPatterns.present_grid_layout = function (self, layout, item)
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_stats_blueprints")
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
-	local mask_size = menu_settings.mask_size
 	local ContentBlueprints = generate_blueprints_function(grid_size, item)
-	local default_grid_height = self._default_grid_size[2]
-
-	grid_size[2] = default_grid_height
-	mask_size[2] = default_grid_height
-
-	self:force_update_list_size()
-
 	local grow_direction = self._grow_direction or "down"
 
 	ViewElementWeaponPatterns.super.present_grid_layout(self, layout, ContentBlueprints, left_click_callback, right_click_callback, grid_display_name, grow_direction)
@@ -86,17 +86,6 @@ end
 
 ViewElementWeaponPatterns._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
 	ViewElementWeaponPatterns.super._on_present_grid_layout_changed(self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
-
-	local grid_length = self:grid_length() + 40
-	local menu_settings = self._menu_settings
-	local grid_size = menu_settings.grid_size
-	local mask_size = menu_settings.mask_size
-	local new_grid_height = math.clamp(grid_length, 0, self._default_grid_size[2])
-
-	grid_size[2] = new_grid_height
-	mask_size[2] = new_grid_height
-
-	self:force_update_list_size()
 end
 
 ViewElementWeaponPatterns.current_attack_index = function (self)
@@ -145,8 +134,49 @@ ViewElementWeaponPatterns.draw = function (self, dt, t, ui_renderer, render_sett
 	end
 end
 
+ViewElementWeaponPatterns._update_grid_size = function (self)
+	self:force_update_list_size()
+
+	local grid_length = self:grid_length() + 40
+	local menu_settings = self._menu_settings
+	local grid_size = menu_settings.grid_size
+	local mask_size = menu_settings.mask_size
+	local new_grid_height = math.clamp(grid_length, 0, 1000)
+
+	grid_size[2] = grid_length
+	mask_size[2] = grid_length
+
+	self:_update_window_size()
+end
+
+ViewElementWeaponPatterns._get_grid_height = function (self)
+	local widgets = self._grid_alignment_widgets
+	local height = 0
+
+	if widgets then
+		for i = 1, #widgets do
+			local widget = widgets[i]
+			local size = widget.content and widget.content.size or widget.size
+
+			if size then
+				height = height + size[2]
+			end
+		end
+	end
+
+	return height
+end
+
 ViewElementWeaponPatterns.update = function (self, dt, t, input_service)
 	self:_update_animations(dt, t)
+
+	local current_hight = self:_get_grid_height()
+
+	if current_hight ~= self._current_height then
+		self._current_height = current_hight
+
+		self:_update_grid_size()
+	end
 
 	return ViewElementWeaponPatterns.super.update(self, dt, t, input_service)
 end

@@ -7,6 +7,7 @@ local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local Text = require("scripts/utilities/ui/text")
 local UiSettings = require("scripts/settings/ui/ui_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -45,6 +46,7 @@ VendorViewBase.init = function (self, definitions, settings, context)
 
 	definition_merge_recursive(merged_definitions, Definitions)
 
+	self._promise_container = PromiseContainer:new()
 	self._fetch_store_items_on_enter = context and context.fetch_store_items_on_enter
 	self._use_item_categories = context and context.use_item_categories
 	self._use_title = context and context.use_title
@@ -173,26 +175,9 @@ VendorViewBase._preview_element = function (self, element)
 	self:_update_button_disable_state()
 end
 
-VendorViewBase.on_exit = function (self)
-	if self._store_promise then
-		self._store_promise:cancel()
-
-		self._store_promise = nil
-	end
-
-	if self._purchase_promise then
-		self._purchase_promise:cancel()
-
-		self._purchase_promise = nil
-	end
-
-	if self._wallet_promise then
-		self._wallet_promise:cancel()
-
-		self._wallet_promise = nil
-	end
-
-	VendorViewBase.super.on_exit(self)
+VendorViewBase.destroy = function (self)
+	self._promise_container:delete()
+	VendorViewBase.super.destroy(self)
 end
 
 VendorViewBase._get_store = function (self)
@@ -266,7 +251,7 @@ VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 
 		local use_item_categories = self._use_item_categories or false
 
-		self._store_promise = store_promise
+		self._store_promise = self._promise_container:cancel_on_destroy(store_promise)
 
 		store_promise:next(function (data)
 			local offers = data.offers
@@ -576,6 +561,7 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 				}
 
 				layout[#layout + 1] = {
+					preview_profile = nil,
 					widget_type = "gear_set",
 					item = fake_set_item,
 					offer = offer,
@@ -761,7 +747,7 @@ VendorViewBase._set_display_price = function (self, price_data)
 		widgets_by_name.price_icon.content.texture = wallet_settings.icon_texture_big
 	end
 
-	local text_width, _ = self:_text_size(price_text, price_text_style.font_type, price_text_style.font_size)
+	local text_width, _ = self:_text_size(price_text, price_text_style)
 	local price_icon_widget = widgets_by_name.price_icon
 	local price_icon_scenegraph_id = price_icon_widget.scenegraph_id
 	local price_icon_width, _ = self:_scenegraph_size(price_icon_scenegraph_id)
@@ -795,7 +781,7 @@ VendorViewBase._purchase_item = function (self, offer)
 		self._purchase_promise = nil
 	end)
 
-	self._purchase_promise = promise
+	self._purchase_promise = self._promise_container:cancel_on_destroy(promise)
 end
 
 VendorViewBase._update_layout_list_on_item_purchase = function (self, items_layout, item)
@@ -880,7 +866,7 @@ VendorViewBase._update_wallets = function (self)
 		self._wallet_promise = nil
 	end)
 
-	self._wallet_promise = promise
+	self._wallet_promise = self._promise_container:cancel_on_destroy(promise)
 
 	return promise
 end

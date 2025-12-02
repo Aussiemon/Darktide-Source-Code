@@ -5,6 +5,14 @@ local NO_SURFACE_DECAL = false
 local armor_types = ArmorSettings.types
 local player = {
 	sfx = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_light_2d",
@@ -24,9 +32,43 @@ local player = {
 			},
 		},
 	},
-	vfx = {},
-	linked_decal = {},
-	blood_ball = {},
+	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		toughness_absorbed = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
+	linked_decal = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 
 return {

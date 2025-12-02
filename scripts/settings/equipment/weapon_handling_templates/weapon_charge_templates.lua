@@ -76,6 +76,12 @@ local weapon_charge_templates = {
 			lerp_perfect = 0.01,
 		},
 	},
+	missile_launcher = {
+		charge_duration = 0.5,
+		charge_on_action_start = true,
+		fully_charged_charge_level = 1,
+		min_charge = 1,
+	},
 	psyker_throwing_knives = {
 		psyker_smite = true,
 		warp_charge_percent = 0.1,

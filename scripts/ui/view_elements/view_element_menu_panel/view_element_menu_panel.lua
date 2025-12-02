@@ -8,6 +8,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementMenuPanelSettings = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Text = require("scripts/utilities/ui/text")
 local ViewElementMenuPanel = class("ViewElementMenuPanel", "ViewElementBase")
 local button_template = {
 	size = ViewElementMenuPanelSettings.button_max_size,
@@ -23,7 +24,7 @@ local button_template = {
 		local text_style = style.text
 		local button_size = content.size
 		local ui_renderer = parent:ui_renderer()
-		local text_width = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, button_size)
+		local text_width = Text.text_width(ui_renderer, text, text_style, button_size)
 		local desired_button_width = text_width + ViewElementMenuPanelSettings.button_text_margin * 2
 
 		if desired_button_width <= button_size[1] then

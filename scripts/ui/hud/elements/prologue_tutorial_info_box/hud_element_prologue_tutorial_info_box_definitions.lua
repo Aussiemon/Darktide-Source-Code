@@ -94,6 +94,7 @@ local widget_definitions = {
 		{
 			pass_type = "text",
 			style_id = "title_text",
+			value = nil,
 			value_id = "title_text",
 			style = info_box_settings.title_text_style,
 		},

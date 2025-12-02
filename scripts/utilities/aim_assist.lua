@@ -182,6 +182,7 @@ local TAU = math.pi * 2
 local YAW_PER_SECOND_MIN = TAU / 128
 local YAW_PER_SECOND_MAX = TAU / 24
 local _internal = {
+	assist_sticky_timer = nil,
 	assisting = false,
 	finding_lock = false,
 	finding_lock_start_t = 0,

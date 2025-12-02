@@ -6,8 +6,7 @@ local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mi
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local blueprint_styles = ViewStyles.blueprints
 local icons = {
@@ -48,10 +47,9 @@ end
 local function calculate_text_size(widget, text_and_style_id, ui_renderer)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local size = text_style.size or widget.content.size
 
-	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+	return Text.text_size(ui_renderer, text, text_style, size)
 end
 
 local function circumstance_init_function(widget, content, ui_renderer)

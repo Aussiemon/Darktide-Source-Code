@@ -97,6 +97,7 @@ trait_text_style.offset = {
 trait_text_style.font_size = 18
 
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select,
 }

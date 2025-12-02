@@ -9,18 +9,23 @@ push_settings.push_templates = {
 		speed = 3.5,
 	},
 	toughness = {
+		max_speed_override = nil,
 		speed = 1.5,
 	},
 	very_light = {
+		max_speed_override = nil,
 		speed = 1.2,
 	},
 	gunner_very_light = {
+		max_speed_override = nil,
 		speed = 0.6,
 	},
 	gunner_light = {
+		max_speed_override = nil,
 		speed = 0.8,
 	},
 	ogryn_very_light = {
+		max_speed_override = nil,
 		speed = 0.25,
 	},
 	light = {

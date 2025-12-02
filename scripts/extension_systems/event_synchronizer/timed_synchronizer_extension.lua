@@ -18,7 +18,7 @@ TimedSynchronizerExtension.setup_from_component = function (self, objective_name
 		self._group_id = 0
 	end
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, global_group and 0 or nil, self._unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, global_group and 0 or nil, self._unit)
 end
 
 TimedSynchronizerExtension.objective_started = function (self)

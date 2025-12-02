@@ -1406,22 +1406,6 @@ templates.psyker_crit_hits_aura_tracking_buff = {
 		template_data.num_crits_made = template_data.num_crits_made + 1
 	end,
 }
-templates.psyker_aura_crit_chance_aura_improved = {
-	class_name = "buff",
-	coherency_id = "psyker_coherency_aura",
-	coherency_priority = 1,
-	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_aura_gunslinger_aura",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
-	hud_priority = 5,
-	max_stacks = 1,
-	predicted = false,
-	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.06,
-	},
-	related_talents = {
-		"psyker_1_tier_3_name_2",
-	},
-}
 
 local percent_toughness = talent_settings_2.toughness_1.percent_toughness
 
@@ -1732,19 +1716,17 @@ templates.psyker_cooldown_buff = {
 			return
 		end
 
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
+	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
-		end
-
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
 		end
 
 		if t > template_data.timer then
@@ -1769,7 +1751,7 @@ templates.psyker_damage_to_peril_conversion = {
 		end
 
 		local toughness_damage_amount = params.toughness_damage_amount or 0
-		local damage_taken = params.damage_amount + params.permanent_damage + toughness_damage_amount
+		local damage_taken = params.damage_amount + toughness_damage_amount
 		local peril_converted = damage_taken * 0.0025
 		local warp_charge_component = template_data.warp_charge_component
 		local current_warp_charge = warp_charge_component.current_percentage
@@ -1783,6 +1765,18 @@ templates.psyker_damage_to_peril_conversion = {
 
 		warp_charge_component.last_charge_at_t = t
 		warp_charge_component.current_percentage = new_warp_charge_percentage
+
+		local percentage_change = current_warp_charge - new_warp_charge_percentage
+
+		if percentage_change ~= 0 then
+			local param_table = template_context.buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.percentage_change = percentage_change
+
+				template_context.buff_extension:add_proc_event(proc_events.on_warp_charge_changed, param_table)
+			end
+		end
 	end,
 	conditional_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = 1 - talent_settings.psyker_damage_to_peril_conversion.percent,
@@ -2026,17 +2020,7 @@ templates.psyker_smite_on_hit = {
 			return
 		end
 
-		local critical_peril = 0.97
 		local player_unit = template_context.unit
-		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
-		local warp_charge_component = unit_data_extension and unit_data_extension:read_component("warp_charge")
-
-		if not warp_charge_component or critical_peril < warp_charge_component.current_percentage then
-			template_data.smite_target = nil
-
-			return
-		end
-
 		local hit_unit_pos = POSITION_LOOKUP[smite_target]
 		local player_pos = POSITION_LOOKUP[player_unit]
 		local attack_direction = Vector3.normalize(hit_unit_pos - player_pos)
@@ -3186,6 +3170,7 @@ templates.psyker_melee_attack_speed = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
+		[stat_buffs.ranged_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
 	},
 }
 templates.psyker_cleave_from_peril = {

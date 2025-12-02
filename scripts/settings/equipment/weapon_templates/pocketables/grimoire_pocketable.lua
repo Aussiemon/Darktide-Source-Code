@@ -212,7 +212,6 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/grimoire"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_grimoire"
 weapon_template.swap_pickup_name = "grimoire"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default

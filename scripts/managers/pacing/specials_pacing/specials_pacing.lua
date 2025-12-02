@@ -67,7 +67,7 @@ SpecialsPacing.on_spawn_points_generated = function (self, template)
 	self._has_move_timer_when_monster_active_mutator = has_move_timer_when_monster_active_mutator
 end
 
-local MIN_TIMER_DIFF_RANGE = {
+local DEFAULT_MIN_TIMER_DIFF_RANGE = {
 	3,
 	5,
 }
@@ -103,7 +103,8 @@ SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_s
 
 		if not optional_spawn_timer then
 			local other_special_slot_timer = other_special_slot.spawn_timer
-			local min_timer_diff = math.random_range(MIN_TIMER_DIFF_RANGE[1], MIN_TIMER_DIFF_RANGE[2])
+			local min_timer_diff_range = template.min_timer_diff_range or DEFAULT_MIN_TIMER_DIFF_RANGE
+			local min_timer_diff = math.random_range(min_timer_diff_range[1], min_timer_diff_range[2])
 
 			if other_special_slot_timer and min_timer_diff > math.abs(spawn_timer - other_special_slot_timer) then
 				spawn_timer = spawn_timer + min_timer_diff
@@ -270,7 +271,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local pacing_specials_enabled, reason = Managers.state.pacing:spawn_type_enabled("specials")
 	local specials_allowed = travel_distance_allowed and pacing_specials_enabled and not self._frozen
 
-	if reason and reason == "disabled_by_challenge_rating" and not Managers.state.pacing:is_using_heat() and self._ahead_unit_has_no_units_in_coherency then
+	if reason and reason == "disabled_by_challenge_rating" and self._ahead_unit_has_no_units_in_coherency then
 		specials_allowed = true
 	end
 

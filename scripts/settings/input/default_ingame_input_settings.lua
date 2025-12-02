@@ -176,8 +176,6 @@ local default_ingame_input_settings = {
 		},
 		tactical_overlay_scroll_down = {
 			"mouse_wheel_down",
-			"ps4_controller_d_down",
-			"xbox_controller_d_down",
 			bindable = false,
 			description = "loc_ingame_tactical_overlay_scroll_down",
 			group = "input_group_combat",
@@ -186,10 +184,26 @@ local default_ingame_input_settings = {
 		},
 		tactical_overlay_scroll_up = {
 			"mouse_wheel_up",
+			bindable = false,
+			description = "loc_ingame_tactical_overlay_scroll_up",
+			group = "input_group_combat",
+			hide_in_controller_layout = true,
+			hide_in_keybindings_menu = true,
+		},
+		tactical_overlay_controller_scroll_down = {
+			"ps4_controller_d_down",
+			"xbox_controller_d_down",
+			bindable = false,
+			description = "loc_tactical_overlay_controller_scroll_down",
+			group = "input_group_combat",
+			hide_in_controller_layout = true,
+			hide_in_keybindings_menu = true,
+		},
+		tactical_overlay_controller_scroll_up = {
 			"ps4_controller_d_up",
 			"xbox_controller_d_up",
 			bindable = false,
-			description = "loc_ingame_tactical_overlay_scroll_up",
+			description = "loc_tactical_overlay_controller_scroll_up",
 			group = "input_group_combat",
 			hide_in_controller_layout = true,
 			hide_in_keybindings_menu = true,
@@ -407,10 +421,18 @@ local default_ingame_input_settings = {
 		},
 		tactical_overlay_scroll_down = {
 			key_alias = "tactical_overlay_scroll_down",
-			type = "held",
+			type = "pressed",
 		},
 		tactical_overlay_scroll_up = {
 			key_alias = "tactical_overlay_scroll_up",
+			type = "pressed",
+		},
+		tactical_overlay_controller_scroll_down = {
+			key_alias = "tactical_overlay_controller_scroll_down",
+			type = "held",
+		},
+		tactical_overlay_controller_scroll_up = {
+			key_alias = "tactical_overlay_controller_scroll_up",
 			type = "held",
 		},
 		weapon_reload_pressed = {

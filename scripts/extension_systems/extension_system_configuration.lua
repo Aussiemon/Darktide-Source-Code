@@ -74,6 +74,8 @@ _system_require("navigation", "navigation_system")
 _system_require("networked_timer", "networked_timer_system")
 _system_require("outline", "outline_system")
 _system_require("spline_follower", "spline_follower_system")
+_system_require("payload_path", "payload_path_system")
+_system_require("payload", "payload_system")
 _system_require("perception", "perception_system")
 _system_require("physics_unit_proximity", "physics_unit_proximity_system")
 _system_require("pickup_animation", "pickup_animation_system")
@@ -82,6 +84,7 @@ _system_require("player_spawner", "player_spawner_system")
 _system_require("player_visibility", "player_visibility_extension")
 _system_require("point_of_interest", "point_of_interest_system")
 _system_require("projectile_damage", "projectile_damage_extension")
+_system_require("prop_collision", "prop_collision_extension")
 _system_require("proximity", "side_relation_proximity_extension")
 _system_require("recoil", "player_unit_weapon_recoil_extension")
 _system_require("respawn_beacon", "respawn_beacon_system")
@@ -570,6 +573,18 @@ local systems = {
 		},
 	},
 	{
+		"payload_path_system",
+		"PayloadPathSystem",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"PayloadPathNodeExtension",
+		},
+	},
+	{
 		"navigation_system",
 		"NavigationSystem",
 		false,
@@ -580,6 +595,18 @@ local systems = {
 		{
 			"BotNavigationExtension",
 			"MinionNavigationExtension",
+		},
+	},
+	{
+		"payload_system",
+		"PayloadSystem",
+		false,
+		true,
+		true,
+		true,
+		false,
+		{
+			"PayloadExtension",
 		},
 	},
 	{
@@ -719,6 +746,18 @@ local systems = {
 		false,
 		{
 			"MissionObjectiveTargetExtension",
+		},
+	},
+	{
+		"prop_collision_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"PropCollisionExtension",
 		},
 	},
 	{

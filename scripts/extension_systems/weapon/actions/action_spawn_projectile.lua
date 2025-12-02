@@ -455,7 +455,7 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 	local shoot_sfx_alias = fx_settings and fx_settings.shoot_sfx_alias
 
 	if shoot_sfx_alias then
-		self._fx_extension:trigger_gear_wwise_event_with_source(shoot_sfx_alias, EXTERNAL_PROPERTIES, source_name, SYNC_TO_CLIENTS)
+		self._fx_extension:trigger_gear_wwise_event_with_source(shoot_sfx_alias, EXTERNAL_PROPERTIES, source_name, SYNC_TO_CLIENTS, false)
 
 		local use_charge_level = fx_settings.sfx_use_charge_level
 

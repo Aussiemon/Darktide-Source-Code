@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/utilities/action/action.lua
 
+local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local MultiFireModes = require("scripts/settings/equipment/weapon_templates/multi_fire_modes")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
@@ -57,16 +58,31 @@ Action.time_left = function (action_component, t)
 	return end_t - t
 end
 
+Action.num_damage_templates = function (action)
+	return action.sweeps and action.sweep_process_mode == ActionSweepSettings.multi_sweep_process_mode.separate and #action.sweeps or action.fire_configurations and action.multi_fire_mode == MultiFireModes.simultaneous and #action.fire_configurations or 1
+end
+
 local _fire_configs_temp = {}
 
-Action.damage_template = function (action)
-	local damage_profile = action.damage_profile or action.inner_damage_profile
+Action.damage_template = function (action, optional_index)
+	local damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort
+
+	damage_profile = action.damage_profile or action.inner_damage_profile
+	special_damage_profile = action.damage_profile_special_active or damage_profile
+	damage_profile_on_abort = action.damage_profile_on_abort
+	special_damage_profile_on_abort = action.damage_profile_special_active_on_abort
+
+	if action.sweeps then
+		local sweep = action.sweeps[optional_index or 1]
+
+		damage_profile = sweep and sweep.damage_profile or damage_profile
+		special_damage_profile = sweep.damage_profile_special_active or special_damage_profile
+		damage_profile_on_abort = sweep.damage_profile_on_abort or damage_profile_on_abort
+		special_damage_profile_on_abort = sweep.damage_profile_special_active_on_abort or special_damage_profile_on_abort
+	end
 
 	if damage_profile then
-		local sticky_hit = action.hit_stickyness_settings_special_active or action.hit_stickyness_settings
-		local special_damage_profile = sticky_hit and sticky_hit.damage.last_damage_profile or action.damage_profile_special_active
-
-		return damage_profile, special_damage_profile
+		return damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort
 	end
 
 	local fire_configurations = action.fire_configurations
@@ -76,24 +92,19 @@ Action.damage_template = function (action)
 		fire_configurations = _fire_configs_temp
 	end
 
-	local fire_configuration, damage_template
+	local damage_template
+	local fire_configuration = fire_configurations[optional_index or 1]
 
-	for i = 1, #fire_configurations do
-		local current_fire_config = fire_configurations[i]
-		local current_damage_template
-
-		if current_fire_config.flamer_gas_template then
-			current_damage_template = current_fire_config.flamer_gas_template.damage
-		elseif current_fire_config.hit_scan_template then
-			current_damage_template = current_fire_config.hit_scan_template.damage
-		elseif current_fire_config.projectile then
-			current_damage_template = current_fire_config.projectile.damage
-		elseif current_fire_config.shotshell then
-			current_damage_template = current_fire_config.shotshell.damage
+	if fire_configuration then
+		if fire_configuration.flamer_gas_template then
+			damage_template = fire_configuration.flamer_gas_template.damage
+		elseif fire_configuration.hit_scan_template then
+			damage_template = fire_configuration.hit_scan_template.damage
+		elseif fire_configuration.projectile then
+			damage_template = fire_configuration.projectile.damage
+		elseif fire_configuration.shotshell then
+			damage_template = fire_configuration.shotshell.damage
 		end
-
-		damage_template = current_damage_template
-		fire_configuration = current_fire_config
 	end
 
 	if damage_template then
@@ -110,12 +121,6 @@ Action.damage_template = function (action)
 		end
 	end
 
-	local fire_configuration = action.fire_configuration or action.fire_configurations and action.fire_configurations[1]
-
-	if fire_configuration then
-		-- Nothing
-	end
-
 	local projectile_template = action.projectile_template
 
 	if projectile_template then
@@ -129,7 +134,7 @@ Action.damage_template = function (action)
 	end
 end
 
-Action.explosion_template = function (action)
+Action.explosion_template = function (action, optional_index)
 	local fire_configurations = action.fire_configurations
 
 	if not fire_configurations then
@@ -139,21 +144,23 @@ Action.explosion_template = function (action)
 
 	local damage_template
 
-	for i = 1, #fire_configurations do
-		local current_fire_config = fire_configurations[i]
-		local current_damage_template
+	if not table.is_empty(fire_configurations) then
+		for i = optional_index or 1, optional_index or #fire_configurations do
+			local current_fire_config = fire_configurations[i]
+			local current_damage_template
 
-		if current_fire_config.flamer_gas_template then
-			current_damage_template = current_fire_config.flamer_gas_template.damage
-		elseif current_fire_config.hit_scan_template then
-			current_damage_template = current_fire_config.hit_scan_template.damage
-		elseif current_fire_config.projectile then
-			current_damage_template = current_fire_config.projectile.damage
-		elseif current_fire_config.shotshell then
-			current_damage_template = current_fire_config.shotshell.damage
+			if current_fire_config.flamer_gas_template then
+				current_damage_template = current_fire_config.flamer_gas_template.damage
+			elseif current_fire_config.hit_scan_template then
+				current_damage_template = current_fire_config.hit_scan_template.damage
+			elseif current_fire_config.projectile then
+				current_damage_template = current_fire_config.projectile.damage
+			elseif current_fire_config.shotshell then
+				current_damage_template = current_fire_config.shotshell.damage
+			end
+
+			damage_template = current_damage_template
 		end
-
-		damage_template = current_damage_template
 	end
 
 	if damage_template then
@@ -193,7 +200,7 @@ Action.explosion_template = function (action)
 	end
 end
 
-Action.power_level = function (action)
+Action.power_level = function (action, optional_index)
 	local power_level = action.power_level
 
 	if not power_level then
@@ -204,28 +211,30 @@ Action.power_level = function (action)
 			fire_configurations = _fire_configs_temp
 		end
 
-		for i = 1, #fire_configurations do
-			local current_fire_config = fire_configurations[i]
-			local current_power_level
+		if not table.is_empty(fire_configurations) then
+			for i = optional_index or 1, optional_index or #fire_configurations do
+				local current_fire_config = fire_configurations[i]
+				local current_power_level
 
-			if current_fire_config.flamer_gas_template then
-				current_power_level = current_fire_config.flamer_gas_template.power_level
-			elseif current_fire_config.hit_scan_template then
-				current_power_level = current_fire_config.hit_scan_template.power_level
-			elseif current_fire_config.projectile then
-				current_power_level = current_fire_config.projectile.power_level
-			elseif current_fire_config.shotshell then
-				current_power_level = current_fire_config.shotshell.power_level
+				if current_fire_config.flamer_gas_template then
+					current_power_level = current_fire_config.flamer_gas_template.power_level
+				elseif current_fire_config.hit_scan_template then
+					current_power_level = current_fire_config.hit_scan_template.power_level
+				elseif current_fire_config.projectile then
+					current_power_level = current_fire_config.projectile.power_level
+				elseif current_fire_config.shotshell then
+					current_power_level = current_fire_config.shotshell.power_level
+				end
+
+				power_level = current_power_level
 			end
-
-			power_level = current_power_level
 		end
 	end
 
 	return power_level or DEFAULT_POWER_LEVEL
 end
 
-Action.stat_power_level = function (action)
+Action.stat_power_level = function (action, optional_index)
 	local power_level = action.stat_power_level
 
 	if not power_level then
@@ -236,25 +245,27 @@ Action.stat_power_level = function (action)
 			fire_configurations = _fire_configs_temp
 		end
 
-		for i = 1, #fire_configurations do
-			local current_fire_config = fire_configurations[i]
-			local current_power_level
+		if not table.is_empty(fire_configurations) then
+			for i = optional_index or 1, optional_index or #fire_configurations do
+				local current_fire_config = fire_configurations[i]
+				local current_power_level
 
-			if current_fire_config.flamer_gas_template then
-				current_power_level = current_fire_config.flamer_gas_template.stat_power_level
-			elseif current_fire_config.hit_scan_template then
-				current_power_level = current_fire_config.hit_scan_template.stat_power_level
-			elseif current_fire_config.projectile then
-				current_power_level = current_fire_config.projectile.stat_power_level
-			elseif current_fire_config.shotshell then
-				current_power_level = current_fire_config.shotshell.stat_power_level
+				if current_fire_config.flamer_gas_template then
+					current_power_level = current_fire_config.flamer_gas_template.stat_power_level
+				elseif current_fire_config.hit_scan_template then
+					current_power_level = current_fire_config.hit_scan_template.stat_power_level
+				elseif current_fire_config.projectile then
+					current_power_level = current_fire_config.projectile.stat_power_level
+				elseif current_fire_config.shotshell then
+					current_power_level = current_fire_config.shotshell.stat_power_level
+				end
+
+				power_level = current_power_level
 			end
-
-			power_level = current_power_level
 		end
 	end
 
-	return power_level or Action.power_level(action)
+	return power_level or Action.power_level(action, optional_index)
 end
 
 return Action

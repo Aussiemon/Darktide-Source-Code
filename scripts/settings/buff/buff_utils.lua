@@ -3,6 +3,9 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local armor_types = ArmorSettings.types
 local BuffUtils = {}
 
@@ -123,6 +126,96 @@ BuffUtils.consecutive_hits_same_target_proc_func = function (params, template_da
 
 		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
 		template_data.last_hit_time = t
+	end
+end
+
+BuffUtils.populate_stimm_field_syringe_buff_variants = function (buff_templates)
+	local talent_settings = TalentSettings.broker
+	local buffs_to_add = {}
+
+	for name, template in pairs(buff_templates) do
+		if template.keywords and table.contains(template.keywords, "syringe") then
+			local buff = table.clone(template)
+			local variant_name = name .. "_stimm_field"
+
+			buff.name = variant_name
+			buff.duration = nil
+			buff.unique_buff_id = nil
+			buff.predicted = false
+			buff.keywords = {
+				"syringe",
+				"syringe_broker",
+			}
+			buffs_to_add[variant_name] = buff
+		end
+	end
+
+	table.merge(buff_templates, buffs_to_add)
+
+	buff_templates.syringe_heal_corruption_buff_stimm_field.single_application = true
+	buff_templates.syringe_broker_buff_stimm_field.single_application_buff_overrides = table.set({
+		"broker_stimm_durability_5b",
+		"broker_stimm_durability_4",
+	})
+
+	local start_func_super = buff_templates.syringe_broker_buff_stimm_field.start_func
+
+	buff_templates.syringe_broker_buff_stimm_field.start_func = function (template_data, template_context)
+		start_func_super(template_data, template_context)
+
+		local owner_player = Managers.state.player_unit_spawn:owner(template_data.stimm_provider)
+
+		if owner_player then
+			template_data.stat_peer_id = owner_player:peer_id()
+			template_data.stat_local_player_id = owner_player:local_player_id()
+		end
+
+		template_data.enter_time = FixedFrame.get_latest_fixed_time()
+	end
+
+	local stop_func_super = buff_templates.syringe_broker_buff_stimm_field.stop_func
+
+	buff_templates.syringe_broker_buff_stimm_field.stop_func = function (template_data, template_context, extension_destroyed)
+		stop_func_super(template_data, template_context, extension_destroyed)
+
+		local peer_id, local_player_id = template_data.stat_peer_id, template_data.stat_local_player_id
+
+		if peer_id and local_player_id then
+			local owner_player = Managers.player:player(peer_id, local_player_id)
+
+			if owner_player then
+				template_data.start_t = FixedFrame.get_latest_fixed_time()
+
+				local buffing_start_time = template_data.enter_time
+
+				if not buffing_start_time then
+					return
+				end
+
+				local current_time = FixedFrame.get_latest_fixed_time()
+				local time_buffed = math.round(current_time - buffing_start_time)
+
+				Managers.stats:record_private("hook_broker_time_ally_buffed_by_stimm_field", owner_player, time_buffed)
+			end
+		end
+	end
+
+	buff_templates.syringe_broker_buff_stimm_field.class_name = "interval_buff"
+	buff_templates.syringe_broker_buff_stimm_field.hud_icon = talent_settings.combat_ability.stimm_field.hud_icon
+	buff_templates.syringe_broker_buff_stimm_field.hud_icon_gradient_map = talent_settings.combat_ability.stimm_field.hud_icon_gradient_map
+	buff_templates.syringe_broker_buff_stimm_field.hud_priority = talent_settings.combat_ability.stimm_field.hud_priority
+	buff_templates.syringe_broker_buff_stimm_field.skip_tactical_overlay = talent_settings.combat_ability.stimm_field.skip_tactical_overlay
+	buff_templates.syringe_broker_buff_stimm_field.stat_buffs.corruption_taken_multiplier = 0
+	buff_templates.syringe_broker_buff_stimm_field.interval = talent_settings.combat_ability.stimm_field.interval
+
+	buff_templates.syringe_broker_buff_stimm_field.interval_func = function (template_data, template_context, template)
+		if not template_context.is_server then
+			return
+		end
+
+		local corruption_heal_amount = talent_settings.combat_ability.stimm_field.corruption_heal_amount
+
+		template_data.health_extension:reduce_permanent_damage(corruption_heal_amount)
 	end
 end
 

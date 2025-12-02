@@ -64,7 +64,7 @@ ProximityHeal.unit_entered_proximity = function (self, t, unit)
 	self._units_in_proximity[unit] = health_extension
 end
 
-ProximityHeal.unit_left_proximity = function (self, unit)
+ProximityHeal.unit_left_proximity = function (self, t, unit)
 	self._units_in_proximity[unit] = nil
 	self._units_healed[unit] = nil
 end

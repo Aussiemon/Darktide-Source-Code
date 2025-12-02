@@ -36,6 +36,110 @@ SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_dista
 	return nav_triangle_group, flood_fill_positions, group_index_to_mainpath_index
 end
 
+SpawnPointQueries.find_isolated_islands = function (nav_world, initial_nav_spawn_points, nav_blocker_units)
+	local zero = Vector3.zero()
+	local query_positions = {
+		zero,
+		zero,
+		zero,
+		zero,
+	}
+	local fill_positions = {
+		zero,
+	}
+	local MAX_POINTS = 2147483647
+	local cutoff_values = {
+		MAX_POINTS,
+	}
+	local nav_spawn_points_filters = {
+		initial_nav_spawn_points,
+	}
+	local num_nav_blocker_units = nav_blocker_units and #nav_blocker_units or 0
+	local isolated_islands = {}
+	local invalid_triangles = {}
+	local tile_count = GwNavWorld.database_tile_count(nav_world)
+
+	for tile = 1, tile_count do
+		local triangle_count = GwNavWorld.database_tile_triangle_count(nav_world, tile)
+
+		for i = 1, triangle_count do
+			local temp_size = Script.temp_byte_count()
+			local a, b, c, _ = GwNavWorld.database_triangle(nav_world, tile, i)
+
+			if a ~= nil then
+				local position = (a + b + c) / 3
+
+				query_positions[1] = position
+				query_positions[2] = a
+				query_positions[3] = b
+				query_positions[4] = c
+
+				local found_group = false
+
+				for _, nav_spawn_points in ipairs(nav_spawn_points_filters) do
+					for _, query_position in ipairs(query_positions) do
+						if GwNavSpawnPoints.get_group_from_position(nav_spawn_points, nav_world, query_position, ABOVE, BELOW) then
+							found_group = true
+
+							break
+						end
+					end
+
+					if found_group then
+						break
+					end
+				end
+
+				if num_nav_blocker_units > 0 and not found_group then
+					for j = 1, num_nav_blocker_units do
+						if Unit.is_point_inside_volume(nav_blocker_units[j], "g_volume_block", position) then
+							found_group = true
+						end
+					end
+				end
+
+				if not found_group then
+					local invalid_triangle = true
+
+					for _, query_position in ipairs(query_positions) do
+						if GwNavQueries.is_position_on_navmesh(nav_world, query_position) then
+							fill_positions[1] = query_position
+							invalid_triangle = false
+
+							break
+						end
+					end
+
+					if invalid_triangle then
+						invalid_triangles[#invalid_triangles + 1] = {
+							position = Vector3Box(position),
+							points = {
+								Vector3Box(a),
+								Vector3Box(b),
+								Vector3Box(c),
+							},
+						}
+					else
+						local island_triangle_group = GwNavTriangleGroup.create_by_flood_fill_from_positions(nav_world, fill_positions, cutoff_values)
+						local island_spawn_points = GwNavSpawnPoints.create(nav_world, island_triangle_group)
+
+						isolated_islands[#isolated_islands + 1] = {
+							position = Vector3Box(position),
+							nav_spawn_points = island_spawn_points,
+							nav_triangle_group = island_triangle_group,
+						}
+						nav_spawn_points_filters[#nav_spawn_points_filters + 1] = island_spawn_points
+					end
+				end
+			end
+
+			Script.set_temp_byte_count(temp_size)
+		end
+	end
+
+	return isolated_islands, invalid_triangles
+end
+
 SpawnPointQueries.generate_nav_spawn_points = function (nav_world, nav_triangle_group, parameters)
 	local nav_spawn_points = GwNavSpawnPoints.create(nav_world, nav_triangle_group)
 	local num_groups, num_sub_groups = GwNavSpawnPoints.get_count(nav_spawn_points)

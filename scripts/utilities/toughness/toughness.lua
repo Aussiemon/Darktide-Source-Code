@@ -46,4 +46,23 @@ Toughness.recover_max_toughness = function (unit, reason, ignore_state_block)
 	return recovered_tougness
 end
 
+Toughness.current_toughness_percent = function (unit)
+	local amount = 0
+	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+
+	if toughness_extension then
+		amount = toughness_extension:current_toughness_percent()
+	end
+
+	return amount
+end
+
+Toughness.break_toughness = function (unit)
+	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+
+	if toughness_extension then
+		toughness_extension:break_toughness()
+	end
+end
+
 return Toughness

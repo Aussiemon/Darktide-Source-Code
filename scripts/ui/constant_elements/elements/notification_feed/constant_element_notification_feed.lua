@@ -6,8 +6,6 @@ local ContractCriteriaParser = require("scripts/utilities/contract_criteria_pars
 local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
 local Items = require("scripts/utilities/items")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -122,7 +120,7 @@ local function _remove_player_frame_cb_func(widget, ui_renderer)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "havoc_status")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "havoc_status", "mutator")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -239,6 +237,13 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			animation_enter = "popup_enter",
 			animation_exit = "popup_leave",
 			priority_order = 1,
+			widget_definition = Definitions.notification_message,
+		},
+		mutator = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 1,
+			total_time = 3,
 			widget_definition = Definitions.notification_message,
 		},
 	}
@@ -409,6 +414,9 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		}
 	elseif message_type == MESSAGE_TYPES.alert then
 		local var_1_0 = {
+			enter_sound_event = nil,
+			icon = nil,
+			icon_color = nil,
 			texts = {
 				{
 					display_name = data.text,
@@ -1100,6 +1108,8 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			line_color = Color.terminal_text_body(255, true),
 			color = Color.terminal_grid_background(100, true),
 		}
+	elseif message_type == MESSAGE_TYPES.mutator then
+		notification_data = data.data_formatter(data.data)
 	end
 
 	if not notification_data then
@@ -1373,11 +1383,8 @@ ConstantElementNotificationFeed._get_notifications_text_height = function (self,
 	local text = content.text
 	local style = widget.style
 	local text_style = style.text
-	local text_font_data = UIFonts.data_by_type(text_style.font_type)
-	local text_font = text_font_data.path
 	local text_size = text_style.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, text_size, text_options)
+	local text_height = Text.text_size(ui_renderer, text, text_style, text_size)
 
 	return text_height
 end

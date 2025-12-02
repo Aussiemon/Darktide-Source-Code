@@ -99,39 +99,36 @@ ActionScanConfirm._check_line_of_sight = function (self)
 		return false
 	end
 
-	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
-	local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
+	local physics_world = self._physics_world
+	local line_of_sight_unit = Scanning.check_direct_line_of_sight(physics_world, first_person_component, scan_settings.distance.near)
 
-	if current_scan_mission_zone then
-		local physics_world = self._physics_world
-		local line_of_sight_unit = Scanning.check_direct_line_of_sight(physics_world, first_person_component, scan_settings.distance.near)
-
-		if scanning_unit == line_of_sight_unit then
-			return true
-		end
-
-		local line_of_sight = Scanning.check_line_of_sight_to_unit(physics_world, first_person_component, scanning_unit, scan_settings)
-
-		return line_of_sight
+	if scanning_unit == line_of_sight_unit then
+		return true
 	end
 
-	return false
+	local line_of_sight = Scanning.check_line_of_sight_to_unit(physics_world, first_person_component, scanning_unit, scan_settings)
+
+	return line_of_sight
 end
 
 ActionScanConfirm._bank_scannable_unit = function (self)
 	local scanning_compomnent = self._scanning_compomnent
 
 	if self._is_server then
-		local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
-		local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
 		local scannable_unit = scanning_compomnent.scannable_unit
 
-		if scannable_unit and current_scan_mission_zone then
+		if scannable_unit then
 			local player = self._player
 			local scannable_extension = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 
 			if scannable_extension and player and scannable_extension:is_active() then
-				current_scan_mission_zone:assign_scanned_object_to_player_and_bank(scannable_extension, player)
+				local mission_target_extension = ScriptUnit.extension(scannable_unit, "mission_objective_target_system")
+				local objective_name = mission_target_extension:objective_name()
+				local group_id = mission_target_extension:objective_group_id()
+				local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
+				local current_scan_mission_zone = mission_objective_zone_system:current_active_zone(objective_name, group_id)
+
+				current_scan_mission_zone:set_scanned(scannable_extension, player)
 			end
 		end
 

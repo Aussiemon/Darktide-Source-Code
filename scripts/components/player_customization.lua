@@ -48,6 +48,7 @@ PlayerCustomization._construct_attach_settings = function (self, unit, world, in
 	local attach_settings = {
 		from_script_component = true,
 		from_ui_profile_spawner = false,
+		item_definitions = nil,
 		world = world,
 		character_unit = unit,
 		in_editor = in_editor,
@@ -87,6 +88,7 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	local face_item_name = self:get_data(unit, "face_item")
 	local face_attachment_items = self:get_data(unit, "face_attachments")
 	local global_material_override_table = self:get_data(unit, "global_material_override")
+	local global_material_override_items_table = self:get_data(unit, "global_material_override_items")
 	local item_defs = item_definitions or attach_settings.item_definitions
 
 	attach_settings.item_definitions = item_defs
@@ -102,7 +104,7 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 	self:spawn_items(item_table)
 
-	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items)
+	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, attach_settings)
 
 	if face_unit then
 		local face_sm_override = self:get_data(unit, "face_sm_override")
@@ -130,8 +132,12 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 		end
 	end
 
-	for i, material_override in pairs(global_material_override_table) do
+	for _, material_override in pairs(global_material_override_table) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+	end
+
+	for _, material_override in pairs(global_material_override_items_table) do
+		VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override, self._in_editor, attach_settings.item_definitions)
 	end
 
 	local disable_all_culling = self:get_data(unit, "disable_all_culling")
@@ -234,12 +240,28 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 					end
 				end
 
+				local deform_override_items = item.deform_override_items
+
+				if deform_override_items then
+					for _, deform_override_item in pairs(deform_override_items) do
+						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, false, attach_settings.item_definitions)
+					end
+				end
+
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_1", i), in_editor)
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_2", i), in_editor)
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_3", i), in_editor)
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_4", i), in_editor)
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_5", i), in_editor)
 				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_6", i), in_editor)
+
+				local material_override_items = self:get_data(unit, "attachment_material_override_items")
+
+				for j = 1, #material_override_items do
+					if material_override_items[j].item_no == i and material_override_items[j].material_override_item then
+						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, material_override_items[j].material_override_item, in_editor, attach_settings.item_definitions)
+					end
+				end
 			end
 		end
 	end
@@ -303,6 +325,12 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 
 		for i = 1, #face_material_overrides do
 			VisualLoadoutCustomization.apply_material_override(face_unit, self._unit, false, face_material_overrides[i], self._in_editor)
+		end
+
+		local face_material_override_items = self:get_data(self._unit, "face_material_override_items")
+
+		for i = 1, #face_material_override_items do
+			VisualLoadoutCustomization.apply_material_override_item(face_unit, self._unit, false, face_material_override_items[i], self._in_editor, self._attach_settings.item_definitions)
 		end
 	end
 
@@ -435,6 +463,13 @@ PlayerCustomization.component_data = {
 		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
 	},
+	face_material_override_items = {
+		category = "Attachment Item Material Overrides",
+		filter = "item",
+		size = 1,
+		ui_name = "Face Material Override Items",
+		ui_type = "resource_array",
+	},
 	face_sm_override = {
 		category = "Facial Attachments",
 		filter = "state_machine",
@@ -503,6 +538,34 @@ PlayerCustomization.component_data = {
 		ui_name = "Global Material Override",
 		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+	},
+	attachment_material_override_items = {
+		category = "Attachment Item Material Overrides",
+		ui_name = "Item Material Overrides",
+		ui_type = "struct_array",
+		definition = {
+			item_no = {
+				ui_name = "Item Number",
+				ui_type = "number",
+				value = 1,
+			},
+			material_override_item = {
+				filter = "item",
+				ui_name = "Material Override Item",
+				ui_type = "resource",
+			},
+		},
+		control_order = {
+			"item_no",
+			"material_override_item",
+		},
+	},
+	global_material_override_items = {
+		category = "Attachment Item Material Overrides",
+		filter = "item",
+		size = 1,
+		ui_name = "Global Material Override Items",
+		ui_type = "resource_array",
 	},
 }
 

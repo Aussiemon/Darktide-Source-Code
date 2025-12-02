@@ -5,6 +5,7 @@ local Definitions = require("scripts/ui/views/social_menu_roster_view/social_men
 local InputUtils = require("scripts/managers/input/input_utils")
 local Popups = require("scripts/utilities/ui/popups")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local RosterViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
@@ -13,6 +14,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
 local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
@@ -158,6 +160,7 @@ local _groups_by_online_status = {
 
 SocialMenuRosterView.init = function (self, settings, context)
 	self._parent = context and context.parent
+	self._promise_container = PromiseContainer:new()
 	self._players_by_account_id = {}
 
 	local roster_lists = {}
@@ -385,6 +388,11 @@ SocialMenuRosterView.on_exit = function (self)
 	self:_unload_icons(true)
 	self:_destroy_renderer()
 	SocialMenuRosterView.super.on_exit(self)
+end
+
+SocialMenuRosterView.destroy = function (self)
+	self._promise_container:delete()
+	SocialMenuRosterView.super.destroy(self)
 end
 
 SocialMenuRosterView.set_can_exit = function (self, value, apply_next_frame)
@@ -872,11 +880,11 @@ SocialMenuRosterView.event_player_profile_updated = function (self, peer_id, pla
 	end
 end
 
-SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+SocialMenuRosterView._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)
 	local widget_content = widget.content
 
 	widget_content.awaiting_portrait_callback = nil
-	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.portrait = self:_get_player_portrait_frame_material(profile)
 
 	local portrait_style = widget.style.portrait
 	local material_values = portrait_style.material_values
@@ -902,6 +910,24 @@ SocialMenuRosterView._cb_unset_player_icon = function (self, widget, ui_renderer
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
+SocialMenuRosterView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
+end
+
 SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
 	local widget_content = widget.content
 
@@ -911,18 +937,24 @@ SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
 	local loadout = profile and profile.loadout
 	local frame_item = loadout and loadout.slot_portrait_frame
 	local frame_item_gear_id = frame_item and frame_item.gear_id
-	local icon
+	local material_values = widget.style.portrait.material_values
+	local matching_item = frame_item_gear_id == item.gear_id
 
-	if frame_item_gear_id == item.gear_id then
-		icon = item.icon
+	if matching_item then
+		if item.icon_material and item.icon_material ~= "" then
+			if material_values.portrait_frame_texture then
+				material_values.portrait_frame_texture = nil
+			end
+
+			widget.content.character_portrait = item.icon_material
+		else
+			widget.content.character_portrait = UISettings.portrait_frame_default_material
+			material_values.portrait_frame_texture = item.icon
+		end
 	else
-		icon = RosterViewStyles.default_frame_material
+		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
 	end
-
-	local portrait_style = widget.style.portrait
-
-	portrait_style.material_values.portrait_frame_texture = icon
-	widget_content.portrait_frame_texture = icon
 end
 
 SocialMenuRosterView._cb_unset_player_frame = function (self, widget, ui_renderer)
@@ -1242,7 +1274,7 @@ SocialMenuRosterView._load_widget_portrait = function (self, widget, profile, po
 		self:_unload_widget_portrait(widget)
 	end
 
-	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget)
+	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget, profile)
 	local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", widget, portrait_renderer)
 
 	widget_content.awaiting_portrait_callback = true
@@ -1870,6 +1902,8 @@ SocialMenuRosterView._refresh_party_list = function (self)
 			end
 		end)
 		self._party_promise = promise
+
+		self._promise_container:cancel_on_destroy(promise)
 	end
 end
 
@@ -1915,7 +1949,11 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh, dt)
 		promises[#promises + 1] = social_service:fetch_blocked_players()
 	end
 
-	self._roster_lists_promise = Promise.all(unpack(promises)):next(function (lists)
+	local collector_promise = Promise.all(unpack(promises))
+
+	self._promise_container:cancel_on_destroy(collector_promise)
+
+	self._roster_lists_promise = collector_promise:next(function (lists)
 		return lists[1]
 	end):next(callback(self, "cb_update_roster")):catch(function (e)
 		if type(e) == "table" then

@@ -18,57 +18,81 @@ local updates_per_frame = {
 local volume_type_events = {
 	["content/volume_types/minion_trigger"] = {
 		[MINION] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.trigger,
 		},
 	},
 	["content/volume_types/minion_instakill_no_cost"] = {
 		[MINION] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.minion_instakill,
 		},
 	},
 	["content/volume_types/minion_instakill_gibbing_no_cost"] = {
 		[MINION] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.minion_instakill_with_gibbing,
 		},
 	},
 	["content/volume_types/nav_tag_volumes/minion_instakill_high_cost"] = {
 		[MINION] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
 			traversal_cost = 100,
 			func = VolumeEventFunctions.minion_instakill,
 		},
 	},
 	["content/volume_types/nav_tag_volumes/bot_impassable"] = {
 		[PLAYER] = {
+			filter = nil,
+			func = nil,
 			invert_volume = false,
+			params = nil,
 			traversal_cost = 0,
 		},
 	},
 	["content/volume_types/player_trigger"] = {
 		[PLAYER] = {
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.trigger,
 			filter = VolumeEventFilters.trigger,
 		},
 	},
 	["content/volume_types/player_instakill"] = {
 		[PLAYER] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.player_instakill,
 		},
 	},
 	["content/volume_types/level_prop_trigger"] = {
 		[LEVEL_PROP] = {
+			filter = nil,
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.trigger,
 		},
 	},
 	["content/volume_types/end_zone"] = {
 		[PLAYER] = {
 			invert_volume = false,
+			params = nil,
+			traversal_cost = nil,
 			func = VolumeEventFunctions.end_zone,
 			filter = VolumeEventFilters.end_zone,
 		},

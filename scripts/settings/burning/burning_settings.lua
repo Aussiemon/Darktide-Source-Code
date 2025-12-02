@@ -78,6 +78,42 @@ burning_settings.buff_effects = {
 				},
 			},
 		},
+		broker_toxin_gas = {
+			ailment_effect = ailment_effects.toxin_gas,
+			node_effects = {
+				{
+					node_name = "j_spine",
+					vfx = {
+						material_emission = true,
+						orphaned_policy = "destroy",
+						particle_effect = "content/fx/particles/enemies/buff_toxin_broker",
+						stop_type = "stop",
+					},
+					sfx = {
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire",
+						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
+					},
+				},
+			},
+		},
+		broker_brittleness = {
+			ailment_effect = ailment_effects.broker_brittleness,
+			node_effects = {
+				{
+					node_name = "j_spine",
+					vfx = {
+						material_emission = true,
+						orphaned_policy = "destroy",
+						particle_effect = "content/fx/particles/enemies/buff_toxin_brittle_broker",
+						stop_type = "stop",
+					},
+					sfx = {
+						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire",
+						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
+					},
+				},
+			},
+		},
 		warpfire = {
 			ailment_effect = ailment_effects.warpfire,
 			node_effects = {

@@ -44,5 +44,12 @@ archetype_stamina_templates.adamant = {
 	regeneration_delay = 0.5,
 	regeneration_per_second = 1,
 }
+archetype_stamina_templates.broker = {
+	base_stamina = 3,
+	no_stamina_sprint_speed_deceleration_time = 1,
+	no_stamina_sprint_speed_multiplier = 0.75,
+	regeneration_delay = 0.5,
+	regeneration_per_second = 2,
+}
 
 return settings("ArchetypeStaminaTemplates", archetype_stamina_templates)

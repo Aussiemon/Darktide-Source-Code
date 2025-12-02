@@ -163,6 +163,7 @@ local penance_overview_view_settings = {
 	category_icons = {
 		account = "content/ui/materials/icons/achievements/categories/category_account",
 		adamant = "content/ui/materials/icons/achievements/categories/category_adamant",
+		broker = "content/ui/materials/icons/achievements/categories/category_broker",
 		endeavours = "content/ui/materials/icons/achievements/categories/category_endeavour",
 		exploration = "content/ui/materials/icons/achievements/categories/category_exploration",
 		heretics = "content/ui/materials/icons/achievements/categories/category_heretics",
@@ -184,6 +185,9 @@ local penance_overview_view_settings = {
 			"kill_renegades_1",
 			"mission_circumstace_1",
 			"amount_of_chests_opened_1",
+		},
+		broker = {
+			"basic_training",
 		},
 		ogryn = {
 			"basic_training",

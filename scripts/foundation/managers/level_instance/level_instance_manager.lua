@@ -11,7 +11,6 @@ LevelInstanceManager.init = function (self, world, extension_manager, is_server,
 	self._main_level = ScriptWorld.level(world, level_name)
 	self._network_event_delegate = network_event_delegate
 	self._spawned_level_instances = {}
-	self._hotjoins_in_progress = {}
 
 	if not is_server then
 		local client_rpcs = LevelInstanceManagerSettings.client_rpcs
@@ -42,62 +41,35 @@ LevelInstanceManager.destroy = function (self)
 	end
 end
 
-LevelInstanceManager.update = function (self, dt, t)
-	if not self._is_server then
-		return
-	end
-
-	local game_session_manager = Managers.state.game_session
-	local hotjoins_in_progress = self._hotjoins_in_progress
-
-	for i = #hotjoins_in_progress, 1, -1 do
-		local hotjoin = hotjoins_in_progress[i]
-		local channel_id = game_session_manager:peer_to_channel(hotjoin.peer_id)
-
-		if channel_id then
-			local level_instances = hotjoin.level_instances
-			local synced_hashes = {}
-
-			for hash, instance_data in pairs(level_instances) do
-				self:_server_sync_instanced_level_with_clients(instance_data, channel_id)
-				table.append(synced_hashes, hash)
-
-				if #synced_hashes >= 10 then
-					break
-				end
-			end
-
-			for j = 1, #synced_hashes do
-				table.remove(hotjoin.level_instances, synced_hashes[i])
-			end
-
-			if #hotjoin.level_instances == 0 then
-				table.remove(self._hotjoins_in_progress, i)
-			end
-		else
-			table.remove(self._hotjoins_in_progress, i)
-		end
-	end
-end
-
 LevelInstanceManager.spawn_level_instance = function (self, level_name, position, rotation)
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 
 	local instance_data = self:_spawn_level_instance_local(level_name, position, rotation)
+	local unit_spawner_manager = Managers.state.unit_spawner
+	local level_units = Level.units(instance_data.level, true)
+	local returned_id = unit_spawner_manager:register_dynamic_level_spawned_units_server(instance_data.level, level_units)
 
 	self:_server_sync_instanced_level_with_clients(instance_data)
+	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned")
+	Level.trigger_level_spawned(instance_data.level)
+
+	local sub_levels = Level.nested_levels(instance_data.level)
+
+	for i = 1, #sub_levels do
+		Level.trigger_level_spawned(sub_levels[i])
+	end
 
 	return instance_data
 end
 
-LevelInstanceManager._spawn_level_instance_local = function (self, level_name, position, rotation, optional_instance_hash)
-	local level, instance_id, instance_hash = ScriptWorld.spawn_level_instance(self._world, level_name, position, rotation, true, optional_instance_hash)
+LevelInstanceManager._spawn_level_instance_local = function (self, level_name, position, rotation, optional_level_id)
+	local level, instance_id, level_id = ScriptWorld.spawn_level_instance(self._world, level_name, position, rotation, true, optional_level_id)
 	local instance_data = {
 		level = level,
 		name = level_name,
 		instance_id = instance_id,
-		instance_hash = instance_hash,
+		level_id = level_id,
 		position_boxed = Vector3Box(),
 		rotation_boxed = QuaternionBox(),
 	}
@@ -105,13 +77,13 @@ LevelInstanceManager._spawn_level_instance_local = function (self, level_name, p
 	Vector3Box.store(instance_data.position_boxed, position)
 	QuaternionBox.store(instance_data.rotation_boxed, rotation)
 
-	self._spawned_level_instances[instance_hash] = instance_data
+	self._spawned_level_instances[level_id] = instance_data
 
 	return instance_data
 end
 
-LevelInstanceManager.destroy_level_instance = function (self, instance_hash)
-	local level_instance_data = self._spawned_level_instances[instance_hash]
+LevelInstanceManager.destroy_level_instance = function (self, level_id)
+	local level_instance_data = self._spawned_level_instances[level_id]
 
 	if not level_instance_data then
 		return
@@ -121,30 +93,34 @@ LevelInstanceManager.destroy_level_instance = function (self, instance_hash)
 end
 
 LevelInstanceManager.hot_join_sync = function (self, peer_id, channel_id)
-	table.append(self._hotjoins_in_progress, {
-		peer_id = peer_id,
-		level_instances = table.clone(self._spawned_level_instances),
-	})
+	for level_id, instance_data in pairs(self._spawned_level_instances) do
+		self:_server_sync_instanced_level_with_clients(instance_data, channel_id)
+	end
 end
 
 LevelInstanceManager._server_sync_instanced_level_with_clients = function (self, instance_data, optional_channel)
 	local game_session_manager = Managers.state.game_session
 
 	if optional_channel then
-		RPC.rpc_level_instance_spawn(optional_channel, instance_data.name, instance_data.instance_hash, instance_data.position_boxed:unbox(), instance_data.rotation_boxed:unbox())
+		RPC.rpc_level_instance_spawn(optional_channel, instance_data.name, instance_data.level_id, instance_data.position_boxed:unbox(), instance_data.rotation_boxed:unbox())
 	else
-		game_session_manager:send_rpc_clients("rpc_level_instance_spawn", instance_data.name, instance_data.instance_hash, instance_data.position_boxed:unbox(), instance_data.rotation_boxed:unbox())
+		game_session_manager:send_rpc_clients("rpc_level_instance_spawn", instance_data.name, instance_data.level_id, instance_data.position_boxed:unbox(), instance_data.rotation_boxed:unbox())
 	end
 end
 
-LevelInstanceManager.rpc_level_instance_spawn = function (self, channel_id, level_name, server_level_hash, position, rotation)
-	if self._spawned_level_instances[server_level_hash] then
-		Log.warning("[LevelInstanceManager]", "client trying to spawn a level instance with the same hash again", server_level_hash, level_name)
+LevelInstanceManager.rpc_level_instance_spawn = function (self, channel_id, level_name, server_level_id, position, rotation)
+	if self._spawned_level_instances[server_level_id] then
+		Log.warning("[LevelInstanceManager]", "client trying to spawn a level instance with the same id again %d %s", server_level_id, level_name)
 
 		return
 	end
 
-	self:_spawn_level_instance_local(level_name, position, rotation, server_level_hash)
+	local instance_data = self:_spawn_level_instance_local(level_name, position, rotation, server_level_id)
+	local unit_spawner_manager = Managers.state.unit_spawner
+	local level_units = Level.units(instance_data.level, true)
+
+	unit_spawner_manager:register_dynamic_level_spawned_units_client(instance_data.level, level_units, server_level_id)
+	Managers.state.extension:add_and_register_units(self._world, level_units, nil, "level_spawned")
 end
 
 LevelInstanceManager.rpc_level_instance_destroy = function (self, instance_hash)

@@ -545,6 +545,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "_cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",
@@ -554,7 +555,7 @@ local legend_inputs = {
 		visibility_function = function (parent)
 			local previewed_element = parent._previewed_element
 
-			if previewed_element and previewed_element.is_empty then
+			if previewed_element and (previewed_element.premium_offer or previewed_element.is_empty) then
 				return false
 			end
 

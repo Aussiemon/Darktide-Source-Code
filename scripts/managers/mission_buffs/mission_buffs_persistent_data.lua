@@ -20,6 +20,8 @@ MissionBuffsPersistentData.init_player_data = function (self, player)
 	local player_account_id = player:account_id()
 
 	players_data[player_account_id] = {
+		buff_family_chosen = nil,
+		current_choice = nil,
 		num_family_buffs_received = 0,
 		account_id = player_account_id,
 		archetype_based_data = {},

@@ -7,6 +7,7 @@ local hit_types = SurfaceMaterialSettings.hit_types
 local surface_fx = {}
 local default_surface_fx = {
 	[hit_types.stop] = {
+		vfx = nil,
 		sfx = {
 			{
 				append_husk_to_event_name = false,
@@ -23,5 +24,8 @@ local default_surface_fx = {
 ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 
 return {
+	armor = nil,
+	surface_decal = nil,
+	surface_overrides = nil,
 	surface = surface_fx,
 }

@@ -90,6 +90,9 @@ end
 BotGroup.add_bot_unit = function (self, unit)
 	local blackboard, unit_data_extension = BLACKBOARDS[unit], ScriptUnit.extension(unit, "unit_data_system")
 	local data = {
+		ammo_pickup_order_unit = nil,
+		follow_position = nil,
+		follow_unit = nil,
 		nav_point_utility = {},
 		aoe_threat = {
 			expires = -math.huge,

@@ -13,7 +13,9 @@ SessionLocalStateMachine.TIMEOUT = 15
 
 SessionLocalStateMachine.init = function (self, network_delegate, engine_lobby, engine_gamesession, gameobject_callback_object, clock_handler_client)
 	local shared_state = {
+		channel_id = nil,
 		has_joined_session = false,
+		peer_id = nil,
 		engine_lobby = engine_lobby,
 		engine_gamesession = engine_gamesession,
 		network_delegate = network_delegate,

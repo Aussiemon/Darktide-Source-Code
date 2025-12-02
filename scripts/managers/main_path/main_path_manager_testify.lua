@@ -19,6 +19,15 @@ local MainPathManagerTestify = {
 
 		return MainPathQueries.total_path_distance()
 	end,
+	check_isolated_islands = function (main_path_manager)
+		if not MainPathQueries.is_main_path_registered() then
+			return Testify.RETRY
+		end
+
+		local isolated_islands = main_path_manager:find_isolated_islands()
+
+		return table.is_empty(isolated_islands)
+	end,
 }
 
 return MainPathManagerTestify

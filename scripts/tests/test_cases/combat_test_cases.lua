@@ -6,35 +6,35 @@ CombatTestCases = {}
 
 local base_talents = {
 	veteran_2 = {
-		veteran_2_base_1 = true,
-		veteran_2_base_2 = true,
-		veteran_2_base_3 = true,
-		veteran_2_combat = true,
-		veteran_2_frag_grenade = true,
+		veteran_2_base_1 = 1,
+		veteran_2_base_2 = 1,
+		veteran_2_base_3 = 1,
+		veteran_2_combat = 1,
+		veteran_2_frag_grenade = 1,
 	},
 	ogryn_2 = {
-		ogryn_2_base_1 = true,
-		ogryn_2_base_2 = true,
-		ogryn_2_base_3 = true,
-		ogryn_2_base_4 = true,
-		ogryn_2_charge_buff = true,
-		ogryn_2_combat_ability = true,
-		ogryn_2_grenade = true,
+		ogryn_2_base_1 = 1,
+		ogryn_2_base_2 = 1,
+		ogryn_2_base_3 = 1,
+		ogryn_2_base_4 = 1,
+		ogryn_2_charge_buff = 1,
+		ogryn_2_combat_ability = 1,
+		ogryn_2_grenade = 1,
 	},
 	zealot_2 = {
-		zealot_2_base_1 = true,
-		zealot_2_base_2 = true,
-		zealot_2_base_3 = true,
-		zealot_2_base_4 = true,
-		zealot_2_combat = true,
-		zealot_2_shock_grenade = true,
+		zealot_2_base_1 = 1,
+		zealot_2_base_2 = 1,
+		zealot_2_base_3 = 1,
+		zealot_2_base_4 = 1,
+		zealot_2_combat = 1,
+		zealot_2_shock_grenade = 1,
 	},
 	psyker_2 = {
-		psyker_2_base_1 = true,
-		psyker_2_base_2 = true,
-		psyker_2_base_3 = true,
-		psyker_2_combat = true,
-		psyker_2_smite = true,
+		psyker_2_base_1 = 1,
+		psyker_2_base_2 = 1,
+		psyker_2_base_3 = 1,
+		psyker_2_combat = 1,
+		psyker_2_smite = 1,
 	},
 }
 
@@ -181,6 +181,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 			bots_stuck_data = bots_stuck_data,
 		}
 		local start_time = os.clock()
+		local assert = "player_died_assert"
 		local assert_message = "The player(s) has/have been killed, this shouldn't be possible. Please check the video in the Testify results."
 
 		local function mission_complete()
@@ -193,6 +194,8 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 		while not mission_complete() do
 			local are_players_alive = Testify:make_request("players_are_alive")
+
+			Testify.expect:is_true(assert, are_players_alive, assert_message)
 
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
 				local memory_usage_data = TestifySnippets.memory_usage()
@@ -287,6 +290,7 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		local spawn_position = start_positions[1]
 		local minion_pathing_data, total_path_queries = Script.new_array(num_minion_breeds), 0
 		local minion_spawn_data = {
+			breed_name = nil,
 			breed_side = 1,
 			spawn_position = spawn_position,
 		}
@@ -321,11 +325,14 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		Testify:make_request("hide_all_units")
 		Log.info("Testify", "Setup done - num_minion_breeds: %d | total_path_queries: %d (start_positions: %d main_path: %d)", num_minion_breeds, total_path_queries, num_start_positions, #unified_main_path)
 
+		local assert = "minion_failed_pathing_" .. mission_name
 		local num_remaining_path_queries = total_path_queries
 		local log_query_interval, next_log_query_value = total_path_queries * 0.1, total_path_queries
 
 		while num_remaining_path_queries > 0 do
 			local new_num_remaining_path_queries, error_message = Testify:make_request("check_and_update_minion_pathing_test", minion_pathing_data, num_remaining_path_queries)
+
+			Testify.expect:is_nil(assert, error_message, error_message)
 
 			if new_num_remaining_path_queries <= next_log_query_value then
 				local done_percentage = 1 - new_num_remaining_path_queries / total_path_queries

@@ -21,6 +21,22 @@ local math_min = math.min
 local math_max = math.max
 local vector3_unbox = Vector3Box.unbox
 local quaternion_unbox = QuaternionBox.unbox
+
+local function _concat_table(t, seperator)
+	local s = ""
+	local num_t = #t
+
+	for ii = 1, num_t do
+		s = s .. tostring(t[ii])
+
+		if ii < num_t then
+			s = s .. seperator
+		end
+	end
+
+	return s
+end
+
 local max_level_unit_id = NetworkConstants.level_unit_id.max
 local max_game_object_id = NetworkConstants.game_object_id.max
 local NUMBER_NETWORK_TYPE_TOLERANCES = {
@@ -135,18 +151,6 @@ end
 
 local RPCS = {}
 
-local function _populate_component(fields, component)
-	for field_name, data in pairs(fields) do
-		local type = data.type
-
-		if type == "Vector3" then
-			component[field_name] = Vector3Box(Vector3.invalid_vector())
-		elseif type == "Quaternion" then
-			component[field_name] = QuaternionBox(Quaternion.from_elements(math.huge, math.huge, math.huge, math.huge))
-		end
-	end
-end
-
 PlayerUnitDataExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._unit = unit
 	self._player = extension_init_data.player
@@ -169,7 +173,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 		for i = 1, state_cache_size do
 			local component = {}
 
-			_populate_component(fields, component)
+			self:_populate_component(fields, component, config_name, false)
 
 			cache[i] = component
 		end
@@ -178,7 +182,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 
 		local rollback_component = {}
 
-		_populate_component(fields, rollback_component)
+		self:_populate_component(fields, rollback_component, config_name, true)
 
 		rollback_components[config_name] = rollback_component
 	end
@@ -344,6 +348,7 @@ end
 
 PlayerUnitDataExtension.on_server_data_state_game_object_created = function (self, session, game_object_id)
 	self._server_data_state_game_object_id = game_object_id
+	self._last_received_frame = GameSession.game_object_field(self._game_session, game_object_id, FRAME_INDEX_FIELD)
 end
 
 local USERDATA_REPLACEMENT = {}
@@ -397,74 +402,129 @@ PlayerUnitDataExtension.extensions_ready = function (self, world, unit)
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 end
 
-local READ_ONLY_META = {
-	__index = function (t, field_name)
-		local field = rawget(t, "__config")[field_name]
-		local data_type = field.type
-		local data = rawget(t, "__data")[rawget(t, "__blackboard").index][field_name]
+PlayerUnitDataExtension._populate_component = function (self, fields, component, component_name, is_rollback)
+	for field_name, data in pairs(fields) do
+		local type = data.type
 
-		if data_type == "Vector3" then
-			local field_network_type = field.field_network_type
+		if type == "Vector3" then
+			component[field_name] = Vector3Box(Vector3.invalid_vector())
+		elseif type == "Quaternion" then
+			component[field_name] = QuaternionBox(Quaternion.from_elements(math.huge, math.huge, math.huge, math.huge))
+		elseif type == "array" then
+			if is_rollback then
+				component[field_name] = {}
+			else
+				local field_data, read, write = {}, {}, {}
 
-			if field_network_type == "locomotion_position" then
-				local additional_data = rawget(t, "__additional_data")[field_name]
-				local parent_unit = additional_data.parent_read_component[additional_data.parent_field_name]
+				component[field_name] = {
+					__data = field_data,
+					__read = read,
+					__write = write,
+				}
 
-				if parent_unit then
-					return PlayerMovement.calculate_absolute_position(parent_unit, data:unbox())
-				else
-					return data:unbox()
-				end
-			else
-				return data:unbox()
-			end
-		elseif data_type == "Quaternion" then
-			local field_network_type = field.field_network_type
+				setmetatable(read, {
+					__index = function (t, k)
+						return field_data[k]
+					end,
+					__newindex = function (t, k, v)
+						ferror("Trying to write %s to index %s in array field %s in component %q", v, k, field_name, component_name)
+					end,
+				})
+				setmetatable(write, {
+					__index = function (t, k)
+						return field_data[k]
+					end,
+					__newindex = function (t, k, v)
+						field_data[k] = v
 
-			if field_network_type == "locomotion_rotation" then
-				local additional_data = rawget(t, "__additional_data")[field_name]
-				local parent_unit = additional_data.parent_read_component[additional_data.parent_field_name]
+						local write_component = self:write_component(component_name)
 
-				if parent_unit then
-					return PlayerMovement.calculate_absolute_rotation(parent_unit, data:unbox())
-				else
-					return data:unbox()
-				end
-			else
-				return data:unbox()
+						write_component[field_name] = field_data
+					end,
+				})
 			end
-		elseif data_type == "Unit" then
-			if not data or data == -1 then
-				return nil
-			elseif data > max_game_object_id then
-				return Managers.state.unit_spawner:unit(data - max_game_object_id - 1, true)
-			else
-				return Managers.state.unit_spawner:unit(data, false)
-			end
-		elseif data_type == "hit_zone_actor_index" then
-			if data == NetworkConstants.invalid_hit_zone_actor_index then
-				return nil
-			else
-				return data
-			end
-		elseif data_type == "prd_state" then
-			if data == -1 then
-				return nil
-			else
-				return data
-			end
-		else
-			return data
 		end
-	end,
-	__newindex = function (t, field_name, value)
-		ferror("Trying to write to %q in read only component %q", field_name, rawget(t, "__name"))
-	end,
-}
+	end
+end
+
+local function _create_read_only_meta(as_write_component)
+	local array_proxy = as_write_component and "__write" or "__read"
+
+	return {
+		__index = function (t, field_name)
+			local field = rawget(t, "__config")[field_name]
+			local data_type = field.type
+			local data = rawget(t, "__data")[rawget(t, "__blackboard").index][field_name]
+
+			if data_type == "Vector3" then
+				local field_network_type = field.field_network_type
+
+				if field_network_type == "locomotion_position" then
+					local additional_data = rawget(t, "__additional_data")[field_name]
+					local parent_unit = additional_data.parent_read_component[additional_data.parent_field_name]
+
+					if parent_unit then
+						return PlayerMovement.calculate_absolute_position(parent_unit, data:unbox())
+					else
+						return data:unbox()
+					end
+				else
+					return data:unbox()
+				end
+			elseif data_type == "Quaternion" then
+				local field_network_type = field.field_network_type
+
+				if field_network_type == "locomotion_rotation" then
+					local additional_data = rawget(t, "__additional_data")[field_name]
+					local parent_unit = additional_data.parent_read_component[additional_data.parent_field_name]
+
+					if parent_unit then
+						return PlayerMovement.calculate_absolute_rotation(parent_unit, data:unbox())
+					else
+						return data:unbox()
+					end
+				else
+					return data:unbox()
+				end
+			elseif data_type == "Unit" then
+				if not data or data == -1 then
+					return nil
+				elseif data > max_game_object_id then
+					return Managers.state.unit_spawner:unit(data - max_game_object_id - 1, true)
+				else
+					return Managers.state.unit_spawner:unit(data, false)
+				end
+			elseif data_type == "hit_zone_actor_index" then
+				if data == NetworkConstants.invalid_hit_zone_actor_index then
+					return nil
+				else
+					return data
+				end
+			elseif data_type == "prd_state" then
+				if data == -1 then
+					return nil
+				else
+					return data
+				end
+			elseif data_type == "array" then
+				return rawget(data, array_proxy)
+			else
+				return data
+			end
+		end,
+		__newindex = function (t, field_name, value)
+			ferror("Trying to write to %q in read only component %q", field_name, rawget(t, "__name"))
+		end,
+	}
+end
+
+local READ_ONLY_META = _create_read_only_meta(false)
+local READ_ONLY_META_FROM_WRITE = _create_read_only_meta(true)
 
 PlayerUnitDataExtension._create_read_component = function (self, component_name)
 	local config = self._component_config[component_name]
 	local component = {
+		__additional_data = nil,
 		__data = self._components[component_name],
 		__blackboard = self._component_blackboard,
 		__config = config,
@@ -485,7 +545,7 @@ PlayerUnitDataExtension.read_component = function (self, component_name)
 end
 
 local WRITE_META = {
-	__index = READ_ONLY_META.__index,
+	__index = READ_ONLY_META_FROM_WRITE.__index,
 	__newindex = function (t, field_name, value)
 		local field = rawget(t, "__config")[field_name]
 		local data_type = field.type
@@ -582,6 +642,26 @@ local WRITE_META = {
 				data[rawget(t, "__blackboard").index][field_name] = value
 			end
 		else
+			if data_type == "array" then
+				local element_type = field.field_network_type
+				local network_info = NetworkConstants[element_type]
+				local max_size = network_info.max_size
+				local value_size = #value
+				local orig = data[rawget(t, "__blackboard").index][field_name]
+				local orig_data = rawget(orig, "__data")
+
+				for i = 1, value_size do
+					rawset(orig_data, i, value[i])
+				end
+
+				for i = value_size + 1, #orig_data do
+					rawset(orig_data, i, nil)
+				end
+
+				value = orig
+				networked_value = orig_data
+			end
+
 			data[rawget(t, "__blackboard").index][field_name] = value
 		end
 
@@ -618,6 +698,7 @@ end
 PlayerUnitDataExtension._create_write_component = function (self, component_name)
 	local config = self._component_config[component_name]
 	local component = {
+		__additional_data = nil,
 		__data = self._components[component_name],
 		__blackboard = self._component_blackboard,
 		__config = config,
@@ -775,7 +856,10 @@ PlayerUnitDataExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 end
 
 PlayerUnitDataExtension._copy_components = function (self, components, from, to)
+	local component_configs = self._component_config
+
 	for component_name, component_cache in pairs(components) do
+		local component_config = component_configs[component_name]
 		local old_component = component_cache[from]
 		local new_component = component_cache[to]
 
@@ -783,7 +867,23 @@ PlayerUnitDataExtension._copy_components = function (self, components, from, to)
 			if type(value) == "userdata" then
 				new_component[field_name]:store(value:unbox())
 			else
-				new_component[field_name] = value
+				local field_config = component_config[field_name]
+
+				if field_config.type == "array" then
+					local old_data = rawget(value, "__data")
+					local new_data = rawget(new_component[field_name], "__data")
+					local value_size = #old_data
+
+					for i = value_size + 1, #new_data do
+						new_data[i] = nil
+					end
+
+					for i = 1, value_size do
+						new_data[i] = old_data[i]
+					end
+				else
+					new_component[field_name] = value
+				end
 			end
 		end
 	end
@@ -901,6 +1001,7 @@ local _game_object_field = GameSession.game_object_field
 local _vector3_distance_sq = Vector3.distance_squared
 local _quaternion_is_valid = Quaternion.is_valid
 local _quaternion_dot = Quaternion.dot
+local _real_value_array_scratch = {}
 
 PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 	local server_data_state_game_object_id = self._server_data_state_game_object_id
@@ -983,7 +1084,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		local field_id = NETWORK_NAME_ID_TO_FIELD_ID[game_object_return_table[i]]
 		local field = FIELD_NETWORK_LOOKUP[field_id]
 		local authoritative_value = game_object_return_table[i + 1]
-		local component_name, field_name, type, network_type, lookup, skip_predict_verification, use_network_lookup = field[1], field[2], field[3], field[5], field[6], field[7], field[8]
+		local component_name, field_name, field_type, network_type, lookup, skip_predict_verification, use_network_lookup = field[1], field[2], field[3], field[5], field[6], field[7], field[8]
 		local component = components[component_name][wrapped_frame_index]
 		local rollback_component = rollback_components[component_name]
 		local simulated_value = component[field_name]
@@ -993,28 +1094,28 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		if simulated_value == nil then
 			correct = false
 
-			if type == "string" then
+			if field_type == "string" then
 				local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
 
 				component[field_name] = string_lookup[authoritative_value]
-			elseif type == "number" and FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
+			elseif field_type == "number" and FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				component[field_name] = (authoritative_value + frame_index) * self._fixed_time_step
-			elseif type == "number" and network_type == "fixed_frame_time" then
+			elseif field_type == "number" and network_type == "fixed_frame_time" then
 				component[field_name] = authoritative_value * self._fixed_time_step
 			else
 				component[field_name] = authoritative_value
 			end
-		elseif type == "Vector3" then
+		elseif field_type == "Vector3" then
 			real_simulated_value = simulated_value:unbox()
 			correct = _vector3_distance_sq(real_simulated_value, authoritative_value) < VECTOR3_NETWORK_TYPE_TOLERANCES[network_type]
 
 			simulated_value:store(authoritative_value)
-		elseif type == "Quaternion" then
+		elseif field_type == "Quaternion" then
 			real_simulated_value = simulated_value:unbox()
 			correct = _quaternion_is_valid(real_simulated_value) and math.abs(_quaternion_dot(real_simulated_value, authoritative_value)) > QUATERNION_TOLERANCE
 
 			simulated_value:store(authoritative_value)
-		elseif type == "string" then
+		elseif field_type == "string" then
 			local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
 
 			real_simulated_value = simulated_value
@@ -1026,7 +1127,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 			if not local_correct then
 				component[field_name] = string_lookup[authoritative_value]
 			end
-		elseif type == "number" then
+		elseif field_type == "number" then
 			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
 				real_simulated_value = math.round(simulated_value / self._fixed_time_step) - frame_index
 
@@ -1057,12 +1158,27 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 				correct = math.abs(simulated_value - authoritative_value) < (NUMBER_NETWORK_TYPE_TOLERANCES[network_type] or default_number_tolerance)
 				component[field_name] = authoritative_value
 			end
+		elseif field_type == "array" then
+			local simulated_data = rawget(simulated_value, "__data")
+
+			correct = true
+
+			for ii = 1, math.max(#simulated_data, #authoritative_value) do
+				local authoritative_value_part = authoritative_value[ii]
+
+				correct = correct and simulated_data[ii] == authoritative_value_part
+				simulated_data[ii] = authoritative_value_part
+			end
 		else
 			correct = simulated_value == authoritative_value
 			component[field_name] = authoritative_value
 		end
 
-		rollback_component[field_name] = simulated_value
+		if field_type == "array" then
+			rollback_component[field_name] = rawget(simulated_value, "__data")
+		else
+			rollback_component[field_name] = simulated_value
+		end
 
 		if not correct then
 			mispredict = true

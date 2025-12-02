@@ -8,6 +8,8 @@ local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_exte
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PREDICTABLE_TYPES = BuffArgs.predictable_component_types()
+local PREDICTABLE_DEFAULT_VALUES = BuffArgs.predictable_default_values()
 local MAX_COMPONENT_BUFFS = PlayerCharacterConstants.max_component_buffs
 local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
 local PlayerUnitBuffExtension = class("PlayerUnitBuffExtension", "BuffExtensionBase")
@@ -38,6 +40,9 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 		self._game_object_id = nil_or_game_object_id
 	end
 
+	self._start_times_to_sync = {}
+	self._extra_durations_to_sync = {}
+
 	local mission_name = Managers.state.mission:mission_name()
 	local mission_settings = mission_name and Missions[mission_name]
 
@@ -53,12 +58,21 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 		local active_start_time_key = key_lookup.active_start_time_key
 		local stack_count_key = key_lookup.stack_count_key
 		local proc_count_key = key_lookup.proc_count_key
+		local extra_duration_key = key_lookup.extra_duration_key
 
 		buff_component[template_name_key] = "none"
 		buff_component[start_time_key] = 0
 		buff_component[active_start_time_key] = 0
 		buff_component[stack_count_key] = 0
 		buff_component[proc_count_key] = 0
+		buff_component[extra_duration_key] = 0
+
+		for param in pairs(PREDICTABLE_TYPES) do
+			local param_key = key_lookup[param]
+			local default_value = PREDICTABLE_DEFAULT_VALUES[param]
+
+			buff_component[param_key] = default_value ~= BuffArgs.nil_value() and default_value or nil
+		end
 	end
 
 	local portable_random = self._portable_random
@@ -90,16 +104,19 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
 	if buffs_added_before_game_object_creation then
+		local unit_spawner_manager = Managers.state.unit_spawner
+
 		for i = 1, #buffs_added_before_game_object_creation do
 			local buff_added_before_game_object_creation = buffs_added_before_game_object_creation[i]
 			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
 			local index = buff_added_before_game_object_creation.index
+			local owner_unit_id = unit_spawner_manager:game_object_id(buff_added_before_game_object_creation.owner_unit)
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
 			local optional_slot_id = buff_added_before_game_object_creation.optional_slot_id
 			local optional_parent_buff_template_id = buff_added_before_game_object_creation.optional_parent_buff_template_id
-			local from_talent = buff_added_before_game_object_creation.from_talent
+			local from_talent = NetworkLookup.archetype_talent_names[buff_added_before_game_object_creation.from_talent]
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, owner_unit_id, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -119,7 +136,7 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 		max_toughness_before = toughness_extension:max_toughness()
 	end
 
-	self:_update_buffs(dt, t)
+	self:_update_buffs(dt, t, fixed_frame)
 	self:_update_on_screen_fx()
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
@@ -161,14 +178,21 @@ PlayerUnitBuffExtension.post_update = function (self, unit, dt, t)
 	local channel_id = player:channel_id()
 
 	if player.remote then
+		local game_object_id = self._game_object_id
+
 		for index, buff_instance in pairs(self._buffs_by_index) do
 			if buff_instance:need_to_sync_start_time() then
 				local start_time = buff_instance:start_time()
 				local start_frame = start_time / self._fixed_time_step
-				local game_object_id = self._game_object_id
 
 				RPC.rpc_buff_set_start_time(channel_id, game_object_id, index, start_frame)
 				buff_instance:set_need_to_sync_start_time(false)
+			end
+
+			if buff_instance:need_to_sync_extra_duration() then
+				local extra_duration = buff_instance:extra_duration()
+
+				RPC.rpc_buff_set_extra_duration(channel_id, game_object_id, index, extra_duration)
 			end
 		end
 	end
@@ -192,8 +216,6 @@ PlayerUnitBuffExtension.add_internally_controlled_buff = function (self, templat
 		else
 			self:_add_rpc_synced_buff(template, t, ...)
 		end
-	elseif template.predicted then
-		self:_update_predicted_buff_start_time_component_on_refresh(template_name)
 	end
 end
 
@@ -251,15 +273,16 @@ end
 
 PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 	local buff_component = self._buff_component
-	local index = self:_add_buff(template, t, ...)
+	local index = self:_add_buff(template, t, false, ...)
 	local buff_instance = self._buffs_by_index[index]
 	local component_index = buff_instance:component_index()
 
 	if not component_index then
 		local next_component_index = self:_next_available_component_index(template)
 		local component_keys = COMPONENT_KEY_LOOKUP[next_component_index]
+		local predicted_params = self:_predicted_params(...)
 
-		buff_instance:set_buff_component(buff_component, component_keys, next_component_index)
+		buff_instance:set_buff_component(buff_component, component_keys, next_component_index, predicted_params)
 
 		component_index = next_component_index
 		self._component_buffs[component_index] = buff_instance
@@ -276,7 +299,7 @@ PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 			Log.warning("PlayerUnitBuffExtension", "Buff stack count of %s exceeding %d (%d)", template.name, warning_stack_count, stack_count)
 		end
 
-		if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
+		if template.refresh_duration_on_stack or template.refresh_start_time_on_stack or template.refresh_duration_on_stacks_increased then
 			local start_time_key = component_keys.start_time_key
 
 			buff_component[start_time_key] = buff_instance:start_time()
@@ -286,20 +309,26 @@ PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 	return index, component_index
 end
 
-PlayerUnitBuffExtension._update_predicted_buff_start_time_component_on_refresh = function (self, template_name)
-	local stacking_buff_instance = self._stacking_buffs[template_name]
-	local component_index = stacking_buff_instance and stacking_buff_instance:component_index()
+local predicted_params_cache = {}
 
-	if stacking_buff_instance and component_index and stacking_buff_instance:need_to_sync_start_time() then
-		local buff_component = self._buff_component
-		local component_keys = COMPONENT_KEY_LOOKUP[component_index]
-		local start_time_key = component_keys.start_time_key
-		local start_time = stacking_buff_instance:start_time()
+PlayerUnitBuffExtension._predicted_params = function (self, ...)
+	table.clear(predicted_params_cache)
 
-		buff_component[start_time_key] = start_time
+	for i = 1, select("#", ...), 2 do
+		local param, value = select(i, ...)
 
-		stacking_buff_instance:set_need_to_sync_start_time(false)
+		if PREDICTABLE_TYPES[param] then
+			predicted_params_cache[param] = value
+		end
 	end
+
+	for param in pairs(PREDICTABLE_TYPES) do
+		if predicted_params_cache[param] == nil then
+			predicted_params_cache[param] = PREDICTABLE_DEFAULT_VALUES[param]
+		end
+	end
+
+	return predicted_params_cache
 end
 
 PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, local_index, component_index)
@@ -318,7 +347,7 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 	local template = buff_instance:template()
 
 	if template.predicted then
-		self:_remove_predicted_buff(component_index)
+		self:_remove_predicted_buff(component_index, buff_instance)
 	elseif self._is_server then
 		self:_remove_rpc_synced_buff(local_index)
 	end
@@ -345,14 +374,21 @@ PlayerUnitBuffExtension._remove_internally_controlled_buff = function (self, loc
 	if template.predicted then
 		local component_index = buff_instance:component_index()
 
-		self:_remove_predicted_buff(component_index)
+		self:_remove_predicted_buff(component_index, buff_instance)
 	elseif self._is_server then
 		self:_remove_rpc_synced_buff(local_index)
 	end
 end
 
-PlayerUnitBuffExtension._remove_predicted_buff = function (self, component_index)
+PlayerUnitBuffExtension._remove_predicted_buff = function (self, component_index, expected_buff_instance)
 	local buff_instance = self._component_buffs[component_index]
+
+	if not buff_instance then
+		local template = expected_buff_instance:template()
+
+		Log.error("PlayerUnitBuffExtension", "Error removing predicted buff. No buff found in component (%s). Expected %s", component_index, template.name)
+	end
+
 	local stack_count = buff_instance:stack_count()
 	local component_keys = COMPONENT_KEY_LOOKUP[component_index]
 
@@ -400,6 +436,8 @@ PlayerUnitBuffExtension._on_remove_buff = function (self, buff_instance)
 end
 
 PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_frame, to_frame, client_simulated_components)
+	self._buff_context.undergoing_server_correction = true
+
 	local buff_component = self._buff_component
 	local seed = buff_component.seed
 	local portable_random = self._portable_random
@@ -459,7 +497,7 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 				for _ = 1, stack_count_difference do
 					local template = BuffTemplates[component_template_name]
 
-					self:_add_buff(template, component_start_time)
+					self:_add_buff(template, component_start_time, true)
 				end
 			elseif stack_count_difference < 0 then
 				local difference = stack_count_difference * -1
@@ -481,6 +519,45 @@ PlayerUnitBuffExtension.server_correction_occurred = function (self, unit, from_
 			end
 		end
 	end
+
+	self._buff_context.undergoing_server_correction = false
+end
+
+PlayerUnitBuffExtension.remove_externally_controlled_buff_with_linger = function (self, local_index, component_index, t, linger_time)
+	local muted_external_buffs = self._muted_external_buffs
+
+	if muted_external_buffs[local_index] then
+		muted_external_buffs[local_index] = nil
+
+		return
+	end
+
+	local buff_instance = self._buffs_by_index[local_index]
+
+	buff_instance = buff_instance or self._component_buffs[component_index]
+
+	buff_instance:add_duration(linger_time)
+	buff_instance:set_start_time(t)
+end
+
+PlayerUnitBuffExtension.reapply_externally_controlled_lingering_buff = function (self, local_index, component_index, template_name, t, ...)
+	local buff_instance = self._buffs_by_index[local_index]
+
+	buff_instance = buff_instance or self._component_buffs[component_index]
+
+	if buff_instance then
+		self:remove_externally_controlled_buff(local_index, component_index)
+	end
+
+	return self:add_externally_controlled_buff(template_name, t, ...)
+end
+
+PlayerUnitBuffExtension.mark_need_to_sync_start_time = function (self, instance_id)
+	self._start_times_to_sync[#self._start_times_to_sync + 1] = instance_id
+end
+
+PlayerUnitBuffExtension.mark_need_to_sync_extra_duration = function (self, instance_id)
+	self._extra_durations_to_sync[#self._extra_durations_to_sync + 1] = instance_id
 end
 
 PlayerUnitBuffExtension._remove_buff_from_server_correction = function (self, component_index)
@@ -498,39 +575,72 @@ end
 PlayerUnitBuffExtension._add_buff_from_server_correction = function (self, template_name, t, component_index)
 	local template = BuffTemplates[template_name]
 	local buff_component = self._buff_component
-	local index = self:_add_buff(template, t)
-	local buff_instance = self._buffs_by_index[index]
 	local component_keys = COMPONENT_KEY_LOOKUP[component_index]
+	local server_params = self:_extract_server_params(buff_component, component_keys)
+	local index = self:_add_buff(template, t, true, unpack(server_params))
+	local buff_instance = self._buffs_by_index[index]
+	local predicted_params = self:_predicted_params(unpack(server_params))
 
-	buff_instance:set_buff_component(buff_component, component_keys, component_index)
+	buff_instance:set_buff_component(buff_component, component_keys, component_index, predicted_params)
 
 	self._component_buffs[component_index] = buff_instance
 end
 
+local server_params_fields = {}
+local server_params_cache_n = table.table_to_array(PREDICTABLE_TYPES, server_params_fields)
+local server_params_cache = {}
+
+PlayerUnitBuffExtension._extract_server_params = function (self, buff_component, component_keys)
+	local skipped = 0
+
+	for i = 1, server_params_cache_n, 2 do
+		local param = server_params_fields[i]
+		local value = buff_component[component_keys[param]]
+
+		if value == nil then
+			skipped = skipped + 1
+		else
+			server_params_cache[i - skipped * 2] = param
+			server_params_cache[i - skipped * 2 + 1] = value
+		end
+	end
+
+	for i = 0, skipped - 1 do
+		server_params_cache[server_params_cache_n - i * 2] = nil
+		server_params_cache[server_params_cache_n - i * 2 - 1] = nil
+	end
+
+	return server_params_cache
+end
+
 PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
-	local index = self:_add_buff(template, t, ...)
+	local index = self:_add_buff(template, t, false, ...)
 	local game_object_id = self._game_object_id
 	local template_name = template.name
 	local buff_template_id = NetworkLookup.buff_templates[template_name]
 	local buff_instance = self._buffs_by_index[index]
+	local owner_unit = buff_instance:owner_unit()
 	local additional_arguments = buff_instance:additional_arguments()
 	local optional_lerp_value = buff_instance:buff_lerp_value()
 	local optional_item_slot = buff_instance:item_slot_name()
 	local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
 	local optional_parent_buff_template = buff_instance.parent_buff_template and buff_instance:parent_buff_template()
 	local optional_parent_buff_template_id = optional_parent_buff_template and NetworkLookup.buff_templates[optional_parent_buff_template]
-	local from_talent = additional_arguments.from_talent or false
+	local from_talent = additional_arguments.from_talent or "n/a"
 	local player = self._player
 
 	if player.remote then
 		if game_object_id then
 			local channel_id = player:channel_id()
+			local talent_id = NetworkLookup.archetype_talent_names[from_talent]
+			local owner_unit_id = Managers.state.unit_spawner:game_object_id(owner_unit)
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_talent)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, owner_unit_id, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, talent_id)
 		else
 			local buff_added_before_game_object_creation = {
 				buff_template_id = buff_template_id,
 				index = index,
+				owner_unit = owner_unit,
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
 				optional_parent_buff_template_id = optional_parent_buff_template_id,
@@ -588,15 +698,20 @@ PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, act
 end
 
 PlayerUnitBuffExtension._set_start_time_from_rpc = function (self, index, start_time)
-	if self._is_server then
-		-- Nothing
-	end
-
 	local buffs_by_index = self._buffs_by_index
 	local buff_instance = buffs_by_index[index]
 
 	if buff_instance and buff_instance.set_start_time then
 		buff_instance:set_start_time(start_time)
+	end
+end
+
+PlayerUnitBuffExtension._set_extra_duration_from_rpc = function (self, index, extra_duration)
+	local buffs_by_index = self._buffs_by_index
+	local buff_instance = buffs_by_index[index]
+
+	if buff_instance and buff_instance.set_extra_duration then
+		buff_instance:set_extra_duration(extra_duration)
 	end
 end
 
@@ -810,20 +925,6 @@ PlayerUnitBuffExtension._update_on_screen_fx = function (self)
 			end
 		end
 	end
-end
-
-local _inherited_buff_owner = {}
-
-PlayerUnitBuffExtension.add_inherited_buff_owner = function (self, buff_provider)
-	_inherited_buff_owner[#_inherited_buff_owner + 1] = buff_provider
-end
-
-PlayerUnitBuffExtension.get_inherited_buff_owner = function (self)
-	local inherited_buff_owner = _inherited_buff_owner[1]
-
-	table.remove(_inherited_buff_owner, 1)
-
-	return inherited_buff_owner
 end
 
 implements(PlayerUnitBuffExtension, BuffExtensionInterface)

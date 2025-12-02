@@ -2,11 +2,12 @@
 
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_click,
 }
@@ -427,7 +428,7 @@ local function create_tab_widgets(tab_settings)
 				pass_type = "text",
 				style_id = "header",
 				value_id = "header",
-				value = TextUtilities.convert_to_roman_numerals(i),
+				value = Text.convert_to_roman_numerals(i),
 				style = table.merge_recursive(table.clone(header_style), {
 					font_size = 16,
 					offset = {

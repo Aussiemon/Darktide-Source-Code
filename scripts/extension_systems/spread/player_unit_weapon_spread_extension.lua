@@ -24,17 +24,19 @@ PlayerUnitWeaponSpreadExtension.init = function (self, extension_init_context, u
 end
 
 PlayerUnitWeaponSpreadExtension._init_components = function (self, unit, initial_seed)
-	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-	self._movement_state_component = unit_data_ext:read_component("movement_state")
-	self._locomotion_component = unit_data_ext:read_component("locomotion")
-	self._spread_component = unit_data_ext:write_component("spread")
-	self._spread_control_component = unit_data_ext:write_component("spread_control")
-	self._suppression_component = unit_data_ext:read_component("suppression")
-	self._weapon_tweak_templates_component = unit_data_ext:write_component("weapon_tweak_templates")
-	self._action_module_charge_component = unit_data_ext:read_component("action_module_charge")
-	self._alternate_fire_component = unit_data_ext:read_component("alternate_fire")
-	self._shooting_status_component = unit_data_ext:read_component("shooting_status")
+	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
+	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
+	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._shooting_status_component = unit_data_extension:read_component("shooting_status")
+	self._spread_component = unit_data_extension:write_component("spread")
+	self._spread_control_component = unit_data_extension:write_component("spread_control")
+	self._suppression_component = unit_data_extension:read_component("suppression")
+	self._weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	self._spread_component.pitch = 0
@@ -48,7 +50,7 @@ PlayerUnitWeaponSpreadExtension._init_components = function (self, unit, initial
 end
 
 PlayerUnitWeaponSpreadExtension.fixed_update = function (self, unit, dt, t)
-	local spread_settings = _spread_settings(self._weapon_extension, self._movement_state_component)
+	local spread_settings = _spread_settings(self._weapon_extension, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 
 	if not spread_settings then
 		return
@@ -151,12 +153,14 @@ local PI_2 = math.pi * 2
 local EMPTY_TABLE = {}
 
 PlayerUnitWeaponSpreadExtension.randomized_spread = function (self, current_rotation, optional_skip_update_component_data)
-	local spread_control_component = self._spread_control_component
-	local shooting_status_component = self._shooting_status_component
-	local movement_state_component = self._movement_state_component
-	local suppression_component = self._suppression_component
 	local weapon_extension = self._weapon_extension
-	local spread_settings = _spread_settings(weapon_extension, movement_state_component)
+	local inair_state_component = self._inair_state_component
+	local locomotion_component = self._locomotion_component
+	local movement_state_component = self._movement_state_component
+	local shooting_status_component = self._shooting_status_component
+	local spread_control_component = self._spread_control_component
+	local suppression_component = self._suppression_component
+	local spread_settings = _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 
 	if not spread_settings then
 		return current_rotation
@@ -224,14 +228,14 @@ PlayerUnitWeaponSpreadExtension.target_style_spread = function (self, current_ro
 	return final_rotation
 end
 
-function _spread_settings(weapon_extension, movement_state_component)
+function _spread_settings(weapon_extension, movement_state_component, locomotion_component, inair_state_component)
 	local spread_template = weapon_extension:spread_template()
 
 	if not spread_template then
 		return nil
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local spread_settings = spread_template[weapon_movement_state]
 
 	return spread_settings

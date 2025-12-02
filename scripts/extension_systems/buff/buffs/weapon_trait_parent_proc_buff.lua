@@ -159,8 +159,7 @@ WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_childre
 	end
 
 	self:set_start_time(t)
-
-	self._need_to_sync_start_time = true
+	self:set_need_to_sync_start_time(true)
 end
 
 WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, t, num_children_to_remove)
@@ -179,8 +178,7 @@ WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, t, num_chil
 	self._num_child_stacks = num_child_stacks
 
 	self:set_start_time(t)
-
-	self._need_to_sync_start_time = true
+	self:set_need_to_sync_start_time(true)
 end
 
 WeaponTraitParentProcBuff.duration_progress = function (self)

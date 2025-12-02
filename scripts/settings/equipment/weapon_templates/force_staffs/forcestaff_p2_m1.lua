@@ -601,7 +601,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "special_action_heavy",
 			},
 		},
@@ -615,6 +615,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		anim_event = "attack_special_swipe_charge",
 		kind = "windup",
+		start_input = nil,
 		total_time = 1.1,
 		crosshair = {
 			crosshair_type = "dot",
@@ -647,7 +648,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "special_action_heavy",
 			},
 		},
@@ -664,8 +665,10 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		range_mod = 1.15,
+		start_input = nil,
 		total_time = 0.6,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_3",
@@ -762,9 +765,11 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		power_level = 800,
 		range_mod = 1.15,
+		start_input = nil,
 		total_time = 0.75,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_2",
@@ -862,9 +867,11 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		power_level = 650,
 		range_mod = 1.15,
+		start_input = nil,
 		total_time = 0.75,
 		uninterruptible = true,
 		weapon_handling_template = "time_scale_1_2",
@@ -962,9 +969,11 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit_shield",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		power_level = 800,
 		range_mod = 1.15,
+		start_input = nil,
 		total_time = 1.1,
 		uninterruptible = true,
 		crosshair = {
@@ -1138,6 +1147,7 @@ weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.ammo_template = "no_ammo"
 weapon_template.spread_template = "default_force_staff_killshot"
+weapon_template.suppression_template = "force_staff_p1_m1_suppression_assault"
 weapon_template.fx_sources = {
 	_muzzle = "j_leftweaponattach",
 	_overheat = "fx_overheat",

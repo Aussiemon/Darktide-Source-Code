@@ -7,7 +7,7 @@ local Sway = require("scripts/utilities/sway")
 local proc_events = BuffSettings.proc_events
 local AlternateFire = {}
 
-AlternateFire.start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
+AlternateFire.start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, locomotion_component, inair_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
 	local alternate_fire_settings = weapon_template.alternate_fire_settings
 	local spread_template_name, recoil_template_name, sway_template_name, suppression_template_name, toughness_template_name
 
@@ -37,8 +37,8 @@ AlternateFire.start = function (alternate_fire_component, weapon_tweak_templates
 	local spread_template = weapon_extension:spread_template()
 	local sway_template = weapon_extension:sway_template()
 
-	Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "alternate_fire_start")
-	Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "alternate_fire_start")
+	Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, locomotion_component, inair_state_component, "alternate_fire_start")
+	Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, locomotion_component, inair_state_component, "alternate_fire_start")
 
 	local player = Managers.state.player_unit_spawn:owner(player_unit)
 

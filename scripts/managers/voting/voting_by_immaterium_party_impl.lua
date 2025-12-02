@@ -250,8 +250,12 @@ VotingManagerImmateriumParty.time_left = function (self, voting_id)
 	local current_vote = self:_current_vote()
 
 	if self:_wrap_vote_id(current_vote.id) == voting_id then
-		local time_left = current_vote.timeout - os.time()
-		local time_left_normalized = time_left and math.max(time_left / current_vote.timeout_duration, 0)
+		local t = Managers.time:time("main")
+		local server_time = Managers.backend:get_server_time(t)
+		local vote_timeout = current_vote.timeout * 1000
+		local voting_duration = current_vote.timeout_duration * 1000
+		local time_left = vote_timeout - server_time
+		local time_left_normalized = time_left and math.max(time_left / voting_duration, 0)
 
 		return time_left, time_left_normalized
 	end

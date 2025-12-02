@@ -19,8 +19,6 @@ table.make_unique(damage_templates)
 table.make_unique(overrides)
 
 local default_armor_mod = DamageProfileSettings.default_armor_mod
-local crit_armor_mod = DamageProfileSettings.crit_armor_mod
-local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 
 damage_templates.default = {
 	stagger_category = "melee",

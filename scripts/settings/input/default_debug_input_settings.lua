@@ -245,6 +245,14 @@ local default_debug_input_settings = {
 			raw = "keyboard_left ctrl+keyboard_left alt+keyboard_j",
 			type = "pressed",
 		},
+		request_auto_event = {
+			raw = "keyboard_left shift+keyboard_y",
+			type = "pressed",
+		},
+		request_auto_event_end = {
+			raw = "keyboard_left shift+keyboard_t",
+			type = "pressed",
+		},
 		teleport_to_next_mutator_spawner = {
 			raw = "keyboard_left shift+keyboard_k",
 			type = "pressed",

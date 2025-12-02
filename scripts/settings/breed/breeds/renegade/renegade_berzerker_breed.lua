@@ -23,6 +23,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_berzerker"
 local breed_data = {
+	achievement_breed_group = "berzerker",
 	activate_slot_system_on_spawn = true,
 	animation_move_speed_modifier = 0.9,
 	base_height = 1.9,
@@ -404,7 +405,9 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller,
-	tokens = {},
+	tokens = {
+		pounced = nil,
+	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
 		pounce_anim_event = "leap_attack",

@@ -33,9 +33,9 @@ local function _set_talents_backend_response_fail(result)
 	end
 end
 
-TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
+TalentsService.set_talents_v2 = function (self, player, layout, node_tiers)
 	local character_id = player:character_id()
-	local talents = TalentLayoutParser.pack_backend_data(layout, points_spent)
+	local talents = TalentLayoutParser.pack_backend_data(layout, node_tiers)
 	local backend = self._backend_interface.characters
 	local promise = backend:set_talents_v2(character_id, talents)
 

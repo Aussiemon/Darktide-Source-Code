@@ -152,7 +152,7 @@ local scenegraph_definition = {
 		},
 	},
 	price_icon = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "right",
 		parent = "price_text",
 		vertical_alignment = "center",
 		size = {
@@ -169,6 +169,7 @@ local scenegraph_definition = {
 local price_text_style = table.clone(UIFontSettings.currency_title)
 
 price_text_style.font_size = 18
+price_text_style.text_horizontal_alignment = "left"
 
 local widget_definitions = {
 	price_text = UIWidget.create_definition({

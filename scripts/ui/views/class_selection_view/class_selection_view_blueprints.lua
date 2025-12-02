@@ -5,8 +5,8 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local Text = require("scripts/utilities/ui/text")
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.icon.material_values
@@ -29,11 +29,8 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 end
 
 local function get_style_text_height(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
 	local text_size = style.size
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options)
+	local text_height = Text.text_height(ui_renderer, text, style)
 
 	return text_height
 end
@@ -169,9 +166,8 @@ local class_selection_view_blueprints = {
 			content.description = description
 
 			local display_name = element.display_name
-			local localized_title = Localize(display_name)
 
-			content.display_name = localized_title
+			content.display_name = display_name
 
 			local icon = element.icon
 			local gradient_map = element.gradient_map
@@ -305,8 +301,7 @@ local class_selection_view_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -346,9 +341,9 @@ local class_selection_view_blueprints = {
 			widget.content.text = text
 
 			local title_style = widget.style.text
-			local _, title_text_height = UIRenderer.text_size(parent._ui_renderer, text, title_style.font_type, title_style.font_size, {
+			local title_text_height = Text.text_height(parent._ui_renderer, text, title_style, {
 				ClassSelectionViewSettings.class_details_size[1],
-				math.huge,
+				1080,
 			})
 
 			widget.content.size = {
@@ -379,7 +374,9 @@ local class_selection_view_blueprints = {
 						0,
 						1,
 					},
-					material_values = {},
+					material_values = {
+						texture_map = nil,
+					},
 				},
 			},
 			{
@@ -426,16 +423,14 @@ local class_selection_view_blueprints = {
 			local description_style = widget.style.description
 			local title_width = max_width - title_style.offset[1]
 			local description_width = max_width - description_style.offset[1]
-			local title_style_options = UIFonts.get_font_options_by_style(title_style)
-			local description_style_options = UIFonts.get_font_options_by_style(description_style)
-			local _, title_text_height = UIRenderer.text_size(ui_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
+			local title_text_height = Text.text_height(ui_renderer, widget.content.title, title_style, {
 				title_width,
-				math.huge,
-			}, title_style_options)
-			local _, description_text_height = UIRenderer.text_size(ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
+				1080,
+			})
+			local description_text_height = Text.text_height(ui_renderer, widget.content.description, description_style, {
 				description_width,
-				math.huge,
-			}, description_style_options)
+				1080,
+			})
 
 			title_style.size = {
 				title_width,
@@ -621,9 +616,9 @@ local class_selection_view_blueprints = {
 			widget.content.description = element.text and Localize(element.text) or ""
 
 			local description_style = widget.style.description
-			local _, description_text_height = UIRenderer.text_size(ui_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
+			local description_text_height = Text.text_height(ui_renderer, widget.content.description, description_style, {
 				max_width,
-				math.huge,
+				1080,
 			})
 
 			widget.content.size = {
@@ -704,9 +699,9 @@ local class_selection_view_blueprints = {
 			widget.content.class_attributes = attributes
 
 			local attributes_style = widget.style.class_attributes
-			local _, attributes_text_height = UIRenderer.text_size(ui_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
+			local attributes_text_height = Text.text_size(ui_renderer, widget.content.class_attributes, attributes_style, {
 				max_width,
-				math.huge,
+				1080,
 			})
 
 			widget.content.size = {

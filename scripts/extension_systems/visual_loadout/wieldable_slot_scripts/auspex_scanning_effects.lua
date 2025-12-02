@@ -292,67 +292,62 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	World.update_unit(self._world, player_holo_unit)
 
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
-	local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
+	local scannable_units = mission_objective_zone_system:scannable_units()
 	local holo_units = self._holo_units
 	local current_holo_unit = 1
 
-	if current_scan_mission_zone then
-		local scannable_units = current_scan_mission_zone:scannable_units()
+	for current_scannable_unit, _ in pairs(scannable_units) do
+		local scannable_extension = ScriptUnit.has_extension(current_scannable_unit, "mission_objective_zone_scannable_system")
+		local is_current_active = scannable_extension:is_active()
 
-		for i = 1, #scannable_units do
-			local current_scannable_unit = scannable_units[i]
-			local scannable_extension = ScriptUnit.has_extension(current_scannable_unit, "mission_objective_zone_scannable_system")
-			local is_current_active = scannable_extension:is_active()
+		if is_current_active then
+			local is_current_scannable_unit = current_scannable_unit == scannable_unit
+			local node_index = 1
 
-			if is_current_active then
-				local is_current_scannable_unit = current_scannable_unit == scannable_unit
-				local node_index = 1
-
-				if Unit.has_node(current_scannable_unit, "vfx_scan") then
-					node_index = Unit.node(current_scannable_unit, "vfx_scan")
-				end
-
-				local scannable_position = Unit.world_position(current_scannable_unit, node_index)
-				local to_scannable = scannable_position - scanner_world_position
-				local scan_angle = Vector3.angle(to_scannable, Vector3.flat(to_scannable), true) * math.sign(to_scannable.z)
-				local diff = scan_angle - player_horizotal_angle
-				local normalized_angle_diff = math.clamp(diff / (math.pi * 0.33), -1, 1)
-				local distance_to_scannable = Vector3.length(to_scannable)
-				local normalized_distance = math.clamp01(math.ilerp(0, far * 0.5, distance_to_scannable))
-				local holo_distance = math.lerp(0.02, 0.035, normalized_distance)
-				local holo_angle = Vector3.flat_angle(angle_check_vector, to_scannable)
-				local rotation = Quaternion.axis_angle(holo_up, holo_angle)
-				local to_scannable_on_holo_plane = Quaternion.rotate(rotation, holo_foward) * distance_to_scannable
-				local local_hight_scaler = Matrix4x4.transform_without_translation(holo_world_pose_inv, to_scannable_on_holo_plane).y
-				local normalized_height_scaler = math.clamp01(math.ilerp(-far * 0.5, far * 0.5, local_hight_scaler))
-				local current_height = HOLO_BASE_HIGHT + math.lerp(-0.25 * HOLO_BASE_HIGHT, 0.25 * HOLO_BASE_HIGHT, normalized_height_scaler) + 0.33 * HOLO_BASE_HIGHT * normalized_angle_diff
-				local direction_on_holo_plane = Vector3.normalize(to_scannable_on_holo_plane)
-				local world_holo_position = new_origin + direction_on_holo_plane * holo_distance + holo_up * current_height
-				local normalized_alpha_distance = math.clamp01(math.ilerp(far, near * 0.25, distance_to_scannable))
-				local current_lerp = math.lerp(0.2, 1, normalized_alpha_distance)
-				local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
-				local size = is_current_scannable_unit and active_size or scaled_size
-				local holo_unit = holo_units[current_holo_unit]
-
-				current_holo_unit = current_holo_unit + 1
-
-				if not holo_unit then
-					holo_unit = World.spawn_unit_ex(self._world, SCAN_HOLO_UNIT_NAME)
-					holo_units[#holo_units + 1] = holo_unit
-
-					local holo_mesh = Unit.mesh(holo_unit, "g_auspex_scanner_holo_ball_01")
-					local holo_material = Mesh.material(holo_mesh, 1)
-
-					self._holo_materials[holo_unit] = holo_material
-				end
-
-				local local_holo_pose = Matrix4x4.from_quaternion_position_scale(Quaternion.identity(), world_holo_position, Vector3.one() * size)
-
-				Unit.set_local_pose(holo_unit, 1, local_holo_pose)
-				Unit.set_unit_visibility(holo_unit, true)
-				World.update_unit(self._world, holo_unit)
-				Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(holo_unit, "custom_fov", is_in_first_person)
+			if Unit.has_node(current_scannable_unit, "vfx_scan") then
+				node_index = Unit.node(current_scannable_unit, "vfx_scan")
 			end
+
+			local scannable_position = Unit.world_position(current_scannable_unit, node_index)
+			local to_scannable = scannable_position - scanner_world_position
+			local scan_angle = Vector3.angle(to_scannable, Vector3.flat(to_scannable), true) * math.sign(to_scannable.z)
+			local diff = scan_angle - player_horizotal_angle
+			local normalized_angle_diff = math.clamp(diff / (math.pi * 0.33), -1, 1)
+			local distance_to_scannable = Vector3.length(to_scannable)
+			local normalized_distance = math.clamp01(math.ilerp(0, far * 0.5, distance_to_scannable))
+			local holo_distance = math.lerp(0.02, 0.035, normalized_distance)
+			local holo_angle = Vector3.flat_angle(angle_check_vector, to_scannable)
+			local rotation = Quaternion.axis_angle(holo_up, holo_angle)
+			local to_scannable_on_holo_plane = Quaternion.rotate(rotation, holo_foward) * distance_to_scannable
+			local local_hight_scaler = Matrix4x4.transform_without_translation(holo_world_pose_inv, to_scannable_on_holo_plane).y
+			local normalized_height_scaler = math.clamp01(math.ilerp(-far * 0.5, far * 0.5, local_hight_scaler))
+			local current_height = HOLO_BASE_HIGHT + math.lerp(-0.25 * HOLO_BASE_HIGHT, 0.25 * HOLO_BASE_HIGHT, normalized_height_scaler) + 0.33 * HOLO_BASE_HIGHT * normalized_angle_diff
+			local direction_on_holo_plane = Vector3.normalize(to_scannable_on_holo_plane)
+			local world_holo_position = new_origin + direction_on_holo_plane * holo_distance + holo_up * current_height
+			local normalized_alpha_distance = math.clamp01(math.ilerp(far, near * 0.25, distance_to_scannable))
+			local current_lerp = math.lerp(0.2, 1, normalized_alpha_distance)
+			local scaled_size = math.lerp(HOLO_MIN_SIZE, HOLO_INACTIVE_SIZE, current_lerp)
+			local size = is_current_scannable_unit and active_size or scaled_size
+			local holo_unit = holo_units[current_holo_unit]
+
+			current_holo_unit = current_holo_unit + 1
+
+			if not holo_unit then
+				holo_unit = World.spawn_unit_ex(self._world, SCAN_HOLO_UNIT_NAME)
+				holo_units[#holo_units + 1] = holo_unit
+
+				local holo_mesh = Unit.mesh(holo_unit, "g_auspex_scanner_holo_ball_01")
+				local holo_material = Mesh.material(holo_mesh, 1)
+
+				self._holo_materials[holo_unit] = holo_material
+			end
+
+			local local_holo_pose = Matrix4x4.from_quaternion_position_scale(Quaternion.identity(), world_holo_position, Vector3.one() * size)
+
+			Unit.set_local_pose(holo_unit, 1, local_holo_pose)
+			Unit.set_unit_visibility(holo_unit, true)
+			World.update_unit(self._world, holo_unit)
+			Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(holo_unit, "custom_fov", is_in_first_person)
 		end
 	end
 

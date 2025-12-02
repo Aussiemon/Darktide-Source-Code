@@ -45,6 +45,22 @@ local stolen_rations = {
 			small = "content/ui/materials/icons/currencies/stolen_rations/rations_live_event_small",
 		},
 	},
+	eor = {
+		{
+			loc_key = "loc_stolen_rations_recovered_stat_name",
+			path = {
+				"rations",
+				"recovered",
+			},
+		},
+		{
+			loc_key = "loc_stolen_rations_destroyed_stat_name",
+			path = {
+				"rations",
+				"destroyed",
+			},
+		},
+	},
 	objective = {
 		widgets = {
 			{
@@ -75,6 +91,11 @@ local stolen_rations = {
 				template = "title",
 				context = {
 					text = "loc_stolen_rations_01_name",
+					resets_at = {
+						{
+							hour = 9,
+						},
+					},
 				},
 			},
 			{

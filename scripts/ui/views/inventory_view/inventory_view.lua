@@ -156,7 +156,7 @@ InventoryView._on_item_hover_start = function (self, item)
 	self._currently_hovered_item = item
 
 	if self._item_stats and item then
-		local profile = self._preview_player:profile()
+		local profile = self._presentation_profile
 		local context = {
 			inventory_items = self._inventory_items,
 			profile = profile,
@@ -762,6 +762,7 @@ InventoryView._setup_menu_tabs = function (self, content)
 	local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button_icon)
 
 	tab_button_template[1].style = {
+		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
@@ -1286,15 +1287,8 @@ InventoryView._select_individual_widget_index = function (self, index)
 	self._selected_individual_widget_index = index
 end
 
-InventoryView.profile_preset_handling_input = function (self)
-	local view_name = "inventory_background_view"
-	local ui_manager = Managers.ui
-
-	if ui_manager:view_active(view_name) then
-		local view_instance = ui_manager:view_instance(view_name)
-
-		return view_instance:profile_preset_handling_input()
-	end
+InventoryView.block_input = function (self, is_blocking)
+	self._parent_block_input = is_blocking
 end
 
 InventoryView.on_resolution_modified = function (self, scale)
@@ -1314,7 +1308,7 @@ InventoryView.on_resolution_modified = function (self, scale)
 end
 
 InventoryView.update = function (self, dt, t, input_service)
-	if self:profile_preset_handling_input() or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
+	if self._parent_block_input or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
 		input_service = input_service:null_service()
 	end
 
@@ -1364,7 +1358,7 @@ InventoryView.update = function (self, dt, t, input_service)
 end
 
 InventoryView.draw = function (self, dt, t, input_service, layer)
-	if self:profile_preset_handling_input() or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
+	if self._parent_block_input or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
 		input_service = input_service:null_service()
 	end
 

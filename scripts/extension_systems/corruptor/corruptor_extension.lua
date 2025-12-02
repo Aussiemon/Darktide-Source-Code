@@ -29,9 +29,11 @@ CorruptorExtension.init = function (self, extension_init_context, unit, extensio
 	self._eye_is_active = false
 	self._effect_template_data = {
 		awake = {
+			global_effect_id = nil,
 			template = EffectTemplates.corruptor_ambience_burrowed,
 		},
 		emerge = {
+			global_effect_id = nil,
 			template = EffectTemplates.corruptor_ambience,
 		},
 	}

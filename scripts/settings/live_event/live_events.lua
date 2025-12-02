@@ -22,6 +22,7 @@ _add_live_event("plasma_smugglers")
 _add_live_event("rotten_armor")
 _add_live_event("skulls")
 _add_live_event("stolen_rations")
+_add_live_event("saints")
 _add_live_event("survival")
 
 return settings("LiveEvents", live_events)

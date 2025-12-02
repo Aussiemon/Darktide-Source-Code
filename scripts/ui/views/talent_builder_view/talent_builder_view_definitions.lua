@@ -800,6 +800,35 @@ local widget_definitions = {
 				text_horizontal_alignment = "left",
 				text_vertical_alignment = "center",
 				vertical_alignment = "top",
+				original_text_color = Color.text_default(255, true),
+				cant_interact_color = Color.text_cant_afford(255, true),
+				size = {
+					nil,
+					0,
+				},
+				offset = {
+					0,
+					0,
+					5,
+				},
+				size_addition = {
+					-40,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "cost_text",
+			value = "",
+			value_id = "cost_text",
+			style = {
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				horizontal_alignment = "center",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
+				vertical_alignment = "top",
 				text_color = Color.text_default(255, true),
 				size = {
 					nil,

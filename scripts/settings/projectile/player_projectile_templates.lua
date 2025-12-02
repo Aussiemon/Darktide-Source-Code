@@ -168,6 +168,37 @@ projectile_templates.ogryn_grenade_frag = {
 		},
 	},
 }
+projectile_templates.broker_missile = {
+	item_name = "content/items/weapons/player/ranged/bullets/broker_missile",
+	locomotion_template = ProjectileLocomotionTemplates.broker_missile,
+	projectile_type = projectile_types.weapon_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 1.5,
+			impact_fuse_time = 0,
+			explosion_template = ExplosionTemplates.broker_missile_launcher,
+		},
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.broker_missile_launcher_impact,
+			damage_type = damage_types.grenade_frag_ogryn,
+			explosion_template = ExplosionTemplates.broker_missile_launcher,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/broker_boom_bringer_projectile_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_outlaw_missile_launcher_projectile_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_outlaw_missile_launcher_projectile_loop",
+			},
+		},
+	},
+}
 projectile_templates.frag_grenade = {
 	item_name = "content/items/weapons/player/grenade_frag",
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
@@ -217,6 +248,39 @@ projectile_templates.fire_grenade = {
 				link = true,
 				orphaned_policy = "destroy",
 				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+}
+projectile_templates.broker_tox_grenade = {
+	item_name = "content/items/weapons/player/grenade_tox",
+	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 5,
+			impact_fuse_time = 1.5,
+			impact_triggered = true,
+			kill_at_lifetime = 5,
+			skip_fuse_reset = true,
+			explosion_template = ExplosionTemplates.broker_tox_grenade,
+			liquid_area_template = LiquidAreaTemplates.broker_tox_grenade,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.fire_grenade_impact,
+			damage_type = damage_types.grenade_fire,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/chem_grenade/chem_grenade_gas_trail",
 			},
 			sfx = {
 				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
@@ -497,6 +561,43 @@ projectile_templates.psyker_throwing_knives_aimed_piercing = table.clone_instanc
 projectile_templates.psyker_throwing_knives_aimed_piercing.damage.fuse.kill_at_lifetime = 3.5
 projectile_templates.psyker_throwing_knives_aimed_piercing.damage.impact.damage_profile = DamageProfileTemplates.psyker_throwing_knives_aimed_pierce
 projectile_templates.psyker_throwing_knives_aimed_piercing.locomotion_template = ProjectileLocomotionTemplates.psyker_throwing_knife_projectile_aimed
+projectile_templates.dual_shivs_p1_throwing_knives = {
+	item_name = "content/items/weapons/player/shivs_throwing_knives",
+	locomotion_template = ProjectileLocomotionTemplates.dual_shivs_throwing_knife_projectile,
+	projectile_type = projectile_types.throwing_knife,
+	sticks_to_armor_types = {},
+	damage = {
+		use_suppression = true,
+		impact = {
+			delete_on_hit_mass = true,
+			delete_on_impact = true,
+			damage_profile = DamageProfileTemplates.dual_shivs_throwing_knives,
+			damage_type = damage_types.throwing_knife_zealot,
+			suppression_settings = {
+				distance = 5,
+				instant_aggro = true,
+				suppression_falloff = true,
+				suppression_value = 5,
+			},
+		},
+		fuse = {
+			fuse_time = 1,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail_toxin_broker",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_zealot_throw_knife_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_zealot_throw_knife_loop",
+			},
+		},
+	},
+}
 projectile_templates.force_staff_ball = {
 	always_hidden = true,
 	item_name = "content/items/weapons/player/ranged/bullets/force_staff_projectile_01",
@@ -866,6 +967,36 @@ projectile_templates.area_buff_drone = {
 				DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
 			end
 		end,
+	},
+}
+projectile_templates.quick_flash_grenade = {
+	item_name = "content/items/weapons/player/grenade_quick_flash",
+	locomotion_template = ProjectileLocomotionTemplates.broker_flash_grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 0.2,
+			impact_fuse_time = 0,
+			impact_triggered = true,
+			explosion_template = ExplosionTemplates.broker_flash_grenade,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.broker_flash_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
 	},
 }
 

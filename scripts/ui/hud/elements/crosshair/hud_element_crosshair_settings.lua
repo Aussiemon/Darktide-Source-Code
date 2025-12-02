@@ -40,6 +40,12 @@ local hud_element_crosshair_settings = {
 			165,
 			255,
 		},
+		damage_reduced = {
+			255,
+			163,
+			226,
+			255,
+		},
 		damage_crit = {
 			255,
 			255,

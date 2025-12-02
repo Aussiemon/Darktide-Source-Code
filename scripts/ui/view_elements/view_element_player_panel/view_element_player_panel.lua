@@ -2,6 +2,7 @@
 
 local Definitions = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_definitions")
 local ViewElementPlayerPanelSettings = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementPlayerPanel = class("ViewElementPlayerPanel", "ViewElementBase")
 
 ViewElementPlayerPanel.init = function (self, parent, draw_layer, start_scale, context)
@@ -144,17 +145,38 @@ ViewElementPlayerPanel._cb_set_player_frame = function (self, item)
 	local loadout = self._preview_profile.loadout
 	local frame_item = loadout.slot_portrait_frame
 	local frame_item_gear_id = frame_item and frame_item.gear_id
+	local widget = self._widgets_by_name.character_portrait
 	local icon
+	local material_values = widget.style.texture.material_values
 
 	if frame_item_gear_id == item.gear_id then
-		icon = item.icon
-	else
-		icon = "content/ui/textures/nameplates/portrait_frames/default"
+		if item.icon_material and item.icon_material ~= "" then
+			if material_values.portrait_frame_texture then
+				material_values.portrait_frame_texture = nil
+			end
+
+			local content = widget.content
+
+			content.texture = item.icon_material
+		else
+			local icon
+
+			if item.icon then
+				icon = item.icon
+			else
+				icon = "content/ui/textures/nameplates/portrait_frames/default"
+			end
+
+			local content = widget.content
+			local portrait_frame_default_material = UISettings.portrait_frame_default_material
+
+			if content.texture ~= portrait_frame_default_material then
+				content.texture = portrait_frame_default_material
+			end
+
+			material_values.portrait_frame_texture = icon
+		end
 	end
-
-	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
-
-	material_values.portrait_frame_texture = icon
 end
 
 ViewElementPlayerPanel._request_player_icon = function (self)
@@ -192,15 +214,13 @@ end
 
 ViewElementPlayerPanel._cb_set_player_icon = function (self, grid_index, rows, columns)
 	local widget = self._widgets_by_name.character_portrait
-
-	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
-
 	local material_values = widget.style.texture.material_values
 
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+	widget.content.texture = self:_get_player_portrait_frame_material()
 end
 
 ViewElementPlayerPanel._cb_unset_player_icon = function (self)
@@ -213,6 +233,25 @@ ViewElementPlayerPanel._cb_unset_player_icon = function (self)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+end
+
+ViewElementPlayerPanel._get_player_portrait_frame_material = function (self)
+	local frame_material = UISettings.portrait_frame_default_material
+	local profile = self._preview_profile
+
+	if not profile then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 return ViewElementPlayerPanel

@@ -2,8 +2,8 @@
 
 require("scripts/extension_systems/mission_objective/utilities/mission_objective_base")
 
+local SideMissionTypes = require("scripts/settings/mission/side_mission_types")
 local MissionObjectiveSide = class("MissionObjectiveSide", "MissionObjectiveBase")
-local SIDE_MISSION_TYPES = Managers.state.mission.SIDE_MISSION_TYPES
 
 MissionObjectiveSide.init = function (self)
 	MissionObjectiveSide.super.init(self)
@@ -13,13 +13,13 @@ end
 MissionObjectiveSide.start_objective = function (self, mission_objective_data, group_id, units, synchronizer_unit)
 	MissionObjectiveSide.super.start_objective(self, mission_objective_data, group_id, units, synchronizer_unit)
 
-	if mission_objective_data.side_objective_type == SIDE_MISSION_TYPES.collect then
-		self:_set_side_mission_type(SIDE_MISSION_TYPES.collect)
+	if mission_objective_data.side_objective_type == SideMissionTypes.collect then
+		self:_set_side_mission_type(SideMissionTypes.collect)
 
 		self._collect_amount = mission_objective_data.collect_amount
 		self._proc_event_at_max_progression = mission_objective_data.proc_event_at_max_progression
-	elseif mission_objective_data.side_objective_type == SIDE_MISSION_TYPES.luggable then
-		self:_set_side_mission_type(SIDE_MISSION_TYPES.luggable)
+	elseif mission_objective_data.side_objective_type == SideMissionTypes.luggable then
+		self:_set_side_mission_type(SideMissionTypes.luggable)
 
 		local luggable_synchronizer_extension = self:synchronizer_extension()
 		local stages = luggable_synchronizer_extension:get_objective_stages()
@@ -31,9 +31,9 @@ end
 MissionObjectiveSide.start_stage = function (self, stage)
 	MissionObjectiveSide.super.start_stage(self, stage)
 
-	if self._side_mission_type == SIDE_MISSION_TYPES.collect then
+	if self._side_mission_type == SideMissionTypes.collect then
 		self:set_max_increment(self._collect_amount)
-	elseif self._side_mission_type == SIDE_MISSION_TYPES.luggable then
+	elseif self._side_mission_type == SideMissionTypes.luggable then
 		local luggable_synchronizer_extension = self:synchronizer_extension()
 
 		self:set_max_increment(luggable_synchronizer_extension:sockets_to_fill())

@@ -5,8 +5,6 @@ local Definitions = require("scripts/ui/view_elements/view_element_tutorial_over
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
@@ -220,7 +218,7 @@ end
 ViewElementTutorialOverlay.active_tutorial_widgets_name = function (self)
 	local data = self:_active_tutorial_data()
 
-	return data and data.widgets_name
+	return data and (type(data.widgets_name) == "function" and data.widgets_name() or data.widgets_name)
 end
 
 ViewElementTutorialOverlay.active_tutorial_elements = function (self)

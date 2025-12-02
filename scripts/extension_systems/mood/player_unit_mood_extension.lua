@@ -153,14 +153,18 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_aiming_lunge = PlayerUnitStatus.is_aiming_lunge(self._combat_ability_action_read_component)
 	local veteran_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.veteran_combat_ability_stance)
 	local ogryn_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.ogryn_combat_ability_stance)
+	local broker_combat_ability_focus_active = buff_extension:has_keyword(buff_keywords.broker_combat_ability_focus)
+	local broker_combat_ability_punk_rage_active = buff_extension:has_keyword(buff_keywords.broker_combat_ability_punk_rage)
+	local broker_punk_rage_exhaustion = buff_extension:has_keyword(buff_keywords.broker_punk_rage_exhaustion)
 	local has_invisible_keyword = buff_extension:has_keyword(buff_keywords.invisible)
-	local is_in_stealth = archetype_name == "zealot" and has_invisible_keyword
+	local is_in_stealth = (archetype_name == "zealot" or archetype_name == "broker") and has_invisible_keyword
 	local is_in_veteran_stealth = archetype_name == "veteran" and has_invisible_keyword
 	local is_in_veteran_stealth_and_stance = is_in_veteran_stealth and veteran_combat_ability_stance_active
-	local is_in_stealth_from_outside_source = archetype_name ~= "zealot" and archetype_name ~= "veteran" and has_invisible_keyword
+	local is_in_stealth_from_outside_source = archetype_name ~= "zealot" and archetype_name ~= "veteran" and archetype_name ~= "broker" and has_invisible_keyword
 	local syringe_ability = buff_extension:has_keyword(buff_keywords.syringe_ability)
 	local syringe_power = buff_extension:has_keyword(buff_keywords.syringe_power)
 	local syringe_speed = buff_extension:has_keyword(buff_keywords.syringe_speed)
+	local syringe_broker = buff_extension:has_keyword(buff_keywords.syringe_broker)
 	local is_in_psyker_force_field, _, force_field_extension = self._force_field_system:is_object_inside_force_field(self._first_person_component.position, 0.05, true)
 	local is_in_psyker_force_field_sphere = is_in_psyker_force_field and force_field_extension:is_sphere_shield()
 
@@ -258,6 +262,18 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_remove_mood(t, mood_types.ogryn_combat_ability_stance)
 	end
 
+	if broker_combat_ability_focus_active then
+		self:_add_mood(t, mood_types.broker_combat_ability_focus)
+	elseif not broker_combat_ability_focus_active then
+		self:_remove_mood(t, mood_types.broker_combat_ability_focus)
+	end
+
+	if broker_combat_ability_punk_rage_active then
+		self:_add_mood(t, mood_types.broker_combat_ability_punk_rage)
+	else
+		self:_remove_mood(t, mood_types.broker_combat_ability_punk_rage)
+	end
+
 	if veteran_combat_ability_stance_active then
 		self:_add_mood(t, mood_types.veteran_combat_ability_stance)
 	elseif not veteran_combat_ability_stance_active then
@@ -334,6 +350,12 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_add_mood(t, mood_types.syringe_speed)
 	elseif not syringe_speed then
 		self:_remove_mood(t, mood_types.syringe_speed)
+	end
+
+	if syringe_broker then
+		self:_add_mood(t, mood_types.syringe_broker)
+	elseif not syringe_broker then
+		self:_remove_mood(t, mood_types.syringe_broker)
 	end
 
 	if is_in_stealth_from_outside_source then

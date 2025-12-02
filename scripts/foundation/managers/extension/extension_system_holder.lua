@@ -185,6 +185,10 @@ ExtensionSystemHolder.latest_fixed_t = function (self)
 	return self._system_update_context.fixed_frame * self._fixed_time_step
 end
 
+ExtensionSystemHolder.latest_fixed_frame = function (self)
+	return self._system_update_context.fixed_frame
+end
+
 local TEMP_SYSTEM_LIST = {}
 
 ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_frame, simulated_components, system_map, server_correction_system_map)

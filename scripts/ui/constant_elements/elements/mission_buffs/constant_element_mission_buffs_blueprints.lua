@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/mission_buffs/constant_element_mission_buffs_blueprints.lua
 
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local card_size = {
 	440,
 	335,
@@ -567,7 +567,7 @@ blueprints.buff_card = {
 
 		local input_action = parent._using_cursor_navigation and "left_hold" or "confirm_hold"
 
-		content.confirm_text = TextUtils.localize_with_button_hint(input_action, "loc_select", nil, nil, Localize("loc_input_legend_text_template"), true)
+		content.confirm_text = Text.localize_with_button_hint(input_action, "loc_select", nil, nil, Localize("loc_input_legend_text_template"), true)
 
 		if content.is_family then
 			style.icon.material_values.frame = "content/ui/textures/frames/horde/circle_frame_horde"

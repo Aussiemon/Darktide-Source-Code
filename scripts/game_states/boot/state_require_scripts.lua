@@ -90,13 +90,15 @@ StateRequireScripts._init_crashify = function (self)
 		Crashify.print_property("testify_test_suite_id", DevParameters.testify_test_suite_id)
 	end
 
-	Log.info("INFO", "Crashify Ready")
+	Log.info("Crashify", "Ready!")
+	Log.set_has_crashify(true)
 end
 
 StateRequireScripts._init_testify = function (self)
 	Testify:ready()
 	require("scripts/tests/test_cases/audio_test_cases")
 	require("scripts/tests/test_cases/combat_test_cases")
+	require("scripts/tests/test_cases/companion_test_cases")
 	require("scripts/tests/test_cases/misc_test_cases")
 	require("scripts/tests/test_cases/networked_test_cases")
 	require("scripts/tests/test_cases/performance_test_cases")
@@ -119,7 +121,6 @@ StateRequireScripts._foundation_scripts = function (self)
 	require("scripts/foundation/utilities/callback")
 	require("scripts/foundation/utilities/crashify")
 	require("scripts/foundation/utilities/testify")
-	require("scripts/foundation/utilities/log")
 	require("scripts/foundation/utilities/reportify")
 end
 

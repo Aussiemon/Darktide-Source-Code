@@ -15,13 +15,13 @@ local hud_element_mission_objective_feed_settings = {
 	},
 	entry_spacing_by_category = {
 		default = 0,
-		overarching = 10,
+		overarching = 0,
 		side_mission = 0,
 		warning = 0,
 	},
 	widget_padding_by_category = {
 		default = 10,
-		overarching = 30,
+		overarching = 10,
 		side_mission = 10,
 		warning = 0,
 	},

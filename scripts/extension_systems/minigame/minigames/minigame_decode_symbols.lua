@@ -151,10 +151,23 @@ MinigameDecodeSymbols.setup_game = function (self)
 	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_symbols", minigame_unit_id, is_level_unit, symbols)
 	table.clear(targets)
 
+	local previous_rnd_num
+
 	for stage = 1, stage_amount do
-		local new_seed, rnd_num = math.next_random(seed, 1, items_per_stage)
+		local new_seed, rnd_num
+
+		if previous_rnd_num then
+			new_seed, rnd_num = math.next_random(seed, 1, items_per_stage - 1)
+
+			if previous_rnd_num <= rnd_num then
+				rnd_num = rnd_num + 1
+			end
+		else
+			new_seed, rnd_num = math.next_random(seed, 1, items_per_stage)
+		end
 
 		targets[#targets + 1] = rnd_num
+		previous_rnd_num = rnd_num
 		seed = new_seed
 
 		game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_target", minigame_unit_id, is_level_unit, stage, rnd_num)

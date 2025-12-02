@@ -20,12 +20,15 @@ local function validate_target_func(target_unit)
 	return true
 end
 
-local hud_icon = "content/ui/materials/icons/pocketables/hud/syringe_ability"
 local hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_syringe_ability"
 local pickup_name = "syringe_ability_boost_pocketable"
 local assist_notification_type = "stimmed"
 local vo_event
 local consume_on_use = true
-local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use)
+local givable = true
+local use_ability_charge = false
+local undroppable = false
+local auto_use = false
+local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, use_ability_charge, undroppable, auto_use)
 
 return weapon_template

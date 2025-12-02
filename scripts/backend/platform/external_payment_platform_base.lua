@@ -15,11 +15,20 @@ end
 
 ExternalPaymentPlatformBase.payment_options = function (self)
 	local language = "en"
-	local builder = BackendUtilities.url_builder():path("/store/payment-options"):query("language", language)
 
-	return Managers.backend:title_request(builder:to_string()):next(function (response)
-		return response.body
+	return Managers.backend:authenticate():next(function (account)
+		local builder = BackendUtilities.url_builder():path("/store/"):path(account.sub):path("/payment-options"):query("language", language)
+
+		return Managers.backend:title_request(builder:to_string()):next(function (response)
+			return response.body
+		end)
 	end)
+end
+
+ExternalPaymentPlatformBase._is_platform_option_owned = function (self, offer)
+	return Promise.resolved({
+		is_owner = false,
+	})
 end
 
 ExternalPaymentPlatformBase.update_account_store_status = function (self)
@@ -68,24 +77,29 @@ ExternalPaymentPlatformBase.get_options = function (self)
 			})
 		end
 
-		return Promise.all(self:payment_options()):next(function (results)
-			local payment_body = results[1]
-			local options = payment_body.options
+		return self:payment_options():next(function (data)
+			local options = data.options
+			local platform_options = data.platformOptions or {}
 			local entitlement_data = platform_entitlements and platform_entitlements.data or {}
 
 			for _, v in ipairs(options) do
 				self:_decorate_option(v, entitlement_data)
 			end
 
+			for i = 1, #platform_options do
+				self:_decorate_platform_option(platform_options[i], entitlement_data)
+			end
+
 			local result = {
-				offers = options,
+				offers = self:_clean_options(options),
+				platform_offers = self:_clean_options(platform_options),
 			}
 
-			if payment_body._links.layout then
-				return Managers.backend:title_request(payment_body._links.layout.href):next(function (data)
-					data.body._links = nil
+			if data._links.layout then
+				return Managers.backend:title_request(data._links.layout.href):next(function (layout_data)
+					layout_data.body._links = nil
 					result.layout_config = {
-						layout = data.body,
+						layout = layout_data.body,
 					}
 
 					return result
@@ -122,6 +136,33 @@ end
 
 ExternalPaymentPlatformBase.query_license_token = function (self, product_ids, signature_string)
 	return Promise.resolved(nil)
+end
+
+ExternalPaymentPlatformBase._decorate_platform_option = function (self, option, platform_entitlements)
+	option.description = {
+		type = "platform_option",
+	}
+
+	local offer_id = self:_offer_id_from_option(option)
+
+	if not offer_id then
+		return
+	end
+
+	local platform_entitlement = platform_entitlements[offer_id]
+
+	if not platform_entitlement then
+		return
+	end
+
+	option.isOwned = option.isOwned and Promise.resolved({
+		is_owner = option.isOwned,
+	}) or self:_is_platform_option_owned(option, platform_entitlement)
+	option.raw = platform_entitlement and platform_entitlement.raw or platform_entitlement
+end
+
+ExternalPaymentPlatformBase.invalidate_cache = function (self)
+	return
 end
 
 implements(ExternalPaymentPlatformBase, ExternalPaymentPlatformInterface)

@@ -54,7 +54,6 @@ local mission_objective_templates = {
 			objective_cm_raid_control_drug_lab = {
 				description = "loc_objective_cm_raid_drug_lab_desc",
 				event_type = "end_event",
-				has_second_progression = true,
 				header = "loc_objective_cm_raid_drug_lab_header",
 				mission_objective_type = "scanning",
 				music_wwise_state = "progression_stage_1",

@@ -5,6 +5,7 @@ local AchievementClassGroups = require("scripts/settings/achievements/achievemen
 local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementMissionGroups = require("scripts/settings/achievements/achievement_mission_groups")
 local AchievementTypes = require("scripts/managers/achievements/achievement_types")
+local AchievementTweakData = require("scripts/managers/achievements/achievement_tweak_data")
 local AchievementWeaponGroups = require("scripts/settings/achievements/achievement_weapon_groups")
 local MissionBuffsAllowed = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -31,7 +32,7 @@ local adventure_mission_types = _sort_adventure_missions()
 local path = "content/ui/textures/icons/achievements/"
 local _achievement_count = 0
 local _achievement_data = {}
-local AchievementDefinitions = setmetatable({}, {
+local achievement_definitions = setmetatable({}, {
 	__index = function (_, key)
 		return _achievement_data[key]
 	end,
@@ -61,6 +62,12 @@ local function _override_with_config(key)
 	end
 end
 
+local function _override_with_value(value)
+	return function ()
+		return value
+	end
+end
+
 local function _apply_overrides(index, definition, overrides, config)
 	for key, override in pairs(overrides) do
 		local override_type = type(override)
@@ -86,16 +93,18 @@ local function family(base, overrides, configs)
 		_apply_overrides(index, definition, overrides, config)
 
 		definition.family_index = index
+		definition.loc_title_variables = definition.loc_title_variables or {}
+		definition.loc_title_variables.tier = definition.loc_title_variables.tier or index
 
 		local id = definition.id
 
 		if prev_id then
 			definition.previous = prev_id
-			AchievementDefinitions[prev_id].next = id
+			achievement_definitions[prev_id].next = id
 		end
 
 		prev_id = id
-		AchievementDefinitions[id] = definition
+		achievement_definitions[id] = definition
 	end
 end
 
@@ -242,7 +251,9 @@ do
 			icon = achievement_icons.missions_objective,
 			category = category_progression,
 			target = #adventure_mission_types,
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 		}, {
 			id = string.format("missions_%s_2_objective", archetype_name) .. "_{index:%d}",
 			title = string.format("loc_achievement_missions_%s_2_objective", archetype_name) .. "_{index:%d}_name",
@@ -266,7 +277,9 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			icon = achievement_icons.mission_easy_difficulty,
 			category = category_progression,
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 		}, {
 			description = "loc_achievement_complete_missions_difficulty_{index:%d}_description",
 			id = string.format("missions_%s_2_easy_difficulty", archetype_name) .. "_{index:%d}",
@@ -323,7 +336,7 @@ do
 			local difficulty = rank_and_difficulty[2]
 			local group_achievement_name = string.format("group_%s_2_rank_%d_difficulty_%d", archetype_name, rank, difficulty)
 
-			AchievementDefinitions[group_achievement_name] = {
+			achievement_definitions[group_achievement_name] = {
 				target = 2,
 				type = AchievementTypesLookup.meta,
 				title = string.format("loc_achievement_group_rank_%d_difficulty_%d_name", rank, difficulty),
@@ -412,7 +425,7 @@ do
 
 		_generate_base_archetype_penances("veteran", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.veteran_2_easy_1 = {
+		achievement_definitions.veteran_2_easy_1 = {
 			description = "loc_achievement_veteran_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_03",
 			stat_name = "veteran_2_weakspot_kills",
@@ -422,7 +435,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_2_easy_2 = {
+		achievement_definitions.veteran_2_easy_2 = {
 			description = "loc_achievement_veteran_2_easy_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_04",
 			stat_name = "veteran_2_ammo_given",
@@ -432,7 +445,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_infiltrate_supress = {
+		achievement_definitions.veteran_infiltrate_supress = {
 			description = "loc_achievement_veteran_infiltrate_supress_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_18",
 			stat_name = "veteran_infiltrate_stagger",
@@ -442,7 +455,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_voice_of_command_toughness_given = {
+		achievement_definitions.veteran_voice_of_command_toughness_given = {
 			description = "loc_achievement_veteran_voice_of_command_toughness_given_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_17",
 			stat_name = "veteran_voice_of_command_toughness_given",
@@ -452,7 +465,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_enemies_killed_with_max_focus_fire = {
+		achievement_definitions.veteran_enemies_killed_with_max_focus_fire = {
 			description = "loc_achievement_veteran_enemies_killed_with_max_focus_fire_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_19",
 			stat_name = "kills_during_max_focus_fire_stack",
@@ -462,7 +475,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_krak_grenade_kills = {
+		achievement_definitions.veteran_krak_grenade_kills = {
 			description = "loc_achievement_veteran_krak_grenade_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_13",
 			stat_name = "veteran_krak_grenade_kills",
@@ -472,7 +485,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_smoke_grenade_engulfed = {
+		achievement_definitions.veteran_smoke_grenade_engulfed = {
 			description = "loc_achievement_veteran_smoke_grenade_engulfed_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_14",
 			stat_name = "veteran_smoke_grenade_engulfed",
@@ -482,7 +495,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_kills_with_improved_tag = {
+		achievement_definitions.veteran_kills_with_improved_tag = {
 			description = "loc_achievement_veteran_kills_with_improved_tag_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_20",
 			stat_name = "veteran_kills_with_improved_tag",
@@ -492,7 +505,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_weapon_switch_passive_keystone_kills = {
+		achievement_definitions.veteran_weapon_switch_passive_keystone_kills = {
 			description = "loc_achievement_veteran_weapon_switch_passive_keystone_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_21",
 			stat_name = "veteran_weapon_switch_passive_keystone_kills",
@@ -502,7 +515,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_team_damage_aura_amplified = {
+		achievement_definitions.veteran_team_damage_aura_amplified = {
 			description = "loc_achievement_veteran_team_damage_amplified_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_15",
 			stat_name = "veteran_team_damage_amplified",
@@ -512,7 +525,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_team_movement_aura_amplified = {
+		achievement_definitions.veteran_team_movement_aura_amplified = {
 			description = "loc_achievement_veteran_team_movement_amplifed_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_16",
 			stat_name = "veteran_team_movement_amplifed",
@@ -522,7 +535,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_2_medium_1 = {
+		achievement_definitions.veteran_2_medium_1 = {
 			description = "loc_achievement_veteran_2_medium_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_05",
 			stat_name = "veteran_2_kill_volley_fire_target_malice",
@@ -532,7 +545,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_2_medium_2 = {
+		achievement_definitions.veteran_2_medium_2 = {
 			description = "loc_achievement_veteran_2_medium_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_06",
 			stat_name = "veteran_2_long_range_kills",
@@ -545,7 +558,7 @@ do
 				distance = 30,
 			},
 		}
-		AchievementDefinitions.veteran_2_hard_1 = {
+		achievement_definitions.veteran_2_hard_1 = {
 			description = "loc_achievement_veteran_2_hard_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_07",
 			stat_name = "max_multiple_elite_or_special_kills_during_volley_fire_heresy",
@@ -558,7 +571,7 @@ do
 				num_enemies = 2,
 			},
 		}
-		AchievementDefinitions.veteran_2_hard_2 = {
+		achievement_definitions.veteran_2_hard_2 = {
 			description = "loc_achievement_veteran_2_hard_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_08",
 			stat_name = "veteran_2_extended_volley_fire_duration",
@@ -648,7 +661,7 @@ do
 
 		_generate_base_archetype_penances("zealot", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.zealot_2_easy_1 = {
+		achievement_definitions.zealot_2_easy_1 = {
 			description = "loc_achievement_zealot_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_03",
 			stat_name = "zealot_2_number_of_shocked_enemies",
@@ -658,7 +671,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_2_easy_2 = {
+		achievement_definitions.zealot_2_easy_2 = {
 			description = "loc_achievement_zealot_2_easy_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_04",
 			stat_name = "zealot_2_toughness_gained_from_chastise_the_wicked",
@@ -668,7 +681,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_elite_or_special_kills_with_shroudfield = {
+		achievement_definitions.zealot_elite_or_special_kills_with_shroudfield = {
 			description = "loc_achievement_zealot_elite_or_special_kills_with_shroudfield_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_19",
 			stat_name = "zealot_elite_or_special_kills_with_shroudfield",
@@ -678,7 +691,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_team_toughness_restored_with_chorus = {
+		achievement_definitions.zealot_team_toughness_restored_with_chorus = {
 			description = "loc_achievement_zealot_team_toughness_restored_with_chorus_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_18",
 			stat_name = "zealot_team_toughness_restored_with_chorus",
@@ -688,7 +701,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_elite_or_special_kills_during_fanatic_rage = {
+		achievement_definitions.zealot_elite_or_special_kills_during_fanatic_rage = {
 			description = "loc_achievement_zealot_elite_or_special_kills_during_fanatic_rage_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_20",
 			stat_name = "zealot_elite_or_special_kills_during_fanatic_rage",
@@ -698,7 +711,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_kills_during_movement_keystone_activated = {
+		achievement_definitions.zealot_kills_during_movement_keystone_activated = {
 			description = "loc_achievement_zealot_kills_during_movement_keystone_activated_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_21",
 			stat_name = "zealot_kills_during_movement_keystone_activated",
@@ -708,7 +721,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_elite_or_special_kills_with_blade_of_faith = {
+		achievement_definitions.zealot_elite_or_special_kills_with_blade_of_faith = {
 			description = "loc_achievement_zealot_elite_or_special_kills_with_blade_of_faith_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_14",
 			stat_name = "zealot_elite_or_special_kills_with_blade_of_faith",
@@ -718,7 +731,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_kills_with_fire_grenade = {
+		achievement_definitions.zealot_kills_with_fire_grenade = {
 			description = "loc_achievement_zealot_kills_with_fire_grenade_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_13",
 			stat_name = "zealot_kills_with_fire_grenade",
@@ -728,7 +741,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_aura_backstab_kills_while_alone = {
+		achievement_definitions.zealot_aura_backstab_kills_while_alone = {
 			description = "loc_achievement_zealot_aura_stamina_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_17",
 			stat_name = "zealot_aura_backstab_kills_while_alone",
@@ -738,7 +751,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_aura_toughness_damage_reduced = {
+		achievement_definitions.zealot_aura_toughness_damage_reduced = {
 			description = "loc_achievement_zealot_aura_toughness_damage_reduced_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_15",
 			stat_name = "zealot_aura_toughness_damage_reduced",
@@ -748,7 +761,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_aura_corruption_healed = {
+		achievement_definitions.zealot_aura_corruption_healed = {
 			description = "loc_achievement_zealot_aura_corruption_healed_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_16",
 			stat_name = "zealot_aura_corruption_healed",
@@ -758,7 +771,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_2_medium_1 = {
+		achievement_definitions.zealot_2_medium_1 = {
 			description = "loc_achievement_zealot_2_medium_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_05",
 			stat_name = "zealot_2_number_of_critical_hits_kills_when_stunned",
@@ -768,7 +781,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_2_medium_2 = {
+		achievement_definitions.zealot_2_medium_2 = {
 			description = "loc_achievement_zealot_2_medium_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_06",
 			stat_name = "zealot_2_kills_with_martyrdoom_stacks",
@@ -781,7 +794,7 @@ do
 				stacks = 3,
 			},
 		}
-		AchievementDefinitions.zealot_2_hard_1 = {
+		achievement_definitions.zealot_2_hard_1 = {
 			description = "loc_achievement_zealot_2_hard_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_07",
 			stat_name = "zealot_2_killed_elites_and_specials_with_activated_attacks",
@@ -791,7 +804,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_2_hard_2 = {
+		achievement_definitions.zealot_2_hard_2 = {
 			description = "loc_achievement_zealot_2_hard_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_08",
 			stat_name = "zealot_2_charged_enemy_wielding_ranged_weapon",
@@ -878,7 +891,7 @@ do
 
 		_generate_base_archetype_penances("psyker", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.psyker_2_easy_1 = {
+		achievement_definitions.psyker_2_easy_1 = {
 			description = "loc_achievement_psyker_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_03",
 			stat_name = "psyker_2_elite_or_special_kills_with_smite",
@@ -888,7 +901,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_2_easy_2 = {
+		achievement_definitions.psyker_2_easy_2 = {
 			description = "loc_achievement_psyker_2_easy_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_04",
 			stat_name = "psyker_2_survived_perils",
@@ -898,7 +911,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_2_medium_1 = {
+		achievement_definitions.psyker_2_medium_1 = {
 			description = "loc_achievement_psyker_2_medium_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_05",
 			stat_name = "psyker_2_smite_kills_at_max_souls",
@@ -908,7 +921,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_2_medium_2 = {
+		achievement_definitions.psyker_2_medium_2 = {
 			description = "loc_achievement_psyker_2_medium_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_06",
 			stat_name = "psyker_2_warp_kills",
@@ -918,7 +931,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_2_hard_1 = {
+		achievement_definitions.psyker_2_hard_1 = {
 			description = "loc_achievement_psyker_2_hard_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_07",
 			stat_name = "psyker_2_killed_disablers_before_disabling",
@@ -928,7 +941,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_2_hard_2 = {
+		achievement_definitions.psyker_2_hard_2 = {
 			description = "loc_achievement_psyker_2_hard_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_08",
 			stat_name = "psyker_2_x_missions_no_elite_melee_damage_taken",
@@ -938,7 +951,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_elite_or_special_kills_with_assail = {
+		achievement_definitions.psyker_elite_or_special_kills_with_assail = {
 			description = "loc_achievement_psyker_elite_or_special_kills_with_assail_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_14",
 			stat_name = "psyker_elite_or_special_kills_with_assail",
@@ -948,7 +961,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_kills_during_overcharge_stance = {
+		achievement_definitions.psyker_kills_during_overcharge_stance = {
 			description = "loc_achievement_psyker_kills_during_overcharge_stance_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_19",
 			stat_name = "max_psyker_kills_during_overcharge_stance",
@@ -958,7 +971,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_kills_with_empowered_abilites = {
+		achievement_definitions.psyker_kills_with_empowered_abilites = {
 			description = "loc_achievement_psyker_kills_with_empowered_abilites_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_20",
 			stat_name = "psyker_kills_with_empowered_abilites",
@@ -968,7 +981,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_time_at_max_unnatural = {
+		achievement_definitions.psyker_time_at_max_unnatural = {
 			description = "loc_achievement_psyker_time_at_max_unnatural_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_21",
 			stat_name = "psyker_time_at_max_unnatural",
@@ -978,7 +991,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_damage_blocked_with_shield = {
+		achievement_definitions.psyker_damage_blocked_with_shield = {
 			description = "loc_achievement_psyker_damage_blocked_with_shield_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_18",
 			stat_name = "psyker_shield_total_damage_taken",
@@ -988,7 +1001,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_team_elite_aura_kills = {
+		achievement_definitions.psyker_team_elite_aura_kills = {
 			description = "loc_achievement_psyker_team_elite_aura_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_15",
 			stat_name = "psyker_team_elite_aura_kills",
@@ -998,7 +1011,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_team_cooldown_reduced = {
+		achievement_definitions.psyker_team_cooldown_reduced = {
 			description = "loc_achievement_psyker_team_cooldown_reduced_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_16",
 			stat_name = "psyker_team_cooldown_reduced",
@@ -1008,7 +1021,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_team_critical_hits = {
+		achievement_definitions.psyker_team_critical_hits = {
 			description = "loc_achievement_psyker_team_critical_hits_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_17",
 			stat_name = "psyker_team_critical_hits",
@@ -1018,7 +1031,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.psyker_threshold_kills_reached_with_grenade_chain = {
+		achievement_definitions.psyker_threshold_kills_reached_with_grenade_chain = {
 			description = "loc_achievement_psyker_threshold_kills_reached_with_grenade_chain_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_13",
 			stat_name = "psyker_threshold_kills_reached_with_grenade_chain",
@@ -1105,7 +1118,7 @@ do
 
 		_generate_base_archetype_penances("ogryn", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
-		AchievementDefinitions.ogryn_2_easy_1 = {
+		achievement_definitions.ogryn_2_easy_1 = {
 			description = "loc_achievement_ogryn_2_easy_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_03",
 			stat_name = "ogryn_2_number_of_revived_or_assisted_allies",
@@ -1115,7 +1128,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_2_easy_2 = {
+		achievement_definitions.ogryn_2_easy_2 = {
 			description = "loc_achievement_ogryn_2_easy_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_04",
 			stat_name = "ogryn_2_number_of_knocked_down_enemies",
@@ -1125,7 +1138,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_2_medium_1 = {
+		achievement_definitions.ogryn_2_medium_1 = {
 			description = "loc_achievement_ogryn_2_medium_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_05",
 			stat_name = "ogryn_2_bullrushed_group_of_ranged_enemies",
@@ -1138,7 +1151,7 @@ do
 				num_enemies = 3,
 			},
 		}
-		AchievementDefinitions.ogryn_2_medium_2 = {
+		achievement_definitions.ogryn_2_medium_2 = {
 			description = "loc_achievement_ogryn_2_medium_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_06",
 			stat_name = "ogryn_2_killed_multiple_enemies_with_sweep",
@@ -1151,7 +1164,7 @@ do
 				amount = 2,
 			},
 		}
-		AchievementDefinitions.ogryn_2_hard_1 = {
+		achievement_definitions.ogryn_2_hard_1 = {
 			description = "loc_achievement_ogryn_2_hard_1_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_07",
 			stat_name = "ogryn_2_number_of_missions_with_no_deaths_and_all_revives_within_x_seconds",
@@ -1164,7 +1177,7 @@ do
 				time = 10,
 			},
 		}
-		AchievementDefinitions.ogryn_2_hard_2 = {
+		achievement_definitions.ogryn_2_hard_2 = {
 			description = "loc_achievement_ogryn_2_hard_2_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_08",
 			stat_name = "ogryn_2_grenade_box_kills_without_missing",
@@ -1177,7 +1190,7 @@ do
 				amount = 4,
 			},
 		}
-		AchievementDefinitions.ogryn_taunt_shout_hit = {
+		achievement_definitions.ogryn_taunt_shout_hit = {
 			description = "loc_achievement_ogryn_taunt_shout_hit_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_18",
 			stat_name = "ogryn_taunt_shout_hit",
@@ -1187,7 +1200,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_grenade_rock_elites_or_specialists = {
+		achievement_definitions.ogryn_grenade_rock_elites_or_specialists = {
 			description = "loc_achievement_ogryn_grenade_rock_elites_or_specialists_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_13",
 			stat_name = "ogryn_grenade_rock_elites_or_specialists",
@@ -1197,7 +1210,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_grenade_frag_group_of_enemies = {
+		achievement_definitions.ogryn_grenade_frag_group_of_enemies = {
 			description = "loc_achievement_ogryn_grenade_frag_group_of_enemies_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_14",
 			stat_name = "ogryn_grenade_frag_group_of_enemies_killed",
@@ -1210,7 +1223,7 @@ do
 				amount = 25,
 			},
 		}
-		AchievementDefinitions.ogryn_kills_during_max_stacks_heavy_hitter = {
+		achievement_definitions.ogryn_kills_during_max_stacks_heavy_hitter = {
 			description = "loc_achievement_ogryn_kills_during_max_stacks_heavy_hitter_new_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_20",
 			stat_name = "ogryn_kills_during_max_stacks_heavy_hitter",
@@ -1220,7 +1233,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_kills_during_barrage_threshold = {
+		achievement_definitions.ogryn_kills_during_barrage_threshold = {
 			description = "loc_achievement_ogryn_kills_during_barrage_threshold_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_19",
 			stat_name = "kills_achieved_group_barrage_threshold",
@@ -1233,7 +1246,7 @@ do
 				amount = 25,
 			},
 		}
-		AchievementDefinitions.ogryn_feel_no_pain_kills_at_max = {
+		achievement_definitions.ogryn_feel_no_pain_kills_at_max = {
 			description = "loc_achievement_ogryn_feel_no_pain_kills_at_max_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_21",
 			stat_name = "ogryn_feel_no_pain_kills_at_max",
@@ -1246,7 +1259,7 @@ do
 				amount = 7,
 			},
 		}
-		AchievementDefinitions.ogryn_leadbelcher_free_shot = {
+		achievement_definitions.ogryn_leadbelcher_free_shot = {
 			description = "loc_achievement_ogryn_leadbelcher_free_shot_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_22",
 			stat_name = "ogryn_leadbelcher_free_shot",
@@ -1256,7 +1269,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_team_heavy_aura_kills = {
+		achievement_definitions.ogryn_team_heavy_aura_kills = {
 			description = "loc_achievement_ogryn_team_heavy_aura_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_15",
 			stat_name = "ogryn_team_heavy_aura_kills",
@@ -1266,7 +1279,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_team_suppressed_aura_kills = {
+		achievement_definitions.ogryn_team_suppressed_aura_kills = {
 			description = "loc_achievement_ogryn_team_suppressed_aura_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_17",
 			stat_name = "ogryn_team_suppressed_aura_kills",
@@ -1276,7 +1289,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.ogryn_team_toughness_restored_aura = {
+		achievement_definitions.ogryn_team_toughness_restored_aura = {
 			description = "loc_achievement_ogryn_team_toughness_restored_aura_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_16",
 			stat_name = "ogryn_team_toughness_restored_aura",
@@ -1388,7 +1401,7 @@ do
 
 		_generate_base_archetype_penances("adamant", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets, rework_group_class_targets)
 
-		AchievementDefinitions.adamant_team_staggered_enemies_aura_kills = {
+		achievement_definitions.adamant_team_staggered_enemies_aura_kills = {
 			description = "loc_achievement_adamant_team_staggered_enemies_aura_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0010",
 			stat_name = "adamant_team_staggered_enemies_aura_kills",
@@ -1398,7 +1411,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_team_wield_speed_aura_kills = {
+		achievement_definitions.adamant_team_wield_speed_aura_kills = {
 			description = "loc_achievement_adamant_team_wield_speed_aura_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0011",
 			stat_name = "adamant_team_wield_speed_aura_kills",
@@ -1408,7 +1421,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_team_companion_in_coherency_kills = {
+		achievement_definitions.adamant_team_companion_in_coherency_kills = {
 			description = "loc_achievement_adamant_team_companion_in_coherency_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0012",
 			stat_name = "adamant_team_companion_in_coherency_kills",
@@ -1418,7 +1431,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_time_enemies_electrocuted_by_shockmine = {
+		achievement_definitions.adamant_time_enemies_electrocuted_by_shockmine = {
 			description = "loc_achievement_adamant_time_enemies_electrocuted_by_shockmine_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0013",
 			stat_name = "adamant_time_enemies_electrocuted_by_shockmine",
@@ -1428,7 +1441,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_enemies_affected_by_buff_drone = {
+		achievement_definitions.adamant_enemies_affected_by_buff_drone = {
 			description = "loc_achievement_adamant_enemies_affected_by_buff_drone_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0014",
 			stat_name = "adamant_enemies_affected_by_buff_drone",
@@ -1438,7 +1451,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_time_allies_buffed_by_buff_drone = {
+		achievement_definitions.adamant_time_allies_buffed_by_buff_drone = {
 			description = "loc_achievement_adamant_time_allies_buffed_by_buff_drone_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0015",
 			stat_name = "adamant_time_allies_buffed_by_buff_drone",
@@ -1448,7 +1461,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_enemies_killed_during_stance = {
+		achievement_definitions.adamant_enemies_killed_during_stance = {
 			description = "loc_achievement_adamant_kill_during_stance_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0016",
 			stat_name = "adamant_enemies_killed_during_stance",
@@ -1462,7 +1475,7 @@ do
 				talent_name = Localize("loc_talent_adamant_stance_ability_name"),
 			},
 		}
-		AchievementDefinitions.adamant_enemies_staggered_during_charge = {
+		achievement_definitions.adamant_enemies_staggered_during_charge = {
 			description = "loc_achievement_adamant_stagger_elites_with_bash_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0017",
 			stat_name = "adamant_enemies_staggered_during_charge",
@@ -1476,7 +1489,7 @@ do
 				talent_name = Localize("loc_talent_adamant_charge_ability_name"),
 			},
 		}
-		AchievementDefinitions.adamant_monsters_staggered_by_whistle_explosion = {
+		achievement_definitions.adamant_monsters_staggered_by_whistle_explosion = {
 			description = "loc_achievement_adamant_stagger_monster_detonation_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0018",
 			stat_name = "adamant_monsters_staggered_by_whistle_explosion",
@@ -1490,7 +1503,7 @@ do
 				talent_name = Localize("loc_talent_ability_detonate"),
 			},
 		}
-		AchievementDefinitions.adamant_cluster_of_enemies_killed_with_grenade = {
+		achievement_definitions.adamant_cluster_of_enemies_killed_with_grenade = {
 			description = "loc_achievement_adamant_kill_cluster_with_grenade_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0019",
 			stat_name = "adamant_cluster_of_enemies_killed_with_grenade",
@@ -1505,7 +1518,7 @@ do
 				talent_name = Localize("loc_talent_ability_adamant_grenade_improved"),
 			},
 		}
-		AchievementDefinitions.adamant_companion_pounced_special_enemies = {
+		achievement_definitions.adamant_companion_pounced_special_enemies = {
 			description = "loc_achievement_adamant_hunt_snipers_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0020",
 			stat_name = "adamant_companion_pounced_special_enemies",
@@ -1518,7 +1531,7 @@ do
 				amount = 50,
 			},
 		}
-		AchievementDefinitions.adamant_companion_knocked_away_special_enemies = {
+		achievement_definitions.adamant_companion_knocked_away_special_enemies = {
 			description = "loc_achievement_adamant_knock_chargers_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0021",
 			stat_name = "adamant_companion_knocked_away_special_enemies",
@@ -1531,7 +1544,7 @@ do
 				amount = 50,
 			},
 		}
-		AchievementDefinitions.adamant_killed_enemies_pounced_by_companion = {
+		achievement_definitions.adamant_killed_enemies_pounced_by_companion = {
 			description = "loc_achievement_adamant_kill_pounced_enemies_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0022",
 			stat_name = "adamant_killed_enemies_pounced_by_companion",
@@ -1544,7 +1557,7 @@ do
 				amount = 750,
 			},
 		}
-		AchievementDefinitions.adamant_killed_electrocuted_enemies = {
+		achievement_definitions.adamant_killed_electrocuted_enemies = {
 			description = "loc_achievement_adamant_kill_electrocuted_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0023",
 			stat_name = "adamant_killed_electrocuted_enemies",
@@ -1557,7 +1570,7 @@ do
 				amount = 500,
 			},
 		}
-		AchievementDefinitions.adamant_saved_by_companion_from_disabling_hound = {
+		achievement_definitions.adamant_saved_by_companion_from_disabling_hound = {
 			description = "loc_achievement_adamant_saved_from_dog_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0024",
 			title = "loc_achievement_adamant_saved_from_dog",
@@ -1565,7 +1578,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_pet_companion = {
+		achievement_definitions.adamant_pet_companion = {
 			description = "loc_achievement_adamant_pet_dog_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0025",
 			title = "loc_achievement_adamant_pet_dog",
@@ -1573,7 +1586,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.adamant_blocked_attack_from_unique_enemies = {
+		achievement_definitions.adamant_blocked_attack_from_unique_enemies = {
 			description = "loc_achievement_adamant_block_enemies_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0026",
 			stat_name = "adamant_blocked_attack_from_unique_enemies",
@@ -1586,7 +1599,7 @@ do
 				amount = 250,
 			},
 		}
-		AchievementDefinitions.adamant_killed_enemies_marked_by_execution_order = {
+		achievement_definitions.adamant_killed_enemies_marked_by_execution_order = {
 			description = "loc_achievement_adamant_kill_marked_enemies_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0027",
 			stat_name = "adamant_killed_enemies_marked_by_execution_order",
@@ -1600,7 +1613,7 @@ do
 				talent_name = Localize("loc_talent_adamant_exterminator"),
 			},
 		}
-		AchievementDefinitions.adamant_melee_kills_with_terminus_warrant = {
+		achievement_definitions.adamant_melee_kills_with_terminus_warrant = {
 			description = "loc_achievement_adamant_kill_with_melee_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0028",
 			stat_name = "adamant_melee_kills_with_terminus_warrant",
@@ -1614,7 +1627,7 @@ do
 				talent_name = Localize("loc_talent_adamant_bullet_rain"),
 			},
 		}
-		AchievementDefinitions.adamant_ranged_kills_with_terminus_warrant = {
+		achievement_definitions.adamant_ranged_kills_with_terminus_warrant = {
 			description = "loc_achievement_adamant_kill_with_ranged_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0029",
 			stat_name = "adamant_ranged_kills_with_terminus_warrant",
@@ -1628,7 +1641,7 @@ do
 				talent_name = Localize("loc_talent_adamant_bullet_rain"),
 			},
 		}
-		AchievementDefinitions.adamant_time_at_max_forceful_stacks = {
+		achievement_definitions.adamant_time_at_max_forceful_stacks = {
 			description = "loc_achievement_adamant_time_in_forceful_desc",
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0030",
 			stat_name = "adamant_time_at_max_forceful_stacks",
@@ -1645,11 +1658,469 @@ do
 	end
 
 	do
-		local category_name = "veteran_2"
+		local category_name = "broker"
+		local category_progression = "broker_progression"
+		local category_abilites = "broker_abilites"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0009",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0007",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0008",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0005",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0006",
+			missions = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0003",
+			missions_objective = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0004",
+			rank = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0002",
+		}
+		local legacy_group_class_targets = {
+			{
+				"broker_enemies_hit_by_flash_grenade_1",
+				"broker_enemies_killed_with_focus_mode",
+			},
+			{
+				"group_class_broker_2_1",
+				"broker_stimm_durability_potency",
+				"broker_gunslinger_aura",
+			},
+			{
+				"group_class_broker_2_2",
+				"broker_gunslinger_keystone_a",
+				"broker_deal_damage_in_punk_rage",
+			},
+		}
+		local rework_group_class_targets = {
+			{
+				"rank_broker_2_4",
+				"missions_broker_2_objective_1",
+				"missions_broker_2_1",
+				"broker_gunslinger_aura",
+				"broker_enemies_affected_by_chem_bomb_1",
+			},
+			{
+				"group_class_broker_2_1_rework",
+				"rank_broker_2_5",
+				"missions_broker_2_objective_2",
+				"missions_broker_2_2",
+				"broker_stimm_apply_toxin",
+				"broker_stimm_hit_weakspots",
+			},
+			{
+				"group_class_broker_2_2_rework",
+				"rank_broker_2_6",
+				"missions_broker_2_objective_3",
+				"missions_broker_2_3",
+				"broker_enemies_killed_by_missile_launcher_2",
+				"broker_enemies_affected_by_chem_bomb_2",
+			},
+		}
+
+		_generate_base_archetype_penances("broker", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets, rework_group_class_targets)
+
+		achievement_definitions.broker_gunslinger_aura = {
+			description = "loc_achievement_broker_gunslinger_aura_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0010",
+			stat_name = "broker_ammo_shared_through_aura",
+			target = 3500,
+			title = "loc_achievement_broker_gunslinger_aura_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 3500,
+				aura_name = Localize("loc_talent_broker_aura_gunslinger"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_ruffian_aura = {
+			description = "loc_achievement_broker_ruffian_aura_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0011",
+			stat_name = "broker_enemies_killed_ruffian_aura",
+			target = 5000,
+			title = "loc_achievement_broker_ruffian_aura_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 5000,
+				aura_name = Localize("loc_talent_broker_aura_ruffian"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_anarchist_aura = {
+			description = "loc_achievement_broker_anarchist_aura_alt_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0012",
+			stat_name = "broker_critical_hits_with_anarchist_aura",
+			target = 1200,
+			title = "loc_achievement_broker_anarchist_aura_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 1200,
+				aura_name = Localize("loc_talent_broker_aura_anarchist"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_enemies_hit_by_flash_grenade_1 = {
+			description = "loc_achievement_broker_enemies_hit_by_flash_grenade_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0013",
+			stat_name = "broker_enemies_staggered_by_flash_grenade",
+			target = 50,
+			title = "loc_achievement_broker_enemies_hit_by_flash_grenade_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				enemy_count = 3,
+				target = 50,
+				flash_grenade = Localize("loc_talent_broker_blitz_flash_grenade"),
+			},
+		}
+		achievement_definitions.broker_enemies_hit_by_flash_grenade_2 = {
+			description = "loc_achievement_broker_enemies_hit_by_flash_grenade_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0013",
+			stat_name = "broker_enemies_staggered_by_flash_grenade",
+			target = 100,
+			title = "loc_achievement_broker_enemies_hit_by_flash_grenade_2_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				enemy_count = 3,
+				target = 100,
+				flash_grenade = Localize("loc_talent_broker_blitz_flash_grenade"),
+			},
+		}
+		achievement_definitions.broker_enemies_killed_by_missile_launcher_1 = {
+			description = "loc_achievement_broker_enemies_killed_by_missile_launcher_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0014",
+			stat_name = "broker_enemies_killed_by_missile_launcher",
+			target = 45,
+			title = "loc_achievement_broker_enemies_killed_by_missile_launcher_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 45,
+				missile_launcher = Localize("loc_talent_broker_blitz_missile_launcher"),
+			},
+		}
+		achievement_definitions.broker_enemies_killed_by_missile_launcher_2 = {
+			description = "loc_achievement_broker_enemies_killed_by_missile_launcher_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0014",
+			stat_name = "broker_enemies_killed_by_missile_launcher",
+			target = 90,
+			title = "loc_achievement_broker_enemies_killed_by_missile_launcher_2_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 90,
+				missile_launcher = Localize("loc_talent_broker_blitz_missile_launcher"),
+			},
+		}
+		achievement_definitions.broker_enemies_affected_by_chem_bomb_1 = {
+			description = "loc_achievement_broker_enemies_affected_by_chem_bomb_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0015",
+			stat_name = "broker_enemies_affected_by_chem_bomb",
+			target = 400,
+			title = "loc_achievement_broker_enemies_affected_by_chem_bomb_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 400,
+				chem_bomb = Localize("loc_talent_broker_blitz_tox_grenade"),
+			},
+		}
+		achievement_definitions.broker_enemies_affected_by_chem_bomb_2 = {
+			description = "loc_achievement_broker_enemies_affected_by_chem_bomb_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0015",
+			stat_name = "broker_enemies_affected_by_chem_bomb",
+			target = 800,
+			title = "loc_achievement_broker_enemies_affected_by_chem_bomb_2_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 800,
+				chem_bomb = Localize("loc_talent_broker_blitz_tox_grenade"),
+			},
+		}
+		achievement_definitions.broker_enemies_killed_with_focus_mode = {
+			description = "loc_achievement_broker_enemies_killed_with_focus_mode_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0016",
+			stat_name = "broker_enemies_killed_with_focus_mode",
+			target = 1000,
+			title = "loc_achievement_broker_enemies_killed_with_focus_mode_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 1000,
+				focus_mode = Localize("loc_talent_broker_ability_focus"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_attacks_dodged_in_focus_mode = {
+			description = "loc_achievement_broker_attacks_dodged_in_focus_mode_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0017",
+			stat_name = "broker_attacks_dodged_in_focus_mode",
+			target = 750,
+			title = "loc_achievement_broker_attacks_dodged_in_focus_mode_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 750,
+				focus_mode = Localize("loc_talent_broker_ability_focus"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_deal_damage_in_punk_rage = {
+			description = "loc_achievement_broker_deal_damage_in_punk_rage_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0018",
+			stat_name = "broker_deal_damage_in_punk_rage",
+			target = 60000,
+			title = "loc_achievement_broker_deal_damage_in_punk_rage_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 60000,
+				punk_rage = Localize("loc_talent_broker_ability_punk_rage"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stay_in_punk_rage = {
+			description = "loc_achievement_broker_stay_in_punk_rage_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0019",
+			stat_name = "broker_time_stay_in_punk_rage",
+			target = 900,
+			title = "loc_achievement_broker_stay_in_punk_rage_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 900,
+				punk_rage = Localize("loc_talent_broker_ability_punk_rage"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_deploy_stimm_field = {
+			description = "loc_achievement_broker_deploy_stimm_field_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0020",
+			stat_name = "broker_deploy_stimm_field",
+			target = 45,
+			title = "loc_achievement_broker_deploy_stimm_field_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 45,
+				stimm_field = Localize("loc_talent_broker_ability_stimm_field"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_buff_allies_chem_field = {
+			description = "loc_achievement_broker_buff_allies_chem_field_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0021",
+			stat_name = "broker_time_buff_allies_chem_field",
+			target = 2400,
+			title = "loc_achievement_broker_buff_allies_chem_field_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 2400,
+				stimm_field = Localize("loc_talent_broker_ability_stimm_field"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_gunslinger_keystone_a = {
+			description = "loc_achievement_broker_gunslinger_keystone_a_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0022",
+			stat_name = "broker_stacks_gained_of_vulture_keystone",
+			target = 150,
+			title = "loc_achievement_broker_gunslinger_keystone_a_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 150,
+				talent_name = Localize("loc_talent_broker_keystone_vultures_mark_on_kill"),
+			},
+		}
+		achievement_definitions.broker_gunslinger_keystone_b = {
+			description = "loc_achievement_broker_gunslinger_keystone_b_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0022",
+			stat_name = "broker_stacks_gained_of_vulture_keystone",
+			target = 300,
+			title = "loc_achievement_broker_gunslinger_keystone_b_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 300,
+				talent_name = Localize("loc_talent_broker_keystone_vultures_mark_on_kill"),
+			},
+		}
+		achievement_definitions.broker_ruffian_keystone_a = {
+			description = "loc_achievement_broker_ruffian_keystone_a_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0023",
+			stat_name = "broker_times_activated_max_stacks_of_adrenaline_keystone",
+			target = 80,
+			title = "loc_achievement_broker_ruffian_keystone_a_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 80,
+				talent_name = Localize("loc_talent_broker_keystone_adrenaline_junkie"),
+			},
+		}
+		achievement_definitions.broker_ruffian_keystone_b = {
+			description = "loc_achievement_broker_ruffian_keystone_b_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0023",
+			stat_name = "broker_times_activated_max_stacks_of_adrenaline_keystone",
+			target = 160,
+			title = "loc_achievement_broker_ruffian_keystone_b_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 160,
+				talent_name = Localize("loc_talent_broker_keystone_adrenaline_junkie"),
+			},
+		}
+		achievement_definitions.broker_anarchist_keystone_a = {
+			description = "loc_achievement_broker_anarchist_keystone_a_description",
+			family_index = 1,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0024",
+			stat_name = "broker_time_spent_max_stacks_chemical_dependency",
+			target = 1000,
+			title = "loc_achievement_broker_anarchist_keystone_a_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 1000,
+				talent_name = Localize("loc_talent_broker_keystone_chemical_dependency"),
+			},
+		}
+		achievement_definitions.broker_anarchist_keystone_b = {
+			description = "loc_achievement_broker_anarchist_keystone_b_description",
+			family_index = 2,
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0024",
+			stat_name = "broker_time_spent_max_stacks_chemical_dependency",
+			target = 2000,
+			title = "loc_achievement_broker_anarchist_keystone_b_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			flags = {},
+			loc_variables = {
+				target = 2000,
+				talent_name = Localize("loc_talent_broker_keystone_chemical_dependency"),
+			},
+		}
+		achievement_definitions.broker_stimm_celerity_potency = {
+			description = "loc_achievement_broker_stimm_celerity_potency_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0025",
+			stat_name = "broker_stimm_attack_speed_gained_from_stimm",
+			target = 3000,
+			title = "loc_achievement_broker_stimm_celerity_potency_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 3000,
+				viscosity_target = AchievementTweakData.broker_stimm_celerity_potency.min_potency * 100,
+				viscosity_name = Localize("loc_stimm_lab_viscosity"),
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stimm_hit_weakspots = {
+			description = "loc_achievement_broker_stimm_hit_weakspots_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0026",
+			stat_name = "broker_stimm_hit_weakspots",
+			target = 2000,
+			title = "loc_achievement_broker_stimm_hit_weakspots_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 2000,
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stimm_combat_potency = {
+			description = "loc_achievement_broker_stimm_combat_potency_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0027",
+			stat_name = "broker_stimm_powerl_level_gained_from_stimm",
+			target = 2000,
+			title = "loc_achievement_broker_stimm_combat_potency_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 2000,
+				viscosity_target = AchievementTweakData.broker_stimm_combat_potency.min_potency * 100,
+				viscosity_name = Localize("loc_stimm_lab_viscosity"),
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stimm_heavy_attack_kills = {
+			description = "loc_achievement_broker_stimm_heavy_attack_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0028",
+			stat_name = "broker_stimm_heavy_attack_kills",
+			target = 1000,
+			title = "loc_achievement_broker_stimm_heavy_attack_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 1000,
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stimm_durability_potency = {
+			description = "loc_achievement_broker_stimm_durability_potency_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0029",
+			stat_name = "broker_stimm_toughness_restored_from_stimm",
+			target = 2600,
+			title = "loc_achievement_broker_stimm_durability_potency_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 2600,
+				viscosity_target = AchievementTweakData.broker_stimm_combat_potency.min_potency * 100,
+				viscosity_name = Localize("loc_stimm_lab_viscosity"),
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+		achievement_definitions.broker_stimm_apply_toxin = {
+			description = "loc_achievement_broker_stimm_apply_toxin_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0030",
+			stat_name = "broker_stimm_apply_toxin",
+			target = 1500,
+			title = "loc_achievement_broker_stimm_apply_toxin_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 1500,
+				broker_stimm = Localize("loc_talent_broker_stimm"),
+			},
+			flags = {},
+		}
+	end
+
+	do
 		local category_progression = "veteran_progression"
 		local category_abilites = "veteran_abilites"
 
-		AchievementDefinitions.veteran_2_weakspot_hits_during_volley_fire_alternate_fire = {
+		achievement_definitions.veteran_2_weakspot_hits_during_volley_fire_alternate_fire = {
 			description = "loc_achievement_veteran_2_weakspot_hits_during_volley_fire_alternate_fire_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0015",
 			stat_name = "max_weakspot_hit_during_volley_fire_alternate_fire",
@@ -1658,10 +2129,10 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 		}
-		AchievementDefinitions.veteran_2_unbounced_grenade_kills = {
+		achievement_definitions.veteran_2_unbounced_grenade_kills = {
 			description = "loc_achievement_veteran_2_unbounced_grenade_kills_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0014",
 			title = "loc_achievement_veteran_2_unbounced_grenade_kills_name",
@@ -1672,7 +2143,7 @@ do
 				target = 5,
 			},
 		}
-		AchievementDefinitions.veteran_2_kills_with_last_round_in_mag = {
+		achievement_definitions.veteran_2_kills_with_last_round_in_mag = {
 			description = "loc_achievement_veteran_2_kills_with_last_round_in_mag_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0017",
 			stat_name = "max_veteran_2_kills_with_last_round_in_mag",
@@ -1681,10 +2152,10 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_progression,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 		}
-		AchievementDefinitions.veteran_2_no_melee_damage_taken = {
+		achievement_definitions.veteran_2_no_melee_damage_taken = {
 			description = "loc_achievement_veteran_2_no_melee_damage_taken_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0016",
 			stat_name = "veteran_min_melee_damage_taken",
@@ -1694,7 +2165,7 @@ do
 			category = category_progression,
 			flags = {},
 		}
-		AchievementDefinitions.veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire = {
+		achievement_definitions.veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire = {
 			description = "loc_achievement_veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0018",
 			stat_name = "max_elite_weakspot_kill_during_volley_fire_alternate_fire",
@@ -1703,10 +2174,10 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 		}
-		AchievementDefinitions.veteran_2_no_missed_shots_empty_ammo = {
+		achievement_definitions.veteran_2_no_missed_shots_empty_ammo = {
 			description = "loc_achievement_veteran_2_no_missed_shots_empty_ammo_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0019",
 			stat_name = "veteran_accuracy_at_end_of_mission_with_no_ammo_left",
@@ -1724,11 +2195,10 @@ do
 	end
 
 	do
-		local category_name = "zealot_2"
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
 
-		AchievementDefinitions.zealot_2_stagger_sniper_with_grenade_distance = {
+		achievement_definitions.zealot_2_stagger_sniper_with_grenade_distance = {
 			description = "loc_achievement_zealot_2_stagger_sniper_with_grenade_distance_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0035",
 			stat_name = "max_zealot_2_stagger_sniper_with_grenade_distance",
@@ -1737,10 +2207,10 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 		}
-		AchievementDefinitions.zelot_2_kill_mutant_charger_with_melee_while_dashing = {
+		achievement_definitions.zelot_2_kill_mutant_charger_with_melee_while_dashing = {
 			description = "loc_achievement_zelot_2_kill_mutant_charger_with_melee_while_dashing_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0039",
 			stat_name = "zelot_2_kill_mutant_charger_with_melee_while_dashing",
@@ -1752,7 +2222,7 @@ do
 				AchievementFlags.hide_progress,
 			},
 		}
-		AchievementDefinitions.zealot_2_kills_of_shocked_enemies_last_15 = {
+		achievement_definitions.zealot_2_kills_of_shocked_enemies_last_15 = {
 			description = "loc_achievement_zealot_2_kills_of_shocked_enemies_last_15_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0037",
 			stat_name = "max_zealot_2_kills_of_shocked_enemies_last_15",
@@ -1761,13 +2231,13 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 			loc_variables = {
 				time_window = 10,
 			},
 		}
-		AchievementDefinitions.zealot_2_not_use_ranged_attacks = {
+		achievement_definitions.zealot_2_not_use_ranged_attacks = {
 			description = "loc_achievement_zealot_2_not_use_ranged_attacks_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0038",
 			stat_name = "zealot_2_not_use_ranged_attacks",
@@ -1779,7 +2249,7 @@ do
 				AchievementFlags.hide_progress,
 			},
 		}
-		AchievementDefinitions.zealot_2_healed_up_after_resisting_death = {
+		achievement_definitions.zealot_2_healed_up_after_resisting_death = {
 			description = "loc_achievement_zealot_2_healed_up_after_resisting_death_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0036",
 			stat_name = "max_zealot_2_health_healed_with_leech_during_resist_death",
@@ -1789,7 +2259,7 @@ do
 			category = category_abilites,
 			flags = {},
 		}
-		AchievementDefinitions.zealot_2_health_on_last_segment_enough_during_mission = {
+		achievement_definitions.zealot_2_health_on_last_segment_enough_during_mission = {
 			description = "loc_achievement_zealot_2_health_on_last_segment_enough_during_mission_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0034",
 			stat_name = "zealot_2_fastest_mission_with_low_health",
@@ -1808,11 +2278,10 @@ do
 	end
 
 	do
-		local category_name = "psyker_2"
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
 
-		AchievementDefinitions.psyker_2_smite_hound_mid_leap = {
+		achievement_definitions.psyker_2_smite_hound_mid_leap = {
 			description = "loc_achievement_psyker_2_smite_hound_mid_leap_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0024",
 			stat_name = "smite_hound_mid_leap",
@@ -1824,7 +2293,7 @@ do
 				AchievementFlags.hide_progress,
 			},
 		}
-		AchievementDefinitions.psyker_2_edge_kills_last_2_sec = {
+		achievement_definitions.psyker_2_edge_kills_last_2_sec = {
 			description = "loc_achievement_psyker_2_edge_kills_last_2_sec_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0028",
 			stat_name = "max_psyker_2_edge_kills_last_2_sec",
@@ -1833,13 +2302,13 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_progression,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 			loc_variables = {
 				time_window = 2,
 			},
 		}
-		AchievementDefinitions.psyker_2_stay_at_max_souls_for_duration = {
+		achievement_definitions.psyker_2_stay_at_max_souls_for_duration = {
 			description = "loc_achievement_psyker_2_stay_at_max_souls_for_duration_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0027",
 			stat_name = "max_psyker_2_time_at_max_souls",
@@ -1848,10 +2317,10 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 		}
-		AchievementDefinitions.psyker_2_perils_of_the_warp_elite_kills = {
+		achievement_definitions.psyker_2_perils_of_the_warp_elite_kills = {
 			description = "loc_achievement_psyker_2_perils_of_the_warp_elite_kills_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0025",
 			title = "loc_achievement_psyker_2_perils_of_the_warp_elite_kills_name",
@@ -1862,7 +2331,7 @@ do
 				target = 1,
 			},
 		}
-		AchievementDefinitions.psyker_2_elite_or_special_kills_with_smite_last_10_sec = {
+		achievement_definitions.psyker_2_elite_or_special_kills_with_smite_last_10_sec = {
 			description = "loc_achievement_psyker_2_elite_or_special_kills_with_smite_last_10_sec_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0027",
 			stat_name = "max_elite_or_special_kills_with_smite_last_12_sec",
@@ -1871,13 +2340,13 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				"hide_from_carousel",
+				AchievementFlags.hide_from_carousel,
 			},
 			loc_variables = {
 				time_window = 12,
 			},
 		}
-		AchievementDefinitions.psyker_2_kill_boss_solo_with_smite = {
+		achievement_definitions.psyker_2_kill_boss_solo_with_smite = {
 			description = "loc_achievement_psyker_2_kill_boss_solo_with_smite_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0029",
 			stat_name = "max_smite_damage_done_to_boss",
@@ -1886,17 +2355,15 @@ do
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			flags = {
-				AchievementFlags.hide_progress,
 				AchievementFlags.private_only,
 			},
 		}
 	end
 
-	local category_name = "ogryn_2"
 	local category_progression = "ogryn_progression"
 	local category_abilites = "ogryn_abilites"
 
-	AchievementDefinitions.ogryn_2_bull_rushed_charging_ogryn = {
+	achievement_definitions.ogryn_2_bull_rushed_charging_ogryn = {
 		description = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0004",
 		title = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_name",
@@ -1904,7 +2371,7 @@ do
 		category = category_abilites,
 		flags = {},
 	}
-	AchievementDefinitions.ogryn_2_killed_corruptor_with_grenade_impact = {
+	achievement_definitions.ogryn_2_killed_corruptor_with_grenade_impact = {
 		description = "loc_achievement_ogryn_2_killed_corruptor_with_grenade_impact_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0008",
 		stat_name = "ogryn_2_killed_corruptor_with_grenade_impact",
@@ -1916,7 +2383,7 @@ do
 			AchievementFlags.hide_progress,
 		},
 	}
-	AchievementDefinitions.ogryn_2_win_with_coherency_all_alive_units = {
+	achievement_definitions.ogryn_2_win_with_coherency_all_alive_units = {
 		description = "loc_achievement_ogryn_2_win_with_coherency_all_alive_units_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0009",
 		stat_name = "ogryn_2_win_with_coherency_all_alive_units",
@@ -1931,7 +2398,7 @@ do
 			time = 90,
 		},
 	}
-	AchievementDefinitions.ogryn_2_bull_rushed_100_enemies = {
+	achievement_definitions.ogryn_2_bull_rushed_100_enemies = {
 		description = "loc_achievement_ogryn_2_bull_rushed_100_enemies_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0006",
 		stat_name = "max_ogryn_2_lunge_number_of_enemies_hit",
@@ -1940,10 +2407,10 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_abilites,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 	}
-	AchievementDefinitions.ogryn_2_bull_rushed_70_within_25_seconds = {
+	achievement_definitions.ogryn_2_bull_rushed_70_within_25_seconds = {
 		description = "loc_achievement_ogryn_2_bull_rushed_70_within_25_seconds_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0007",
 		stat_name = "max_ogryn_2_lunge_distance_last_x_seconds",
@@ -1952,13 +2419,13 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_abilites,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 		loc_variables = {
 			time_window = 20,
 		},
 	}
-	AchievementDefinitions.ogryn_2_bull_rushed_4_ogryns = {
+	achievement_definitions.ogryn_2_bull_rushed_4_ogryns = {
 		description = "loc_achievement_ogryn_2_bull_rushed_4_ogryns_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0005",
 		stat_name = "max_ogryns_bullrushed",
@@ -1967,7 +2434,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_abilites,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 	}
 end
@@ -1981,7 +2448,7 @@ do
 		local pattern_name_string = weapon.pattern_name_string or string.format("loc_weapon_family_%s_m1", weapon.pattern)
 		local localized_pattern_name = Localize(pattern_name_string)
 
-		AchievementDefinitions[achievement_name] = {
+		achievement_definitions[achievement_name] = {
 			description = "loc_achievement_max_mastery_description",
 			title = "loc_achievement_max_mastery_name",
 			type = AchievementTypesLookup.direct_unlock,
@@ -2095,7 +2562,7 @@ do
 		},
 	})
 
-	AchievementDefinitions.primary_weapon_max_expertise = {
+	achievement_definitions.primary_weapon_max_expertise = {
 		description = "loc_achievement_primary_weapon_max_expertise_description",
 		icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0004",
 		stat_name = "expertise_reached_50_primary",
@@ -2107,7 +2574,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.secondary_weapon_max_expertise = {
+	achievement_definitions.secondary_weapon_max_expertise = {
 		description = "loc_achievement_secondary_weapon_max_expertise_description",
 		icon = "content/ui/textures/icons/achievements/weapon_achievements/weapon_achievements_icon_0002",
 		stat_name = "expertise_reached_50_secondary",
@@ -2143,7 +2610,7 @@ do
 		return stats
 	end
 
-	AchievementDefinitions.all_renegade_specials_killed = {
+	achievement_definitions.all_renegade_specials_killed = {
 		description = "loc_achievement_all_renegade_specials_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0041",
 		title = "loc_achievement_all_renegade_specials_killed_name",
@@ -2156,7 +2623,7 @@ do
 			target = kill_all_specials_target,
 		},
 	}
-	AchievementDefinitions.all_renegade_elites_killed = {
+	achievement_definitions.all_renegade_elites_killed = {
 		description = "loc_achievement_all_renegade_elites_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0042",
 		title = "loc_achievement_all_renegade_elites_killed_name",
@@ -2169,7 +2636,7 @@ do
 			target = kill_all_elites_target,
 		},
 	}
-	AchievementDefinitions.all_renegades_killed = {
+	achievement_definitions.all_renegades_killed = {
 		description = "loc_achievement_all_renegades_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0043",
 		title = "loc_achievement_all_renegades_killed_name",
@@ -2177,7 +2644,9 @@ do
 		target = #AchievementBreedGroups.renegade,
 		stats = stats_from_breeds(AchievementBreedGroups.renegade, kill_all_target),
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.use_checkboxes,
+		},
 		loc_variables = {
 			target = kill_all_target,
 		},
@@ -2198,7 +2667,7 @@ do
 		12500,
 	})
 
-	AchievementDefinitions.melee_renegade = {
+	achievement_definitions.melee_renegade = {
 		description = "loc_achievement_melee_renegade_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0045",
 		stat_name = "total_renegade_grenadier_melee",
@@ -2208,7 +2677,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.executor_non_headshot = {
+	achievement_definitions.executor_non_headshot = {
 		description = "loc_achievement_executor_non_headshot_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0046",
 		stat_name = "total_renegade_executors_non_headshot",
@@ -2218,7 +2687,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.group_enemies_renegades = {
+	achievement_definitions.group_enemies_renegades = {
 		description = "loc_achievement_group_enemies_renegades_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0047",
 		target = 6,
@@ -2235,7 +2704,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.all_cultist_specials_killed = {
+	achievement_definitions.all_cultist_specials_killed = {
 		description = "loc_achievement_all_cultist_specials_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0048",
 		title = "loc_achievement_all_cultist_specials_killed_name",
@@ -2248,7 +2717,7 @@ do
 			target = kill_all_specials_target,
 		},
 	}
-	AchievementDefinitions.all_cultist_elites_killed = {
+	achievement_definitions.all_cultist_elites_killed = {
 		description = "loc_achievement_all_cultist_elites_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0049",
 		title = "loc_achievement_all_cultist_elites_killed_name",
@@ -2261,7 +2730,7 @@ do
 			target = kill_all_elites_target,
 		},
 	}
-	AchievementDefinitions.all_cultists_killed = {
+	achievement_definitions.all_cultists_killed = {
 		description = "loc_achievement_all_cultists_killed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0050",
 		title = "loc_achievement_all_cultists_killed_name",
@@ -2269,7 +2738,9 @@ do
 		target = #AchievementBreedGroups.cultist,
 		stats = stats_from_breeds(AchievementBreedGroups.cultist, kill_all_target),
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.use_checkboxes,
+		},
 		loc_variables = {
 			target = kill_all_target,
 		},
@@ -2290,7 +2761,7 @@ do
 		12500,
 	})
 
-	AchievementDefinitions.cultist_berzerker_head = {
+	achievement_definitions.cultist_berzerker_head = {
 		description = "loc_achievement_cultist_berzerker_head_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0052",
 		stat_name = "total_cultist_berzerker_head",
@@ -2300,7 +2771,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.group_enemies_cultists = {
+	achievement_definitions.group_enemies_cultists = {
 		description = "loc_achievement_group_enemies_cultists_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0107",
 		target = 5,
@@ -2316,9 +2787,9 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.all_chaos_specials_killed = {
+	achievement_definitions.all_chaos_specials_killed = {
 		description = "loc_achievement_all_chaos_specials_killed_description",
-		icon = "content/ui/textures/icons/achievements/achievement_icon_0048",
+		icon = "content/ui/textures/icons/achievements/achievement_icon_0054",
 		title = "loc_achievement_all_chaos_specials_killed_name",
 		type = AchievementTypesLookup.multi_stat,
 		target = #AchievementBreedGroups.chaos_special,
@@ -2329,9 +2800,9 @@ do
 			target = kill_all_specials_target,
 		},
 	}
-	AchievementDefinitions.all_chaos_elites_killed = {
+	achievement_definitions.all_chaos_elites_killed = {
 		description = "loc_achievement_all_chaos_elites_killed_description",
-		icon = "content/ui/textures/icons/achievements/achievement_icon_0049",
+		icon = "content/ui/textures/icons/achievements/achievement_icon_0055",
 		title = "loc_achievement_all_chaos_elites_killed_name",
 		type = AchievementTypesLookup.multi_stat,
 		target = #AchievementBreedGroups.chaos_elite,
@@ -2342,15 +2813,17 @@ do
 			target = kill_all_elites_target,
 		},
 	}
-	AchievementDefinitions.all_chaos_killed = {
+	achievement_definitions.all_chaos_killed = {
 		description = "loc_achievement_all_chaos_killed_description",
-		icon = "content/ui/textures/icons/achievements/achievement_icon_0050",
+		icon = "content/ui/textures/icons/achievements/achievement_icon_0056",
 		title = "loc_achievement_all_chaos_killed_name",
 		type = AchievementTypesLookup.multi_stat,
 		target = #AchievementBreedGroups.chaos,
 		stats = stats_from_breeds(AchievementBreedGroups.chaos, kill_all_target),
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.use_checkboxes,
+		},
 		loc_variables = {
 			target = kill_all_target,
 		},
@@ -2358,7 +2831,7 @@ do
 
 	old_numeric_target_family("kill_chaos_{index:%d}", {
 		description = "loc_achievement_kill_chaos_x_description",
-		icon = "content/ui/textures/icons/achievements/achievement_icon_0051",
+		icon = "content/ui/textures/icons/achievements/achievement_icon_0057",
 		stat_name = "total_chaos_kills",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
@@ -2371,7 +2844,7 @@ do
 		15000,
 	})
 
-	AchievementDefinitions.ogryn_gunner_melee = {
+	achievement_definitions.ogryn_gunner_melee = {
 		description = "loc_achievement_ogryn_gunner_melee_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0109",
 		stat_name = "total_ogryn_gunner_melee",
@@ -2381,7 +2854,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.banish_daemonhost = {
+	achievement_definitions.banish_daemonhost = {
 		description = "loc_achievement_banish_daemonhost_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0110",
 		stat_name = "kill_daemonhost",
@@ -2389,9 +2862,11 @@ do
 		title = "loc_achievement_banish_daemonhost_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 	}
-	AchievementDefinitions.group_enemies_chaos = {
+	achievement_definitions.group_enemies_chaos = {
 		description = "loc_achievement_group_enemies_chaos_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0108",
 		target = 5,
@@ -2407,7 +2882,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.training_grounds_fully_unlocked = {
+	achievement_definitions.training_grounds_fully_unlocked = {
 		description = "loc_achievement_training_grounds_fully_unlocked_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0120",
 		target = 6,
@@ -2424,7 +2899,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.pox_hounds_pushed_midair = {
+	achievement_definitions.pox_hounds_pushed_midair = {
 		description = "loc_achievement_pox_hounds_pushed_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0129",
 		stat_name = "poxhound_pushed_mid_air",
@@ -2434,7 +2909,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.trappers_net_dodged = {
+	achievement_definitions.trappers_net_dodged = {
 		description = "loc_achievement_trapper_net_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0130",
 		stat_name = "trapper_net_dodged",
@@ -2444,7 +2919,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.shotgunner_spread_dodged = {
+	achievement_definitions.shotgunner_spread_dodged = {
 		description = "loc_achievement_shotgunner_spread_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0132",
 		stat_name = "shotgunner_spread_dodged",
@@ -2454,7 +2929,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.mutant_charge_dodged = {
+	achievement_definitions.mutant_charge_dodged = {
 		description = "loc_achievement_mutant_charge_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0135",
 		stat_name = "mutant_charge_dodged",
@@ -2464,7 +2939,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.mauler_attack_dodged = {
+	achievement_definitions.mauler_attack_dodged = {
 		description = "loc_achievement_mauler_attack_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0139",
 		stat_name = "mauler_attack_dodged",
@@ -2474,7 +2949,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.crusher_overhead_smash_dodged = {
+	achievement_definitions.crusher_overhead_smash_dodged = {
 		description = "loc_achievement_crusher_overhead_smash_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0140",
 		stat_name = "crusher_overhead_smash_dodged",
@@ -2484,7 +2959,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.renegade_sniper_dodged = {
+	achievement_definitions.renegade_sniper_dodged = {
 		description = "loc_achievement_sniper_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0138",
 		stat_name = "sniper_dodged",
@@ -2494,7 +2969,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.bulwark_backstab_damage_inflicted = {
+	achievement_definitions.bulwark_backstab_damage_inflicted = {
 		description = "loc_achievement_bulwark_backstab_damage_inflicted_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0141",
 		stat_name = "bulwark_backstab_damage_inflicted",
@@ -2504,7 +2979,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.cultist_gunner_shot_dodged = {
+	achievement_definitions.cultist_gunner_shot_dodged = {
 		description = "loc_achievement_cultist_gunner_shot_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0133",
 		stat_name = "cultist_gunner_shot_dodged",
@@ -2514,7 +2989,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.ogryn_gunner_shot_dodged = {
+	achievement_definitions.ogryn_gunner_shot_dodged = {
 		description = "loc_achievement_ogryn_gunner_shot_dodged_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0142",
 		stat_name = "ogryn_gunner_shot_dodged",
@@ -2524,7 +2999,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.team_poxburster_damage_avoided = {
+	achievement_definitions.team_poxburster_damage_avoided = {
 		description = "loc_achievement_team_poxburster_damage_avoided_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0136",
 		stat_name = "team_poxburster_damage_avoided",
@@ -2534,7 +3009,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.grenadier_killed_before_attack_occurred = {
+	achievement_definitions.grenadier_killed_before_attack_occurred = {
 		description = "loc_achievement_grenadier_killed_before_attack_occurred_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0137",
 		stat_name = "grenadier_killed_before_attack_occurred",
@@ -2544,7 +3019,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.flamer_killed_before_attack_occurred = {
+	achievement_definitions.flamer_killed_before_attack_occurred = {
 		description = "loc_achievement_flamer_killed_before_attack_occurred_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0134",
 		stat_name = "flamer_killed_before_attack_occurred",
@@ -2554,7 +3029,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.team_chaos_spawned_killed_no_players_grabbed = {
+	achievement_definitions.team_chaos_spawned_killed_no_players_grabbed = {
 		description = "loc_achievement_team_chaos_spawned_killed_no_players_grabbed_description",
 		stat_name = "team_chaos_spawned_killed_no_players_grabbed",
 		target = 1,
@@ -2562,9 +3037,11 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		icon = path .. "achievement_icon_0127",
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 	}
-	AchievementDefinitions.team_chaos_beast_of_nurgle_slain_no_corruption = {
+	achievement_definitions.team_chaos_beast_of_nurgle_slain_no_corruption = {
 		description = "loc_achievement_team_chaos_beast_of_nurgle_slain_no_corruption_description",
 		stat_name = "team_chaos_beast_of_nurgle_slain_no_corruption",
 		target = 1,
@@ -2572,7 +3049,9 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		icon = path .. "achievement_icon_0124",
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 	}
 end
 
@@ -2638,13 +3117,14 @@ do
 		for _, mission in ipairs(missions) do
 			if not excluded_maps[mission.name] then
 				family({
-					description = "loc_achievement_level_mission_description",
 					target = 1,
 					title = "loc_achievement_level_mission_name",
 					type = AchievementTypesLookup.increasing_stat,
 					category = mission.category.default,
 					icon = mission.icon.mission_default,
-					flags = {},
+					flags = {
+						AchievementFlags.hide_progress,
+					},
 					loc_title_variables = {
 						mission_name = Localize(mission.local_variable),
 					},
@@ -2656,12 +3136,23 @@ do
 					stat_name = "mission_" .. mission.name .. "_difficulty_{index:%d}",
 					loc_title_variables = _generate_tier_localization(),
 					loc_variables = _generate_difficulty_localization(),
+					description = _override_with_config("description"),
 				}, {
-					{},
-					{},
-					{},
-					{},
-					{},
+					{
+						description = "loc_achievement_level_mission_description",
+					},
+					{
+						description = "loc_achievement_level_mission_description",
+					},
+					{
+						description = "loc_achievement_level_mission_description",
+					},
+					{
+						description = "loc_achievement_level_mission_description",
+					},
+					{
+						description = "loc_achievement_level_mission_description",
+					},
 				})
 			end
 		end
@@ -2691,7 +3182,9 @@ do
 		end
 
 		for _, mission in ipairs(missions) do
-			if not excluded_maps[mission.name] then
+			local name = mission.name
+
+			if not excluded_maps[name] then
 				family({
 					description = "loc_achievement_level_mission_auric_description",
 					target = 1,
@@ -2699,7 +3192,9 @@ do
 					type = AchievementTypesLookup.increasing_stat,
 					category = mission.category.default,
 					icon = mission.icon.auric,
-					flags = {},
+					flags = {
+						AchievementFlags.hide_progress,
+					},
 					loc_title_variables = {
 						mission_name = Localize(mission.local_variable),
 					},
@@ -2707,8 +3202,8 @@ do
 						mission_name = Localize(mission.local_variable),
 					},
 				}, {
-					id = "level_" .. mission.name .. "_mission_{index:%d}_auric",
-					stat_name = _generate_auric_difficulty_stats(mission.name),
+					id = "level_" .. name .. "_mission_{index:%d}_auric",
+					stat_name = _generate_auric_difficulty_stats(name),
 					loc_title_variables = _generate_tier_localization(),
 					loc_variables = _generate_difficulty_auric_localization(),
 				}, {
@@ -2825,7 +3320,7 @@ do
 			2500,
 		})
 
-		AchievementDefinitions.hack_perfect = {
+		achievement_definitions.hack_perfect = {
 			description = "loc_achievement_hack_perfect_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0072",
 			stat_name = "perfect_hacks",
@@ -2873,7 +3368,9 @@ do
 				type = AchievementTypesLookup.multi_stat,
 				category = category_name,
 				target = #adventure_mission_types,
-				flags = {},
+				flags = {
+					AchievementFlags.use_checkboxes,
+				},
 			}, {
 				description = "loc_achievement_mission_difficulty_objectives_{index:%d}_description",
 				id = "mission_difficulty_objectives_{index:%d}",
@@ -2898,7 +3395,7 @@ do
 			})
 		end
 
-		AchievementDefinitions.group_missions = {
+		achievement_definitions.group_missions = {
 			description = "loc_achievement_group_missions_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0078",
 			target = 7,
@@ -2946,7 +3443,7 @@ do
 			30,
 		})
 
-		AchievementDefinitions.mission_auric_flawless_maelstrom = {
+		achievement_definitions.mission_auric_flawless_maelstrom = {
 			category = "mission_auric",
 			description = "loc_achievement_mission_auric_flawless_description",
 			stat_name = "flawless_auric_maelstrom",
@@ -2954,9 +3451,11 @@ do
 			title = "loc_achievement_mission_auric_flawless_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "mission_achievements/missions_achievement_0012",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 		}
-		AchievementDefinitions.mission_auric_flawless_maelstrom_won = {
+		achievement_definitions.mission_auric_flawless_maelstrom_won = {
 			category = "mission_auric",
 			description = "loc_achievement_mission_auric_flawless_maelstrom_x_description",
 			stat_name = "flawless_auric_maelstrom_won",
@@ -2964,9 +3463,11 @@ do
 			title = "loc_achievement_mission_auric_flawless_maelstrom_x_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "mission_achievements/missions_achievement_0014",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 		}
-		AchievementDefinitions.flawless_auric_maelstrom_consecutive = {
+		achievement_definitions.flawless_auric_maelstrom_consecutive = {
 			category = "mission_auric",
 			description = "loc_achievement_mission_consecutive_maelstrom_x_description",
 			stat_name = "flawless_auric_maelstrom_consecutive",
@@ -3117,7 +3618,9 @@ do
 			title = "loc_achievement_havoc_tier_reached",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "havoc_achievements/havoc_missions_adept_of_the_53rd",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 			loc_title_variables = {
 				rank = Localize("loc_havoc_militarium_rank_01"),
 			},
@@ -3155,7 +3658,7 @@ do
 			20,
 		})
 
-		AchievementDefinitions.flawless_havoc_won = {
+		achievement_definitions.flawless_havoc_won = {
 			category = "mission_havoc",
 			description = "loc_achievement_havoc_flawless_win_description",
 			stat_name = "flawless_havoc_won",
@@ -3163,7 +3666,9 @@ do
 			title = "loc_havoc_plus_flawless_win_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "havoc_achievements/havoc_missions_the_insane",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 			loc_variables = {
 				rank = 35,
 			},
@@ -3184,7 +3689,7 @@ do
 			50,
 		})
 
-		AchievementDefinitions.horde_mortis_collect_one = {
+		achievement_definitions.horde_mortis_collect_one = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_mortis_collect_one_description",
 			stat_name = "game_mode_survival_mcguffin_returned",
@@ -3192,9 +3697,11 @@ do
 			title = "loc_achievement_horde_mortis_collect_one_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "horde_achievements/horde_memory_shard_one",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 		}
-		AchievementDefinitions.horde_win_in_less_than_X = {
+		achievement_definitions.horde_win_in_less_than_X = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_win_in_less_than_X_description",
 			stat_name = "game_mode_survival_game_end_flawless",
@@ -3202,20 +3709,24 @@ do
 			title = "loc_achievement_horde_win_in_less_than_X_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = path .. "horde_achievements/horde_speedrun_win",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 			loc_variables = {
 				target = 25,
 			},
 		}
-		AchievementDefinitions.horde_win_auric_no_ammo_pickups_or_health_station = {
+		achievement_definitions.horde_win_auric_no_ammo_pickups_or_health_station = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_no_heal_description",
 			title = "loc_achievement_horde_no_heal_title",
 			type = AchievementTypesLookup.direct_unlock,
 			icon = path .. "horde_achievements/horde_auric_win_no_ammo_pickup_or_health_station",
-			flags = {},
+			flags = {
+				AchievementFlags.hide_progress,
+			},
 		}
-		AchievementDefinitions.horde_complete_all_maps = {
+		achievement_definitions.horde_complete_all_maps = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_complete_all_maps_description",
 			target = 3,
@@ -3236,7 +3747,9 @@ do
 					target = 1,
 				},
 			},
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 			loc_variables = {
 				target = 3,
 			},
@@ -3252,7 +3765,7 @@ do
 			local title = string.format("loc_achievement_horde_win_%s_archetype_name", class_name)
 			local description = string.format("loc_achievement_horde_win_%s_archetype_description", class_name)
 
-			AchievementDefinitions[horde_win_all_archetype] = {
+			achievement_definitions[horde_win_all_archetype] = {
 				category = "mission_survival",
 				target = 1,
 				type = AchievementTypesLookup.increasing_stat,
@@ -3263,11 +3776,13 @@ do
 					class = class_name,
 				},
 				icon = icon_name,
-				flags = {},
+				flags = {
+					AchievementFlags.hide_progress,
+				},
 			}
 		end
 
-		AchievementDefinitions.horde_win_all_archetype = {
+		achievement_definitions.horde_win_all_archetype = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_win_families_group_x_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_all",
@@ -3291,7 +3806,7 @@ do
 				target = 5,
 			},
 		}
-		AchievementDefinitions.horde_win_all_archetype_tier_two = {
+		achievement_definitions.horde_win_all_archetype_tier_two = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_win_families_group_x_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_archetype_all_2",
@@ -3346,7 +3861,7 @@ do
 		local vo_target = 1
 		local morrow_num_vo = 11
 
-		AchievementDefinitions.horde_morrow_story = {
+		achievement_definitions.horde_morrow_story = {
 			category = "mission_survival",
 			description = "loc_horde_morrow_story_desc",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_morrow",
@@ -3355,7 +3870,9 @@ do
 			target = morrow_num_vo,
 			stats = generate_vo_stats("morrow", morrow_num_vo, vo_target),
 			stats_sorting = generate_vo_stats_sorting("morrow", morrow_num_vo),
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 			loc_variables = {
 				target = vo_target,
 			},
@@ -3363,7 +3880,7 @@ do
 
 		local zola_num_vo = 9
 
-		AchievementDefinitions.horde_zola_story = {
+		achievement_definitions.horde_zola_story = {
 			category = "mission_survival",
 			description = "loc_horde_zola_story_desc",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_zola",
@@ -3372,7 +3889,9 @@ do
 			target = zola_num_vo,
 			stats = generate_vo_stats("zola", zola_num_vo, vo_target),
 			stats_sorting = generate_vo_stats_sorting("zola", zola_num_vo),
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 			loc_variables = {
 				target = vo_target,
 			},
@@ -3380,7 +3899,7 @@ do
 
 		local brahms_num_vo = 10
 
-		AchievementDefinitions.horde_brahms_story = {
+		achievement_definitions.horde_brahms_story = {
 			category = "mission_survival",
 			description = "loc_horde_brahms_story_desc",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_brahms",
@@ -3389,7 +3908,9 @@ do
 			target = brahms_num_vo,
 			stats = generate_vo_stats("brahms", brahms_num_vo, vo_target),
 			stats_sorting = generate_vo_stats_sorting("brahms", brahms_num_vo),
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 			loc_variables = {
 				target = vo_target,
 			},
@@ -3397,7 +3918,7 @@ do
 
 		local zorin_num_vo = 2
 
-		AchievementDefinitions.horde_zorin_story = {
+		achievement_definitions.horde_zorin_story = {
 			category = "mission_survival",
 			description = "loc_horde_zorin_story_desc",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memo_zorin",
@@ -3406,12 +3927,14 @@ do
 			target = zorin_num_vo,
 			stats = generate_vo_stats("zorin", zorin_num_vo, vo_target),
 			stats_sorting = generate_vo_stats_sorting("zorin", zorin_num_vo),
-			flags = {},
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
 			loc_variables = {
 				target = vo_target,
 			},
 		}
-		AchievementDefinitions.horde_mortis_collect_all = {
+		achievement_definitions.horde_mortis_collect_all = {
 			category = "mission_survival",
 			description = "loc_achievement_horde_mortis_collect_all_description",
 			icon = "content/ui/textures/icons/achievements/horde_achievements/horde_memory_shard_collect_all",
@@ -3428,7 +3951,7 @@ do
 		}
 	end
 
-	AchievementDefinitions.mission_scavenge_samples = {
+	achievement_definitions.mission_scavenge_samples = {
 		category = "exploration_dust",
 		description = "loc_achievement_mission_scavenge_samples_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_challenge_0010",
@@ -3439,7 +3962,7 @@ do
 			target = 5,
 		},
 	}
-	AchievementDefinitions.mission_propaganda_fan_kills = {
+	achievement_definitions.mission_propaganda_fan_kills = {
 		category = "exploration_dust",
 		description = "loc_achievement_mission_propganda_fan_kills_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_challenge_0008",
@@ -3452,7 +3975,7 @@ do
 			target = 10,
 		},
 	}
-	AchievementDefinitions.mission_raid_bottles = {
+	achievement_definitions.mission_raid_bottles = {
 		category = "exploration_entertainment",
 		description = "loc_achievement_mission_raid_bottles_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_challenge_0026",
@@ -3497,6 +4020,7 @@ do
 	do
 		local excluded_maps_for_puzzles = {
 			core_research = true,
+			op_no_mans_land = true,
 			op_train = true,
 			psykhanium = true,
 		}
@@ -3505,7 +4029,7 @@ do
 			local mission_name = mission.name
 
 			if not excluded_maps_for_puzzles[mission_name] then
-				AchievementDefinitions["mission_zone_" .. mission.name .. "_mission_collectible_1"] = {
+				achievement_definitions["mission_zone_" .. mission.name .. "_mission_collectible_1"] = {
 					description = "loc_achievement_level_collectible_description",
 					target = 1,
 					title = "loc_achievement_level_collectible_name",
@@ -3513,7 +4037,7 @@ do
 					category = mission.category.puzzle,
 					icon = mission.icon.collectible,
 					flags = {
-						"hide_progress",
+						AchievementFlags.hide_progress,
 					},
 					stat_name = string.format("mission_%s_collectible", mission.name),
 					loc_title_variables = {
@@ -3563,7 +4087,7 @@ do
 
 	local category_name = "exploration_twins_mission"
 
-	AchievementDefinitions.mission_twins_win = {
+	achievement_definitions.mission_twins_win = {
 		description = "loc_achievement_mission_twins_win_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_twins_mission",
 		stat_name = "mission_twins",
@@ -3573,9 +4097,10 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_missing,
+			AchievementFlags.hide_progress,
 		},
 	}
-	AchievementDefinitions.difficult_mission_twins_win = {
+	achievement_definitions.difficult_mission_twins_win = {
 		description = "loc_achievement_difficult_mission_twins_win_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_twins_mission_level5",
 		stat_name = "mission_twins",
@@ -3585,10 +4110,12 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_missing,
+			AchievementFlags.hide_progress,
 		},
 	}
-	AchievementDefinitions.difficult_mission_twins_hard_mode_win = {
+	achievement_definitions.difficult_mission_twins_hard_mode_win = {
 		description = "loc_achievement_difficult_mission_twins_hard_mode_win_description",
+		icon = nil,
 		stat_name = "mission_twins_hard_mode",
 		target = 1,
 		title = "loc_achievement_difficult_mission_twins_hard_mode_win_name",
@@ -3596,10 +4123,12 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_missing,
+			AchievementFlags.hide_progress,
 		},
 	}
-	AchievementDefinitions.mission_twins_secret = {
+	achievement_definitions.mission_twins_secret = {
 		description = "loc_achievement_mission_twins_unlocked_puzzle_description",
+		icon = nil,
 		stat_name = "mission_twins_secret_puzzle_trigger",
 		target = 1,
 		title = "loc_achievement_mission_twins_unlocked_puzzle_name",
@@ -3607,9 +4136,10 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_missing,
+			AchievementFlags.hide_progress,
 		},
 	}
-	AchievementDefinitions.mission_twins_killed_successfully_within_x = {
+	achievement_definitions.mission_twins_killed_successfully_within_x = {
 		description = "loc_achievement_mission_twins_within_limit_name_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_challenge_0023",
 		stat_name = "mission_twins_killed_successfully_within_x",
@@ -3617,12 +4147,14 @@ do
 		title = "loc_achievement_mission_twins_within_limit_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 		loc_variables = {
 			target = 5,
 		},
 	}
-	AchievementDefinitions.mission_twins_killed_no_mines_triggered = {
+	achievement_definitions.mission_twins_killed_no_mines_triggered = {
 		description = "loc_achievement_mission_twins_killed_no_mines_triggered_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_challenge_0024",
 		stat_name = "mission_twins_no_mines_triggered",
@@ -3630,11 +4162,60 @@ do
 		title = "loc_achievement_mission_twins_killed_no_mines_triggered_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 		loc_variables = {
 			amount = 3,
 		},
 	}
+
+	family({
+		icon = "content/ui/textures/icons/achievements/campaigns/no_man_land_campaign_completed",
+		target = 3,
+		title = "loc_no_mans_land_completion_name",
+		type = AchievementTypesLookup.multi_stat,
+		category = category_name,
+		flags = {
+			AchievementFlags.use_checkboxes,
+		},
+	}, {
+		id = "no_man_land_campaign_completed_{index:%d}",
+		description = _override_with_config("description"),
+		loc_variables = {
+			difficulty = _override_with_config("difficulty"),
+		},
+		stats = {
+			circumstance_story_nomansland_01_max_difficulty = {
+				increasing = _override_with_value(true),
+				target = _override_with_config("target"),
+			},
+			circumstance_story_nomansland_02_max_difficulty = {
+				increasing = _override_with_value(true),
+				target = _override_with_config("target"),
+			},
+			circumstance_story_nomansland_03_max_difficulty = {
+				increasing = _override_with_value(true),
+				target = _override_with_config("target"),
+			},
+		},
+	}, {
+		{
+			description = "loc_no_mans_land_completion_easy_description",
+			difficulty = "",
+			target = 1,
+		},
+		{
+			description = "loc_no_mans_land_completion_description",
+			target = 4,
+			difficulty = Localize("loc_achievement_difficulty_04"),
+		},
+		{
+			description = "loc_no_mans_land_completion_description",
+			target = 6,
+			difficulty = Localize("loc_group_finder_difficulty_auric"),
+		},
+	})
 end
 
 do
@@ -3650,6 +4231,7 @@ do
 			"rank_psyker_2_6",
 			"rank_ogryn_2_6",
 			"rank_adamant_2_6",
+			"rank_broker_2_6",
 		}),
 		category = category_name,
 		flags = {},
@@ -3705,7 +4287,7 @@ end
 do
 	local category_name = "account"
 
-	AchievementDefinitions.prologue = {
+	achievement_definitions.prologue = {
 		description = "loc_achievement_prologue_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0080",
 		title = "loc_achievement_prologue_name",
@@ -3713,7 +4295,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.basic_training = {
+	achievement_definitions.basic_training = {
 		description = "loc_achievement_basic_training_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0081",
 		title = "loc_achievement_basic_training_name",
@@ -3721,7 +4303,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.unlock_gadgets = {
+	achievement_definitions.unlock_gadgets = {
 		description = "loc_achievement_unlock_gadgets_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0077",
 		title = "loc_achievement_unlock_gadgets_name",
@@ -3729,7 +4311,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.unlock_contracts = {
+	achievement_definitions.unlock_contracts = {
 		description = "loc_achievement_unlock_contracts_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0104",
 		title = "loc_achievement_unlock_contracts_name",
@@ -3737,7 +4319,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.unlock_crafting = {
+	achievement_definitions.unlock_crafting = {
 		description = "loc_achievement_unlock_crafting_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0105",
 		title = "loc_achievement_unlock_crafting_name",
@@ -3794,7 +4376,7 @@ do
 		1000,
 	})
 
-	AchievementDefinitions.flawless_team = {
+	achievement_definitions.flawless_team = {
 		description = "loc_achievement_flawless_team_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0085",
 		stat_name = "team_flawless_missions",
@@ -3804,7 +4386,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.coherency_toughness = {
+	achievement_definitions.coherency_toughness = {
 		description = "loc_achievement_coherency_toughness_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0086",
 		stat_name = "total_coherency_toughness",
@@ -3814,7 +4396,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.revive_all = {
+	achievement_definitions.revive_all = {
 		description = "loc_achievement_revive_all_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0087",
 		stat_name = "max_different_players_rescued",
@@ -3823,7 +4405,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 	}
 
@@ -3842,7 +4424,7 @@ do
 		500,
 	})
 
-	AchievementDefinitions.group_cooperation = {
+	achievement_definitions.group_cooperation = {
 		description = "loc_achievement_group_cooperation_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0088",
 		target = 5,
@@ -3858,7 +4440,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.total_syringes_used = {
+	achievement_definitions.total_syringes_used = {
 		description = "loc_achievement_total_syringes_used_description",
 		stat_name = "total_syringes_used",
 		target = 20,
@@ -3868,7 +4450,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.elites_and_specials_killed_using_red_stimm = {
+	achievement_definitions.elites_and_specials_killed_using_red_stimm = {
 		description = "loc_achievement_elites_and_specials_killed_using_red_stimm_description",
 		stat_name = "total_kills_gained_while_using_red_stimm",
 		target = 50,
@@ -3878,7 +4460,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.corruption_healed_using_green_stimm = {
+	achievement_definitions.corruption_healed_using_green_stimm = {
 		description = "loc_achievement_corruption_healed_using_green_stimm_description",
 		stat_name = "corruption_healed_with_green_stimm",
 		target = 1000,
@@ -3888,7 +4470,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.ability_time_saved_using_yellow_stimm = {
+	achievement_definitions.ability_time_saved_using_yellow_stimm = {
 		description = "loc_achievement_ability_time_saved_using_yellow_stimm_description",
 		stat_name = "ability_time_saved_by_yellow_stimm",
 		target = 1000,
@@ -3898,7 +4480,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.horde_kills_during_blue_stimm = {
+	achievement_definitions.horde_kills_during_blue_stimm = {
 		description = "loc_achievement_horde_kills_during_blue_stimm_description",
 		stat_name = "total_kills_gained_while_using_blue_stimm",
 		target = 1000,
@@ -3942,7 +4524,7 @@ do
 		100,
 	})
 
-	AchievementDefinitions.team_win_without_ally_downed_longer_then_x = {
+	achievement_definitions.team_win_without_ally_downed_longer_then_x = {
 		description = "loc_achievement_team_win_without_ally_downed_longer_then_x_description",
 		icon = "content/ui/textures/icons/achievements/mission_achievements/missions_achievement_0029",
 		stat_name = "team_win_without_ally_downed_longer_then_x",
@@ -3950,7 +4532,9 @@ do
 		title = "loc_achievement_team_win_without_ally_downed_longer_then_x_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 		loc_variables = {
 			downed_times = 5,
 		},
@@ -3998,7 +4582,7 @@ do
 		1000000,
 	})
 
-	AchievementDefinitions.consecutive_headshots = {
+	achievement_definitions.consecutive_headshots = {
 		description = "loc_achievement_consecutive_headshots_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0090",
 		stat_name = "max_head_shot_in_a_row",
@@ -4016,7 +4600,7 @@ do
 		type = AchievementTypesLookup.decreasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 	}, {
 		60,
@@ -4030,7 +4614,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 		loc_variables = {
 			time_window = 30,
@@ -4041,7 +4625,7 @@ do
 		120,
 	})
 
-	AchievementDefinitions.enemies_climbing = {
+	achievement_definitions.enemies_climbing = {
 		description = "loc_achievement_enemies_climbing_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0093",
 		stat_name = "kill_climbing",
@@ -4059,7 +4643,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 		loc_variables = {
 			time_window = 10,
@@ -4070,7 +4654,7 @@ do
 		15,
 	})
 
-	AchievementDefinitions.group_offence = {
+	achievement_definitions.group_offence = {
 		description = "loc_achievement_group_offence_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0088",
 		target = 6,
@@ -4099,7 +4683,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 		loc_variables = {
 			time_window = 10,
@@ -4116,7 +4700,7 @@ do
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
 		flags = {
-			"hide_from_carousel",
+			AchievementFlags.hide_from_carousel,
 		},
 	}, {
 		7,
@@ -4136,7 +4720,7 @@ do
 		15,
 	})
 
-	AchievementDefinitions.total_sprint_dodges = {
+	achievement_definitions.total_sprint_dodges = {
 		description = "loc_achievement_total_sprint_dodges_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0099",
 		stat_name = "total_sprint_dodges",
@@ -4146,7 +4730,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.slide_dodge = {
+	achievement_definitions.slide_dodge = {
 		description = "loc_achievement_slide_dodge_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0100",
 		stat_name = "total_slide_dodges",
@@ -4154,9 +4738,11 @@ do
 		title = "loc_achievement_slide_dodge_name",
 		type = AchievementTypesLookup.increasing_stat,
 		category = category_name,
-		flags = {},
+		flags = {
+			AchievementFlags.hide_progress,
+		},
 	}
-	AchievementDefinitions.melee_toughness = {
+	achievement_definitions.melee_toughness = {
 		description = "loc_achievement_melee_toughness_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0101",
 		stat_name = "total_melee_toughness_regen",
@@ -4166,7 +4752,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.mission_no_damage = {
+	achievement_definitions.mission_no_damage = {
 		description = "loc_achievement_mission_no_damage_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0102",
 		stat_name = "lowest_damage_taken_on_win",
@@ -4176,7 +4762,7 @@ do
 		category = category_name,
 		flags = {},
 	}
-	AchievementDefinitions.group_defence = {
+	achievement_definitions.group_defence = {
 		description = "loc_achievement_group_defence_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0103",
 		target = 7,
@@ -4196,13 +4782,13 @@ do
 	}
 end
 
-AchievementDefinitions = _achievement_data
+achievement_definitions = _achievement_data
 
-for _, definition in pairs(AchievementDefinitions) do
+for _, definition in pairs(achievement_definitions) do
 	definition.flags = table.set(definition.flags)
 end
 
-for id, definition in pairs(AchievementDefinitions) do
+for id, definition in pairs(achievement_definitions) do
 	local platform_id = XboxLivePlatformAchievements.backend_to_platform[id]
 
 	if platform_id ~= nil then
@@ -4213,7 +4799,7 @@ for id, definition in pairs(AchievementDefinitions) do
 	end
 end
 
-for id, definition in pairs(AchievementDefinitions) do
+for id, definition in pairs(achievement_definitions) do
 	local platform_id = SteamPlatformAchievements.backend_to_platform[id]
 
 	if platform_id ~= nil then
@@ -4224,7 +4810,7 @@ for id, definition in pairs(AchievementDefinitions) do
 	end
 end
 
-for id, definition in pairs(AchievementDefinitions) do
+for id, definition in pairs(achievement_definitions) do
 	local platform_id = PsnPlatformAchievements.backend_to_platform[id]
 
 	if platform_id ~= nil then
@@ -4235,4 +4821,4 @@ for id, definition in pairs(AchievementDefinitions) do
 	end
 end
 
-return settings("AchievementDefinitions", AchievementDefinitions)
+return settings("AchievementDefinitions", achievement_definitions)

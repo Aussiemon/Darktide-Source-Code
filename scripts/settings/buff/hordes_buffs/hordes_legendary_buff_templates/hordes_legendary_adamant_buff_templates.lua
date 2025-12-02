@@ -183,6 +183,7 @@ local adamant_bash_random_ailment_effects = {
 	},
 	{
 		buff_to_add = "bleed",
+		sfx = nil,
 	},
 }
 

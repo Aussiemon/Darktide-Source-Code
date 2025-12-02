@@ -2,14 +2,12 @@
 
 local Definitions = require("scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_definitions")
 local HudElementPrologueTutorialInfoBoxSettings = require("scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
-local Vo = require("scripts/utilities/vo")
-local InputUtils = require("scripts/managers/input/input_utils")
 local InputDevice = require("scripts/managers/input/input_device")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
+local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local Vo = require("scripts/utilities/vo")
 local HudElementPrologueTutorialInfoBox = class("HudElementPrologueTutorialInfoBox", "HudElementBase")
 local info_box_settings = HudElementPrologueTutorialInfoBoxSettings
 local devices = info_box_settings.devices
@@ -211,7 +209,7 @@ HudElementPrologueTutorialInfoBox._get_input_description_text = function (self, 
 		local include_input_type = true
 		local end_of_line = #input_actions ~= 1 and "\n" or ""
 
-		input_description_text = input_description_text .. TextUtils.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type) .. end_of_line
+		input_description_text = input_description_text .. Text.localize_with_button_hint(input_action, description, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type) .. end_of_line
 
 		local alias = self._input_manager:alias_object(service_type)
 		local alias_name = self._ui_manager:get_input_alias_key(input_action, service_type)
@@ -313,7 +311,7 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 	local title_text_x_offset = 25
 	local title_text_default_size = style.title_text.size
 	local title_text_loc = Utf8.upper(Localize(title_text))
-	local title_text_width, title_text_height = UIRenderer.text_size(self._ui_renderer, title_text_loc, style.title_text.font_type, style.title_text.font_size, title_text_default_size)
+	local title_text_width, title_text_height = self:_text_size(self._ui_renderer, title_text_loc, style.title_text, title_text_default_size)
 	local total_title_text_width = title_text_x_offset + title_text_width + 45
 	local base_height = base_offset + title_text_height + 20
 
@@ -325,13 +323,13 @@ HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self
 	style.description_text.size[1] = description_width
 
 	local default_description_size = style.description_text.size
-	local _, text_height, _, _ = UIRenderer.text_size(self._ui_renderer, description_loc_text, style.description_text.font_type, style.description_text.font_size, default_description_size)
+	local _, text_height = self:_text_size(self._ui_renderer, description_loc_text, style.description_text, default_description_size)
 	local description_text_height = text_height
 	local total_height = base_height + description_text_height
 
 	if input_description_text ~= "" then
 		local default_input_description_size = style.input_description_text.size
-		local _, input_text_height, _, _ = UIRenderer.text_size(self._ui_renderer, input_description_text, style.input_description_text.font_type, style.input_description_text.font_size, default_input_description_size)
+		local _, input_text_height = self:_text_size(self._ui_renderer, input_description_text, style.input_description_text, default_input_description_size)
 		local input_description_text_height = input_text_height * 1.2
 		local input_description_width = info_box_settings.info_box_input_description_size[1]
 
@@ -421,7 +419,7 @@ HudElementPrologueTutorialInfoBox._create_entry = function (self, objective_id, 
 	content.entry_text = entry_text
 
 	local default_size = info_box_settings.tracker_entry_size
-	local entry_text_width = UIRenderer.text_size(self._ui_renderer, entry_text, style.entry_text.font_type, style.entry_text.font_size, default_size)
+	local entry_text_width = self:_text_size(self._ui_renderer, entry_text, style.entry_text, default_size)
 	local entry_text_x_offset = 50
 	local total_text_width = entry_text_x_offset + entry_text_width + 25
 

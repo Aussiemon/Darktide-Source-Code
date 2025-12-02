@@ -51,6 +51,9 @@ templates.syringe_heal_corruption_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_corruption_buff_hud",
 	predicted = false,
 	skip_tactical_overlay = true,
+	keywords = {
+		keywords.syringe,
+	},
 	heal_settings = {
 		heal_duration = 0,
 		min_percentage_of_heal = 0.25,
@@ -63,9 +66,7 @@ templates.syringe_heal_corruption_buff = {
 			return
 		end
 
-		local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
-
-		template_data.stimm_provider = buff_extension:get_inherited_buff_owner()
+		template_data.stimm_provider_player = Managers.player:player_by_unit(template_context.buff:owner_unit())
 
 		local unit = template_context.unit
 		local health_extension = ScriptUnit.extension(unit, "health_system")
@@ -167,9 +168,11 @@ templates.syringe_heal_corruption_buff = {
 			Managers.telemetry_events:player_stimm_heal(player, data)
 		end
 
-		local stimm_provider = template_data.stimm_provider
+		local stimm_provider = template_data.stimm_provider_player
 
-		Managers.stats:record_private("hook_green_stimm_corruption_healed", stimm_provider, corruption_heal)
+		if stimm_provider then
+			Managers.stats:record_private("hook_green_stimm_corruption_healed", stimm_provider, corruption_heal)
+		end
 	end,
 }
 templates.syringe_ability_boost_buff = {
@@ -181,6 +184,7 @@ templates.syringe_ability_boost_buff = {
 	unique_buff_id = "syringe_stimm",
 	unique_buff_priority = 1,
 	keywords = {
+		keywords.syringe,
 		keywords.syringe_ability,
 	},
 	start_func = function (template_data, template_context)
@@ -194,6 +198,12 @@ templates.syringe_ability_boost_buff = {
 		local particle_name = "content/fx/particles/pocketables/syringe_ability_3p"
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
+
+		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+		if duration_increase ~= 0 then
+			template_context.buff:add_duration(duration_increase)
+		end
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		local ability_extension = template_data.ability_extension
@@ -238,6 +248,7 @@ templates.syringe_power_boost_buff = {
 		[stat_buffs.warp_charge_amount] = 0.66,
 	},
 	keywords = {
+		keywords.syringe,
 		keywords.syringe_power,
 	},
 	start_func = function (template_data, template_context)
@@ -246,6 +257,12 @@ templates.syringe_power_boost_buff = {
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 		Managers.stats:record_private("hook_red_stimm_active", template_context.player)
+
+		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+		if duration_increase ~= 0 then
+			template_context.buff:add_duration(duration_increase)
+		end
 	end,
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -276,6 +293,7 @@ templates.syringe_speed_boost_buff = {
 		[stat_buffs.vent_warp_charge_multiplier] = 1.25,
 	},
 	keywords = {
+		keywords.syringe,
 		keywords.syringe_speed,
 	},
 	start_func = function (template_data, template_context)
@@ -286,6 +304,12 @@ templates.syringe_speed_boost_buff = {
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 		Managers.stats:record_private("hook_blue_stimm_active", template_context.player)
+
+		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+		if duration_increase ~= 0 then
+			template_context.buff:add_duration(duration_increase)
+		end
 	end,
 	stop_func = function (template_data, template_context)
 		if not template_context.is_server then

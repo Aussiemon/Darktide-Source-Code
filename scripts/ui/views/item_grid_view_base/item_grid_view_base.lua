@@ -210,6 +210,7 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 	local tab_button_template = table.clone(tab_menu_settings.button_template or ButtonPassTemplates.tab_menu_button_icon)
 
 	tab_button_template[1].style = {
+		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
@@ -347,8 +348,8 @@ ItemGridViewBase.update_grid_widgets_visibility = function (self)
 	return self._item_grid:update_grid_widgets_visibility()
 end
 
-ItemGridViewBase.force_update_grid_widget_icon = function (self, index)
-	return self._item_grid:force_update_grid_widget_icon(index)
+ItemGridViewBase.force_update_grid_widget = function (self, index)
+	return self._item_grid:force_update_grid_widget(index)
 end
 
 ItemGridViewBase._update_tab_bar_position = function (self)
@@ -646,6 +647,10 @@ ItemGridViewBase._grid_widget_by_name = function (self, widget_name)
 end
 
 ItemGridViewBase.on_exit = function (self)
+	return
+end
+
+ItemGridViewBase.destroy = function (self)
 	if self._inpect_view_opened then
 		if Managers.ui:view_active(self._inpect_view_opened) then
 			Managers.ui:close_view(self._inpect_view_opened)

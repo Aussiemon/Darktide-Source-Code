@@ -8,7 +8,6 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local bar_size = HudElementStaminaSettings.bar_size
 local spacing = HudElementStaminaSettings.spacing
 local area_size = HudElementStaminaSettings.area_size
-local glow_size = HudElementStaminaSettings.glow_size
 local center_offset = HudElementStaminaSettings.center_offset
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,

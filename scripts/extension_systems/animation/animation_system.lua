@@ -6,6 +6,7 @@ require("scripts/extension_systems/animation/player_husk_animation_extension")
 require("scripts/extension_systems/animation/player_unit_animation_extension")
 require("scripts/extension_systems/animation/prop_animation_extension")
 
+local AnimCallbackTemplates = require("scripts/extension_systems/animation/anim_callback_templates")
 local AnimationSystem = class("AnimationSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_prop_anim_event",
@@ -66,6 +67,24 @@ AnimationSystem.on_remove_extension = function (self, unit, extension_name)
 	end
 
 	AnimationSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
+AnimationSystem.anim_callback = function (self, unit, callback_name, param1)
+	local callback
+
+	if self._is_server then
+		callback = AnimCallbackTemplates.server[callback_name]
+
+		if callback then
+			callback(unit, param1)
+		end
+	end
+
+	callback = AnimCallbackTemplates.client[callback_name]
+
+	if callback then
+		callback(unit, param1)
+	end
 end
 
 AnimationSystem.rpc_prop_anim_event = function (self, channel_id, unit_id, is_level_unit, event_index)

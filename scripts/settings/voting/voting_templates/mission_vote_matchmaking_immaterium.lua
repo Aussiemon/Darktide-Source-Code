@@ -67,7 +67,7 @@ local mission_vote_matchmaking_immaterium = {
 		_close_voting_view()
 
 		if result == "rejected" then
-			Log.info("party declined mission!")
+			Log.info("MissionVoteMatchmakingImmaterium", "party declined mission!")
 		else
 			local ui_manager = Managers.ui
 

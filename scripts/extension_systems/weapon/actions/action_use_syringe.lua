@@ -3,6 +3,7 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
@@ -89,28 +90,37 @@ ActionUseSyringe.fixed_update = function (self, dt, t, time_in_action)
 		action_module_target_finder_component.target_unit_2 = nil
 		action_module_target_finder_component.target_unit_3 = nil
 
-		if self._is_server then
-			local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
-			local has_override_buff_rule_two = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
-			local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
-			local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local use_ability_charge = action_settings.use_ability_charge
 
-			if target_buff_extension then
-				if buff_name == "syringe_heal_corruption_buff" then
-					local player = Managers.player:player_by_unit(self._player_unit)
+		if use_ability_charge then
+			self:_use_ability_charge(1)
+		end
 
-					target_buff_extension:add_inherited_buff_owner(player)
-				end
+		local has_override_buff_rule = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_one)
+		local has_override_buff_rule_two = self._talent_extension:has_special_rule(special_rules.buff_target_buff_name_override_two)
+		local buff_name = has_override_buff_rule and action_settings.override_buff_name_one or has_override_buff_rule_two and action_settings.override_buff_name_two or action_settings.buff_name
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
-				target_buff_extension:add_internally_controlled_buff(buff_name, t)
-
-				local assist_notification_type = action_settings.assist_notification_type
-
-				if assist_notification_type and ALIVE[target_unit] then
-					PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
-				end
+		if target_buff_extension then
+			if target_unit == self._player_unit or self._is_server then
+				target_buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", self._player_unit)
 			end
 
+			local assist_notification_type = action_settings.assist_notification_type
+
+			if self._is_server and assist_notification_type and ALIVE[target_unit] then
+				PlayerAssistNotifications.show_notification(target_unit, self._player_unit, assist_notification_type)
+			end
+		end
+
+		local owner_buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
+		local param_table = owner_buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			owner_buff_extension:add_proc_event(BuffSettings.proc_events.on_syringe_used, param_table)
+		end
+
+		if self._is_server then
 			local player = Managers.player:player_by_unit(self._player_unit)
 
 			if player then

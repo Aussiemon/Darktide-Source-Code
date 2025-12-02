@@ -273,7 +273,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -356,7 +359,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -897,7 +903,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -972,7 +981,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -1043,7 +1055,10 @@ local action_data = {
 			right = "run_into_shoot_right",
 		},
 		start_move_anim_data = {
-			run_into_shoot_fwd = {},
+			run_into_shoot_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_into_shoot_bwd = {
 				sign = -1,
 				rad = math.pi,

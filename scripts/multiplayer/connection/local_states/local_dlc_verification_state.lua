@@ -20,7 +20,7 @@ end
 LocalDLCVerificationState.enter = function (self)
 	local profile = Managers.player:local_player_backend_profile()
 
-	if profile.archetype.dlc_settings == nil then
+	if profile.archetype.requires_dlc == nil then
 		RPC.rpc_dlc_verification_client_done(self._shared_state.channel_id, self._platform)
 
 		return

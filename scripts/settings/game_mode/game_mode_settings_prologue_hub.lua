@@ -58,19 +58,22 @@ local settings = {
 	},
 	default_inventory = {
 		adamant = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_adamant",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+		},
+		broker = {
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
 		},
 		ogryn = {
 			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn",
 		},
 		psyker = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_psyker",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
 		},
 		veteran = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_veteran",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
 		},
 		zealot = {
-			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_zealot",
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
 		},
 	},
 }

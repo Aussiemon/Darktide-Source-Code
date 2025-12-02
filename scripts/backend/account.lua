@@ -15,7 +15,7 @@ Account.get_boon_inventory = function (self)
 	end)
 end
 
-Account.set_has_created_first_character = function (self, value)
+Account.set_has_created_first_character = function (self, value, character_id)
 	return self:set_data("core", {
 		has_created_first_character = value,
 	})

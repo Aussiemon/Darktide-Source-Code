@@ -13,7 +13,11 @@ PathTypeLinear.init = function (self, world, nav_world, num_sides, is_server, us
 
 	for i = 1, num_sides do
 		side_progress_on_path[i] = {
+			ahead_travel_distance = nil,
+			ahead_unit = nil,
 			behind_travel_changed_t = 0,
+			behind_travel_distance = nil,
+			behind_unit = nil,
 			forward_travel_changed_t = 0,
 			furthest_travel_distance = 0,
 			furthest_worst_travel_distance = 0,

@@ -4,6 +4,8 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local PickupSpawnerExtension = class("PickupSpawnerExtension")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
+local POOL_DISTRIBUTION_TYPES = PickupSettings.pool_types
+local EVENT_DISTRIBUTION_TYPES = PickupSettings.event_types
 local FLOW_SPAWN_METHOD = table.enum("none", "next_in_list", "random_in_list")
 
 PickupSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data)
@@ -30,13 +32,11 @@ PickupSpawnerExtension.setup_from_component = function (self, component, spawn_m
 	data.guid = component_guid
 	data.is_side_mission = false
 
-	if string.find(spawn_method, "distribution") then
+	if POOL_DISTRIBUTION_TYPES[spawn_method] then
+		data.distribution_type = POOL_DISTRIBUTION_TYPES[spawn_method]
 		pool_spawner = true
-		data.distribution_type = spawn_method:gsub("_distribution", "")
-	elseif spawn_method == "guaranteed_spawn" then
-		data.distribution_type = DISTRIBUTION_TYPES.guaranteed
-	elseif spawn_method == "manual_spawn" or spawn_method == "flow_spawn" then
-		data.distribution_type = DISTRIBUTION_TYPES.manual
+	elseif EVENT_DISTRIBUTION_TYPES[spawn_method] then
+		data.distribution_type = EVENT_DISTRIBUTION_TYPES[spawn_method]
 	elseif spawn_method == "side_mission" then
 		data.distribution_type = DISTRIBUTION_TYPES.side_mission
 		data.is_side_mission = true
@@ -112,6 +112,14 @@ end
 
 PickupSpawnerExtension.spawner_count = function (self)
 	return #self._components
+end
+
+PickupSpawnerExtension.get_distribution_type = function (self, component_index)
+	component_index = component_index or 1
+
+	local components = self._components
+
+	return components[component_index].distribution_type
 end
 
 PickupSpawnerExtension.is_chest = function (self)

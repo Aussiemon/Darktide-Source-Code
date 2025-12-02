@@ -37,6 +37,7 @@ _create_entry("scripts/settings/buff/hordes_buffs/hordes_family_buff_templates/h
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_family_buff_templates/hordes_unkillable_family_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_family_buff_templates/hordes_unstoppable_family_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_adamant_buff_templates", buff_categories.hordes_buff)
+_create_entry("scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_broker_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_generic_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_grenade_buff_templates", buff_categories.hordes_buff)
 _create_entry("scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_ogryn_buff_templates", buff_categories.hordes_buff)
@@ -61,6 +62,11 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p2_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_combatsword_p3_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_crowbar_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_dual_shivs_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_needlepistol_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_dual_autopistols_p1_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_dual_stubpistols_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_flamer_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcestaff_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_forcestaff_p2_buff_templates", buff_categories.weapon_traits)
@@ -92,6 +98,7 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_powersword_p2_buff_templates", buff_categories.weapon_traits)
+_create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_saw_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p2_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_shotgun_p4_buff_templates", buff_categories.weapon_traits)
@@ -99,14 +106,20 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_thunderhammer_2h_p1_buff_templates", buff_categories.weapon_traits)
 _create_entry("scripts/settings/buff/archetype_buff_templates/shared_archetype_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/adamant_buff_templates", buff_categories.talents)
+_create_entry("scripts/settings/buff/archetype_buff_templates/broker_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/ogryn_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/psyker_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/veteran_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templates", buff_categories.talents)
-_create_entry("scripts/settings/buff/archetype_buff_templates/adamant_buff_templates", buff_categories.talents)
 _create_entry("scripts/settings/buff/live_event_buff_templates/live_event_stolen_rations_buff_templates", buff_categories.live_event)
+_create_entry("scripts/settings/buff/live_event_buff_templates/live_event_saints_buff_templates", buff_categories.live_event)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
+local BuffUtils = require("scripts/settings/buff/buff_utils")
+
+BuffUtils.populate_stimm_field_syringe_buff_variants(templates)
+
 local TEMPLATE_LOOKUPS = {
 	NON_PREDICTED = {},
 	PREDICTED = {},

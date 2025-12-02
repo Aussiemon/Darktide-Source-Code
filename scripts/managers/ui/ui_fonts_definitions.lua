@@ -15,9 +15,10 @@ local definitions = {
 		friz_quadrata = FONT_TYPES.serif,
 		rexlia = FONT_TYPES.sans_serif,
 		machine_medium = FONT_TYPES.sans_serif,
-		trim_mono_light = FONT_TYPES.sans_serif,
-		trim_mono_medium = FONT_TYPES.sans_serif,
-		trim_mono_bold = FONT_TYPES.sans_serif,
+		kode_mono_regular = FONT_TYPES.sans_serif,
+		kode_mono_medium = FONT_TYPES.sans_serif,
+		kode_mono_bold = FONT_TYPES.sans_serif,
+		kode_mono_semi_bold = FONT_TYPES.sans_serif,
 	},
 	locale_specific_fonts = {
 		ja = {

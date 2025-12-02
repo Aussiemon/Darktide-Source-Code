@@ -180,7 +180,7 @@ local breed_data = {
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_poxwalker,
 	size_variation_range = {
-		0.9,
+		0.93,
 		1.1,
 	},
 	fade = {
@@ -427,7 +427,9 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.melee_base,
-	tokens = {},
+	tokens = {
+		pounced = nil,
+	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
 		pounce_anim_event = "leap_attack",

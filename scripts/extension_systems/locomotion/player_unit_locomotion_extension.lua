@@ -344,6 +344,64 @@ local function _check_minion_collision_constrained_pos(minion_unit, minion_posit
 	return constrained_target, min_dot, max_dot
 end
 
+local function _line_intersection_position(p1, p2, p3, p4)
+	local Ax = p2.x - p1.x
+	local Bx = p3.x - p4.x
+	local Ay = p2.y - p1.y
+	local By = p3.y - p4.y
+	local Cx = p1.x - p3.x
+	local Cy = p1.y - p3.y
+	local d = By * Cx - Bx * Cy
+	local f = Ay * Bx - Ax * By
+
+	if f == 0 then
+		return
+	end
+
+	return Vector3(p1.x + d * Ax / f, p1.y + d * Ay / f, 0)
+end
+
+local LINE_DISTANCES = {}
+
+local function _check_polygon_collision_constrained_pos(prop_unit, collision_points, check_position, flat_player_pos, velocity_flat_normalized)
+	table.clear(LINE_DISTANCES)
+
+	local new_collision = true
+	local closest_overstep = math.huge
+	local closest_pos
+
+	for i = 1, #collision_points do
+		local point_a = collision_points[i]
+		local point_b = collision_points[i % #collision_points + 1]
+		local overstep = (check_position.y - point_a.y) * (point_b.x - point_a.x) - (check_position.x - point_a.x) * (point_b.y - point_a.y)
+
+		if overstep < 0 then
+			new_collision = false
+		else
+			local collision_pos = _line_intersection_position(point_a, point_b, check_position, flat_player_pos)
+
+			if closest_overstep > math.abs(overstep) and collision_pos then
+				closest_pos = collision_pos
+				closest_overstep = overstep
+			end
+		end
+	end
+
+	local constrained_target
+	local min_dot, max_dot = -1, 1
+
+	if new_collision and closest_pos then
+		constrained_target = closest_pos
+
+		local dot = Vector3.dot(velocity_flat_normalized, Vector3.normalize(constrained_target - flat_player_pos)) * 2 * 2
+
+		min_dot = math.max(min_dot, dot)
+		max_dot = math.min(max_dot, dot)
+	end
+
+	return constrained_target, min_dot, max_dot
+end
+
 PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, unit, dt, t, locomotion_component, steering_component, current_position, calculate_fall_velocity, on_ground, mover)
 	local velocity_current = locomotion_component.velocity_current
 	local velocity_wanted = steering_component.velocity_wanted
@@ -370,8 +428,9 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	end
 
 	local force_stop = false
+	local disable_minion_collision = self:_should_ignore_minion_collision(unit)
 
-	if self._script_minion_collision and not steering_component.disable_minion_collision then
+	if self._script_minion_collision and not steering_component.disable_minion_collision and not disable_minion_collision then
 		local box_minion_collision = false
 
 		if box_minion_collision then
@@ -401,12 +460,25 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 					local minion_unit = BROADPHASE_RESULTS[i]
 					local breed = ScriptUnit.extension(minion_unit, "unit_data_system"):breed()
 					local ignore_collision = false
-					local should_ignore_collision_with_horde_minions = self:_should_ignore_collision_with_horde_minions(unit)
 
-					if should_ignore_collision_with_horde_minions then
-						local valid_breed = not breed or not breed.tags or not breed.tags.elite and not breed.tags.ogryn and not breed.tags.special and not breed.tags.monster
+					if not ignore_collision then
+						local should_ignore_collision_with_horde_minions = self:_should_ignore_collision_with_horde_minions(unit)
 
-						ignore_collision = valid_breed
+						if should_ignore_collision_with_horde_minions then
+							local valid_breed = not breed or not breed.tags or not breed.tags.elite and not breed.tags.ogryn and not breed.tags.special and not breed.tags.monster
+
+							ignore_collision = valid_breed
+						end
+					end
+
+					if not ignore_collision then
+						local should_ignore_collision_with_elite_minions = self:_should_ignore_collision_with_elite_minions(unit)
+
+						if should_ignore_collision_with_elite_minions then
+							local valid_breed = not breed or not breed.tags or breed.tags.elite
+
+							ignore_collision = valid_breed or ignore_collision
+						end
 					end
 
 					local collide_with_minions = HEALTH_ALIVE[minion_unit] and breed.player_locomotion_constrain_radius ~= nil
@@ -433,6 +505,43 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 							constrained_target = constrained_target + new_constrained_target
 						end
+					end
+				end
+
+				num_results = broadphase.query(broadphase, query_position, query_radius, BROADPHASE_RESULTS, "prop_collision")
+
+				for i = 1, num_results do
+					local prop_unit = BROADPHASE_RESULTS[i]
+					local prop_collision_extension = ScriptUnit.extension(prop_unit, "prop_collision_system")
+					local shape = prop_collision_extension:shape()
+					local new_constrained_target, new_min_dot, new_max_dot
+
+					if shape == "sphere" then
+						local prop_radius = prop_collision_extension:radius()
+						local prop_min_dist_sq = prop_radius * prop_radius * 2 * 2
+						local prop_position = Vector3.flat(Unit.world_position(prop_unit, 1))
+						local prop_point_on_line = flat_player_pos + velocity_flat_normalized * prop_radius
+
+						new_constrained_target, new_min_dot, new_max_dot = _check_minion_collision_constrained_pos(prop_unit, prop_position, prop_point_on_line, prop_radius, prop_min_dist_sq, flat_player_pos, velocity_flat_normalized)
+					elseif shape == "polygon" then
+						local collision_points = prop_collision_extension:polygon_nodes()
+						local check_position = flat_player_pos + velocity_flat_normalized
+
+						new_constrained_target, new_min_dot, new_max_dot = _check_polygon_collision_constrained_pos(prop_unit, collision_points, check_position, flat_player_pos, velocity_flat_normalized)
+					end
+
+					if new_constrained_target then
+						num_constraints = num_constraints + 1
+
+						if min_dot < new_min_dot then
+							min_dot = new_min_dot
+						end
+
+						if new_max_dot < max_dot then
+							max_dot = new_max_dot
+						end
+
+						constrained_target = constrained_target + new_constrained_target
 					end
 				end
 
@@ -501,13 +610,33 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	return final_position
 end
 
-PlayerUnitLocomotionExtension._should_ignore_collision_with_horde_minions = function (self, unit)
-	local buff_extension = self._buff_extension
+PlayerUnitLocomotionExtension._should_ignore_minion_collision = function (self, unit)
+	local disable_minions_collision_during_dodge = self._buff_extension:has_keyword("disable_minions_collision_during_dodge")
 
-	if not buff_extension then
-		return false
+	if disable_minions_collision_during_dodge then
+		local is_dodging, dodge_type = Dodge.is_dodging(unit)
+
+		if is_dodging and dodge_type == dodge_types.dodge then
+			return true
+		end
 	end
 
+	local disable_minions_collision_during_sprint = self._buff_extension:has_keyword("disable_minions_collision_during_sprint")
+
+	if disable_minions_collision_during_sprint then
+		local is_sprinting = Sprint.is_sprinting(self._sprint_character_state_component)
+		local current_stamina, _ = Stamina.current_and_max_value(unit, self._stamina_component, self._base_stamina_template)
+
+		if is_sprinting and current_stamina > 0 then
+			return true
+		end
+	end
+
+	return false
+end
+
+PlayerUnitLocomotionExtension._should_ignore_collision_with_horde_minions = function (self, unit)
+	local buff_extension = self._buff_extension
 	local is_dodging, dodge_type = Dodge.is_dodging(unit)
 	local is_dodging_not_sliding = is_dodging and dodge_type == dodge_types.dodge
 	local disable_horde_minions_collision_during_dodge = buff_extension:has_keyword("disable_horde_minions_collision_during_dodge")
@@ -525,6 +654,36 @@ PlayerUnitLocomotionExtension._should_ignore_collision_with_horde_minions = func
 	local has_disable_horde_minions_collision_during_sprint_keyword = buff_extension:has_keyword("disable_horde_minions_collision_during_sprint")
 
 	if has_disable_horde_minions_collision_during_sprint_keyword and is_sprinting_with_stamina then
+		return true
+	end
+
+	return false
+end
+
+PlayerUnitLocomotionExtension._should_ignore_collision_with_elite_minions = function (self, unit)
+	local buff_extension = self._buff_extension
+
+	if not buff_extension then
+		return false
+	end
+
+	local is_dodging, dodge_type = Dodge.is_dodging(unit)
+	local is_dodging_not_sliding = is_dodging and dodge_type == dodge_types.dodge
+	local has_disable_elite_minions_collision_during_dodge_keyword = buff_extension:has_keyword("disable_elite_minions_collision_during_dodge")
+
+	if is_dodging_not_sliding and has_disable_elite_minions_collision_during_dodge_keyword then
+		local consecutive_dodges = Dodge.consecutive_dodges(unit)
+		local first_dodge = consecutive_dodges == 1
+
+		return first_dodge
+	end
+
+	local is_sprinting = Sprint.is_sprinting(self._sprint_character_state_component)
+	local current_stamina, _ = Stamina.current_and_max_value(unit, self._stamina_component, self._base_stamina_template)
+	local is_sprinting_with_stamina = is_sprinting and current_stamina > 0
+	local has_disable_elite_minions_collision_during_sprint_keyword = buff_extension:has_keyword("disable_elite_minions_collision_during_sprint")
+
+	if has_disable_elite_minions_collision_during_sprint_keyword and is_sprinting_with_stamina then
 		return true
 	end
 

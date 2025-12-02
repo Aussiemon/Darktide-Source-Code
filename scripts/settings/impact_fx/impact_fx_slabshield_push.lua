@@ -79,6 +79,9 @@ local unarmored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -129,7 +132,18 @@ local unarmored = {
 			},
 		},
 	},
-	blood_ball = {},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local armored = {
 	sfx = {
@@ -223,6 +237,9 @@ local armored = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -273,7 +290,18 @@ local armored = {
 			},
 		},
 	},
-	blood_ball = {},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local super_armor = {
 	sfx = {
@@ -367,6 +395,9 @@ local super_armor = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -417,7 +448,18 @@ local super_armor = {
 			},
 		},
 	},
-	blood_ball = {},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local disgustingly_resilient = {
 	sfx = {
@@ -511,6 +553,9 @@ local disgustingly_resilient = {
 		},
 	},
 	vfx = {
+		blocked = nil,
+		dead = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				effects = {
@@ -561,7 +606,18 @@ local disgustingly_resilient = {
 			},
 		},
 	},
-	blood_ball = {},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)

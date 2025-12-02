@@ -22,7 +22,7 @@ StateLoadRenderSettings._state_update = function (self, dt)
 		local setting = settings[i]
 		local settings_to_run = {}
 
-		self:_check_settings_to_tun(setting, settings_to_run)
+		self:_check_settings_to_run(setting, settings_to_run)
 		table.sort(settings_to_run, sort_function)
 
 		for i = 1, #settings_to_run do
@@ -41,14 +41,14 @@ StateLoadRenderSettings._state_update = function (self, dt)
 	return done, error
 end
 
-StateLoadRenderSettings._check_settings_to_tun = function (self, settings, settings_to_run)
+StateLoadRenderSettings._check_settings_to_run = function (self, settings, settings_to_run)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
 			if setting.pages then
 				for i = 1, #setting.pages do
 					local page_setting = setting.pages[i].entries
 
-					self:_check_settings_to_tun(page_setting, settings_to_run)
+					self:_check_settings_to_run(page_setting, settings_to_run)
 				end
 			end
 

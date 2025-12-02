@@ -441,6 +441,10 @@ StoreService._find_cached_wallet_by_type = function (self, wallet_type)
 	return wallet
 end
 
+StoreService.change_cached_wallet_balance = function (self, wallet_type, change_amount, increment_transaction_id, log_prefix)
+	return self:_change_cached_wallet_balance(wallet_type, change_amount, increment_transaction_id, log_prefix)
+end
+
 StoreService._change_cached_wallet_balance = function (self, wallet_type, change_amount, increment_transaction_id, log_prefix)
 	local cached_wallet = self:_find_cached_wallet_by_type(wallet_type)
 
@@ -582,6 +586,28 @@ StoreService.get_character_premium_store = function (self, archetype_name)
 	local storefront_key = self:_character_premium_store_key(archetype_name)
 
 	return self:get_premium_store(storefront_key)
+end
+
+StoreService.get_premium_currency_store = function (self)
+	return Managers.backend.interfaces.external_payment:get_options():next(function (data)
+		return data
+	end, function (error)
+		Log.error("StoreService", "Failed to fetch external payment options %s", error)
+
+		if error.error and error.error == "empty_store" and Managers.backend.interfaces.external_payment.show_empty_store_error then
+			return Managers.backend.interfaces.external_payment:show_empty_store_error():next(function ()
+				return Promise.rejected({
+					error = error.error,
+				})
+			end)
+		end
+
+		local show_error = error and (not type(error) == "table" and {
+			error = error,
+		} or error) or {}
+
+		return Promise.rejected(show_error)
+	end)
 end
 
 StoreService.get_premium_store = function (self, storefront_key)

@@ -84,7 +84,10 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 	local hips_handle = Unit.node(unit, HAND_IK_CONFIG.hips_handle_name)
 
 	self._hands_ik_data = {
+		hips_goal_pose = nil,
+		left_goal_pose = nil,
 		left_ray_hit = false,
+		right_goal_pose = nil,
 		right_ray_hit = false,
 		left_handle = left_handle,
 		left_transform_node = left_transform_node,

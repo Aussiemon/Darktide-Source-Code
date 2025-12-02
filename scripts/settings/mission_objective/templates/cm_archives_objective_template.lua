@@ -70,13 +70,11 @@ local mission_objective_templates = {
 			objective_cm_archives_control_end_event = {
 				description = "loc_objective_cm_archives_control_end_event_desc",
 				event_type = "end_event",
-				has_second_progression = true,
 				header = "loc_objective_cm_archives_control_end_event_header",
 				mission_giver_voice_profile = "tech_priest_a",
 				mission_objective_type = "scanning",
 				music_ignore_start_event = true,
 				music_wwise_state = "scanning_event",
-				progress_bar = true,
 				turn_off_backfill = true,
 			},
 			objective_cm_archives_absconditum_start_printing = {

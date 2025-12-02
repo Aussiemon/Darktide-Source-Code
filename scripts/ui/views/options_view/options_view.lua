@@ -10,7 +10,6 @@ local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
 local CATEGORIES_GRID = 1
 local SETTINGS_GRID = 2
@@ -113,6 +112,10 @@ OptionsView.on_exit = function (self)
 		Managers.event:trigger("event_remove_ui_popup", self._popup_id)
 	end
 
+	OptionsView.super.on_exit(self)
+end
+
+OptionsView.destroy = function (self)
 	if self._ui_offscreen_renderer then
 		self._ui_offscreen_renderer = nil
 
@@ -129,7 +132,7 @@ OptionsView.on_exit = function (self)
 		self._offscreen_world = nil
 	end
 
-	OptionsView.super.on_exit(self)
+	OptionsView.super.destroy(self)
 end
 
 OptionsView.cb_on_back_pressed = function (self)
@@ -512,7 +515,10 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 	end
 
 	if self._tooltip_data and self._tooltip_data.widget and (self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_hover or not self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_focused) then
-		self._tooltip_data = {}
+		self._tooltip_data = {
+			text = nil,
+			widget = nil,
+		}
 		self._widgets_by_name.tooltip.content.visible = false
 	end
 
@@ -907,11 +913,10 @@ OptionsView._set_tooltip_data = function (self, widget)
 		local text_style = self._widgets_by_name.tooltip.style.text
 		local x_pos = starting_point[1] + widget.offset[1]
 		local width = widget.content.size[1] * 0.5
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local _, text_height = self:_text_size(localized_text, text_style.font_type, text_style.font_size, {
+		local _, text_height = self:_text_size(localized_text, text_style, {
 			width,
 			0,
-		}, text_options)
+		})
 		local height = text_height
 
 		self._widgets_by_name.tooltip.content.size = {

@@ -5,15 +5,13 @@ local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_me
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local Promise = require("scripts/foundation/utilities/promise")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local Zones = require("scripts/settings/zones/zones")
 local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
-local TextUtils = require("scripts/utilities/ui/text")
 local MissionUtilities = require("scripts/utilities/ui/mission")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
@@ -408,7 +406,7 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 
 	for i = 1, #rewards do
 		local reward = rewards[i]
-		local amount_text = "+" .. TextUtilities.format_currency(reward.amount or 0)
+		local amount_text = "+" .. Text.format_currency(reward.amount or 0)
 		local text_id = "reward_text_" .. i
 		local icon_id = "reward_icon_" .. i
 
@@ -421,11 +419,10 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 
 		icon_style.offset[1] = icon_style.default_offset[1] - total_reward_horizontal_offset
 
-		local text_options = UIFonts.get_font_options_by_style(text_style)
-		local text_width = UIRenderer.text_size(ui_renderer, amount_text, text_style.font_type, text_style.font_size, {
+		local text_width = Text.text_width(ui_renderer, amount_text, text_style, {
 			400,
 			30,
-		}, text_options)
+		})
 
 		text_style.offset[1] = text_style.default_offset[1] - total_reward_horizontal_offset
 		total_reward_horizontal_offset = total_reward_horizontal_offset + text_width + icon_text_width_difference + reward_spacing
@@ -645,8 +642,6 @@ HordePlayView._handle_input = function (self, input_service, dt, t)
 end
 
 HordePlayView.on_exit = function (self)
-	self._promise_container:delete()
-
 	if self._enter_animation_id then
 		self:_stop_animation(self._enter_animation_id)
 
@@ -660,6 +655,11 @@ HordePlayView.on_exit = function (self)
 	end
 
 	HordePlayView.super.on_exit(self)
+end
+
+HordePlayView.ui_renderer = function (self)
+	self._promise_container:delete()
+	HordePlayView.super.destroy(self)
 end
 
 HordePlayView.ui_renderer = function (self)

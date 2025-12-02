@@ -10,7 +10,7 @@ local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/tr
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local TrainingGroundsOptionsView = class("TrainingGroundsOptionsView", "BaseView")
 local view_settings = TrainingGroundsOptionsViewSettings
 
@@ -338,7 +338,7 @@ TrainingGroundsOptionsView._update_difficulty_stepper = function (self, current_
 
 	content.danger = current_difficulty_index
 	self._selected_danger = current_difficulty_index
-	content.difficulty_text = TextUtils.localize_to_upper(DangerSettings[current_difficulty_index].display_name)
+	content.difficulty_text = Text.localize_to_upper(DangerSettings[current_difficulty_index].display_name)
 	content.target_color = DangerSettings[current_difficulty_index].color
 
 	local difficulty_indicators = self._difficulty_indicator_widgets

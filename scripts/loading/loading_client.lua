@@ -23,7 +23,15 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	self._network_delegate = network_delegate
 
 	local shared_state = {
+		circumstance_name = nil,
+		level = nil,
+		level_name = nil,
+		level_spawner = nil,
+		mission_name = nil,
+		mission_seed = nil,
+		spawn_group = nil,
 		state = "loading",
+		world = nil,
 		world_name = "level_world",
 		network_delegate = network_delegate,
 		host_channel_id = host_channel_id,

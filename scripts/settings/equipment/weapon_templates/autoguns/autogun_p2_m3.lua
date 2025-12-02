@@ -278,6 +278,8 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		ammunition_usage = 1,
+		anim_end_event = nil,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.2,
 		sprint_requires_press_to_interrupt = true,
@@ -554,6 +556,7 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
@@ -647,6 +650,7 @@ weapon_template.actions = {
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
+		chain_anim_event = "alternative_inspect_stop",
 		kind = "inspect",
 		lock_view = true,
 		skip_3p_anims = false,
@@ -658,6 +662,34 @@ weapon_template.actions = {
 		end,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_alt_start = {
+				action_name = "action_inspect_alt",
+				chain_time = 0.75,
+			},
+		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+	},
+	action_inspect_alt = {
+		anim_end_event = "inspect_end",
+		anim_event = "alternative_inspect_start",
+		kind = "inspect",
+		lock_view = true,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_alt_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
 		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
@@ -922,11 +954,11 @@ weapon_template.explicit_combo = {
 weapon_template.special_action_name = "action_push"
 
 weapon_template.action_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return false
+	return current_action_name == "action_inspect"
 end
 
 weapon_template.action_alt_inspect_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return false
+	return current_action_name == "action_inspect_alt"
 end
 
 return weapon_template

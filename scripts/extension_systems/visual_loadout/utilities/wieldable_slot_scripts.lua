@@ -33,6 +33,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazine_ammo")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/melee_idling_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/missile_launcher_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_charges_effects")
@@ -46,6 +47,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolve
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/revolver_speedloader")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/riot_shield_charge_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/riot_shield_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/saw_coating_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shock_maul_hit_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/shotgun_special_shell_carrier")
@@ -55,8 +57,10 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/sweep_t
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/thunder_hammer_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/tox_grenade_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_special_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/zealot_relic_effects")
 
 local MasterItems = require("scripts/backend/master_items")
@@ -272,6 +276,90 @@ WieldableSlotScripts.unwield = function (wieldable_slot_scripts)
 		local wieldable_slot_script = wieldable_slot_scripts[ii]
 
 		wieldable_slot_script:unwield()
+	end
+end
+
+WieldableSlotScripts.on_sweep_hit = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_sweep_hit then
+			wieldable_slot_script:on_sweep_hit()
+		end
+	end
+end
+
+WieldableSlotScripts.on_sweep_start = function (wieldable_slot_scripts, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_sweep_start then
+			wieldable_slot_script:on_sweep_start(t)
+		end
+	end
+end
+
+WieldableSlotScripts.on_sweep_finish = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_sweep_finish then
+			wieldable_slot_script:on_sweep_finish()
+		end
+	end
+end
+
+WieldableSlotScripts.on_exit_damage_window = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_exit_damage_window then
+			wieldable_slot_script:on_exit_damage_window()
+		end
+	end
+end
+
+WieldableSlotScripts.on_weapon_special_toggle = function (wieldable_slot_scripts)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_weapon_special_toggle then
+			wieldable_slot_script:on_weapon_special_toggle()
+		end
+	end
+end
+
+WieldableSlotScripts.on_weapon_special_toggle_finished = function (wieldable_slot_scripts, reason)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_weapon_special_toggle_finished then
+			wieldable_slot_script:on_weapon_special_toggle_finished(reason)
+		end
+	end
+end
+
+WieldableSlotScripts.on_action = function (wieldable_slot_scripts, action_settings, t)
+	local num_scripts = #wieldable_slot_scripts
+
+	for ii = 1, num_scripts do
+		local wieldable_slot_script = wieldable_slot_scripts[ii]
+
+		if wieldable_slot_script.on_action then
+			wieldable_slot_script:on_action(action_settings, t)
+		end
 	end
 end
 

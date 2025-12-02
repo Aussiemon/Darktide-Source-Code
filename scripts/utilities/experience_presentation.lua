@@ -126,6 +126,7 @@ ExperiencePresentation.setup_presentation_data = function (experience_settings, 
 	return {
 		presentation_completed = false,
 		presentation_started = false,
+		presentation_time = nil,
 		time = 0,
 		time_progress = 0,
 		experience_settings = experience_settings,

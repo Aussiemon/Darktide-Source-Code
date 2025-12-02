@@ -47,6 +47,7 @@ local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
+local PayloadSettings = require("scripts/settings/payload/payload_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -105,7 +106,9 @@ for _, archetype_talents in pairs(ArchetypeTalents) do
 	end
 end
 
-NetworkLookup.archetype_talent_names = _create_lookup({}, archetype_talent_names)
+NetworkLookup.archetype_talent_names = _create_lookup({
+	"n/a",
+}, archetype_talent_names)
 NetworkLookup.attack_results = _create_lookup({}, AttackSettings.attack_results)
 NetworkLookup.attack_types = _create_lookup({}, AttackSettings.attack_types)
 NetworkLookup.bot_orders = {
@@ -238,6 +241,8 @@ NetworkLookup.assist_type_lookup = {
 	"gifted",
 	"stimmed",
 }
+NetworkLookup.payload_states = _create_lookup({}, PayloadSettings.states)
+NetworkLookup.payload_speed_controllers = _create_lookup({}, PayloadSettings.payload_speed_controllers)
 NetworkLookup.minigame_game_states = _create_lookup({}, MinigameSettings.game_states)
 
 local minion_attack_selection_template_names = {}
@@ -437,6 +442,7 @@ NetworkLookup.sound_parameters = {
 	"auspex_b_h",
 	"auspex_b_w",
 	"auspex_b_goal",
+	"ability_duration",
 }
 NetworkLookup.sound_switches = {
 	"surface_material",

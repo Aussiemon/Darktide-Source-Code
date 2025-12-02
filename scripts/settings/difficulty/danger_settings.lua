@@ -71,7 +71,7 @@ local DangerSettings = {
 	},
 	{
 		challenge = 5,
-		difficulty = 5,
+		difficulty = 6,
 		digital_icon = "content/ui/materials/icons/difficulty/difficulty_skull_auric",
 		display_name = "loc_group_finder_difficulty_auric",
 		icon = "content/ui/materials/icons/difficulty/flat/difficulty_skull_auric",

@@ -106,6 +106,9 @@ templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = {
 					stat_buffs.power_level_modifier,
 				},
 			},
+			value_manipulation = function (value)
+				return value * 4 * 100
+			end,
 		},
 	},
 	buffs = {

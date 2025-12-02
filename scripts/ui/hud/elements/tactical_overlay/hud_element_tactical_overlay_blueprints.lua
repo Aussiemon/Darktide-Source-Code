@@ -5,9 +5,7 @@ local AchievementTypes = require("scripts/managers/achievements/achievement_type
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local MasterItems = require("scripts/backend/master_items")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -16,20 +14,7 @@ local internal_buffer = ElementSettings.internal_buffer
 local buffer = ElementSettings.buffer
 local icon_size = ElementSettings.right_header_height
 local line_width = ElementSettings.line_width
-local _math_round = math.round
 local _text_extra_options = {}
-
-local function _text_height(ui_renderer, text, style)
-	local text_extra_options = _text_extra_options
-
-	table.clear(text_extra_options)
-	UIFonts.get_font_options_by_style(style, text_extra_options)
-
-	local height = UIRenderer.text_height(ui_renderer, text, style.font_type, style.font_size, style.size, text_extra_options)
-
-	return _math_round(height)
-end
-
 local _disabled_color = Color.terminal_text_body_sub_header(255, true)
 local _dark_text_color = Color.terminal_text_body_sub_header(255, true)
 
@@ -40,7 +25,7 @@ local function _format_progress(current, goal, use_complete_text)
 		return Localize("loc_contracts_task_completed")
 	end
 
-	return string.format("%s/%s", current, TextUtils.apply_color_to_text(goal, _dark_text_color))
+	return string.format("%s/%s", current, Text.apply_color_to_text(goal, _dark_text_color))
 end
 
 local _achievement_completed_color = Color.termianl_icon_dark(255, true)
@@ -263,17 +248,17 @@ Blueprints.achievement = {
 		style.icon.material_values.icon = achievement_definition.icon
 		content.title = AchievementUIHelper.localized_title(achievement_definition)
 		style.title.offset[2] = size
-		size = size + _text_height(ui_renderer, content.title, style.title) + internal_buffer
+		size = size + Text.text_height(ui_renderer, content.title, style.title, style.size, true) + internal_buffer
 		content.description = AchievementUIHelper.localized_description(achievement_definition)
 		style.description.offset[2] = size
 
-		local description_height = _text_height(ui_renderer, content.description, style.description)
+		local description_height = Text.text_height(ui_renderer, content.description, style.description, style.description.size, true)
 
 		while description_height > ElementSettings.max_penance_description_height do
 			local string_length = Utf8.string_length(content.description)
 
 			content.description = string.format("%s...", Utf8.sub_string(content.description, 1, math.max(0, string_length - 8)))
-			description_height = _text_height(ui_renderer, content.description, style.description)
+			description_height = Text.text_height(ui_renderer, content.description, style.description, style.description.size, true)
 		end
 
 		size = size + description_height + internal_buffer
@@ -298,7 +283,7 @@ Blueprints.achievement = {
 			size = size + style.progress_bar.size[2] + internal_buffer
 			content.progress = _format_progress(at, target)
 			style.progress.offset[2] = size
-			size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
+			size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
 		else
 			style.progress_border.visible = false
 			style.progress_background.visible = false
@@ -442,7 +427,7 @@ Blueprints.contract = {
 		style.icon.material_values.checkbox = 0
 		content.title = title
 		style.title.offset[2] = size
-		size = size + _text_height(ui_renderer, content.title, style.title) + internal_buffer
+		size = size + Text.text_height(ui_renderer, content.title, style.title, style.title.size, true) + internal_buffer
 
 		local percent_done = at / target
 
@@ -455,7 +440,7 @@ Blueprints.contract = {
 		content.reward = string.format("%d %s", config.reward or 0, WalletSettings.marks.string_symbol)
 		style.progress.offset[2] = size
 		style.reward.offset[2] = size
-		size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
+		size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
 		size = size + buffer - internal_buffer
 		content.size[2] = math.max(2 * buffer + icon_size, size)
 		widget.contract_criteria = parsed_criteria
@@ -577,7 +562,7 @@ Blueprints.event_tier = {
 
 		content.title = title
 		style.title.offset[2] = size
-		size = size + _text_height(ui_renderer, content.title, style.title) + internal_buffer
+		size = size + Text.text_height(ui_renderer, content.title, style.title, style.title.size, true) + internal_buffer
 
 		local percent_done = at / target
 
@@ -596,7 +581,7 @@ Blueprints.event_tier = {
 			local reward_id = reward.id
 
 			if reward_type == "currency" and WalletSettings[reward.currency] then
-				reward_strings[#reward_strings + 1] = string.format("%s %s", TextUtils.format_currency(reward.amount or 0), WalletSettings[reward.currency].string_symbol)
+				reward_strings[#reward_strings + 1] = string.format("%s %s", Text.format_currency(reward.amount or 0), WalletSettings[reward.currency].string_symbol)
 			end
 
 			if reward_type == "item" and MasterItems.item_exists(reward_id) then
@@ -613,7 +598,7 @@ Blueprints.event_tier = {
 		style.reward.offset[2] = size
 		style.reward_icon.offset[2] = size
 		style.progress.offset[2] = size
-		size = size + _text_height(ui_renderer, content.progress, style.progress) + internal_buffer
+		size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
 		widget.target = target
 		content.size[2] = size
 
@@ -679,7 +664,7 @@ Blueprints.divider = {
 			content.text = text
 			style.text.offset[2] = size + internal_buffer
 			style.text.size[1] = ElementSettings.right_grid_width - 2 * buffer
-			size = size + internal_buffer + _text_height(ui_renderer, content.text, style.text)
+			size = size + internal_buffer + Text.text_height(ui_renderer, content.text, style.text, style.text.size, true)
 		end
 
 		content.size[2] = size
@@ -696,7 +681,7 @@ do
 		content.text = text
 		style.text.offset[2] = size
 		style.text.size[1] = ElementSettings.right_grid_width - 2 * buffer
-		size = size + _text_height(ui_renderer, content.text, style.text)
+		size = size + Text.text_height(ui_renderer, content.text, style.text, style.text.size, true)
 		content.size[2] = size
 	end
 
@@ -934,7 +919,7 @@ Blueprints.buff_title = {
 
 		content.title = config.title
 
-		local title_height = _text_height(ui_renderer, content.title, style.title)
+		local title_height = Text.text_height(ui_renderer, content.title, style.title, style.title.size, true)
 		local big_margin = 4
 
 		style.title.size[2] = title_height
@@ -1025,7 +1010,7 @@ Blueprints.buff_sub_title = {
 
 		local small_margin = 2
 		local big_margin = 8
-		local title_height = _text_height(ui_renderer, content.title, style.title)
+		local title_height = Text.text_height(ui_renderer, content.title, style.title, style.title.size, true)
 
 		style.title.size[2] = title_height
 		style.title.offset[2] = big_margin
@@ -1181,8 +1166,8 @@ Blueprints.buff = {
 			style.icon.offset[2] = config.icon_offset[2] and style.icon.offset[2] + config.icon_offset[2] or style.icon.offset[2]
 		end
 
-		local title_height = _text_height(ui_renderer, content.title, style.title)
-		local description_height = _text_height(ui_renderer, content.description, style.description)
+		local title_height = Text.text_height(ui_renderer, content.title, style.title, style.title.size, true)
+		local description_height = Text.text_height(ui_renderer, content.description, style.description, style.description.size, true)
 		local small_margin = 0
 		local big_margin = 4
 

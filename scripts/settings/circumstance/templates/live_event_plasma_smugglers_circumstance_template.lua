@@ -11,6 +11,7 @@ circumstance_templates.plasma_smugglers_default = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -33,6 +34,7 @@ circumstance_templates.plasma_smugglers_hunting_grounds = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -52,6 +54,7 @@ circumstance_templates.plasma_smugglers_increased_resistance = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -74,6 +77,7 @@ circumstance_templates.plasma_smugglers_darkness = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -95,6 +99,7 @@ circumstance_templates.plasma_smugglers_toxic_gas = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -118,6 +123,7 @@ circumstance_templates.plasma_smugglers_ventilation = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",
@@ -141,6 +147,7 @@ circumstance_templates.plasma_smugglers_waves_of_specials = {
 		"mutator_only_traitor_guard_faction",
 		"mutator_plasma_smuggler_groups",
 		"mutator_live_event_plasma_gunner_replacement",
+		"mutator_plasma_smuggler_props",
 	},
 	ui = {
 		background = "content/ui/materials/backgrounds/mutators/mutators_bg_default",

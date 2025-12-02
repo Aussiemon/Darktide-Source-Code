@@ -4,8 +4,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Colors = require("scripts/utilities/ui/colors")
 local HudElementPlayerBuffsSettings = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_settings")
 local PlayerBuffDefinitions = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_definitions")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local buff_categories = BuffSettings.buff_categories
 local buff_category_order = BuffSettings.buff_category_order
@@ -130,6 +128,7 @@ HudElementPlayerBuffs._add_buff = function (self, buff_instance)
 
 	self._active_buffs_data[index] = {
 		is_active = false,
+		widget = nil,
 		buff_instance = buff_instance,
 		is_negative = is_negative,
 		activated_time = math.huge,
@@ -400,9 +399,6 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 			local buff_template = buff_instance:template()
 			local buff_category = buff_template.buff_category
 			local show_category = buff_category ~= buff_categories.aura or show_aura_category
-
-			show_category = show_category and buff_category ~= buff_categories.live_event
-
 			local show = buff_hud_data.show and show_category
 			local is_active = buff_hud_data.is_active
 			local icon = buff_hud_data.hud_icon
@@ -515,8 +511,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 						38,
 						38,
 					}
-					local text_font_options = UIFonts.get_font_options_by_style(text_style)
-					local text_width, text_height = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, buff_size, text_font_options)
+					local text_width, text_height = self:_text_size(ui_renderer, content.text, text_style, buff_size)
 					local text_margin = 5
 					local total_width = text_margin + text_width
 

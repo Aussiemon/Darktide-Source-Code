@@ -1075,4 +1075,6 @@ local default_view_input_settings = {
 	},
 }
 
+default_view_input_settings.aliases.back[#default_view_input_settings.aliases.back + 1] = "mouse_extra_1"
+
 return settings("DefaultViewInputSettings", default_view_input_settings)

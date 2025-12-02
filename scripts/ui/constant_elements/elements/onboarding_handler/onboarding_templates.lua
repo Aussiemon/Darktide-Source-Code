@@ -74,6 +74,7 @@ end
 local function _create_objective(objective_name, localization_key, marker_units, is_side_mission, localized_header)
 	local icon = is_side_mission and "content/ui/materials/icons/objectives/bonus" or "content/ui/materials/icons/objectives/main"
 	local objective_data = {
+		description = nil,
 		locally_added = true,
 		marker_type = "hub_objective",
 		name = objective_name,
@@ -155,11 +156,23 @@ local function _last_completed_chapter_is(story_name, chapter_name)
 	end
 end
 
-local function _archetype_name_is(archetype_name)
+local dlc_archetypes = {
+	"adamant",
+	"broker",
+}
+
+local function _is_dlc_archetype()
 	local player = _get_player()
 	local player_archetype_name = player:archetype_name()
+	local num_dlc_archetypes = #dlc_archetypes
 
-	return archetype_name == player_archetype_name
+	for i = 1, num_dlc_archetypes do
+		if dlc_archetypes[i] == player_archetype_name then
+			return true
+		end
+	end
+
+	return false
 end
 
 local function _has_new_difficulty()
@@ -659,7 +672,7 @@ local templates = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited") and not _archetype_name_is("adamant")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited") and not _is_dlc_archetype()
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -1090,9 +1103,19 @@ local templates = {
 				if profile then
 					local talent_points = profile.talent_points or 0
 					local points_spent = 0
+					local archetype = profile.archetype
+					local talent_layout = archetype and archetype.talent_layout_file_path and require(archetype.talent_layout_file_path)
 
-					for widget_name, points_spent_on_node in pairs(profile.selected_nodes) do
-						points_spent = points_spent + points_spent_on_node
+					if talent_layout then
+						local nodes = talent_layout.nodes
+
+						for i = 1, #nodes do
+							local node = nodes[i]
+
+							if profile.selected_nodes[node.widget_name] then
+								points_spent = points_spent + node.cost
+							end
+						end
 					end
 
 					if points_spent < talent_points then
@@ -1172,7 +1195,7 @@ local templates = {
 				Managers.narrative:complete_event("level_unlock_premium_store_visited")
 				Managers.narrative:complete_event("level_unlock_barber_visited")
 			else
-				if not _archetype_name_is("adamant") then
+				if not _is_dlc_archetype() then
 					local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 					cinematic_scene_system:play_cutscene("path_of_trust_01")
@@ -1183,7 +1206,7 @@ local templates = {
 		end,
 		close_condition = function (self)
 			if not _journey_mission_completed("km_heresy") then
-				return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+				return Managers.ui:is_view_closing("cutscene_view") or _is_dlc_archetype()
 			else
 				return true
 			end
@@ -1208,7 +1231,7 @@ local templates = {
 			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_stockpile") and _is_on_story_chapter("main_story", "dm_stockpile")
 		end,
 		on_activation = function (self)
-			if not _archetype_name_is("adamant") then
+			if not _is_dlc_archetype() then
 				local player = _get_player()
 				local localization_key = "loc_onboarding_popup_cosmetics_shop"
 				local localized_text = Localize(localization_key)
@@ -1262,14 +1285,14 @@ local templates = {
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
 
-			if not _archetype_name_is("adamant") then
+			if not _is_dlc_archetype() then
 				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 				cinematic_scene_system:play_cutscene("path_of_trust_05")
 			end
 		end,
 		close_condition = function (self)
-			return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+			return Managers.ui:is_view_closing("cutscene_view") or _is_dlc_archetype()
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()
@@ -1368,7 +1391,7 @@ local templates = {
 			return _is_in_hub() and _journey_mission_completed("hm_strain") and (_last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "core_research_1_2") or _last_completed_chapter_is("main_story", "dm_propaganda_1_2"))
 		end,
 		on_activation = function (self)
-			if not _archetype_name_is("adamant") then
+			if not _is_dlc_archetype() then
 				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 				cinematic_scene_system:play_cutscene("path_of_trust_08")
@@ -1576,14 +1599,14 @@ local templates = {
 		on_activation = function (self)
 			Managers.narrative:set_story_to_chapter("main_story", "km_heresy")
 
-			if not _archetype_name_is("adamant") then
+			if not _is_dlc_archetype() then
 				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 				cinematic_scene_system:play_cutscene("path_of_trust_09")
 			end
 		end,
 		close_condition = function (self)
-			return Managers.ui:is_view_closing("cutscene_view") or _archetype_name_is("adamant")
+			return Managers.ui:is_view_closing("cutscene_view") or _is_dlc_archetype()
 		end,
 		on_deactivation = function (self)
 			local player = _get_player()

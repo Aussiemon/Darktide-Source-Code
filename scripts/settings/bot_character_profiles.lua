@@ -29,7 +29,7 @@ local function bot_profiles(item_definitions)
 			loadout[slot_name] = item
 		end
 
-		LocalProfileBackendParser.parse_profile(profile, profile_name)
+		LocalProfileBackendParser.parse_profile(profile, tostring(profile_name))
 	end
 
 	bot_profiles_cached[item_definitions] = profiles

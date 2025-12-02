@@ -3,9 +3,7 @@
 local Breed = require("scripts/utilities/breed")
 local Definitions = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_definitions")
 local HudElementCombatFeedSettings = require("scripts/ui/hud/elements/combat_feed/hud_element_combat_feed_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -77,7 +75,7 @@ HudElementCombatFeed._get_unit_presentation_name = function (self, unit)
 		local player_slot = player:slot()
 		local player_slot_color = UISettings.player_slot_colors[player_slot] or player_default_color
 
-		return TextUtilities.apply_color_to_text(player_name, player_slot_color)
+		return Text.apply_color_to_text(player_name, player_slot_color)
 	else
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
@@ -88,7 +86,7 @@ HudElementCombatFeed._get_unit_presentation_name = function (self, unit)
 			local tags = breed_or_nil.tags
 			local color = self:_color_by_enemy_tags(tags)
 
-			return display_name and TextUtilities.apply_color_to_text(Localize(display_name), color)
+			return display_name and Text.apply_color_to_text(Localize(display_name), color)
 		end
 	end
 end
@@ -152,7 +150,7 @@ HudElementCombatFeed.event_add_notification_message = function (self, message_ty
 		if wallet_settings then
 			local selected_color = Color.terminal_corner_selected(255, true)
 
-			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtilities.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
+			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or Text.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
 
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
@@ -170,7 +168,7 @@ HudElementCombatFeed.event_add_notification_message = function (self, message_ty
 		local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 		if player_name and player_slot_color then
-			player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+			player_name = Text.apply_color_to_text(player_name, player_slot_color)
 		end
 
 		local localization_context = _localization_context
@@ -310,8 +308,7 @@ HudElementCombatFeed._get_notifications_text_height = function (self, notificati
 	local style = widget.style
 	local text_style = style.text
 	local text_size = text_style.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, text_size, text_options)
+	local _, text_height = self:_text_size(ui_renderer, text, text_style, text_size)
 
 	return text_height
 end

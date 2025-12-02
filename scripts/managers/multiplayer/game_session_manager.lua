@@ -534,7 +534,10 @@ GameSessionManager._client_left = function (self, channel_id, peer_id, game_reas
 			local player_unit = player.player_unit
 
 			for unit in pairs(owned_units) do
-				if unit ~= player_unit then
+				local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+				local is_companion = unit_data_extension and unit_data_extension:is_companion() or false
+
+				if unit ~= player_unit and not is_companion then
 					unit_spawner_manager:mark_for_deletion(unit)
 				end
 			end

@@ -56,6 +56,7 @@ local StateGameTestify = GameParameters.testify and require("scripts/game_states
 local StateSplash = require("scripts/game_states/game/state_splash")
 local StatsManager = require("scripts/managers/stats/stats_manager")
 local SteamManager = require("scripts/managers/steam/steam_manager")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TelemetryEvents = require("scripts/managers/telemetry/telemetry_events")
 local TelemetryManager = require("scripts/managers/telemetry/telemetry_manager")
 local TelemetryReporters = require("scripts/managers/telemetry/telemetry_reporters")
@@ -220,7 +221,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 			["request-id"] = math.uuid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
-			["is-modded"] = GameParameters.is_modded_crashify_property or nil,
+			["is-modded"] = rawget(_G, "Mods") ~= nil,
 		}
 	end)
 	Managers.steam = SteamManager:new()

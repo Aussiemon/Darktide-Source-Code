@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/managers/pacing/pacing_manager.lua
 
+local AutoEvent = require("scripts/managers/pacing/auto_event/auto_event")
 local HordePacing = require("scripts/managers/pacing/horde_pacing/horde_pacing")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -46,6 +47,10 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
 	self._monster_pacing = MonsterPacing:new(nav_world)
+
+	local auto_event_template = template.auto_event_template
+
+	self._auto_event = AutoEvent:new(nav_world, world, side_id, target_side_id, auto_event_template)
 	self._side_sub_faction_types = side_sub_faction_types
 	self._side_system = side_system
 	self._paused_spawn_types = {}
@@ -176,6 +181,8 @@ PacingManager.update = function (self, dt, t)
 		if self._ramp_up_enabled then
 			self:_update_ramp_up_frequency(dt, t, target_side_id)
 		end
+
+		self._auto_event:update(dt, t)
 	end
 
 	local switch_state_conditions = self._switch_state_conditions
@@ -294,6 +301,10 @@ PacingManager.pause_spawn_type = function (self, spawn_type, paused, reason, opt
 	end
 end
 
+PacingManager.level_seed = function (self)
+	return self._level_seed
+end
+
 PacingManager.override_allowed_spawn_types = function (self, override_settings)
 	self._override_allowed_spawn_type_settings = override_settings
 end
@@ -318,8 +329,26 @@ PacingManager.is_enabled = function (self)
 	return not self._disabled
 end
 
-PacingManager.is_using_heat = function (self)
-	return self._use_heat
+PacingManager.request_auto_event = function (self, params)
+	local uuid = self._auto_event:request_auto_event(params)
+
+	return uuid
+end
+
+PacingManager.request_auto_event_end = function (self, uuid)
+	self._auto_event:request_auto_event_end(uuid)
+end
+
+PacingManager.get_auto_event_data = function (self, uuid)
+	return self._auto_event:get_auto_event_data(uuid)
+end
+
+PacingManager.highlight_remaining_enemies = function (self, uuid)
+	return self._auto_event:highlight_remaining_enemies(uuid)
+end
+
+PacingManager.kill_remaining_enemies = function (self, uuid)
+	return self._auto_event:kill_remaining_enemies(uuid)
 end
 
 PacingManager._event_intro_cinematic_played = function (self, cinematic_name)
@@ -345,7 +374,7 @@ PacingManager.spawn_type_enabled = function (self, spawn_type)
 		return false, "paused"
 	end
 
-	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] and not self._use_heat then
+	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] then
 		return false, "not_allowed"
 	end
 
@@ -1021,6 +1050,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	if is_auric then
 		self._is_auric = is_auric
 	end
+
+	local auto_event_template = modify_settings.auto_event_template
+
+	if auto_event_template then
+		self._auto_event:swap_auto_event_template(auto_event_template)
+	end
 end
 
 PacingManager.aggro_roamer_zone_range = function (self, target_unit, range)
@@ -1079,7 +1114,9 @@ PacingManager.current_density_type = function (self)
 end
 
 PacingManager.try_inject_special = function (self, breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
-	self._specials_pacing:try_inject_special(breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+	local success = self._specials_pacing:try_inject_special(breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+
+	return success
 end
 
 PacingManager.refund_special_slot = function (self)

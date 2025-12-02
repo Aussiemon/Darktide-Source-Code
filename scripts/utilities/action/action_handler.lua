@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
 local buff_stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local ActionHandler = class("ActionHandler")
@@ -37,6 +38,10 @@ ActionHandler.init = function (self, unit, data)
 	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 end
 
+ActionHandler.extensions_ready = function (self, world, unit)
+	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+end
+
 ActionHandler.add_component = function (self, component_name)
 	local component = self._unit_data_extension:write_component(component_name)
 
@@ -51,6 +56,8 @@ ActionHandler.add_component = function (self, component_name)
 	component.special_active_at_start = false
 	component.combo_count = 0
 	self._registered_components[component_name] = {
+		actions = nil,
+		running_action = nil,
 		id = component_name,
 		component = component,
 	}
@@ -303,6 +310,12 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	self:_anim_event(action_settings, action, condition_func_params, is_chain_action, running_action)
 	self:_update_combo_count(running_action, action_settings, component, automatic_input, reset_combo_override)
 
+	local wieldable_slot_scripts = self._visual_loadout_extension:current_wielded_slot_scripts()
+
+	if wieldable_slot_scripts then
+		WieldableSlotScripts.on_action(wieldable_slot_scripts, action_settings, t)
+	end
+
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -422,6 +435,10 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	end
 
 	time_scale = math.clamp(time_scale, min, max)
+
+	local gameplay_time_scale_limit = ActionHandlerSettings.gameplay_time_scale_limits[action_settings.kind] or max
+
+	time_scale = math.clamp(time_scale, min, gameplay_time_scale_limit)
 
 	return time_scale
 end
@@ -731,8 +748,9 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 		local inventory_component = self._inventory_component
 		local wielded_slot = inventory_component.wielded_slot
 		local ammo, reserve = Ammo.current_slot_clip_amount(self._unit, wielded_slot)
+		local inventory_slot_component = self._unit_data_extension:read_component(wielded_slot)
 
-		if ammo <= 0 and not action_settings.allow_even_if_out_of_ammo and reserve > 0 then
+		if ammo <= 0 and not action_settings.allow_even_if_out_of_ammo and (reserve > 0 or inventory_slot_component.free_ammunition_transfer) then
 			return false
 		end
 	end

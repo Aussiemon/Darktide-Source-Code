@@ -238,6 +238,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.3,
 		sprint_requires_press_to_interrupt = true,
@@ -325,6 +326,7 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		start_input = "zoom_shoot",
@@ -504,7 +506,7 @@ weapon_template.actions = {
 			buff_stat_buffs.reload_speed,
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "reload",
 			},
 		},

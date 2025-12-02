@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/inventory_weapon_marks_view/inventory_weapon_marks_view.lua
 
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local Definitions = require("scripts/ui/views/inventory_weapon_marks_view/inventory_weapon_marks_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
 local InventoryWeaponMarksViewSettings = require("scripts/ui/views/inventory_weapon_marks_view/inventory_weapon_marks_view_settings")
@@ -25,23 +27,25 @@ function remove_attachment_item_slot_path(target_table, slot_id, item, link_item
 	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
 	local path = optional_path or nil
 
-	for k, t in pairs(target_table) do
-		if type(t) == "table" then
-			if k == slot_id then
-				t.item = "content/items/weapons/player/trinkets/empty_trinket"
+	if target_table then
+		for k, t in pairs(target_table) do
+			if type(t) == "table" then
+				if k == slot_id then
+					t.item = "content/items/weapons/player/trinkets/empty_trinket"
 
-				return
-			else
-				local previous_path = path
-
-				path = path and path .. "." .. k or k
-
-				local alternative_path, path_item = remove_attachment_item_slot_path(t, slot_id, item, link_item, path)
-
-				if alternative_path then
 					return
 				else
-					path = previous_path
+					local previous_path = path
+
+					path = path and path .. "." .. k or k
+
+					local alternative_path, path_item = remove_attachment_item_slot_path(t, slot_id, item, link_item, path)
+
+					if alternative_path then
+						return
+					else
+						path = previous_path
+					end
 				end
 			end
 		end
@@ -52,7 +56,6 @@ InventoryWeaponMarksView.init = function (self, settings, context)
 	local class_name = self.__class_name
 
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
-	self._parent = context.parent
 	self._visibility_toggled_on = true
 	self._preview_player = context.player or Managers.player:local_player(1)
 
@@ -80,10 +83,6 @@ InventoryWeaponMarksView.init = function (self, settings, context)
 
 	self._grow_direction = "down"
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
-	self._weapon_zoom_fraction = -0.45
-	self._weapon_zoom_target = -0.45
-	self._min_zoom = -0.45
-	self._max_zoom = 4
 	self._pass_input = false
 	self._pass_draw = false
 end
@@ -186,10 +185,46 @@ InventoryWeaponMarksView.on_enter = function (self)
 	self._content_blueprints = require("scripts/ui/view_content_blueprints/item_blueprints")(grid_size)
 
 	self:_register_button_callbacks()
-	self:_fetch_marks():next(function (marks)
+	self:_fetch_marks():next(function (result)
+		local mastery_data = result and result.mastery_data
+		local marks = result and result.marks
 		local layout = {}
-		local mastery_id = self._mastery_id
-		local pattern_data = UISettings.weapon_patterns[mastery_id]
+		local mastery_id = mastery_data and mastery_data.mastery_id or self._presentation_item.parent_pattern
+		local pattern_data = mastery_id and UISettings.weapon_patterns[mastery_id]
+
+		if not marks or table.is_empty(marks) then
+			marks = {}
+
+			local items_data = {}
+
+			if mastery_data then
+				local mark_item = Mastery.get_default_mark_for_mastery(mastery_data)
+				local item = mark_item and MasterItems.get_item(mark_item)
+
+				if item then
+					items_data[#items_data + 1] = {
+						comparison_text = nil,
+						item = item,
+					}
+				end
+			end
+
+			for i = 1, #items_data do
+				local item_data = items_data[i]
+				local item = item_data.item
+				local comparison_text = item_data.comparison_text
+
+				marks[#marks + 1] = {
+					level = 1,
+					unlocked = true,
+					icon = item.hud_icon,
+					display_name = Items.weapon_card_sub_display_name(item),
+					comparison_text = comparison_text,
+					item = item,
+				}
+			end
+		end
+
 		local mastery_name = pattern_data and pattern_data.display_name and Localize(pattern_data.display_name)
 
 		self._widgets_by_name.display_name.content.text = mastery_name and Utf8.upper(Localize("loc_inventory_weapon_marks_title", true, {
@@ -343,17 +378,21 @@ InventoryWeaponMarksView._register_button_callbacks = function (self)
 end
 
 InventoryWeaponMarksView._update_equip_button_state = function (self)
-	local disable_button = self._selected_widget and not self._selected_widget.content.is_unlocked
+	local disable_button = not self._view_ready
+	local is_equipped = false
 
-	if not disable_button and self._selected_item and self._equipped_item then
-		disable_button = self._selected_item.name == self._equipped_item.name
+	if self._selected_item and self._equipped_item then
+		is_equipped = self._selected_item.name == self._equipped_item.name
 	end
+
+	disable_button = disable_button or self._selected_widget and not self._selected_widget.content.is_unlocked
+	disable_button = disable_button or is_equipped
 
 	local button = self._widgets_by_name.equip_button
 	local button_content = button.content
 
 	button_content.hotspot.disabled = not not disable_button
-	button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
+	button_content.original_text = Utf8.upper(is_equipped and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 end
 
 InventoryWeaponMarksView.present_grid_layout = function (self, layout)
@@ -388,8 +427,8 @@ InventoryWeaponMarksView.present_grid_layout = function (self, layout)
 	local grow_direction = "down"
 
 	local function on_present_callback()
-		self._weapon_stats:present_item(self._presentation_item)
 		self:_setup_weapon_preview()
+		self._weapon_stats:present_item(self._presentation_item)
 		self:_preview_item(self._presentation_item)
 
 		local index = self._selected_index or 1
@@ -402,6 +441,7 @@ InventoryWeaponMarksView.present_grid_layout = function (self, layout)
 		end
 
 		self._widgets_by_name.equip_button.content.visible = true
+		self._view_ready = true
 	end
 
 	self._item_grid:present_grid_layout(layout, ContentBlueprints, left_click_callback, nil, grid_display_name, grow_direction, on_present_callback)
@@ -451,15 +491,12 @@ InventoryWeaponMarksView._setup_weapon_preview = function (self)
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
 
-		local allow_rotation = true
-
-		self._weapon_preview:set_force_allow_rotation(allow_rotation)
-		self:_set_weapon_zoom(self._weapon_zoom_fraction)
 		self._weapon_preview:center_align(0, {
 			0,
 			0,
 			-0.1,
 		})
+		self:_update_weapon_preview_viewport()
 	end
 end
 
@@ -480,11 +517,12 @@ InventoryWeaponMarksView._fetch_marks = function (self)
 	local pattern_name = self._presentation_item.parent_pattern
 
 	return Managers.data_service.mastery:get_mastery_by_pattern(pattern_name):next(function (mastery_data)
-		self._mastery_id = mastery_data.mastery_id
-
 		local mark_milestones = Mastery.get_all_mastery_marks(mastery_data)
 
-		return mark_milestones
+		return {
+			mastery_data = mastery_data,
+			marks = mark_milestones,
+		}
 	end)
 end
 
@@ -551,61 +589,34 @@ InventoryWeaponMarksView.on_back_pressed = function (self)
 	Managers.ui:close_view("inventory_weapon_marks_view")
 end
 
-InventoryWeaponMarksView._set_weapon_zoom = function (self, fraction)
-	self._weapon_zoom_fraction = fraction
-
-	self:_update_weapon_preview_viewport()
-end
-
-InventoryWeaponMarksView._update_weapon_preview_viewport = function (self)
-	local weapon_preview = self._weapon_preview
-
-	if weapon_preview then
-		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
-		local use_custom_zoom = true
-		local optional_node_name = "p_zoom"
-		local optional_pos
-		local min_zoom = self._min_zoom
-		local max_zoom = self._max_zoom
-
-		weapon_preview:set_weapon_zoom(weapon_zoom_fraction, use_custom_zoom, optional_node_name, optional_pos, min_zoom, max_zoom)
-	end
-end
-
 InventoryWeaponMarksView._handle_input = function (self, input_service, dt, t)
 	local using_cursor = self._using_cursor_navigation
 
-	if input_service:get("confirm_pressed") then
-		self:cb_on_equip_pressed()
-	elseif not using_cursor then
-		local scroll_axis = input_service:get("scroll_axis")
+	if self._view_ready then
+		if input_service:get("confirm_pressed") then
+			self:cb_on_equip_pressed()
+		elseif not using_cursor then
+			local scroll_axis = input_service:get("scroll_axis")
 
-		if scroll_axis then
-			local scroll = scroll_axis[2]
-			local scroll_speed = 0.25
+			if scroll_axis then
+				local scroll = scroll_axis[2]
+				local scroll_speed = 0.25
 
-			if InputDevice.gamepad_active then
-				scroll = math.abs(scroll) > math.abs(scroll_axis[1]) and scroll or 0
-				scroll_speed = 0.1
+				if InputDevice.gamepad_active then
+					scroll = math.abs(scroll) > math.abs(scroll_axis[1]) and scroll or 0
+					scroll_speed = 0.1
+				end
 			end
 
-			self._weapon_zoom_target = math.clamp(self._weapon_zoom_target + scroll * scroll_speed, self._min_zoom, self._max_zoom)
+			local current_index = self._item_grid:selected_grid_index()
 
-			if math.abs(self._weapon_zoom_target - self._weapon_zoom_fraction) > 0.01 then
-				local weapon_zoom_fraction = math.lerp(self._weapon_zoom_fraction, self._weapon_zoom_target, dt * 2)
+			if current_index ~= self._selected_index then
+				local widget = self._item_grid:widget_by_index(current_index)
+				local config = widget and widget.content.element
 
-				self:_set_weapon_zoom(weapon_zoom_fraction)
-			end
-		end
-
-		local current_index = self._item_grid:selected_grid_index()
-
-		if current_index ~= self._selected_index then
-			local widget = self._item_grid:widget_by_index(current_index)
-			local config = widget and widget.content.element
-
-			if widget and config then
-				self:cb_on_grid_entry_left_pressed(widget, config)
+				if widget and config then
+					self:cb_on_grid_entry_left_pressed(widget, config)
+				end
 			end
 		end
 	end

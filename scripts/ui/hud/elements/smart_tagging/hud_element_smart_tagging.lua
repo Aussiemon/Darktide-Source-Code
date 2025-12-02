@@ -21,7 +21,10 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 	self._wheel_active_progress = 0
 	self._wheel_active = false
 	self._entries = {}
-	self._last_widget_hover_data = {}
+	self._last_widget_hover_data = {
+		index = nil,
+		t = nil,
+	}
 	self._interaction_scan_delay = HudElementSmartTaggingSettings.scan_delay
 	self._interaction_scan_delay_duration = 0
 	self._presented_smart_tags_by_tag_id = {}

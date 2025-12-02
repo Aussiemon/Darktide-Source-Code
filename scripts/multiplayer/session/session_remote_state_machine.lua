@@ -17,6 +17,7 @@ SessionRemoteStateMachine.TIMEOUT = 30
 
 SessionRemoteStateMachine.init = function (self, network_delegate, client_peer_id, engine_lobby, engine_gamesession, gameobject_callback_object)
 	local shared_state = {
+		channel_id = nil,
 		game_object_sync_done = false,
 		has_been_in_session = false,
 		peer_added_to_session = false,

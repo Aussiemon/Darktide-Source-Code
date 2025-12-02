@@ -180,8 +180,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 								local behaviour_extension = ScriptUnit.has_extension(attacker_unit, "behavior_system")
 								local attacked_action = behaviour_extension and behaviour_extension:running_action()
 								local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(hit_unit)
+								local dodging_unit_buff_keywords = target_buff_extension and target_buff_extension:keywords() or nil
 
-								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type, attacked_action, previously_dodged)
+								Managers.stats:record_private("hook_dodged_attack", dodging_player, optional_attacker_breed_name, attack_types.ranged, stat_dodge_type, attacked_action, previously_dodged, dodging_unit_buff_keywords)
 							end
 
 							should_break = true

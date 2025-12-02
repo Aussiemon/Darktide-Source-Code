@@ -1,24 +1,26 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/utilities/weapon_movement_state.lua
 
 local WeaponMovementStateSettings = require("scripts/settings/equipment/weapon_movement_state_settings")
-local weapon_movement_states = WeaponMovementStateSettings.weapon_movement_states
+local WEAPON_MOVEMENT_STATES = WeaponMovementStateSettings.weapon_movement_states
+local EPSILON_SQUARED_MOVEMENT_SPEED = WeaponMovementStateSettings.epsilon_squared_movement_speed
 local WeaponMovementState = {}
 
-WeaponMovementState.translate_movement_state_component = function (movement_state_component)
-	local method = movement_state_component.method
+WeaponMovementState.translate_movement_state_component = function (movement_state_component, locomotion_component, inair_state_component)
 	local is_crouching = movement_state_component.is_crouching
+	local on_ground = inair_state_component.on_ground
+	local velocity_current = locomotion_component.velocity_current
 
-	if is_crouching then
-		if method == "ladder_idle" or method == "idle" then
-			return weapon_movement_states.crouch_still
-		else
-			return weapon_movement_states.crouch_moving
-		end
-	elseif method == "ladder_idle" or method == "idle" then
-		return weapon_movement_states.still
-	else
-		return weapon_movement_states.moving
+	if not on_ground then
+		return WEAPON_MOVEMENT_STATES.moving
 	end
+
+	local moving = Vector3.length_squared(velocity_current) > EPSILON_SQUARED_MOVEMENT_SPEED
+
+	if moving then
+		return is_crouching and WEAPON_MOVEMENT_STATES.crouch_moving or WEAPON_MOVEMENT_STATES.moving
+	end
+
+	return is_crouching and WEAPON_MOVEMENT_STATES.crouch_still or WEAPON_MOVEMENT_STATES.still
 end
 
 return WeaponMovementState

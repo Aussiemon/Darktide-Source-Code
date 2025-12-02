@@ -176,10 +176,6 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 		self:trigger_anim_event(anim, anim_3p)
 	end
 
-	if self._ability_pause_cooldown_setting then
-		self._ability_component.cooldown_paused = true
-	end
-
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 
 	if has_stance then

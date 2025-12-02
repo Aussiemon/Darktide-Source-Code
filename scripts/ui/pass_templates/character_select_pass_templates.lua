@@ -356,7 +356,9 @@ CharacterSelectPassTemplates.character_select = {
 				0,
 				62,
 			},
-			material_values = {},
+			material_values = {
+				texture_map = nil,
+			},
 			color = {
 				0,
 				255,

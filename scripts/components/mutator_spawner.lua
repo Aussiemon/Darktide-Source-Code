@@ -5,7 +5,6 @@ local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonho
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MonsterSettings = require("scripts/settings/monster/monster_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
-local MutatorSpawnerTemplates = require("scripts/settings/mutator/templates/mutator_monster_spawner_templates")
 local SharedNav = require("scripts/components/utilities/shared_nav")
 local action_data = BreedActions.chaos_daemonhost
 local MutatorSpawner = component("MutatorSpawner")
@@ -25,30 +24,36 @@ local function _calculate_positions(unit)
 end
 
 MutatorSpawner.init = function (self, unit, is_server, nav_world)
-	local _position, _, path_position, travel_distance = _calculate_positions(unit)
-	local level_size = self:get_data(unit, "level_size")
-	local position = Vector3Box(_position)
-	local rotation = QuaternionBox(Unit.local_rotation(unit, 1))
-
-	if is_server then
-		local mutator_manager = Managers.state.mutator
-		local all_activated_mutators = mutator_manager:all_activated_mutators()
-
-		for key, value in pairs(all_activated_mutators) do
-			local current_mutator = key
-
-			if MutatorSpawnerTemplates[current_mutator] then
-				local mutator = mutator_manager:mutator(current_mutator)
-				local section = self:get_data(unit, "section")
-
-				mutator:add_spawn_point(unit, position, rotation, path_position, travel_distance, section, level_size)
-			end
-		end
-	end
+	self._unit = unit
+	self._is_server = is_server
 
 	local run_update = false
 
 	return run_update
+end
+
+MutatorSpawner.get_position_data = function (self)
+	local unit = self._unit
+	local is_server = self._is_server
+
+	if is_server then
+		local _position, _, path_position, travel_distance = _calculate_positions(unit)
+		local level_size = self:get_data(unit, "level_size")
+		local position = Vector3Box(_position)
+		local rotation = QuaternionBox(Unit.local_rotation(unit, 1))
+		local section = self:get_data(unit, "section")
+		local position_data = {
+			unit = unit,
+			position = position,
+			rotation = rotation,
+			path_position = path_position,
+			travel_distance = travel_distance,
+			section = section,
+			level_size = level_size,
+		}
+
+		return position_data
+	end
 end
 
 MutatorSpawner.destroy = function (self)
@@ -98,7 +103,7 @@ MutatorSpawner.editor_init = function (self, unit)
 	local level_size = self:get_data(unit, "level_size")
 	local node_index = Unit.node(unit, "ap_preview_gizmos")
 	local size = SIZE_LOOKUP[level_size]
-	local extents = Vector3(size, size, 1)
+	local extents = Vector3(size, size, 0.3)
 
 	Unit.set_local_scale(unit, node_index, extents)
 	Unit.set_vector4_for_material(unit, "gizmo_bounds", "color", Color(1, 0, 0, 0.4))

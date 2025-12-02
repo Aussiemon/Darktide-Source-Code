@@ -732,7 +732,9 @@ local function team_member_definition(scenegraph_id)
 					0,
 					5,
 				},
-				material_values = {},
+				material_values = {
+					texture_map = nil,
+				},
 				color = {
 					0,
 					255,
@@ -1028,7 +1030,9 @@ local widget_definitions = {
 	previous_filter_button = UIWidget.create_definition(terminal_button_highlighted_pass_template, "previous_filter_button", {
 		gamepad_action = "back",
 		original_text = Utf8.upper(Localize("loc_group_finder_navigation_back_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}, nil, {
 		text = {
 			line_spacing = 1,
@@ -1038,7 +1042,9 @@ local widget_definitions = {
 		gamepad_action = "confirm_pressed",
 		highlighted = true,
 		original_text = Utf8.upper(Localize("loc_group_finder_join_request_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}, nil, {
 		text = {
 			line_spacing = 1,
@@ -1089,7 +1095,9 @@ local widget_definitions = {
 	cancel_group_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button_hold_small, "cancel_group_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		original_text = Utf8.upper(Localize("loc_group_finder_cancel_group_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}, scenegraph_definition.cancel_group_button.size, {
 		text = {
 			line_spacing = 1,
@@ -1098,7 +1106,9 @@ local widget_definitions = {
 	start_group_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "start_group_button", {
 		gamepad_action = "hotkey_menu_special_2",
 		original_text = Utf8.upper(Localize("loc_group_finder_create_group_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}, nil, {
 		text = {
 			line_spacing = 1,
@@ -1779,7 +1789,9 @@ local grid_blueprints = {
 						0,
 						5,
 					},
-					material_values = {},
+					material_values = {
+						texture_map = nil,
+					},
 					color = {
 						0,
 						255,

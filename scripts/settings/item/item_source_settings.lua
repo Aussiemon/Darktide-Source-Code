@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/item/item_source_settings.lua
 
-local ItemSourceSettings = {
+local item_source_settings = {
 	{
 		display_name = "loc_item_source_achievement",
 		is_achievement = true,
@@ -20,12 +20,24 @@ local ItemSourceSettings = {
 	},
 	{
 		display_name = "loc_dlc_adamant_name",
-		is_dlc = true,
+		dlc_name = "adamant",
 	},
 	{
 		display_name = "loc_dlc_adamant_name_deluxe",
-		is_dlc = true,
+		dlc_name = "adamant_deluxe",
+	},
+	{
+		display_name = "loc_dlc_broker_name",
+		dlc_name = "broker",
+	},
+	{
+		display_name = "loc_dlc_broker_name_deluxe",
+		dlc_name = "broker_deluxe",
+	},
+	{
+		display_name = "loc_dlc_broker_name_cosmetic_upgrade",
+		dlc_name = "broker_cosmetic",
 	},
 }
 
-return settings("ItemSourceSettings", ItemSourceSettings)
+return settings("ItemSourceSettings", item_source_settings)

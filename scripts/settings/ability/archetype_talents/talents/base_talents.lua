@@ -840,6 +840,33 @@ local base_talents = {
 				identifier = "player_toughness_damage_reduction_node_buff_medium_5",
 			},
 		},
+		base_melee_toughness_damage_reduction_node_buff_medium_old = {
+			description = "loc_talent_melee_toughness_damage_reduction_medium_desc",
+			display_name = "loc_talent_melee_toughness_damage_reduction_medium",
+			name = "[dev] toughness bonus",
+			format_values = {
+				toughness = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_old",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.melee_toughness_damage_taken_multiplier,
+						},
+					},
+					value_manipulation = function (value)
+						return math.abs(1 - value) * 100
+					end,
+				},
+			},
+			passive = {
+				buff_template_name = "player_melee_toughness_damage_reduction_node_buff_medium_old",
+				identifier = "player_melee_toughness_damage_reduction_node_buff_medium_old",
+			},
+		},
 		base_melee_damage_node_buff_low_1 = {
 			description = "loc_talent_melee_damage_boost_low_desc",
 			display_name = "loc_talent_melee_damage_boost_low",
@@ -1726,6 +1753,31 @@ local base_talents = {
 			passive = {
 				buff_template_name = "player_ranged_damage_node_buff_medium_5",
 				identifier = "player_ranged_damage_node_buff_medium_5",
+			},
+		},
+		base_toxin_power_boost_1 = {
+			description = "loc_talent_toxin_damage_boost_desc",
+			display_name = "loc_talent_toxin_damage_boost",
+			name = "[dev] toxin_damage bonus",
+			format_values = {
+				power = {
+					format_type = "percentage",
+					prefix = "+",
+					value = 0.1,
+					find_value = {
+						buff_template_name = "base_toxin_power_boost_1",
+						find_value_type = "buff_template",
+						tier = true,
+						path = {
+							"stat_buffs",
+							stat_buffs.toxin_power,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "base_toxin_power_boost_1",
+				identifier = "base_toxin_power_boost_1",
 			},
 		},
 		base_armor_pen_node_buff_low_1 = {
@@ -3263,7 +3315,6 @@ local base_talents = {
 					find_value = {
 						buff_template_name = "player_max_ammo_node_buff_1",
 						find_value_type = "buff_template",
-						tier = true,
 						path = {
 							"stat_buffs",
 							stat_buffs.ammo_reserve_capacity,
@@ -3280,6 +3331,20 @@ local base_talents = {
 			description = "loc_talent_max_ammo_low_desc",
 			display_name = "loc_talent_max_ammo_low",
 			name = "",
+			format_values = {
+				ammo = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "player_max_ammo_node_buff_1",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.ammo_reserve_capacity,
+						},
+					},
+				},
+			},
 			passive = {
 				buff_template_name = "player_max_ammo_node_buff_2",
 				identifier = "base_max_ammo_node_buff",

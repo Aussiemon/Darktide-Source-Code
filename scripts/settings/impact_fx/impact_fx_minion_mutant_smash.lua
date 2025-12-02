@@ -9,6 +9,14 @@ local blood_ball = {
 local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker
 local player = {
 	sfx = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				event = "wwise/events/minions/play_enemy_mutant_charger_smash_human",
@@ -33,6 +41,14 @@ local player = {
 		},
 	},
 	vfx = {
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				effects = {
@@ -51,6 +67,14 @@ local player = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		died = blood_ball,
 		damage = blood_ball,
 	},

@@ -8,6 +8,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionState = require("scripts/utilities/minion_state")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local Toughness = require("scripts/utilities/toughness/toughness")
 local attack_results = AttackSettings.attack_results
 local stagger_results = AttackSettings.stagger_results
 local attack_types = AttackSettings.attack_types
@@ -464,6 +465,10 @@ CheckProcFunctions.on_melee_weakspot_kills = function (params, template_data, te
 	return CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) and CheckProcFunctions.on_melee_kill(params, template_data, template_context, t)
 end
 
+CheckProcFunctions.on_melee_backstab_kill = function (params, template_data, template_context, t)
+	return CheckProcFunctions.is_backstab(params, template_data, template_context, t) and CheckProcFunctions.on_melee_kill(params, template_data, template_context, t)
+end
+
 CheckProcFunctions.on_alternative_fire_hit = function (params, template_data, template_context, t)
 	return params.alternative_fire
 end
@@ -687,6 +692,31 @@ end
 
 CheckProcFunctions.on_bleeding_buff_added = function (params, template_data, template_context, t)
 	return params.template_name == "bleed"
+end
+
+CheckProcFunctions.is_self = function (params, template_data, template_context, t)
+	return params.unit == template_context.unit
+end
+
+CheckProcFunctions.has_toughness = function (params, template_data, template_context, t)
+	return Toughness.current_toughness_percent(template_context.unit) > 0
+end
+
+CheckProcFunctions.combine = function (...)
+	local functions = {
+		...,
+	}
+	local num_functions = #functions
+
+	return function (params, template_data, template_context, t)
+		for i = 1, num_functions do
+			if not functions[i](params, template_data, template_context, t) then
+				return false
+			end
+		end
+
+		return true
+	end
 end
 
 function _is_within_close_distance(params, template_data, template_context, t)

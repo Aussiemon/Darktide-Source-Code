@@ -1,12 +1,11 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_definitions.lua
 
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view_pj/mission_board_view_settings")
+local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local Settings = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_settings")
 local Styles = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_styles")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -18,6 +17,7 @@ local mission_area_width = 1120
 local mission_area_height = 760
 local debrief_settings = Settings.debrief_settings
 local debrief_size = debrief_settings.size
+local panel_height = Settings.panel_height
 local scenegraph_definition = {
 	screen = {
 		size = {
@@ -114,6 +114,48 @@ local scenegraph_definition = {
 			2,
 		},
 	},
+	panel_button_right = {
+		horizontal_alignment = "right",
+		parent = "list_background",
+		vertical_alignment = "top",
+		size = {
+			50,
+			panel_height,
+		},
+		position = {
+			0,
+			0,
+			20,
+		},
+	},
+	panel_button_left = {
+		horizontal_alignment = "left",
+		parent = "list_background",
+		vertical_alignment = "top",
+		size = {
+			50,
+			panel_height,
+		},
+		position = {
+			0,
+			0,
+			20,
+		},
+	},
+	list_panel = {
+		horizontal_alignment = "center",
+		parent = "list_background",
+		vertical_alignment = "top",
+		size = {
+			mission_area_width - 100,
+			panel_height,
+		},
+		position = {
+			0,
+			0,
+			50,
+		},
+	},
 	top_detail = {
 		horizontal_alignment = "center",
 		parent = "list_background",
@@ -139,7 +181,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			38,
-			2,
+			30,
 		},
 	},
 	scrollbar_horizontal = {
@@ -153,7 +195,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			10,
+			30,
 		},
 	},
 	scrollbar_vertical = {
@@ -167,10 +209,17 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			10,
+			30,
 		},
 	},
 }
+
+local function _get_input_text(action)
+	local service_type = "View"
+	local alias_key = Managers.ui:get_input_alias_key(action, service_type)
+
+	return InputUtils.input_text_for_current_input_device(service_type, alias_key)
+end
 
 local function scrollbar_visibility_function(content)
 	if content.parent then
@@ -508,11 +557,15 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 		{
 			pass_type = "texture",
 			style_id = "debrief_icon",
-			value = "content/ui/materials/mission_board/soundwave_icon",
+			value = "content/ui/materials/patterns/ui_waveform",
 			value_id = "debrief_icon",
 			style = icon_style,
 			change_function = function (content, style, animation, dt)
 				_update_debrief_button_size_by_selection_state(content, style, animation, dt)
+
+				if style.material_values and not is_locked then
+					style.material_values.enable_animation = content.hotspot.anim_hover_progress
+				end
 			end,
 		},
 		{
@@ -549,6 +602,233 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 	widget_definition.content.is_locked = is_locked
 
 	return widget_definition
+end
+
+local function create_panel_step_button(scenegraph_id, horz_alignment, input_action)
+	local uvs = horz_alignment == "right" and {
+		{
+			1,
+			0,
+		},
+		{
+			0,
+			1,
+		},
+	} or {
+		{
+			0,
+			0,
+		},
+		{
+			1,
+			1,
+		},
+	}
+	local button_icon_style = table.clone(Styles.panel_stepper.button_icon)
+	local button_icon_glow_style = table.clone(Styles.panel_stepper.button_icon_glow)
+
+	button_icon_style.uvs = uvs
+	button_icon_glow_style.uvs = uvs
+
+	local input_text = _get_input_text(input_action)
+	local content_override = {
+		gamepad_input = input_action,
+	}
+
+	return UIWidget.create_definition({
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+			style = Styles.panel_stepper.hotspot,
+		},
+		{
+			pass_type = "texture",
+			style_id = "list_frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				color = {
+					255,
+					255,
+					88,
+					27,
+				},
+				offset = {
+					0,
+					0,
+					6,
+				},
+				size_addition = {
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture_uv",
+			style_id = "button_icon",
+			value = "content/ui/materials/buttons/double_arrow",
+			style = button_icon_style,
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return not InputDevice.gamepad_active
+			end,
+			change_function = function (content, style, animations, dt)
+				local hotspot_data = content.hotspot
+
+				style.color[1] = 255 * (1 - hotspot_data.anim_input_progress)
+				style.size[1] = style.default_size[1] + 10 * hotspot_data.anim_hover_progress
+				style.size[2] = style.default_size[2] + 10 * hotspot_data.anim_hover_progress
+			end,
+		},
+		{
+			pass_type = "texture_uv",
+			style_id = "button_icon_glow",
+			value = "content/ui/materials/buttons/double_arrow_glow",
+			style = button_icon_glow_style,
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return not InputDevice.gamepad_active
+			end,
+			change_function = function (content, style, animations, dt)
+				local hotspot_data = content.hotspot
+
+				style.color[1] = 255 * hotspot_data.anim_input_progress
+				style.size[1] = style.default_size[1] + 10 * hotspot_data.anim_hover_progress
+				style.size[2] = style.default_size[2] + 10 * hotspot_data.anim_hover_progress
+			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "button_input",
+			value = "X",
+			value_id = "button_input",
+			style = Styles.panel_stepper.button_input,
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return InputDevice.gamepad_active
+			end,
+			change_function = function (content, style, animations, dt)
+				local input_action = content.gamepad_input
+
+				if input_action then
+					local input_text = _get_input_text(input_action)
+
+					content.button_input = input_text
+				end
+			end,
+		},
+	}, scenegraph_id, content_override)
+end
+
+local function create_list_panel_widget(scenegraph_id)
+	return UIWidget.create_definition({
+		{
+			content_id = "panel_button_hotspot",
+			pass_type = "hotspot",
+			style_id = "panel_button_hotspot",
+			style = Styles.list_panel.panel_button_hotspot,
+		},
+		{
+			pass_type = "rect",
+			style_id = "panel_button_background",
+			style = Styles.list_panel.panel_button_background,
+		},
+		{
+			pass_type = "rect",
+			style_id = "panel_button_highlight",
+			style = Styles.list_panel.panel_button_highlight,
+			change_function = function (content, style, animations, dt)
+				local hotspot = content.panel_button_hotspot
+				local alpha = 175 * hotspot.anim_hover_progress
+
+				alpha = math.clamp(alpha + 255 * hotspot.anim_select_progress, 0, 255)
+				style.color[1] = alpha
+			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "panel_button_campaign_title",
+			value = "",
+			value_id = "panel_button_campaign_title",
+			style = Styles.list_panel.panel_button_campaign_title,
+			change_function = function (content, style, animations, dt)
+				local hotspot = content.panel_button_hotspot
+
+				style.text_color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.default_color
+
+				local font_size = 22 + 2 * hotspot.anim_hover_progress
+
+				font_size = font_size + 3 * hotspot.anim_select_progress
+				style.font_size = font_size
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "outer_frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				color = {
+					255,
+					255,
+					88,
+					27,
+				},
+				offset = {
+					0,
+					0,
+					6,
+				},
+				size_addition = {
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "inner_frame",
+			value = "content/ui/materials/mission_board/list_panel_button_frame",
+			style = {
+				scale_to_material = true,
+				color = {
+					255,
+					255,
+					88,
+					27,
+				},
+				selected_color = {
+					255,
+					0,
+					0,
+					0,
+				},
+				default_color = {
+					255,
+					255,
+					88,
+					27,
+				},
+				offset = {
+					0,
+					0,
+					6,
+				},
+				size_addition = {
+					0,
+					0,
+				},
+			},
+			change_function = function (content, style, animations, dt)
+				local hotspot = content.panel_button_hotspot
+
+				style.color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.default_color
+			end,
+		},
+	}, scenegraph_id)
 end
 
 local widget_definitions = {
@@ -642,22 +922,8 @@ local widget_definitions = {
 			end,
 		},
 	}, "bottom_detail"),
-	campaign_header = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "header_text",
-			value = "",
-			value_id = "header_text",
-			style = Styles.campaign_header.header_text,
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			value_id = "frame",
-			style = Styles.bottom_detail.frame,
-		},
-	}, "campaign_header"),
+	panel_stepper_right = create_panel_step_button("panel_button_right", "right", "navigate_secondary_right_pressed"),
+	panel_stepper_left = create_panel_step_button("panel_button_left", "left", "navigate_secondary_left_pressed"),
 }
 local animations = {}
 
@@ -669,50 +935,89 @@ animations.title_enter = {
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			local scrollbar_widget = parent._scrollbar_widget
 
-			scrollbar_widget.visible = false
+			if scrollbar_widget then
+				scrollbar_widget.visible = false
+			end
+
 			widgets.top_detail.visible = false
 			widgets.bottom_detail.visible = false
-			widgets.campaign_header.visible = false
 			widgets.list_background.visible = false
 			widgets.list_background.style.list_background_fade.color[1] = 0
 			widgets.list_frame.visible = false
-			ui_scenegraph.list_background.size[1] = 0
-			ui_scenegraph.list_background.size[2] = 0
+			widgets.panel_stepper_right.visible = false
+			widgets.panel_stepper_left.visible = false
+
+			if parent._panel_button_widgets then
+				for _, widget in pairs(parent._panel_button_widgets) do
+					widget.visible = false
+				end
+			end
+
+			ui_scenegraph.list_background.size[1] = 4
+			ui_scenegraph.list_background.size[2] = 4
+			ui_scenegraph.list_background.position[1] = side_buffer + 60 + mission_area_width * 0.5 - 1
+			ui_scenegraph.list_background.position[2] = top_buffer + 60 + mission_area_height * 0.5 - 1
 			parent._background_entry_done = false
 		end,
 	},
 	{
-		end_time = 0.35,
-		name = "background_entry",
+		end_time = 0.3,
+		name = "background_entry_width",
 		start_time = 0.05,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			widgets.list_background.visible = true
 			widgets.list_frame.visible = true
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local width = mission_area_width * math.easeOutCubic(progress)
-			local height = mission_area_height * math.easeOutCubic(progress)
+			local width = 4 + (mission_area_width - 4) * math.easeOutCubic(progress)
 
+			ui_scenegraph.list_background.position[1] = side_buffer + 60 + (mission_area_width * 0.5 - 1) * (1 - math.easeOutCubic(progress))
 			ui_scenegraph.list_background.size[1] = width
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			return
+		end,
+	},
+	{
+		end_time = 0.55,
+		name = "background_entry_heigh",
+		start_time = 0.3,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local height = 4 + (mission_area_height - 4) * math.easeOutCubic(progress)
+
+			ui_scenegraph.list_background.position[2] = top_buffer + 60 + (mission_area_height * 0.5 - 1) * (1 - math.easeOutCubic(progress))
 			ui_scenegraph.list_background.size[2] = height
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			widgets.top_detail.visible = true
 			widgets.bottom_detail.visible = true
-			widgets.campaign_header.visible = true
+			widgets.panel_stepper_right.visible = true
+			widgets.panel_stepper_left.visible = true
+
+			if parent._panel_button_widgets then
+				for _, widget in pairs(parent._panel_button_widgets) do
+					widget.visible = true
+				end
+			end
 
 			local scrollbar_widget = parent._scrollbar_widget
 
-			scrollbar_widget.visible = true
+			if scrollbar_widget then
+				scrollbar_widget.visible = true
+			end
+
 			parent._background_entry_done = true
 
 			parent:_start_mission_list_entry_animation()
 		end,
 	},
 	{
-		end_time = 0.5,
+		end_time = 0.7,
 		name = "fade_in",
-		start_time = 0.35,
+		start_time = 0.55,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			return
 		end,
@@ -721,16 +1026,18 @@ animations.title_enter = {
 		end,
 	},
 	{
-		end_time = 1.15,
+		end_time = 1.25,
 		name = "title_enter",
-		start_time = 0.35,
+		start_time = 0.55,
 		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			local campaign_header = widgets.campaign_header
-			local campaign_header_content = campaign_header.content
-			local default_header_text = campaign_header_content.default_header_text
-			local campaign_header_num_characters = campaign_header_content.num_characters or Utf8.string_length(default_header_text)
+			if parent._panel_button_widgets then
+				for _, widget in pairs(parent._panel_button_widgets) do
+					local button_text = widget.content.default_panel_button_campaign_title
+					local button_text_num_characters = widget.content.num_characters or Utf8.string_length(button_text)
 
-			campaign_header_content.num_characters = campaign_header_num_characters
+					widget.content.num_characters = button_text_num_characters
+				end
+			end
 
 			local bottom_detail = widgets.bottom_detail
 
@@ -738,11 +1045,10 @@ animations.title_enter = {
 
 			local bottom_detail_style = bottom_detail.style
 			local text_style = bottom_detail_style.flavor_text_1
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local text_width = UIRenderer.text_size(params.ui_renderer, bottom_detail.content.default_flavor_text, text_style.font_type, text_style.font_size, {
+			local text_width = Text.text_width(params.ui_renderer, bottom_detail.content.default_flavor_text, text_style, {
 				mission_area_width,
 				0,
-			}, text_options)
+			})
 
 			text_style.size[1] = text_width + 60
 			text_style.offset[1] = mission_area_width - (text_width + 60)
@@ -753,10 +1059,13 @@ animations.title_enter = {
 			bottom_detail.content.num_characters = bottom_detail_num_characters
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local campaign_header = widgets.campaign_header
-			local campaign_header_content = campaign_header.content
+			if parent._panel_button_widgets then
+				for _, widget in pairs(parent._panel_button_widgets) do
+					local content = widget.content
 
-			campaign_header_content.header_text = Utf8.sub_string(campaign_header_content.default_header_text, 1, math.floor(campaign_header_content.num_characters * progress))
+					content.panel_button_campaign_title = Utf8.sub_string(content.default_panel_button_campaign_title, 1, math.floor(content.num_characters * progress))
+				end
+			end
 
 			local bottom_detail = widgets.bottom_detail
 			local bottom_detail_content = bottom_detail.content
@@ -1103,10 +1412,76 @@ animations.mission_tile_entry = {
 		end,
 	},
 }
+animations.title_exit = {
+	{
+		end_time = 0.05,
+		name = "setup",
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			local scrollbar_widget = parent._scrollbar_widget
+
+			if scrollbar_widget then
+				scrollbar_widget.visible = false
+			end
+
+			widgets.top_detail.visible = false
+			widgets.bottom_detail.visible = false
+			widgets.panel_stepper_right.visible = false
+			widgets.panel_stepper_left.visible = false
+			widgets.list_background.style.list_background_fade.color[1] = 0
+
+			if parent._panel_button_widgets then
+				for _, widget in pairs(parent._panel_button_widgets) do
+					widget.visible = false
+				end
+			end
+		end,
+	},
+	{
+		end_time = 0.4,
+		name = "background_exit_height",
+		start_time = 0.05,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local height = 4 + (mission_area_height - 4) * (1 - math.easeOutCubic(progress))
+
+			ui_scenegraph.list_background.position[2] = top_buffer + 60 + (mission_area_height * 0.5 - 1) * math.easeOutCubic(progress)
+			ui_scenegraph.list_background.size[2] = height
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			return
+		end,
+	},
+	{
+		end_time = 0.75,
+		name = "background_exit_width",
+		start_time = 0.4,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+			local width = 4 + (mission_area_width - 4) * (1 - math.easeOutCubic(progress))
+
+			ui_scenegraph.list_background.position[1] = side_buffer + 60 + (mission_area_width * 0.5 - 1) * math.easeOutCubic(progress)
+			ui_scenegraph.list_background.size[1] = width
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+			widgets.list_background.visible = false
+			widgets.list_frame.visible = false
+
+			parent:set_visibility(false)
+
+			parent._exit_animation = nil
+		end,
+	},
+}
 Definitions.scenegraph_definition = scenegraph_definition
 Definitions.widget_definitions = widget_definitions
 Definitions.create_scrollbar_widget = create_scrollbar_widget
 Definitions.create_debrief_widget = create_debrief_widget
+Definitions.create_list_panel_widget = create_list_panel_widget
 Definitions.animations = animations
 
 return settings("ViewElementCampaignMissionListDefinitions", Definitions)

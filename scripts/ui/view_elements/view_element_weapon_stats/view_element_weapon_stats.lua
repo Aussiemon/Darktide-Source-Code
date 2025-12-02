@@ -68,7 +68,7 @@ local function _add_presentation_perks(item, layout, grid_size)
 			local is_locked = false
 			local is_modified = false
 			local show_glow = perk.is_fake
-			local is_gadget = item_type == "GADGET"
+			local is_gadget = Items.is_gadget(item_type)
 
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
@@ -110,7 +110,7 @@ end
 
 local function _add_presentation_traits(item, layout, grid_size)
 	local item_type = item.item_type
-	local is_gadget = item_type == "GADGET"
+	local is_gadget = Items.is_gadget(item_type)
 	local add_end_margin = false
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
@@ -143,7 +143,7 @@ local function _add_presentation_traits(item, layout, grid_size)
 		local trait_id = trait.id
 		local trait_value = trait.value
 		local trait_rarity = trait.rarity
-		local trait_category = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and Items.trait_category(item)
+		local trait_category = Items.is_weapon(item_type) and Items.trait_category(item)
 		local trait_item = MasterItems.get_item(trait_id)
 
 		if trait_item then
@@ -290,7 +290,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			item = item,
 			size = {
 				grid_size[1],
-				75,
+				70,
 			},
 		}
 		layout[#layout + 1] = {
@@ -327,7 +327,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 		if _add_presentation_traits(item, layout, grid_size) then
 			add_end_margin = false
 		end
-	elseif item_type == "GADGET" then
+	elseif is_gadget then
 		layout[#layout + 1] = {
 			widget_type = "gadget_header",
 			item = item,
@@ -898,7 +898,7 @@ ViewElementWeaponStats.update_expertise_value = function (self, start_value, ove
 	local item = self._item
 	local grid_divider_bottom_weapon = self._widgets_by_name.grid_divider_top_weapon
 
-	if item and (item.item_type == "WEAPON_MELEE" or item.item_type == "WEAPON_RANGED") then
+	if item and Items.is_weapon(item.item_type) then
 		grid_divider_bottom_weapon.content.rating_value = string.format(" %i", override_value or start_value)
 		grid_divider_bottom_weapon.content.show_glow = override_value and override_value ~= start_value
 

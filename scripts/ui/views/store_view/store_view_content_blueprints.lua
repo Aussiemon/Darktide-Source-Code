@@ -4,7 +4,6 @@ local Colors = require("scripts/utilities/ui/colors")
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local Items = require("scripts/utilities/items")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -184,6 +183,88 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	material_values.use_placeholder_texture = 1
 end
 
+local aquila_button_icon_pass = {
+	pass_type = "texture_uv",
+	style_id = "texture",
+	value = "content/ui/materials/icons/offer_cards/offer_card_container",
+	value_id = "texture",
+	style = {
+		hdr = false,
+		horizontal_alignment = "center",
+		vertical_alignment = "center",
+		offset = {
+			0,
+			0,
+			1,
+		},
+		size = {
+			196,
+			230.99999999999997,
+		},
+		uvs = {
+			{
+				0,
+				0,
+			},
+			{
+				1,
+				1,
+			},
+		},
+		material_values = {
+			shine = 0,
+		},
+	},
+	visibility_function = function (content, style)
+		return not not style.material_values and not not style.material_values.main_texture
+	end,
+	change_function = function (content, style)
+		local hotspot = content.hotspot
+		local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+		local min_uv = 0.95
+		local max_uv = 1
+		local start_uv = 0
+		local end_uv = 1
+		local current_uv = (max_uv - min_uv) * progress * 0.5
+
+		style.uvs[1][1] = start_uv + current_uv
+		style.uvs[1][2] = start_uv + current_uv
+		style.uvs[2][1] = end_uv - current_uv
+		style.uvs[2][2] = end_uv - current_uv
+	end,
+}
+local mtx_pack_description_text = {
+	{
+		pass_type = "text",
+		style_id = "pack_description",
+		value = "",
+		value_id = "pack_description",
+		style = item_description_text_style,
+	},
+	{
+		pass_type = "texture",
+		style_id = "pack_description_background",
+		value = "content/ui/materials/backgrounds/terminal_basic",
+		value_id = "pack_description_background",
+		style = {
+			size_addition = {
+				60,
+				20,
+			},
+			color = Color.terminal_corner(178.5, true),
+			offset = {
+				item_description_text_style.offset[1],
+				item_description_text_style.offset[2],
+				item_description_text_style.offset[3] - 1,
+			},
+			horizontal_alignment = item_description_text_style.horizontal_alignment,
+			vertical_alignment = item_description_text_style.vertical_alignment,
+		},
+		visibility_function = function (content, style)
+			return content.pack_description ~= ""
+		end,
+	},
+}
 local blueprints = {
 	dynamic_spacing = {
 		size = {
@@ -437,6 +518,40 @@ local blueprints = {
 				value = "<Sub Title>",
 				value_id = "sub_title",
 				style = item_sub_header_text_style,
+			},
+			{
+				pass_type = "rotated_texture",
+				style_id = "loading",
+				value = "content/ui/materials/loading/loading_small",
+				style = {
+					angle = 0,
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+					size = {
+						80,
+						80,
+					},
+					color = {
+						60,
+						160,
+						160,
+						160,
+					},
+					offset = {
+						0,
+						0,
+						2,
+					},
+				},
+				visibility_function = function (content, style)
+					return not content.element._is_image_loaded
+				end,
+				change_function = function (content, style, _, dt)
+					local add = -0.5 * dt
+
+					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+					style.angle = style.rotation_progress * math.pi * 2
+				end,
 			},
 			{
 				pass_type = "texture",
@@ -713,11 +828,10 @@ local blueprints = {
 
 			local title_style = style.title
 			local title_width = content.size[1] + style.title.size_addition[1]
-			local title_options = UIFonts.get_font_options_by_style(title_style)
-			local _, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
+			local _, title_height = parent:_text_size(content.title, title_style, {
 				title_width,
-				math.huge,
-			}, title_options)
+				1080,
+			})
 			local title_background_margin = 20
 
 			style.title_background.size = {
@@ -734,15 +848,31 @@ local blueprints = {
 			style.price.material = not element.owned and font_gradient_material
 			style.price.text_color = element.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
 			content.price_icon = icon_texture_small
+
+			if element.offer.description.type == "platform_purchase" then
+				style.price.material = nil
+				style.price_icon.visible = false
+				style.price.text_color = Color.white(255, true)
+				content.price = Localize("loc_dlc_store_popup_confirm")
+			end
+
 			content.has_media = not not element.texture_map
 			content.has_aquila_texture = not not element.aquila_texture
-			style.texture.material_values.main_texture = element.aquila_texture or element.texture_map
 
-			if element.aquila_texture then
-				style.texture.size = {
-					215,
-					215,
-				}
+			if element.image_url then
+				element._is_image_loaded = false
+				content.hotspot.disabled = true
+				element._texture_load_promise = Managers.url_loader:load_texture(element.image_url, nil, "store_view")
+
+				element._texture_load_promise:next(function (data)
+					content.hotspot.disabled = false
+					element._is_image_loaded = true
+					style.texture.material_values.main_texture = data.texture
+				end, function (error)
+					content.hotspot.disabled = false
+
+					Log.error("StoreView", "fetching item image", error)
+				end)
 			end
 
 			local icon_margin = 10
@@ -752,11 +882,10 @@ local blueprints = {
 
 			local icon_margin = 0
 			local price_style = style.price
-			local price_options = UIFonts.get_font_options_by_style(price_style)
-			local price_width, price_height = parent:_text_size(content.price, price_style.font_type, price_style.font_size, {
+			local price_width, price_height = parent:_text_size(content.price, price_style, {
 				title_width,
-				math.huge,
-			}, price_options)
+				1080,
+			})
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
 
@@ -778,7 +907,10 @@ local blueprints = {
 			local discount_percent = element.discount_percent
 
 			if element.discount then
-				local text_width, _ = parent:_text_size(content.price, price_style.font_type, price_style.font_size)
+				local text_width, _ = parent:_text_size(content.price, price_style, {
+					title_width,
+					1080,
+				})
 				local discount_margin = 20
 				local price_style = style.price
 
@@ -786,11 +918,10 @@ local blueprints = {
 				style.discount_price.text_color = Color.terminal_text_body(255, true)
 
 				local discount_style = style.discount_price
-				local discount_options = UIFonts.get_font_options_by_style(discount_style)
-				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style.font_type, discount_style.font_size, {
+				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style, {
 					title_width,
-					math.huge,
-				}, discount_options)
+					1080,
+				})
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
 			end
@@ -850,6 +981,12 @@ local blueprints = {
 			end
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
+			if element._texture_load_promise then
+				Managers.url_loader:unload_texture(element.image_url)
+
+				widget.style.texture.material_values.main_texture = nil
+			end
+
 			local content = widget.content
 
 			if content.icon_load_id then
@@ -1076,6 +1213,7 @@ local blueprints = {
 			{
 				pass_type = "texture",
 				style_id = "icon",
+				value = nil,
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "center",
@@ -1168,56 +1306,6 @@ local blueprints = {
 					},
 				},
 			},
-			{
-				pass_type = "texture_uv",
-				style_id = "texture",
-				value = "content/ui/materials/icons/offer_cards/offer_card_container",
-				value_id = "texture",
-				style = {
-					hdr = false,
-					horizontal_alignment = "center",
-					vertical_alignment = "center",
-					offset = {
-						0,
-						0,
-						1,
-					},
-					size = {
-						196,
-						230.99999999999997,
-					},
-					uvs = {
-						{
-							0,
-							0,
-						},
-						{
-							1,
-							1,
-						},
-					},
-					material_values = {
-						shine = 0,
-					},
-				},
-				visibility_function = function (content, style)
-					return not not style.material_values and not not style.material_values.main_texture
-				end,
-				change_function = function (content, style)
-					local hotspot = content.hotspot
-					local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-					local min_uv = 0.95
-					local max_uv = 1
-					local start_uv = 0
-					local end_uv = 1
-					local current_uv = (max_uv - min_uv) * progress * 0.5
-
-					style.uvs[1][1] = start_uv + current_uv
-					style.uvs[1][2] = start_uv + current_uv
-					style.uvs[2][1] = end_uv - current_uv
-					style.uvs[2][2] = end_uv - current_uv
-				end,
-			},
 		},
 		init = function (parent, widget, element, callback_name)
 			local content = widget.content
@@ -1230,11 +1318,10 @@ local blueprints = {
 
 			local title_style = style.title
 			local max_width = content.size[1] + style.title.size_addition[1]
-			local title_options = UIFonts.get_font_options_by_style(title_style)
-			local title_width, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
+			local title_width, title_height = parent:_text_size(content.title, title_style, {
 				max_width,
 				200,
-			}, title_options)
+			})
 			local icon_margin = 10
 			local price_text = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
 
@@ -1247,7 +1334,17 @@ local blueprints = {
 
 			style.price.material = not element.owned and font_gradient_material
 			style.price.text_color = element.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
-			style.texture.material_values.main_texture = element.texture_map
+
+			if element.texture_map then
+				style.texture.material_values.main_texture = element.texture_map
+			end
+
+			if element.texture_maps then
+				for idx = 1, #element.texture_maps do
+					style["texture" .. idx].material_values.main_texture = element.texture_maps[idx]
+				end
+			end
+
 			content.icon = icon_texture_small
 			style.title_background.size = {
 				[2] = title_height,
@@ -1259,14 +1356,51 @@ local blueprints = {
 				content.divider_bottom = "content/ui/materials/frames/premium_store/offer_card_lower_sale"
 			end
 
-			if element.description ~= "" then
-				style.texture.offset[2] = -40
-				style.texture.size = {
-					168,
-					198,
-				}
-			else
-				style.texture.offset[2] = -10
+			local icon_count = 0
+
+			if element.texture_map then
+				icon_count = 1
+
+				if element.description ~= "" then
+					style.texture.offset[2] = -40
+					style.texture.size = {
+						168,
+						198,
+					}
+				else
+					style.texture.offset[2] = -10
+				end
+			end
+
+			if element.texture_maps then
+				icon_count = #element.texture_maps
+
+				for idx = 1, #element.texture_maps do
+					local texture_pass = style["texture" .. idx]
+
+					if element.description ~= "" then
+						texture_pass.offset[2] = -40
+						texture_pass.size = {
+							168,
+							198,
+						}
+					else
+						texture_pass.horizontal_alignment = "left"
+						texture_pass.offset[1] = 280 * (idx - 1) + 10
+						texture_pass.offset[2] = -10
+					end
+				end
+
+				if style.pack_description then
+					style.pack_description_background.horizontal_alignment = "left"
+					style.pack_description_background.offset[1] = 280 * icon_count + 10
+					style.pack_description_background.offset[2] = -10
+					style.pack_description_background.offset[3] = -1
+					style.pack_description_background.size = {
+						196,
+						230.99999999999997,
+					}
+				end
 			end
 		end,
 	},
@@ -1700,11 +1834,10 @@ local blueprints = {
 
 			local title_style = style.title
 			local title_width = content.size[1] + style.title.size_addition[1]
-			local title_options = UIFonts.get_font_options_by_style(title_style)
-			local _, title_height = parent:_text_size(content.title, title_style.font_type, title_style.font_size, {
+			local _, title_height = parent:_text_size(content.title, title_style, {
 				title_width,
-				math.huge,
-			}, title_options)
+				1080,
+			})
 
 			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or Text.format_currency(element.price)
 
@@ -1715,6 +1848,13 @@ local blueprints = {
 			style.price.material = not element.owned and font_gradient_material
 			style.price.text_color = element.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
 			content.price_icon = icon_texture_small
+
+			if element.offer.description.type == "platform_purchase" then
+				style.price_icon.visible = false
+				style.price.text_color = Color.terminal_text_header(255, true)
+				content.price = Localize("loc_dlc_store_popup_confirm")
+			end
+
 			content.has_media = not not element.texture_map
 			content.has_aquila_texture = not not element.aquila_texture
 			style.texture.material_values.main_texture = element.aquila_texture or element.texture_map
@@ -1733,11 +1873,10 @@ local blueprints = {
 
 			local icon_margin = 0
 			local price_style = style.price
-			local price_options = UIFonts.get_font_options_by_style(price_style)
-			local price_width, price_height = parent:_text_size(content.price, price_style.font_type, price_style.font_size, {
+			local price_width, price_height = parent:_text_size(content.price, price_style, {
 				title_width,
-				math.huge,
-			}, price_options)
+				1080,
+			})
 
 			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
 
@@ -1759,7 +1898,10 @@ local blueprints = {
 			local discount_percent = element.discount_percent
 
 			if element.discount then
-				local text_width, _ = parent:_text_size(content.price, price_style.font_type, price_style.font_size)
+				local text_width, _ = parent:_text_size(content.price, price_style, {
+					title_width,
+					1080,
+				})
 				local discount_margin = 20
 				local price_style = style.price
 
@@ -1767,11 +1909,10 @@ local blueprints = {
 				style.discount_price.text_color = Color.terminal_text_body(255, true)
 
 				local discount_style = style.discount_price
-				local discount_options = UIFonts.get_font_options_by_style(discount_style)
-				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style.font_type, discount_style.font_size, {
+				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style, {
 					title_width,
-					math.huge,
-				}, discount_options)
+					1080,
+				})
 
 				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
 			end
@@ -1849,6 +1990,8 @@ local blueprints = {
 			end
 		end,
 	},
+	aquila_button_icon_pass = aquila_button_icon_pass,
+	mtx_pack_description_text = mtx_pack_description_text,
 }
 
 return blueprints

@@ -7,16 +7,13 @@ local PopupStyles = require("scripts/ui/view_elements/view_element_player_social
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
 local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
 local ViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local blueprint_styles = PopupStyles.blueprints
 local OnlineStatus = SocialConstants.OnlineStatus
 local view_element_player_popup_blueprints = {}
 local temp_text_size = {}
 
 local function get_style_text_size(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
 	local text_size = style.size
 	local size_addition = style.size_addition
 
@@ -31,8 +28,7 @@ local function get_style_text_size(text, style, ui_renderer)
 	end
 
 	local use_max_extents = true
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local text_width, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size and temp_text_size, text_options, use_max_extents)
+	local text_width, text_height = Text.text_size(ui_renderer, text, style, text_size and temp_text_size, use_max_extents)
 
 	return text_width, text_height
 end
@@ -119,9 +115,9 @@ view_element_player_popup_blueprints.search_header = {
 		widget_content.text = context.label
 
 		local style = widget.style.search_text
-		local text_width, text_height = UIRenderer.text_size(parent._ui_renderer, context.label, style.font_type, style.font_size, {
+		local text_width, text_height = Text.text_size(parent._ui_renderer, context.label, style, {
 			blueprint_styles.search_header.size[1],
-			math.huge,
+			1080,
 		})
 
 		widget_content.size[1] = math.max(widget_content.size[1], text_width)

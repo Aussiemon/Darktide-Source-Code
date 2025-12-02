@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/mission/mission_types.lua
 
-local MissionTypes = {
+local mission_types = {
 	raid = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_01",
 		index = 1,
@@ -65,4 +65,4 @@ local MissionTypes = {
 	},
 }
 
-return settings("MissionTypes", MissionTypes)
+return settings("MissionTypes", mission_types)

@@ -174,10 +174,15 @@ BuffVolume._update_inverse_buffs = function (self, unit, dt, t)
 
 	for buff_affected_unit, buff_indices in pairs(buff_affected_units) do
 		local is_inside_volume = false
-		local affected_unit_position = POSITION_LOOKUP[buff_affected_unit] + Vector3(0, 0, 0.1)
 
-		if not ALIVE[buff_affected_unit] or Unit.is_point_inside_volume(unit, "volume", affected_unit_position) then
+		if not ALIVE[buff_affected_unit] then
 			is_inside_volume = true
+		else
+			local affected_unit_position = (POSITION_LOOKUP[buff_affected_unit] or Unit.world_position(buff_affected_unit, 1)) + Vector3(0, 0, 0.1)
+
+			if Unit.is_point_inside_volume(unit, "volume", affected_unit_position) then
+				is_inside_volume = true
+			end
 		end
 
 		if is_inside_volume then

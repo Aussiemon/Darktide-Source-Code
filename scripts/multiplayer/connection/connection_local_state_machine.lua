@@ -29,7 +29,9 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 	local parent
 	local shared_state = {
 		boot_complete = false,
+		channel_id = nil,
 		has_reserved = false,
+		is_dedicated = nil,
 		event_delegate = event_delegate,
 		engine_lobby = engine_lobby,
 		host_peer_id = host_peer_id,

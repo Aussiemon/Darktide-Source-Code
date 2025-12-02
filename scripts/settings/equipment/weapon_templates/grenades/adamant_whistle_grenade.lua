@@ -95,6 +95,6 @@ weapon_template.keywords = {
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/throwing_knives"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/adamant_whistle"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_non_grenade"
 
 return weapon_template

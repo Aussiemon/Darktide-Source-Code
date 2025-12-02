@@ -115,6 +115,10 @@ MutatorMinionVisualOverride.cleanup = function (self)
 	return
 end
 
+MutatorMinionVisualOverride.reset = function (self)
+	return
+end
+
 MutatorMinionVisualOverride._cleanup = function (self)
 	local package_manager = Managers.package
 	local packages = self._package_ids

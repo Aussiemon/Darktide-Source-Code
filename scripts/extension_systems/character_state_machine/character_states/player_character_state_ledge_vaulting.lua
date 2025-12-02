@@ -67,15 +67,17 @@ PlayerCharacterStateLedgeVaulting.on_enter = function (self, unit, dt, t, previo
 	locomotion_steering.calculate_fall_velocity = false
 	locomotion_steering.move_method = "script_driven"
 
-	local movement_state = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local movement_state_component = self._movement_state_component
 
-	movement_state.method = "vaulting"
+	movement_state_component.method = "vaulting"
 
 	local first_person_extension = self._first_person_extension
 	local animation_extension = self._animation_extension
 
-	if not movement_state.is_crouching then
-		Crouch.enter(unit, first_person_extension, animation_extension, self._weapon_extension, movement_state, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+	if not movement_state_component.is_crouching then
+		Crouch.enter(unit, first_person_extension, animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 	end
 
 	first_person_extension:set_wanted_player_height("vault", 0.5)
@@ -166,12 +168,14 @@ PlayerCharacterStateLedgeVaulting.on_exit = function (self, unit, t, next_state)
 	self._locomotion_steering_component.calculate_fall_velocity = true
 
 	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local wants_crouch = Crouch.crouch_input(self._input_extension, false, false, false)
 	local is_crouching = movement_state_component.is_crouching
 	local first_person_extension = self._first_person_extension
 
 	if next_state ~= "sliding" and not wants_crouch and Crouch.can_exit(unit) then
-		Crouch.exit(unit, first_person_extension, animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+		Crouch.exit(unit, first_person_extension, animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 
 		is_crouching = false
 	end

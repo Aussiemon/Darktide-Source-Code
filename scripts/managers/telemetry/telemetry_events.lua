@@ -436,6 +436,16 @@ TelemetryEvents.mispredict_report = function (self, entries, count)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.image_request_failed = function (self, url, context)
+	local event = self:_create_event("image_request_failed")
+
+	event:set_data({
+		url = url,
+		context = context,
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.player_knocked_down = function (self, player, data)
 	data.coherency = TelemetryHelper.unit_coherency(player.player_unit)
 	data.chunk = TelemetryHelper.chunk_at_unit(player.player_unit)
@@ -1244,6 +1254,11 @@ TelemetryEvents.memory_usage = function (self, tag)
 		usage[key] = string.format("%d", value)
 	end
 
+	if IS_WINDOWS then
+		usage.vram_usage = string.format("%d", Memory.vram_usage() * 1024 * 1024)
+		usage.vram_budget = string.format("%d", Memory.vram_budget() * 1024 * 1024)
+	end
+
 	local allocators
 	local to_track = Managers.telemetry:allocators_to_track()
 
@@ -1286,6 +1301,17 @@ TelemetryEvents.dlc_purchase_button_clicked = function (self, dlc_telemetry_id, 
 	event:set_data({
 		identifier = dlc_telemetry_id,
 		dlc_variant = dlc_variant,
+		active_views = active_views,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.premium_currency_button_pressed = function (self, premium_currency_id)
+	local event = self:_create_event("premium_currency_button_pressed")
+	local active_views = Managers.ui:active_views()
+
+	event:set_data({
+		identifier = premium_currency_id,
 		active_views = active_views,
 	})
 	self._manager:register_event(event)

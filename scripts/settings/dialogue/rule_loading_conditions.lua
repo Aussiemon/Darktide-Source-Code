@@ -78,10 +78,34 @@ local function _all_players_at_least_level(level_requirement)
 	return true
 end
 
+local function _zone_is(zone_id)
+	local mission = Managers.state.mission:mission()
+	local current_zone_id = mission.zone_id
+
+	return zone_id == current_zone_id
+end
+
+local function _archetype_present(archetype)
+	local human_players = Managers.player:human_players()
+
+	for _, player in pairs(human_players) do
+		local player_archetype_name = player:archetype_name()
+
+		if player_archetype_name == archetype then
+			return true
+		end
+	end
+
+	return false
+end
+
 RuleLoadingConditions.conversations_core = {
 	exclude_conditions = {
 		all_max_level = function ()
 			return _all_players_at_least_level(30)
+		end,
+		broker_present = function ()
+			return _archetype_present("broker")
 		end,
 	},
 	all_max_level = {
@@ -91,6 +115,9 @@ RuleLoadingConditions.conversations_core = {
 		"conversation_sergeant",
 		"conversation_tech_priest",
 		"conversation_zealot",
+	},
+	broker_present = {
+		"lore_hive_cities_one",
 	},
 }
 RuleLoadingConditions.adamant_female_a = {
@@ -117,6 +144,7 @@ RuleLoadingConditions.adamant_female_a = {
 		"adamant_female_a_zealot_bonding_conversation_36",
 		"adamant_female_a_zealot_bonding_conversation_48",
 		"adamant_female_a_zealot_bonding_conversation_57",
+		"broker_male_b_adamant_bonding_conversation_09",
 	},
 	pre_habs = {
 		"adamant_female_a_ogryn_bonding_conversation_04",
@@ -138,6 +166,7 @@ RuleLoadingConditions.adamant_female_b = {
 		"adamant_female_b_psyker_bonding_conversation_57",
 		"adamant_female_b_veteran_bonding_conversation_34",
 		"adamant_female_b_zealot_bonding_conversation_30",
+		"broker_female_a_adamant_bonding_conversation_20",
 	},
 }
 RuleLoadingConditions.adamant_female_c = {
@@ -210,6 +239,7 @@ RuleLoadingConditions.adamant_male_b = {
 		"adamant_male_b_zealot_bonding_conversation_14",
 		"adamant_male_b_zealot_bonding_conversation_40",
 		"adamant_male_b_zealot_bonding_conversation_47",
+		"broker_female_b_adamant_bonding_conversation_15",
 	},
 }
 RuleLoadingConditions.adamant_male_c = {
@@ -226,11 +256,42 @@ RuleLoadingConditions.adamant_male_c = {
 		"adamant_male_c_zealot_bonding_conversation_22",
 		"adamant_male_c_zealot_bonding_conversation_33",
 		"adamant_male_c_zealot_bonding_conversation_58",
+		"broker_male_b_adamant_bonding_conversation_29",
+	},
+}
+RuleLoadingConditions.broker_female_a = {
+	exclude_conditions = {
+		throneside = function ()
+			return _zone_is("throneside")
+		end,
+	},
+	throneside = {
+		"broker_female_a_psyker_bonding_conversation_32",
+		"broker_bonding_conversation_29",
+	},
+}
+RuleLoadingConditions.broker_male_a = {
+	exclude_conditions = {
+		throneside = function ()
+			return _zone_is("throneside")
+		end,
+	},
+	throneside = {
+		"broker_male_a_zealot_bonding_conversation_09",
+		"broker_male_a_zealot_bonding_conversation_15",
 	},
 }
 RuleLoadingConditions.ogryn_c = {
 	pre_heresy = {
 		"pimlico_bonding_conversation_penances",
+	},
+}
+RuleLoadingConditions.ogryn_d = {
+	pre_twins = {
+		"bonding_conversation_hammersmith_even_more_wolfer",
+	},
+	pre_heresy = {
+		"bonding_conversation_hammersmith_more_wolfer",
 	},
 }
 RuleLoadingConditions.psyker_female_a = {

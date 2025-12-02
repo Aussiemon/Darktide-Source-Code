@@ -7,6 +7,7 @@ local Breed = require("scripts/utilities/breed")
 local BreedQueries = require("scripts/utilities/breed_queries")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
 local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
+local Component = require("scripts/utilities/component")
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
@@ -34,6 +35,15 @@ local unit_flow_event = Unit.flow_event
 
 FlowCallbacks.clear_return_value = function ()
 	table.clear(flow_return_table)
+end
+
+FlowCallbacks.anim_callback = function (params)
+	local unit = params.unit
+	local callback_name = params.callback
+	local param1 = params.param1
+	local animation_system = Managers.state.extension:system("animation_system")
+
+	animation_system:anim_callback(unit, callback_name, param1)
 end
 
 FlowCallbacks.call_anim_event = function (params)
@@ -1014,7 +1024,7 @@ FlowCallbacks.player_inventory_fx = function (params)
 			if sound_alias and sound_alias ~= "" then
 				local sync_to_clients = true
 
-				wwise_playing_id = fx_extension:trigger_gear_wwise_event_with_source(sound_alias, external_properties, source_name, sync_to_clients)
+				wwise_playing_id = fx_extension:trigger_gear_wwise_event_with_source(sound_alias, external_properties, source_name, sync_to_clients, false)
 			end
 
 			if effect_alias and effect_alias ~= "" then
@@ -2204,11 +2214,28 @@ FlowCallbacks.teleport_payload = function (params)
 	end
 
 	local unit = params.payload
+	local payload_extension = ScriptUnit.has_extension(unit, "payload_system")
 
-	if ScriptUnit.has_extension(unit, "payload_system") then
-		local payload_extension = ScriptUnit.extension(unit, "payload_system")
-
+	if payload_extension then
 		payload_extension:teleport_to_node(params.path, params.node)
+	end
+end
+
+FlowCallbacks.set_payload_aim_target_position = function (params)
+	local unit = params.payload_unit
+	local payload_extension = ScriptUnit.has_extension(unit, "payload_system")
+
+	if payload_extension then
+		payload_extension:set_payload_aim_target_position_override(params.target_position, nil, nil)
+	end
+end
+
+FlowCallbacks.clear_payload_aim_target_position = function (params)
+	local unit = params.payload_unit
+	local payload_extension = ScriptUnit.has_extension(unit, "payload_system")
+
+	if payload_extension then
+		payload_extension:clear_payload_aim_target_position_override()
 	end
 end
 
@@ -2238,8 +2265,10 @@ FlowCallbacks.start_mission_objective = function (params)
 
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local level = Application.flow_callback_context_level()
+		local cb = callback(Level.trigger_script_node_event, level, params.node_id, "objective_ended", true)
 
-		mission_objective_system:flow_callback_start_mission_objective(params.objective_name, get_objective_group_id())
+		mission_objective_system:flow_callback_start_mission_objective(params.objective_name, get_objective_group_id(), cb)
 	end
 end
 
@@ -2899,20 +2928,23 @@ FlowCallbacks.hook_stat_team = function (params)
 end
 
 FlowCallbacks.live_event_check = function (params)
+	local template = Managers.live_event:active_template()
+
+	if not template then
+		return
+	end
+
 	flow_return_table.event_active = false
 	flow_return_table.event_progress = 0
 
-	local template = Managers.live_event:active_template()
+	local id = template.id
+	local check_passed = params.event_name == id or not params.event_name
 
-	if template then
-		local id = template.id
+	if check_passed then
+		local progress = Managers.live_event:active_completion_rate()
 
-		if params.event_name == id then
-			local progress = Managers.live_event:active_progress()
-
-			flow_return_table.event_active = true
-			flow_return_table.event_progress = progress
-		end
+		flow_return_table.event_active = true
+		flow_return_table.event_progress = progress
 	end
 
 	return flow_return_table
@@ -3045,6 +3077,19 @@ FlowCallbacks.aggro_all_within_radius = function (params)
 	local radius = params.radius
 
 	pacing_manager:aggro_all_within_radius(position, radius)
+end
+
+FlowCallbacks.tag_all_within_radius = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local position = params.worldposition
+	local radius = params.radius
+
+	Managers.event:trigger("event_tag_enemies_inside_area", position, radius)
 end
 
 FlowCallbacks.mission_buffs_send_family_selection = function (params)

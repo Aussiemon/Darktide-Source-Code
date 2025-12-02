@@ -218,6 +218,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.2,
 		sprint_requires_press_to_interrupt = true,
@@ -294,6 +295,7 @@ weapon_template.actions = {
 	action_shoot_zoomed = {
 		allowed_during_sprint = true,
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		recoil_template = "default_stub_pistol_killshot",
 		spread_template = "default_stub_pistol_killshot",
@@ -497,7 +499,7 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "reload",
 			},
 		},
@@ -581,7 +583,7 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "reload",
 			},
 		},
@@ -623,6 +625,7 @@ weapon_template.actions = {
 		damage_window_start = 0.25,
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		power_level = 300,
 		range_mod = 1,
@@ -721,10 +724,12 @@ weapon_template.actions = {
 		damage_window_start = 0.25,
 		first_person_hit_anim = "attack_hit",
 		first_person_hit_stop_anim = "attack_hit",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		power_level = 300,
 		range_mod = 1,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		stop_alternate_fire = true,
 		total_time = 1.2,
 		crosshair = {
@@ -841,6 +846,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.laspistol
 weapon_template.spread_template = "default_stub_pistol_assault"
 weapon_template.recoil_template = "default_stub_pistol_bfg"
+weapon_template.suppression_template = "stub_pistol_p1_m1_suppression_assault"
 weapon_template.look_delta_template = "stub_pistol"
 weapon_template.conditional_state_to_action_input = {
 	{

@@ -243,6 +243,7 @@ weapon_template.actions = {
 		abort_sprint = false,
 		allowed_during_sprint = false,
 		ammunition_usage = 1,
+		anim_end_event = nil,
 		anim_event = "attack_shoot_start",
 		first_shot_only_sound_reflection = true,
 		ignore_shooting_look_delta_anim_control = true,
@@ -580,6 +581,7 @@ table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/flamer_rifle"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/flamer_rifle"
 weapon_template.reload_template = ReloadTemplates.flamer_rifle
+weapon_template.suppression_template = "flamer_p1_m1_suppression_assault"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",
@@ -611,7 +613,10 @@ weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	look_delta_template = "lasgun_brace_light",
 	start_anim_event = "to_braced",
+	start_anim_event_3p = nil,
 	stop_anim_event = "to_unaim_braced",
+	stop_anim_event_3p = nil,
+	suppression_template = "flamer_p1_m1_suppression_demolitions",
 	sway_template = "default_lasgun_killshot",
 	uninterruptible = false,
 	crosshair = {

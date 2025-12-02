@@ -60,6 +60,10 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	for i = 1, ALIGNED_VFX_RING_BUFFER_SIZE do
 		aligned_vfx_buffer[i] = {
+			particle_id = nil,
+			spawner_attach_name = nil,
+			spawner_name = nil,
+			variable_index = nil,
 			end_position = Vector3Box(),
 		}
 	end
@@ -73,6 +77,12 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
 		moving_sfx_buffer[ii] = {
+			distance = nil,
+			playing_id = nil,
+			range = nil,
+			source_id = nil,
+			speed = nil,
+			wwise_stop_event = nil,
 			position = Vector3Box(),
 			direction = Vector3Box(),
 		}
@@ -87,6 +97,10 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 
 	for ii = 1, MOVING_FX_RING_BUFFER_SIZE do
 		moving_vfx_buffer[ii] = {
+			distance = nil,
+			effect_id = nil,
+			range = nil,
+			speed = nil,
 			position = Vector3Box(),
 			direction = Vector3Box(),
 		}
@@ -142,10 +156,19 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 		if not config.exclude_from_unit_data_components then
 			looping_sound_trigger_data[alias_name] = {
 				should_trigger = false,
+				source_attach_name = nil,
+				source_name = nil,
 			}
 			looping_sounds[alias_name] = {
+				event_alias = nil,
+				event_name = nil,
+				id = nil,
 				ignored_as_exclusive_event = false,
+				is_husk = nil,
 				is_playing = false,
+				source_attach_name = nil,
+				source_name = nil,
+				stop_event_name = nil,
 				timestamp = -1,
 			}
 		end
@@ -169,7 +192,9 @@ PlayerUnitFxExtension.init = function (self, extension_init_context, unit, exten
 	for alias_name, config in pairs(PlayerCharacterLoopingParticleAliases) do
 		if not config.exclude_from_unit_data_components then
 			looping_particles[alias_name] = {
+				id = nil,
 				is_playing = false,
+				particle_name = nil,
 				spawner_attach_name = "n/a",
 				spawner_name = "n/a",
 				external_properties = {},
@@ -233,6 +258,7 @@ PlayerUnitFxExtension.extensions_ready = function (self, world, unit)
 	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 
 	self:_update_first_person_mode_all_sources(is_in_first_person_mode)
+	Managers.event:register(self, "event_player_profile_updated", "_event_player_profile_updated")
 end
 
 PlayerUnitFxExtension._create_particles_wrapper = function (self, world, particle_name, position, rotation, scale, create_network_index)
@@ -295,6 +321,8 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 		self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(CLIENT_RPCS))
 	end
 
+	Managers.event:unregister(self, "event_player_profile_updated")
+
 	local looping_particles = self._looping_particles
 
 	for looping_particles_alias, data in pairs(looping_particles) do
@@ -340,6 +368,14 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 	end
 
 	World.destroy_particle_group(self._world, self._player_particle_group_id)
+end
+
+PlayerUnitFxExtension._event_player_profile_updated = function (self, synced_peer_id, synced_local_player_id, synced_profile)
+	local player_peer_id = self._player:peer_id()
+
+	if player_peer_id == synced_peer_id then
+		self:destroy_particle_group()
+	end
 end
 
 PlayerUnitFxExtension.destroy_particle_group = function (self)
@@ -1138,32 +1174,33 @@ end
 PlayerUnitFxExtension.spawn_moving_player_fx_alias = function (self, particle_alias, sound_alias, external_properties, position, direction, range, duration)
 	local _, particle_name = self._visual_loadout_extension:resolve_gear_particle(particle_alias, external_properties)
 	local _, event_name, has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias, external_properties)
+	local should_play_husk_effect = self:should_play_husk_effect()
 
-	if has_husk_events and self:should_play_husk_effect() then
+	if has_husk_events and should_play_husk_effect then
 		event_name = event_name .. "_husk"
 	end
 
-	self:_spawn_moving_player_fx(particle_name, event_name, position, direction, range, duration)
+	self:_spawn_moving_player_fx(false, should_play_husk_effect, particle_name, event_name, position, direction, range, duration)
 
 	if self._is_server then
 		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
 
-		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_moving_player_fx", channel_id, game_object_id, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_sounds[event_name], position, direction, range, duration)
+		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_moving_player_fx", channel_id, game_object_id, false, should_play_husk_effect, NetworkLookup.player_character_particles[particle_name], NetworkLookup.player_character_sounds[event_name], position, direction, range, duration)
 	end
 end
 
-PlayerUnitFxExtension.rpc_spawn_moving_player_fx = function (self, channel_id, game_object_id, particle_name_id, event_name_id, position, direction, range, duration)
+PlayerUnitFxExtension.rpc_spawn_moving_player_fx = function (self, channel_id, game_object_id, husk_only, should_play_husk_effect, particle_name_id, event_name_id, position, direction, range, duration)
 	local particle_name = NetworkLookup.player_character_particles[particle_name_id]
 	local event_name = NetworkLookup.player_character_sounds[event_name_id]
 
-	self:_spawn_moving_player_fx(particle_name, event_name, position, direction, range, duration)
+	self:_spawn_moving_player_fx(husk_only, should_play_husk_effect, particle_name, event_name, position, direction, range, duration)
 end
 
-PlayerUnitFxExtension._spawn_moving_player_fx = function (self, particle_name, event_name, position, direction, range, duration)
+PlayerUnitFxExtension._spawn_moving_player_fx = function (self, husk_only, should_play_husk_effect, particle_name, event_name, position, direction, range, duration)
 	local speed = range / duration
 
 	self:_add_moving_vfx(position, direction, speed, range, particle_name)
-	self:_add_moving_sfx(position, direction, speed, range, event_name, nil)
+	self:_add_moving_sfx(husk_only, should_play_husk_effect, position, direction, speed, range, event_name, nil)
 end
 
 PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_name)
@@ -1314,6 +1351,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 		local early_stop_sound_alias = moving_sfx_config.early_stop_event_alias
 		local distance_offset = moving_sfx_config.distance_offset
 		local duration = moving_sfx_config.duration
+		local husk_only = moving_sfx_config.husk_only
 		local total_distance = distance_offset * 2
 		local speed = total_distance / duration
 		local resolved, start_event_name, start_has_husk_events = self._visual_loadout_extension:resolve_gear_sound(sound_alias)
@@ -1344,7 +1382,9 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			total_distance = distance_to_end
 		end
 
-		if resolved and start_has_husk_events and self:should_play_husk_effect() then
+		local should_play_husk_effect = self:should_play_husk_effect()
+
+		if resolved and start_has_husk_events and should_play_husk_effect then
 			start_event_name = start_event_name .. "_husk"
 		end
 
@@ -1354,7 +1394,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			local stop_resolved, stop_event_name, stop_has_husk_events = self._visual_loadout_extension:resolve_gear_sound(early_stop_sound_alias)
 
 			if stop_resolved then
-				if stop_has_husk_events and self:should_play_husk_effect() then
+				if stop_has_husk_events and should_play_husk_effect then
 					stop_event_name = stop_event_name .. "_husk"
 				end
 
@@ -1362,11 +1402,11 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 			end
 		end
 
-		self:_add_moving_sfx(sound_position, line_direction, speed, total_distance, start_event_name, wwise_stop_event)
+		self:_add_moving_sfx(husk_only, should_play_husk_effect, sound_position, line_direction, speed, total_distance, start_event_name, wwise_stop_event)
 	end
 end
 
-PlayerUnitFxExtension._add_moving_sfx = function (self, position, direction, speed, range, event_name, stop_event_name)
+PlayerUnitFxExtension._add_moving_sfx = function (self, husk_only, should_play_husk_effect, position, direction, speed, range, event_name, stop_event_name)
 	local wwise_world = self._wwise_world
 	local moving_sfx = self._moving_sfx
 	local buffer = moving_sfx.buffer
@@ -1395,8 +1435,9 @@ PlayerUnitFxExtension._add_moving_sfx = function (self, position, direction, spe
 	end
 
 	local manual_source_id, playing_id, _
+	local should_play = should_play_husk_effect and husk_only or not husk_only
 
-	if event_name then
+	if event_name and should_play then
 		local rotation = Quaternion.look(direction)
 
 		manual_source_id = WwiseWorld.make_manual_source(wwise_world, position, rotation)
@@ -1638,6 +1679,15 @@ PlayerUnitFxExtension._resolve_wwise_event = function (self, event_name, append_
 	end
 
 	return wwise_event_name
+end
+
+PlayerUnitFxExtension.set_source_parameter_local = function (self, parameter_name, parameter_value, source_name, optional_attachment_name)
+	local source = self._sources[source_name]
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+
+	source = source[reference_attachment_name]
+
+	WwiseWorld.set_source_parameter(self._wwise_world, source, parameter_name, parameter_value)
 end
 
 PlayerUnitFxExtension.set_source_parameter = function (self, parameter_name, parameter_value, source_name, optional_attachment_name)
@@ -2156,6 +2206,12 @@ PlayerUnitFxExtension.is_looping_particles_playing = function (self, looping_par
 	local component = self._looping_particles_components[looping_particle_alias]
 
 	return component and component.is_playing
+end
+
+PlayerUnitFxExtension.spawn_particles_local = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value)
+	local world = self._world
+
+	return self:_create_particles_wrapper(world, particle_name, position, rotation, scale, false)
 end
 
 PlayerUnitFxExtension.spawn_particles = function (self, particle_name, position, rotation, scale, optional_variable_name, optional_variable_value, all_clients, create_network_index)

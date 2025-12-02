@@ -8,7 +8,7 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElemenServerMigration = class("ViewElemenServerMigration", "ViewElementBase")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local currency_order = {
@@ -97,6 +97,7 @@ local widget_passes = {
 			{
 				pass_type = "texture",
 				style_id = "icon",
+				value = nil,
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "right",
@@ -829,7 +830,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 						pass_template = "currency_text",
 						data = {
 							currency_type = currency_type,
-							value = TextUtils.format_currency(currency_data[1]),
+							value = Text.format_currency(currency_data[1]),
 						},
 					}
 				end
@@ -856,7 +857,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 							pass_template = "currency_text",
 							data = {
 								currency_type = currency_type,
-								value = TextUtils.format_currency(currency_data[character_id]),
+								value = Text.format_currency(currency_data[character_id]),
 							},
 						}
 					end

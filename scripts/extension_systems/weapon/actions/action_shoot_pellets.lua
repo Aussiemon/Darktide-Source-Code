@@ -88,10 +88,17 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 			local hits = {}
 
 			for jj = 1, MAX_NUM_HITS_PER_UNIT do
-				hits[jj] = {}
+				hits[jj] = {
+					hit_actor = nil,
+					hit_direction = nil,
+					hit_normal = nil,
+					hit_position = nil,
+				}
 			end
 
 			surface_impact_data[hit_type][ii] = {
+				attacked_unit = nil,
+				attacking_unit = nil,
 				hits = hits,
 			}
 		end
@@ -180,9 +187,11 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 	if process_hits then
 		local num_hit_units = self:_process_hits(power_level, t, fire_config)
 		local hit_all_pellets_on_same = false
+		local attacked_unit
 
 		for hit_unit, number_of_hits in pairs(self._num_hits_per_unit) do
 			repeat
+				attacked_unit = attacked_unit or hit_unit or attacked_unit
 				hit_all_pellets_on_same = number_of_hits == num_pellets_total and true or hit_all_pellets_on_same
 			until true
 		end
@@ -210,6 +219,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 
 		if param_table then
 			param_table.attacking_unit = player_unit
+			param_table.attacked_unit = attacked_unit
 			param_table.num_shots_fired = action_component.num_shots_fired
 			param_table.combo_count = self._combo_count
 			param_table.num_hit_units = num_hit_units
@@ -819,9 +829,6 @@ ActionShootPellets._next_fire_state = function (self, dt, t)
 
 		return "shot"
 	elseif auto_fire_time then
-		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
-		action_component.fire_at_time = t + auto_fire_time
-
 		return "waiting_to_shoot"
 	else
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "shot_complete")

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_styles.lua
 
 local Settings = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Styles = {}
 local DebriefSettings = Settings.debrief_settings
 
@@ -105,7 +106,7 @@ Styles.bottom_detail.frame = {
 }
 Styles.bottom_detail.flavor_text_1 = {
 	font_size = 22,
-	font_type = "trim_mono_medium",
+	font_type = "kode_mono_medium",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "center",
@@ -129,7 +130,7 @@ Styles.bottom_detail.flavor_text_1 = {
 Styles.campaign_header = {}
 Styles.campaign_header.header_text = {
 	font_size = 30,
-	font_type = "trim_mono_medium",
+	font_type = "kode_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -178,6 +179,7 @@ Styles.debrief_video.hotspot = {
 }
 Styles.debrief_video.debrief_icon = {
 	horizontal_alignment = "center",
+	scale_to_material = true,
 	vertical_alignment = "center",
 	color = {
 		255,
@@ -204,6 +206,9 @@ Styles.debrief_video.debrief_icon = {
 	},
 	size = DebriefSettings.icon_size,
 	default_size = DebriefSettings.icon_size,
+	material_values = {
+		enable_animation = 0,
+	},
 }
 Styles.debrief_video.frame = {
 	horizontal_alignment = "center",
@@ -286,6 +291,164 @@ Styles.debrief_video.gamepad_input_hint = {
 	size = {
 		40,
 		40,
+	},
+}
+Styles.list_panel = {}
+Styles.list_panel.panel_button_hotspot = {
+	anim_hover_speed = 10,
+	anim_select_speed = 5,
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	offset = {
+		0,
+		0,
+		2,
+	},
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
+}
+Styles.list_panel.panel_button_background = {
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	color = {
+		255,
+		0,
+		0,
+		0,
+	},
+	offset = {
+		0,
+		0,
+		1,
+	},
+}
+Styles.list_panel.panel_button_highlight = {
+	horizontal_alignment = "left",
+	vertical_alignment = "center",
+	color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	offset = {
+		0,
+		0,
+		2,
+	},
+}
+Styles.list_panel.panel_button_campaign_title = {
+	font_size = 22,
+	font_type = "kode_mono_medium",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	selected_color = {
+		255,
+		0,
+		0,
+		0,
+	},
+	default_color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	offset = {
+		0,
+		0,
+		3,
+	},
+}
+Styles.panel_stepper = {}
+Styles.panel_stepper.hotpsot = {
+	anim_hover_speed = 10,
+	anim_input_speed = 5,
+	offset = {
+		0,
+		0,
+		1,
+	},
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
+}
+Styles.panel_stepper.button_icon = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	offset = {
+		0,
+		0,
+		2,
+	},
+	size = {
+		68,
+		68,
+	},
+	default_size = {
+		68,
+		68,
+	},
+}
+Styles.panel_stepper.button_icon_glow = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	offset = {
+		0,
+		0,
+		2,
+	},
+	size = {
+		68,
+		68,
+	},
+	default_size = {
+		68,
+		68,
+	},
+}
+Styles.panel_stepper.button_input = {
+	font_size = 32,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = {
+		255,
+		255,
+		88,
+		27,
+	},
+	offset = {
+		0,
+		0,
+		3,
+	},
+	size = {
+		68,
+		68,
 	},
 }
 

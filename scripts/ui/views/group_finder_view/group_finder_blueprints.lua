@@ -5,10 +5,8 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local tag_text_style = {
@@ -110,6 +108,7 @@ local function generate_blueprints_func(grid_size)
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.default_click,
 				},
@@ -564,6 +563,7 @@ local function generate_blueprints_func(grid_size)
 					content_id = "hotspot",
 					pass_type = "hotspot",
 					content = {
+						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
 						on_pressed_sound = UISoundEvents.default_click,
 					},
@@ -1126,6 +1126,7 @@ local function generate_blueprints_func(grid_size)
 					content_id = "hotspot",
 					pass_type = "hotspot",
 					content = {
+						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
 						on_pressed_sound = UISoundEvents.default_click,
 					},
@@ -1635,6 +1636,7 @@ local function generate_blueprints_func(grid_size)
 					content_id = "hotspot",
 					pass_type = "hotspot",
 					content = {
+						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
 						on_pressed_sound = UISoundEvents.default_click,
 					},
@@ -2438,7 +2440,7 @@ local function generate_blueprints_func(grid_size)
 						end
 
 						content.slot_filled = true
-						content.sub_header_filled = TextUtilities.apply_color_to_text(sub_header_text, sub_header_color)
+						content.sub_header_filled = Text.apply_color_to_text(sub_header_text, sub_header_color)
 					end
 				end
 			end,
@@ -2808,6 +2810,7 @@ local function generate_blueprints_func(grid_size)
 					content_id = "hotspot",
 					pass_type = "hotspot",
 					content = {
+						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
 						on_pressed_sound = UISoundEvents.default_click,
 					},
@@ -4448,8 +4451,7 @@ local function generate_blueprints_func(grid_size)
 
 				local size = content.size
 				local text_style = style.text
-				local text_options = UIFonts.get_font_options_by_style(text_style)
-				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+				local height = Text.text_height(ui_renderer, text, text_style, size)
 
 				size[2] = height + 0
 			end,
@@ -4509,8 +4511,7 @@ local function generate_blueprints_func(grid_size)
 
 				local size = content.size
 				local text_style = style.text
-				local text_options = UIFonts.get_font_options_by_style(text_style)
-				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+				local height = Text.text_height(ui_renderer, text, text_style, size)
 
 				size[2] = height + 0
 			end,
@@ -4570,8 +4571,7 @@ local function generate_blueprints_func(grid_size)
 
 				local size = content.size
 				local text_style = style.text
-				local text_options = UIFonts.get_font_options_by_style(text_style)
-				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+				local height = Text.text_height(ui_renderer, text, text_style, size)
 
 				size[2] = height + 0
 			end,

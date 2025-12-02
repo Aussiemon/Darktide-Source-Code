@@ -9,7 +9,6 @@ mission_objective_scanning.servo_skull = {
 	vo_trigger_time = 5,
 	wandering_distance = 15,
 }
-mission_objective_scanning.servo_skull_marker_types = table.enum("objective")
 mission_objective_scanning.vo_settings = {
 	concept = "mission_info",
 }

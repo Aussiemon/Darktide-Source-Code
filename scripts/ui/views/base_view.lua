@@ -2,11 +2,11 @@
 
 local BaseViewTestify = GameParameters.testify and require("scripts/ui/views/base_view_testify")
 local InputUtils = require("scripts/managers/input/input_utils")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local Text = require("scripts/utilities/ui/text")
 local BaseView = class("BaseView")
 
 BaseView.init = function (self, definitions, settings, context, dynamic_package_name)
@@ -102,7 +102,7 @@ BaseView._on_view_load_complete = function (self, loaded)
 end
 
 BaseView.is_view_requirements_complete = function (self)
-	return not self._loading or false
+	return not self._loading
 end
 
 BaseView._on_view_requirements_complete = function (self)
@@ -315,20 +315,14 @@ BaseView.on_exit = function (self)
 		self._cursor_pushed = nil
 	end
 
-	if self._should_unload then
-		self._should_unload = nil
+	self._destroyed = true
+end
 
-		local frame_delay_count = 1
-
-		Managers.ui:unload_view(self.view_name, self.__class_name, frame_delay_count)
-	end
-
+BaseView.destroy = function (self)
 	local elements_array = self._elements_array
 
-	if elements_array then
-		for _, element in ipairs(elements_array) do
-			element:destroy(self._ui_renderer)
-		end
+	for _, element in ipairs(elements_array) do
+		element:destroy(self._ui_renderer)
 	end
 
 	self._elements = nil
@@ -339,7 +333,13 @@ BaseView.on_exit = function (self)
 		Managers.ui:destroy_renderer(self.__class_name .. "_ui_renderer")
 	end
 
-	self._destroyed = true
+	if self._should_unload then
+		self._should_unload = nil
+
+		local frame_delay_count = 1
+
+		Managers.ui:unload_view(self.view_name, self.__class_name, frame_delay_count)
+	end
 end
 
 BaseView.set_can_exit = function (self, value, apply_next_frame)
@@ -620,36 +620,10 @@ BaseView._localized_input_text = function (self, action, optional_service_type)
 	return InputUtils.input_text_for_current_input_device(service_type, action)
 end
 
-BaseView._text_size = function (self, text, font_type, font_size, optional_size, options)
+BaseView._text_size = function (self, text, style, optional_size, use_max_extents)
 	local ui_renderer = self._ui_renderer
 
-	return UIRenderer.text_size(ui_renderer, text, font_type, font_size, optional_size, options)
-end
-
-local _temp_optional_size = {
-	0,
-	0,
-}
-
-BaseView._text_size_for_style = function (self, text, text_style, optional_size)
-	optional_size = optional_size or text_style.size
-
-	if optional_size then
-		_temp_optional_size[1] = optional_size[1]
-		_temp_optional_size[2] = optional_size[2]
-
-		local size_addition = text_style.size_addition
-
-		if size_addition then
-			_temp_optional_size[1] = _temp_optional_size[1] + size_addition[1]
-			_temp_optional_size[2] = _temp_optional_size[2] + size_addition[2]
-		end
-	end
-
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local ui_renderer = self._ui_renderer
-
-	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, optional_size and _temp_optional_size, text_options)
+	return Text.text_size(ui_renderer, text, style, optional_size, use_max_extents)
 end
 
 BaseView._play_sound = function (self, event_name)

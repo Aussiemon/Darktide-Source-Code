@@ -62,7 +62,6 @@ weapon_template.breed_footstep_intervals = {
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
 }
-weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/ammo_crate"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_ammo_crate"
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

@@ -27,19 +27,19 @@ local ShoutAbilityImplementation = {}
 local _handle_enemy_targets, _handle_allied_targets
 local broadphase_results = {}
 
-ShoutAbilityImplementation.execute = function (radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction, backup_position, backup_rotation)
+ShoutAbilityImplementation.execute = function (radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction, backup_position, backup_rotation, external_power_modifier)
 	local side_system = Managers.state.extension:system("side_system")
 	local player_side = side_system.side_by_unit[player_unit]
 	local player_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local shout_target_template = ShoutTargetTemplates[shout_target_template_name]
-	local enemies_hit = _handle_enemy_targets(t, radius, shout_target_template.enemies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
+	local enemies_hit = _handle_enemy_targets(t, radius, shout_target_template.enemies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)
 
-	_handle_allied_targets(t, radius, shout_target_template.allies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
+	_handle_allied_targets(t, radius, shout_target_template.allies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)
 
 	return enemies_hit
 end
 
-function _handle_enemy_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
+function _handle_enemy_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)
 	if not target_settings then
 		return 0
 	end
@@ -64,7 +64,7 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 	local num_hits = broadphase.query(broadphase, player_position, radius_to_use, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
 	local damage_profile = target_settings.damage_profile
 	local damage_type = target_settings.damage_type
-	local power_level = target_settings.power_level or DEFAULT_POWER_LEVEL
+	local power_level = (target_settings.power_level or DEFAULT_POWER_LEVEL) * (external_power_modifier or 1)
 	local buff_to_add = target_settings.buff_to_add
 	local buff_to_add_non_monster = target_settings.buff_to_add_non_monster
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
@@ -198,7 +198,7 @@ function _handle_enemy_targets(t, radius, target_settings, player_unit, locomoti
 	return units_hit
 end
 
-function _handle_allied_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation)
+function _handle_allied_targets(t, radius, target_settings, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)
 	if not target_settings then
 		return
 	end

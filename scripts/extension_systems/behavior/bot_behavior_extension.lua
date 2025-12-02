@@ -7,6 +7,7 @@ local BotSettings = require("scripts/settings/bot/bot_settings")
 local Health = require("scripts/utilities/health")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
+local PlayerBehaviorExtensionInterface = require("scripts/extension_systems/behavior/player_behavior_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
@@ -24,6 +25,7 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 	self:_init_blackboard_components(blackboard, physics_world, gestalts_or_nil)
 
 	self._cover_data = {
+		cover_hash = nil,
 		fails = 0,
 		cover_position = Vector3Box(Vector3.invalid_vector()),
 		threats = {},
@@ -41,6 +43,7 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 		distance = 0,
 		index = 1,
 		path_failed = false,
+		unit = nil,
 		rotation = QuaternionBox(),
 		path_position = Vector3Box(),
 	}
@@ -49,6 +52,7 @@ BotBehaviorExtension.init = function (self, extension_init_context, unit, extens
 		distance = 0,
 		index = 1,
 		path_failed = false,
+		unit = nil,
 		rotation = QuaternionBox(),
 		path_position = Vector3Box(),
 	}
@@ -1112,5 +1116,7 @@ BotBehaviorExtension.is_taking_cover = function (self)
 
 	return is_taking_cover
 end
+
+implements(BotBehaviorExtension, PlayerBehaviorExtensionInterface)
 
 return BotBehaviorExtension

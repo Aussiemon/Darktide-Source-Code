@@ -3,10 +3,10 @@
 local Definitions = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_definitions")
 local DialogueSpeakerVoiceSettings = require("scripts/settings/dialogue/dialogue_speaker_voice_settings")
 local ConstantElementSubtitlesSettings = require("scripts/ui/constant_elements/elements/subtitles/constant_element_subtitles_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Views = require("scripts/ui/views/views")
+local Text = require("scripts/utilities/ui/text")
 local debug_subtitles = {
 	{
 		duration = 2,
@@ -454,8 +454,7 @@ ConstantElementSubtitles._set_font_size = function (self, new_size)
 
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local text_width, text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
+	local text_width, text_height = Text.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, text_style, dummy_text_size)
 
 	text_style.size[1] = text_width
 	text_style.size[2] = text_height
@@ -471,8 +470,7 @@ ConstantElementSubtitles._set_secondary_font_size = function (self, new_size)
 
 	local parent = self._parent
 	local ui_renderer = parent:ui_renderer()
-	local secondary_text_options = UIFonts.get_font_options_by_style(secondary_text_style)
-	local secondary_text_width, secondary_text_height, _, _ = UIRenderer.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, secondary_text_style.font_type, secondary_text_style.font_size, dummy_text_size, secondary_text_options)
+	local secondary_text_width, secondary_text_height = Text.text_size(ui_renderer, DUMMY_MEASURE_TEXT_LINE, secondary_text_style, dummy_text_size)
 
 	secondary_text_style.size[1] = secondary_text_width
 	secondary_text_style.size[2] = secondary_text_height
@@ -503,9 +501,9 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration, se
 	local style = widget.style
 	local text_style = style.text
 	local text_width = text_style.size[1]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local rows = UIRenderer.word_wrap(ui_renderer, text, text_style.font_type, text_style.font_size, text_width)
-	local total_height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, text_style.size, text_options)
+	local font_size = text_style.font_size
+	local rows = Text.word_wrap(ui_renderer, text, text_style, text_width)
+	local total_height = Text.text_height(ui_renderer, text, text_style, text_style.size)
 
 	if not secondary_subtitle then
 		table.clear(self._letterbox_lines_width)
@@ -518,13 +516,16 @@ ConstantElementSubtitles._display_text_line = function (self, text, duration, se
 
 	for i = 1, num_rows do
 		local text_line = rows[i]
-		local line_text_width, _, _, _ = UIRenderer.text_size(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
-		local line_height = UIRenderer.text_height(ui_renderer, text_line, text_style.font_type, text_style.font_size, dummy_text_size, text_options)
+		local line_text_width, line_height = Text.text_size(ui_renderer, text_line, text_style, dummy_text_size)
+		local height_padding = font_size / 3
+		local width_padding = font_size / 1.5
+
+		line_height = line_height + height_padding
 
 		if not secondary_subtitle then
-			self._letterbox_lines_width[i] = line_text_width + 20
+			self._letterbox_lines_width[i] = line_text_width + width_padding
 		else
-			self._secondary_letterbox_lines_width[i] = line_text_width + 20
+			self._secondary_letterbox_lines_width[i] = line_text_width + width_padding
 		end
 
 		if text_max_height < line_height then

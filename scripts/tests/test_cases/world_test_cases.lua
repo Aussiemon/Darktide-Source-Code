@@ -58,6 +58,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 			"circumstances",
 		}
 		local mission_name = settings.mission_name
+		local circumstances_to_test = settings.circumstances_to_test or nil
 		local num_peers = settings.num_peers or 0
 
 		if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
@@ -75,20 +76,22 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 		for i = 1, length do
 			local circumstance = mission_circumstances[i]
 
-			TestifySnippets.load_mission(mission_name, nil, nil, circumstance)
+			if not circumstances_to_test or circumstances_to_test and circumstances_to_test[circumstance] then
+				TestifySnippets.load_mission(mission_name, nil, nil, circumstance)
 
-			if check_theme_loaded then
-				Testify:make_request("check_theme_loaded")
+				if check_theme_loaded then
+					Testify:make_request("check_theme_loaded")
+				end
+
+				Testify:make_request("wait_for_state_gameplay_reached")
+
+				if num_peers > 0 then
+					TestifySnippets.wait_for_peers(num_peers)
+					TestifySnippets.wait_for_all_peers_reach_gameplay_state()
+				end
+
+				TestifySnippets.wait(2)
 			end
-
-			Testify:make_request("wait_for_state_gameplay_reached")
-
-			if num_peers > 0 then
-				TestifySnippets.wait_for_peers(num_peers)
-				TestifySnippets.wait_for_all_peers_reach_gameplay_state()
-			end
-
-			TestifySnippets.wait(2)
 		end
 
 		TestifySnippets.wait(2)
@@ -260,5 +263,26 @@ WorldTestCases.test_triggers = function ()
 		result = result == "" and "Success" or result
 
 		return result
+	end)
+end
+
+WorldTestCases.check_isolated_islands = function (case_settings)
+	Testify:run_case(function (dt, t)
+		TestifySnippets.skip_splash_and_title_screen()
+
+		local settings = cjson.decode(case_settings or "{}")
+		local mission_key = settings.mission_key
+		local output = TestifySnippets.mission_exists(mission_key)
+
+		if output then
+			return output
+		end
+
+		TestifySnippets.load_mission(mission_key)
+		Testify:make_request("wait_for_state_gameplay_reached")
+
+		local has_islands = Testify:make_request("check_isolated_islands")
+
+		Testify.expect:is_true("has_islands", has_islands, "Level contains navmesh islands")
 	end)
 end

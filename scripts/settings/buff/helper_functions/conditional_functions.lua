@@ -63,6 +63,15 @@ ConditionalFunctions.is_item_slot_not_wielded = function (template_data, templat
 	return not ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
 end
 
+ConditionalFunctions.is_weapon_using_magazine = function (template_data, template_context)
+	local unit = template_context.unit
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local weapon_action_component = unit_data_extension:read_component("weapon_action")
+	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+
+	return weapon_template and weapon_template.using_magazine
+end
+
 ConditionalFunctions.has_full_toughness = function (template_data, template_context)
 	local unit = template_context.unit
 	local toughness_extension = ScriptUnit.extension(unit, "toughness_system")

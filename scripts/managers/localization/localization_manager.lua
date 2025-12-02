@@ -145,7 +145,7 @@ end
 LocalizationManager.setup_localizers = function (self, strings_package_id)
 	self._package_id = strings_package_id
 
-	print("[LocalizationManager] Setup localizers")
+	Log.info("LocalizationManager", "Setup localizers")
 
 	local num_string_resources = #STRING_RESOURCE_NAMES
 	local localizers = Script.new_array(num_string_resources)

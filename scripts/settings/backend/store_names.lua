@@ -1,10 +1,11 @@
 ﻿-- chunkname: @scripts/settings/backend/store_names.lua
 
-local StoreNames = {}
+local store_names = {}
 
-StoreNames.by_archetype = {
+store_names.by_archetype = {
 	credit = {
 		adamant = "get_adamant_credits_store",
+		broker = "get_broker_credits_store",
 		ogryn = "get_ogryn_credits_store",
 		psyker = "get_psyker_credits_store",
 		veteran = "get_veteran_credits_store",
@@ -12,6 +13,7 @@ StoreNames.by_archetype = {
 	},
 	credit_goods = {
 		adamant = "get_adamant_credits_goods_store",
+		broker = "get_broker_credits_goods_store",
 		ogryn = "get_ogryn_credits_goods_store",
 		psyker = "get_psyker_credits_goods_store",
 		veteran = "get_veteran_credits_goods_store",
@@ -19,6 +21,7 @@ StoreNames.by_archetype = {
 	},
 	credit_cosmetics = {
 		adamant = "get_adamant_credits_cosmetics_store",
+		broker = "get_broker_credits_cosmetics_store",
 		ogryn = "get_ogryn_credits_cosmetics_store",
 		psyker = "get_psyker_credits_cosmetics_store",
 		veteran = "get_veteran_credits_cosmetics_store",
@@ -26,6 +29,7 @@ StoreNames.by_archetype = {
 	},
 	credit_weapon_cosmetics = {
 		adamant = "get_adamant_credits_weapon_cosmetics_store",
+		broker = "get_broker_credits_cosmetics_store",
 		ogryn = "get_ogryn_credits_weapon_cosmetics_store",
 		psyker = "get_psyker_credits_weapon_cosmetics_store",
 		veteran = "get_veteran_credits_weapon_cosmetics_store",
@@ -33,6 +37,7 @@ StoreNames.by_archetype = {
 	},
 	mark = {
 		adamant = "get_adamant_marks_store",
+		broker = "get_broker_marks_store",
 		ogryn = "get_ogryn_marks_store",
 		psyker = "get_psyker_marks_store",
 		veteran = "get_veteran_marks_store",
@@ -40,6 +45,7 @@ StoreNames.by_archetype = {
 	},
 	premium = {
 		adamant = "premium_store_skins_adamant",
+		broker = "premium_store_skins_broker",
 		ogryn = "premium_store_skins_ogryn",
 		psyker = "premium_store_skins_psyker",
 		veteran = "premium_store_skins_veteran",
@@ -47,4 +53,4 @@ StoreNames.by_archetype = {
 	},
 }
 
-return settings("StoreNames", StoreNames)
+return settings("StoreNames", store_names)

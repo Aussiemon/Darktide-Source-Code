@@ -4,8 +4,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -470,13 +469,16 @@ ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui
 				widget.style.text.material = font_gradient_material
 				widget.content.texture = icon_texture_small
 
-				local text = TextUtilities.format_currency(amount)
+				local text = Text.format_currency(amount)
 
 				widget.content.text = text
 
 				local style = widget.style
 				local text_style = style.text
-				local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
+				local text_width = Text.text_width(ui_renderer, text, text_style, {
+					1920,
+					100,
+				})
 				local icon_size = widget.style.texture.size
 
 				widget.offset[1] = total_width

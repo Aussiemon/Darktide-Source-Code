@@ -1,24 +1,13 @@
 ﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view_summary_blueprints.lua
 
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
+local Text = require("scripts/utilities/ui/text")
 local summary_grid_size = TalentBuilderViewSettings.summary_grid_size
-
-local function get_style_text_height(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
-	local text_size = style.size
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size, text_options)
-
-	return text_height
-end
-
 local talent_blueprint_description_style = table.clone(UIFontSettings.body)
 
 talent_blueprint_description_style.offset = {
@@ -58,7 +47,7 @@ local grid_blueprints = {
 		},
 		size_function = function (parent, element, ui_renderer)
 			local description = element.description
-			local description_height = get_style_text_height(description, talent_blueprint_description_style, ui_renderer)
+			local description_height = Text.text_height(ui_renderer, description, talent_blueprint_description_style, talent_blueprint_description_style.size)
 			local entry_height = math.max(68, description_height + 25)
 
 			return {
@@ -133,9 +122,8 @@ local grid_blueprints = {
 			content.description = description
 
 			local display_name = element.display_name
-			local localized_title = Localize(element.display_name)
 
-			content.display_name = localized_title
+			content.display_name = display_name
 
 			local icon = element.icon
 			local gradient_map = element.gradient_map
@@ -203,8 +191,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -290,6 +277,8 @@ local grid_blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_pressed_sound = nil,
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 				},
 			},
@@ -413,8 +402,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 20
 		end,
@@ -467,8 +455,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,

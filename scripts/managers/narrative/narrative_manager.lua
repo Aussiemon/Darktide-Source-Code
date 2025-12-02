@@ -152,6 +152,7 @@ NarrativeManager._empty_character_data = function (self, character_id)
 	return {
 		is_dirty = false,
 		is_saving = false,
+		time_until_save = nil,
 		character_id = character_id or false,
 		stories = {},
 		events = {},

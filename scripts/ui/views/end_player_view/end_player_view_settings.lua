@@ -4,6 +4,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local end_player_view_settings = {
 	carousel_initial_states = {
 		{
+			animation_id = nil,
 			duration = 0.5,
 			name = "slide_cards_to_the_left",
 			retract_duration = 0.25,
@@ -14,9 +15,11 @@ local end_player_view_settings = {
 		{
 			duration = 0.3,
 			name = "expand_current_card",
+			sound_event = nil,
 			update_func_name = "carousel_state_expand_current_card",
 		},
 		{
+			animation_id = nil,
 			name = "show_fade_in_content",
 			update_func_name = "carousel_state_fade_in_card_content",
 		},

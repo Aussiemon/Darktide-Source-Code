@@ -3,8 +3,6 @@
 local Definitions = require("scripts/ui/hud/elements/interaction/hud_element_interaction_definitions")
 local HudElementInteractionSettings = require("scripts/ui/hud/elements/interaction/hud_element_interaction_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local HudElementInteraction = class("HudElementInteraction", "HudElementBase")
@@ -75,6 +73,7 @@ HudElementInteraction._update_interactee_data = function (self, interactee_unit,
 	if render_marker then
 		if not interaction_units[interactee_unit] then
 			interaction_units[interactee_unit] = {
+				marker_id = nil,
 				requested = true,
 				extension = extension,
 			}
@@ -414,7 +413,7 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 		max_text_width,
 		1080,
 	}
-	local tag_text_width, tag_text_height = UIRenderer.text_size(ui_renderer, tag_text, tag_style.font_type, tag_style.font_size, tag_max_size, UIFonts.get_font_options_by_style(tag_style))
+	local tag_text_width, tag_text_height = self:_text_size(ui_renderer, tag_text, tag_style, tag_max_size)
 
 	tag_text_width = tag_text_width > 0 and tag_text_width + edge_spacing[1] or 0
 
@@ -422,8 +421,8 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 		max_text_width - tag_text_width,
 		1080,
 	}
-	local interaction_width, interaction_height = UIRenderer.text_size(ui_renderer, interaction_text, interaction_style.font_type, interaction_style.font_size, interaction_max_size, UIFonts.get_font_options_by_style(interaction_style))
-	local description_width, description_height = UIRenderer.text_size(ui_renderer, description_text, description_style.font_type, description_style.font_size, description_max_size, UIFonts.get_font_options_by_style(description_style))
+	local interaction_width, interaction_height = self:_text_size(ui_renderer, interaction_text, interaction_style, interaction_max_size)
+	local description_width, description_height = self:_text_size(ui_renderer, description_text, description_style, description_max_size)
 
 	interaction_height = interaction_height + (interaction_height > 0 and edge_spacing[2] * 2 or 0)
 	description_height = description_height + (description_height > 0 and edge_spacing[2] * 4 or 0)

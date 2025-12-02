@@ -598,6 +598,13 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 				pass_size_x = width
 				pass_size_y = height
 
+				local pivot_scale = style_data.pivot_scale
+
+				if pivot_scale then
+					pass_pos_x = pass_pos_x + pass_size_x * (pivot_scale[1] or 0)
+					pass_pos_y = pass_pos_y + pass_size_y * (pivot_scale[2] or 0)
+				end
+
 				local style_offset = style_data.offset
 
 				if style_offset then

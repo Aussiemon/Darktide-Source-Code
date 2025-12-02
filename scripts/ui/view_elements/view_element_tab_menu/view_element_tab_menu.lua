@@ -3,10 +3,9 @@
 local Definitions = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu_definitions")
 local ViewElementTabMenuSettings = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
+local Text = require("scripts/utilities/ui/text")
 local ViewElementTabMenu = class("ViewElementTabMenu", "ViewElementBase")
 
 ViewElementTabMenu.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -96,11 +95,10 @@ ViewElementTabMenu._update_widget_size = function (self, widget, ui_renderer)
 	if text_style then
 		local text = content.text
 		local size = content.size
-		local text_options = UIFonts.get_font_options_by_style(text_style)
 
 		size[1] = 1920
 
-		local width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+		local width = Text.text_width(ui_renderer, text, text_style, size)
 
 		size[1] = width + self._menu_settings.button_text_margin
 	end

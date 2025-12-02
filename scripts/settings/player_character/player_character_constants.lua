@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/player_character/player_character_constants.lua
 
+local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HubMovementSettingsTemplates = require("scripts/settings/player_character/hub_movement_settings_templates")
@@ -33,32 +34,37 @@ local SLIDE_TWEAK_VALUES = {
 }
 local weapon_component_config = {
 	current_ammunition_clip = {
-		default_value = 0,
-		network_type = "ammunition_small",
-	},
-	current_ammunition_clip_2 = {
-		default_value = 0,
-		network_type = "ammunition_small",
+		network_type = "ammunition_clip_array",
+		default_value = {
+			0,
+			0,
+		},
 	},
 	current_ammunition_reserve = {
 		default_value = 0,
 		network_type = "ammunition_large",
 	},
 	current_ammunition_clips_in_use = {
-		default_value = 0,
-		network_type = "lookup_2bit0",
+		network_type = "clips_in_use",
+		default_value = {
+			false,
+			false,
+		},
 	},
 	max_ammunition_clip = {
-		default_value = 0,
-		network_type = "ammunition_small",
-	},
-	max_ammunition_clip_2 = {
-		default_value = 0,
-		network_type = "ammunition_small",
+		network_type = "ammunition_clip_array",
+		default_value = {
+			0,
+			0,
+		},
 	},
 	max_ammunition_reserve = {
 		default_value = 0,
 		network_type = "ammunition_large",
+	},
+	free_ammunition_transfer = {
+		default_value = false,
+		network_type = "bool",
 	},
 	ammunition_at_reload_start = {
 		default_value = 0,
@@ -153,7 +159,7 @@ local constants = {
 	leave_knocked_down_damage_immunity_buff = "knocked_down_damage_immunity_linger",
 	leave_knocked_down_damage_reduction_buff = "knocked_down_damage_reduction_linger",
 	ledge_hanging_to_ground_safe_distance = 1.2,
-	max_component_buffs = 10,
+	max_component_buffs = 15,
 	max_dynamic_weapon_buffs = 4,
 	max_meta_buffs = 10,
 	move_speed = 4,
@@ -313,6 +319,7 @@ local constants = {
 				"slot_body_skin_color",
 				"slot_body_hair_color",
 				"slot_body_hair",
+				"slot_body_face_makeup",
 			},
 		},
 		slot_body_face_hair = {
@@ -323,11 +330,19 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_hair_color",
+				"slot_body_face_hair_color",
 			},
+		},
+		slot_body_face_makeup = {
+			mispredict_packages = true,
+			priority = 33,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
 		},
 		slot_body_face_scar = {
 			mispredict_packages = true,
-			priority = 12,
+			priority = 31,
 			profile_field = true,
 			slot_type = "body",
 			wieldable = false,
@@ -337,7 +352,7 @@ local constants = {
 		},
 		slot_body_face_tattoo = {
 			mispredict_packages = true,
-			priority = 12,
+			priority = 32,
 			profile_field = true,
 			slot_type = "body",
 			wieldable = false,
@@ -378,7 +393,7 @@ local constants = {
 		},
 		slot_body_tattoo = {
 			mispredict_packages = true,
-			priority = 11,
+			priority = 13,
 			profile_field = true,
 			slot_type = "body",
 			wieldable = false,
@@ -411,6 +426,16 @@ local constants = {
 			profile_field = true,
 			slot_type = "body",
 			wieldable = false,
+		},
+		slot_body_face_hair_color = {
+			mispredict_packages = true,
+			priority = 51,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_hair_color",
+			},
 		},
 		slot_body_skin_color = {
 			mispredict_packages = true,
@@ -458,6 +483,7 @@ local constants = {
 			slot_type = "gear",
 			wieldable = false,
 			slot_dependencies = {
+				"slot_body_tattoo",
 				"slot_body_skin_color",
 				"slot_gear_material_override_decal",
 			},
@@ -609,6 +635,11 @@ local constants = {
 			slot_type = "vfx",
 			wieldable = false,
 		},
+		slot_prop = {
+			priority = 1,
+			slot_type = "vfx",
+			wieldable = false,
+		},
 	},
 	quick_wield_configuration = {
 		default = "slot_primary",
@@ -682,6 +713,7 @@ local constants = {
 		weapon = table.clone(weapon_component_config),
 		luggable = {
 			existing_unit_3p = {
+				default_value = nil,
 				network_type = "Unit",
 			},
 		},
@@ -725,14 +757,6 @@ local constants = {
 		buff_template_names = {
 			"coherency_toughness_regen",
 		},
-	},
-	current_ammo_clip_fields = {
-		[1] = "current_ammunition_clip",
-		[2] = "current_ammunition_clip_2",
-	},
-	max_ammo_clip_fields = {
-		[1] = "max_ammunition_clip",
-		[2] = "max_ammunition_clip_2",
 	},
 }
 
@@ -844,6 +868,7 @@ for slot_name, config in pairs(slot_configuration) do
 	end
 end
 
+local predictable_component_types = BuffArgs.predictable_component_types()
 local buff_component_key_lookup = {}
 
 for ii = 1, constants.max_component_buffs do
@@ -853,7 +878,12 @@ for ii = 1, constants.max_component_buffs do
 		active_start_time_key = "buff_" .. ii .. "_active_start_time",
 		stack_count_key = "buff_" .. ii .. "_stack_count",
 		proc_count_key = "buff_" .. ii .. "_proc_count",
+		extra_duration_key = "buff_" .. ii .. "_extra_duration",
 	}
+
+	for param_name in pairs(predictable_component_types) do
+		buff_component_key_lookup[ii][param_name] = "buff_" .. ii .. "_" .. param_name
+	end
 end
 
 constants.buff_component_key_lookup = buff_component_key_lookup

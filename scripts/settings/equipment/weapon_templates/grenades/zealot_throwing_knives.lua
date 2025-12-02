@@ -31,10 +31,12 @@ weapon_template.action_inputs = {
 	quick_throw = {
 		buffer_time = 0,
 		dont_queue = true,
+		input_sequence = nil,
 	},
 	unwield_to_previous = {
 		buffer_time = 0,
 		dont_queue = true,
+		input_sequence = nil,
 	},
 }
 
@@ -70,7 +72,7 @@ weapon_template.actions = {
 		total_time = 0,
 		uninterruptible = true,
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "quick_throw",
 			},
 		},
@@ -131,7 +133,7 @@ weapon_template.actions = {
 			},
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "unwield_to_previous",
 			},
 		},
@@ -196,7 +198,7 @@ weapon_template.alternate_fire_settings = {
 	},
 }
 weapon_template.spread_template = "no_spread"
-weapon_template.ammo_template = "no_ammo"
+weapon_template.ammo_template = "grenade"
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,
@@ -216,6 +218,6 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/throwing_knife"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_non_grenade"
 
 return weapon_template

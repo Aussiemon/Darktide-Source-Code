@@ -38,7 +38,7 @@ CosmeticsVendorBackgroundView.on_enter = function (self)
 	local pot_completed = narrative_manager:is_story_complete(story_name)
 
 	if pot_completed then
-		self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 0)
+		self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 1)
 	else
 		self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_a", nil, 1)
 	end

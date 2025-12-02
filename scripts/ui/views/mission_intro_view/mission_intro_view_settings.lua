@@ -34,7 +34,6 @@ local mission_intro_view_settings = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
-		"slot_support_ability",
 		"slot_combat_ability",
 		"slot_grenade_ability",
 		"slot_companion_gear_full",
@@ -49,6 +48,9 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
 			"mission_briefing_pose_07",
+		},
+		broker = {
+			"mission_briefing_pose_02",
 		},
 		ogryn = {
 			"mission_briefing_pose_01",
@@ -83,7 +85,7 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_07",
 		},
 	},
-	journey_briefing_lines = {
+	story_briefing_lines = {
 		player_journey_01 = {
 			1,
 			1,
@@ -168,6 +170,21 @@ local mission_intro_view_settings = {
 		player_journey_014 = {
 			1,
 			1,
+			3,
+		},
+		story_nomansland_01 = {
+			3,
+			1,
+			3,
+		},
+		story_nomansland_02 = {
+			2,
+			1,
+			2,
+		},
+		story_nomansland_03 = {
+			1,
+			3,
 			3,
 		},
 	},

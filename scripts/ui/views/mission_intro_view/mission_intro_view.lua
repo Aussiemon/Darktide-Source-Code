@@ -497,7 +497,7 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 		seed = Managers.connection:session_seed()
 	end
 
-	local specific_lines = MissionIntroViewSettings.journey_briefing_lines[circumstance_name]
+	local specific_lines = MissionIntroViewSettings.story_briefing_lines[circumstance_name]
 	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed, nil, specific_lines)
 
 	if vo_unit then

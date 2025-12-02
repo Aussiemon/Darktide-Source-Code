@@ -148,6 +148,12 @@ local objectives_lookup = {
 		objective_id = "combat_ability_adamant_2",
 		play_sound = true,
 	},
+	combat_ability_broker = {
+		max_value = 30,
+		name = "loc_combat_ability_broker",
+		objective_id = "combat_ability_broker",
+		play_sound = true,
+	},
 	adamant_companion_targeting = {
 		max_value = 3,
 		name = "loc_psyker_thowing_knife_input_description_charge",
@@ -169,6 +175,12 @@ local objectives_lookup = {
 		max_value = 3,
 		name = "loc_weapon_special_objective",
 		objective_id = "weapon_special",
+		play_sound = true,
+	},
+	weapon_special_dual_shivs = {
+		max_value = 3,
+		name = "loc_weapon_special_objective_broker",
+		objective_id = "weapon_special_dual_shivs",
 		play_sound = true,
 	},
 	armor_objective_1 = {
@@ -248,6 +260,12 @@ local objectives_lookup = {
 		max_value = 5,
 		name = "loc_grenade_objective_shock",
 		objective_id = "maniac_blitz",
+		play_sound = true,
+	},
+	broker_blitz = {
+		max_value = 5,
+		name = "loc_grenade_objective_stagger",
+		objective_id = "broker_blitz",
 		play_sound = true,
 	},
 	grenade = {

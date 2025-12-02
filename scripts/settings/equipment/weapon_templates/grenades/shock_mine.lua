@@ -7,6 +7,6 @@ local weapon_template = mine_weapon_template_generator()
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/shock_mine"
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/shock_mine"
 weapon_template.projectile_template = ProjectileTemplates.shock_mine
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/shock_mine"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_grenade"
 
 return weapon_template

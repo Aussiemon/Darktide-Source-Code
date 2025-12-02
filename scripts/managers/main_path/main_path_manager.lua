@@ -364,4 +364,10 @@ MainPathManager.update = function (self, dt, t)
 	end
 end
 
+MainPathManager.find_isolated_islands = function (self)
+	local nav_blocker_units = _fetch_level_nav_blocker_units(self._world, self._debug_level_name)
+
+	return SpawnPointQueries.find_isolated_islands(self._nav_world, self._nav_spawn_points, nav_blocker_units)
+end
+
 return MainPathManager

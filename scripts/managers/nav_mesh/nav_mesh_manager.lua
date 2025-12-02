@@ -59,6 +59,7 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._level_spawned = false
 	self._sparse_nav_graph_nav_data = nil
 	self._sparse_nav_graph_connected = false
+	self._sparse_nav_graph_disconnecting = {}
 
 	local nav_tag_volume_data = self:_require_nav_tag_volume_data(level_name, {})
 	local nav_tag_volume_layers = self:_create_nav_tag_volumes_from_level_data(nav_tag_volume_data)
@@ -410,6 +411,14 @@ NavMeshManager.destroy = function (self)
 			GwNavTagLayerCostTable.destroy(self._navtag_layer_cost_table)
 		end
 	end
+
+	self:_disconnect_sparse_graph()
+
+	for _, nav_data in ipairs(self._sparse_nav_graph_disconnecting) do
+		GwNavData.destroy(nav_data)
+	end
+
+	table.clear(self._sparse_nav_graph_disconnecting)
 end
 
 local NAV_COST_MAP_MAX_COST_MAPS = 16
@@ -581,6 +590,7 @@ end
 NavMeshManager._make_sparse_graph_dirty = function (self)
 	if self._sparse_nav_graph_connected then
 		GwNavWorld.disconnect_sparse_graph(self._nav_world, self._sparse_nav_graph_nav_data)
+		table.insert(self._sparse_nav_graph_disconnecting, self._sparse_nav_graph_nav_data)
 
 		self._sparse_nav_graph_nav_data = nil
 		self._sparse_nav_graph_connected = false
@@ -592,6 +602,7 @@ end
 NavMeshManager._disconnect_sparse_graph = function (self)
 	if self._sparse_nav_graph_connected then
 		GwNavWorld.disconnect_sparse_graph(self._nav_world, self._sparse_nav_graph_nav_data)
+		table.insert(self._sparse_nav_graph_disconnecting, self._sparse_nav_graph_nav_data)
 
 		self._sparse_nav_graph_nav_data = nil
 		self._sparse_nav_graph_connected = false
@@ -639,6 +650,20 @@ NavMeshManager.update = function (self, dt, t)
 
 		if nav_world and GwNavTagVolume.all_integrated(nav_world) then
 			self:_connect_sparse_graph()
+		end
+	end
+
+	local disconnecting_sparse_graphs = self._sparse_nav_graph_disconnecting
+	local num_disconnecting_sparse_graphs = #disconnecting_sparse_graphs
+
+	if num_disconnecting_sparse_graphs > 0 then
+		for i = num_disconnecting_sparse_graphs, 1, -1 do
+			local nav_data = disconnecting_sparse_graphs[i]
+
+			if not GwNavData.is_alive_in_database(nav_data) then
+				GwNavData.destroy(nav_data)
+				table.remove(disconnecting_sparse_graphs, i)
+			end
 		end
 	end
 
@@ -730,6 +755,13 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 				end
 			end
 		end
+	end
+
+	local payload_system = Managers.state.extension:system("payload_system")
+	local unit_to_payload_extension_map = payload_system:unit_to_extension_map()
+
+	for unit, extension in pairs(unit_to_payload_extension_map) do
+		extension:allow_nav_tag_layer(layer_name, allowed)
 	end
 
 	if slot_system:is_traverse_logic_initialized() then

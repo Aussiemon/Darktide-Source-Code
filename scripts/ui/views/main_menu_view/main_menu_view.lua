@@ -2,11 +2,11 @@
 
 local definition_path = "scripts/ui/views/main_menu_view/main_menu_view_definitions"
 local CharacterSelectPassTemplates = require("scripts/ui/pass_templates/character_select_pass_templates")
+local DLCUtils = require("scripts/utilities/dlc_utils")
 local InputDevice = require("scripts/managers/input/input_device")
 local MainMenuViewSettings = require("scripts/ui/views/main_menu_view/main_menu_view_settings")
 local MainMenuViewTestify = GameParameters.testify and require("scripts/ui/views/main_menu_view/main_menu_view_testify")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
@@ -14,10 +14,12 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
 local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
+local Text = require("scripts/utilities/ui/text")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -220,9 +222,13 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 	local icon_value = self._widgets_by_name.friends_online.content.icon
 	local text_count_style = self._widgets_by_name.friends_online.style.text_count
 	local text_count_value = self._widgets_by_name.friends_online.content.text_count
-	local text_width = UIRenderer.text_size(self._ui_renderer, text_value, text_style.font_type, text_style.font_size)
-	local icon_width = UIRenderer.text_size(self._ui_renderer, icon_value, icon_style.font_type, icon_style.font_size)
-	local text_count_width = UIRenderer.text_size(self._ui_renderer, text_count_value, text_count_style.font_type, text_count_style.font_size)
+	local size = {
+		1000,
+		30,
+	}
+	local text_width = Text.text_width(self._ui_renderer, text_value, text_style, size)
+	local icon_width = Text.text_width(self._ui_renderer, icon_value, icon_style, size)
+	local text_count_width = Text.text_width(self._ui_renderer, text_count_value, text_count_style, size)
 	local margin = 5
 
 	icon_style.offset[1] = text_width + margin * 2
@@ -264,9 +270,13 @@ MainMenuView.cb_update_strike_team_count = function (self, party)
 		local icon_value = self._widgets_by_name.strike_team.content.icon
 		local text_count_style = self._widgets_by_name.strike_team.style.text_count
 		local text_count_value = self._widgets_by_name.strike_team.content.text_count
-		local text_width = UIRenderer.text_size(self._ui_renderer, text_value, text_style.font_type, text_style.font_size)
-		local icon_width = UIRenderer.text_size(self._ui_renderer, icon_value, icon_style.font_type, icon_style.font_size)
-		local text_count_width = UIRenderer.text_size(self._ui_renderer, text_count_value, text_count_style.font_type, text_count_style.font_size)
+		local size = {
+			1000,
+			30,
+		}
+		local text_width = Text.text_width(self._ui_renderer, text_value, text_style, size)
+		local icon_width = Text.text_width(self._ui_renderer, icon_value, icon_style, size)
+		local text_count_width = Text.text_width(self._ui_renderer, text_count_value, text_count_style, size)
 		local margin = 5
 
 		icon_style.offset[1] = text_width + margin * 2
@@ -400,6 +410,7 @@ end
 
 MainMenuView._reset_news_list = function (self)
 	return {
+		starting_slide_index = nil,
 		slides = {},
 	}
 end
@@ -689,8 +700,6 @@ MainMenuView._destroy_character_list_renderer = function (self)
 end
 
 MainMenuView.on_exit = function (self)
-	self._promise_container:delete()
-
 	if self._input_legend_element then
 		self._input_legend_element = nil
 
@@ -716,6 +725,11 @@ MainMenuView.on_exit = function (self)
 	Managers.event:unregister(self, "event_main_menu_selected_profile_changed")
 	Managers.event:unregister(self, "update_character_sync_state")
 	MainMenuView.super.on_exit(self)
+end
+
+MainMenuView.destroy = function (self)
+	self._promise_container:delete()
+	MainMenuView.super.destroy(self)
 end
 
 MainMenuView._sync_character_slots = function (self)
@@ -888,11 +902,7 @@ MainMenuView._show_character_details = function (self, show, profile)
 			self._current_archetype_available_promise:cancel()
 		end
 
-		local is_archetype_available_promise = Promise:resolved(false)
-
-		if selected_archetype.is_available then
-			is_archetype_available_promise = selected_archetype:is_available()
-		end
+		local is_archetype_available_promise = DLCUtils.is_archetype_available(selected_archetype)
 
 		self._current_archetype_available_promise = is_archetype_available_promise
 
@@ -903,7 +913,7 @@ MainMenuView._show_character_details = function (self, show, profile)
 				if result.available then
 					self:_on_play_pressed()
 				else
-					selected_archetype:acquire_callback(function (is_success)
+					Managers.dlc:open_dlc_view(selected_archetype.requires_dlc, selected_archetype.deluxe_dlc, function (is_success)
 						if is_success then
 							self:_show_character_details(show, profile)
 						end
@@ -981,7 +991,16 @@ end
 MainMenuView._cb_set_player_frame = function (self, widget, item)
 	local material_values = widget.style.character_portrait.material_values
 
-	material_values.portrait_frame_texture = item.icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.character_portrait = item.icon_material
+	else
+		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 MainMenuView._cb_set_player_insignia = function (self, widget, item)
@@ -1010,16 +1029,16 @@ MainMenuView._request_player_icon = function (self, profile, widget)
 end
 
 MainMenuView._load_portrait_icon = function (self, profile, widget)
-	local load_cb = callback(self, "_cb_set_player_icon", widget)
+	local load_cb = callback(self, "_cb_set_player_icon", widget, profile)
 	local unload_cb = callback(self, "_cb_unset_player_icon", widget)
 
 	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 end
 
-MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+MainMenuView._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)
 	local material_values = widget.style.character_portrait.material_values
 
-	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.character_portrait = self:_get_player_portrait_frame_material(profile)
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -1036,6 +1055,24 @@ MainMenuView._cb_unset_player_icon = function (self, widget)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+end
+
+MainMenuView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 MainMenuView._unload_portrait_icon = function (self, widget)

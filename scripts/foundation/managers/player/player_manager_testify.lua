@@ -240,6 +240,11 @@ local PlayerManagerTestify = {
 			return Testify.RETRY
 		end
 	end,
+	companion_tag_enemy = function (_, player_unit, target_unit)
+		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+
+		smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, "companion_order")
+	end,
 }
 
 return PlayerManagerTestify

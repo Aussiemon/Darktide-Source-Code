@@ -23,18 +23,18 @@ Crouch.can_crouch = function (unit, first_person_extension, animation_extension,
 	return movement_state_component.can_crouch
 end
 
-Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t, force_hold_to_crouch)
+Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, input_source, t, force_hold_to_crouch)
 	local is_crouching = movement_state_component.is_crouching
 	local has_crouch_input = Crouch.crouch_input(input_source, is_crouching, false, force_hold_to_crouch)
 	local can_crouch = Crouch.can_crouch(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
 	local wants_crouch = has_crouch_input and can_crouch
 
 	if wants_crouch and not is_crouching then
-		Crouch.enter(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+		Crouch.enter(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 
 		is_crouching = true
 	elseif not wants_crouch and is_crouching and Crouch.can_exit(unit) then
-		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+		Crouch.exit(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 
 		is_crouching = false
 	end
@@ -49,7 +49,7 @@ Crouch.can_exit = function (unit)
 	return movement_state_component.can_exit_crouch
 end
 
-Crouch.enter = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+Crouch.enter = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 	animation_extension:anim_event("to_crouch")
 	animation_extension:anim_event_1p("to_crouch")
 	first_person_extension:set_wanted_player_height("crouch", 0.3)
@@ -61,11 +61,11 @@ Crouch.enter = function (unit, first_person_extension, animation_extension, weap
 	local spread_template = weapon_extension:spread_template()
 	local sway_template = weapon_extension:sway_template()
 
-	Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "crouch_transition")
-	Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
+	Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, locomotion_component, inair_state_component, "crouch_transition")
+	Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, locomotion_component, inair_state_component, "crouch_transition")
 end
 
-Crouch.exit = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, t)
+Crouch.exit = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, sway_control_component, sway_component, spread_control_component, t)
 	animation_extension:anim_event("to_uncrouch")
 	animation_extension:anim_event_1p("to_uncrouch")
 	first_person_extension:set_wanted_player_height("default", 0.2)
@@ -77,13 +77,13 @@ Crouch.exit = function (unit, first_person_extension, animation_extension, weapo
 	if sway_control_component then
 		local sway_template = weapon_extension:sway_template()
 
-		Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "crouch_transition")
+		Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, locomotion_component, inair_state_component, locomotion_component, inair_state_component, "crouch_transition")
 	end
 
 	if spread_control_component then
 		local spread_template = weapon_extension:spread_template()
 
-		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "crouch_transition")
+		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, locomotion_component, inair_state_component, "crouch_transition")
 	end
 end
 

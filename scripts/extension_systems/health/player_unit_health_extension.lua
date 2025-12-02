@@ -116,10 +116,8 @@ PlayerUnitHealthExtension.is_unkillable = function (self)
 end
 
 PlayerUnitHealthExtension.is_invulnerable = function (self)
-	local is_invulnerable = self._is_invulnerable
 	local buff_extension = self._buff_extension
-
-	is_invulnerable = is_invulnerable or buff_extension and buff_extension:has_keyword(buff_keywords.invulnerable) or false
+	local is_invulnerable = self._is_invulnerable or not not buff_extension and not not buff_extension:has_keyword(buff_keywords.invulnerable)
 
 	return is_invulnerable
 end

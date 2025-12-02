@@ -112,20 +112,26 @@ templates.weapon_trait_bespoke_powersword_p2_reduce_fixed_overheat_amount_child 
 	predicted = false,
 	stack_offset = -1,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 		template_data.inventory_slot_component = unit_data_extension:write_component(template_context.item_slot_name)
 	end,
-	update_func = function (template_data, template_context)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			if template_context.stack_count > 1 then
 				local override_data = template_context.template_override_data

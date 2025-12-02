@@ -180,6 +180,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.5,
 		sprint_requires_press_to_interrupt = true,
@@ -257,6 +258,7 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.5,
 		start_input = "zoom_shoot",
@@ -291,6 +293,7 @@ weapon_template.actions = {
 		},
 		fx = {
 			crit_shoot_sfx_alias = "critical_shot_extra",
+			muzzle_flash_crit_effect = nil,
 			muzzle_flash_effect = "content/fx/particles/weapons/rifles/lasgun/lasgun_muzzle",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",

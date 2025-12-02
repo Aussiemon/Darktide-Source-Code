@@ -31,7 +31,7 @@ target_selection_template.cultist_ritualist = function (unit, side, perception_c
 		local distance_sq = vector3_distance_squared(Vector3.flat(position), Vector3.flat(target_position))
 		local radius_sq = math.pow(math.max(half_extents.x, half_extents.y) * math.max(local_scale.x, local_scale.y), 2)
 
-		if radius_sq < distance_sq or ii == #shield_units and not best_target_unit and Unit.alive(best_target_unit) then
+		if (radius_sq < distance_sq or ii == #shield_units and not best_target_unit and Unit.alive(best_target_unit)) and distance_sq - radius_sq > 0 and distance_sq <= closest_distance_sq then
 			best_target_unit = shield_unit
 			closest_distance_sq = distance_sq
 			closest_z_distance = math.abs(position.z - target_position.z)

@@ -26,6 +26,10 @@ ActionAbilityBase.start = function (self, action_settings, t, time_scale, action
 	if use_ability_charge and action_settings.use_charge_at_start then
 		self:_use_ability_charge()
 	end
+
+	if self._ability_pause_cooldown_setting then
+		self._ability_component.cooldown_paused = true
+	end
 end
 
 ActionAbilityBase.finish = function (self, reason, data, t, time_in_action)

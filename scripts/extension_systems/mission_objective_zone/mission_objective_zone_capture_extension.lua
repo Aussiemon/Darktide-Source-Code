@@ -8,6 +8,7 @@ local NETWORK_TIMER_STATES = table.enum("pause", "play")
 MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	MissionObjectiveZoneCaptureExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
 
+	self._zone_type = "capture"
 	self._time_progress = 0
 	self._time_in_zone = 0
 	self._number_of_players_in_zone = 1
@@ -20,19 +21,13 @@ MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_conte
 	self._player_side = side_system:get_default_player_side_name()
 	self._side_system = side_system
 	self._is_local_objective_marker_enabled = true
-	self._mission_objective_target_extension = nil
 end
 
 MissionObjectiveZoneCaptureExtension.setup_from_component = function (self, num_player_in_zone, time_in_zone, zone_type)
 	self._number_of_players_in_zone = num_player_in_zone
 	self._time_in_zone = time_in_zone
-	self._zone_type = zone_type
 
 	self._networked_timer_extension:setup_from_component(time_in_zone, nil, 1, false)
-end
-
-MissionObjectiveZoneCaptureExtension.extensions_ready = function (self, world, unit)
-	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 end
 
 MissionObjectiveZoneCaptureExtension.activate_zone = function (self)

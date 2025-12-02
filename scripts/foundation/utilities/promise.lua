@@ -419,27 +419,31 @@ local predicates = {}
 
 Promise._check_predicate = function ()
 	for i = #predicates, 1, -1 do
-		local p = predicates[i]
-		local promise = p.promise
+		repeat
+			local p = predicates[i]
+			local promise = p.promise
 
-		if not promise:is_pending() then
-			table.swap_delete(predicates, i)
-		else
+			if not promise:is_pending() then
+				table.swap_delete(predicates, i)
+
+				break
+			end
+
 			local predicate = p.predicate
 			local is_done, error = predicate()
 
 			if not is_done and not error then
-				-- Nothing
-			else
-				if is_done then
-					promise:resolve(is_done)
-				else
-					promise:reject(error)
-				end
-
-				table.swap_delete(predicates, i)
+				break
 			end
-		end
+
+			if is_done then
+				promise:resolve(is_done)
+			else
+				promise:reject(error)
+			end
+
+			table.swap_delete(predicates, i)
+		until true
 	end
 end
 

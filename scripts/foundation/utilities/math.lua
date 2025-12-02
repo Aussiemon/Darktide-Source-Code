@@ -70,6 +70,10 @@ math.lerp = function (a, b, p)
 	return a * (1 - p) + b * p
 end
 
+math.lerp_clamped = function (a, b, p)
+	return math.clamp01(math.lerp(a, b, p))
+end
+
 math.remap = function (input_min, input_max, output_min, output_max, value)
 	local t = math.ilerp(input_min, input_max, value)
 
@@ -137,6 +141,10 @@ math.round_to_closest_multiple = function (value, multiple)
 	end
 
 	return value + multiple - modulo
+end
+
+math.round_to_closest_multiple_toward_zero = function (value, multiple)
+	return math.modf(value / multiple) * multiple
 end
 
 math.smoothstep = function (value, min, max)
@@ -414,6 +422,10 @@ math.ease_in_sine = function (t)
 	return 1 - math.cos(t * pi / 2)
 end
 
+math.ease_in_out_sine = function (t)
+	return -(math.cos(pi * t) - 1) / 2
+end
+
 math.ease_exp = function (t)
 	if t < 0.5 then
 		return 0.5 * 2^(20 * (t - 0.5))
@@ -536,6 +548,14 @@ math.ease_in_out_quart = function (t)
 		return 8 * t * t * t * t
 	else
 		return 1 - (-2 * t + 2)^4 / 2
+	end
+end
+
+math.ease_in_out_cubic = function (t)
+	if t < 0.5 then
+		return 4 * t * t * t
+	else
+		return 1 - (-2 * t + 2)^3 * 0.5
 	end
 end
 

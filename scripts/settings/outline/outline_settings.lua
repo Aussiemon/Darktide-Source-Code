@@ -112,6 +112,19 @@ templates.MinionOutlineExtension = {
 		},
 		visibility_check = _minion_alive_check,
 	},
+	broker_proximity_target = {
+		priority = 2,
+		material_layers = {
+			"minion_outline",
+			"minion_outline_reversed_depth",
+		},
+		color = {
+			0.48,
+			0.8,
+			0.96,
+		},
+		visibility_check = _minion_alive_check,
+	},
 }
 templates.CompanionOutlineExtension = {
 	owned_companion = {

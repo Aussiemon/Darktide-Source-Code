@@ -517,11 +517,29 @@ UnitSpawnerManager.level_index = function (self, unit)
 	return nil, NetworkConstants.invalid_level_name_hash
 end
 
+UnitSpawnerManager.unit_exists = function (self, game_object_id_or_level_index, is_level_unit_optional, level_name_hash_optional)
+	if level_name_hash_optional and level_name_hash_optional ~= NetworkConstants.invalid_level_name_hash then
+		local units_in_runtime_loaded_level = self._runtime_loaded_levels[level_name_hash_optional]
+
+		if units_in_runtime_loaded_level[game_object_id_or_level_index] then
+			return true
+		end
+	elseif is_level_unit_optional and self._level_unit_array[game_object_id_or_level_index] then
+		return true
+	end
+
+	return self._network_units[game_object_id_or_level_index] ~= nil
+end
+
 UnitSpawnerManager.unit = function (self, game_object_id_or_level_index, is_level_unit_optional, level_name_hash_optional)
 	local hash_ok = level_name_hash_optional and level_name_hash_optional ~= NetworkConstants.invalid_level_name_hash
 
 	if hash_ok then
 		local units_in_runtime_loaded_level = self._runtime_loaded_levels[level_name_hash_optional]
+
+		if not units_in_runtime_loaded_level then
+			return nil
+		end
 
 		return units_in_runtime_loaded_level[game_object_id_or_level_index]
 	elseif is_level_unit_optional then

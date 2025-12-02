@@ -62,7 +62,7 @@ local accept_mission_voting_template_immaterium = {
 		_close_voting_view(voting_id)
 
 		if result == "rejected" then
-			Log.info("party declined mission!")
+			Log.info("AcceptMissionVotingTemplate", "party declined mission!")
 		else
 			local ui_manager = Managers.ui
 

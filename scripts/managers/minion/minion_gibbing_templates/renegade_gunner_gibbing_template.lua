@@ -712,6 +712,28 @@ center_mass_right_warp_lightning.stump_settings.vfx = SharedGibbingTemplates.vfx
 center_mass_right_warp_lightning.stump_settings.sfx = SharedGibbingTemplates.sfx.warp_stump_lightning
 center_mass_right_warp_lightning.gibbing_threshold = GibbingThresholds.heavy
 
+local center_mass_toxin = table.clone(torso_remove)
+
+center_mass_toxin.stump_settings.vfx = SharedGibbingTemplates.vfx.toxin_gas_stump
+center_mass_toxin.extra_hit_zone_gibs = {
+	"head",
+	"upper_right_arm",
+	"upper_left_arm",
+}
+
+local center_mass_toxin_variation_1 = table.clone(center_mass_toxin)
+
+center_mass_toxin_variation_1.extra_hit_zone_gibs = {
+	"upper_right_arm",
+	"upper_left_arm",
+}
+
+local center_mass_toxin_variation_2 = table.clone(center_mass_toxin)
+
+center_mass_toxin_variation_2.extra_hit_zone_gibs = {
+	"head",
+}
+
 local gibbing_template = {
 	name = name,
 	head = {
@@ -962,6 +984,11 @@ local gibbing_template = {
 			center_mass_full,
 			center_mass_upper,
 			torso_sever,
+		},
+		toxin = {
+			center_mass_toxin,
+			center_mass_toxin_variation_1,
+			center_mass_toxin_variation_2,
 		},
 	},
 }

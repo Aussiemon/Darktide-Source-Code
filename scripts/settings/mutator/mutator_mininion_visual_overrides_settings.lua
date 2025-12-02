@@ -102,6 +102,24 @@ MutatorMinionVisualOverrideSettings.head_parasite = {
 			},
 		},
 	},
+	chaos_ogryn_gunner = {
+		item_slot_data = {
+			slot_head = {
+				items = {
+					"content/items/characters/minions/chaos_ogryn/attachments_base/head_a",
+					"content/items/characters/minions/chaos_ogryn/attachments_base/head_b",
+				},
+			},
+			slot_base_attachment = {
+				items = {
+					"content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_01",
+					"content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02",
+					"content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_01_var_01",
+					"content/items/characters/minions/chaos_ogryn/attachments_base/tentacle_head_02_var_01",
+				},
+			},
+		},
+	},
 	ogryn = {
 		item_slot_data = {
 			slot_head_attachment = {

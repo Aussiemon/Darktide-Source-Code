@@ -51,6 +51,10 @@ LuggableExtension.set_synchronizer = function (self, synchronizer)
 	self._synchronizer = synchronizer
 end
 
+LuggableExtension.clear_synchronizer = function (self)
+	self._synchronizer = nil
+end
+
 LuggableExtension._on_carried = function (self)
 	if self._is_server then
 		self._interactee_extension:set_active(false)

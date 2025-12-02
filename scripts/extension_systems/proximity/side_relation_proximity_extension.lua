@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/proximity/side_relation_proximity_extension.lua
 
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_area_buff_drone")
+require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_broker_stimm_field")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_shock_mine")
 
@@ -202,7 +203,7 @@ SideRelationProximityExtension._update_proximity = function (self, unit, dt, t)
 					local logic = data_logic[ii]
 
 					if logic.unit_left_proximity ~= nil then
-						logic:unit_left_proximity(exit_unit)
+						logic:unit_left_proximity(t, exit_unit)
 					end
 				end
 

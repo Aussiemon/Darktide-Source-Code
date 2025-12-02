@@ -94,6 +94,7 @@ local widget_definitions = {
 			style = {
 				material_values = {
 					progress = 0,
+					talent_icon = nil,
 				},
 				offset = {
 					0,

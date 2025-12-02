@@ -543,7 +543,7 @@ local archetype_option_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "icon",
-		value = "content/ui/textures/frames/class_selection/windows/class_selection_top_adamant_effect",
+		value = "content/ui/materials/frames/class_selection_top_container",
 		value_id = "icon",
 		style = {
 			hdr = true,

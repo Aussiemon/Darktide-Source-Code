@@ -117,9 +117,11 @@ channel_metadata[ChannelTags.HUB] = {
 	color = hub_channel_color,
 }
 channel_metadata[ChannelTags.CLAN] = {
+	name = nil,
 	color = clan_channel_color,
 }
 channel_metadata[ChannelTags.PRIVATE] = {
+	name = nil,
 	color = clan_channel_color,
 }
 channel_metadata[ChannelTags.SYSTEM] = {
@@ -128,6 +130,7 @@ channel_metadata[ChannelTags.SYSTEM] = {
 	color = Color.ui_orange_medium(255, true),
 }
 channel_metadata.placeholder = {
+	name = nil,
 	color = Color.magenta(255, true),
 }
 

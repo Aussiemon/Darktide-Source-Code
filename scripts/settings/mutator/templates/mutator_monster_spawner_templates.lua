@@ -1,55 +1,19 @@
 ﻿-- chunkname: @scripts/settings/mutator/templates/mutator_monster_spawner_templates.lua
 
+local HavocMutatorLocalSettings = require("scripts/settings/havoc/havoc_mutator_local_settings")
 local MutatorSpawnerNode = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node")
-local MutatorSpawnerNodeLevelInstance = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance")
-local MutatorSpawnerNodeHordeTrigger = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_horde_trigger")
-local MutatorSpawnerNodeEnemyTemplate = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template")
 local EnemyEventSpawnerSettings = require("scripts/settings/components/enemy_event_spawner_settings")
 local MutatorSpawnerLocationSources = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_location_sources")
+local havoc_twins_settings = HavocMutatorLocalSettings.mutator_havoc_twins_settings
+local mutator_havoc_chaos_rituals = HavocMutatorLocalSettings.mutator_havoc_chaos_rituals
 local mutator_templates = {
 	mutator_monster_spawner = {
 		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = {
-			force_horde_on_spawn = true,
-			trigger_distance = 55,
-			monster_breed_name = {
-				"chaos_mutator_daemonhost",
-			},
-			num_to_spawn_per_mission = {
-				cm_archives = 5,
-				cm_habs = 3,
-				cm_raid = 5,
-				core_research = 4,
-				dm_forge = 5,
-				dm_propaganda = 5,
-				dm_rise = 5,
-				dm_stockpile = 5,
-				fm_armoury = 5,
-				fm_cargo = 5,
-				fm_resurgence = 5,
-				hm_cartel = 5,
-				hm_complex = 5,
-				hm_strain = 5,
-				km_enforcer = 5,
-				km_heresy = 5,
-				km_station = 5,
-				lm_cooling = 5,
-				lm_rails = 5,
-				lm_scavenge = 5,
-			},
-		},
+		spawner_template = mutator_havoc_chaos_rituals,
 	},
 	mutator_monster_havoc_twins = {
 		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = {
-			force_horde_on_spawn = true,
-			injection_template = "havoc_twins",
-			num_to_spawn = 1,
-			trigger_distance = 55,
-			monster_breed_name = {
-				"havoc_twins",
-			},
-		},
+		spawner_template = havoc_twins_settings,
 	},
 	mutator_nurgle_totem = {
 		asset_package = "content/characters/enemy/mutators/skull_totems_assets",
@@ -79,31 +43,45 @@ local mutator_templates = {
 			},
 		},
 	},
-	mutator_plasma_smuggler_groups_tree_test = {
+	mutator_plasma_smuggler_props = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		num_to_spawn = 3,
 		trigger_distance = 55,
 		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations("skulls_locations"),
 		spawners = {
-			MutatorSpawnerNodeLevelInstance:new({
-				asset_package = "packages/content/live_events/plasma_smugglers/plasma_smugglers_assets",
-				run_on_init = true,
-				levels = {
-					"content/levels/live_events/plasma_smugglers_props_1",
-					"content/levels/live_events/plasma_smugglers_props_2",
-					"content/levels/live_events/plasma_smugglers_props_3",
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance",
+				template = {
+					asset_package = "packages/content/live_events/plasma_smugglers/plasma_smugglers_assets",
+					use_raycast = true,
+					levels = {
+						level_size_4 = {
+							"content/levels/live_events/plasma_smugglers_props_1",
+							"content/levels/live_events/plasma_smugglers_props_2",
+							"content/levels/live_events/plasma_smugglers_props_3",
+						},
+					},
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					size_lookup = {
+						"level_size_4",
+					},
+					spawn_settings = {
+						randomize_rotation = true,
+					},
 				},
-				placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
-				spawn_settings = {
-					randomize_rotation = true,
+			},
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_horde_trigger",
+				template = {},
+			},
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
+				template = {
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					composition = EnemyEventSpawnerSettings.live_event_plasma_smugglers,
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
 				},
-			}),
-			MutatorSpawnerNodeHordeTrigger:new({}),
-			MutatorSpawnerNodeEnemyTemplate:new({
-				placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
-				composition = EnemyEventSpawnerSettings.live_event_plasma_smugglers,
-				enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-			}),
+			},
 		},
 	},
 }

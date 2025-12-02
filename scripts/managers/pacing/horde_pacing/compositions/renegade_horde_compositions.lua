@@ -852,13 +852,6 @@ local horde_compositions = {
 						1,
 					},
 				},
-				{
-					name = "renegade_plasma_gunner",
-					amount = {
-						1,
-						1,
-					},
-				},
 			},
 		},
 		{
@@ -872,13 +865,6 @@ local horde_compositions = {
 				},
 				{
 					name = "renegade_gunner",
-					amount = {
-						1,
-						1,
-					},
-				},
-				{
-					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						1,
@@ -1958,13 +1944,6 @@ local horde_compositions = {
 						1,
 					},
 				},
-				{
-					name = "renegade_plasma_gunner",
-					amount = {
-						1,
-						1,
-					},
-				},
 			},
 		},
 		{
@@ -1978,13 +1957,6 @@ local horde_compositions = {
 				},
 				{
 					name = "renegade_gunner",
-					amount = {
-						1,
-						2,
-					},
-				},
-				{
-					name = "renegade_plasma_gunner",
 					amount = {
 						1,
 						2,
@@ -3004,13 +2976,6 @@ local horde_compositions = {
 						2,
 					},
 				},
-				{
-					name = "renegade_plasma_gunner",
-					amount = {
-						1,
-						1,
-					},
-				},
 			},
 		},
 		{
@@ -3027,13 +2992,6 @@ local horde_compositions = {
 					amount = {
 						2,
 						3,
-					},
-				},
-				{
-					name = "renegade_plasma_gunner",
-					amount = {
-						1,
-						2,
 					},
 				},
 			},

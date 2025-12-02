@@ -214,7 +214,7 @@ MinigameDrill.on_action_pressed = function (self, t)
 		return
 	end
 
-	if self._current_state ~= MinigameSettings.game_states.gameplay or not self._selected_index then
+	if self._current_state ~= MinigameSettings.game_states.gameplay or not self._selected_index or not self._current_stage then
 		return
 	end
 

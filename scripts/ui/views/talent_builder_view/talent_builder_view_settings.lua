@@ -213,6 +213,19 @@ local talent_builder_view_settings = {
 				80,
 			},
 		},
+		broker_stimm = {
+			display_name = "loc_glossary_talent_default",
+			frame = "content/ui/textures/frames/talents/diamond_frame",
+			gradient_map = "content/ui/textures/color_ramps/talent_default",
+			icon_mask = "content/ui/textures/frames/talents/diamond_frame_mask",
+			selected_material = "content/ui/materials/frames/talents/diamond_frame_selected",
+			sort_order = 9,
+			node_definition = node_definitions.node_definition_broker_stimm,
+			size = {
+				110,
+				110,
+			},
+		},
 	},
 	starting_talent_nodes_offset_by_name = {
 		adamant = {
@@ -236,15 +249,9 @@ local talent_builder_view_settings = {
 			35,
 		},
 	},
-	starting_points_material_by_name = {
-		adamant = "content/ui/materials/frames/talents/starting_points/starting_point_adamant",
-		ogryn = "content/ui/materials/frames/talents/starting_points/starting_point_ogryn",
-		psyker = "content/ui/materials/frames/talents/starting_points/starting_point_psyker",
-		veteran = "content/ui/materials/frames/talents/starting_points/starting_point_veteran",
-		zealot = "content/ui/materials/frames/talents/starting_points/starting_point_zealot",
-	},
 	archetype_badge_texture_by_name = {
 		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
+		broker = "content/ui/textures/icons/class_badges/broker_01_01",
 		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
 		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
 		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",
@@ -252,6 +259,7 @@ local talent_builder_view_settings = {
 	},
 	archetype_backgrounds_by_name = {
 		adamant = "content/ui/materials/frames/talents/talent_bg_top_gradient_adamant",
+		broker = "content/ui/materials/frames/talents/talent_bg_top_gradient_broker",
 		ogryn = "content/ui/materials/frames/talents/talent_bg_top_gradient_ogryn",
 		psyker = "content/ui/materials/frames/talents/talent_bg_top_gradient_psyker",
 		veteran = "content/ui/materials/frames/talents/talent_bg_top_gradient_veteran",
@@ -399,6 +407,36 @@ local talent_builder_view_settings = {
 			},
 		},
 		zealot = {
+			line_chosen = {
+				fill_color = {
+					255,
+					224,
+					250,
+					255,
+				},
+				blur_color = {
+					150,
+					99,
+					167,
+					176,
+				},
+			},
+			line_available = {
+				fill_color = {
+					255,
+					39,
+					74,
+					78,
+				},
+				blur_color = {
+					127,
+					42,
+					55,
+					59,
+				},
+			},
+		},
+		broker = {
 			line_chosen = {
 				fill_color = {
 					255,

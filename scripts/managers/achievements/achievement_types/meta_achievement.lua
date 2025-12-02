@@ -65,9 +65,7 @@ MetaAchievement.get_progress = function (achievement_definition, player)
 		end
 	end
 
-	local target = achievement_definition.target
-
-	return result, target
+	return result, achievement_definition.target
 end
 
 return MetaAchievement

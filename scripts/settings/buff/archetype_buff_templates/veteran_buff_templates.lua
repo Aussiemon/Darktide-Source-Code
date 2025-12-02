@@ -674,7 +674,6 @@ templates.veteran_movement_bonuses_on_toughness_broken = {
 }
 
 local in_melee_range = DamageSettings.in_melee_range
-local check_interval_time = 0.1
 local melee_hit_cooldown = talent_settings_2.veteran_ranged_power_out_of_melee.cooldown
 
 templates.veteran_ranged_power_out_of_melee = {
@@ -1155,10 +1154,7 @@ templates.veteran_invisibility = {
 		end
 
 		local buff_extension = template_context.buff_extension
-		local can_attack_during_invisibility = false
-
-		can_attack_during_invisibility = buff_extension:has_keyword(keywords.can_attack_during_invisibility)
-
+		local can_attack_during_invisibility = not not buff_extension:has_keyword(keywords.can_attack_during_invisibility)
 		local damage_type = params.damage_type
 
 		if damage_type and (ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] or can_attack_during_invisibility) then
@@ -1661,7 +1657,6 @@ templates.veteran_replenish_toughness_of_ally_close_to_victim_damage_buff = {
 	},
 }
 
-local range = talent_settings_2.toughness_3.range
 local melee_hit_cooldown_toughness = talent_settings_2.toughness_3.cooldown
 
 templates.veteran_toughness_regen_out_of_melee = {
@@ -2114,19 +2109,17 @@ templates.veteran_combat_ability_cooldown_reduction_on_elite_kills_buff = {
 			return
 		end
 
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
+	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
-		end
-
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
 		end
 
 		if t > template_data.timer then
@@ -2650,7 +2643,7 @@ templates.veteran_tdr_on_high_toughness = {
 
 		return current_toughness > 0.75
 	end,
-	related_talent = {
+	related_talents = {
 		"veteran_tdr_on_high_toughness",
 	},
 }
@@ -2707,7 +2700,6 @@ local function _snipers_focus_handle_stacks(template_data, template_context, pre
 end
 
 local snipers_focus_stacks_per_weakspot_kill = 3
-local snipers_focus_stacks_per_weakspot_hit = 1
 
 templates.veteran_snipers_focus = {
 	class_name = "proc_buff",
@@ -2830,6 +2822,9 @@ templates.veteran_snipers_focus_stat_buff = {
 			template_data.veteran_snipers_focus_effect_id = nil
 		end
 	end,
+	related_talents = {
+		"veteran_snipers_focus",
+	},
 }
 templates.veteran_snipers_focus_stat_buff_increased_stacks = table.clone(templates.veteran_snipers_focus_stat_buff)
 templates.veteran_snipers_focus_stat_buff_increased_stacks.max_stacks = snipers_focus_max_stacks_talent

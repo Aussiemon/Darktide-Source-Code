@@ -86,7 +86,7 @@ local function _haptic_trigger_template(action_settings_or_weapon_template, cond
 	local haptic_trigger_template_condition_func = action_settings_or_weapon_template and action_settings_or_weapon_template.haptic_trigger_template_condition_func
 
 	if haptic_trigger_template_condition_func and condition_func_params then
-		haptic_trigger_template = haptic_trigger_template_condition_func(condition_func_params)
+		haptic_trigger_template = haptic_trigger_template_condition_func(action_settings_or_weapon_template, condition_func_params)
 	end
 
 	return haptic_trigger_template

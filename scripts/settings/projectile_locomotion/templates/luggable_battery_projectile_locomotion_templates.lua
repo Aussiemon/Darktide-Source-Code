@@ -14,6 +14,7 @@ local luggable_projectile_locomotion_templates = {
 				offset_right = 0.3,
 				offset_up = 0.1,
 				place_distance = 2,
+				randomized_angular_velocity = nil,
 				rotation_charge_duration = 1,
 				speed_charge_duration = 1.5,
 				speed_initial = 4,

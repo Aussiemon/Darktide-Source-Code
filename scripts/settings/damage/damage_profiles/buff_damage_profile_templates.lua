@@ -6,6 +6,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
+local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_templates = {}
 local overrides = {}
 
@@ -61,6 +62,16 @@ local corruptor_corruption_adm = {
 	[armor_types.super_armor] = 0,
 	[armor_types.disgustingly_resilient] = 0,
 	[armor_types.void_shield] = 0,
+}
+local toxin_adm = {
+	[armor_types.unarmored] = 2.5,
+	[armor_types.armored] = 1.5,
+	[armor_types.resistant] = 0.9,
+	[armor_types.player] = 0.125,
+	[armor_types.berserker] = 2,
+	[armor_types.super_armor] = 0.9,
+	[armor_types.disgustingly_resilient] = 0.9,
+	[armor_types.void_shield] = 0.1,
 }
 
 damage_templates.liquid_area_fire_burning = {
@@ -525,6 +536,192 @@ damage_templates.hordes_buff_damage_reflection_push_hit = table.clone(damage_tem
 damage_templates.hordes_buff_damage_reflection_push_hit.power_distribution.attack = 0
 damage_templates.hordes_buff_high_damage_reflection_hit = table.clone(damage_templates.hordes_buff_damage_reflection_hit)
 damage_templates.hordes_buff_high_damage_reflection_hit.power_distribution.attack = 120
+damage_templates.live_event_saints_out_of_area_debuff_damage_template = {
+	ignore_shield = true,
+	ignore_toughness = true,
+	permanent_damage_ratio = 1,
+	skip_on_hit_proc = true,
+	stagger_category = "melee",
+	unblockable = true,
+	power_distribution = {
+		attack = 1,
+		impact = 0,
+	},
+	damage_type = damage_types.corruption,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.toxin_variant_1 = {
+	disorientation_type = "burninating",
+	ignore_shield = true,
+	is_buff_damage = true,
+	ogryn_disorientation_type = "burninating",
+	stagger_category = "flamer",
+	toughness_multiplier = 3,
+	armor_damage_modifier = {
+		attack = toxin_adm,
+		impact = toxin_adm,
+	},
+	power_distribution = {
+		attack = 400,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"burning_damage",
+	},
+	power_stat_buffs = {
+		"toxin_power",
+	},
+}
+damage_templates.toxin_variant_2 = {
+	disorientation_type = "burninating",
+	ignore_shield = true,
+	is_buff_damage = true,
+	ogryn_disorientation_type = "burninating",
+	stagger_category = "flamer",
+	toughness_multiplier = 3,
+	armor_damage_modifier = {
+		attack = toxin_adm,
+		impact = toxin_adm,
+	},
+	power_distribution = {
+		attack = 500,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"burning_damage",
+	},
+	power_stat_buffs = {
+		"toxin_power",
+	},
+}
+damage_templates.toxin_variant_3 = {
+	disorientation_type = "burninating",
+	ignore_shield = false,
+	is_buff_damage = true,
+	ogryn_disorientation_type = "burninating",
+	ragdoll_push_force = 10,
+	stagger_category = "flamer",
+	toughness_multiplier = 3,
+	armor_damage_modifier = {
+		attack = toxin_adm,
+		impact = toxin_adm,
+	},
+	power_distribution = {
+		attack = 440,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"burning_damage",
+	},
+	power_stat_buffs = {
+		"toxin_power",
+	},
+}
+damage_templates.horde_mode_self_propagating_toxin = {
+	disorientation_type = "burninating",
+	ignore_shield = true,
+	is_buff_damage = true,
+	ogryn_disorientation_type = "burninating",
+	stagger_category = "flamer",
+	toughness_multiplier = 3,
+	armor_damage_modifier = {
+		attack = toxin_adm,
+		impact = toxin_adm,
+	},
+	power_distribution = {
+		attack = 200,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"burning_damage",
+	},
+	power_stat_buffs = {
+		"toxin_power",
+	},
+}
+damage_templates.broker_toxin_stacks_stun_interval = {
+	ignore_shield = true,
+	stagger_category = "sticky",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_2,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 20,
+	},
+	power_distribution = {
+		attack = 8,
+		impact = 100,
+	},
+	damage_type = damage_types.electrocution,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_stat_buffs = {
+		"toxin_power",
+	},
+}
 
 return {
 	base_templates = damage_templates,

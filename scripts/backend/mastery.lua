@@ -23,15 +23,6 @@ Mastery.purchase_trait = function (self, traitCatId, traitPath, tier)
 	end)
 end
 
-Mastery.get_mastery_available_points = function (self)
-	return Managers.backend:authenticate():next(function (account)
-		local account_id = account.sub
-		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/statistics/"):path("mastery")
-
-		return Managers.backend:title_request(builder:to_string())
-	end)
-end
-
 Mastery.switch_mark = function (self, gear_id, mark_id)
 	return Managers.backend:authenticate():next(function (account)
 		local account_id = account.sub

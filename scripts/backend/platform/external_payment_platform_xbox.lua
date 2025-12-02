@@ -303,6 +303,8 @@ ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_
 	local offer = platform_entitlements[offer_id]
 	local is_store_managed_consumable = offer and table.array_contains(offer.productKind, "consumable")
 
+	option.raw = offer
+
 	if is_store_managed_consumable then
 		option.description.title = offer.title
 		option.price.amount.formattedPrice = offer.formattedPrice.formattedPrice
@@ -420,6 +422,53 @@ ExternalPaymentPlatformXbox._decorate_option = function (self, option, platform_
 
 		return pending_txn_promise
 	end
+end
+
+ExternalPaymentPlatformXbox._clean_options = function (self, options)
+	for i, v in ipairs(options) do
+		local clean_offer
+		local microsoft_data = v.microsoft or v.productIds and v.productIds.microsoft
+
+		if v.raw and microsoft_data then
+			clean_offer = {}
+
+			local sku = v.raw.skus[1]
+			local price_struct = sku.price
+
+			clean_offer.base_price = price_struct.basePrice and price_struct.basePrice or price_struct.price
+			clean_offer.discount_price = price_struct.isOnSale and price_struct.price
+			clean_offer.item_id = microsoft_data.productId
+			clean_offer.entitlement_id = microsoft_data.productId
+			clean_offer.product_id = microsoft_data.productId
+			clean_offer.description = sku.description
+			clean_offer.formatted_price = price_struct.formattedPrice
+			clean_offer.formatted_original_price = price_struct.isOnSale and price_struct.formattedBasePrice
+			clean_offer.is_platform_option = v.description.type == "platform_option"
+			clean_offer.metadata = v.metadata or {}
+		end
+
+		options[i].clean_offer = clean_offer
+	end
+
+	return options
+end
+
+ExternalPaymentPlatformXbox._is_platform_option_owned = function (self, offer, platform_entitlement)
+	if offer.productIds.microsoft then
+		return Promise.resolved({
+			is_owner = platform_entitlement.isInUserCollection,
+		})
+	end
+
+	return Promise.resolved({
+		is_owner = false,
+	})
+end
+
+ExternalPaymentPlatformXbox._offer_id_from_option = function (self, option)
+	local option_data = option.microsoft or option.productIds.microsoft
+
+	return option_data and option_data.productId
 end
 
 ExternalPaymentPlatformXbox._get_entitlements = function (self)

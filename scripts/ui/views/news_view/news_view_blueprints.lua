@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/news_view/news_view_blueprints.lua
 
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local window_size = NewsViewSettings.window_size
@@ -180,8 +179,7 @@ local widget_blueprints_by_type = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+			local height = ui_renderer and Text.text_height(ui_renderer, text, text_style, size) or size[2]
 
 			size[2] = height + 0
 		end,
@@ -242,8 +240,7 @@ local widget_blueprints_by_type = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+			local height = ui_renderer and Text.text_height(ui_renderer, text, text_style, size) or size[2]
 
 			size[2] = height + 0
 		end,
@@ -296,8 +293,7 @@ local widget_blueprints_by_type = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = ui_renderer and UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options) or size[2]
+			local height = ui_renderer and Text.text_height(ui_renderer, text, text_style, size) or size[2]
 
 			size[2] = height + 0
 		end,

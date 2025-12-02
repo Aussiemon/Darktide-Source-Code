@@ -3,10 +3,8 @@
 local Definitions = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet_definitions")
 local ViewElementWalletSettings = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ViewElementWallet = class("ViewElementWallet", "ViewElementBase")
 
 ViewElementWallet.init = function (self, parent, draw_layer, start_scale)
@@ -126,16 +124,15 @@ ViewElementWallet._get_wallet_text_size = function (self, widget, currency_name,
 	local content = widget.content
 	local style = widget.style.text
 	local amount = self._amount_by_currency[currency_name]
-	local text = TextUtils.format_currency(amount)
+	local text = Text.format_currency(amount)
 
 	content.text = text
 
-	local text_options = UIFonts.get_font_options_by_style(style, self._text_options)
 	local size = {
 		1920,
 		1080,
 	}
-	local width, height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, size, text_options)
+	local width, height = Text.text_size(ui_renderer, text, style, size)
 
 	return width, height
 end

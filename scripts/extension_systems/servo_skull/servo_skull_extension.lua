@@ -138,9 +138,9 @@ ServoSkullExtension._zone_has_active_scannables = function (self)
 	return false
 end
 
-ServoSkullExtension._recieve_scannables_from_active_zone = function (self)
+ServoSkullExtension._recieve_scannables_from_active_zone = function (self, objective_name, objective_group)
 	local mission_objective_zone_system = self._mission_objective_zone_system
-	local current_active_zone = mission_objective_zone_system:current_active_zone()
+	local current_active_zone = mission_objective_zone_system:current_active_zone(objective_name, objective_group)
 
 	if current_active_zone.selected_scannable_units then
 		local scannable_units = current_active_zone:selected_scannable_units()
@@ -158,11 +158,15 @@ end
 
 ServoSkullExtension.at_end_of_spline = function (self, last_spline)
 	if self._is_server then
-		local mission_objective_zone_system = self._mission_objective_zone_system
+		local target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
+		local objective_name = target_extension:objective_name()
+		local objective_group = target_extension:objective_group_id()
+		local synchronizer_unit = self._mission_objective_system:objective_synchronizer_unit(objective_name, objective_group)
+		local synchronizer_unit_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
-		mission_objective_zone_system:at_end_of_spline(last_spline)
+		synchronizer_unit_extension:at_end_of_spline(last_spline)
 
-		local scannable_units = self:_recieve_scannables_from_active_zone()
+		local scannable_units = self:_recieve_scannables_from_active_zone(objective_name, objective_group)
 
 		if scannable_units then
 			self._scannable_units = scannable_units
@@ -245,9 +249,8 @@ ServoSkullExtension._vo_timer = function (self, dt)
 end
 
 ServoSkullExtension._play_vo = function (self, scanning_vo_line)
-	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
-	local mission_objective = self._mission_objective_system:active_objective(current_objective_name)
-	local voice_profile = mission_objective:mission_giver_voice_profile()
+	local objective = self:_objective()
+	local voice_profile = objective:mission_giver_voice_profile()
 
 	if voice_profile then
 		local concept = MissionObjectiveScanning.vo_settings.concept
@@ -282,9 +285,11 @@ ServoSkullExtension.set_scanning_active = function (self, active)
 end
 
 ServoSkullExtension._objective = function (self)
-	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+	local target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
+	local objective_name = target_extension:objective_name()
+	local objective_group = target_extension:objective_group_id()
 
-	self._mission_objective = self._mission_objective_system:active_objective(current_objective_name)
+	self._mission_objective = self._mission_objective_system:active_objective(objective_name, objective_group)
 
 	return self._mission_objective
 end

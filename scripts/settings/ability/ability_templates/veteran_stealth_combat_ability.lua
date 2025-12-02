@@ -79,7 +79,7 @@ ability_template.actions = {
 		start_input = "combat_ability_pressed",
 		total_time = 0,
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "combat_ability_released",
 			},
 		},
@@ -97,6 +97,7 @@ ability_template.actions = {
 		kind = "veteran_combat_ability",
 		prevent_sprint = false,
 		shout_target_template = "veteran_shout",
+		sprint_ready_up_time = nil,
 		total_time = 1,
 		uninterruptible = true,
 		use_ability_charge = true,

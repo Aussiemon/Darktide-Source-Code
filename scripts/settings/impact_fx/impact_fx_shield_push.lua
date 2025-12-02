@@ -6,6 +6,13 @@ local armor_types = ArmorSettings.types
 local unarmored, armored, super_armor, disgustingly_resilient, resistant, berserker
 local player = {
 	sfx = {
+		blocked = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				append_husk_to_event_name = true,
@@ -19,8 +26,28 @@ local player = {
 			},
 		},
 	},
-	vfx = {},
-	blood_ball = {},
+	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
+	blood_ball = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 }
 
 return {

@@ -27,6 +27,11 @@ local CONFIG = {
 		glass_color = Vector3Box(0.221, 0.49, 1),
 		liquid_color = Vector3Box(0.221, 0.49, 1),
 	},
+	syringe_broker_pocketable = {
+		decal_index = 3,
+		glass_color = Vector3Box(0.389, 0, 0),
+		liquid_color = Vector3Box(0.389, 0, 0),
+	},
 }
 
 SyringeEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)

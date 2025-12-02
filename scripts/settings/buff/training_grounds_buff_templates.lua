@@ -24,6 +24,15 @@ templates.tg_minion_unperceivable = {
 		keywords.unperceivable,
 	},
 }
+templates.tg_no_aura_radius = {
+	class_name = "buff",
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	stat_buffs = {
+		coherency_radius_multiplier = 0,
+	},
+}
 templates.tg_health_station_scenario_corruption = {
 	class_name = "buff",
 	predicted = false,
@@ -47,6 +56,16 @@ templates.tg_player_on_dodge_tutorial = {
 	predicted = false,
 	proc_events = {
 		[buff_proc_events.on_successful_dodge] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		Managers.event:trigger("tg_on_successful_dodge")
+	end,
+}
+templates.tg_player_on_ranged_dodge_tutorial = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_ranged_dodge] = 1,
 	},
 	proc_func = function (params, template_data, template_context)
 		Managers.event:trigger("tg_on_successful_dodge")

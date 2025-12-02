@@ -11,6 +11,7 @@ local STATES = door_settings.STATES
 door_settings.anim = {
 	[STATES.none] = {
 		duration = 0,
+		event = nil,
 	},
 	[STATES.open] = {
 		duration = 0,

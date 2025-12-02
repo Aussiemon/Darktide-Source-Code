@@ -15,6 +15,10 @@ local constant_element_mission_lobby_status_settings = {
 			nil,
 			0,
 		},
+		broker_stimm_builder_view = {
+			nil,
+			0,
+		},
 	},
 	hide_in_view = {
 		inventory_background_view = true,

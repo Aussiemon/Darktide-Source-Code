@@ -20,6 +20,25 @@ local templates = {
 		vfx_name_rim = "content/fx/particles/liquid_area/fire_lingering_edge",
 		spread_function = LiquidSpread.pour,
 	},
+	broker_tox_grenade = {
+		buff_target_side_relation = "enemy",
+		cell_size = 1.2,
+		end_pressure = 16,
+		in_liquid_buff_template_name = "broker_tox_grenade_in_liquid_buff",
+		leaving_liquid_buff_template_name = "neurotoxin_interval_buff3",
+		life_time = 20,
+		linearized_flow = false,
+		max_liquid = 55,
+		nav_cost_map_cost = 5,
+		nav_cost_map_name = "fire",
+		sfx_name_start = "wwise/events/weapon/play_aoe_chem_loop",
+		sfx_name_stop = "wwise/events/weapon/stop_aoe_chem_loop",
+		start_pressure = 80,
+		use_liquid_drawer = true,
+		vfx_name_filled = "content/fx/particles/liquid_area/chem_grenade_player_lingering",
+		vfx_name_rim = "content/fx/particles/liquid_area/chem_grenade_player_lingering_edge",
+		spread_function = LiquidSpread.pour,
+	},
 }
 
 return templates

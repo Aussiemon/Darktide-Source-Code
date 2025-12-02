@@ -9,19 +9,18 @@ PlayerUnitWeaponRecoilExtension.init = function (self, extension_init_context, u
 	self._player = extension_init_data.player
 
 	local initial_seed = extension_init_data.recoil_seed
-	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
-	local recoil_component = unit_data_ext:write_component("recoil")
-	local recoil_control_component = unit_data_ext:write_component("recoil_control")
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-	self._movement_state_component = unit_data_ext:read_component("movement_state")
-	self._locomotion_component = unit_data_ext:read_component("locomotion")
-	self._recoil_component = recoil_component
-	self._recoil_control_component = recoil_control_component
-	self._weapon_tweak_templates_component = unit_data_ext:write_component("weapon_tweak_templates")
-	self._first_person_component = unit_data_ext:read_component("first_person")
+	self._first_person_component = unit_data_extension:read_component("first_person")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
+	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._recoil_component = unit_data_extension:write_component("recoil")
+	self._recoil_control_component = unit_data_extension:write_component("recoil_control")
+	self._weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
-	recoil_control_component.seed = initial_seed
+	self._recoil_control_component.seed = initial_seed
 
 	self:_reset()
 end
@@ -52,7 +51,7 @@ PlayerUnitWeaponRecoilExtension._snap_camera = function (self)
 	local player = self._player
 	local orientation = player:get_orientation()
 	local recoil_template = self._weapon_extension:recoil_template()
-	local pitch_offset, yaw_offset = Recoil.weapon_offset(recoil_template, self._recoil_component, self._movement_state_component)
+	local pitch_offset, yaw_offset = Recoil.weapon_offset(recoil_template, self._recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 	local new_yaw = math.mod_two_pi(orientation.yaw + yaw_offset)
 	local new_pitch = math.mod_two_pi(orientation.pitch + pitch_offset)
 
@@ -70,7 +69,9 @@ PlayerUnitWeaponRecoilExtension.fixed_update = function (self, unit, dt, t)
 	end
 
 	local movement_state_component = self._movement_state_component
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local recoil_template = self._weapon_extension:recoil_template()
 	local recoil_settings = recoil_template[weapon_movement_state]
 

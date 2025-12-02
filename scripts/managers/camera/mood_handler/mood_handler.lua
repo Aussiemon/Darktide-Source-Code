@@ -161,6 +161,18 @@ MoodHandler._update_active_moods = function (self, mood_data)
 	return _added_moods, _removing_moods, _removed_moods
 end
 
+MoodHandler.get_wwise_source_id = function (self, mood_name, event)
+	local mood_sources = self._sfx_source_ids[mood_name]
+
+	for i = 1, #mood_sources do
+		for k, v in pairs(mood_sources[i]) do
+			if k == event then
+				return v
+			end
+		end
+	end
+end
+
 MoodHandler._update_sounds = function (self, added_moods, removing_moods, removed_moods, moods_data)
 	local player = self._player
 	local wwise_world = self._wwise_world

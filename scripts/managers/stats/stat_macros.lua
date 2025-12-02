@@ -60,4 +60,28 @@ StatMacros.set_to_min = function (self, stat_data, value)
 	end
 end
 
+StatMacros.set_flag = function (self, stat_data)
+	local id = self.id
+
+	if stat_data[id] == 1 then
+		return
+	end
+
+	stat_data[id] = 1
+
+	return id, 1
+end
+
+StatMacros.clear_flag = function (self, stat_data)
+	local id = self.id
+
+	if stat_data[id] == 0 then
+		return
+	end
+
+	stat_data[id] = 0
+
+	return id, 0
+end
+
 return StatMacros

@@ -238,6 +238,7 @@ weapon_template.actions = {
 		abort_sprint = false,
 		allowed_during_sprint = false,
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_pellets",
 		spread_template = "default_shotgun_assault",
 		sprint_ready_up_time = 0.3,
@@ -324,6 +325,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip_from_reload = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_pellets",
 		spread_template = "default_shotgun_assault",
 		total_time = 1.5,
@@ -412,6 +414,7 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_pellets",
 		spread_template = "default_shotgun_killshot",
 		start_input = "zoom_shoot",
@@ -594,7 +597,7 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "reload",
 			},
 		},
@@ -673,7 +676,7 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "reload",
 			},
 		},
@@ -803,6 +806,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.spread_template = "default_shotgun_assault"
 weapon_template.recoil_template = "default_shotgun_assault"
 weapon_template.special_recoil_template = "shotgun_special_recoil"
+weapon_template.suppression_template = "shotgun_p1_m1_suppression_assault"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_with_delay",
@@ -844,6 +848,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "default_lasgun_killshot",
 	start_anim_event = "to_ironsight",
 	stop_anim_event = "to_unaim_ironsight",
+	suppression_template = "shotgun_p1_m1_suppression_killshot",
 	sway_template = "default_shotgun_killshot",
 	crosshair = {
 		crosshair_type = "ironsight",

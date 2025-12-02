@@ -9,6 +9,7 @@ local mission_templates = {
 		level = "content/levels/hub/hub_ship/missions/hub_ship",
 		mechanism_name = "hub",
 		mission_name = "loc_mission_name_hub_ship",
+		not_available_on_mission_board = true,
 		objectives = "hub",
 		wwise_state = "hub",
 		zone_id = "hub",

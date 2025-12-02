@@ -63,5 +63,17 @@ state_machine_settings["content/characters/player/ogryn/third_person/animations/
 state_machine_settings["content/characters/player/human/third_person/animations/assault_shield_shotpistol"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/third_person/animations/dual_stubgun_pistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/third_person/animations/needle_pistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/third_person/animations/missile_launcher"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/third_person/animations/dual_autopistols"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

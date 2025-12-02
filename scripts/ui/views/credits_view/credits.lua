@@ -2695,6 +2695,121 @@ local Credits = {
 			},
 			{
 				localized = true,
+				text = "loc_personality_name_ogryn_4",
+				type = "title",
+			},
+			{
+				text = "Tim Bentinck",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_adamant_1",
+				type = "title",
+			},
+			{
+				text = "Mark Takeshi Ota",
+				type = "person",
+			},
+			{
+				text = "Devora Wilde",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_adamant_2",
+				type = "title",
+			},
+			{
+				text = "Michael Geary",
+				type = "person",
+			},
+			{
+				text = "Lara Sawalha",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_adamant_3",
+				type = "title",
+			},
+			{
+				text = "David Boyle",
+				type = "person",
+			},
+			{
+				text = "Alix Wilton Regan",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_broker_1",
+				type = "title",
+			},
+			{
+				text = "Gordon Cooper",
+				type = "person",
+			},
+			{
+				text = "Lizzie Wofford",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_broker_2",
+				type = "title",
+			},
+			{
+				text = "Theo Spofforth",
+				type = "person",
+			},
+			{
+				text = "Lucy Forrester",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_personality_name_male_broker_3",
+				type = "title",
+			},
+			{
+				text = "Ian Conningham",
+				type = "person",
+			},
+			{
+				text = "Jess Nesling",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
 				text = "loc_credits_view_explicator_orgustine_zola_title",
 				type = "title",
 			},
@@ -3058,6 +3173,45 @@ local Credits = {
 			},
 			{
 				text = "Rebecca Hanssen",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_npc_full_name_adamant_officer_a",
+				type = "title",
+			},
+			{
+				text = "Marcus Gilbert",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_npc_short_name_past_matriarch_a",
+				type = "title",
+			},
+			{
+				text = "Sally Knyvette",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_npc_short_name_past_alpha_a",
+				type = "title",
+			},
+			{
+				text = "David Banks",
 				type = "person",
 			},
 			{
@@ -3579,6 +3733,10 @@ local Credits = {
 			},
 			{
 				text = "James Battley",
+				type = "person",
+			},
+			{
+				text = "Joe Phillips",
 				type = "person",
 			},
 			{

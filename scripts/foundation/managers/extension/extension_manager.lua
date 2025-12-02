@@ -447,6 +447,7 @@ ExtensionManager._add_and_register_units = function (self, world, unit_list, fro
 	for i = from_index, to_index do
 		local unit = unit_list[i]
 		local unit_template_name = Unit.get_data(unit, "unit_template")
+		local breed_name = Unit.get_data(unit, "breed_name")
 		local added
 
 		if unit_template_name then
@@ -454,7 +455,9 @@ ExtensionManager._add_and_register_units = function (self, world, unit_list, fro
 			local init_function = unit_template.local_init
 			local unit_spawned_function_or_nil = unit_template.local_unit_spawned
 
-			added = self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil)
+			added = self:add_unit_extensions_from_template(world, unit, init_function, unit_spawned_function_or_nil, nil, nil, {
+				breed_name = breed_name,
+			})
 		else
 			added = self:add_unit_extensions_from_script_data(world, unit)
 		end
@@ -665,6 +668,10 @@ end
 
 ExtensionManager.latest_fixed_t = function (self)
 	return self._extension_system_holder:latest_fixed_t()
+end
+
+ExtensionManager.latest_fixed_frame = function (self)
+	return self._extension_system_holder:latest_fixed_frame()
 end
 
 local TEMP_SYSTEM_MAP = {}

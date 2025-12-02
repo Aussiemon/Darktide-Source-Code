@@ -44,7 +44,7 @@ DecoderSynchronizerExtension.setup_from_component = function (self, objective_na
 
 	local unit = self._unit
 
-	self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
 end
 
 DecoderSynchronizerExtension.destroy = function (self)
@@ -258,7 +258,7 @@ DecoderSynchronizerExtension.start_event = function (self)
 		Unit.flow_event(attached_device, "lua_device_enabled")
 	end
 
-	Unit.flow_event(self._unit, "lua_event_started")
+	DecoderSynchronizerExtension.super.start_event(self)
 
 	if not self._loaded_view then
 		self._event_synchronizer_system:load_scanner_view()

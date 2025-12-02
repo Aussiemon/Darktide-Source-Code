@@ -28,10 +28,17 @@ local function _link_unit(world, item_unit, target_unit, attach_node_name, map_n
 end
 
 local _attach_settings = {
+	attach_pose = nil,
+	character_unit = nil,
 	from_script_component = false,
 	from_ui_profile_spawner = false,
 	is_minion = true,
+	item_definitions = nil,
+	lod_group = nil,
+	lod_shadow_group = nil,
 	spawn_with_extensions = false,
+	unit_spawner = nil,
+	world = nil,
 }
 
 local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
@@ -110,6 +117,14 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 
 	for i, material_override in pairs(item_data.material_overrides) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, false)
+	end
+
+	local material_override_items = item_data.material_override_items
+
+	if material_override_items then
+		for i, material_override_item in pairs(material_override_items) do
+			VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override_item, false, item_definitions)
+		end
 	end
 
 	local slot_entry = {

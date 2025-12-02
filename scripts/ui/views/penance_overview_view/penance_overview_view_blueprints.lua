@@ -1,17 +1,15 @@
 ﻿-- chunkname: @scripts/ui/views/penance_overview_view/penance_overview_view_blueprints.lua
 
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ItemUtils = require("scripts/utilities/items")
-local PenanceOverviewViewSettings = require("scripts/ui/views/penance_overview_view/penance_overview_view_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Colors = require("scripts/utilities/ui/colors")
 local InputUtilities = require("scripts/managers/input/input_utils")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
-local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
+local Items = require("scripts/utilities/items")
+local PenanceOverviewViewSettings = require("scripts/ui/views/penance_overview_view/penance_overview_view_settings")
+local Text = require("scripts/utilities/ui/text")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local carousel_penance_size = PenanceOverviewViewSettings.carousel_penance_size
 local penance_pixel_size = PenanceOverviewViewSettings.penance_pixel_size
 local penance_size = PenanceOverviewViewSettings.penance_size
@@ -48,6 +46,7 @@ local reward_glow_small = {
 	188,
 }
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_click,
 }
@@ -185,7 +184,7 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 						120,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
+						icon = "content/ui/textures/icons/achievements/default",
 					},
 					color = {
 						255,
@@ -236,12 +235,18 @@ local function _setup_blueprint_penance_icon(input_size, edge_padding)
 			content.completed = element.completed
 			content.can_claim = element.can_claim
 
+			if not content.completed and not content.can_claim then
+				style.texture.color[2] = style.texture.color[2] * 0.5
+				style.texture.color[3] = style.texture.color[3] * 0.5
+				style.texture.color[4] = style.texture.color[4] * 0.5
+			end
+
 			local family_index = element.family_index
 
 			if family_index then
 				local number_texture = PenanceOverviewViewSettings.roman_numeral_texture_array[family_index]
 
-				if texture and number_texture then
+				if number_texture then
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
@@ -274,13 +279,13 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 				value = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
 				style = {
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
+						icon = "content/ui/textures/icons/achievements/default",
 					},
 					color = {
 						255,
-						255,
-						255,
-						255,
+						120,
+						120,
+						120,
 					},
 					offset = {
 						0,
@@ -288,14 +293,6 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 						1,
 					},
 				},
-				change_function = function (content, style)
-					local completed = content.completed
-					local color_value = completed and 120 or 255
-
-					style.color[2] = color_value
-					style.color[3] = color_value
-					style.color[4] = color_value
-				end,
 			},
 			{
 				pass_type = "texture",
@@ -357,7 +354,7 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 			if family_index then
 				local number_texture = PenanceOverviewViewSettings.roman_numeral_texture_array[family_index]
 
-				if texture and number_texture then
+				if number_texture then
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
@@ -367,13 +364,11 @@ local function _setup_blueprint_penance_icon_small(input_size, edge_padding)
 	}
 end
 
-local function _setup_blueprint_penance_header(input_size, edge_padding)
-	edge_padding = edge_padding or 0
-
+local function _setup_blueprint_penance_text(input_size, edge_padding, default_height, base_style)
 	return {
 		size = {
 			input_size[1],
-			50,
+			default_height,
 		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
@@ -383,7 +378,7 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 				size[2] or 50,
 			} or {
 				input_size[1],
-				50,
+				default_height,
 			}
 		end,
 		pass_template = {
@@ -392,87 +387,7 @@ local function _setup_blueprint_penance_header(input_size, edge_padding)
 				style_id = "text",
 				value = "n/a",
 				value_id = "text",
-				style = {
-					font_size = 24,
-					font_type = "proxima_nova_bold",
-					horizontal_alignment = "center",
-					text_horizontal_alignment = "center",
-					text_vertical_alignment = "center",
-					text_color = Color.terminal_text_header(255, true),
-					offset = {
-						0,
-						0,
-						3,
-					},
-					size_addition = {
-						-(20 + edge_padding),
-						0,
-					},
-				},
-			},
-		},
-		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
-			local style = widget.style
-			local content = widget.content
-			local text = element.text
-			local new_indicator_width_offset = element.new_indicator_width_offset
-
-			if new_indicator_width_offset then
-				local offset = style.new_indicator.offset
-
-				offset[1] = new_indicator_width_offset[1]
-				offset[2] = new_indicator_width_offset[2]
-				offset[3] = new_indicator_width_offset[3]
-			end
-
-			content.element = element
-			content.text = text
-		end,
-	}
-end
-
-local function _setup_blueprint_penance_body(input_size, edge_padding)
-	edge_padding = edge_padding or 0
-
-	return {
-		size = {
-			input_size[1],
-			100,
-		},
-		size_function = function (parent, element, ui_renderer)
-			local size = element.size
-
-			return size and {
-				size[1] or input_size[1],
-				size[2] or 100,
-			} or {
-				input_size[1],
-				100,
-			}
-		end,
-		pass_template = {
-			{
-				pass_type = "text",
-				style_id = "text",
-				value = "n/a",
-				value_id = "text",
-				style = {
-					font_size = 18,
-					font_type = "proxima_nova_bold",
-					horizontal_alignment = "center",
-					text_horizontal_alignment = "center",
-					text_vertical_alignment = "center",
-					size_addition = {
-						-(0 + edge_padding),
-						0,
-					},
-					text_color = Color.terminal_text_header(255, true),
-					offset = {
-						0,
-						0,
-						3,
-					},
-				},
+				style = base_style,
 			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
@@ -482,24 +397,82 @@ local function _setup_blueprint_penance_body(input_size, edge_padding)
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			content.element = element
 			content.text = text
 
-			local strict_size = element.strict_size
+			local size = content.size
+			local text_style = style.text
+			local size_policy = element.size_policy
+			local should_shorten_text = size_policy == "strict" or size_policy == "shrink_to_fit"
 
-			if not strict_size then
-				local size = content.size
-				local text_style = style.text
-				local text_options = UIFonts.get_font_options_by_style(text_style)
-				local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			if should_shorten_text then
+				text = Text.crop_to_size(ui_renderer, text, text_style, size)
+				content.text = text
+			end
 
-				size[2] = math.max(height, size[2])
+			local can_resize = size_policy == "shrink_to_fit" or size_policy == "flexible"
+
+			if can_resize then
+				local size_addition = text_style.size_addition or {
+					0,
+					0,
+				}
+				local height = Text.text_height(ui_renderer, text, text_style, {
+					size[1] + size_addition[1],
+					size[2] + size_addition[2],
+				}) + size_addition[2]
+
+				size[2] = height
 			end
 		end,
 	}
+end
+
+local function _setup_blueprint_penance_header(input_size, edge_padding)
+	edge_padding = edge_padding or 0
+
+	return _setup_blueprint_penance_text(input_size, edge_padding, 50, {
+		font_size = 24,
+		font_type = "proxima_nova_bold",
+		horizontal_alignment = "center",
+		text_horizontal_alignment = "center",
+		text_vertical_alignment = "center",
+		text_color = Color.terminal_text_header(255, true),
+		offset = {
+			0,
+			0,
+			3,
+		},
+		size_addition = {
+			-(20 + edge_padding),
+			0,
+		},
+	})
+end
+
+local function _setup_blueprint_penance_body(input_size, edge_padding)
+	edge_padding = edge_padding or 0
+
+	return _setup_blueprint_penance_text(input_size, edge_padding, 100, {
+		font_size = 18,
+		font_type = "proxima_nova_bold",
+		horizontal_alignment = "center",
+		text_horizontal_alignment = "center",
+		text_vertical_alignment = "center",
+		size_addition = {
+			-(0 + edge_padding),
+			0,
+		},
+		text_color = Color.terminal_text_header(255, true),
+		offset = {
+			0,
+			0,
+			3,
+		},
+	})
 end
 
 local function _setup_blueprint_penance_score_and_reward(input_size, edge_padding)
@@ -699,21 +672,21 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				})
 			end
 
-			local reward_display_name = ItemUtils.display_name(item)
+			local reward_display_name = Items.display_name(item)
 
 			content.display_name = reward_display_name
 
 			local rarity = item.rarity
-			local item_type = ItemUtils.type_display_name(item)
+			local item_type = Items.type_display_name(item)
 
 			if rarity then
-				local rarity_color, dark_rarity_color = ItemUtils.rarity_color(item)
+				local rarity_color, dark_rarity_color = Items.rarity_color(item)
 
 				style.icon_background_gradient.color = table.clone(dark_rarity_color)
 
-				local rarity_display_name = ItemUtils.rarity_display_name(item)
+				local rarity_display_name = Items.rarity_display_name(item)
 
-				content.sub_display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
+				content.sub_display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_color[5], rarity_display_name, item_type)
 			else
 				content.sub_display_name = item_type
 			end
@@ -722,7 +695,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 				style.bar.size[1] = bar_progress * penance_pixel_size
 			end
 
-			local slot = ItemUtils.item_slot(item)
+			local slot = Items.item_slot(item)
 			local item_icon_size = slot.item_icon_size
 
 			if item_icon_size then
@@ -753,7 +726,7 @@ local function _setup_blueprint_penance_score_and_reward(input_size, edge_paddin
 			local item_group = element.item_group
 
 			if not content.icon_load_id and item then
-				local slot_name = ItemUtils.slot_name(item)
+				local slot_name = Items.slot_name(item)
 				local item_state_machine = item.state_machine
 				local item_animation_event = item.animation_event
 				local item_companion_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
@@ -975,7 +948,7 @@ local function _setup_blueprint_penance_progress_bar(input_size, edge_padding)
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			local progress = element.progress or 0
@@ -1052,13 +1025,13 @@ local function _setup_blueprint_penance_stat(input_size, edge_padding)
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			local size = content.size
 			local text_style = style.text
 			local max_width = size[1] - (40 + math.abs(text_style.offset[1]))
-			local croped_text = UIRenderer.crop_text_width(ui_renderer, text, text_style.font_type, text_style.font_size, max_width)
+			local croped_text = Text.crop_text_width(ui_renderer, text, text_style, max_width)
 
 			content.element = element
 			content.text = croped_text
@@ -1098,13 +1071,13 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 						50,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
+						icon = "content/ui/textures/icons/achievements/default",
 					},
 					color = {
 						255,
-						255,
-						255,
-						255,
+						120,
+						120,
+						120,
 					},
 					offset = {
 						edge_padding * 0.5,
@@ -1112,14 +1085,6 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 						1,
 					},
 				},
-				change_function = function (content, style)
-					local completed = content.completed
-					local color_value = completed and 120 or 255
-
-					style.color[2] = color_value
-					style.color[3] = color_value
-					style.color[4] = color_value
-				end,
 			},
 			{
 				pass_type = "texture",
@@ -1199,18 +1164,18 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local max_width = (size[1] - (20 + math.abs(text_style.size_addition[1]))) * 1.2
-			local croped_text = UIRenderer.crop_text_width(ui_renderer, text, text_style.font_type, text_style.font_size, max_width, nil, text_options)
+			local croped_text = Text.crop_text_width(ui_renderer, text, text_style, max_width)
 
 			content.element = element
 			content.text = croped_text
 			content.completed = element.completed
+			content.can_claim = element.can_claim
 
 			local texture = element.texture
 
@@ -1223,7 +1188,7 @@ local function _setup_blueprint_penance_icon_and_name(input_size, edge_padding)
 			if family_index then
 				local number_texture = PenanceOverviewViewSettings.roman_numeral_texture_array[family_index]
 
-				if texture and number_texture then
+				if number_texture then
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
@@ -1299,6 +1264,7 @@ local function _setup_blueprint_penance_category(input_size, edge_padding)
 			{
 				pass_type = "texture",
 				style_id = "icon",
+				value = nil,
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "left",
@@ -1366,6 +1332,72 @@ local grid_blueprints = {
 	tooltip_penance_icon_and_name = _setup_blueprint_penance_icon_and_name(tooltip_blueprint_size, 30),
 	tooltip_penance_completed = _setup_blueprint_penance_completed(tooltip_blueprint_size, 30),
 	tooltip_penance_category = _setup_blueprint_penance_category(tooltip_blueprint_size, 30),
+	claim_text = {
+		size = {
+			carousel_penance_size[1],
+			50,
+		},
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "title",
+				value_id = "title",
+				style = {
+					font_size = 28,
+					font_type = "proxima_nova_bold",
+					text_horizontal_alignment = "center",
+					text_vertical_alignment = "top",
+					text_color = Color.terminal_text_key_value(255, true),
+					offset = {
+						20,
+						0,
+						13,
+					},
+					size_addition = {
+						-40,
+						0,
+					},
+				},
+				value = Localize("loc_penance_menu_completed_title"),
+			},
+			{
+				pass_type = "text",
+				style_id = "description",
+				value_id = "description",
+				style = {
+					font_size = 18,
+					font_type = "proxima_nova_bold",
+					text_horizontal_alignment = "center",
+					text_vertical_alignment = "bottom",
+					text_color = Color.terminal_text_header(255, true),
+					offset = {
+						20,
+						0,
+						13,
+					},
+					size_addition = {
+						-40,
+						0,
+					},
+				},
+				value = Localize("loc_penance_menu_claim_button"),
+			},
+		},
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			if parent._using_cursor_navigation then
+				widget.content.description = Localize("loc_penance_menu_claim_button")
+			elseif widget.content.hovered then
+				local action = "confirm_pressed"
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(action, service_type)
+				local input_text = InputUtilities.input_text_for_current_input_device(service_type, alias_key)
+
+				widget.content.description = string.format("%s %s", input_text, Localize("loc_penance_menu_claim_button"))
+			else
+				widget.content.description = ""
+			end
+		end,
+	},
 	claim_overlay = {
 		size = {
 			carousel_penance_size[1],
@@ -1399,7 +1431,7 @@ local grid_blueprints = {
 				style_id = "icon",
 				value = "content/ui/materials/frames/achievements/penance_reward_symbol",
 				style = {
-					size = reward_icon_large,
+					size = reward_icon_small,
 					color = {
 						255,
 						255,
@@ -1425,127 +1457,45 @@ local grid_blueprints = {
 						0,
 						11,
 					},
-					size = reward_glow_large,
+					size = reward_glow_small,
 				},
-			},
-			{
-				pass_type = "text",
-				style_id = "title",
-				value_id = "title",
-				style = {
-					font_size = 30,
-					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "center",
-					text_vertical_alignment = "center",
-					text_color = Color.terminal_text_key_value(255, true),
-					offset = {
-						20,
-						100,
-						13,
-					},
-					size = {
-						0,
-						0,
-					},
-					size_addition = {
-						-40,
-						0,
-					},
-				},
-				value = Localize("loc_penance_menu_completed_title"),
-			},
-			{
-				pass_type = "text",
-				style_id = "description",
-				value_id = "description",
-				style = {
-					font_size = 24,
-					font_type = "proxima_nova_bold",
-					text_horizontal_alignment = "center",
-					text_vertical_alignment = "center",
-					text_color = Color.terminal_text_header(255, true),
-					offset = {
-						20,
-						135,
-						13,
-					},
-					size = {
-						0,
-						0,
-					},
-					size_addition = {
-						-40,
-						0,
-					},
-				},
-				value = Localize("loc_penance_menu_claim_button"),
 			},
 		},
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
 			local size = element.size
-			local style = widget.style
 
-			if size then
-				local title_style = style.title
-
-				if title_style then
-					local title_size = title_style.size
-
-					title_size[1] = size[1]
-					title_size[2] = size[2]
-				end
-
-				local description_style = style.description
-
-				if description_style then
-					local description_size = description_style.size
-
-					description_size[1] = size[1]
-					description_size[2] = size[2]
-				end
-
-				local overlay_style = style.overlay
-
-				if overlay_style then
-					local texture_size = overlay_style.size
-
-					texture_size[1] = size[1]
-					texture_size[2] = size[2]
-				end
-
-				local icon_style = style.icon
-
-				if icon_style then
-					local texture_size = icon_style.size
-					local offset = icon_style.offset
-
-					offset[1] = (size[1] - texture_size[1]) * 0.5
-					offset[2] = (size[2] - texture_size[2]) * 0.5
-				end
-
-				local glow_style = style.glow
-
-				if glow_style then
-					local texture_size = glow_style.size
-					local offset = glow_style.offset
-
-					offset[1] = (size[1] - texture_size[1]) * 0.5
-					offset[2] = (size[2] - texture_size[2]) * 0.5
-				end
+			if not size then
+				return
 			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			if parent._using_cursor_navigation then
-				widget.content.description = Localize("loc_penance_menu_claim_button")
-			elseif widget.content.hovered or widget.content.hovered then
-				local action = "confirm_pressed"
-				local service_type = "View"
-				local alias_key = Managers.ui:get_input_alias_key(action, service_type)
-				local input_text = InputUtilities.input_text_for_current_input_device(service_type, alias_key)
 
-				widget.content.description = string.format("%s %s", input_text, Localize("loc_penance_menu_claim_button"))
-			else
-				widget.content.description = ""
+			local style = widget.style
+			local overlay_style = style.overlay
+
+			if overlay_style then
+				local texture_size = overlay_style.size
+
+				texture_size[1] = size[1]
+				texture_size[2] = size[2]
+			end
+
+			local icon_style = style.icon
+
+			if icon_style then
+				local texture_size = icon_style.size
+				local offset = icon_style.offset
+
+				offset[1] = (size[1] - texture_size[1]) * 0.5
+				offset[2] = (size[2] - texture_size[2]) * 0.09
+			end
+
+			local glow_style = style.glow
+
+			if glow_style then
+				local texture_size = glow_style.size
+				local offset = glow_style.offset
+
+				offset[1] = (size[1] - texture_size[1]) * 0.5
+				offset[2] = (size[2] - texture_size[2]) * 0
 			end
 		end,
 	},
@@ -1649,8 +1599,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -1687,7 +1636,7 @@ local grid_blueprints = {
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			content.element = element
@@ -1695,8 +1644,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -1737,7 +1685,7 @@ local grid_blueprints = {
 			local optional_text_color = element.text_color
 
 			if optional_text_color then
-				ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+				Colors.color_copy(optional_text_color, style.text.text_color)
 			end
 
 			content.element = element
@@ -1745,13 +1693,35 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
 	},
 	dynamic_spacing = {
+		size_function = function (parent, element, ui_renderer)
+			local size = element.size
+
+			return size and {
+				size[1],
+				size[2],
+			} or {
+				225,
+				20,
+			}
+		end,
+	},
+	external_dynamic_spacing = {
+		pass_template = {
+			{
+				pass_type = "rect",
+				style_id = "background",
+				style = {
+					visible = false,
+					color = Color.black(200, true),
+				},
+			},
+		},
 		size_function = function (parent, element, ui_renderer)
 			local size = element.size
 
@@ -1893,7 +1863,7 @@ local grid_blueprints = {
 						-20,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
+						icon = "content/ui/textures/icons/achievements/default",
 					},
 					color = {
 						255,
@@ -2116,7 +2086,7 @@ local grid_blueprints = {
 			if family_index then
 				local number_texture = PenanceOverviewViewSettings.roman_numeral_texture_array[family_index]
 
-				if texture and number_texture then
+				if number_texture then
 					style.texture.material_values.icon_number = number_texture
 				end
 			end
@@ -2285,7 +2255,7 @@ local grid_blueprints = {
 						70,
 					},
 					material_values = {
-						icon = "content/ui/textures/icons/achievements/achievement_icon_0010",
+						icon = "content/ui/textures/icons/achievements/default",
 					},
 					color = {
 						255,
@@ -2807,21 +2777,19 @@ local grid_blueprints = {
 				local title_text_style = style.title
 				local size = content.size
 				local text_max_width = size[1] + title_text_style.size_addition[1] - 30
-				local text_options = UIFonts.get_font_options_by_style(title_text_style)
-				local title_text_croped = UIRenderer.crop_text_width(ui_renderer, title_text, title_text_style.font_type, title_text_style.font_size, text_max_width, nil, text_options)
+				local title_text_croped = Text.crop_text_width(ui_renderer, title_text, title_text_style, text_max_width)
 
 				content.title = title_text_croped
 			end
 
-			local description_text = not can_claim and completed and TextUtilities.apply_color_to_text(Localize("loc_notification_desc_achievement_completed"), Color.terminal_text_key_value(255, true)) or element.description or "n/a"
+			local description_text = not can_claim and completed and Text.apply_color_to_text(Localize("loc_notification_desc_achievement_completed"), Color.terminal_text_key_value(255, true)) or element.description or "n/a"
 
 			if description_text then
 				local description_text_style = style.description
 				local size = content.size
 				local num_rows = bar_progress and 3 or 4
 				local text_max_width = (size[1] + description_text_style.size_addition[1] - 60) * num_rows
-				local text_options = UIFonts.get_font_options_by_style(description_text_style)
-				local description_text_croped = UIRenderer.crop_text_width(ui_renderer, description_text, description_text_style.font_type, description_text_style.font_size, text_max_width, nil, text_options)
+				local description_text_croped = Text.crop_text_width(ui_renderer, description_text, description_text_style, text_max_width)
 
 				content.description = description_text_croped
 			end

@@ -24,6 +24,9 @@ local renegade_plasma_gunner_default = {
 }
 local renegade_plasma_gunner_plasma_beam = {
 	collision_filter = "filter_minion_shooting",
+	scope_reflection_distance = nil,
+	scope_reflection_timing = nil,
+	scope_reflection_vfx_name = nil,
 	shoot_sound_event = "wwise/events/weapon/play_minion_plasmapistol",
 	shoot_vfx_name = "content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_muzzle",
 	damage_type = damage_types.minion_laser,

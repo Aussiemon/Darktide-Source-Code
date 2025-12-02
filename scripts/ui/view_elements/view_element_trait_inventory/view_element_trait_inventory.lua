@@ -7,13 +7,10 @@ local Items = require("scripts/utilities/items")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 
 local function _style_text_height(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
 	local text_size = style.size
 	local text_additional_size = style.size_addition
 	local calculate_size = {
@@ -28,9 +25,7 @@ local function _style_text_height(text, style, ui_renderer)
 		}
 	end
 
-	local use_max_extents = true
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, calculate_size, text_options, use_max_extents)
+	local text_height = Text.text_height(ui_renderer, text, style, calculate_size, true)
 
 	return text_height
 end
@@ -288,6 +283,7 @@ ViewElementTraitInventory._update_info_box = function (self, ui_renderer)
 		local trait_box_height = math.max(icon_height, style.description.offset[2] + description_height)
 
 		self:_set_scenegraph_size("trait_info_box_contents", nil, trait_box_height)
+		self:_force_update_scenegraph()
 
 		local texture_icon, texture_frame = Items.trait_textures(trait_item, trait_item.rarity)
 		local icon_material_values = style.icon.material_values

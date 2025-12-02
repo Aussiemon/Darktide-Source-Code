@@ -16,18 +16,6 @@ table.size = function (t)
 	return elements
 end
 
-if pcall(require, "table.new") then
-	Script.new_array = function (narr)
-		return table.new(narr, 0)
-	end
-
-	Script.new_map = function (nrec)
-		return table.new(0, nrec)
-	end
-
-	Script.new_table = table.new
-end
-
 table.clone = function (t)
 	local clone = {}
 
@@ -286,8 +274,7 @@ table.append = function (dest, source, optional_size)
 	local source_size = optional_size or #source
 
 	for i = 1, source_size do
-		dest_size = dest_size + 1
-		dest[dest_size] = source[i]
+		dest[dest_size + i] = source[i]
 	end
 
 	return dest
@@ -391,6 +378,24 @@ table.find_by_key = function (t, search_key, search_value)
 	return nil
 end
 
+table.find_func = function (t, func)
+	for key, value in pairs(t) do
+		if func(key, value) then
+			return key, value
+		end
+	end
+end
+
+table.find_func_array = function (t, func)
+	for i = 1, #t do
+		local value = t[i]
+
+		if func(value) then
+			return i, value
+		end
+	end
+end
+
 table.index_of = function (t, element)
 	for i = 1, #t do
 		if t[i] == element then
@@ -462,19 +467,17 @@ table.insert_sorted = function (t, val)
 	return t
 end
 
+table.insert_unique = function (t, val)
+	if not table.contains(t, val) then
+		table.insert(t, val)
+	end
+end
+
 table.reverse = function (t)
 	local size = #t
 
 	for i = 1, math.floor(size / 2) do
 		t[i], t[size - i + 1] = t[size - i + 1], t[i]
-	end
-end
-
-if not pcall(require, "table.clear") then
-	table.clear = function (t)
-		for key in pairs(t) do
-			t[key] = nil
-		end
 	end
 end
 
@@ -846,12 +849,17 @@ table.pack = function (...)
 end
 
 table.array_to_table = function (array, array_n, out_table)
+	out_table = out_table or {}
+	array_n = array_n or #array
+
 	for i = 1, array_n, 2 do
 		local key = array[i]
 		local value = array[i + 1]
 
 		out_table[key] = value
 	end
+
+	return out_table
 end
 
 table.table_to_array = function (t, array_out, values_only)
@@ -1305,6 +1313,16 @@ table.variance = function (t)
 	return table.average(diff)
 end
 
+table.any = function (t, func)
+	for k, v in pairs(t) do
+		if func(k, v) then
+			return true
+		end
+	end
+
+	return false
+end
+
 table.nested_get = function (t, key, ...)
 	if key == nil or t == nil then
 		return t
@@ -1373,13 +1391,29 @@ table.select_map = function (t, selector)
 	return new_t
 end
 
+table.remap = function (t, converter)
+	local new_t = {}
+
+	for k, v in pairs(t) do
+		local new_k, new_v = converter(k, v)
+
+		if new_k ~= nil then
+			new_t[new_k] = new_v
+		end
+	end
+
+	return new_t
+end
+
 table.array_to_map = function (t, converter)
 	local new_t = {}
 
 	for i, v in pairs(t) do
 		local new_k, new_v = converter(i, v)
 
-		new_t[new_k] = new_v
+		if new_k ~= nil then
+			new_t[new_k] = new_v
+		end
 	end
 
 	return new_t
@@ -1399,4 +1433,117 @@ table.map_to_array = function (t, converter)
 	end
 
 	return new_t
+end
+
+local function _partition(array, func, ...)
+	for i = 1, #array do
+		local element = array[i]
+		local chosen_partition = func(element, ...)
+
+		if chosen_partition then
+			chosen_partition[#chosen_partition + 1] = element
+		end
+	end
+
+	return ...
+end
+
+table.partition = function (array, num_partitions, func)
+	local partitions = {}
+
+	for i = 1, num_partitions do
+		partitions[i] = {}
+	end
+
+	return _partition(array, func, unpack(partitions))
+end
+
+local function _partition_map(map, func, ...)
+	for key, value in pairs(map) do
+		local chosen_partition = func(value, ...)
+
+		if chosen_partition then
+			chosen_partition[key] = value
+		end
+	end
+
+	return ...
+end
+
+table.partition_map = function (map, num_partitions, func)
+	local partitions = {}
+
+	for i = 1, num_partitions do
+		partitions[i] = {}
+	end
+
+	return _partition_map(map, func, unpack(partitions))
+end
+
+table.safe_get = function (t, ...)
+	local val = t
+
+	for i = 1, select("#", ...) do
+		local key = select(i, ...)
+
+		val = val[key]
+
+		if not val then
+			return nil
+		end
+	end
+
+	return val
+end
+
+if pcall(require, "table.fatshark") then
+	table.size = table.fatshark.count
+
+	local _t_fs_any = table.fatshark.any
+
+	table.is_empty = function (t)
+		return not _t_fs_any(t)
+	end
+
+	local _t_fs_keys = table.fatshark.keys
+
+	table.keys = function (t, out)
+		return (_t_fs_keys(t, out))
+	end
+
+	local _t_fs_dup = table.fatshark.dup
+
+	table.clone = function (t)
+		return _t_fs_dup(t, 999)
+	end
+
+	local _t_fs_merge = table.fatshark.merge
+
+	table.shallow_copy = function (t)
+		return _t_fs_merge(t, {})
+	end
+
+	table.merge = function (dest, source)
+		return _t_fs_merge(source, dest)
+	end
+end
+
+if not pcall(require, "table.clear") then
+	table.clear = function (t)
+		for key in pairs(t) do
+			t[key] = nil
+		end
+	end
+end
+
+if pcall(require, "table.new") then
+	Script.new_array = function (narr)
+		return table.new(narr, 0)
+	end
+
+	Script.new_map = function (nrec)
+		return table.new(0, nrec)
+	end
+
+	Script.new_table = table.new
 end

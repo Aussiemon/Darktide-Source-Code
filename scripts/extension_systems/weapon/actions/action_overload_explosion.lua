@@ -35,7 +35,7 @@ ActionOverloadExplosion.start = function (self, action_settings, ...)
 		local sync_to_clients = true
 		local external_properties
 
-		self._fx_extension:trigger_gear_wwise_event_with_source(on_start_sfx, external_properties, self._on_start_source_name, sync_to_clients)
+		self._fx_extension:trigger_gear_wwise_event_with_source(on_start_sfx, external_properties, self._on_start_source_name, sync_to_clients, false)
 	end
 
 	local unit = self._player_unit

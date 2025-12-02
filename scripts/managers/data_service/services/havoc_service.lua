@@ -57,7 +57,11 @@ end
 HavocService.default_havoc_cadence_status = function (self)
 	return {
 		active = true,
-		current_cadence = {},
+		current_cadence = {
+			end_date = nil,
+			next_cadence_start_date = nil,
+			start_date = nil,
+		},
 	}
 end
 
@@ -90,7 +94,7 @@ end
 HavocService._set_fallback_havoc_cadence_status = function (self)
 	self._havoc_cadence_status = Managers.data_service.havoc:default_havoc_cadence_status()
 
-	Log.info("Using fallback havoc_cadence_status")
+	Log.info("HavocService", "Using fallback havoc_cadence_status")
 end
 
 HavocService.refresh_ever_received_havoc_order = function (self)
@@ -123,13 +127,13 @@ end
 HavocService._set_fallback_ever_received_havoc_order = function (self)
 	self._ever_received_havoc_order = false
 
-	Log.info("Using fallback ever_received_havoc_order")
+	Log.info("HavocService", "Using fallback ever_received_havoc_order")
 end
 
 HavocService.refresh_havoc_unlock_status = function (self)
 	return Managers.backend.interfaces.account:get_havoc_unlock_status():next(function (value)
 		if value == nil then
-			Log.info("Backend provided nil value for havoc_unlock_status")
+			Log.info("HavocService", "Backend provided nil value for havoc_unlock_status")
 			self:_set_fallback_havoc_unlock_status()
 
 			return
@@ -182,7 +186,7 @@ end
 HavocService._set_fallback_havoc_unlock_status = function (self)
 	self._havoc_unlock_status = HavocService.HAVOC_UNLOCK_STATUS[1]
 
-	Log.info("Using fallback havoc_unlock_status.")
+	Log.info("HavocService", "Using fallback havoc_unlock_status.")
 end
 
 HavocService.set_havoc_unlock_status = function (self, value)

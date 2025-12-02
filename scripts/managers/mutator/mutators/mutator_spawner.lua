@@ -2,9 +2,9 @@
 
 require("scripts/managers/mutator/mutators/mutator_base")
 
+local Component = require("scripts/utilities/component")
 local NavQueries = require("scripts/utilities/nav_queries")
 local LoadedDice = require("scripts/utilities/loaded_dice")
-local MutatorMonsterSpawnerSettings = require("scripts/settings/mutator/mutator_monster_spawner_settings")
 local MutatorSpawner = class("MutatorSpawner", "MutatorBase")
 local spawn_types = table.enum("proximity", "default")
 local TARGET_SIDE_ID = 1
@@ -12,14 +12,14 @@ local PLAYER_POSITIONS = {}
 local vector3_distance = Vector3.distance
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
 
-local function _walk_nodes_recursive(nodes, node_fun)
+local function _walk_nodes_recursive(nodes, node_func)
 	for i = 1, #nodes do
-		node_fun(nodes[i])
+		node_func(nodes[i])
 
-		local node_children = nodes[i]:children()
+		local node_children = nodes[i].template.spawners
 
 		if node_children then
-			_walk_nodes_recursive(node_children, node_fun)
+			_walk_nodes_recursive(node_children, node_func)
 		end
 	end
 end
@@ -29,7 +29,7 @@ MutatorSpawner.init = function (self, is_server, network_event_delegate, mutator
 
 	self._uuid = math.uuid()
 	self._is_active = true
-	self._raycast_object = PhysicsWorld.make_raycast(self._physics_world, "closest", "types", "statics")
+	self._raycast_object = PhysicsWorld.make_raycast(self._physics_world, "closest", "types", "statics", "collision_filter", "filter_player_character_shooting_raycast_statics")
 
 	if not self._is_server then
 		return
@@ -89,6 +89,14 @@ MutatorSpawner._setup = function (self)
 
 	mission_name = Managers.state.mission:mission_name()
 	self._num_to_spawn = self._template_data.num_to_spawn or self._template_data.num_to_spawn_per_mission[mission_name]
+	self._spawners = {}
+
+	for i = 1, #self._template.spawners do
+		local spawner_template = self._template.spawners[i]
+		local class = require(spawner_template.class)
+
+		table.insert(self._spawners, class:new(spawner_template.template))
+	end
 end
 
 MutatorSpawner.reset = function (self)
@@ -96,14 +104,15 @@ MutatorSpawner.reset = function (self)
 		return
 	end
 
-	local nodes = self._template.spawners
+	local nodes = self._spawners
 
 	for i = 1, #nodes do
-		if nodes[i]:destroy() then
+		if nodes[i].destroy then
 			nodes[i]:destroy()
 		end
 	end
 
+	self._spawners = nil
 	self._chance_initialized = nil
 	self._init_spawn_called = nil
 	self._spawn_points_done = nil
@@ -126,7 +135,7 @@ end
 
 MutatorSpawner._load_subnode_packages = function (self, package_scope)
 	_walk_nodes_recursive(self._template.spawners, function (node)
-		local asset_package = node:asset_package()
+		local asset_package = node.template and node.template.asset_package
 
 		if asset_package then
 			package_scope:add_package(asset_package)
@@ -139,6 +148,30 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 		self._spawn_points_done = true
 	elseif self._spawn_points_done then
 		return
+	end
+
+	local component_system = Managers.state.extension:system("component_system")
+	local mutator_spawners = component_system:get_units_from_component_name("MutatorSpawner")
+
+	if #mutator_spawners == 0 then
+		Log.exception("MutatorToxicGasVolumes", "No MutatorSpawner components found in the level.")
+	else
+		for i = 1, #mutator_spawners do
+			local fog_unit = mutator_spawners[i]
+			local components = Component.get_components_by_name(fog_unit, "MutatorSpawner")
+
+			for ii = 1, #components do
+				local component = components[ii]
+				local component_data = component:get_position_data()
+
+				self._dirty_spawn_locations[#self._dirty_spawn_locations + 1] = {
+					position = component_data.position,
+					rotation = component_data.rotation,
+					section = component_data.section,
+					level_size = component_data.level_size,
+				}
+			end
+		end
 	end
 
 	self:_sort_dirty_spawn_locations()
@@ -369,7 +402,7 @@ MutatorSpawner._trigger_runtime_spawn = function (self, location, ahead_target_u
 	local spawn_position = location.position:unbox()
 	local optional_spawn_rotation = location.rotation
 	local optional_level_size = location.level_size
-	local nodes = self._template.spawners
+	local nodes = self._spawners
 
 	for i = 1, #nodes do
 		if nodes[i]:is_runtime() then
@@ -394,7 +427,7 @@ MutatorSpawner._trigger_init_spawn = function (self, location)
 	local spawn_position = location.position:unbox()
 	local optional_spawn_rotation = location.rotation
 	local optional_level_size = location.level_size
-	local nodes = self._template.spawners
+	local nodes = self._spawners
 
 	for i = 1, #nodes do
 		if nodes[i]:should_run_on_init() then

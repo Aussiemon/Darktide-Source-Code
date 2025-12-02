@@ -616,6 +616,10 @@ UIWorldSpawner.reset_camera_target = function (self, animation_time, func_ptr)
 	self:reset_target_camera_rotation(animation_time, func_ptr)
 end
 
+UIWorldSpawner.camera_rotation = function (self)
+	return Unit.local_rotation(self._camera_unit, 1)
+end
+
 local function linear(x)
 	return x
 end
@@ -804,7 +808,7 @@ UIWorldSpawner.update = function (self, dt, t)
 	self._unit_spawner:remove_pending_units()
 end
 
-UIWorldSpawner.set_world_disabled = function (self, disabled)
+UIWorldSpawner.set_world_disabled = function (self, disabled, include_viewport)
 	disabled = disabled or false
 	self._world_disabled = disabled
 
@@ -814,6 +818,14 @@ UIWorldSpawner.set_world_disabled = function (self, disabled)
 
 	if world_disabled_state ~= disabled then
 		world_manager:enable_world(world_name, not disabled)
+	end
+
+	if include_viewport and self._viewport and ScriptWorld.viewport_active(self._viewport) ~= not disabled then
+		if disabled then
+			ScriptWorld.deactivate_viewport(self._world, self._viewport)
+		else
+			ScriptWorld.activate_viewport(self._world, self._viewport)
+		end
 	end
 end
 

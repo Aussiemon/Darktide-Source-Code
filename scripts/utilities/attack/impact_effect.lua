@@ -16,7 +16,7 @@ local surface_hit_types = SurfaceMaterialSettings.hit_types
 local PI = math.pi
 local EMPTY_TABLE = {}
 local MATERIAL_QUERY_DISTANCE = 0.1
-local _can_play, _find_surface_impact_fx, _impact_effect_anim_from_direction, _impact_effect_anim_from_direction_with_hit_zones, _impact_fx
+local _can_play, _find_surface_impact_fx, _impact_effect_anim_from_direction, _impact_effect_anim_from_direction_with_hit_zones, _impact_fx, _check_for_mutator_override
 local ImpactEffect = {}
 local DEFAULT_HIT_REACTS_MIN_DAMAGE = 0
 
@@ -37,7 +37,7 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 	local hit_weakspot = Weakspot.hit_weakspot(breed_or_nil, hit_zone_name, attacking_unit)
 	local did_damage = damage > 0
 	local target_alive = HEALTH_ALIVE[attacked_unit]
-	local impact_fx = _impact_fx(damage_type, breed_or_nil, did_damage, hit_weakspot, armor, attack_was_stopped, attack_result, damage_efficiency, target_alive, hit_zone_name)
+	local impact_fx = _impact_fx(damage_type, breed_or_nil, did_damage, hit_weakspot, armor, attack_was_stopped, attack_result, damage_efficiency, target_alive, hit_zone_name, attacked_unit)
 
 	if impact_fx then
 		local source_parameters = impact_fx_data_or_nil.source_parameters or EMPTY_TABLE
@@ -219,7 +219,7 @@ function _can_play(damage_type, breed, hit_position, attack_direction, attacking
 	return true
 end
 
-function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, attack_was_stopped, attack_result, damage_efficiency, target_alive, hit_zone_name)
+function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, attack_was_stopped, attack_result, damage_efficiency, target_alive, hit_zone_name, attacked_unit)
 	local breed_impact_fx_overrides = breed.impact_fx_override or EMPTY_TABLE
 	local breed_impact_fx_override = breed_impact_fx_overrides[damage_type]
 	local impact_fxs
@@ -227,6 +227,12 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 
 	if hitzone_armor_override and hitzone_armor_override[hit_zone_name] then
 		armor_type = hitzone_armor_override[hit_zone_name]
+	end
+
+	local mutator_override = _check_for_mutator_override(attacked_unit)
+
+	if mutator_override then
+		armor_type = mutator_override
 	end
 
 	if breed.hit_effect_armor_override then
@@ -371,6 +377,26 @@ function _find_surface_impact_fx(damage_type, material_type, hit_type)
 	local impact_fx = impact_fxs[hit_type] or impact_fxs[surface_hit_types.stop]
 
 	return impact_fx
+end
+
+local MUTATOR_IMPACT_FX_OVERRIDES = {
+	"rotten_armor",
+}
+
+function _check_for_mutator_override(unit)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if buff_extension then
+		for i = 1, #MUTATOR_IMPACT_FX_OVERRIDES do
+			local check_keyword = MUTATOR_IMPACT_FX_OVERRIDES[i]
+
+			if buff_extension:has_keyword(check_keyword) then
+				local armor_type = check_keyword
+
+				return armor_type
+			end
+		end
+	end
 end
 
 return ImpactEffect

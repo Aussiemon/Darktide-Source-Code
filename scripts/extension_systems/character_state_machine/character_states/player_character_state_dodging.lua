@@ -11,6 +11,7 @@ local HealthStateTransitions = require("scripts/extension_systems/character_stat
 local Stamina = require("scripts/utilities/attack/stamina")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local proc_events = BuffSettings.proc_events
+local buff_keywords = BuffSettings.keywords
 local PlayerCharacterStateDodging = class("PlayerCharacterStateDodging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateDodging.init = function (self, character_state_init_context, ...)
@@ -185,6 +186,10 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	local buff_extension = self._buff_extension
 	local dodge_cost = 1
 
+	if buff_extension:has_keyword(buff_keywords.free_dodges) then
+		dodge_cost = 0
+	end
+
 	if t > dodge_character_state_component.consecutive_dodges_cooldown then
 		dodge_character_state_component.consecutive_dodges = dodge_cost
 	else
@@ -251,7 +256,7 @@ PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 	local weapon_consecutive_dodges_reset = weapon_dodge_template and weapon_dodge_template.consecutive_dodges_reset or 0
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local buff_modifier = stat_buffs.dodge_cooldown_reset_modifier
-	local buff_dodge_cooldown_reset_modifier = buff_modifier and 1 - (buff_modifier - 1) or 1
+	local buff_dodge_cooldown_reset_modifier = buff_modifier or 1
 	local cooldown = (base_dodge_template.consecutive_dodges_reset + weapon_consecutive_dodges_reset) * buff_dodge_cooldown_reset_modifier
 
 	dodge_character_state_component.consecutive_dodges_cooldown = t + cooldown
@@ -286,7 +291,7 @@ PlayerCharacterStateDodging.fixed_update = function (self, unit, dt, t, next_sta
 	self._ability_extension:update_ability_actions(fixed_frame)
 
 	local input_ext = self._input_extension
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_ext, t, false)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, weapon_extension, self._movement_state_component, self._locomotion_component, self._inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_ext, t, false)
 	local started_from_crouch = self._dodge_character_state_component.started_from_crouch
 	local distance_left = self._dodge_character_state_component.distance_left
 	local has_slide_input = not started_from_crouch and (time_in_dodge > 0.2 or distance_left < 0.3) and is_crouching

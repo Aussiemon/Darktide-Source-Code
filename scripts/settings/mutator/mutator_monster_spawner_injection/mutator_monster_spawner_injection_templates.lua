@@ -84,11 +84,6 @@ mutator_monster_spawner_injection_templates.nurgle_totems = {
 	end,
 }
 mutator_monster_spawner_injection_templates.plasma_smugglers = {
-	spawn_event_props = {
-		"content/levels/live_events/plasma_smugglers_props_1",
-		"content/levels/live_events/plasma_smugglers_props_2",
-		"content/levels/live_events/plasma_smugglers_props_3",
-	},
 	spawn = function (template, monster, ahead_target_unit, side_id)
 		local nav_mesh_manager = Managers.state.nav_mesh
 		local nav_world = nav_mesh_manager:nav_world()

@@ -5,8 +5,10 @@ local default_hold = PLATFORM == "win32"
 
 SaveData.default_account_data = {
 	crossplay_accepted = false,
+	last_seen_store_id = nil,
 	latest_backend_migration_index = -1,
 	profile_preset_intro_presented = false,
+	right_panel_category = nil,
 	input_settings = {
 		always_dodge = false,
 		com_wheel_delay = 0.3,
@@ -67,7 +69,6 @@ SaveData.default_account_data = {
 		crosshair_enabled = true,
 		crosshair_type_override = "weapon",
 		crossplay_enabled = true,
-		enemy_outlines = "both",
 		forced_dot_crosshair_enabled = false,
 		group_buff_icon_in_categories = true,
 		hit_indicator_duration = 0.5,

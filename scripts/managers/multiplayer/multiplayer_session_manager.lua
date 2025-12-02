@@ -39,8 +39,8 @@ end
 MultiplayerSessionManager._use_persistent_breed_loader = function (self)
 	local is_lockhart = IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART
 
-	if is_lockhart and GameParameters.persistent_breeds_lockhart then
-		return false
+	if is_lockhart then
+		return GameParameters.persistent_breeds_lockhart
 	else
 		return true
 	end
@@ -163,6 +163,10 @@ MultiplayerSessionManager.party_immaterium_join_server = function (self, matched
 	return new_session
 end
 
+MultiplayerSessionManager.has_session = function (self)
+	return self._session ~= nil
+end
+
 MultiplayerSessionManager.is_booting_session = function (self)
 	return self._session_boot ~= nil
 end
@@ -217,6 +221,10 @@ MultiplayerSessionManager._find_available_immaterium_session = function (self)
 	self:party_immaterium_hot_join_hub_server()
 
 	return StateLoading, {}
+end
+
+MultiplayerSessionManager.poll_available_session = function (self)
+	return
 end
 
 MultiplayerSessionManager.find_available_session = function (self)

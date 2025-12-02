@@ -19,8 +19,15 @@ SplineGroupSystem.spline_names = function (self)
 
 	for unit, extension in pairs(unit_to_extension_map) do
 		local objective_name = extension:objective_name()
+		local level = Unit.level(unit)
 
-		splines[objective_name] = extension:splines()
+		if not splines[level] then
+			splines[level] = {}
+		end
+
+		local group_splines = splines[level]
+
+		group_splines[objective_name] = extension:splines()
 	end
 
 	return splines

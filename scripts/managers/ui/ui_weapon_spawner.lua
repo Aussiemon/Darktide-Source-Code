@@ -4,7 +4,9 @@ local InputDevice = require("scripts/managers/input/input_device")
 local MasterItems = require("scripts/backend/master_items")
 local UiCharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
+local Promise = require("scripts/foundation/utilities/promise")
 local UIWeaponSpawner = class("UIWeaponSpawner")
+local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
 
 UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner)
 	self._reference_name = reference_name
@@ -15,6 +17,7 @@ UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawn
 	self._default_rotation_angle = 0
 	self._force_allow_rotation = false
 	self._rotation_angle = self._default_rotation_angle
+	self._stream_promises = {}
 end
 
 UIWeaponSpawner.set_force_allow_rotation = function (self, allow)
@@ -48,7 +51,7 @@ UIWeaponSpawner._node = function (self, node_name)
 	end
 end
 
-UIWeaponSpawner.start_presentation = function (self, item, position, rotation, scale, level_link_unit, on_spawn_cb, force_highest_mip)
+UIWeaponSpawner.start_presentation = function (self, item, position, rotation, scale, level_link_unit, use_unit_preview_rotation_offset, on_spawn_cb, force_highest_mip, on_complete_callback)
 	if self._loading_weapon_data then
 		self._loading_weapon_data.loader:destroy()
 
@@ -72,6 +75,8 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 		item = item,
 		level_link_unit = level_link_unit,
 		force_highest_mip = force_highest_mip,
+		use_unit_preview_rotation_offset = use_unit_preview_rotation_offset,
+		on_complete_callback = on_complete_callback,
 	}
 
 	single_item_loader:load_slot_item(slot_id, item, on_loaded_callback)
@@ -91,6 +96,8 @@ UIWeaponSpawner.destroy = function (self)
 
 		self._loading_weapon_data = nil
 	end
+
+	self:_update_and_remove_stream_promises(nil, true)
 end
 
 UIWeaponSpawner.update = function (self, dt, t, input_service)
@@ -139,10 +146,40 @@ UIWeaponSpawner.update = function (self, dt, t, input_service)
 			local link_unit_name = loading_weapon_data.link_unit_name
 			local level_link_unit = loading_weapon_data.level_link_unit
 			local force_highest_mip = loading_weapon_data.force_highest_mip
+			local use_unit_preview_rotation_offset = loading_weapon_data.use_unit_preview_rotation_offset
+			local on_complete_callback = loading_weapon_data.on_complete_callback
 
-			self:_spawn_weapon(item, link_unit_name, level_link_unit, loader, position, rotation, scale, force_highest_mip)
+			self:_spawn_weapon(item, link_unit_name, level_link_unit, loader, position, rotation, scale, use_unit_preview_rotation_offset, force_highest_mip, on_complete_callback)
 
 			self._loading_weapon_data = nil
+		end
+	end
+
+	self:_update_and_remove_stream_promises(dt)
+end
+
+UIWeaponSpawner._update_and_remove_stream_promises = function (self, dt, force_remove_all)
+	if self._stream_promises then
+		local limit = FORCE_STREAM_TIMEOUT + 1
+
+		for stream_promise, stream_data in pairs(self._stream_promises) do
+			local time = stream_promise.time or 0
+			local added_time = dt or 0
+			local on_complete_callback = stream_data.on_complete_callback
+
+			stream_data.time = time + added_time
+
+			if limit <= stream_data.time or force_remove_all then
+				if not stream_promise:is_fulfilled() and not stream_promise:is_canceled() then
+					stream_promise:cancel()
+
+					if on_complete_callback then
+						on_complete_callback()
+					end
+				end
+
+				self._stream_promises[stream_promise] = nil
+			end
 		end
 	end
 end
@@ -208,7 +245,34 @@ UIWeaponSpawner.set_position = function (self, position)
 	end
 end
 
-UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link_unit, loader, position, rotation, scale, force_highest_mip)
+UIWeaponSpawner._force_stream = function (self, unit_3p, on_complete_callback)
+	local mesh_complete_promise = Promise.new()
+	local texture_complete_promise = Promise.new()
+
+	Unit.force_stream_meshes(unit_3p, function (timeout)
+		return mesh_complete_promise:resolve(timeout)
+	end, true, FORCE_STREAM_TIMEOUT)
+	Unit.force_stream_textures(unit_3p, function (timeout)
+		return texture_complete_promise:resolve(timeout)
+	end, true, FORCE_STREAM_TIMEOUT)
+
+	local stream_promise = Promise.all(mesh_complete_promise, texture_complete_promise)
+
+	stream_promise:next(function (timeouts)
+		local timeout_mesh, timeout_texture = unpack(timeouts)
+		local timeout = timeout_mesh or timeout_texture
+
+		self._stream_promises[stream_promise] = nil
+
+		return on_complete_callback(timeout)
+	end)
+
+	self._stream_promises[stream_promise] = {
+		on_complete_callback = on_complete_callback,
+	}
+end
+
+UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link_unit, loader, position, rotation, scale, use_unit_preview_rotation_offset, force_highest_mip, complete_callback)
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 	scale = scale or Vector3.zero()
@@ -245,20 +309,26 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 
 	self._weapon_spawn_data = spawn_data
 
-	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p)
+	local on_complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p, complete_callback)
 
-	Unit.force_stream_meshes(item_unit_3p, complete_callback, true, GameParameters.force_stream_mesh_timeout)
+	if force_highest_mip then
+		self:_force_stream(item_unit_3p, on_complete_callback)
+	else
+		on_complete_callback()
+	end
 
-	local node_index = Unit.has_node(item_unit_3p, "p_rotation") and Unit.node(item_unit_3p, "p_rotation") or 1
-	local node_pos = Unit.local_position(item_unit_3p, node_index)
+	if use_unit_preview_rotation_offset then
+		local node_index = Unit.has_node(item_unit_3p, "p_rotation") and Unit.node(item_unit_3p, "p_rotation") or 1
+		local node_pos = Unit.local_position(item_unit_3p, node_index)
 
-	Unit.set_local_position(item_unit_3p, 1, -node_pos)
+		Unit.set_local_position(item_unit_3p, 1, -node_pos)
 
-	local link_unit_rot = Unit.local_rotation(link_unit, 1)
-	local rotated_pos = Quaternion.rotate(link_unit_rot, node_pos)
-	local link_unit_pos = Unit.local_position(link_unit, 1)
+		local link_unit_rot = Unit.local_rotation(link_unit, 1)
+		local rotated_pos = Quaternion.rotate(link_unit_rot, node_pos)
+		local link_unit_pos = Unit.local_position(link_unit, 1)
 
-	Unit.set_local_position(link_unit, 1, link_unit_pos + rotated_pos)
+		Unit.set_local_position(link_unit, 1, link_unit_pos + rotated_pos)
+	end
 
 	if level_link_unit then
 		local left_attach_source_node_index = Unit.has_node(level_link_unit, "j_leftweaponattach") and Unit.node(level_link_unit, "j_leftweaponattach")
@@ -276,7 +346,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 	end
 end
 
-UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p, timeout)
+UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p, complete_callback, timeout)
 	if timeout then
 		Log.info("UIWeaponSpawner", "[cb_on_unit_3p_streaming_complete] unit: %s", tostring(item_unit_3p))
 	end
@@ -287,6 +357,10 @@ UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p,
 		weapon_spawn_data.streaming_complete = true
 
 		Unit.set_unit_visibility(item_unit_3p, true, true)
+	end
+
+	if complete_callback then
+		complete_callback()
 	end
 end
 

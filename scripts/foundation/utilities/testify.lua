@@ -18,6 +18,7 @@ local CLIENT_RPCS = {
 
 Testify = {
 	_are_rpcs_registered = false,
+	_last_request = nil,
 	_requests = {},
 	_responses = {},
 	_peers = {},

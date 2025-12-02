@@ -168,6 +168,13 @@ ExternalPaymentPlatformSteam._decorate_option = function (self, option, platform
 			})
 		end
 
+		if not Steam.is_overlay_enabled() then
+			return Promise.rejected({
+				message = "Cannot purchase premium currency with overlay disabled",
+				player_message = "loc_premium_currency_steam_overlay_disabled",
+			})
+		end
+
 		local pending_txn_promise = Promise:new()
 
 		self.pending_txn_promise = pending_txn_promise
@@ -182,6 +189,55 @@ ExternalPaymentPlatformSteam._decorate_option = function (self, option, platform
 
 		return pending_txn_promise
 	end
+end
+
+ExternalPaymentPlatformSteam._clean_options = function (self, options)
+	for i, v in ipairs(options) do
+		local clean_offer
+		local steam_data = v.steam or v.productIds and v.productIds.steam
+
+		if steam_data and steam_data.priceCents then
+			clean_offer = {}
+
+			local currency = steam_data.currency
+
+			clean_offer.base_price = steam_data.priceCentsOriginal or steam_data.priceCents
+			clean_offer.discount_price = steam_data.priceCentsOriginal and steam_data.priceCents
+			clean_offer.item_id = steam_data.itemId
+			clean_offer.product_id = type(steam_data.productId) == "number" and steam_data.productId or tonumber(steam_data.productId, 10)
+			clean_offer.description = steam_data.description
+			clean_offer.formatted_price = string.format("%.2f %s", clean_offer.base_price / 100, currency)
+			clean_offer.is_platform_option = v.description.type == "platform_option"
+			clean_offer.metadata = v.metadata or {}
+
+			if clean_offer.discount_price then
+				clean_offer.formatted_original_price = clean_offer.formatted_price
+				clean_offer.formatted_price = string.format("%.2f %s", clean_offer.discount_price / 100, currency)
+			end
+		end
+
+		options[i].clean_offer = clean_offer
+	end
+
+	return options
+end
+
+ExternalPaymentPlatformSteam._is_platform_option_owned = function (self, offer)
+	if offer.productIds.steam then
+		return Promise.resolved({
+			is_owner = Steam.is_subscribed(offer.productIds.steam.productId),
+		})
+	end
+
+	return Promise.resolved({
+		is_owner = false,
+	})
+end
+
+ExternalPaymentPlatformSteam._offer_id_from_option = function (self, option)
+	local option_data = option.steam or option.productIds.steam
+
+	return option_data and option_data.productId
 end
 
 ExternalPaymentPlatformSteam._get_entitlements = function (self)

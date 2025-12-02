@@ -109,6 +109,7 @@ local function generate_base_template()
 		unwield_to_previous = {
 			buffer_time = 0,
 			dont_queue = true,
+			input_sequence = nil,
 		},
 		inspect_start = {
 			buffer_time = 0,
@@ -351,7 +352,7 @@ local function generate_base_template()
 			use_ability_charge = true,
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -427,7 +428,7 @@ local function generate_base_template()
 			use_ability_charge = true,
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -479,7 +480,7 @@ local function generate_base_template()
 	base_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/grenade"
 	base_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/grenade_equipable_stumm"
 	base_template.spread_template = "lasgun"
-	base_template.ammo_template = "no_ammo"
+	base_template.ammo_template = "grenade"
 	base_template.hud_configuration = {
 		uses_ammunition = true,
 		uses_overheat = false,

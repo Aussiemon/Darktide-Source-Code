@@ -951,6 +951,11 @@ end
 
 HudElementPlayerPanelBase._update_grenade_ability_presentation = function (self, status, visible, hud_icon, ui_renderer)
 	local widget = self._widgets_by_name.throwable
+
+	if hud_icon then
+		widget.content.texture = hud_icon
+	end
+
 	local style = widget.style.texture
 	local icon_color = style.color
 	local color
@@ -984,7 +989,9 @@ HudElementPlayerPanelBase._update_ammo_representation = function (self, uses_amm
 	local icon_color = icon_style.color
 	local color
 
-	if ammo_status <= 0 then
+	if not uses_ammo then
+		color = UIHudSettings.color_tint_ammo_not_in_use
+	elseif ammo_status <= 0 then
 		color = UIHudSettings.color_tint_ammo_high
 	elseif ammo_status <= 1 then
 		color = UIHudSettings.color_tint_ammo_medium
@@ -1090,18 +1097,34 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 		return
 	end
 
-	local icon
-
-	if item.icon then
-		icon = item.icon
-	else
-		icon = "content/ui/textures/nameplates/portrait_frames/default"
-	end
-
 	local widget = self._widgets_by_name.player_icon
+	local content = widget.content
 	local material_values = widget.style.texture.material_values
 
-	material_values.portrait_frame_texture = icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		content.texture = item.icon_material
+	else
+		local icon
+
+		if item.icon then
+			icon = item.icon
+		else
+			icon = "content/ui/textures/nameplates/portrait_frames/default"
+		end
+
+		local portrait_frame_default_material = UISettings.portrait_frame_default_material
+
+		if content.texture ~= portrait_frame_default_material then
+			content.texture = portrait_frame_default_material
+		end
+
+		material_values.portrait_frame_texture = icon
+	end
+
 	widget.dirty = true
 end
 
@@ -1191,7 +1214,7 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
 
 	local player = self._player
 	local profile = player:profile()
-	local load_cb = callback(self, "_cb_set_player_icon")
+	local load_cb = callback(self, "_cb_set_player_icon", profile)
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 
@@ -1219,7 +1242,7 @@ HudElementPlayerPanelBase._unload_portrait_icon = function (self, ui_renderer)
 	self._portrait_loaded_info = nil
 end
 
-HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
+HudElementPlayerPanelBase._cb_set_player_icon = function (self, profile, grid_index, rows, columns, render_target)
 	local widget = self._widgets_by_name.player_icon
 	local material_values = widget.style.texture.material_values
 
@@ -1228,7 +1251,7 @@ HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
-	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.texture = self:_get_player_portrait_frame_material(profile)
 	widget.dirty = true
 end
 
@@ -1242,6 +1265,24 @@ HudElementPlayerPanelBase._cb_unset_player_icon = function (self)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+end
+
+HudElementPlayerPanelBase._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 HudElementPlayerPanelBase._set_character_text = function (self, character_title, ui_renderer)

@@ -2,34 +2,9 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
-	"pre_get_region_latencies",
-	"get_region_latencies",
-	"get_preferred_reef",
-	"get_reef_info_based_on_region_latencies",
+	"matchmaker_regions",
 }
 local RegionLatency = class("RegionLatency")
-
-RegionLatency.pre_get_region_latencies = function (self)
-	if not self._promise or self._promise:is_rejected() then
-		self._promise = self:_do_refresh()
-	end
-end
-
-RegionLatency.get_region_latencies = function (self)
-	self:pre_get_region_latencies()
-
-	return self._promise:next(function (result)
-		return result.region_latencies
-	end)
-end
-
-RegionLatency.get_preferred_reef = function (self)
-	self:pre_get_region_latencies()
-
-	return self._promise:next(function (result)
-		return result.preferred_reef
-	end)
-end
 
 RegionLatency._ping_targets = function (self, timeout, regions)
 	local targets = {}
@@ -91,7 +66,7 @@ RegionLatency._convert_decimal_to_int_latency = function (self, decimal)
 	return math.ceil(decimal * 1000)
 end
 
-RegionLatency._do_refresh = function (self)
+RegionLatency.matchmaker_regions = function (self)
 	return Managers.backend:title_request("/matchmaker/regions", {
 		method = "GET",
 	}):next(function (data)
@@ -236,31 +211,6 @@ RegionLatency._do_refresh = function (self)
 
 		return Promise.rejected(e)
 	end)
-end
-
-RegionLatency.get_reef_info_based_on_region_latencies = function (self, region_latencies)
-	local reefs = {}
-
-	for i, region_latency in ipairs(region_latencies) do
-		for _, reef_name in ipairs(region_latency.reefs) do
-			local reef = reefs[reef_name]
-
-			if not reef then
-				reef = {}
-				reefs[reef_name] = reef
-			end
-
-			if not reef.min_latency or reef.min_latency > region_latency.latency then
-				reef.min_latency = region_latency.latency
-			end
-
-			if not reef.max_latency or reef.max_latency < region_latency.latency then
-				reef.max_latency = region_latency.latency
-			end
-		end
-	end
-
-	return reefs
 end
 
 implements(RegionLatency, Interface)

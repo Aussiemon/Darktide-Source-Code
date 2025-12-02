@@ -11,6 +11,8 @@ local math_clamp = math.clamp
 
 SwayWeaponModule.init = function (self, unit, unit_data_extension, weapon_extension)
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._sway_component = unit_data_extension:write_component("sway")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._suppression_component = unit_data_extension:read_component("suppression")
@@ -48,7 +50,9 @@ SwayWeaponModule.fixed_update = function (self, dt, t)
 	local sway_component = self._sway_component
 	local shooting_status_component = self._shooting_status_component
 	local movement_state_component = self._movement_state_component
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local sway_template = self._weapon_extension:sway_template()
 	local sway_settings = sway_template[weapon_movement_state]
 	local shooting_grace_duration = sway_settings.decay.from_shooting_grace_time or 0
@@ -119,8 +123,6 @@ SwayWeaponModule._player_event_decay = function (self, decay, t)
 end
 
 SwayWeaponModule._calculate_sway_offsets = function (self, dt, t)
-	local movement_state_component = self._movement_state_component
-	local sway_component = self._sway_component
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local sway_template_name = weapon_tweak_templates_component.sway_template_name
 
@@ -128,7 +130,11 @@ SwayWeaponModule._calculate_sway_offsets = function (self, dt, t)
 		return
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local sway_component = self._sway_component
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local sway_template = self._weapon_extension:sway_template()
 	local sway_settings = sway_template[weapon_movement_state]
 	local sway_pattern = sway_settings.sway_pattern

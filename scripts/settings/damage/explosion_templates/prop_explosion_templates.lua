@@ -3,9 +3,11 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local explosion_templates = {
 	explosive_barrel = {
+		close_damage_type = nil,
 		close_radius = 3,
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = false,
+		damage_type = nil,
 		min_close_radius = 0.5,
 		min_radius = 3,
 		override_friendly_fire = true,
@@ -28,9 +30,11 @@ local explosion_templates = {
 		},
 	},
 	decoy_landmine = {
+		close_damage_type = nil,
 		close_radius = 3,
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = false,
+		damage_type = nil,
 		min_close_radius = 0.5,
 		min_radius = 3,
 		override_friendly_fire = true,
@@ -157,6 +161,25 @@ local explosion_templates = {
 		damage_profile = DamageProfileTemplates.corruptor_emerge_explosion,
 		broadphase_explosion_filter = {
 			"heroes",
+		},
+	},
+	tank_wall_explosion = {
+		close_damage_type = nil,
+		close_radius = 3,
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = false,
+		damage_type = nil,
+		min_close_radius = 0.5,
+		min_radius = 4,
+		override_friendly_fire = true,
+		radius = 5,
+		scalable_radius = false,
+		close_damage_profile = DamageProfileTemplates.no_mans_land_tank_wall_explosion,
+		damage_profile = DamageProfileTemplates.no_mans_land_tank_wall_explosion,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
 		},
 	},
 }

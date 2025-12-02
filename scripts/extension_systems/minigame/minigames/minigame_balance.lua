@@ -44,11 +44,27 @@ MinigameBalance._player_fail = function (self, player)
 	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
 
+MinigameBalance._get_objective = function (self)
+	local target_extension = ScriptUnit.has_extension(self._minigame_unit, "mission_objective_target_system")
+
+	if target_extension then
+		local objective_name = target_extension:objective_name()
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local group_id = mission_objective_system:get_objective_group_id_from_unit(self._minigame_unit)
+
+		return mission_objective_system:active_objective(objective_name, group_id)
+	end
+
+	return nil
+end
+
 MinigameBalance.decode_interrupt = function (self)
 	MinigameBalance.super.decode_interrupt(self)
 
-	if self._start_progression == 0 then
-		self._start_progression = self._objective and self._objective:progression() or 0
+	local objective = self:_get_objective()
+
+	if self._start_progression == 0 and objective then
+		self._start_progression = objective:progression()
 	end
 end
 
@@ -67,14 +83,8 @@ MinigameBalance.start = function (self, player)
 		Unit.set_flow_variable(self._minigame_unit, "player_unit", player_unit)
 	end
 
-	local target_extension = ScriptUnit.has_extension(self._minigame_unit, "mission_objective_target_system")
-
-	if target_extension then
-		local objective_name = target_extension:objective_name()
-		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-		local group_id = mission_objective_system:get_objective_group_id_from_unit(self._minigame_unit)
-
-		self._objective = mission_objective_system:active_objective(objective_name, group_id)
+	if not self._objective then
+		self._objective = self:_get_objective()
 	end
 end
 

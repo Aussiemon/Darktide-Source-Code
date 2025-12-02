@@ -12,7 +12,7 @@ local bit, debug, math, string = bit, debug, math, string
 local pairs, tonumber, type = pairs, tonumber, type
 local LuaJIT = {}
 
-ffi.cdef("int QueryPerformanceFrequency(long long*);\nint QueryPerformanceCounter(long long*);\n")
+ffi.cdef("             int QueryPerformanceFrequency(long long*);\n             int QueryPerformanceCounter(long long*);\n             ")
 
 local freq = ffi.new("long long[1]")
 local cnt = ffi.new("long long[1]")

@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/extension_systems/first_person/character_state_orientation/base_player_orientation.lua
 
-local InputDevice = require("scripts/managers/input/input_device")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local BasePlayerOrientation = class("BasePlayerOrientation")
 
@@ -19,13 +18,14 @@ BasePlayerOrientation.init = function (self, player, orientation)
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._force_look_rotation_component = unit_data_extension:read_component("force_look_rotation")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
+	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._recoil_component = unit_data_extension:read_component("recoil")
 	self._recoil_control_component = unit_data_extension:read_component("recoil_control")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._weapon_lock_view_component = unit_data_extension:read_component("weapon_lock_view")
-	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 end
 
 BasePlayerOrientation.destroy = function (self)

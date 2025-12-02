@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/utilities/ui/text.lua
 
 local InputUtils = require("scripts/managers/input/input_utils")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local TextUtilities = {}
 
 TextUtilities.apply_color_to_text = function (text, color)
@@ -50,6 +52,25 @@ TextUtilities.localize_with_button_hint = function (action, localization_key, op
 	local localized_text = Localize(localization_key, optional_localization_context ~= nil, optional_localization_context)
 
 	return string.format(pattern, input_text, localized_text)
+end
+
+TextUtilities.add_button_hint = function (action, text, optional_service_type, optional_pattern, include_input_type, color_tint_text)
+	local pattern = optional_pattern or "%s %s"
+	local service_type = optional_service_type or "View"
+	local alias_key = Managers.ui:get_input_alias_key(action, service_type)
+	local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key, color_tint_text)
+
+	if include_input_type then
+		local action_type = Managers.ui:get_action_type(action, service_type)
+
+		if action_type == "held" then
+			input_text = Localize("loc_input_hold") .. " " .. input_text
+		elseif action_type == "released" then
+			input_text = Localize("loc_input_release") .. " " .. input_text
+		end
+	end
+
+	return string.format(pattern, input_text, text)
 end
 
 local SECONDS_IN_A_MINUTE = 60
@@ -256,6 +277,177 @@ TextUtilities.format_currency = function (value)
 	end
 
 	return formatted_string
+end
+
+TextUtilities.text_size = function (ui_renderer, text, style, optional_size, use_max_extents)
+	local calculated_size
+
+	if optional_size then
+		calculated_size = {
+			optional_size[1] or 0,
+			optional_size[2] or 0,
+		}
+	else
+		local text_size = style.size
+		local width = text_size and text_size[1]
+		local height = text_size and text_size[2]
+		local has_size = width or height
+
+		if has_size then
+			width = width or 0
+			height = height or 0
+
+			local text_additional_size = style.size_addition
+
+			if text_additional_size then
+				local additional_width = text_additional_size[1] or 0
+				local additional_height = text_additional_size[2] or 0
+
+				width = width + additional_width
+				height = height + additional_height
+			end
+
+			calculated_size = {
+				width,
+				height,
+			}
+		end
+	end
+
+	return UIRenderer.styled_text_size(ui_renderer, text, style, calculated_size, use_max_extents)
+end
+
+TextUtilities.text_height = function (ui_renderer, text, style, optional_size, use_max_extents)
+	local _, text_height, min, caret = TextUtilities.text_size(ui_renderer, text, style, optional_size, use_max_extents)
+
+	return text_height, min, caret
+end
+
+TextUtilities.text_width = function (ui_renderer, text, style, optional_size, use_max_extents)
+	local text_width, _, min, caret = TextUtilities.text_size(ui_renderer, text, style, optional_size, use_max_extents)
+
+	return text_width, min, caret
+end
+
+TextUtilities.scaled_size = function (font_size, scale)
+	return UIFonts.scaled_size(font_size, scale)
+end
+
+TextUtilities.crop_text_width = function (ui_renderer, text, style, max_width, crop_from_left)
+	local use_max_extents = true
+
+	return UIRenderer.styled_crop_text_width(ui_renderer, text, style, max_width, crop_from_left, use_max_extents)
+end
+
+TextUtilities.word_wrap = function (ui_renderer, text, text_style, text_width)
+	return UIRenderer.word_wrap(ui_renderer, text, text_style.font_type, text_style.font_size, text_width)
+end
+
+TextUtilities.crop_to_size = function (ui_renderer, text, text_style, size, use_max_extents, append_if_too_long)
+	append_if_too_long = append_if_too_long or "…"
+
+	local width, height = size[1], size[2]
+	local almost_math_dot_huge = 1000000
+
+	size[2] = almost_math_dot_huge
+
+	local target_height = height
+
+	if text_style and text_style.size_addition then
+		size[1] = size[1] + (text_style.size_addition[1] or 0)
+		target_height = target_height + (text_style.size_addition[2] or 0)
+	end
+
+	if target_height >= TextUtilities.text_height(ui_renderer, text, text_style, size, use_max_extents) then
+		size[1], size[2] = width, height
+
+		return text
+	end
+
+	local text_length = Utf8.string_length(text)
+	local lo, hi = 0, text_length
+
+	while lo < hi do
+		local mid = lo + math.ceil((hi - lo) / 2)
+		local sub_text = mid >= 1 and Utf8.sub_string(text, 1, mid) .. append_if_too_long or ""
+		local text_height = TextUtilities.text_height(ui_renderer, sub_text, text_style, size, use_max_extents)
+
+		if text_height <= target_height then
+			lo = mid
+		else
+			hi = mid - 1
+		end
+	end
+
+	size[1], size[2] = width, height
+
+	if lo == 0 then
+		return ""
+	end
+
+	return Utf8.sub_string(text, 1, lo) .. append_if_too_long
+end
+
+local temp_options = {}
+
+TextUtilities.get_font_options_by_style = function (ui_renderer, text, text_style)
+	table.clear(temp_options)
+
+	return UIFonts.get_font_options_by_style(text_style, temp_options)
+end
+
+do
+	local powers_of_three = {
+		{
+			loc_key = "loc_key_1e3",
+			value = 1000,
+		},
+		{
+			loc_key = "loc_key_1e6",
+			value = 1000000,
+		},
+		{
+			loc_key = "loc_key_1e9",
+			value = 1000000000,
+		},
+	}
+	local powers_of_four = {
+		{
+			loc_key = "loc_key_1e4",
+			value = 10000,
+		},
+		{
+			loc_key = "loc_key_1e8",
+			value = 100000000,
+		},
+	}
+	local suffixes_by_language = {
+		ja = powers_of_four,
+		["zh-cn"] = powers_of_four,
+		["zh-tw"] = powers_of_four,
+		default = powers_of_three,
+	}
+
+	TextUtilities.format_large_number = function (value, factor)
+		factor = factor or 1
+
+		local language = Managers.localization:language()
+		local suffix = suffixes_by_language[language] or suffixes_by_language.default
+
+		for i = #suffix, 1, -1 do
+			local suffix_data = suffix[i]
+
+			if value >= suffix_data.value * factor then
+				local formatted_value = math.round(value / suffix_data.value)
+
+				return Localize(suffix_data.loc_key, true, {
+					value = formatted_value,
+				})
+			end
+		end
+
+		return tostring(value)
+	end
 end
 
 return TextUtilities

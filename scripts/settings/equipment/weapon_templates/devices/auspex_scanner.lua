@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/auspex_scanner.lua
 
+local Auspex = require("scripts/utilities/weapon/auspex")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -72,56 +73,8 @@ weapon_template.hud_configuration = {
 }
 weapon_template.require_minigame = true
 weapon_template.not_player_wieldable = true
-
-local function _get_minigame(player)
-	local player_unit = player.player_unit
-
-	if not player_unit then
-		return nil
-	end
-
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local minigame_character_state_component = unit_data_extension:read_component("minigame_character_state")
-	local is_level_unit = minigame_character_state_component.interface_is_level_unit
-	local unit_id = is_level_unit and minigame_character_state_component.interface_level_unit_id or minigame_character_state_component.interface_game_object_id
-	local interface_unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-
-	if not interface_unit then
-		return nil
-	end
-
-	local minigame_extension = interface_unit and ScriptUnit.has_extension(interface_unit, "minigame_system")
-	local minigame = minigame_extension:minigame()
-
-	return minigame
-end
-
-local function _move_ui_validate(player)
-	local minigame = _get_minigame(player)
-
-	return minigame and minigame:uses_joystick()
-end
-
-weapon_template.action_confirm_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	local minigame = _get_minigame(player)
-
-	return minigame and minigame:uses_action()
-end
-
-weapon_template.action_move_gamepad_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	if Managers.input:device_in_use("gamepad") then
-		return _move_ui_validate(player)
-	end
-
-	return false
-end
-
-weapon_template.action_move_keyboard_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	if not Managers.input:device_in_use("gamepad") then
-		return _move_ui_validate(player)
-	end
-
-	return false
-end
+weapon_template.action_confirm_screen_ui_validation = Auspex.confirm_screen_ui_validation
+weapon_template.action_move_gamepad_screen_ui_validation = Auspex.move_gamepad_screen_ui_validation
+weapon_template.action_move_keyboard_screen_ui_validation = Auspex.move_keyboard_screen_ui_validation
 
 return weapon_template

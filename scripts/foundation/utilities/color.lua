@@ -2415,6 +2415,12 @@ local color_definitions = {
 		204,
 		204,
 	},
+	text_cant_afford = {
+		255,
+		227,
+		56,
+		56,
+	},
 	terminal_background = {
 		100,
 		49,

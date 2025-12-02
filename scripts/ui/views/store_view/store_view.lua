@@ -2,17 +2,18 @@
 
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local DLCUtils = require("scripts/utilities/dlc_utils")
 local Items = require("scripts/utilities/items")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Offer = require("scripts/utilities/offer")
+local PremiumCurrencyPurchaseView = require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local StoreViewContentBlueprints = require("scripts/ui/views/store_view/store_view_content_blueprints")
+local StoreViewBlueprintFactory = require("scripts/ui/views/store_view/store_view_blueprint_factory")
 local StoreViewDefinitions = require("scripts/ui/views/store_view/store_view_definitions")
 local StoreViewSettings = require("scripts/ui/views/store_view/store_view_settings")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -64,14 +65,16 @@ local STORE_LAYOUT = {
 		display_name = "loc_premium_store_category_skins_title_adamant",
 		storefront = "premium_store_skins_adamant",
 		telemetry_name = "adamant",
-		template = ButtonPassTemplates.terminal_tab_menu_button,
+		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
 		require_archetype_ownership = Archetypes.adamant,
 	},
-}
-local AQUILA_STORE_LAYOUT = {
-	display_name = "loc_premium_store_category_title_currency",
-	storefront = "hard_currency_store",
-	template = ButtonPassTemplates.default_button,
+	{
+		display_name = "loc_premium_store_category_skins_title_broker",
+		storefront = "premium_store_skins_broker",
+		telemetry_name = "broker",
+		template = ButtonPassTemplates.terminal_tab_menu_button,
+		require_archetype_ownership = Archetypes.broker,
+	},
 }
 local DEBUG_GRID = false
 local StoreView = class("StoreView", "BaseView")
@@ -90,7 +93,13 @@ StoreView.init = function (self, settings, context)
 	self._current_vo_event = nil
 	self._current_vo_id = nil
 	self._vo_unit = nil
-	self._vo_callback = callback(self, "_cb_on_play_vo")
+
+	self._vo_callback = function (...)
+		if not self.__deleted then
+			return self:_cb_on_play_vo(...)
+		end
+	end
+
 	self._vo_world_spawner = nil
 	self._hub_interaction = context and context.hub_interaction
 
@@ -133,7 +142,6 @@ StoreView.on_enter = function (self)
 		self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self)
 
 		self:_setup_navigation_arrows()
-		self:_destroy_aquilas_presentation()
 	end):catch(function (error)
 		self._store_promise = nil
 	end)
@@ -191,20 +199,12 @@ StoreView._update_store_page = function (self)
 end
 
 StoreView._on_navigation_input_changed = function (self)
-	if self._using_cursor_navigation then
-		if self._aquila_open then
-			self:_select_aquila_widget_by_index()
-		end
-
+	if self._using_cursor_navigation and (not self._aquila_open or true) then
 		if self._grid_widgets then
 			self:_set_selected_grid_index()
 		end
 	elseif self._aquila_open then
-		if not self._selected_aquila_index then
-			self._selected_aquila_index = 1
-		end
-
-		self:_select_aquila_widget_by_index(self._selected_aquila_index)
+		-- Nothing
 	elseif self._grid_widgets then
 		local index = self:_get_first_grid_panel_index()
 
@@ -246,6 +246,7 @@ StoreView._set_panels_store = function (self)
 		local tab_button_template = table.clone(tab_content.template)
 
 		tab_button_template[1].style = {
+			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 		}
@@ -308,36 +309,35 @@ StoreView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.aquila_button.content.hotspot.pressed_callback = function ()
-		local on_complete_callback = callback(self, "setup_aquila_store")
+		self:_cb_on_grid_exit_done()
 
-		self:_fetch_storefront(AQUILA_STORE_LAYOUT.storefront, on_complete_callback)
+		if self._page_panel then
+			self:_remove_element("page_panel")
+
+			self._page_panel = nil
+			self._widgets_by_name.navigation_arrow_left.content.visible = false
+			self._widgets_by_name.navigation_arrow_right.content.visible = false
+		end
+
+		self._widgets_by_name.aquila_button.content.visible = false
+		self._widgets_by_name.get_dlc_button.content.hotspot.disabled = true
+		self._widgets_by_name.get_dlc_button.content.visible = false
+
+		self:_destroy_category_panel()
+
+		if self._store_promise then
+			self._store_promise:cancel()
+
+			self._store_promise = nil
+		end
+
+		if self._debounce_tab_switch then
+			self._debounce_tab_switch:cancel()
+		end
+
+		self._input_legend_element:set_visibility(false)
+		PremiumCurrencyPurchaseView.open(callback(self, "cb_on_aquilas_closed"))
 	end
-end
-
-StoreView.setup_aquila_store = function (self)
-	self._widgets_by_name.get_dlc_button.content.hotspot.disabled = true
-	self._widgets_by_name.get_dlc_button.content.visible = false
-	self._selected_page_index = 1
-
-	local category_pages_layout_data = self._category_pages_layout_data
-
-	if not category_pages_layout_data then
-		return
-	end
-
-	self:_set_telemetry_name("aquilas")
-	self:_start_animation("grid_entry", self._grid_widgets, self)
-
-	self._widgets_by_name.aquila_button.content.visible = false
-
-	self:_destroy_category_panel()
-
-	if not self._using_cursor_navigation then
-		self:_select_aquila_widget_by_index(1)
-	end
-
-	self._aquila_open = true
-	self._widgets_by_name.background.content.visible = true
 end
 
 StoreView._get_first_grid_panel_index = function (self)
@@ -369,25 +369,26 @@ StoreView._destroy_category_panel = function (self)
 	end
 end
 
-StoreView.cb_on_back_pressed = function (self)
-	if self._aquila_open == true then
-		self._aquila_open = false
-		self._widgets_by_name.background.content.visible = false
-
-		self:_destroy_aquilas_presentation()
-
-		local path = {
-			page_index = self._selected_page_index,
-			category_index = self._selected_category_index,
-		}
-
-		self._widgets_by_name.aquila_button.content.visible = true
-
-		self:_open_navigation_path(path)
-
-		return
+StoreView.cb_on_aquilas_closed = function (self, success)
+	if success then
+		self:_update_wallets()
 	end
 
+	self._input_legend_element:set_visibility(true)
+
+	local path = {
+		page_index = self._selected_page_index,
+		category_index = self._selected_category_index,
+	}
+
+	self._selected_category_index = nil
+	self._selected_page_index = nil
+	self._widgets_by_name.aquila_button.content.visible = true
+
+	self:_open_navigation_path(path)
+end
+
+StoreView.cb_on_back_pressed = function (self)
 	local view_name = self.view_name
 
 	Managers.ui:close_view(view_name)
@@ -528,8 +529,6 @@ StoreView._open_navigation_path = function (self, path)
 end
 
 StoreView._on_category_index_selected = function (self, index, on_complete_callback)
-	self._selected_category_index = index
-
 	local category_layout = STORE_LAYOUT[index]
 
 	self._selected_category_layout = category_layout
@@ -540,19 +539,41 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 	widgets_by_name.get_dlc_button.content.hotspot.disabled = true
 	widgets_by_name.get_dlc_button.content.visible = false
 
-	if category_layout.require_archetype_ownership then
-		category_layout.require_archetype_ownership:is_available():next(function (result)
+	local archetype = category_layout.require_archetype_ownership
+
+	if archetype then
+		DLCUtils.is_archetype_available(archetype):next(function (result)
 			widgets_by_name.get_dlc_button.content.hotspot.disabled = result.available
 			widgets_by_name.get_dlc_button.content.visible = not result.available
-			widgets_by_name.get_dlc_button.content.hotspot.pressed_callback = callback(category_layout.require_archetype_ownership, "acquire_callback", function (is_success)
-				if is_success then
-					self:_on_category_index_selected(index, on_complete_callback)
-				end
-			end)
+
+			widgets_by_name.get_dlc_button.content.hotspot.pressed_callback = function ()
+				Managers.dlc:open_dlc_view(archetype.requires_dlc, archetype.deluxe_dlc, function (is_success)
+					if is_success then
+						self:_on_category_index_selected(index, on_complete_callback)
+					end
+				end)
+			end
 		end)
 	end
 
-	local promise = self:_fetch_storefront(storefront, on_complete_callback)
+	if self._debounce_tab_switch then
+		self._debounce_tab_switch:cancel()
+	end
+
+	local is_item_detail_view_active = Managers.ui:view_active("store_item_detail_view")
+
+	self._debounce_tab_switch = self._using_cursor_navigation and not is_item_detail_view_active and Promise.resolved() or Promise.delay(0.3)
+
+	local promise = self._debounce_tab_switch:next(function ()
+		if self._selected_category_index == index and not is_item_detail_view_active then
+			return
+		end
+
+		self._selected_category_index = index
+		self._debounce_tab_switch = nil
+
+		return self:_fetch_storefront(storefront, on_complete_callback)
+	end)
 
 	return promise
 end
@@ -580,17 +601,11 @@ StoreView._set_telemetry_name = function (self, category, page)
 end
 
 StoreView._on_page_index_selected = function (self, page_index)
-	self._selected_page_index = page_index
-
 	local category_index = self._selected_category_index
 	local category_layout = STORE_LAYOUT[category_index]
 	local category_name = category_layout.telemetry_name
 
 	self:_set_telemetry_name(category_name, page_index)
-
-	if self._page_panel then
-		self._page_panel:set_selected_index(page_index)
-	end
 
 	local category_pages_layout_data = self._category_pages_layout_data
 
@@ -599,21 +614,83 @@ StoreView._on_page_index_selected = function (self, page_index)
 	end
 
 	local page_layout = category_pages_layout_data[page_index]
+
+	if not page_layout then
+		return
+	end
+
+	local previous_page_index = self._selected_page_index
+
+	self._selected_page_index = page_index
+
+	if self._page_panel then
+		self._page_panel:set_selected_index(page_index)
+	end
+
 	local grid_settings = page_layout.grid_settings
 	local elements = page_layout.elements
-	local storefront_layout = self:_debug_generate_layout(grid_settings)
+	local sequence_promise
 
-	self:_setup_grid(elements, grid_settings)
-	self:_start_animation("grid_entry", self._grid_widgets, self)
+	if self:_is_animation_active(self._grid_exit_animation_id) then
+		sequence_promise = Promise.until_value_is_true(function ()
+			return self._grid_widgets == nil
+		end)
+	else
+		sequence_promise = Promise.resolved():next(function ()
+			self:_destroy_current_grid()
+		end)
+	end
 
-	local grid_index = self:_get_first_grid_panel_index()
+	sequence_promise:next(function ()
+		self:_setup_grid(elements, grid_settings)
+
+		local image_promises = {}
+
+		for i = 1, #self._grid_widgets do
+			self._grid_widgets[i].alpha_multiplier = 0
+
+			local image_promise = self._grid_widgets[i].config._texture_load_promise
+
+			if image_promise then
+				table.insert(image_promises, image_promise)
+			end
+		end
+
+		local promise
+
+		if #image_promises > 0 then
+			promise = Promise.race(Promise.delay(0.5), Promise.all(unpack(image_promises)))
+		else
+			promise = Promise.resolved()
+		end
+
+		promise:next(callback(self, "_show_grid_entries", page_index, previous_page_index), function ()
+			return
+		end)
+	end)
+end
+
+StoreView._show_grid_entries = function (self, page_index, previous_page_index)
+	if self._grid_widgets == nil then
+		return
+	end
+
+	self:_start_animation("grid_entry", self._grid_widgets, self, nil, 1)
+
+	local grid_index
+
+	if not previous_page_index or previous_page_index <= page_index then
+		grid_index = self:_get_first_grid_panel_index()
+	else
+		grid_index = self:_get_last_grid_panel_index()
+	end
 
 	if not self._using_cursor_navigation and grid_index then
 		self:_set_selected_grid_index(grid_index)
 	end
 
 	self._widgets_by_name.navigation_arrow_left.content.visible = page_index > 1
-	self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #category_pages_layout_data
+	self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #self._category_pages_layout_data
 end
 
 local function sum(arr, from, to)
@@ -667,8 +744,6 @@ StoreView._is_owned = function (self, items)
 end
 
 StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules)
-	self:_unload_url_textures()
-
 	if not offers then
 		return {}
 	end
@@ -678,14 +753,6 @@ StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules
 
 	for _, offer in ipairs(offers) do
 		local element = self:_find_empty_element_with_type(pages, offer.description.type)
-
-		if offer.description.type == "currency" then
-			self:_create_aquilas_presentation(offers)
-
-			promises[#promises + 1] = Promise:resolve()
-
-			return promises
-		end
 
 		if element then
 			local widget_types = {
@@ -744,6 +811,10 @@ StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules
 				item_type = item_type,
 			})
 
+			if offer.description.type == "platform_purchase" then
+				item_type_display_name_localized = offer.description.localized_subtitle or Localize("loc_term_glossary_dlc")
+			end
+
 			element.title = title
 			element.sub_title = item_type_display_name_localized
 			element.offer = offer
@@ -757,50 +828,32 @@ StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules
 			local imageURL
 
 			if element.mediaSize and offer.media then
-				for i = 1, #offer.media do
-					local media = offer.media[i]
-
-					if media.mediaSize == element.mediaSize then
-						imageURL = media.url
-
-						break
-					end
-				end
-			end
-
-			if imageURL then
-				local url_load_promise = Promise:new()
-
-				promises[#promises + 1] = url_load_promise
-
-				local url_textures = self._url_textures
-
-				url_textures[#url_textures + 1] = imageURL
-
-				Managers.url_loader:load_texture(imageURL):next(function (data)
-					element.texture_map = data.texture
-
-					url_load_promise:resolve(element)
-				end):catch(function (error)
-					url_load_promise:resolve(element)
+				imageURL = Offer.find_media_url(offer, function (media)
+					return media.mediaSize == element.mediaSize
 				end)
-			elseif offer.sku then
-				if offer.sku.category == "item_instance" and offer.description.type == "weapon" then
-					local item = MasterItems.get_store_item_instance(offer.description)
+				element.image_url = imageURL
 
-					if item then
-						element.slot = item.slots[1]
-						element.item = item
-					else
-						element.selected = false
-					end
-				end
+				if imageURL then
+					local url_textures = self._url_textures
 
-				if element.item then
-					promises[#promises + 1] = Promise:resolve(element)
+					url_textures[#url_textures + 1] = imageURL
+
+					Managers.url_loader:load_texture(imageURL, nil, "store_view")
 				end
 			end
 
+			if not element.media_url and offer.sku and offer.sku.category == "item_instance" and offer.description.type == "weapon" then
+				local item = MasterItems.get_store_item_instance(offer.description)
+
+				if item then
+					element.slot = item.slots[1]
+					element.item = item
+				else
+					element.selected = false
+				end
+			end
+
+			promises[#promises + 1] = Promise.resolved(element)
 			index = index + 1
 		end
 	end
@@ -816,291 +869,9 @@ StoreView._format_price = function (self, element, price)
 	end
 end
 
-StoreView._create_aquilas_presentation = function (self, offers)
-	self:_destroy_aquilas_presentation()
-
-	local scenegraph_id = "grid_aquilas_content"
-	local widgets = {}
-	local template = StoreViewContentBlueprints.aquila_button
-	local size_addition = {
-		20,
-		20,
-	}
-	local spacing = {
-		20,
-		25,
-	}
-	local large_size = {
-		260,
-		350,
-	}
-	local small_size = {
-		260,
-		250,
-	}
-	local medium_size = {
-		260,
-		300,
-	}
-	local size_per_row = {}
-	local pass_template = template.pass_template
-	local platform
-	local authenticate_method = Managers.backend:get_auth_method()
-
-	platform = authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM and "steam" or authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and PLATFORM == "win32" and "microsoft" or authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and Application.xbox_live and Application.xbox_live() == true and "microsoft" or authenticate_method == Managers.backend.AUTH_METHOD_PSN and "psn" or "steam"
-
-	local bonus_offer_count = 0
-	local valid_offers = 0
-	local non_bonus_offer_count = 0
-
-	for offerIdx = 1, #offers do
-		local offer = offers[offerIdx]
-
-		if offer[platform] then
-			valid_offers = valid_offers + 1
-
-			local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
-
-			if bonus_aquila and bonus_aquila > 0 then
-				bonus_offer_count = bonus_offer_count + 1
-			else
-				non_bonus_offer_count = non_bonus_offer_count + 1
-			end
-		end
-	end
-
-	local canvas_width = self._ui_scenegraph.canvas.size[1]
-	local max_allowed_large_per_row = math.floor(canvas_width / (large_size[1] + spacing[1]))
-	local max_allowed_small_per_row = math.floor(canvas_width / (small_size[1] + spacing[1]))
-	local max_allowed_medium_per_row = math.floor(canvas_width / (medium_size[1] + spacing[1]))
-	local large_needed_rows = math.ceil(bonus_offer_count / max_allowed_large_per_row)
-	local small_needed_rows = math.ceil(non_bonus_offer_count / max_allowed_small_per_row)
-	local use_same_size_on_all_offers = large_needed_rows > 1 or small_needed_rows > 1
-
-	table.sort(offers, function (a, b)
-		return a.value.amount > b.value.amount
-	end)
-
-	local widget_grid_position_by_index = {}
-	local widgets_count_per_row = {}
-	local i = 0
-
-	for offerIdx = 1, #offers do
-		local offer = offers[offerIdx]
-		local element = {}
-
-		if offer[platform] then
-			i = i + 1
-
-			local values = offer[platform]
-
-			if values and values.priceCents and values.currency then
-				element.formattedPrice = string.format("%.2f %s", values.priceCents / 100, values.currency)
-			else
-				element.formattedPrice = offer.price.amount.formattedPrice
-			end
-
-			element.title = offer.value.amount
-
-			local description = ""
-			local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
-
-			if bonus_aquila and bonus_aquila > 0 then
-				local aquilas = offer.value.amount
-				local aquila_minus_bonus = aquilas - bonus_aquila
-				local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
-					amount = bonus_aquila,
-				})
-
-				description = string.format("%d\n%s", aquila_minus_bonus, bonus_text)
-			end
-
-			element.description = description
-			element.offer = offer
-			element.item_types = {
-				"currency",
-			}
-
-			local size, max_allowed_items_per_row, total_elements_in_row
-
-			if use_same_size_on_all_offers then
-				size = medium_size
-				max_allowed_items_per_row = max_allowed_medium_per_row
-			elseif description ~= "" then
-				size = large_size
-				max_allowed_items_per_row = max_allowed_large_per_row
-				total_elements_in_row = bonus_offer_count
-			else
-				size = small_size
-				max_allowed_items_per_row = max_allowed_small_per_row
-				total_elements_in_row = non_bonus_offer_count
-			end
-
-			local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
-			local name = "currency_widget_" .. i
-			local widget = self:_create_widget(name, widget_definition)
-
-			widget.type = "aquila_button"
-
-			local row = not use_same_size_on_all_offers and (size == large_size and 1 or 2) or math.ceil(i / max_allowed_items_per_row)
-			local start_row = not use_same_size_on_all_offers and (row == 1 and 0 or bonus_offer_count) or (row - 1) * max_allowed_items_per_row
-
-			total_elements_in_row = total_elements_in_row or row == 1 and max_allowed_items_per_row or valid_offers - max_allowed_items_per_row
-
-			local end_row = start_row + total_elements_in_row
-			local element_position = end_row - i
-
-			widget.row = row
-			size_per_row[row] = size_per_row[row] or {}
-			size_per_row[row][1] = (size_per_row[row][1] or 0) + size[1] + spacing[1]
-			size_per_row[row][2] = math.max(size_per_row[row][2] or 0, size[2])
-			widget.offset = {
-				element_position * (size[1] + spacing[1]),
-				0,
-				0,
-			}
-
-			local init = template.init
-			local media_url = offer.mediaUrl
-
-			element.media_url = media_url
-
-			if media_url then
-				local url_textures = self._url_textures
-
-				url_textures[#url_textures + 1] = media_url
-
-				Managers.url_loader:load_texture(media_url):next(function (data)
-					local texture = data.texture
-
-					if not texture then
-						return
-					end
-
-					element.texture_map = texture
-
-					if init then
-						init(self, widget, element, "cb_on_grid_entry_left_pressed")
-					end
-				end)
-			end
-
-			if init then
-				init(self, widget, element, "cb_on_grid_entry_left_pressed")
-			end
-
-			local description_style_options = UIFonts.get_font_options_by_style(widget.style.bonus_description)
-			local description_width, description_height = self:_text_size(widget.content.bonus_description, widget.style.bonus_description.font_type, widget.style.bonus_description.font_size, {
-				1920,
-				1080,
-			}, description_style_options)
-
-			widget.style.bonus_description_background.size = {
-				description_width,
-				description_height,
-			}
-			widget.style.bonus_description_background_line.size = {
-				description_width,
-				description_height,
-			}
-			widgets[i] = widget
-			widget_grid_position_by_index[#widget_grid_position_by_index + 1] = {
-				row = row,
-				element_position_in_row = total_elements_in_row - element_position,
-				grid_index = start_row + element_position + 1,
-			}
-			widgets_count_per_row[row] = widgets_count_per_row[row] and widgets_count_per_row[row] + 1 or 1
-		end
-	end
-
-	local needed_rows = #size_per_row
-	local total_width = 0
-	local total_height = (needed_rows - 1) * spacing[2]
-
-	for jj = 1, needed_rows do
-		total_width = math.max(total_width, size_per_row[jj][1] - spacing[1])
-		total_height = total_height + size_per_row[jj][2]
-	end
-
-	for jj = 1, #widgets do
-		local widget = widgets[jj]
-		local row = widget.row - 1
-		local offset_height_value = 0
-		local row_width_value = size_per_row[widget.row][1]
-
-		if row > 0 then
-			for ff = 1, row do
-				offset_height_value = offset_height_value + size_per_row[ff][2]
-			end
-
-			offset_height_value = offset_height_value + spacing[2] * row
-		end
-
-		widget.offset[1] = widget.offset[1] + (total_width - row_width_value) * 0.5
-		widget.offset[2] = offset_height_value
-	end
-
-	self:_set_scenegraph_size(scenegraph_id, total_width, total_height)
-
-	local aquilas_frame_element_vertical_margin = 40
-	local min_aquilas_frame_element_height = 0
-
-	self:_set_scenegraph_size("aquilas_background", nil, math.max(min_aquilas_frame_element_height, total_height + aquilas_frame_element_vertical_margin + size_addition[2] * needed_rows))
-
-	self._aquilas_widgets = widgets
-	self._aquilas_navigation_data = {
-		widgets_position_by_index = widget_grid_position_by_index,
-		num_rows = needed_rows,
-		widgets_count_per_row = widgets_count_per_row,
-		total_widgets = #self._aquilas_widgets,
-	}
-
-	if not self._using_cursor_navigation then
-		self._selected_aquila_index = 1
-		self._selected_aquila_row = 1
-
-		self:_select_aquila_widget_by_index(self._selected_aquila_index)
-	end
-
-	self._widgets_by_name.aquilas_background.content.visible = true
-
-	if IS_PLAYSTATION then
-		local POSITION = {
-			CENTER = 0,
-			LEFT = 1,
-			RIGHT = 2,
-		}
-
-		if not self._ps_store_icon_showing then
-			NpCommerceDialog.show_ps_store_icon(POSITION.RIGHT)
-
-			self._ps_store_icon_showing = true
-		end
-	end
-end
-
-StoreView._destroy_aquilas_presentation = function (self)
-	if self._aquilas_widgets then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
-			local widget_name = widget.name
-
-			self:_unregister_widget_name(widget_name)
-		end
-
-		self._aquilas_widgets = nil
-	end
-
-	self._widgets_by_name.aquilas_background.content.visible = false
-
-	if IS_PLAYSTATION and self._ps_store_icon_showing then
-		NpCommerceDialog.hide_ps_store_icon()
-
-		self._ps_store_icon_showing = false
-	end
-end
-
 StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
+	self:_unload_url_textures()
+
 	local storefront_request_id = self._storefront_request_id + 1
 
 	self._storefront_request_id = storefront_request_id
@@ -1127,8 +898,16 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		self._widgets_by_name.navigation_arrow_right.content.visible = false
 	end
 
+	if not self._store_promise:is_fulfilled() then
+		self:_fade_out_grid(2)
+	else
+		self:_cb_on_grid_exit_done()
+	end
+
 	return self._store_promise:next(function (data)
-		self:_destroy_current_grid()
+		if self:_is_animation_active(self._grid_exit_animation_id) then
+			self:_complete_animation(self._grid_exit_animation_id)
+		end
 
 		if storefront_request_id ~= self._storefront_request_id or not self._store_promise or not data then
 			self._store_promise = nil
@@ -1159,6 +938,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		for i = 1, #offers do
 			local offer = offers[i]
 			local bundle_info = offer.bundleInfo
+			local platform_info = offer.platformInfo
 
 			if bundle_info then
 				local offer_valid = true
@@ -1180,6 +960,8 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 				if offer_valid then
 					valid_offers[#valid_offers + 1] = offer
 				end
+			elseif platform_info then
+				valid_offers[#valid_offers + 1] = offer
 			else
 				local is_item = offer.sku and offer.sku.category == "item_instance"
 				local item
@@ -1223,9 +1005,11 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 				local cell_count_width = sum(page.gridTemplateColumns, item.gridColumnStart, item.gridColumnEnd - 1)
 				local cell_count_height = sum(page.gridTemplateRows, item.gridRowStart, item.gridRowEnd - 1)
 
+				table.insert(item.itemTypes, "platform_purchase")
+
 				elements[j] = {
 					index = j,
-					display_name = "entry_" .. j,
+					display_name = string.format("page_%d_entry_%d", i, j),
 					grid_position = {
 						column_index,
 						row_index,
@@ -1293,6 +1077,10 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, valid_offers, data.bundle_rules))):next(function (elements)
 			if self._destroyed or not self._store_promise then
 				return
+			end
+
+			if self:_is_animation_active(self._grid_exit_animation_id) then
+				self:_complete_animation(self._grid_exit_animation_id)
 			end
 
 			self._store_promise = nil
@@ -1377,12 +1165,14 @@ StoreView._setup_navigation_arrows = function (self, layout_pages)
 	self._widgets_by_name.navigation_arrow_right.content.hotspot.pressed_callback = function ()
 		local page_index = self._selected_page_index + 1
 
+		self:_fade_out_grid(2)
 		self:_on_page_index_selected(page_index)
 	end
 
 	self._widgets_by_name.navigation_arrow_left.content.hotspot.pressed_callback = function ()
 		local page_index = self._selected_page_index - 1
 
+		self:_fade_out_grid(2)
 		self:_on_page_index_selected(page_index)
 	end
 end
@@ -1482,6 +1272,7 @@ StoreView.on_exit = function (self)
 	end
 
 	self:_destroy_offscreen_gui()
+	self:_destroy_current_grid()
 	self:_unload_url_textures()
 	StoreView.super.on_exit(self)
 
@@ -1530,28 +1321,9 @@ StoreView._handle_input = function (self, input_service)
 
 		if input_service:get("hotkey_menu_special_1") and not self._aquila_open and not self._widgets_by_name.aquila_button.content.hotspot.disabled then
 			self:_play_sound(UISoundEvents.default_click)
-
-			local on_complete_callback = callback(self, "setup_aquila_store")
-
-			self:_fetch_storefront(AQUILA_STORE_LAYOUT.storefront, on_complete_callback)
+			self._widgets_by_name.aquila_button.content.hotspot.pressed_callback()
 		elseif self._aquila_open then
-			local new_selection_index, new_selection_row
-
-			if input_service:get("navigate_up_continuous") and self._selected_aquila_row then
-				new_selection_row = self._selected_aquila_row > 1 and "up"
-			elseif input_service:get("navigate_down_continuous") and self._selected_aquila_row then
-				new_selection_row = self._selected_aquila_row < (self._aquilas_navigation_data and self._aquilas_navigation_data.num_rows or self._selected_aquila_row) and "down"
-			elseif input_service:get("navigate_left_continuous") and self._selected_aquila_index then
-				new_selection_index = self._selected_aquila_index > 1 and self._selected_aquila_index - 1
-			elseif input_service:get("navigate_right_continuous") and self._selected_aquila_index then
-				new_selection_index = self._selected_aquila_index < (self._aquilas_navigation_data and self._aquilas_navigation_data.total_widgets or self._selected_aquila_index) and self._selected_aquila_index + 1
-			end
-
-			if new_selection_index then
-				self:_select_aquila_widget_by_index(new_selection_index)
-			elseif new_selection_row then
-				self:_select_aquila_widget_by_row(new_selection_row)
-			end
+			-- Nothing
 		end
 	end
 end
@@ -1561,9 +1333,10 @@ StoreView.update = function (self, dt, t, input_service)
 		input_service = input_service:null_service()
 	end
 
+	local is_animation_active = self:_is_animation_active(self._grid_exit_animation_id)
+
 	if self._store_promise or self._purchase_promise then
-		input_service = input_service:null_service()
-		self._widgets_by_name.loading.content.visible = true
+		self._widgets_by_name.loading.content.visible = not is_animation_active
 
 		if not self._show_loading then
 			Managers.event:trigger("event_start_waiting")
@@ -1665,10 +1438,26 @@ StoreView._destroy_current_grid = function (self)
 			local widget_name = widget.name
 
 			self:_unregister_widget_name(widget_name)
+
+			if widget.delete then
+				widget:delete()
+			end
 		end
 
 		self._grid_widgets = nil
 	end
+end
+
+StoreView._fade_out_grid = function (self, speed)
+	if not self._grid_widgets then
+		return
+	end
+
+	self._grid_exit_animation_id = self:_start_animation("grid_exit", self._grid_widgets, self, callback(self, "_cb_on_grid_exit_done"), speed)
+end
+
+StoreView._cb_on_grid_exit_done = function (self)
+	self:_destroy_current_grid()
 end
 
 StoreView.cb_on_grid_entry_left_pressed = function (self, widget, element)
@@ -1676,56 +1465,45 @@ StoreView.cb_on_grid_entry_left_pressed = function (self, widget, element)
 		return
 	end
 
-	local item_type = element.item_types and element.item_types[1]
+	local offer = element.offer
+	local item_type = offer.description.type
 
-	if item_type == "currency" then
-		self._purchase_promise = Managers.data_service.store:purchase_currency(element.offer):next(function (data)
-			if self._destroyed or not self._purchase_promise then
-				return
-			end
-
-			if data and data.body.state == "failed" then
-				self._purchase_promise = nil
-
-				return
-			end
-
-			self:_play_sound(UISoundEvents.aquilas_vendor_purchase_aquilas)
-
-			local currency = element.offer.value.type
-			local amount = element.offer.value.amount
-
-			Managers.event:trigger("event_add_notification_message", "currency", {
-				currency = currency,
-				amount = amount,
-			})
-			self:_update_wallets()
-			self:cb_on_back_pressed()
-
-			self._purchase_promise = nil
-		end):catch(function (error)
-			self._purchase_promise = nil
-		end)
-	else
+	if item_type ~= "platform_purchase" then
 		self._selected_store_item_offerId = element.offer.offerId
 
 		Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
 			store_item = element,
 			parent = self,
 		})
+
+		return
+	else
+		local product_id
+
+		if IS_XBS then
+			product_id = offer.sku.platformInfo.xbs
+		elseif IS_GDK then
+			product_id = offer.sku.platformInfo.xbs
+		elseif IS_PLAYSTATION then
+			product_id = offer.sku.platformInfo.psn
+		elseif HAS_STEAM then
+			product_id = offer.sku.platformInfo.steam
+		else
+			product_id = offer.sku.platformInfo.steam
+		end
+
+		Managers.dlc:open_to_store(product_id, nil)
 	end
 end
 
 StoreView._setup_grid = function (self, layout, grid_settings)
 	self._active_grid_settings = grid_settings
 
-	self:_destroy_current_grid()
-
 	local widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_left_pressed"
 
 	for index, entry in ipairs(layout) do
-		local widget_suffix = "entry_" .. tostring(index)
+		local widget_suffix = entry.display_name
 		local widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name)
 
 		widgets[#widgets + 1] = widget
@@ -1763,7 +1541,6 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 	local scenegraph_id = "grid_content_pivot"
 	local ui_renderer = self._ui_renderer
 	local widget_type = config.widget_type
-	local template = StoreViewContentBlueprints[widget_type]
 	local layout_width, layout_height = self:_scenegraph_size("grid_background")
 	local size_scale = config.size_scale
 	local spacing = config.spacing
@@ -1786,6 +1563,10 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 			0,
 		}
 	end
+
+	local template
+
+	template = StoreViewBlueprintFactory.create_blueprint(new_size, config)
 
 	local size = new_size or config.size or template.size_function and template.size_function(self, config) or template.size
 	local pass_template_function = template.pass_template_function
@@ -1814,6 +1595,12 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 
 	if widget.content.item then
 		template.load_icon(self, widget, config)
+	end
+
+	if template.destroy then
+		widget.delete = function (w)
+			template.destroy(self, w, config, nil)
+		end
 	end
 
 	return widget
@@ -2065,16 +1852,21 @@ StoreView._generate_nine_grid_nodes = function (self, size, position)
 end
 
 StoreView.can_handle_input = function (self)
-	return not self:_is_animation_active(self._on_enter_anim_id)
+	return true
 end
 
 StoreView._draw_grid = function (self, dt, t, input_service)
 	local widgets = self._grid_widgets
+
+	if not widgets or self:_is_animation_active(self._on_enter_anim_id) then
+		return
+	end
+
 	local widgets_by_name = self._widgets_by_name
 	local interaction_widget = widgets_by_name.grid_interaction
 	local is_grid_focused = not self._using_cursor_navigation or interaction_widget.content.hotspot.is_hover or false
 	local render_settings = self._render_settings
-	local ui_renderer = self._ui_offscreen_renderer
+	local ui_renderer = self._ui_renderer
 	local ui_scenegraph = self._ui_scenegraph
 	local focused_widget
 
@@ -2094,10 +1886,6 @@ StoreView._draw_grid = function (self, dt, t, input_service)
 			end
 
 			UIWidget.draw(widget, ui_renderer)
-
-			if widget.content.widget_type and StoreViewContentBlueprints[widget.content.widget_type] and StoreViewContentBlueprints[widget.content.widget_type].update then
-				StoreViewContentBlueprints[widget.content.widget_type].update(self, widget, input_service, dt, t, ui_renderer)
-			end
 		end
 	end
 
@@ -2154,100 +1942,10 @@ StoreView.draw = function (self, dt, t, input_service, layer)
 		end
 	end
 
-	local aquilas_widgets = self._aquilas_widgets
-
-	if self._aquilas_widgets then
-		for i = 1, #aquilas_widgets do
-			local widget = aquilas_widgets[i]
-
-			UIWidget.draw(widget, self._ui_renderer)
-		end
-	end
-
 	UIRenderer.end_pass(ui_renderer)
 
 	if self._wallet_element then
 		self._wallet_element:draw(dt, t, ui_renderer, render_settings, input_service)
-	end
-end
-
-StoreView._select_aquila_widget_by_row = function (self, direction)
-	if not self._aquilas_widgets then
-		return
-	end
-
-	local new_selection_row, new_selection_index
-
-	if direction == "up" then
-		new_selection_row = self._selected_aquila_row > 1 and self._selected_aquila_row - 1 or self._selected_aquila_row
-	elseif direction == "down" then
-		new_selection_row = self._selected_aquila_row < self._aquilas_navigation_data.num_rows and self._selected_aquila_row + 1 or self._selected_aquila_row
-	end
-
-	if new_selection_row then
-		local row_size_top = self._aquilas_navigation_data.widgets_count_per_row[1]
-		local row_size_bottom = self._aquilas_navigation_data.widgets_count_per_row[2]
-
-		if direction == "up" then
-			local start_row_position = 1
-			local end_row_position = start_row_position + row_size_top - 1
-			local grid_diff = (row_size_bottom - row_size_top) * 0.5
-			local new_position = math.floor(self._selected_aquila_index - row_size_top - grid_diff)
-
-			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
-		elseif direction == "down" then
-			local start_row_position = row_size_top + 1
-			local end_row_position = start_row_position + row_size_bottom - 1
-			local grid_diff = (row_size_top - row_size_bottom) * 0.5
-			local new_position = math.floor(self._selected_aquila_index + row_size_top - grid_diff)
-
-			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
-		end
-
-		self._selected_aquila_row = new_selection_row
-
-		self:_select_aquila_widget_by_index(new_selection_index)
-	end
-end
-
-StoreView._select_aquila_widget_by_index = function (self, index)
-	if not self._aquilas_widgets then
-		return
-	end
-
-	if not index then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
-
-			widget.content.hotspot.is_focused = false
-		end
-
-		return
-	end
-
-	local widgets_position_by_index = self._aquilas_navigation_data.widgets_position_by_index
-	local focused_index
-
-	for i = 1, #self._aquilas_widgets do
-		local data = widgets_position_by_index[i]
-
-		if index == data.grid_index then
-			if data.row == self._selected_aquila_row then
-				focused_index = i
-			end
-
-			break
-		end
-	end
-
-	if focused_index then
-		for i = 1, #self._aquilas_widgets do
-			local widget = self._aquilas_widgets[i]
-
-			widget.content.hotspot.is_focused = i == focused_index
-		end
-
-		self._selected_aquila_index = index
 	end
 end
 

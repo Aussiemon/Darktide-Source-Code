@@ -80,6 +80,7 @@ blueprints.milestone = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
+			value = nil,
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -196,6 +197,7 @@ blueprints.wintrack = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
+			value = nil,
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -352,6 +354,7 @@ blueprints.overlay = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
+			value = nil,
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -677,7 +680,7 @@ blueprints.trait_new = {
 				local weapon_trait_icon_index = string.sub(weapon_trait_icon_name, string.len(string_start) + 1)
 				local index_to_number = tonumber(weapon_trait_icon_index)
 
-				if not index_to_number or index_to_number > 243 then
+				if not index_to_number or index_to_number > 247 then
 					weapon_trait_icon_name = "weapon_trait_default"
 				end
 

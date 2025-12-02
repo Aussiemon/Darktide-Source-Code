@@ -152,7 +152,7 @@ ChargeEffects._play_charged_done_effects = function (self)
 			local charge_done_sound_alias = charge_effects.charge_done_sound_alias
 
 			if charge_done_sound_alias then
-				fx_extension:trigger_gear_wwise_event_with_source(charge_done_sound_alias, external_properties, charge_done_source, sync_to_clients)
+				fx_extension:trigger_gear_wwise_event_with_source(charge_done_sound_alias, external_properties, charge_done_source, sync_to_clients, false)
 			end
 
 			local charge_done_effect_alias = charge_effects.charge_done_effect_alias

@@ -27,39 +27,46 @@ LuggableSynchronizerExtension.init = function (self, extension_init_context, uni
 	self._is_side_mission_synchronizer = false
 end
 
-LuggableSynchronizerExtension.setup_from_component = function (self, objective_name, objective_stages, shuffle_stages, auto_start, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
+LuggableSynchronizerExtension.setup_from_component = function (self, objective_name, objective_stages, auto_start, shuffle_stages, use_safe_zone, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
+	local unit = self._unit
 	local mission_manager = Managers.state.mission
 	local side_mission = mission_manager:side_mission()
 	local should_register_side_mission_unit = is_side_mission_synchronizer and side_mission and mission_manager:side_mission_is_luggable()
 
 	if not is_side_mission_synchronizer or should_register_side_mission_unit then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-		local unit = self._unit
 
 		objective_name = is_side_mission_synchronizer and side_mission.name or objective_name
-
-		mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+		self._group_id = mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
 	end
 
 	self._objective_name = objective_name
 	self._objective_stages = objective_stages
-	self._shuffle_stages = shuffle_stages
 	self._auto_start = auto_start
+	self._shuffle_stages = shuffle_stages
 	self._manual_luggable_spawn = manual_luggable_spawn
 	self._max_socket_target = max_socket_target
 	self._keep_unused_sockets = keep_unused_sockets
+	self._use_safe_zone = use_safe_zone
 	self._luggable_should_respawn = luggable_should_respawn
 	self._luggable_respawn_timer = luggable_respawn_timer
 	self._luggable_reset_timer = luggable_reset_timer
 	self._luggable_consume_timer = luggable_consume_timer
 	self._is_side_mission_synchronizer = is_side_mission_synchronizer
+
+	if luggable_should_respawn and use_safe_zone then
+		-- Nothing
+	end
 end
 
 LuggableSynchronizerExtension.fixed_update = function (self, unit, dt, t)
 	if self._is_server and self._mission_active then
 		if self._luggable_should_respawn then
 			self:_check_reset_timer(dt)
-			self:_check_boundaries()
+
+			if self._use_safe_zone then
+				self:_check_boundaries()
+			end
 		end
 
 		self:_check_luggable_to_respawn(dt)
@@ -329,7 +336,7 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 		local sync = true
 
 		luggable_objective_target_extension:set_objective_name(objective_name, sync)
-		luggable_objective_target_extension:set_objective_group_id(objective_group_id)
+		luggable_objective_target_extension:set_objective_group_id(objective_group_id, sync)
 
 		local luggable_extension = ScriptUnit.extension(luggable_unit, "luggable_system")
 

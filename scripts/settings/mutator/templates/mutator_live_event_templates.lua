@@ -1,14 +1,8 @@
 ﻿-- chunkname: @scripts/settings/mutator/templates/mutator_live_event_templates.lua
 
 local MutatorSpawnerNode = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node")
-local MutatorSpawnerNodeLevelInstance = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance")
-local MutatorSpawnerNodeHordeTrigger = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_horde_trigger")
-local MutatorSpawnerNodeEnemyTemplate = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template")
 local MutatorSpawnerLocationSources = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_location_sources")
-local MutatorStatTrigger = require("scripts/managers/mutator/mutators/mutator_stat_trigger")
-local MutatorStatTriggerEverytime = require("scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_everytime")
 local MutatorStatTriggerUtilities = require("scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_utilities")
-local MutatorStatTriggerPerCount = require("scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count")
 local EnemyCompositions = require("scripts/settings/live_event/live_event_enemy_compositions/stolen_rations_enemy_compositions")
 local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local mutator_templates = {
@@ -159,35 +153,75 @@ local mutator_templates = {
 	mutator_stat_trigger_stolen_rations_core = {
 		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_stat_trigger",
-		stats = {
+		team_stats = {
 			stolen_rations_destroyed_team = {
-				key = "TEAM",
 				triggers = {
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_spawn_horde, "flood_horde"),
-						MutatorStatTriggerUtilities.on_trigger_send_live_event_notification("notification_destroy"),
-					}, 50, false),
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_boss, "flood_horde"),
-					}, 100, false),
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_super_boss, "flood_horde"),
-					}, 350, false),
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 50,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_spawn_horde, "flood_horde"),
+								MutatorStatTriggerUtilities.on_trigger_send_live_event_notification("notification_destroy"),
+							},
+						},
+					},
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 50,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_boss, "flood_horde"),
+							},
+						},
+					},
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 350,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_super_boss, "flood_horde"),
+							},
+						},
+					},
 				},
 			},
 			stolen_rations_recovered_team = {
-				key = "TEAM",
 				triggers = {
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_spawn_horde, "flood_horde"),
-						MutatorStatTriggerUtilities.on_trigger_send_live_event_notification("notification_recover"),
-					}, 50, false),
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_boss, "flood_horde"),
-					}, 100, false),
-					MutatorStatTriggerPerCount:new({
-						MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_super_boss, "flood_horde"),
-					}, 350, false),
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 50,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_spawn_horde, "flood_horde"),
+								MutatorStatTriggerUtilities.on_trigger_send_live_event_notification("notification_recover"),
+							},
+						},
+					},
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 100,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_boss, "flood_horde"),
+							},
+						},
+					},
+					{
+						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
+						template = {
+							trigger_amount = 350,
+							trigger_once = false,
+							on_trigger = {
+								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_recover_super_boss, "flood_horde"),
+							},
+						},
+					},
 				},
 			},
 		},
@@ -198,31 +232,34 @@ local mutator_templates = {
 		trigger_distance = 40,
 		spawn_locations = MutatorSpawnerLocationSources.main_path_locations(),
 		spawners = {
-			MutatorSpawnerNodeLevelInstance:new({
-				asset_package = "packages/content/live_events/stolen_rations/stolen_rations_assets",
-				use_raycast = true,
-				levels = {
-					level_size_2 = {
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_medium",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_medium",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
-						"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance",
+				template = {
+					asset_package = "packages/content/live_events/stolen_rations/stolen_rations_assets",
+					use_raycast = true,
+					levels = {
+						level_size_2 = {
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_medium",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_medium",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+							"content/levels/live_events/stolen_rations/stolen_rations_01_prop_small",
+						},
+					},
+					placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
+					size_lookup = {
+						"level_size_2",
+					},
+					spawn_settings = {
+						count = 5,
+						position_offset = 5,
+						randomize_rotation = true,
 					},
 				},
-				placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
-				size_lookup = {
-					"level_size_2",
-				},
-				spawn_settings = {
-					count = 5,
-					position_offset = 5,
-					randomize_rotation = true,
-				},
-			}),
+			},
 		},
 	},
 	mutator_stolen_rations_recover_mutant_waves = {
@@ -378,6 +415,12 @@ local mutator_templates = {
 				renegade_sniper = 0,
 			},
 		},
+	},
+	mutator_respawn_modifier = {
+		activate_on_load = false,
+		class = "scripts/managers/mutator/mutators/mutator_respawn_modifier",
+		respawn_state = "walking",
+		time = 0,
 	},
 }
 

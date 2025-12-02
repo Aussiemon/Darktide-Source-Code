@@ -8,7 +8,7 @@ local AchievementUIHelper = require("scripts/managers/achievements/utility/achie
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local AchievementsManager = class("AchievementsManager")
 local CLIENT_RPCS = {
 	"rpc_unlock_achievement",
@@ -951,11 +951,11 @@ AchievementsManager._show_unlock_in_chat = function (self, player, achievement_i
 	if player_name and achievement_name then
 		local player_color = Color.terminal_text_key_value(255, true)
 
-		player_name = TextUtilities.apply_color_to_text(player_name, player_color)
+		player_name = Text.apply_color_to_text(player_name, player_color)
 
 		local achievement_color = Color.ui_brown_super_light(255, true)
 
-		achievement_name = TextUtilities.apply_color_to_text(achievement_name, achievement_color)
+		achievement_name = Text.apply_color_to_text(achievement_name, achievement_color)
 
 		local message = Localize("loc_ally_unlocked_penance", true, {
 			player_name = player_name,

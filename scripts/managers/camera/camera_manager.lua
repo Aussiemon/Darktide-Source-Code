@@ -67,9 +67,13 @@ CameraManager.init = function (self, world)
 	self._listener_elevation_min = -math.huge
 	self._listener_elevation_max = math.huge
 	self._sequence_event_settings = {
+		current_values = nil,
 		end_time = 0,
+		event = nil,
+		recovery_values = nil,
 		start_time = 0,
 		time_to_recover = 0,
+		transition_function = nil,
 	}
 	self._shake_event_settings = {}
 	self._active_events = {}
@@ -298,16 +302,6 @@ CameraManager.shading_callback = function (self, world, shading_env, viewport, d
 
 		if camera_data.exposure_snap then
 			ShadingEnvironment.set_scalar(shading_env, "exposure_snap", 1)
-		end
-
-		if self._is_teleporting then
-			local fog_settings = ShadingEnvironment.vector3(shading_env, "fog0_settings")
-
-			ShadingEnvironment.set_vector3(shading_env, "fog0_settings", Vector3(0, fog_settings.y, fog_settings.z))
-
-			fog_settings = ShadingEnvironment.vector3(shading_env, "fog1_settings")
-
-			ShadingEnvironment.set_vector3(shading_env, "fog1_settings", Vector3(0, fog_settings.y, fog_settings.z))
 		end
 
 		for interaction_type, interaction_settings in pairs(WorldInteractionSettings) do

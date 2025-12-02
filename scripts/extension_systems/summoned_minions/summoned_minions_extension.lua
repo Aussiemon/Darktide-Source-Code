@@ -65,14 +65,14 @@ SummonedMinionsExtension._evaluate_summmoned_minions = function (self)
 	local summon_minions = self._summoned_minions
 	local amount = 0
 
-	for i, unit in pairs(summon_minions) do
+	for i, unit in ripairs(summon_minions) do
 		if HEALTH_ALIVE[unit] then
 			amount = amount + 1
 		else
 			local position = POSITION_LOOKUP[unit]
 
 			self:_on_death(position)
-			table.remove(summon_minions, i)
+			table.swap_delete(summon_minions, i)
 		end
 	end
 

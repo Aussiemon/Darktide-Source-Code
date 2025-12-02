@@ -9,7 +9,8 @@ return {
 	version = 29,
 	nodes = {
 		{
-			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
+			cost = 0,
+			icon = "content/ui/materials/frames/talents/starting_points/starting_point_veteran",
 			max_points = 1,
 			talent = "veteran_combat_ability_stance",
 			type = "start",
@@ -29,6 +30,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_elite_kills_restore_grenade",
 			max_points = 1,
 			talent = "veteran_aura_elite_kills_restore_grenade",
@@ -51,6 +53,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_faster_reload_on_non_empty_clips",
 			max_points = 1,
 			talent = "veteran_faster_reload_on_non_empty_clips",
@@ -75,6 +78,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_reload_speed_on_elite_kill",
 			max_points = 1,
 			talent = "veteran_reload_speed_on_elite_kill",
@@ -99,6 +103,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_weakspot_damage",
 			max_points = 1,
 			talent = "veteran_increased_weakspot_damage",
@@ -120,6 +125,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_melee_crit_chance_and_melee_finesse",
 			max_points = 1,
 			talent = "veteran_increased_melee_crit_chance_and_melee_finesse",
@@ -145,6 +151,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_1",
@@ -166,6 +173,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_all_kills_replenish_toughness",
 			max_points = 1,
 			talent = "veteran_all_kills_replenish_toughness",
@@ -188,6 +196,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increase_damage_after_sprinting",
 			max_points = 1,
 			talent = "veteran_increase_damage_after_sprinting",
@@ -208,6 +217,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_crits_apply_rending",
 			max_points = 1,
 			talent = "veteran_crits_apply_rending",
@@ -229,6 +239,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_smoke_grenade",
 			max_points = 1,
 			talent = "veteran_smoke_grenade",
@@ -252,6 +263,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_undercover",
 			max_points = 1,
 			talent = "veteran_invisibility_on_combat_ability",
@@ -278,6 +290,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_movement_speed_towards_downed",
 			max_points = 1,
 			talent = "veteran_movement_speed_towards_downed",
@@ -298,6 +311,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_extra_grenade",
 			max_points = 1,
 			talent = "veteran_extra_grenade",
@@ -320,6 +334,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_rending_bonus",
 			max_points = 1,
 			talent = "veteran_rending_bonus",
@@ -340,6 +355,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_assault_unit",
 			max_points = 1,
 			talent = "veteran_movement_speed_coherency",
@@ -362,6 +378,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_dodging_grants_crit",
 			max_points = 1,
 			talent = "veteran_dodging_grants_crit",
@@ -382,6 +399,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_kill_grants_damage_to_other_slot",
 			max_points = 1,
 			talent = "veteran_kill_grants_damage_to_other_slot",
@@ -402,6 +420,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_hits_cause_bleed",
 			max_points = 1,
 			talent = "veteran_hits_cause_bleed",
@@ -425,6 +444,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_attack_speed",
 			max_points = 1,
 			talent = "veteran_attack_speed",
@@ -450,6 +470,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_continous_hits_apply_rending",
 			max_points = 1,
 			talent = "veteran_continous_hits_apply_rending",
@@ -472,6 +493,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_2",
@@ -493,6 +515,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_reduced_threat_when_still",
 			max_points = 1,
 			talent = "veteran_reduced_threat_after_combat_ability",
@@ -511,6 +534,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_replenish_toughness_outside_melee",
 			max_points = 1,
 			talent = "veteran_replenish_toughness_outside_melee",
@@ -537,6 +561,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_bonus_crit_chance_on_ammo",
 			max_points = 1,
 			talent = "veteran_bonus_crit_chance_on_ammo",
@@ -559,6 +584,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ranged_power_out_of_melee",
 			max_points = 1,
 			talent = "veteran_ranged_power_out_of_melee",
@@ -581,6 +607,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_volley_fire",
 			max_points = 1,
 			talent = "veteran_combat_ability_elite_and_special_outlines",
@@ -608,6 +635,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_no_ammo_consumption_on_lasweapon_crit",
 			max_points = 1,
 			talent = "veteran_no_ammo_consumption_on_lasweapon_crit",
@@ -628,6 +656,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_coherency_outlines",
 			max_points = 1,
 			talent = "veteran_combat_ability_coherency_outlines",
@@ -646,6 +675,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_movement_speed_on_toughness_broken",
 			max_points = 1,
 			talent = "veteran_movement_bonuses_on_toughness_broken",
@@ -669,6 +699,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_ranged_enemies_outlines_ranged_weakspot_damage_bonus",
 			max_points = 1,
 			talent = "veteran_combat_ability_ranged_roamer_outlines",
@@ -690,6 +721,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_replenish_toughness_on_weakspot_kill",
 			max_points = 1,
 			talent = "veteran_replenish_toughness_on_weakspot_kill",
@@ -713,6 +745,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_toughness_damage_reduction_during_ability",
 			max_points = 1,
 			talent = "veteran_toughness_bonus_leaving_invisibility",
@@ -732,6 +765,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ammo_increase",
 			max_points = 1,
 			talent = "veteran_ammo_increase",
@@ -757,6 +791,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ally_kills_increase_damage",
 			max_points = 1,
 			talent = "veteran_ally_kills_increase_damage",
@@ -777,6 +812,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_grenades",
 			max_points = 1,
 			talent = "veteran_improved_grenades",
@@ -799,6 +835,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_elite_kills_reduce_cooldown",
 			max_points = 1,
 			talent = "veteran_elite_kills_reduce_cooldown",
@@ -823,6 +860,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_krak_grenade",
 			max_points = 1,
 			talent = "veteran_krak_grenade",
@@ -844,6 +882,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_voice_of_command",
 			max_points = 1,
 			talent = "veteran_combat_ability_stagger_nearby_enemies",
@@ -869,6 +908,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_revive_nearby_allies",
 			max_points = 1,
 			talent = "veteran_combat_ability_revive_nearby_allies",
@@ -887,6 +927,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_replenish_grenades",
 			max_points = 1,
 			talent = "veteran_replenish_grenades",
@@ -915,6 +956,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_better_deployables",
 			max_points = 1,
 			talent = "veteran_better_deployables",
@@ -941,6 +983,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_commanding_presence",
 			max_points = 1,
 			talent = "veteran_increased_damage_coherency",
@@ -962,6 +1005,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ability_marksman",
 			max_points = 1,
 			talent = "veteran_increased_weakspot_power_after_combat_ability",
@@ -982,6 +1026,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_replenish_toughness_and_boost_allies",
 			max_points = 1,
 			talent = "veteran_replenish_toughness_and_boost_allies",
@@ -1002,6 +1047,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_allies_in_coherency_share_toughness_gain",
 			max_points = 1,
 			talent = "veteran_allies_in_coherency_share_toughness_gain",
@@ -1023,6 +1069,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_elite_kills_replenish_toughness",
 			max_points = 1,
 			talent = "veteran_elite_kills_replenish_toughness",
@@ -1046,6 +1093,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_increase_and_restore_toughness_to_coherency",
 			max_points = 1,
 			talent = "veteran_combat_ability_increase_and_restore_toughness_to_coherency",
@@ -1064,6 +1112,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_extra_charge",
 			max_points = 1,
 			talent = "veteran_combat_ability_extra_charge",
@@ -1082,6 +1131,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_reduced_toughness_damage_in_coherency",
 			max_points = 1,
 			talent = "veteran_reduced_toughness_damage_in_coherency",
@@ -1108,6 +1158,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_damage_based_on_range",
 			max_points = 1,
 			talent = "veteran_increased_damage_based_on_range",
@@ -1131,6 +1182,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_default_utility_talent",
 			max_points = 1,
 			talent = "veteran_reduce_swap_time",
@@ -1154,6 +1206,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_ads_drain_stamina",
 			max_points = 1,
 			talent = "veteran_ads_drain_stamina",
@@ -1174,6 +1227,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_big_game_hunter",
 			max_points = 1,
 			talent = "veteran_big_game_hunter",
@@ -1196,6 +1250,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_aura_scavengers",
 			max_points = 1,
 			talent = "veteran_aura_gain_ammo_on_elite_kill_improved",
@@ -1218,6 +1273,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade_bleed",
 			max_points = 1,
 			talent = "veteran_grenade_apply_bleed",
@@ -1240,6 +1296,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_reload_speed_node_buff_medium_1",
 			type = "stat",
@@ -1267,6 +1324,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_melee_damage_node_buff_high_1",
 			type = "stat",
@@ -1292,6 +1350,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_ranged_damage_node_buff_medium_1",
 			type = "stat",
@@ -1317,6 +1376,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_damage_vs_elites",
 			max_points = 1,
 			talent = "veteran_increase_damage_vs_elites",
@@ -1341,6 +1401,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_dodging_grants_stamina",
 			max_points = 1,
 			talent = "veteran_dodging_grants_stamina",
@@ -1361,6 +1422,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_block_break_gives_tdr",
 			max_points = 1,
 			talent = "veteran_tdr_on_high_toughness",
@@ -1385,6 +1447,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
 			type = "stat",
@@ -1405,6 +1468,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_node_buff_low_5",
 			type = "stat",
@@ -1436,6 +1500,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_stamina_regen_delay_2",
 			type = "stat",
@@ -1456,6 +1521,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increased_close_damage_after_combat_ability",
 			max_points = 1,
 			talent = "veteran_increased_close_damage_after_combat_ability",
@@ -1476,6 +1542,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/ogryn/ogryn_increased_ammo_reserve",
 			max_points = 1,
 			talent = "veteran_clip_size",
@@ -1496,6 +1563,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_stamina_node_buff_low_2",
 			type = "stat",
@@ -1521,6 +1589,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_movement_speed_node_buff_low_1",
 			type = "stat",
@@ -1542,6 +1611,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_big_game_hunter",
 			max_points = 1,
 			talent = "veteran_combat_ability_ogryn_outlines",
@@ -1561,6 +1631,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus",
 			max_points = 1,
 			talent = "veteran_snipers_focus",
@@ -1588,6 +1659,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_rending_bonus",
 			max_points = 1,
 			talent = "veteran_snipers_focus_rending_bonus",
@@ -1606,6 +1678,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_toughness_bonus",
 			max_points = 1,
 			talent = "veteran_snipers_focus_toughness_bonus",
@@ -1624,6 +1697,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_snipers_focus_increased_stacks",
 			max_points = 1,
 			talent = "veteran_snipers_focus_increased_stacks",
@@ -1643,6 +1717,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_passive",
 			max_points = 1,
 			talent = "veteran_weapon_switch_passive",
@@ -1667,6 +1742,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_faster_2",
 			max_points = 1,
 			talent = "veteran_weapon_switch_replenish_toughness",
@@ -1685,6 +1761,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_crit_bonus",
 			max_points = 1,
 			talent = "veteran_weapon_switch_replenish_ammo",
@@ -1705,6 +1782,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_weapon_switch_cleave_bonus",
 			max_points = 1,
 			talent = "veteran_weapon_switch_replenish_stamina",
@@ -1725,6 +1803,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag",
 			max_points = 1,
 			talent = "veteran_improved_tag",
@@ -1748,6 +1827,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_dead_coherency_bonus",
 			max_points = 1,
 			talent = "veteran_improved_tag_dead_bonus",
@@ -1766,6 +1846,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_dead_bonus",
 			max_points = 1,
 			talent = "veteran_improved_tag_dead_coherency_bonus",
@@ -1784,6 +1865,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_improved_tag_more_damage",
 			max_points = 1,
 			talent = "veteran_improved_tag_more_damage",
@@ -1802,6 +1884,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/veteran/veteran_increase_suppression",
 			max_points = 1,
 			talent = "veteran_increase_suppression",
@@ -1822,6 +1905,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/zealot/zealot_increased_damage_when_flanking",
 			max_points = 1,
 			talent = "veteran_increased_damage_when_flanking",

@@ -28,6 +28,7 @@ local base_loadout_presentation_order = {
 local class_loadout = {
 	ability = {},
 	blitz = {},
+	pocketable = {},
 	aura = {},
 }
 local base_loadout_to_type = {
@@ -84,11 +85,14 @@ TalentBuilderView.on_enter = function (self)
 
 	local active_layout = self._active_layout
 	local nodes = active_layout.nodes
-	local active_layout_version = active_layout.version
+	local player = self._preview_player
+	local profile = player:profile()
+	local active_talents_version = TalentLayoutParser.talents_version(profile)
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if self._is_own_player and not self._is_readonly then
 		local talents
+		local context = self._context
 		local profile_preset = profile_preset_id and ProfileUtils.get_profile_preset(profile_preset_id)
 
 		if profile_preset then
@@ -96,82 +100,80 @@ TalentBuilderView.on_enter = function (self)
 
 			local profile_preset_talents_version = profile_preset.talents_version
 
-			if profile_preset_talents_version ~= active_layout_version then
+			if profile_preset_talents_version ~= active_talents_version then
 				talents = {}
 			else
-				talents = profile_preset and profile_preset.talents or {}
+				talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", context and context.current_profile_equipped_talents or profile_preset.talents) or {}
 			end
 		else
-			local context = self._context
 			local current_profile_equipped_talents = context and context.current_profile_equipped_talents
 
 			if current_profile_equipped_talents then
 				talents = table.clone(current_profile_equipped_talents)
 			else
-				local player = self._preview_player
-				local profile = player:profile()
-
 				talents = {}
 
-				for node_index_s, points_spent_on_node in pairs(profile.selected_nodes) do
-					local node_index = tonumber(node_index_s)
-					local node = nodes[node_index]
+				for i = 1, #nodes do
+					local node = nodes[i]
+					local widget_name = node.widget_name
+					local node_tier = profile.selected_nodes[widget_name]
 
-					if node then
-						talents[node.widget_name] = points_spent_on_node
+					if node_tier then
+						talents[widget_name] = node_tier
 					end
 				end
 			end
 		end
 
-		self._points_spent_on_node_widgets = table.clone_instance(talents)
+		self._node_widget_tiers = table.clone_instance(talents)
 
-		local total_points_spent = 0
+		for widget_name, tier in pairs(self._node_widget_tiers) do
+			local node = self:_node_by_name(widget_name)
 
-		for key, value in pairs(self._points_spent_on_node_widgets) do
-			local node = self:_node_by_name(key)
-
-			if type(value) == "number" and node then
-				total_points_spent = total_points_spent + value
+			if node then
+				self._node_widget_tiers[widget_name] = tier
 			else
-				self._points_spent_on_node_widgets[key] = nil
+				self._node_widget_tiers[widget_name] = nil
 
 				if profile_preset_id then
-					ProfileUtils.save_talent_node_for_profile_preset(profile_preset_id, key, nil)
+					ProfileUtils.save_talent_node_for_profile_preset(profile_preset_id, widget_name, nil)
 				end
 			end
 		end
-
-		self._node_points_spent = total_points_spent or 0
 	else
-		local player = self._preview_player
-		local profile = player:profile()
-		local points_spent_on_node_widgets = self._points_spent_on_node_widgets
-		local total_points_spent = 0
+		local node_widget_tiers = self._node_widget_tiers
 
-		for node_index_s, points_spent_on_node in pairs(profile.selected_nodes) do
-			local node_index = tonumber(node_index_s)
-			local node = nodes[node_index]
+		for i = 1, #nodes do
+			local node = nodes[i]
+			local widget_name = node.widget_name
+			local node_tier = profile.selected_nodes[widget_name]
 
-			points_spent_on_node_widgets[node.widget_name] = points_spent_on_node
-			total_points_spent = total_points_spent + points_spent_on_node
+			if node_tier then
+				node_widget_tiers[widget_name] = node_tier
+			end
 		end
-
-		self._node_points_spent = total_points_spent or 0
 	end
 
+	local all_nodes_cost_one = true
 	local widgets = self._node_widgets
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
-		local already_spent_node_points, _ = self:_node_points_by_widget(widget)
+		local node_selected, _ = self:_node_points_by_widget(widget)
 
-		content.has_points_spent = already_spent_node_points > 0
+		content.has_points_spent = node_selected
 		content.highlighted = content.has_points_spent
 		content.alpha_anim_progress = content.has_points_spent and 1 or 0
+
+		local node = content.node_data
+
+		if node.type ~= "start" then
+			all_nodes_cost_one = all_nodes_cost_one and node.cost == 1
+		end
 	end
 
+	self._all_nodes_cost_one = all_nodes_cost_one
 	self._draw_instant_lines = true
 
 	self:_refresh_all_nodes()
@@ -199,54 +201,47 @@ TalentBuilderView._update_summery_button_text = function (self)
 end
 
 TalentBuilderView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
-	local layout = self:get_active_layout()
-	local active_layout_version = layout.version
+	local player = self._preview_player
+	local profile = player:profile()
+	local active_talent_version = TalentLayoutParser.talents_version(profile)
 	local talents_version = profile_preset and profile_preset.talents_version
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local previously_active_profile_preset_id = self._active_profile_preset_id
-	local trigger_talent_nodes_event_update = false
 	local talents
 
 	if previously_active_profile_preset_id and profile_preset then
-		if talents_version ~= active_layout_version then
+		if talents_version ~= active_talent_version then
 			talents = {}
 		else
-			talents = profile_preset and profile_preset.talents or {}
+			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
 		end
 	else
-		talents = table.clone_instance(self._points_spent_on_node_widgets)
-		trigger_talent_nodes_event_update = true
+		talents = table.clone_instance(self._node_widget_tiers)
 		self._save_talent_changes = true
 	end
 
-	self._points_spent_on_node_widgets = talents and table.clone_instance(talents) or {}
+	self._node_widget_tiers = talents and table.clone_instance(talents) or {}
 
-	local total_points_spent = 0
+	for widget_name, tier in pairs(self._node_widget_tiers) do
+		local node = self:_node_by_name(widget_name)
 
-	for key, value in pairs(self._points_spent_on_node_widgets) do
-		local node = self:_node_by_name(key)
-
-		if type(value) == "number" and node then
-			total_points_spent = total_points_spent + value
-		else
-			self._points_spent_on_node_widgets[key] = nil
+		if not node then
+			self._node_widget_tiers[widget_name] = nil
 
 			if profile_preset_id then
-				ProfileUtils.save_talent_node_for_profile_preset(profile_preset_id, key, nil)
+				ProfileUtils.save_talent_node_for_profile_preset(profile_preset_id, widget_name, nil)
 			end
 		end
 	end
-
-	self._node_points_spent = total_points_spent or 0
 
 	local widgets = self._node_widgets
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
-		local already_spent_node_points, _ = self:_node_points_by_widget(widget)
+		local node_selected, _ = self:_node_points_by_widget(widget)
 
-		content.has_points_spent = already_spent_node_points > 0
+		content.has_points_spent = node_selected
 		content.highlighted = content.has_points_spent
 		content.alpha_anim_progress = content.has_points_spent and 1 or 0
 	end
@@ -261,24 +256,10 @@ TalentBuilderView.event_on_profile_preset_changed = function (self, profile_pres
 	self:_update_base_talent_loadout_presentation()
 end
 
-TalentBuilderView.on_exit = function (self)
-	local layout = self:get_active_layout()
-
-	if not layout then
-		return
-	end
-
-	TalentBuilderView.super.on_exit(self)
-end
-
-TalentBuilderView.get_talent_points_spent_on_nodes = function (self)
-	return self._points_spent_on_node_widgets
-end
-
 TalentBuilderView._remove_node_point_on_widget = function (self, widget)
 	TalentBuilderView.super._remove_node_point_on_widget(self, widget)
 	self:_update_base_talent_loadout_presentation()
-	Managers.event:trigger("event_player_talent_node_updated", self._points_spent_on_node_widgets)
+	Managers.event:trigger("event_player_talent_node_updated", self._node_widget_tiers)
 
 	self._save_talent_changes = true
 end
@@ -320,7 +301,7 @@ TalentBuilderView._add_node_point_on_widget = function (self, widget)
 		end
 
 		self:_update_base_talent_loadout_presentation()
-		Managers.event:trigger("event_player_talent_node_updated", self._points_spent_on_node_widgets)
+		Managers.event:trigger("event_player_talent_node_updated", self._node_widget_tiers)
 	end
 
 	return success
@@ -417,25 +398,23 @@ TalentBuilderView.clear_node_points = function (self)
 		end
 	end
 
-	local widgets_by_name = self._widgets_by_name
-
-	widgets_by_name.talent_points.content.play_badge_effect_anim = true
-
 	self:_update_base_talent_loadout_presentation()
 
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if active_profile_preset_id then
-		ProfileUtils.clear_all_talent_nodes_for_profile_preset(active_profile_preset_id)
+		ProfileUtils.clear_layout_talent_nodes_for_profile_preset(active_profile_preset_id, self._active_layout)
 	end
 
-	Managers.event:trigger("event_player_talent_node_updated", self._points_spent_on_node_widgets)
+	Managers.event:trigger("event_player_talent_node_updated", self._node_widget_tiers)
 
 	self._save_talent_changes = true
 end
 
 TalentBuilderView._setup_node_connection_widget = function (self)
-	self._node_connection_widget = self:_create_widget("node_connection", self._definitions.node_connection_definition)
+	self._node_connection_widgets = {
+		self:_create_widget("node_connection", self._definitions.node_connection_definition),
+	}
 end
 
 TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
@@ -446,25 +425,19 @@ TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
 		0,
 	}
 
-	local node_connection_style = self._node_connection_widget.style
+	local node_connection_style = self._node_connection_widgets[1].style
 
 	node_connection_style.line.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
 	node_connection_style.line.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
 	node_connection_style.line_available.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_available.fill_color)
 	node_connection_style.line_available.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_available.blur_color)
 
-	local material_name = TalentBuilderViewSettings.starting_points_material_by_name[archetype_name]
 	local node_widgets = self._node_widgets
 
 	for i = 1, #node_widgets do
 		local node_widget = node_widgets[i]
-		local node = self:active_layout_node_by_name(node_widget.name)
 
-		if node.type == "start" then
-			node_widget.content.icon = material_name
-			node_widget.style.icon.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
-			node_widget.style.icon.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
-		elseif node_widget.style.frame_selected then
+		if node_widget.style.frame_selected then
 			node_widget.style.frame_selected.material_values.fill_color = Colors.format_color_to_material(glow_colors.line_chosen.fill_color)
 			node_widget.style.frame_selected.material_values.blur_color = Colors.format_color_to_material(glow_colors.line_chosen.blur_color)
 		end
@@ -623,40 +596,38 @@ TalentBuilderView._draw_layout_node_connections = function (self, dt, t, input_s
 	end
 end
 
-TalentBuilderView._draw_connection_between_widgets = function (self, ui_renderer, visible, dt, parent_node, child_node, offset_x, offset_y, distance, angle)
-	local node_connection_widget = self._node_connection_widget
-
-	if not node_connection_widget then
-		return
-	end
-
+TalentBuilderView._draw_connection_between_widgets = function (self, ui_renderer, visible, dt, parent_node, child_node, offset_x, offset_y, distance, angle, connection_index)
+	local node_connection_widget = self:_node_connection_widget_by_index(connection_index)
 	local widgets_by_name = self._widgets_by_name
-	local points_spent_on_node_widgets = self._points_spent_on_node_widgets
-	local is_parent_starting_node = parent_node.type == "start"
+	local node_widget_tiers = self._node_widget_tiers
+	local is_parent_starting_node = table.is_empty(parent_node.parents)
 	local parent_node_name = parent_node.widget_name
 	local parent_node_widget = widgets_by_name[parent_node_name]
 	local parent_node_requirements = parent_node.requirements
 	local children_unlock_points = parent_node_requirements and parent_node_requirements.children_unlock_points or 0
-	local points_spent_on_parent = points_spent_on_node_widgets[parent_node_name] or 0
+	local parent_tier = node_widget_tiers[parent_node_name]
+	local parent_points_spent = (parent_tier or 0) * parent_node.cost
 	local child_status = self:_node_availability_status(child_node) or TalentBuilderView.NODE_STATUS.available
 	local child_node_name = child_node.widget_name
 	local child_widget = widgets_by_name[child_node_name]
-	local child_points_spent = points_spent_on_node_widgets[child_node_name] or 0
+	local child_unlocked = node_widget_tiers[child_node_name]
 	local points_available = self:_points_available()
 	local draw_instant_lines = self._draw_instant_lines
 	local color_status
 
 	if is_parent_starting_node then
-		if child_points_spent > 0 then
+		if parent_node.type ~= "start" and not node_widget_tiers[parent_node_name] then
+			color_status = "locked"
+		elseif child_unlocked then
 			color_status = "chosen"
 		elseif points_available > 0 then
 			color_status = "unlocked"
 		end
-	elseif child_status == TalentBuilderView.NODE_STATUS.locked or child_status == TalentBuilderView.NODE_STATUS.unavailable or not (children_unlock_points <= points_spent_on_parent) then
+	elseif child_status == TalentBuilderView.NODE_STATUS.locked or child_status == TalentBuilderView.NODE_STATUS.unavailable or not parent_tier or parent_points_spent < children_unlock_points then
 		color_status = "locked"
-	elseif child_points_spent > 0 then
+	elseif child_unlocked then
 		color_status = "chosen"
-	elseif points_available > 0 then
+	elseif points_available > 0 or child_node.cost == 0 then
 		color_status = "unlocked"
 	end
 
@@ -742,13 +713,8 @@ TalentBuilderView._apply_node_connection_anims = function (self, node_connection
 	return
 end
 
-TalentBuilderView._apply_node_connection_line_colors = function (self, color_status, alpha_multiplier)
-	local node_connection_widget = self._node_connection_widget
-
-	if not node_connection_widget then
-		return
-	end
-
+TalentBuilderView._apply_node_connection_line_colors = function (self, color_status, alpha_multiplier, connection_index)
+	local node_connection_widget = self:_node_connection_widget_by_index(connection_index)
 	local alpha = 255
 
 	if color_status == "locked" then
@@ -786,7 +752,17 @@ TalentBuilderView._get_player_mode_layout = function (self)
 		local talent_layout_file_path = archetype.talent_layout_file_path
 
 		if talent_layout_file_path then
-			return require(talent_layout_file_path)
+			local layout = require(talent_layout_file_path)
+
+			if layout then
+				local nodes = layout.nodes
+
+				for i = 1, #nodes do
+					self:_init_node(nodes[i])
+				end
+			end
+
+			return layout
 		end
 	end
 end
@@ -948,7 +924,7 @@ TalentBuilderView._handle_input = function (self, input_service, dt, t)
 	elseif not self._setup_summery_grid_next_frame then
 		if input_service:get(self._summery_window_input_action) then
 			if not self._summary_grid then
-				self._setup_summery_grid_next_frame = true
+				self._setup_summery_grid_next_frame = self._player_mode
 			else
 				self:_close_summary_window()
 			end
@@ -968,10 +944,10 @@ TalentBuilderView._handle_input = function (self, input_service, dt, t)
 				local widget = self._widgets_by_name[widget_name]
 
 				if input_service:get("confirm_pressed") then
-					local points_spent_on_node_widgets = self._points_spent_on_node_widgets
-					local points_spent = points_spent_on_node_widgets[widget_name]
+					local node_widget_tiers = self._node_widget_tiers
+					local tier = node_widget_tiers[widget_name]
 
-					if self:_can_remove_point_in_node(selected_node) and points_spent and points_spent > 0 then
+					if self:_can_remove_point_in_node(selected_node) and tier then
 						self:_on_node_widget_right_pressed(widget)
 
 						self._input_handled_current_frame = true
@@ -1267,7 +1243,7 @@ end
 TalentBuilderView._play_select_sound_for_node_widget = function (self, widget)
 	local already_spent_node_points = self:_node_points_by_widget(widget)
 
-	if already_spent_node_points > 1 then
+	if already_spent_node_points and already_spent_node_points > 1 then
 		self:_play_sound(UISoundEvents.talent_node_add_point)
 	else
 		local content = widget.content
@@ -1520,7 +1496,8 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 
 		if talent then
 			local max_points = node.max_points or 0
-			local points_spent = is_base_talent_tooltip and 1 or self._points_spent_on_node_widgets[node.widget_name] or 0
+			local tier = is_base_talent_tooltip and 1 or self._node_widget_tiers[node.widget_name]
+			local points_spent = (tier or 0) * node.cost
 			local text_vertical_offset = 14
 
 			content.level_counter = is_locked and " " .. Localize("loc_talent_mechanic_locked") or ""
@@ -1543,8 +1520,8 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 			style.talent_type_title.size[2] = talent_type_title_height
 			text_vertical_offset = text_vertical_offset + talent_type_title_height
 
-			local description = TalentLayoutParser.talent_description(talent, points_spent, Color.ui_terminal(255, true))
-			local localized_title = self:_localize(talent.display_name)
+			local description = TalentLayoutParser.talent_description(talent, points_spent or 0, Color.ui_terminal(255, true))
+			local localized_title = TalentLayoutParser.talent_title(talent, points_spent or 0, Color.ui_terminal(255, true))
 
 			content.title = localized_title or ""
 			content.description = description or ""
@@ -1566,11 +1543,11 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 			style.description.size[2] = description_height
 			text_vertical_offset = text_vertical_offset + description_height
 
-			local present_next_level_text = points_spent > 0 and points_spent < max_points
+			local present_next_level_text = tier and points_spent < max_points and node.cost > 0
 
 			if present_next_level_text then
 				local next_level_title = Text.apply_color_to_text(Localize("loc_talent_mechanic_next_level"), Color.terminal_text_body_sub_header(255, true))
-				local next_level_description = TalentLayoutParser.talent_description(talent, points_spent + 1, Color.ui_terminal_dark(255, true))
+				local next_level_description = TalentLayoutParser.talent_description(talent, points_spent + node.cost, Color.ui_terminal_dark(255, true))
 
 				content.next_level_title = next_level_title
 				content.next_level_description = next_level_description
@@ -1614,7 +1591,7 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 
 			if node_status == NodeBuilderViewBase.NODE_STATUS.locked and requirements then
 				local requirement_text_height = 0
-				local node_points_spent = self._node_points_spent or 0
+				local node_points_spent = self:_node_points_spent()
 				local requirement_description = ""
 
 				if requirements.min_points_spent and requirements.min_points_spent > 0 then
@@ -1671,7 +1648,11 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 				end
 			end
 
-			local show_input_info = self._is_own_player and not self._is_readonly and not is_locked and not is_base_talent_tooltip
+			local can_afford = self:_points_available() >= node.cost
+
+			style.input_text.text_color = points_spent < max_points and not can_afford and style.input_text.cant_interact_color or style.input_text.original_text_color
+
+			local show_input_info = self._is_own_player and not self._is_readonly and (not is_locked or not self._all_nodes_cost_one) and not is_base_talent_tooltip
 
 			if show_input_info then
 				if not requirement_added then
@@ -1684,28 +1665,44 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 
 				text_vertical_offset = text_vertical_offset + input_text_height_margin
 
+				local display_cost = not self._all_nodes_cost_one
 				local using_cursor_navigation = self._using_cursor_navigation
+				local any_parent_unlocked = node.parents and table.any(node.parents, function (_, child_name)
+					return self._node_widget_tiers[child_name]
+				end)
 				local input_text = ""
 
-				if points_spent ~= max_points then
-					if present_next_level_text then
-						input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_next_level", nil, nil, Localize("loc_input_legend_text_template"))
-					else
-						input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_first_level", nil, nil, Localize("loc_input_legend_text_template"))
+				if not can_afford and points_spent < max_points and display_cost and any_parent_unlocked then
+					local c = Color.ui_grey_medium(255, true)
+
+					input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_mastery_trait_no_points", nil, nil, Localize("loc_color_value_fomat_key", true, {
+						value = "%s",
+						r = c[2],
+						g = c[3],
+						b = c[4],
+					}) .. " %s")
+					input_text = input_text .. "  "
+				else
+					if not is_locked and points_spent ~= max_points and node.cost > 0 then
+						if present_next_level_text then
+							input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_next_level", nil, nil, Localize("loc_input_legend_text_template"))
+						else
+							input_text = Text.localize_with_button_hint(using_cursor_navigation and "left_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_first_level", nil, nil, Localize("loc_input_legend_text_template"))
+						end
+
+						input_text = input_text .. "  "
 					end
 
-					input_text = input_text .. "  "
-				end
-
-				if points_spent > 1 then
-					input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level", nil, nil, Localize("loc_input_legend_text_template"))
-				elseif points_spent > 0 then
-					input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level_first", nil, nil, Localize("loc_input_legend_text_template"))
+					if points_spent > node.cost then
+						input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level", nil, nil, Localize("loc_input_legend_text_template"))
+					elseif tier then
+						input_text = input_text .. Text.localize_with_button_hint(using_cursor_navigation and "right_pressed" or "gamepad_confirm_pressed", "loc_talent_menu_tooltip_button_hint_remove_level_first", nil, nil, Localize("loc_input_legend_text_template"))
+					end
 				end
 
 				local input_text_style_color = style.input_text.text_color
 
-				if points_spent > 0 then
+				if tier then
 					if self:_can_remove_point_in_node(node) then
 						input_text_style_color[1] = 255
 					else
@@ -1715,17 +1712,49 @@ TalentBuilderView._setup_tooltip_info = function (self, node, instant_tooltip, i
 					input_text_style_color[1] = 255
 				end
 
+				if display_cost then
+					local tc = (can_afford or points_spent == max_points) and Color.text_default(255, true) or Color.ui_grey_medium(255, true)
+					local nc = (can_afford or points_spent == max_points) and Color.ui_input_color(255, true) or Color.text_cant_afford(255, true)
+					local text_color_args = {
+						r = tc[2],
+						g = tc[3],
+						b = tc[4],
+						value = Localize("loc_stimm_lab_cost", true, {
+							cost = "",
+						}),
+					}
+					local number_color_args = {
+						r = nc[2],
+						g = nc[3],
+						b = nc[4],
+						value = node.cost,
+					}
+
+					content.cost_text = Localize("loc_color_value_fomat_key", true, text_color_args) .. Localize("loc_color_value_fomat_key", true, number_color_args)
+				else
+					content.cost_text = ""
+				end
+
+				style.cost_text.offset[2] = text_vertical_offset
+
+				local cost_text_height = self:_get_text_height(content.cost_text, style.input_text, dummy_tooltip_text_size)
+
+				style.cost_text.size[2] = cost_text_height
 				content.input_text = input_text
+				style.input_text.offset[2] = text_vertical_offset
 
 				local input_text_height = self:_get_text_height(content.input_text, style.input_text, dummy_tooltip_text_size)
 
-				style.input_text.offset[2] = text_vertical_offset
 				style.input_text.size[2] = input_text_height
-				text_vertical_offset = text_vertical_offset + input_text_height
-				style.input_background.size[2] = input_text_height + input_text_height_margin * 2
+
+				local max_text_height = math.max(input_text_height, cost_text_height)
+
+				text_vertical_offset = text_vertical_offset + max_text_height
+				style.input_background.size[2] = max_text_height + input_text_height_margin * 2
 				text_vertical_offset = text_vertical_offset + input_text_height_margin
 			else
 				content.input_text = ""
+				content.cost_text = ""
 				style.input_background.size[2] = 0
 				text_vertical_offset = text_vertical_offset + 20
 			end
@@ -1745,11 +1774,14 @@ TalentBuilderView._update_base_talent_loadout_presentation = function (self)
 	local player = self._preview_player
 	local profile = player and player:profile()
 	local active_layout = self:get_active_layout()
-	local packed_talents = TalentLayoutParser.pack_backend_data(active_layout, self._points_spent_on_node_widgets)
+	local packed_talents = TalentLayoutParser.pack_backend_data(active_layout, self._node_widget_tiers)
 	local selected_nodes = {}
 
 	TalentLayoutParser.unpack_backend_data(active_layout, packed_talents, selected_nodes)
-	CharacterSheet.class_loadout(profile, class_loadout, nil, selected_nodes)
+
+	local selected_talents = CharacterSheet.convert_selected_nodes_to_selected_talents(profile.archetype, selected_nodes)
+
+	CharacterSheet.class_loadout(profile, class_loadout, nil, selected_talents)
 
 	local settings_by_node_type = TalentBuilderViewSettings.settings_by_node_type
 	local widgets_by_name = self._widgets_by_name
@@ -1768,6 +1800,7 @@ TalentBuilderView._update_base_talent_loadout_presentation = function (self)
 
 		widget_content.talent = loadout.talent
 		widget_content.node_type = node_type
+		widget_content.node_cost = 0
 		talent_style_material_values.icon = loadout.icon
 
 		local node_gradient_color
@@ -1799,9 +1832,11 @@ TalentBuilderView._handle_base_talent_loadout_hover = function (self)
 
 			local talent = widget_content.talent
 			local node_type = widget_content.node_type
+			local node_cost = widget_content.node_cost
 
 			talent_hover_data.talent = talent
 			talent_hover_data.type = node_type
+			talent_hover_data.cost = node_cost
 			self._hovered_slot_talent = talent_hover_data
 
 			break
@@ -1871,35 +1906,34 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 			},
 		}
 
-		local points_spent_on_node_widgets = self._points_spent_on_node_widgets
+		local node_widget_tiers = self._node_widget_tiers
 		local nodes_to_present = {}
 		local ability_added, blitz_added, aura_added = false, false, false
 
-		for node_name, points_spent in pairs(points_spent_on_node_widgets) do
-			if points_spent > 0 then
-				local node = self:_node_by_name(node_name)
+		for node_name in pairs(node_widget_tiers) do
+			local node = self:_node_by_name(node_name)
 
-				if node then
-					local talent_name = node.talent
-					local talent = archetype.talents[talent_name]
+			if node then
+				local talent_name = node.talent
+				local talent = archetype.talents[talent_name]
 
-					if talent then
-						local node_type = node.type
+				if talent then
+					local node_type = node.type
 
-						nodes_to_present[#nodes_to_present + 1] = {
-							widget_name = node.widget_name,
-							type = node_type,
-							talent = talent,
-							icon = node.icon,
-						}
+					nodes_to_present[#nodes_to_present + 1] = {
+						widget_name = node.widget_name,
+						type = node_type,
+						talent = talent,
+						icon = node.icon,
+						cost = node.cost,
+					}
 
-						if node_type == "ability" then
-							ability_added = true
-						elseif node_type == "tactical" then
-							blitz_added = true
-						elseif node_type == "aura" then
-							aura_added = true
-						end
+					if node_type == "ability" then
+						ability_added = true
+					elseif node_type == "tactical" then
+						blitz_added = true
+					elseif node_type == "aura" then
+						aura_added = true
 					end
 				end
 			end
@@ -1968,7 +2002,7 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 
 		for index, data in ipairs(nodes_to_present) do
 			local widget_name = data.widget_name
-			local points_spent = data.points_spent or points_spent_on_node_widgets[widget_name] or 0
+			local points_spent = data.points_spent or (node_widget_tiers[widget_name] or 0) * (data.cost or 0)
 			local talent = type(data.talent) == "table" and data.talent
 
 			if not talent then
@@ -1981,12 +2015,12 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 			local add = false
 
 			if talent then
-				display_name = talent.display_name
+				display_name = TalentLayoutParser.talent_title(talent, points_spent, Color.ui_terminal(255, true))
 				description = TalentLayoutParser.talent_description(talent, points_spent, Color.ui_terminal(255, true))
 				add = true
 			elseif data.base_talent then
 				description = data.description
-				display_name = data.display_name
+				display_name = TalentLayoutParser.talent_title(data, points_spent, Color.ui_terminal(255, true))
 				add = true
 			end
 

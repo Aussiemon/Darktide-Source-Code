@@ -169,6 +169,7 @@ end
 MultiplayerSession.client_disconnected = function (self, channel_id, peer_id, is_error, source, reason, host_became_empty)
 	if Managers.telemetry_events then
 		local disconnection_info = {
+			error_details = nil,
 			is_error = is_error,
 			source = source,
 			reason = reason,

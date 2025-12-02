@@ -446,8 +446,10 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_back_pressed",
+		visibility_function = nil,
 	},
 	{
+		alignment = nil,
 		display_name = "loc_settings_menu_reset_to_default",
 		input_action = "hotkey_menu_special_2",
 		on_pressed_callback = "cb_reset_category_to_default",

@@ -4,9 +4,9 @@ local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_ele
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local Text = require("scripts/utilities/ui/text")
 local header_size = ConstantElementNotificationFeedSettings.header_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -251,9 +251,9 @@ local create_notification_message = {
 
 				text_style.font_size = text.font_size or i == 1 and 22 or text_style.font_size
 
-				local width, height = UIRenderer.text_size(parent._parent:ui_renderer(), text.display_name, text_style.font_type, text_style.font_size, {
+				local width, height = Text.text_size(parent._parent:ui_renderer(), text.display_name, text_style, {
 					max_text_width,
-					math.huge,
+					1080,
 				})
 
 				text_style.offset[2] = total_text_size

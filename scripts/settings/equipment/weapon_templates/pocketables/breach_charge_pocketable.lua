@@ -157,8 +157,8 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
-weapon_template.swap_pickup_name = "syringe"
+weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_ammo_crate"
+weapon_template.swap_pickup_name = "breach_charge_pocketable"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)

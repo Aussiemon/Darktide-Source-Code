@@ -92,6 +92,7 @@ local kick_from_mission_voting_template = {
 	abort_on_member_left = true,
 	can_change_vote = false,
 	duration = 30,
+	evaluate_delay = nil,
 	name = "kick_from_mission",
 	retry_delay = 70,
 	rpc_request_voting = "rpc_request_voting_kick_player",

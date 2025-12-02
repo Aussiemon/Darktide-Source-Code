@@ -377,7 +377,10 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 		local widget = self._widgets_by_name.sort_button
 		local style = widget.style
 		local text_style = style.text
-		local text_width, _, _, _ = UIRenderer.text_size(ui_renderer, widget.content.text, text_style.font_type, text_style.font_size)
+		local text_width = Text.text_width(ui_renderer, widget.content.text, text_style, {
+			1920,
+			20,
+		})
 
 		self:_set_scenegraph_size("sort_button", text_width + 10)
 	end
@@ -532,8 +535,11 @@ ViewElementGrid._draw_grid = function (self, dt, t, ui_renderer, input_service, 
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
+		local content = widget.content
+		local visible = content.visible
+		local previous_visibility_state = content.visible_last_frame
 
-		if widget and grid:is_widget_visible(widget, widget.content.extra_margin or widget_visual_margin) then
+		if visible or previous_visibility_state ~= visible then
 			local hotspot = widget.content.hotspot
 
 			if hotspot then
@@ -1216,7 +1222,7 @@ ViewElementGrid.cb_on_grid_entry_double_click_pressed = function (self, widget, 
 	end
 end
 
-ViewElementGrid.force_update_grid_widget_icon = function (self, index)
+ViewElementGrid.force_update_grid_widget = function (self, index)
 	local widgets = self._grid_widgets
 	local widget = widgets and widgets[index]
 
@@ -1254,6 +1260,10 @@ ViewElementGrid.force_update_grid_widget_icon = function (self, index)
 				if icon_load_id and self._cache_loaded_icons and not self._loaded_icon_id_cache[icon_load_id] then
 					self._loaded_icon_id_cache[icon_load_id] = Managers.ui:increment_item_icon_load_by_existing_id(icon_load_id)
 				end
+			end
+
+			if template.update_data then
+				template.update_data(self, widget, element)
 			end
 		end
 	end

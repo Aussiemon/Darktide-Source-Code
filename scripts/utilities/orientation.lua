@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/utilities/orientation.lua
 
-local InputDevice = require("scripts/managers/input/input_device")
+local Recoil = require("scripts/utilities/recoil")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Orientation = {}
 local _mouse_input, _gamepad_input
 
 Orientation.look_delta = function (main_dt, input, fov_sensitivity, mouse_scale, look_delta_context)
 	local mouse_input = _mouse_input(input, look_delta_context)
-	local gamepad_input = _gamepad_input(input, look_delta_context)
+	local gamepad_input, _ = _gamepad_input(input, look_delta_context)
 	local look_delta = (mouse_input * mouse_scale + gamepad_input) * fov_sensitivity
 
 	return look_delta
@@ -34,6 +34,23 @@ Orientation.clamp_from_origin = function (current_rad, delta_rad, origin_rad, co
 	return new_value
 end
 
+Orientation.recoil_offset = function (orientation, min_pitch, max_pitch, weapon_extension, recoil_component, movement_state_component, locomotion_component, inair_state_component)
+	local pitch_offset, yaw_offset, roll_offset = 0, 0, 0
+
+	if recoil_component then
+		local recoil_template = weapon_extension:recoil_template()
+
+		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component)
+	end
+
+	local current_pitch = orientation.pitch
+	local clamped_pitch = math.clamp((current_pitch + pitch_offset + PI) % PI_2 - PI, min_pitch, max_pitch) % PI_2
+
+	pitch_offset = clamped_pitch - current_pitch
+
+	return yaw_offset, pitch_offset, roll_offset
+end
+
 function _mouse_input(input, look_delta_context)
 	local weapon_action_component = look_delta_context.weapon_action_component
 	local alternate_fire_component = look_delta_context.alternate_fire_component
@@ -57,7 +74,7 @@ function _gamepad_input(input, look_delta_context)
 	local using_gamepad = Managers.input:is_using_gamepad()
 
 	if not using_gamepad then
-		return Vector3.zero()
+		return Vector3.zero(), nil
 	end
 
 	local weapon_action_component = look_delta_context.weapon_action_component
@@ -86,7 +103,7 @@ function _gamepad_input(input, look_delta_context)
 
 	local gamepad_input = input:get(input_filter_name)
 
-	return gamepad_input
+	return gamepad_input, nil
 end
 
 return Orientation

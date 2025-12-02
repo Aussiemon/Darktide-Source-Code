@@ -57,14 +57,18 @@ end
 ReloadStates.reimburse_clip_to_reserve = function (inventory_slot_component)
 	local current_ammo_reserve = inventory_slot_component.current_ammunition_reserve
 	local current_ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
-	local new_ammunition_reserve = current_ammo_reserve + current_ammo_clip
-
-	if Managers.state.game_mode:infinite_ammo_reserve() then
-		new_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
-	end
 
 	inventory_slot_component.ammunition_at_reload_start = current_ammo_clip
-	inventory_slot_component.current_ammunition_reserve = new_ammunition_reserve
+
+	if not inventory_slot_component.free_ammunition_transfer then
+		local new_ammunition_reserve = current_ammo_reserve + current_ammo_clip
+
+		if Managers.state.game_mode:infinite_ammo_reserve() then
+			new_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
+		end
+
+		inventory_slot_component.current_ammunition_reserve = new_ammunition_reserve
+	end
 
 	Ammo.set_current_ammo_in_clips(inventory_slot_component, 0)
 end

@@ -13,7 +13,7 @@ local TraitValueParser = require("scripts/utilities/trait_value_parser")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Promise = require("scripts/utilities/weapon/weapon_template")
+local Promise = require("scripts/foundation/utilities/promise")
 local unit_alive = Unit.alive
 local expertise_multiplier = 10
 local max_weapon_preview = 0.8
@@ -729,6 +729,7 @@ end
 
 local _key_value_color = Color.terminal_text_body(255, true)
 local _obtained_source_color_context = {
+	value = nil,
 	r = _key_value_color[2],
 	g = _key_value_color[3],
 	b = _key_value_color[4],
@@ -791,7 +792,7 @@ Items.obtained_display_name = function (item)
 			display_name = Localize(display_name_localization_key, true, {
 				live_event_label = live_event_label_colored,
 			})
-		elseif source_settings.is_dlc then
+		elseif source_settings.dlc_name then
 			optional_description = Localize("loc_term_glossary_dlc")
 		end
 	end
@@ -924,55 +925,6 @@ Items.set_item_class_requirement_text = function (item)
 	end
 
 	return text, true
-end
-
-Items.item_num_classes_not_available_by_total = function (item)
-	local archetype_restrictions = item and item.archetypes
-
-	if not archetype_restrictions or table.is_empty(archetype_restrictions) then
-		return 0, 0
-	else
-		local not_available_count = 0
-		local total_archetypes = #archetype_restrictions
-
-		for i = 1, total_archetypes do
-			local archetype_name = archetype_restrictions[i]
-			local archetype = Archetypes[archetype_name]
-			local is_archetype_available_func = archetype and archetype.is_available
-			local is_archetype_available = true
-
-			if is_archetype_available_func then
-				is_archetype_available = is_archetype_available_func()
-			end
-
-			if not is_archetype_available then
-				not_available_count = not_available_count + 1
-			end
-		end
-
-		return not_available_count, total_archetypes
-	end
-end
-
-Items.check_archetype_restrictions = function (item)
-	local restriction_type
-	local archetypes_not_available, total_archetypes = Items.item_num_classes_not_available_by_total(item)
-
-	if archetypes_not_available > 0 then
-		if archetypes_not_available == 1 and archetypes_not_available == total_archetypes then
-			local archetype = item.archetypes[1]
-
-			if restriction_type and archetype ~= restriction_type then
-				restriction_type = "generic"
-			elseif not restriction_type then
-				restriction_type = archetype
-			end
-		elseif archetypes_not_available > 1 then
-			restriction_type = "generic"
-		end
-	end
-
-	return restriction_type
 end
 
 local function _class_requirement_entries(item, available_archetypes)
@@ -1634,7 +1586,7 @@ end
 
 Items.item_perk_rating = function (item)
 	local rating = 0
-	local perks = item.perks
+	local perks = item and item.perks
 	local num_perks = perks and #perks or 0
 
 	for i = 1, num_perks do
@@ -1649,16 +1601,16 @@ end
 
 Items.item_trait_rating = function (item)
 	local rating = 0
-	local traits = item.traits
+	local traits = item and item.traits
 	local num_traits = traits and #traits or 0
 
-	if item.item_type == "GADGET" then
+	if item and item.item_type == "GADGET" then
 		for i = 1, num_traits do
 			local trait = traits[i]
 
 			rating = rating + math.round(trait.value * 100)
 		end
-	else
+	elseif item then
 		local fake_perk_count = 0
 
 		for i = 1, num_traits do
@@ -1677,6 +1629,10 @@ Items.item_trait_rating = function (item)
 end
 
 Items.trait_category = function (item)
+	if not item then
+		return
+	end
+
 	local trait_category
 
 	if item.item_type == "TRAIT" then
@@ -1695,7 +1651,7 @@ Items.trait_category = function (item)
 end
 
 Items.has_crafting_modification = function (item)
-	local perks = item.perks
+	local perks = item and item.perks
 	local has_perk_modification = false
 
 	if perks then
@@ -1708,7 +1664,7 @@ Items.has_crafting_modification = function (item)
 		end
 	end
 
-	local traits = item.traits
+	local traits = item and item.traits
 	local has_trait_modification = false
 
 	if traits then
@@ -1725,7 +1681,7 @@ Items.has_crafting_modification = function (item)
 end
 
 Items.count_crafting_modification = function (item)
-	local perks = item.perks
+	local perks = item and item.perks
 	local count = 0
 
 	if perks then
@@ -1736,7 +1692,7 @@ Items.count_crafting_modification = function (item)
 		end
 	end
 
-	local traits = item.traits
+	local traits = item and item.traits
 
 	if traits then
 		for i = 1, #traits do

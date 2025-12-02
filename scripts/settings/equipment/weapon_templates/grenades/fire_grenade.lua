@@ -5,7 +5,7 @@ local grenade_weapon_template_generator = require("scripts/settings/equipment/we
 local weapon_template = grenade_weapon_template_generator()
 
 weapon_template.projectile_template = ProjectileTemplates.fire_grenade
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/flame_grenade"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_grenade"
 weapon_template.actions.action_wield.allowed_chain_actions = {
 	combat_ability = {
 		action_name = "combat_ability",

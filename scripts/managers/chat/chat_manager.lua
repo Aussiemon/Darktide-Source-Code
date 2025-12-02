@@ -648,6 +648,7 @@ ChatManager._handle_event = function (self, message)
 
 		local peer_id, account_id = self:split_displayname(message.displayname)
 		local participant = {
+			displayname = nil,
 			is_moderator_muted = false,
 			is_moderator_text_muted = false,
 			is_mute_status_set = false,

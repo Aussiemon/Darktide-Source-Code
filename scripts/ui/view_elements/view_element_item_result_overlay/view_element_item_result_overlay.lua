@@ -8,7 +8,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementItemResultOverlaySettings = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay_settings")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local WorldRenderUtils = require("scripts/utilities/world_render")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local Definitions = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay_definitions")
 local BLUR_TIME = 0.3
 local WORLD_LAYER_BACKGROUND = 300
@@ -151,11 +151,10 @@ ViewElementItemResultOverlay.start = function (self, presentation_data)
 	local content = title_text_widget.content
 	local style = title_text_widget.style
 	local text_style = style.text
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local title_text_width = UIRenderer.text_size(ui_renderer, content.text, text_style.font_type, text_style.font_size, text_style.size or {
+	local title_text_width = Text.text_width(ui_renderer, content.text, text_style, text_style.size or {
 		900,
 		50,
-	}, text_options)
+	})
 
 	self:_set_scenegraph_size("divider", math.max(title_text_width + 440, 600))
 end

@@ -770,7 +770,9 @@ local widget_definitions = {
 	play_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "play_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_story_mission_play_menu_button_start_mission")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 	play_button_legend = UIWidget.create_definition({
 		{

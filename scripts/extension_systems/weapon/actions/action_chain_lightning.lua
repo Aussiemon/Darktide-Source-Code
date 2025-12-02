@@ -592,7 +592,7 @@ function _trigger_gear_sound(fx_extension, fx_source_name, sound_alias, action_m
 
 	EXTERNAL_PROPERTIES.charge_level = charge_level >= 1 and "fully_charged"
 
-	fx_extension:trigger_gear_wwise_event_with_source(sound_alias, EXTERNAL_PROPERTIES, fx_source_name, SYNC_TO_CLIENTS)
+	fx_extension:trigger_gear_wwise_event_with_source(sound_alias, EXTERNAL_PROPERTIES, fx_source_name, SYNC_TO_CLIENTS, false)
 end
 
 function _trigger_gear_tail_sound(fx_extension, fx_source_name, sound_alias)

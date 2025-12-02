@@ -40,7 +40,7 @@ local mission_templates = {
 			none = 0.4,
 		},
 		mission_brief_vo = {
-			vo_profile = "sergeant_a",
+			vo_profile = "commissar_a",
 			wwise_route_key = 1,
 			vo_events = {
 				"mission_scavenge_briefing_one",

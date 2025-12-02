@@ -24,6 +24,7 @@ local prop_data = {
 		},
 	},
 	tags = {
+		point_cost = nil,
 		tags = {
 			hazard = true,
 		},

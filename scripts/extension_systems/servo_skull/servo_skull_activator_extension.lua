@@ -8,7 +8,7 @@ ServoSkullActivatorExtension.init = function (self, extension_init_context, unit
 	self._hidden = true
 	self._interactee_extension = nil
 	self._mission_objective_target_extension = nil
-	self._objective_name = nil
+	self._synchronizer_extension = nil
 
 	Unit.set_visibility(unit, "main", false)
 end
@@ -18,23 +18,22 @@ ServoSkullActivatorExtension.extensions_ready = function (self, world, unit)
 	local interaction_type = interactee_extension:interaction_type()
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 
-	self._objective_name = mission_objective_target_extension:objective_name()
 	self._interactee_extension = interactee_extension
 	self._mission_objective_target_extension = mission_objective_target_extension
 end
 
 ServoSkullActivatorExtension.on_gameplay_post_init = function (self, unit)
+	local mission_objective_target_extension = self._mission_objective_target_extension
+	local objective_name = mission_objective_target_extension:objective_name()
+	local objective_group = mission_objective_target_extension:objective_group_id()
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(self._objective_name)
+	local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name, objective_group)
+	local synchronizer_unit_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
-	if synchronizer_unit == nil then
-		Log.error("ServoSkullActivatorExtension", "[on_gameplay_post_init] Please setup ServoSkullActivator component for unit(%s, %s) else the scanning event is not functional.", tostring(self._unit), Unit.id_string(self._unit))
-	else
-		local synchronizer_unit_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+	self._synchronizer_extension = synchronizer_unit_extension
 
-		synchronizer_unit_extension:register_servor_skull_activator_extension(self)
-		self._interactee_extension:set_active(false)
-	end
+	synchronizer_unit_extension:register_servor_skull_activator_extension(self)
+	self._interactee_extension:set_active(false)
 end
 
 ServoSkullActivatorExtension.on_start_event = function (self)
@@ -59,8 +58,8 @@ ServoSkullActivatorExtension.hidden = function (self)
 	return self._hidden
 end
 
-ServoSkullActivatorExtension.objective_name = function (self)
-	return self._objective_name
+ServoSkullActivatorExtension.synchronizer_extension = function (self)
+	return self._synchronizer_extension
 end
 
 ServoSkullActivatorExtension.set_visibility = function (self, value)

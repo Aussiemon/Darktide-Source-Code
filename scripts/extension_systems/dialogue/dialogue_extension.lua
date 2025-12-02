@@ -149,7 +149,7 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 			local event_manager = Managers.event
 
 			for event_name, vo_event in pairs(vo_events) do
-				event_manager:register_with_parameters(self, "_cb_vo_event_triggered", event_name, event_name)
+				event_manager:register_with_parameters(self, event_name, "_cb_vo_event_triggered", event_name)
 			end
 
 			self._registered_vo_events = vo_events
@@ -482,12 +482,21 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 		self._dialogue_system:append_event_to_queue(self._unit, event_name, event_data, identifier)
 	else
 		local index_concept = self._dialogue_system.dialogueLookupConcepts[event_name]
+
+		if index_concept == nil then
+			return
+		end
+
 		local array_event_data = {}
 		local array_event_data_is_number = {}
 		local current_pair = 1
 
 		for key, value in pairs(event_data) do
 			local context_name_id = self._dialogue_system.dialogueLookupContexts.all_context_names[key]
+
+			if context_name_id == nil then
+				return
+			end
 
 			array_event_data[current_pair] = context_name_id
 			array_event_data_is_number[current_pair] = false
@@ -502,6 +511,10 @@ DialogueExtension.trigger_networked_dialogue_event = function (self, event_name,
 				end
 
 				local value_id = self._dialogue_system.dialogueLookupContexts[key][value]
+
+				if value_id == nil then
+					return
+				end
 
 				array_event_data[current_pair] = value_id
 				array_event_data_is_number[current_pair] = false

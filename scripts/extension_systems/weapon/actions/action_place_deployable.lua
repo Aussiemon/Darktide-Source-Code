@@ -3,6 +3,9 @@
 require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local ActionPlaceDeployable = class("ActionPlaceDeployable", "ActionPlaceBase")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Vo = require("scripts/utilities/vo")
+local buff_proc_events = BuffSettings.proc_events
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 ActionPlaceDeployable._place_unit = function (self, action_settings, position, rotation, placed_on_unit)
@@ -21,6 +24,33 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 
 	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
 		Managers.event:trigger("tg_on_pickup_placed", placed_unit)
+	end
+
+	if action_settings.use_ability_charge then
+		local ability_type = action_settings.ability_type
+		local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
+
+		ability_extension:use_ability_charge(ability_type)
+
+		local vo_tag = action_settings.vo_tag
+
+		if vo_tag then
+			Vo.play_combat_ability_event(player_unit, vo_tag)
+		end
+	end
+
+	local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+	if buff_extension then
+		local param_table = buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.deployable_name = deployable_settings.name
+			param_table.position = Vector3Box(position)
+			param_table.life_time = deployable_settings.proximity_init_data.life_time
+
+			buff_extension:add_proc_event(buff_proc_events.on_deployable_placed, param_table)
+		end
 	end
 
 	self:_register_stats_and_telemetry(unit_template, player_or_nil)

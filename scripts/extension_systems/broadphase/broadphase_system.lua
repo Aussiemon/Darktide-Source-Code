@@ -12,6 +12,7 @@ local function _generate_broadphase_categories(system_init_data)
 		"doors",
 		"pickups",
 		"destructibles",
+		"prop_collision",
 	}, side_names)
 	local pickup_groups = Pickups.by_group
 

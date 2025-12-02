@@ -2,12 +2,10 @@
 
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectiveScanning = require("scripts/settings/mission_objective/mission_objective_scanning")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Vo = require("scripts/utilities/vo")
 local MissionObjectiveZoneScanExtension = class("MissionObjectiveZoneScanExtension", "MissionObjectiveZoneBaseExtension")
 local SCANNING_VO_LINES = MissionObjectiveScanning.vo_trigger_ids
-local SERVO_SKULL_MARKER_TYPES = MissionObjectiveScanning.servo_skull_marker_types
 local RETURN_TO_SERVO_SKULL_HEADER = "loc_objective_zone_scanning_return_to_servoskull_header"
 local RETURN_TO_SERVO_SKULL_DESC = "loc_objective_zone_scanning_return_to_servoskull_desc"
 
@@ -16,18 +14,16 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 
 	local is_server = extension_init_context.is_server
 
+	self._zone_type = "scan"
 	self._is_server = is_server
 	self._num_scanned_objects_per_player = {}
 	self._registered_players = 0
 	self._num_scannables_in_zone = 0
-	self._check_player_condition_timer = 0
-	self._check_player_condition_interval = 0.2
 	self._finish_zone_timer = 1
 	self._start_finish_zone_timer = false
 	self._current_progression = 0
 	self._scannable_units = {}
 	self._selected_scannable_units = {}
-	self._max_scannable_objects_per_player = 0
 	self._start_vo_line_timer = false
 	self._vo_line_interval = MissionObjectiveScanning.zone_settings.vo_trigger_time
 	self._vo_line_timer = self._vo_line_interval
@@ -35,33 +31,10 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 	self._mission_objective_system = mission_objective_system
-	self._objective_group_id = mission_objective_system:get_objective_group_id_from_unit(unit)
-
-	if is_server then
-		self._players_with_scanned_objects = {}
-
-		local event_manager = Managers.event
-
-		event_manager:register(self, "player_unit_despawned", "_on_player_unit_despawned")
-	end
 end
 
-MissionObjectiveZoneScanExtension.extensions_ready = function (self, world, unit)
-	self._mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
-end
-
-MissionObjectiveZoneScanExtension.destroy = function (self)
-	if self._is_server then
-		local event_manager = Managers.event
-
-		event_manager:unregister(self, "player_unit_despawned")
-	end
-end
-
-MissionObjectiveZoneScanExtension.setup_from_component = function (self, num_scannable_objects, max_scannable_objects_per_player, zone_type, item_to_equip)
+MissionObjectiveZoneScanExtension.setup_from_component = function (self, num_scannable_objects, item_to_equip)
 	self._num_scannables_in_zone = num_scannable_objects
-	self._max_scannable_objects_per_player = max_scannable_objects_per_player
-	self._zone_type = zone_type
 	self._item_to_equip = item_to_equip
 end
 
@@ -83,20 +56,6 @@ end
 
 MissionObjectiveZoneScanExtension.update = function (self, unit, dt, t)
 	if self._activated and self._is_server then
-		if self._registered_players > 0 then
-			local check_player_condition_timer = self._check_player_condition_timer
-
-			if check_player_condition_timer > 0 then
-				check_player_condition_timer = math.max(check_player_condition_timer - dt, 0)
-			else
-				self:_check_if_players_knocked_down_or_killed()
-
-				check_player_condition_timer = self._check_player_condition_interval
-			end
-
-			self._check_player_condition_timer = check_player_condition_timer
-		end
-
 		if self._start_finish_zone_timer then
 			local finish_zone_timer = self._finish_zone_timer
 
@@ -125,41 +84,15 @@ MissionObjectiveZoneScanExtension.update = function (self, unit, dt, t)
 end
 
 MissionObjectiveZoneScanExtension._set_skull_to_wait_for_players = function (self)
-	local is_server = self._is_server
-	local servo_skull_target_states = self._mission_objective_zone_system.SERVO_SKULL_TARGET_STATES
-	local servo_skull_target_state = servo_skull_target_states.enabled
-
-	self:_set_servo_skull_target(servo_skull_target_state, SERVO_SKULL_MARKER_TYPES.objective, is_server)
+	self._synchronizer_extension:set_servo_skull_target_enabled(true)
 end
 
-MissionObjectiveZoneScanExtension._check_if_players_knocked_down_or_killed = function (self)
-	local players_with_scanned_objects = self._players_with_scanned_objects
-
-	for player, scannable_extensions in pairs(players_with_scanned_objects) do
-		local is_player_alive = player:unit_is_alive()
-
-		if not is_player_alive then
-			local killed = true
-
-			self:release_scanned_object_from_player(player, killed)
-		else
-			local player_unit = player.player_unit
-			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-			local character_state_component = unit_data_extension:read_component("character_state")
-			local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
-
-			if is_knocked_down then
-				self:release_scanned_object_from_player(player, is_knocked_down)
-			end
-		end
-	end
-end
-
-local function _set_objectie_name_on_unit(unit, objective_name)
+local function _set_objectie_name_on_unit(unit, objective_name, objective_group)
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 
 	if mission_objective_target_extension:objective_name() == "default" then
 		mission_objective_target_extension:set_objective_name(objective_name)
+		mission_objective_target_extension:set_objective_group_id(objective_group)
 
 		return true
 	end
@@ -170,6 +103,7 @@ end
 MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (self)
 	local mission_objective_target_extension = self._mission_objective_target_extension
 	local objective_name = mission_objective_target_extension:objective_name()
+	local objective_group = mission_objective_target_extension:objective_group_id()
 	local scannable_units = self._scannable_units
 	local selected_units = {}
 	local num_scannables_in_zone = self._num_scannables_in_zone
@@ -181,7 +115,7 @@ MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (
 		local index = random_table[i]
 		local selected_unit = scannable_units[index]
 
-		if _set_objectie_name_on_unit(selected_unit, objective_name) then
+		if _set_objectie_name_on_unit(selected_unit, objective_name, objective_group) then
 			selected_units[#selected_units + 1] = selected_unit
 			spawned = spawned + 1
 		end
@@ -190,22 +124,6 @@ MissionObjectiveZoneScanExtension._select_scannable_units_for_event = function (
 	end
 
 	return selected_units
-end
-
-MissionObjectiveZoneScanExtension._last_scanned_object = function (self)
-	local total_scanned = 0
-
-	for _, points in pairs(self._num_scanned_objects_per_player) do
-		total_scanned = total_scanned + points
-	end
-
-	total_scanned = total_scanned + self._current_progression
-
-	return total_scanned == self._num_scannables_in_zone
-end
-
-MissionObjectiveZoneScanExtension._set_servo_skull_target = function (self, server_skull_target_state, marker_type, is_server)
-	self._mission_objective_zone_system:set_servo_skull_target_state(server_skull_target_state, marker_type, is_server)
 end
 
 MissionObjectiveZoneScanExtension.register_scannable_unit = function (self, scannable_unit)
@@ -222,114 +140,23 @@ MissionObjectiveZoneScanExtension.register_scannable_unit = function (self, scan
 	end
 end
 
-MissionObjectiveZoneScanExtension.assign_scanned_object_to_player_and_bank = function (self, scannable_extension, player)
-	local player_incapacitated = false
-
-	self:assign_scanned_object_to_player(scannable_extension, player)
-	self:release_scanned_object_from_player(player, player_incapacitated)
-end
-
-MissionObjectiveZoneScanExtension.assign_scanned_object_to_player = function (self, scannable_extension, player)
-	local players_with_scanned_objects = self._players_with_scanned_objects
-	local unit_list = players_with_scanned_objects[player]
-
-	if not unit_list then
-		unit_list = {}
-		self._registered_players = self._registered_players + 1
-	end
-
-	unit_list[#unit_list + 1] = scannable_extension
-	self._players_with_scanned_objects[player] = unit_list
-
+MissionObjectiveZoneScanExtension.set_scanned = function (self, scannable_extension, player)
 	scannable_extension:set_active(false)
 
-	local scanned_object_points = 1
+	self._current_progression = self._current_progression + 1
+
+	local progression = self._current_progression
+
+	if progression == 1 then
+		local is_mission_giver_line = false
+
+		self:_play_vo(player, SCANNING_VO_LINES.scan_performed, is_mission_giver_line)
+	end
 
 	if self._is_server then
-		local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
-		local peer_id = player:peer_id()
-		local local_player_id = player:local_player_id()
-
-		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_scan_add_player_scanned_object", level_object_id, peer_id, local_player_id, scanned_object_points)
-	end
-
-	self:add_scanned_points_to_player(player, scanned_object_points)
-end
-
-MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function (self, player, player_incapacitated)
-	local scannable_extensions = self._players_with_scanned_objects[player]
-
-	if scannable_extensions and #scannable_extensions > 0 then
-		local scannable_count = #scannable_extensions
-
-		for i = 1, scannable_count do
-			if player_incapacitated then
-				local scannable_extension = scannable_extensions[i]
-
-				scannable_extension:set_active(true)
-			else
-				self._current_progression = self._current_progression + 1
-
-				if self._current_progression == self._num_scannables_in_zone then
-					self._start_finish_zone_timer = true
-				end
-			end
-		end
-
-		self._players_with_scanned_objects[player] = nil
-		self._registered_players = self._registered_players - 1
-
-		local scanned_object_points = 0
-
-		if self._is_server then
-			if not player_incapacitated then
-				Managers.telemetry_events:player_scanned_objects(player, scannable_count)
-				Managers.stats:record_private("hook_scan", player, scannable_count)
-			end
-
-			local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
-			local peer_id = player:peer_id()
-			local local_player_id = player:local_player_id()
-
-			Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_scan_add_player_scanned_object", level_object_id, peer_id, local_player_id, scanned_object_points)
-		end
-
-		self:add_scanned_points_to_player(player, scanned_object_points)
-	end
-end
-
-MissionObjectiveZoneScanExtension.player_scanned_objects = function (self, player)
-	local scanned_objects = self._num_scanned_objects_per_player[player] or 0
-
-	return scanned_objects
-end
-
-MissionObjectiveZoneScanExtension.num_scanned_objects_per_player = function (self)
-	return self._num_scanned_objects_per_player
-end
-
-MissionObjectiveZoneScanExtension.max_scannable_objects_per_player = function (self)
-	return self._max_scannable_objects_per_player
-end
-
-MissionObjectiveZoneScanExtension.add_scanned_points_to_player = function (self, player, scanned_points)
-	local new_scan_points
-
-	if scanned_points > 0 then
-		local current_scanned_points = self._num_scanned_objects_per_player[player]
-
-		new_scan_points = current_scanned_points and current_scanned_points + scanned_points or scanned_points
-	end
-
-	self._num_scanned_objects_per_player[player] = new_scan_points
-
-	local is_mission_giver_line = false
-
-	self:_play_vo(player, SCANNING_VO_LINES.scan_performed, is_mission_giver_line)
-
-	if self._is_server then
-		if self:_last_scanned_object() then
+		if progression == self._num_scannables_in_zone then
 			self._start_vo_line_timer = true
+			self._start_finish_zone_timer = true
 		else
 			self._start_vo_line_timer = false
 			self._vo_line_timer = self._vo_line_interval
@@ -338,10 +165,6 @@ MissionObjectiveZoneScanExtension.add_scanned_points_to_player = function (self,
 end
 
 MissionObjectiveZoneScanExtension.current_progression = function (self)
-	return self._current_progression / self._num_scannables_in_zone
-end
-
-MissionObjectiveZoneScanExtension.num_objets_banked = function (self)
 	return self._current_progression
 end
 
@@ -355,12 +178,6 @@ end
 
 MissionObjectiveZoneScanExtension.scannable_units = function (self)
 	return self._scannable_units
-end
-
-MissionObjectiveZoneScanExtension._on_player_unit_despawned = function (self, player)
-	local disconnect = true
-
-	self:release_scanned_object_from_player(player, disconnect)
 end
 
 MissionObjectiveZoneScanExtension.activate_zone = function (self)
@@ -380,14 +197,9 @@ MissionObjectiveZoneScanExtension.activate_zone = function (self)
 
 		self._selected_scannable_units = selected_scannable_units
 
-		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+		local mission_objective_system = self._mission_objective_system
 
-		if current_objective_name then
-			local mission_objective_system = self._mission_objective_system
-			local objective_group_id = self._objective_group_id
-
-			mission_objective_system:set_objective_show_counter(current_objective_name, objective_group_id, true)
-		end
+		mission_objective_system:set_objective_show_counter(self._objective_name, self._objective_group, true)
 	end
 end
 
@@ -397,14 +209,9 @@ MissionObjectiveZoneScanExtension._deactivate_zone = function (self)
 	MissionObjectiveZoneScanExtension.super._deactivate_zone(self)
 
 	if self._is_server then
-		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+		local mission_objective_system = self._mission_objective_system
 
-		if current_objective_name then
-			local mission_objective_system = self._mission_objective_system
-			local objective_group_id = self._objective_group_id
-
-			mission_objective_system:override_ui_string(current_objective_name, objective_group_id, nil, nil)
-		end
+		mission_objective_system:override_ui_string(self._objective_name, self._objective_group, nil, nil)
 	end
 end
 
@@ -412,15 +219,10 @@ MissionObjectiveZoneScanExtension.set_is_waiting_for_player_confirmation = funct
 	self._is_waiting_for_player_confirmation = true
 
 	if self._is_server then
-		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+		local mission_objective_system = self._mission_objective_system
 
-		if current_objective_name then
-			local mission_objective_system = self._mission_objective_system
-			local objective_group_id = self._objective_group_id
-
-			mission_objective_system:set_objective_show_counter(current_objective_name, objective_group_id, false)
-			mission_objective_system:override_ui_string(current_objective_name, objective_group_id, RETURN_TO_SERVO_SKULL_HEADER, RETURN_TO_SERVO_SKULL_DESC)
-		end
+		mission_objective_system:set_objective_show_counter(self._objective_name, self._objective_group, false)
+		mission_objective_system:override_ui_string(self._objective_name, self._objective_group, RETURN_TO_SERVO_SKULL_HEADER, RETURN_TO_SERVO_SKULL_DESC)
 
 		local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
 
@@ -447,9 +249,7 @@ end
 
 MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo_line, is_mission_giver_line)
 	if is_mission_giver_line then
-		local current_objective_name = self._mission_objective_zone_system:current_objective_name()
-		local objective_group_id = self._objective_group_id
-		local mission_objective = self._mission_objective_system:active_objective(current_objective_name, objective_group_id)
+		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._objective_group)
 		local voice_profile = mission_objective:mission_giver_voice_profile()
 
 		if voice_profile then

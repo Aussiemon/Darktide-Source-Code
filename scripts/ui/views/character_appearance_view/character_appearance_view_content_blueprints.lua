@@ -365,6 +365,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearance_change,
 				},
@@ -499,6 +500,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearance_change,
 				},
@@ -679,6 +681,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearance_change,
 				},
@@ -894,6 +897,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearance_change,
 				},
@@ -911,6 +915,9 @@ local blueprints = {
 						1,
 					},
 				},
+				visibility_function = function (content, style)
+					return not style.material_values or not style.material_values.texture_map
+				end,
 			},
 			{
 				pass_type = "texture",
@@ -960,27 +967,6 @@ local blueprints = {
 			},
 			{
 				pass_type = "texture",
-				style_id = "equipped_icon",
-				value = "content/ui/materials/icons/items/equipped_label",
-				style = {
-					horizontal_alignment = "right",
-					vertical_alignment = "top",
-					size = {
-						32,
-						32,
-					},
-					offset = {
-						0,
-						0,
-						8,
-					},
-				},
-				visibility_function = function (content, style)
-					return content.hotspot.is_selected
-				end,
-			},
-			{
-				pass_type = "texture",
 				style_id = "button_gradient",
 				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
 				style = {
@@ -1005,12 +991,32 @@ local blueprints = {
 			},
 			{
 				pass_type = "texture",
+				style_id = "icon",
+				value = "content/ui/materials/base/ui_default_base",
+				value_id = "icon",
+				style = {
+					offset = {
+						0,
+						0,
+						3,
+					},
+					color = Color.terminal_text_body(nil, true),
+					default_color = Color.terminal_text_body(nil, true),
+					selected_color = Color.terminal_icon_selected(nil, true),
+				},
+				change_function = item_change_function,
+				visibility_function = function (content, style)
+					return style.material_values and style.material_values.texture_map
+				end,
+			},
+			{
+				pass_type = "texture",
 				style_id = "choice_icon",
 				value = "content/ui/materials/base/ui_default_base",
 				value_id = "choice_icon",
 				style = {
-					horizontal_alignment = "bottom",
-					vertical_alignment = "left",
+					horizontal_alignment = "left",
+					vertical_alignment = "bottom",
 					offset = {
 						5,
 						-5,
@@ -1034,6 +1040,21 @@ local blueprints = {
 			content.hotspot.use_is_focused = true
 			content.hotspot.pressed_callback = callback(parent, callback_name, widget, option, grid_index)
 			content.element = element
+
+			if option.icon_texture then
+				content.icon_texture = option.icon_texture
+				style.icon.material_values = {
+					texture_map = content.icon_texture,
+				}
+			end
+
+			if element.icon_background then
+				content.icon_background = element.icon_background
+				style.icon_background.material_values = {
+					texture_map = content.icon_background,
+				}
+			end
+
 			content.texture = element.texture
 			style.texture.color = option.color
 		end,
@@ -1048,6 +1069,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearance_change,
 				},
@@ -1118,27 +1140,6 @@ local blueprints = {
 					},
 				},
 				change_function = ButtonPassTemplates.terminal_button_change_function,
-			},
-			{
-				pass_type = "texture",
-				style_id = "equipped_icon",
-				value = "content/ui/materials/icons/items/equipped_label",
-				style = {
-					horizontal_alignment = "right",
-					vertical_alignment = "top",
-					size = {
-						32,
-						32,
-					},
-					offset = {
-						0,
-						0,
-						8,
-					},
-				},
-				visibility_function = function (content, style)
-					return content.hotspot.is_selected
-				end,
 			},
 			{
 				pass_type = "texture",
@@ -1512,6 +1513,7 @@ local blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.character_appearence_option_pressed,
 				},

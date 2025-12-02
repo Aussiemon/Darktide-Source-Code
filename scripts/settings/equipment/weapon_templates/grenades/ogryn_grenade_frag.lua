@@ -12,6 +12,6 @@ weapon_template.actions.action_aim.allowed_chain_actions.aim_released.chain_time
 weapon_template.actions.action_aim_underhand.allowed_chain_actions.short_hand_throw.chain_time = 0.6
 weapon_template.projectile_template = ProjectileTemplates.ogryn_grenade_frag
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_combat_blade
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/ogryn_frag_grenade"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_grenade"
 
 return weapon_template

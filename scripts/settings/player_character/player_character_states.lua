@@ -31,7 +31,7 @@ local PlayerCharacterStateSprinting = require("scripts/extension_systems/charact
 local PlayerCharacterStateStunned = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_stunned")
 local PlayerCharacterStateWalking = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_walking")
 local PlayerCharacterStateWarpGrabbed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_warp_grabbed")
-local class_list = {
+local player_character_states = {
 	catapulted = PlayerCharacterStateCatapulted,
 	consumed = PlayerCharacterStateConsumed,
 	dead = PlayerCharacterStateDead,
@@ -65,4 +65,4 @@ local class_list = {
 	warp_grabbed = PlayerCharacterStateWarpGrabbed,
 }
 
-return settings("PlayerCharacterStates", class_list)
+return settings("PlayerCharacterStates", player_character_states)

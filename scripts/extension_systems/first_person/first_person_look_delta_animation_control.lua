@@ -23,6 +23,8 @@ FirstPersonLookDeltaAnimationControl.init = function (self, first_person_unit, u
 		self._action_shoot_component = unit_data_extension:read_component("action_shoot")
 		self._recoil_component = unit_data_extension:read_component("recoil")
 		self._movement_state_component = unit_data_extension:read_component("movement_state")
+		self._locomotion_component = unit_data_extension:read_component("locomotion")
+		self._inair_state_component = unit_data_extension:read_component("inair_state")
 		self._sway_control_component = unit_data_extension:read_component("sway_control")
 		self._sway_component = unit_data_extension:read_component("sway")
 		self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
@@ -61,12 +63,14 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 		settings = look_delta_template.shooting
 
 		local movement_state_component = self._movement_state_component
+		local locomotion_component = self._locomotion_component
+		local inair_state_component = self._inair_state_component
 		local shoot_rotation = self._action_shoot_component.shooting_rotation
 		local recoil_template = self._weapon_extension:recoil_template()
 		local sway_template = self._weapon_extension:sway_template()
-		local recoiled_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, self._recoil_component, movement_state_component, rotation)
+		local recoiled_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, self._recoil_component, movement_state_component, locomotion_component, inair_state_component, rotation)
 
-		recoiled_rotation = Sway.apply_sway_rotation(sway_template, self._sway_component, movement_state_component, recoiled_rotation)
+		recoiled_rotation = Sway.apply_sway_rotation(sway_template, self._sway_component, recoiled_rotation)
 
 		local rot_right = Quaternion.right(recoiled_rotation)
 		local rot_up = Quaternion.up(recoiled_rotation)

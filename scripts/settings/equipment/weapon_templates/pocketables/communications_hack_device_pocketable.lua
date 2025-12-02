@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/pocketables/communications_hack_device_pocketable.lua
 
 local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
+local Auspex = require("scripts/utilities/weapon/auspex")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -68,6 +69,7 @@ weapon_template.action_inputs = {
 		anim_event = "unequip",
 		buffer_time = 0,
 		clear_input_queue = true,
+		input_sequence = nil,
 	},
 }
 
@@ -279,7 +281,6 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/corrupted_auspex_scanner"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_corrupted_auspex_scanner"
 weapon_template.swap_pickup_name = "communications_hack_device"
 weapon_template.give_pickup_name = "communications_hack_device"
@@ -290,125 +291,14 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-
-local function _is_minigame_in_focus(player)
-	local player_unit = player.player_unit
-
-	if not player_unit then
-		return nil
-	end
-
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local minigame_character_state_component = unit_data_extension:read_component("minigame_character_state")
-	local pocketable_device_active = minigame_character_state_component.pocketable_device_active
-
-	return pocketable_device_active
-end
-
-weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return not _is_minigame_in_focus(player) and (not current_action_name or current_action_name == "none")
-end
-
-weapon_template.action_none_gift_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return not _is_minigame_in_focus(player) and (not current_action_name or current_action_name == "none")
-end
-
-weapon_template.action_scan_on_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	return not _is_minigame_in_focus(player) and (not current_action_name or current_action_name == "none")
-end
-
-weapon_template.action_can_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
-	local target_unit = action_module_target_finder_component.target_unit_1
-
-	return not _is_minigame_in_focus(player) and current_action_name == "action_aim_give" and target_unit ~= nil
-end
-
-weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
-	local action_module_target_finder_component = condition_func_params.action_module_target_finder_component
-	local target_unit = action_module_target_finder_component.target_unit_1
-
-	return not _is_minigame_in_focus(player) and current_action_name == "action_aim_give" and target_unit == nil
-end
-
-local function _get_minigame(player)
-	local player_unit = player.player_unit
-
-	if not player_unit then
-		return nil
-	end
-
-	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local minigame_character_state_component = unit_data_extension:read_component("minigame_character_state")
-	local is_level_unit = minigame_character_state_component.interface_is_level_unit
-	local unit_id
-
-	if is_level_unit then
-		unit_id = minigame_character_state_component.interface_level_unit_id
-
-		if unit_id == NetworkConstants.invalid_level_unit_id then
-			return nil
-		end
-	else
-		unit_id = minigame_character_state_component.interface_game_object_id
-
-		if unit_id == NetworkConstants.invalid_game_object_id then
-			return nil
-		end
-	end
-
-	local interface_unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-
-	if not interface_unit then
-		return nil
-	end
-
-	local minigame_extension = interface_unit and ScriptUnit.has_extension(interface_unit, "minigame_system")
-	local minigame = minigame_extension:minigame()
-
-	return minigame
-end
-
-local function _move_ui_validate(player)
-	local minigame = _get_minigame(player)
-
-	return minigame and minigame:uses_joystick()
-end
-
-weapon_template.action_confirm_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	local minigame = _get_minigame(player)
-
-	return _is_minigame_in_focus(player) and minigame and minigame:uses_action()
-end
-
-weapon_template.action_move_gamepad_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	if not _is_minigame_in_focus(player) then
-		return false
-	end
-
-	if Managers.input:device_in_use("gamepad") then
-		return _move_ui_validate(player)
-	end
-
-	return false
-end
-
-weapon_template.action_move_keyboard_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	if not _is_minigame_in_focus(player) then
-		return false
-	end
-
-	if not Managers.input:device_in_use("gamepad") then
-		return _move_ui_validate(player)
-	end
-
-	return false
-end
-
-weapon_template.action_cancel_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
-	local minigame = _get_minigame(player)
-
-	return _is_minigame_in_focus(player) and minigame
-end
+weapon_template.action_none_screen_ui_validation = Auspex.idle_out_of_focus_ui_validation
+weapon_template.action_none_gift_screen_ui_validation = Auspex.idle_out_of_focus_ui_validation
+weapon_template.action_scan_on_screen_ui_validation = Auspex.idle_out_of_focus_ui_validation
+weapon_template.action_can_give_screen_ui_validation = Auspex.can_give_ui_validation
+weapon_template.action_cant_give_screen_ui_validation = Auspex.cant_give_ui_validation
+weapon_template.action_confirm_screen_ui_validation = Auspex.confirm_screen_ui_validation
+weapon_template.action_move_gamepad_screen_ui_validation = Auspex.move_gamepad_screen_ui_validation
+weapon_template.action_move_keyboard_screen_ui_validation = Auspex.move_keyboard_screen_ui_validation
+weapon_template.action_cancel_ui_validation = Auspex.cancel_ui_validation
 
 return weapon_template

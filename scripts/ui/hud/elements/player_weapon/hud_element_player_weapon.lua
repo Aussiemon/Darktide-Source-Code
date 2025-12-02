@@ -7,9 +7,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local DEFINITION_PATH = "scripts/ui/hud/elements/player_weapon/hud_element_player_weapon_definitions"
 local HudElementPlayerWeapon = class("HudElementPlayerWeapon", "HudElementBase")
@@ -29,7 +27,7 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	local slot_settings = self._slot_name and ItemSlotSettings[self._slot_name]
 
-	self._wield_input = self._ability and self._ability.ability_type or slot_settings.wield_input
+	self._wield_input = slot_settings.wield_input or self._ability and self._ability.ability_type
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 
@@ -37,6 +35,8 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	self._weapon_name = data.weapon_name
 	self._weapon_template = weapon_template
+	self._current_ammunition_clips = {}
+	self._max_ammunition_clips = {}
 
 	local weapon_slots = {}
 	local slot_configuration = PlayerCharacterConstants.slot_configuration
@@ -53,8 +53,6 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	self._is_weapon = is_weapon
 
-	self:_set_ammo_amount(nil, nil)
-
 	if data.icon then
 		self:set_icon(data.icon)
 	else
@@ -68,15 +66,24 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	local hud_configuration = weapon_template and weapon_template.hud_configuration or self._ability.hud_configuration
 	local uses_ammo = hud_configuration and hud_configuration.uses_ammunition
+	local hud_ammo_icon = hud_configuration and hud_configuration.hud_ammo_icon
 	local uses_overheat = hud_configuration and hud_configuration.uses_overheat
+	local uses_weapon_special_charges = hud_configuration and hud_configuration.uses_weapon_special_charges
 	local infinite_ammo = not uses_ammo and uses_overheat
 
 	self._infinite_ammo = infinite_ammo
 	self._widgets_by_name.infinite_symbol.content.visible = not not infinite_ammo
-	self._widgets_by_name.ammo_text.content.visible = not not not infinite_ammo
-	self._uses_ammo = uses_ammo
-	self._uses_overheat = uses_overheat
 
+	for i = 1, NetworkConstants.clips_in_use.max_size do
+		self._widgets_by_name["ammo_text_" .. i].content.visible = not not not infinite_ammo
+	end
+
+	self._uses_ammo = uses_ammo
+	self._hud_ammo_icon = hud_ammo_icon
+	self._uses_overheat = uses_overheat
+	self._uses_weapon_special_charges = uses_weapon_special_charges
+
+	self:_set_ammo_amount(nil, nil)
 	self:_update_input()
 	self:_register_events()
 
@@ -159,6 +166,8 @@ HudElementPlayerWeapon._set_ammo_refill_alpha = function (self, alpha)
 	widget.dirty = true
 end
 
+local _clips_in_use_scratch = {}
+
 HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementPlayerWeapon.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
@@ -185,17 +194,121 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 
 	local clip_information_updated = false
 
-	if self._ability then
-		local ability_type = self._ability.ability_type
-		local ability_extension = self._ability_extension
-		local remaining_ability_charges = ability_extension:remaining_ability_charges(ability_type)
-		local max_ability_charges = ability_extension:max_ability_charges(ability_type)
+	if self._ability or self._uses_weapon_special_charges then
+		local remaining_ability_charges, clip_total, total_max_ammo_amount
+
+		if self._uses_weapon_special_charges then
+			local weapon_special_tweak_data = self._weapon_template.weapon_special_tweak_data
+
+			remaining_ability_charges = self._slot_component.num_special_charges
+			clip_total = weapon_special_tweak_data.max_charges
+			total_max_ammo_amount = false
+		elseif self._ability then
+			local ability_extension = self._ability_extension
+			local ability_type = self._ability.ability_type
+			local max_ability_charges = self._ability_extension:max_ability_charges(ability_type)
+
+			remaining_ability_charges = self._ability_extension:remaining_ability_charges(ability_type)
+			clip_total = max_ability_charges
+			total_max_ammo_amount = max_ability_charges
+
+			local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_type)
+			local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_type)
+			local cooldown_progress = max_ability_cooldown > 0 and remaining_ability_cooldown / max_ability_cooldown or 0
+
+			if remaining_ability_charges ~= self._remaining_ability_charges then
+				if self._remaining_ability_charges and remaining_ability_charges > self._remaining_ability_charges then
+					self._animate_charge_gained = true
+					self._animate_first_charge = self._animate_first_charge or remaining_ability_charges == 1
+					self._animate_charge_gained_t = t
+				end
+
+				local icon_widget = self._widgets_by_name.icon
+				local icon_style = icon_widget.style.icon
+				local icon_opacity = 255
+
+				if remaining_ability_charges == 0 then
+					icon_opacity = icon_opacity * 0.5
+				end
+
+				if icon_style.color[1] ~= icon_opacity then
+					icon_style.color[1] = icon_opacity
+					icon_widget.dirty = true
+				end
+
+				self._remaining_ability_charges = remaining_ability_charges
+			end
+
+			if cooldown_progress ~= self._cooldown_progress then
+				if self._cooldown_progress ~= nil then
+					local background_widget = self._widgets_by_name.background
+					local background_glow_style = background_widget.style.background_glow
+
+					background_glow_style.uvs[2][2] = cooldown_progress
+					background_glow_style.scale[2] = cooldown_progress
+					background_widget.dirty = true
+				end
+
+				self._cooldown_progress = cooldown_progress
+			end
+
+			if self._animate_charge_gained then
+				local background_widget = self._widgets_by_name.background
+				local background_style = background_widget.style
+				local icon_widget = self._widgets_by_name.icon
+				local icon_style = icon_widget.style.icon
+				local icon_cooldown_done_style = icon_widget.style.icon_cooldown_done
+
+				background_widget.dirty = true
+				icon_widget.dirty = true
+
+				local icon_pop_time = 0.2
+				local glass_time = 0.25
+				local glow_time = 0.5
+				local time_in_anim = t - self._animate_charge_gained_t
+				local glass_anim_p = math.clamp01(time_in_anim / glass_time)
+				local glow_anim_p = math.clamp01(time_in_anim / glow_time)
+				local pop_anim_p = math.clamp01(time_in_anim / icon_pop_time)
+				local all_done = math.min(glass_anim_p, glow_anim_p, pop_anim_p) == 1
+
+				if all_done then
+					self._animate_charge_gained = false
+					self._animate_charge_gained_t = nil
+					self._animate_first_charge = false
+					background_style.background_stripe_wide.color[1] = 0
+					background_style.background_stripe_thin_left.color[1] = 0
+					background_style.background_stripe_thin_right.color[1] = 0
+					icon_cooldown_done_style.color[1] = 0
+					icon_style.color[1] = 255
+				else
+					if self._animate_first_charge then
+						table.merge(background_style.background_stripe_wide.color, background_style.background_stripe_wide.active_color)
+						table.merge(background_style.background_stripe_thin_left.color, background_style.background_stripe_thin_left.active_color)
+						table.merge(background_style.background_stripe_thin_right.color, background_style.background_stripe_thin_right.active_color)
+
+						background_style.background_stripe_wide.offset_scale[1] = math.remap(0, 1, -0.5, 1, glass_anim_p)
+
+						local icon_scale_multiplier = HudElementPlayerWeaponHandlerSettings.icon_shrink_scale
+						local pop_size = 1 / (1 - icon_scale_multiplier)
+						local size_increase = math.lerp(pop_size, 1, pop_anim_p)
+
+						icon_cooldown_done_style.size[1] = icon_style.size[1] * size_increase
+						icon_cooldown_done_style.size[2] = icon_style.size[2] * size_increase
+						icon_cooldown_done_style.color[1] = 200
+					end
+
+					local glow_p = 1 - math.easeInCubic(glow_anim_p)
+
+					background_style.cooldown_done_glow.color[1] = glow_p * 255
+				end
+			end
+		end
 
 		if self._uses_ammo and self._total_ammo ~= remaining_ability_charges then
 			self._low_on_ammo = remaining_ability_charges <= 0
 
-			self:_set_clip_amount(remaining_ability_charges, max_ability_charges)
-			self:_set_ammo_amount(remaining_ability_charges, max_ability_charges)
+			self:_set_clip_amount(remaining_ability_charges, clip_total, 1)
+			self:_set_ammo_amount(remaining_ability_charges, total_max_ammo_amount, 1)
 
 			clip_information_updated = true
 		end
@@ -205,32 +318,46 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 		if slot_component then
 			if self._uses_ammo or self._uses_overheat then
 				local max_reserve = slot_component.max_ammunition_reserve
-				local max_ammunition_clip = Ammo.max_ammo_in_clips(slot_component)
 
 				if max_reserve and max_reserve > 0 then
-					local current_ammunition_clip = Ammo.current_ammo_in_clips(slot_component)
-					local current_reserve = slot_component.current_ammunition_reserve
-					local update_clip = self._current_ammunition_clip ~= current_ammunition_clip
-					local total_ammo = current_ammunition_clip + current_reserve
-					local total_max_ammo = max_reserve + max_ammunition_clip
-					local update_total = self._total_ammo ~= total_ammo
+					local any_clip_in_use = Ammo.clips_in_use(slot_component, _clips_in_use_scratch)
 
-					if update_clip or update_total or clip_information_updated then
-						self:_set_clip_amount(current_ammunition_clip, max_ammunition_clip)
+					if any_clip_in_use then
+						local current_reserve = slot_component.current_ammunition_reserve
+						local total_ammo = current_reserve
+						local total_max_ammo = max_reserve
+						local clip_updated = false
 
-						clip_information_updated = true
-					end
+						for i = 1, NetworkConstants.clips_in_use.max_size do
+							local max_ammunition_clip = Ammo.max_ammo_in_clips(slot_component, i)
+							local current_ammunition_clip = Ammo.current_ammo_in_clips(slot_component, i)
+							local max_clip_dirty = self._max_ammunition_clips[i] ~= max_ammunition_clip
+							local update_clip = max_clip_dirty or self._current_ammunition_clips[i] ~= current_ammunition_clip
 
-					if update_total or update_clip then
-						if self._total_ammo and total_ammo > self._total_ammo then
-							self._ammo_refill_progress = 0
+							total_ammo = total_ammo + current_ammunition_clip
+							total_max_ammo = total_max_ammo + max_ammunition_clip
+
+							if update_clip or clip_information_updated then
+								self:_set_clip_amount(current_ammunition_clip, max_ammunition_clip, i)
+
+								clip_information_updated = true
+								clip_updated = true
+							end
 						end
 
-						self._low_on_ammo = total_ammo / total_max_ammo <= 0.2
+						local update_total = self._total_ammo ~= total_ammo
 
-						self:_set_ammo_amount(total_ammo, total_max_ammo)
+						if update_total or clip_updated then
+							if self._total_ammo and total_ammo > self._total_ammo then
+								self._ammo_refill_progress = 0
+							end
 
-						clip_information_updated = true
+							self._low_on_ammo = total_ammo / total_max_ammo <= 0.2
+
+							self:_set_ammo_amount(total_ammo, total_max_ammo)
+
+							clip_information_updated = true
+						end
 					end
 				end
 			end
@@ -277,8 +404,13 @@ HudElementPlayerWeapon.set_height_offset = function (self, height_offset)
 	widgets_by_name.input_text.dirty = true
 	widgets_by_name.infinite_symbol.offset[2] = height_offset
 	widgets_by_name.infinite_symbol.dirty = true
-	widgets_by_name.ammo_text.offset[2] = height_offset
-	widgets_by_name.ammo_text.dirty = true
+
+	for i = 1, NetworkConstants.clips_in_use.max_size do
+		widgets_by_name["ammo_text_" .. i].offset[2] = height_offset
+		widgets_by_name["ammo_text_" .. i].dirty = true
+	end
+
+	widgets_by_name.hud_ammo_icon.offset[2] = height_offset
 end
 
 HudElementPlayerWeapon._set_alpha = function (self, alpha_fraction)
@@ -288,12 +420,55 @@ HudElementPlayerWeapon._set_alpha = function (self, alpha_fraction)
 	widgets_by_name.background.alpha_multiplier = 1
 	widgets_by_name.icon.alpha_multiplier = general_fraction
 	widgets_by_name.infinite_symbol.alpha_multiplier = general_fraction
-	widgets_by_name.ammo_text.alpha_multiplier = general_fraction
+
+	for i = 1, NetworkConstants.clips_in_use.max_size do
+		widgets_by_name["ammo_text_" .. i].alpha_multiplier = general_fraction
+	end
 end
 
 HudElementPlayerWeapon.is_weapon = function (self)
 	return self._is_weapon
 end
+
+local function _update_ammo_number(pass_style, progress, low_on_ammo, ammo_text_height, background_scenegraph_height, height_difference_scale, inverse_progress, use_one_line_ammunition, free_transfer)
+	local default_font_size = pass_style.default_font_size
+	local focused_font_size = pass_style.focused_font_size
+	local font_size_difference = focused_font_size - default_font_size
+	local font_size_difference_animated = font_size_difference * progress
+	local animated_font_size = default_font_size + font_size_difference_animated
+
+	pass_style.font_size = animated_font_size
+
+	local color_tint_main_1 = UIHudSettings.color_tint_main_1
+	local color_tint_main_2 = UIHudSettings.color_tint_main_2
+	local color_tint_main_3 = UIHudSettings.color_tint_main_3
+	local free_transfer_color = UIHudSettings.color_tint_10
+	local wielded_color = free_transfer and free_transfer_color or low_on_ammo and HudElementPlayerWeaponSettings.urgent_color or color_tint_main_2
+	local secondary_color = free_transfer and free_transfer_color or low_on_ammo and HudElementPlayerWeaponSettings.urgent_color_wielded or pass_style.primary_counter and color_tint_main_1 or color_tint_main_3
+	local include_alpha = free_transfer
+
+	_animate_color_value(pass_style.text_color or pass_style.color, progress, wielded_color, secondary_color, include_alpha)
+
+	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
+	local digit_width = math.round(animated_font_size * 0.55)
+	local index = pass_style.index
+
+	if index then
+		pass_style.offset[1] = -((max_ammo_digits - index) * digit_width)
+	end
+
+	if pass_style.clip_ammo then
+		local additional_height = use_one_line_ammunition and 12 or 4
+
+		pass_style.offset[2] = background_scenegraph_height * 0.5 - ammo_text_height + (additional_height - height_difference_scale * inverse_progress)
+	else
+		pass_style.offset[2] = background_scenegraph_height * 0.5 + (8 - height_difference_scale * inverse_progress)
+	end
+
+	return digit_width, ammo_text_height
+end
+
+local _clip_in_use_scratch = {}
 
 HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_renderer)
 	local inverse_progress = 1 - progress
@@ -329,8 +504,9 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 	local default_ammo_offset = ammo_offsets.default
 	local small_ammo_offset = ammo_offsets.small
 	local width_difference = size[1] - size_small[1]
+	local ammo_text_offset = -icon_size[1] + (default_ammo_offset[1] + (small_ammo_offset[1] - default_ammo_offset[1]) * inverse_progress)
+	local spare_text_offset = ammo_text_offset
 
-	widgets_by_name.ammo_text.offset[1] = -icon_size[1] + (default_ammo_offset[1] + (small_ammo_offset[1] - default_ammo_offset[1]) * inverse_progress)
 	widgets_by_name.input_text.offset[1] = size[1] - width_difference * inverse_progress
 
 	if self._infinite_ammo then
@@ -342,7 +518,7 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 
 		infinite_symbol_style_size[1] = (infinite_symbol_size_focused[1] - infinite_symbol_size[1]) * progress + infinite_symbol_size[1]
 		infinite_symbol_style_size[2] = (infinite_symbol_size_focused[2] - infinite_symbol_size[2]) * progress + infinite_symbol_size[2]
-	else
+	elseif self._uses_ammo then
 		local low_on_ammo = self._low_on_ammo
 		local scenegraph_id = "background"
 		local background_scenegraph_size = self:scenegraph_size(scenegraph_id)
@@ -350,47 +526,81 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 		local height_difference = size[2] - size_small[2]
 		local extra_height = height_difference * progress
 		local height_difference_scale = extra_height / size[2]
-		local ammo_text_style = widgets_by_name.ammo_text.style
-		local ammo_text_content = widgets_by_name.ammo_text.content
 
-		for pass_name, pass_style in pairs(ammo_text_style) do
-			local default_font_size = pass_style.default_font_size
-			local focused_font_size = pass_style.focused_font_size
-			local font_size_difference = focused_font_size - default_font_size
-			local font_size_difference_animated = font_size_difference * progress
-			local animated_font_size = default_font_size + font_size_difference_animated
+		Ammo.clips_in_use(self._slot_component, _clip_in_use_scratch)
 
-			pass_style.font_size = animated_font_size
+		local free_transfer = self._slot_component.free_ammunition_transfer
+		local first_digit_offset_x, first_digit_offset_y, first_digit_height
 
-			local wielded_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color or color_tint_main_2
-			local secondary_color = low_on_ammo and HudElementPlayerWeaponSettings.urgent_color_wielded or pass_style.primary_counter and color_tint_main_1 or color_tint_main_3
-			local include_alpha = false
+		for clip_index = NetworkConstants.clips_in_use.max_size, 1, -1 do
+			local ammo_text_widget = widgets_by_name["ammo_text_" .. clip_index]
+			local ammo_text_style = ammo_text_widget.style
+			local ammo_text_content = ammo_text_widget.content
 
-			_animate_color_value(pass_style.text_color, progress, wielded_color, secondary_color, include_alpha)
+			if _clip_in_use_scratch[clip_index] or clip_index == 1 and self._ability then
+				ammo_text_widget.offset[1] = ammo_text_offset
 
-			local index = pass_style.index
-			local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
+				for digit_i = 1, HudElementPlayerWeaponSettings.max_ammo_digits do
+					local spare_pass_name = "ammo_spare_" .. digit_i
+					local spare_pass_style = ammo_text_style[spare_pass_name]
 
-			pass_style.offset[1] = -((max_ammo_digits - index) * (animated_font_size * 0.55))
+					if spare_pass_style then
+						local spare_pass_content = ammo_text_content[spare_pass_name]
 
-			local ammo_text = ammo_text_content[pass_name]
-			local ammo_text_height = self:_style_text_height(ammo_text, pass_style, ui_renderer)
+						_update_ammo_number(spare_pass_style, progress, low_on_ammo, self:_style_text_height(spare_pass_content, spare_pass_style, ui_renderer), background_scenegraph_height, height_difference_scale, inverse_progress, self._use_one_line_ammunition, false)
 
-			if pass_style.clip_ammo then
-				local additional_height = self._use_one_line_ammunition and 12 or 4
+						spare_pass_style.offset[1] = spare_pass_style.offset[1] + (spare_text_offset - ammo_text_offset)
+					end
+				end
 
-				pass_style.offset[2] = background_scenegraph_height * 0.5 - ammo_text_height + (additional_height - height_difference_scale * inverse_progress)
-			else
-				pass_style.offset[2] = background_scenegraph_height * 0.5 + (8 - height_difference_scale * inverse_progress)
+				for digit_i = 1, HudElementPlayerWeaponSettings.max_ammo_digits do
+					local ammo_pass_name = "ammo_amount_" .. digit_i
+					local pass_style = ammo_text_style[ammo_pass_name]
+					local pass_content = ammo_text_content[ammo_pass_name]
+					local digit_width, ammo_text_height = _update_ammo_number(pass_style, progress, low_on_ammo, self:_style_text_height(pass_content, pass_style, ui_renderer), background_scenegraph_height, height_difference_scale, inverse_progress, self._use_one_line_ammunition, free_transfer)
+
+					if pass_content ~= "" then
+						if not first_digit_offset_x then
+							first_digit_offset_x = pass_style.offset[1] - digit_width
+							first_digit_offset_y = pass_style.offset[2]
+							first_digit_height = ammo_text_height
+						end
+
+						ammo_text_offset = ammo_text_offset - digit_width
+					end
+				end
+
+				if ammo_text_style.divider then
+					ammo_text_style.divider.offset[1] = (first_digit_offset_x or 0) - (HudElementPlayerWeaponSettings.divider_padding - HudElementPlayerWeaponSettings.divider_width - 3)
+					ammo_text_style.divider.offset[2] = first_digit_offset_y
+					ammo_text_style.divider.size[2] = first_digit_height
+					ammo_text_offset = ammo_text_offset - HudElementPlayerWeaponSettings.divider_padding * 2 + 3
+				end
 			end
+		end
+
+		if first_digit_offset_y then
+			local ammo_icon_widget = widgets_by_name.hud_ammo_icon
+			local ammo_icon_x_width, ammo_icon_x_height = _update_ammo_number(ammo_icon_widget.style.hud_ammo_icon_x, progress, false, self:_style_text_height(ammo_icon_widget.content.hud_ammo_icon_x, ammo_icon_widget.style.hud_ammo_icon_x, ui_renderer), background_scenegraph_height, height_difference_scale, inverse_progress, self._use_one_line_ammunition, false)
+
+			ammo_icon_widget.content.hud_ammo_icon = self._hud_ammo_icon
+			ammo_icon_widget.style.hud_ammo_icon_x.offset[1] = ammo_text_offset
+			ammo_icon_widget.style.hud_ammo_icon_x.offset[2] = first_digit_offset_y + first_digit_height - ammo_icon_x_height - 1
+			ammo_text_offset = ammo_text_offset - ammo_icon_x_width
+
+			local _, ammo_icon_height = _update_ammo_number(ammo_icon_widget.style.hud_ammo_icon, progress, false, first_digit_height, background_scenegraph_height, height_difference_scale, inverse_progress, self._use_one_line_ammunition, false)
+
+			ammo_icon_widget.style.hud_ammo_icon.offset[1] = ammo_text_offset - 4
+			ammo_icon_widget.style.hud_ammo_icon.offset[2] = first_digit_offset_y
+			ammo_icon_widget.style.hud_ammo_icon.size[2] = ammo_icon_height
+			ammo_icon_widget.dirty = true
 		end
 	end
 end
 
 HudElementPlayerWeapon._style_text_height = function (self, text, text_style, ui_renderer)
 	local text_size = text_style.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, text_size, text_options)
+	local _, text_height = self:_text_size(ui_renderer, text, text_style, text_size)
 
 	return text_height
 end
@@ -431,68 +641,102 @@ local function _convert_ammo_to_display_texts(amount, max_character, low_on_ammo
 	return _temp_ammo_display_texts
 end
 
-HudElementPlayerWeapon._set_clip_amount = function (self, current, total)
-	self._current_ammunition_clip = current
-
-	if total and total > 0 and (not self._max_ammunition_clip or self._max_ammunition_clip ~= total) then
-		self._max_ammunition_clip = total
-	end
+HudElementPlayerWeapon._set_clip_amount = function (self, current, total, clip_index)
+	self._current_ammunition_clips[clip_index] = current
+	self._max_ammunition_clips[clip_index] = total
 end
 
 HudElementPlayerWeapon._set_ammo_amount = function (self, amount, total_max_amount)
 	self._total_ammo = amount
 
 	local is_weapon = self._is_weapon
-	local current_ammunition_clip = self._current_ammunition_clip
+	local current_ammunition_clips = self._current_ammunition_clips
 	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
 
 	if not self._infinite_ammo then
+		local slot_component = self._slot_component
 		local widgets_by_name = self._widgets_by_name
-		local ammo_text_widget = widgets_by_name.ammo_text
-		local content = ammo_text_widget.content
-		local style = ammo_text_widget.style
+		local content_idx = 0
 
-		if current_ammunition_clip then
-			local display_texts = _convert_ammo_to_display_texts(current_ammunition_clip, string.len(self._max_ammunition_clip or amount), self._low_on_ammo, current_ammunition_clip == 0, amount == 0, is_weapon)
+		if self._uses_ammo then
+			Ammo.clips_in_use(slot_component, _clip_in_use_scratch)
 
-			for ii = max_ammo_digits, 1, -1 do
-				local key = "ammo_amount_" .. ii
-				local text = table.remove(display_texts, #display_texts)
+			local free_transfer = slot_component.free_ammunition_transfer
+			local total_ammo_in_clips = 0
 
-				content[key] = text or ""
-				style[key].drop_shadow = not not text
+			for clip_index = 1, NetworkConstants.clips_in_use.max_size do
+				if _clip_in_use_scratch[clip_index] or clip_index == 1 and self._ability then
+					content_idx = content_idx + 1
+
+					local ammo_text_widget = widgets_by_name["ammo_text_" .. content_idx]
+					local current_ammunition_clip = current_ammunition_clips[clip_index]
+
+					total_ammo_in_clips = total_ammo_in_clips + (current_ammunition_clip or 0)
+
+					local content = ammo_text_widget.content
+					local style = ammo_text_widget.style
+
+					if current_ammunition_clip then
+						local display_texts = _convert_ammo_to_display_texts(current_ammunition_clip, string.len(self._max_ammunition_clips[clip_index] or amount), self._low_on_ammo, current_ammunition_clip == 0, amount == 0, is_weapon)
+
+						for ii = max_ammo_digits, 1, -1 do
+							local key = "ammo_amount_" .. ii
+							local text = table.remove(display_texts, #display_texts)
+
+							content[key] = text or ""
+
+							local digit_style = style[key]
+
+							digit_style.drop_shadow = not not text
+							digit_style.color = free_transfer and digit_style.free_transfer_text_color or digit_style.default_text_color
+						end
+					else
+						for ii = max_ammo_digits, 1, -1 do
+							content["ammo_amount_" .. ii] = ""
+						end
+					end
+
+					ammo_text_widget.dirty = true
+					ammo_text_widget.visible = true
+				end
 			end
-		else
-			for ii = max_ammo_digits, 1, -1 do
-				content["ammo_amount_" .. ii] = ""
+
+			local spare_clip_content = widgets_by_name.ammo_text_1.content
+			local spare_clip_style = widgets_by_name.ammo_text_1.style
+			local spare_clips = is_weapon and not table.is_empty(self._max_ammunition_clips) and amount - total_ammo_in_clips
+
+			if spare_clips and total_max_amount then
+				local display_texts = _convert_ammo_to_display_texts(spare_clips, string.len(total_max_amount), self._low_on_ammo, true, amount == 0, is_weapon, true)
+
+				for ii = max_ammo_digits, 1, -1 do
+					local key = "ammo_spare_" .. ii
+					local text = table.remove(display_texts, #display_texts)
+
+					spare_clip_content[key] = text or ""
+					spare_clip_style[key].drop_shadow = not not text
+				end
+
+				self._use_one_line_ammunition = false
+			else
+				for ii = max_ammo_digits, 1, -1 do
+					spare_clip_content["ammo_spare_" .. ii] = ""
+				end
+
+				self._use_one_line_ammunition = true
 			end
 		end
 
-		local spare_clips = is_weapon and self._max_ammunition_clip and amount - current_ammunition_clip
+		for i = content_idx + 1, NetworkConstants.clips_in_use.max_size do
+			local ammo_text_widget = widgets_by_name["ammo_text_" .. i]
+			local content = ammo_text_widget.content
 
-		if spare_clips then
-			local display_texts = _convert_ammo_to_display_texts(spare_clips, string.len(total_max_amount), self._low_on_ammo, true, amount == 0, is_weapon, true)
-
-			for ii = max_ammo_digits, 1, -1 do
-				local key = "ammo_spare_" .. ii
-				local text = table.remove(display_texts, #display_texts)
-
-				content[key] = text or ""
-				style[key].drop_shadow = not not text
+			if content.visible then
+				content.visible = false
+				ammo_text_widget.dirty = true
 			end
-
-			self._use_one_line_ammunition = false
-		else
-			for ii = max_ammo_digits, 1, -1 do
-				content["ammo_spare_" .. ii] = ""
-			end
-
-			self._use_one_line_ammunition = true
 		end
 
 		self:set_height_offset(self._height_offset or 0)
-
-		ammo_text_widget.dirty = true
 	end
 end
 

@@ -656,10 +656,15 @@ UIViewHandler._force_close = function (self, view_name)
 	local active_views_data = self._active_views_data
 	local view_data = active_views_data[view_name]
 	local instance = view_data.instance
-	local on_exit = instance.on_exit
 
-	if on_exit then
+	if instance:entered() then
 		instance:on_exit()
+	end
+
+	if DevParameters.ui_unsafe_view_destroy then
+		instance:destroy()
+	else
+		instance:delete()
 	end
 
 	view_data.instance = nil

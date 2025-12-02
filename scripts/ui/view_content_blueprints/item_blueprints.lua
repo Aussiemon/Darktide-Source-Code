@@ -7,9 +7,7 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -917,7 +915,7 @@ local function generate_blueprints_function(grid_size)
 					content.required_level = required_level_text
 
 					local required_level_style = style.required_level
-					local required_level_text_width = UIRenderer.text_size(ui_renderer, required_level_text, required_level_style.font_type, required_level_style.font_size) or 0
+					local required_level_text_width = Text.text_size(ui_renderer, required_level_text, required_level_style) or 0
 					local required_level_background_style = style.required_level_background
 
 					required_level_background_style.size[1] = required_level_text_width + 40
@@ -1024,6 +1022,35 @@ local function generate_blueprints_function(grid_size)
 			end,
 			style_function = function (parent, config, size)
 				return config and config.style_override
+			end,
+			update_data = function (parent, widget, element)
+				local item = element.item
+				local content = widget.content
+				local style = widget.style
+
+				if style.item_level then
+					local item_level, has_level = Items.expertise_level(item)
+
+					content.item_level = has_level and item_level or ""
+				end
+
+				local is_weapon = Items.is_weapon(item.item_type)
+				local rarity_color = Items.rarity_color(item)
+
+				if is_weapon then
+					content.display_name = Items.weapon_card_display_name(item)
+					content.sub_display_name = Items.weapon_card_sub_display_name(item)
+					content.rarity_name = Items.rarity_display_name(item)
+					style.rarity_name.text_color = table.clone(rarity_color)
+				else
+					content.display_name = Items.display_name(item)
+					content.sub_display_name = Items.sub_display_name(item)
+					content.rarity_name = ""
+					style.sub_display_name.text_color = table.clone(rarity_color)
+				end
+
+				style.background_gradient.color = table.clone(rarity_color)
+				style.rarity_tag.color = table.clone(rarity_color)
 			end,
 		},
 		gear_set = {
@@ -1642,15 +1669,13 @@ local function generate_blueprints_function(grid_size)
 					item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 				end
 
-				local item_name_options = UIFonts.get_font_options_by_style(item_name_style)
-				local display_description_options = UIFonts.get_font_options_by_style(display_description_style)
 				local item_name_margin = 15
 				local item_name_size = {
 					widget.content.size[1],
 					1080,
 				}
-				local _, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
-				local _, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
+				local item_name_height = Text.text_height(ui_renderer, widget.content.title, item_name_style, item_name_size)
+				local display_description_height = Text.text_height(ui_renderer, widget.content.description, display_description_style, item_name_size)
 
 				widget.content.size[2] = item_name_height + item_name_margin + display_description_height
 				widget.style.title.size = {

@@ -242,7 +242,7 @@ local scenegraph_definition = {
 		position = {
 			175,
 			116,
-			109,
+			111,
 		},
 	},
 	loading = {
@@ -428,6 +428,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",
@@ -463,7 +464,35 @@ local legend_inputs = {
 		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "cb_on_clear_all_talents_pressed",
 		visibility_function = function (parent, id)
-			return parent._active_view == "talent_builder_view" and not parent._is_readonly
+			if parent._is_readonly then
+				return false
+			end
+
+			local active_view = parent._active_view
+
+			if active_view == "talent_builder_view" then
+				return true
+			end
+
+			return false
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_action_interaction_help",
+		input_action = "hotkey_help",
+		on_pressed_callback = "cb_on_help_pressed",
+		visibility_function = function (parent)
+			local active_view = parent._active_view
+
+			if active_view == "broker_stimm_builder_view" then
+				local view_instance = Managers.ui:view_instance(active_view)
+				local tutorial_overlay = view_instance and view_instance:tutorial_overlay()
+
+				return not tutorial_overlay or not tutorial_overlay:is_active()
+			end
+
+			return false
 		end,
 	},
 	{

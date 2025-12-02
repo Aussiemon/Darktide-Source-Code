@@ -998,6 +998,87 @@ haptic_trigger_templates.ranged.stubrevolver_p1_m2_special_shoot = {
 		},
 	},
 }
+haptic_trigger_templates.ranged.dual_auto = {
+	right = {
+		scale_vibration_with_ammo = true,
+		weapon = {
+			end_position = 3,
+			start_position = 2,
+			strength = 8,
+		},
+		vibration = {
+			amplitude = 5,
+			frequency = 0,
+			position = 2,
+		},
+	},
+	left = {
+		scale_vibration_with_ammo = true,
+		weapon = {
+			end_position = 4,
+			start_position = 3,
+			strength = 8,
+		},
+		vibration = {
+			amplitude = 5,
+			frequency = 0,
+			position = 3,
+		},
+	},
+}
+haptic_trigger_templates.ranged.dual_stubpistol_right = {
+	right = {
+		optional_wwise_vibration_event = "wwise/events/weapon/play_ps5_rumble_dual_stub_right",
+		scale_vibration_with_ammo = true,
+		use_template_vibration_frequency = true,
+		weapon = {
+			end_position = 3,
+			start_position = 2,
+			strength = 5,
+		},
+		vibration = {
+			amplitude = 8,
+			frequency = 2,
+			position = 2,
+		},
+	},
+	left = {
+		multi_position_feedback = {
+			strength = {
+				0,
+				0,
+				0,
+				1,
+				1,
+				2,
+				2,
+				2,
+				3,
+				4,
+			},
+		},
+	},
+}
+haptic_trigger_templates.ranged.dual_stubpistol_left = {
+	right = {
+		off = {},
+	},
+	left = {
+		optional_wwise_vibration_event = "wwise/events/weapon/play_ps5_rumble_dual_stub_left",
+		scale_vibration_with_ammo = true,
+		use_template_vibration_frequency = true,
+		weapon = {
+			end_position = 8,
+			start_position = 2,
+			strength = 8,
+		},
+		vibration = {
+			amplitude = 8,
+			frequency = 3,
+			position = 9,
+		},
+	},
+}
 
 local function _preprocess(settings_type)
 	for name, template in pairs(haptic_trigger_templates[settings_type]) do
@@ -1022,53 +1103,5 @@ end
 
 _preprocess("melee")
 _preprocess("ranged")
-
-local function _verify_triger_template(template)
-	if not template then
-		return
-	end
-
-	local has_feedback = false
-	local has_vibration = false
-
-	for name, entry in pairs(template) do
-		local template_name = template.name
-
-		if name == "weapon" then
-			has_feedback = true
-		elseif name == "feedback" then
-			has_feedback = true
-		elseif name == "slope_feedback" then
-			has_feedback = true
-		elseif name == "multi_position_feedback" then
-			has_feedback = true
-
-			for ii = 1, #entry.strength do
-				-- Nothing
-			end
-		elseif name == "vibration" then
-			has_vibration = true
-		elseif name == "multi_position_vibration" then
-			has_vibration = true
-
-			for ii = 1, #entry.amplitude do
-				-- Nothing
-			end
-		end
-	end
-end
-
-for group_name, templates in pairs(haptic_trigger_templates) do
-	for template_name, template in pairs(templates) do
-		local left = template.left
-		local right = template.right
-
-		_verify_triger_template(left)
-		_verify_triger_template(right)
-	end
-end
-
-table.make_strict(haptic_trigger_templates.ranged)
-table.make_strict(haptic_trigger_templates.melee)
 
 return settings("HapticTriggerTemplates", haptic_trigger_templates)

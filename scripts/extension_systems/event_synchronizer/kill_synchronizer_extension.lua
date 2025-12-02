@@ -16,8 +16,7 @@ end
 KillSynchronizerExtension.setup_from_component = function (self, objective_name, auto_start)
 	self._objective_name = objective_name
 	self._auto_start = auto_start
-
-	self._mission_objective_system:register_objective_synchronizer(objective_name, nil, self._unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, self._unit)
 end
 
 KillSynchronizerExtension.fixed_update = function (self, unit, dt, t)

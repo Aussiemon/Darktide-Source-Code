@@ -1,23 +1,166 @@
 ﻿-- chunkname: @scripts/utilities/character_sheet.lua
 
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
+local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local CharacterSheet = {}
+local BASE_TALENT_STEP_COUNT = -1
 local _fill_combat_ability_or_grenade_ability_or_coherency, _add_modifier
-local TRASH_TABLE = {}
-local PASSIVES_BEST_IDENTIFIER = {}
-local COHERENCY_BEST_IDENTIFIER = {}
-local SPECIAL_RULE_BEST_IDENTIFIER = {}
+local talent_layouts = {
+	"talent_layout_file_path",
+}
 
-CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_nodes)
+table.insert(talent_layouts, "specialization_talent_layout_file_path")
+
+local ALLOWED_MULTIPLE_OF = table.set({
+	"stat",
+	"default",
+	"broker_stimm",
+})
+
+local function _nodes_by_talents(out_nodes, archetype)
+	for layout_i = 1, #talent_layouts do
+		local talent_layout_file_path = archetype[talent_layouts[layout_i]]
+
+		if talent_layout_file_path then
+			local talent_layout = require(talent_layout_file_path)
+			local nodes = talent_layout.nodes
+
+			for node_i = 1, #nodes do
+				local node = nodes[node_i]
+				local talent = node.talent
+
+				if talent then
+					local node_group_data = out_nodes[talent] or {
+						node_type = nil,
+					}
+
+					out_nodes[talent] = node_group_data
+
+					local node_type = node.type
+
+					node_group_data.node_type = node_type
+					node_group_data.icon = node.icon
+				end
+			end
+		end
+	end
+end
+
+local function _filter_non_base_talents(selected_talents, base_talents, out_selected_talents)
+	local i = 0
+
+	for talent_name, tier in pairs(selected_talents) do
+		if not base_talents[talent_name] then
+			i = i + 1
+			out_selected_talents[i] = talent_name
+		end
+	end
+
+	table.sort(out_selected_talents)
+
+	return i
+end
+
+local function _handle_buff_tier(buff_tiers, selected_talents, talent_name, buff_template_name, handled_node_groups)
+	if not handled_node_groups[talent_name] then
+		handled_node_groups[talent_name] = true
+
+		local talent_tier = selected_talents[talent_name]
+
+		buff_tiers[buff_template_name] = (buff_tiers[buff_template_name] or 0) + talent_tier
+	end
+end
+
+local function _by_furthest_from_start(previous_talent, talent_name, value, archetype)
+	local previous_step_count = previous_talent and previous_talent.step_count or BASE_TALENT_STEP_COUNT
+	local found, step_count, is_unique
+
+	for layout_i = 1, #talent_layouts do
+		local talent_layout_file_path = archetype[talent_layouts[layout_i]]
+
+		if talent_layout_file_path then
+			local talent_layout = require(talent_layout_file_path)
+
+			found, step_count, is_unique = NodeLayout.num_steps_to_start_recursive(talent_layout, talent_name)
+
+			if found then
+				break
+			end
+		end
+	end
+
+	if not found then
+		step_count = BASE_TALENT_STEP_COUNT + 1
+	end
+
+	if previous_step_count ~= BASE_TALENT_STEP_COUNT and step_count < previous_step_count then
+		Log.info("CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", previous_talent.talent_name, talent_name, previous_step_count, step_count)
+
+		return previous_talent
+	elseif previous_talent then
+		if step_count == previous_step_count and previous_talent.value ~= value then
+			local pick_previous = talent_name > previous_talent.talent_name
+
+			Log.error("CharacterSheet", "Found two selected talents using the same identifier with same distance from start (%s, %s). No way of deciding one over the other. Picked by name sorting: %s", talent_name, previous_talent.talent_name, pick_previous and previous_talent.talent_name or talent_name)
+
+			if pick_previous then
+				return previous_talent
+			end
+		else
+			Log.info("CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", talent_name, previous_talent.talent_name, step_count, previous_step_count)
+		end
+	end
+
+	return {
+		is_base = false,
+		talent_name = talent_name,
+		value = value,
+		step_count = step_count,
+		is_unique = is_unique,
+	}
+end
+
+local TEMP_TABLE_INDEX = 1
+local _temp_table_pool = {}
+
+local function _temp_table()
+	local tbl = _temp_table_pool[TEMP_TABLE_INDEX] or {}
+
+	_temp_table_pool[TEMP_TABLE_INDEX] = tbl
+	TEMP_TABLE_INDEX = TEMP_TABLE_INDEX + 1
+
+	table.clear(tbl)
+
+	return tbl
+end
+
+local TRASH_TABLE = {}
+local PASSIVE_IDENTIFIERS_FOUND = {}
+local COHERENCY_IDENTIFIERS_FOUND = {}
+local SPECIAL_RULE_IDENTIFIERS_FOUND = {}
+local ABILITIES_FOUND = {}
+local HANDLED_NODE_GROUPS = {}
+local NODES_BY_TALENT = {}
+local NON_BASE_TALENTS = {}
+
+CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_talents)
 	local ability, blitz, aura = destination.ability or TRASH_TABLE, destination.blitz or TRASH_TABLE, destination.aura or TRASH_TABLE
+	local pocketable = destination.pocketable or TRASH_TABLE
 	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics, modifiers = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics, destination.modifiers
 
 	table.clear(ability)
 	table.clear(blitz)
+	table.clear(pocketable)
 	table.clear(aura)
-	table.clear(PASSIVES_BEST_IDENTIFIER)
-	table.clear(COHERENCY_BEST_IDENTIFIER)
-	table.clear(SPECIAL_RULE_BEST_IDENTIFIER)
+	table.clear(PASSIVE_IDENTIFIERS_FOUND)
+	table.clear(COHERENCY_IDENTIFIERS_FOUND)
+	table.clear(SPECIAL_RULE_IDENTIFIERS_FOUND)
+	table.clear(ABILITIES_FOUND)
+	table.clear(HANDLED_NODE_GROUPS)
+	table.clear(NODES_BY_TALENT)
+	table.clear(NON_BASE_TALENTS)
+
+	TEMP_TABLE_INDEX = 1
 
 	if not passives and coherency_buffs then
 		-- Nothing
@@ -47,17 +190,18 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 		table.clear(modifiers)
 	end
 
+	local combat_ability, grenade_ability, pocketable_ability
+	local found_base_combat_ability, found_base_grenade_ability, found_base_coherency_talent = false, false, false
+	local found_base_pocketable_ability = false
 	local archetype = profile.archetype
 	local archetype_talents = archetype.talents
-	local talent_layout_file_path = archetype.talent_layout_file_path
-	local talent_layout = require(talent_layout_file_path)
-	local nodes = talent_layout.nodes
-	local selected_nodes = optional_selected_nodes or profile.selected_nodes
-	local combat_ability, grenade_ability
-	local found_base_combat_ability, found_base_grenade_ability, found_base_coherency_talent = false, false, false
-	local base_talents = archetype.base_talents
+	local base_talents = PlayerTalents.base_talents(archetype, not force_base_talents and optional_selected_talents)
+	local base_talent_names = table.keys(base_talents)
 
-	for talent_name, selected_points in pairs(base_talents) do
+	table.sort(base_talent_names)
+
+	for i = 1, #base_talent_names do
+		local talent_name = base_talent_names[i]
 		local talent = archetype_talents[talent_name]
 
 		do
@@ -69,7 +213,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 				else
 					found_base_combat_ability = true
 
-					_fill_combat_ability_or_grenade_ability_or_coherency(ability, talent, talent.large_icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(ability, talent, talent.large_icon or talent.icon)
 
 					combat_ability = player_ability.ability
 				end
@@ -82,6 +226,16 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 					_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, talent.icon)
 
 					grenade_ability = player_ability.ability
+				end
+			elseif player_ability and player_ability.ability_type == "pocketable_ability" then
+				if found_base_pocketable_ability then
+					Log.error("CharacterSheet", "Found multiple pocketable abilities in base_talents, one will be chosen at random.")
+				else
+					found_base_pocketable_ability = true
+
+					_fill_combat_ability_or_grenade_ability_or_coherency(pocketable, talent, talent.icon)
+
+					pocketable_ability = player_ability.ability
 				end
 			elseif talent.coherency then
 				if found_base_coherency_talent then
@@ -108,26 +262,22 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 					for jj = 1, #identifier do
 						local sub_identifier = identifier[jj]
 
-						if PASSIVES_BEST_IDENTIFIER[sub_identifier] then
-							Log.error("CharacterSheet", "Multiple passives with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
-						else
-							PASSIVES_BEST_IDENTIFIER[sub_identifier] = -1
-
-							local buff_template_name = buff_template_names[jj]
-
-							passives[sub_identifier] = buff_template_name
-							buff_template_tiers[buff_template_name] = selected_points
-						end
+						PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = {
+							is_base = true,
+							talent_name = talent_name,
+							value = buff_template_names[jj],
+							step_count = BASE_TALENT_STEP_COUNT,
+						}
 					end
-				elseif PASSIVES_BEST_IDENTIFIER[identifier] then
-					Log.error("CharacterSheet", "Multiple passives with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 				else
-					PASSIVES_BEST_IDENTIFIER[identifier] = -1
-
 					local buff_template_name = passive.buff_template_name
 
-					passives[identifier] = buff_template_name
-					buff_template_tiers[buff_template_name] = selected_points
+					PASSIVE_IDENTIFIERS_FOUND[identifier] = {
+						is_base = true,
+						talent_name = talent_name,
+						value = buff_template_name,
+						step_count = BASE_TALENT_STEP_COUNT,
+					}
 				end
 			end
 		end
@@ -137,17 +287,14 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 			if coherency then
 				local identifier = coherency.identifier
+				local buff_template_name = coherency.buff_template_name
 
-				if COHERENCY_BEST_IDENTIFIER[identifier] then
-					Log.error("CharacterSheet", "Multiple coherency with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
-				else
-					COHERENCY_BEST_IDENTIFIER[identifier] = -1
-
-					local buff_template_name = coherency.buff_template_name
-
-					coherency_buffs[identifier] = buff_template_name
-					buff_template_tiers[buff_template_name] = selected_points
-				end
+				COHERENCY_IDENTIFIERS_FOUND[identifier] = {
+					is_base = true,
+					talent_name = talent_name,
+					value = buff_template_name,
+					step_count = BASE_TALENT_STEP_COUNT,
+				}
 			end
 		end
 
@@ -163,192 +310,192 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						local sub_identifier = identifier[jj]
 						local sub_special_rule_name = special_rule_name[jj]
 
-						if SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] then
-							Log.error("CharacterSheet", "Multiple special_rule with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", sub_identifier, archetype.name)
-						else
-							SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] = -1
-							special_rules[sub_identifier] = sub_special_rule_name
-						end
+						SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = {
+							is_base = true,
+							talent_name = talent_name,
+							value = sub_special_rule_name,
+							step_count = BASE_TALENT_STEP_COUNT,
+						}
 					end
-				elseif SPECIAL_RULE_BEST_IDENTIFIER[identifier] then
-					Log.error("CharacterSheet", "Multiple special_rule with the same identifier(%q) in base_talents for archetype(%q). Will choose one at random.", identifier, archetype.name)
 				else
-					SPECIAL_RULE_BEST_IDENTIFIER[identifier] = -1
-					special_rules[identifier] = special_rule_name
+					SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = {
+						is_base = true,
+						talent_name = talent_name,
+						value = special_rule_name,
+						step_count = BASE_TALENT_STEP_COUNT,
+					}
 				end
 			end
 		end
 	end
 
-	if not force_base_talents then
-		local combat_ability_step_count = -1
-		local grenade_ability_step_count = -1
+	if optional_selected_talents and not force_base_talents then
+		_nodes_by_talents(NODES_BY_TALENT, archetype)
+
 		local found_combat_ability, found_grenade_ability, found_coherency_talent = false, false, false
-		local num_nodes = #nodes
+		local found_pocketable_ability = false
+		local num_talents = _filter_non_base_talents(optional_selected_talents, base_talents, NON_BASE_TALENTS)
 
-		for ii = 1, num_nodes do
-			local points_in_node = selected_nodes[tostring(ii)]
+		for i = 1, num_talents do
+			local talent_name = NON_BASE_TALENTS[i]
+			local talent = archetype_talents[talent_name]
 
-			if points_in_node then
-				local node = nodes[ii]
-				local node_type = node.type
+			if talent then
+				if passives then
+					local passive = talent.passive
 
-				if node_type ~= "start" then
-					local talent_name = node.talent
-					local talent = archetype_talents[talent_name]
-					local found, step_count = NodeLayout.num_steps_to_start_recursive(talent_layout, node)
+					if passive then
+						local identifier = passive.identifier
 
-					if node_type == "ability" then
-						if found_combat_ability then
-							Log.error("CharacterSheet", "Found multiple selected combat abilities in selected_nodes.")
+						if type(identifier) == "table" then
+							local buff_template_names = passive.buff_template_name
+
+							for jj = 1, #identifier do
+								local buff_template_name = buff_template_names[jj]
+								local sub_identifier = identifier[jj]
+								local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
+
+								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
+							end
 						else
-							found_combat_ability = true
+							local buff_template_name = passive.buff_template_name
+							local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-							_fill_combat_ability_or_grenade_ability_or_coherency(ability, talent, node.icon)
-						end
-					elseif node_type == "tactical" then
-						if found_grenade_ability then
-							Log.error("CharacterSheet", "Found multiple selected blitz in selected_nodes.")
-						else
-							found_grenade_ability = true
-
-							_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, node.icon)
-						end
-					elseif node_type == "aura" then
-						if found_coherency_talent then
-							Log.error("CharacterSheet", "Found multiple selected auras in selected_nodes.")
-						else
-							found_coherency_talent = true
-
-							_fill_combat_ability_or_grenade_ability_or_coherency(aura, talent, node.icon)
-						end
-					end
-
-					if talent then
-						if passives then
-							local passive = talent.passive
-
-							if passive then
-								local identifier = passive.identifier
-
-								if type(identifier) == "table" then
-									local buff_template_names = passive.buff_template_name
-
-									for jj = 1, #identifier do
-										local buff_template_name = buff_template_names[jj]
-										local sub_identifier = identifier[jj]
-										local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
-
-										if not prev_best_identifier or prev_best_identifier < step_count then
-											PASSIVES_BEST_IDENTIFIER[sub_identifier] = step_count
-											passives[sub_identifier] = buff_template_name
-											buff_template_tiers[buff_template_name] = points_in_node
-										else
-											Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
-										end
-									end
-								else
-									local buff_template_name = passive.buff_template_name
-									local prev_best_identifier = PASSIVES_BEST_IDENTIFIER[identifier]
-
-									if not prev_best_identifier or prev_best_identifier < step_count then
-										PASSIVES_BEST_IDENTIFIER[identifier] = step_count
-										passives[identifier] = buff_template_name
-										buff_template_tiers[buff_template_name] = points_in_node
-									else
-										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
-									end
-								end
-							end
-						end
-
-						if coherency_buffs then
-							local coherency = talent.coherency
-
-							if coherency then
-								local identifier = coherency.identifier
-								local prev_best_identifier = COHERENCY_BEST_IDENTIFIER[identifier]
-
-								if not prev_best_identifier or prev_best_identifier < step_count then
-									COHERENCY_BEST_IDENTIFIER[identifier] = step_count
-
-									local buff_template_name = coherency.buff_template_name
-
-									if buff_template_name then
-										coherency_buffs[identifier] = buff_template_name
-										buff_template_tiers[buff_template_name] = points_in_node
-									end
-								else
-									Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
-								end
-							end
-						end
-
-						if special_rules then
-							local special_rule = talent.special_rule
-
-							if special_rule then
-								local identifier = special_rule.identifier
-								local special_rule_name = special_rule.special_rule_name
-
-								if type(identifier) == "table" then
-									for jj = 1, #identifier do
-										local sub_identifier = identifier[jj]
-										local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier]
-
-										if not prev_best_identifier or prev_best_identifier < step_count then
-											SPECIAL_RULE_BEST_IDENTIFIER[sub_identifier] = step_count
-											special_rules[sub_identifier] = special_rule_name[jj]
-										else
-											Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", sub_identifier, prev_best_identifier, step_count)
-										end
-									end
-								else
-									local prev_best_identifier = SPECIAL_RULE_BEST_IDENTIFIER[identifier]
-
-									if not prev_best_identifier or prev_best_identifier < step_count then
-										SPECIAL_RULE_BEST_IDENTIFIER[identifier] = step_count
-										special_rules[identifier] = special_rule_name
-									else
-										Log.error("CharacterSheet", "skipping %q prev(%i) node(%i)", identifier, prev_best_identifier, step_count)
-									end
-								end
-							end
-						end
-
-						local player_ability = talent.player_ability
-
-						if player_ability then
-							if player_ability.ability_type == "combat_ability" then
-								if combat_ability_step_count < step_count then
-									combat_ability_step_count = step_count
-									combat_ability = player_ability.ability
-
-									_add_modifier(modifiers, "ability", talent)
-								else
-									Log.error("CharacterSheet", "skipping combat ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, combat_ability.name, combat_ability_step_count, step_count)
-								end
-							elseif player_ability.ability_type == "grenade_ability" then
-								if grenade_ability_step_count < step_count then
-									grenade_ability_step_count = step_count
-									grenade_ability = player_ability.ability
-
-									_add_modifier(modifiers, "blitz", talent)
-								else
-									Log.error("CharacterSheet", "skipping grenade ability(%q) for (%q). prev_step_count(%i) step_count(%i)", player_ability.ability.name, grenade_ability.name, grenade_ability_step_count, step_count)
-								end
-							else
-								Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
-							end
+							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
 						end
 					end
 				end
+
+				if coherency_buffs then
+					local coherency = talent.coherency
+
+					if coherency then
+						local buff_template_name = coherency.buff_template_name
+
+						if buff_template_name then
+							local identifier = coherency.identifier
+							local prev_best_identifier = COHERENCY_IDENTIFIERS_FOUND[identifier]
+
+							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
+						end
+					end
+				end
+
+				if special_rules then
+					local special_rule = talent.special_rule
+
+					if special_rule then
+						local identifier = special_rule.identifier
+						local special_rule_name = special_rule.special_rule_name
+
+						if type(identifier) == "table" then
+							for jj = 1, #identifier do
+								local sub_special_rule_name = special_rule_name[jj]
+								local sub_identifier = identifier[jj]
+								local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier]
+
+								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, sub_special_rule_name, archetype)
+							end
+						else
+							local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[identifier]
+
+							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, special_rule_name, archetype)
+						end
+					end
+				end
+
+				local player_ability = talent.player_ability
+
+				if player_ability then
+					if player_ability.ability_type == "combat_ability" then
+						local previous_ability = ABILITIES_FOUND.ability
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+
+						ABILITIES_FOUND.ability = chosen_ability
+						combat_ability = chosen_ability.value.player_ability.ability
+
+						_add_modifier(modifiers, "ability", chosen_ability.value)
+					elseif player_ability.ability_type == "grenade_ability" then
+						local previous_ability = ABILITIES_FOUND.blitz
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+
+						ABILITIES_FOUND.blitz = chosen_ability
+						grenade_ability = chosen_ability.value.player_ability.ability
+
+						_add_modifier(modifiers, "blitz", chosen_ability.value)
+					elseif player_ability.ability_type == "pocketable_ability" then
+						local previous_ability = ABILITIES_FOUND.pocketable
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+
+						ABILITIES_FOUND.pocketable = chosen_ability
+						pocketable_ability = chosen_ability.value.player_ability.ability
+
+						_add_modifier(modifiers, "pocketable", chosen_ability.value)
+					else
+						Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
+					end
+				elseif talent.coherency then
+					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent_name, talent, archetype)
+				end
 			end
+		end
+	end
+
+	for _, data in pairs(PASSIVE_IDENTIFIERS_FOUND) do
+		local buff_template_name = data.value
+
+		if buff_template_name then
+			local talent_name = data.talent_name
+
+			passives[talent_name] = passives[talent_name] or _temp_table()
+
+			table.insert(passives[talent_name], buff_template_name)
+			_handle_buff_tier(buff_template_tiers, data.is_base and base_talents or optional_selected_talents, talent_name, buff_template_name, HANDLED_NODE_GROUPS)
+		end
+	end
+
+	for _, data in pairs(COHERENCY_IDENTIFIERS_FOUND) do
+		local buff_template_name = data.value
+
+		if buff_template_name then
+			local talent_name = data.talent_name
+
+			coherency_buffs[talent_name] = coherency_buffs[talent_name] or _temp_table()
+
+			table.insert(coherency_buffs[talent_name], buff_template_name)
+			_handle_buff_tier(buff_template_tiers, data.is_base and base_talents or optional_selected_talents, talent_name, buff_template_name, HANDLED_NODE_GROUPS)
+		end
+	end
+
+	for identifier, data in pairs(SPECIAL_RULE_IDENTIFIERS_FOUND) do
+		local special_rule_name = data.value
+
+		special_rules[identifier] = special_rule_name
+	end
+
+	local write_out_abilities = {
+		ability = ability,
+		blitz = blitz,
+		aura = aura,
+	}
+
+	write_out_abilities.pocketable = pocketable
+
+	for ability_type, write_out_data in pairs(write_out_abilities) do
+		local ability_data = ABILITIES_FOUND[ability_type]
+
+		if ability_data then
+			local talent = ability_data.value
+			local talent_name = ability_data.talent_name
+			local node_data = NODES_BY_TALENT[talent_name]
+
+			_fill_combat_ability_or_grenade_ability_or_coherency(write_out_data, talent, node_data.icon or talent.icon)
 		end
 	end
 
 	destination.combat_ability = combat_ability
 	destination.grenade_ability = grenade_ability
+	destination.pocketable_ability = pocketable_ability
 
 	if modifiers then
 		for talent_type, talents_data in pairs(modifiers) do
@@ -375,36 +522,33 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	end
 end
 
-CharacterSheet.convert_talents_to_node_layout = function (profile, selected_talents)
-	if not profile or not selected_talents then
-		return nil
-	end
+CharacterSheet.convert_selected_nodes_to_selected_talents = function (archetype, selected_nodes)
+	local out_talents = {}
 
-	local archetype = profile.archetype
-	local talent_layout_file_path = archetype.talent_layout_file_path
-	local talent_layout = require(talent_layout_file_path)
-	local nodes = talent_layout.nodes
-	local found_overrides = false
-	local selected_nodes = {}
-	local num_nodes = #nodes
+	for layout_i = 1, #talent_layouts do
+		local talent_layout_file_path = archetype[talent_layouts[layout_i]]
 
-	for ii = 1, num_nodes do
-		local node = nodes[ii]
-		local talent_name = node.talent
-		local points_in_talent = selected_talents[talent_name]
+		if talent_layout_file_path then
+			local talent_layout = require(talent_layout_file_path)
+			local nodes = talent_layout.nodes
 
-		if points_in_talent then
-			selected_nodes[tostring(ii)] = points_in_talent
-			found_overrides = true
+			for node_i = 1, #nodes do
+				local node = nodes[node_i]
+				local widget_name = node.widget_name
+
+				if selected_nodes[widget_name] and node.talent then
+					out_talents[node.talent] = (out_talents[node.talent] or 0) + selected_nodes[widget_name]
+				end
+			end
 		end
 	end
 
-	return found_overrides and selected_nodes
+	return out_talents
 end
 
 function _fill_combat_ability_or_grenade_ability_or_coherency(dest, talent, icon)
 	dest.talent = talent
-	dest.icon = icon
+	dest.icon = icon or NodeLayout.fallback_icon()
 end
 
 function _add_modifier(dest, name, talent)

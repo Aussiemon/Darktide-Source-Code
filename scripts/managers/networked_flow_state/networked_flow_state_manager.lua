@@ -28,7 +28,6 @@ end
 
 NetworkedFlowStateManager.init = function (self, world, is_server, network_event_delegate)
 	self._story_lookup = {}
-	self._level_lookup = {}
 	self._playing_stories = {}
 	self._object_states = {}
 	self._return_table = {}
@@ -57,15 +56,20 @@ NetworkedFlowStateManager.flow_cb_create_story = function (self, node_id)
 	self._story_lookup[level] = self._story_lookup[level] or {}
 
 	local lookup = self._story_lookup[level]
-	local level_index = #self._story_lookup + 1
+	local flow_state_id = 1
+
+	while self._story_lookup[flow_state_id] do
+		flow_state_id = flow_state_id + 1
+	end
+
 	local story_data = {
-		level_index = level_index,
+		flow_state_id = flow_state_id,
 		level = level,
 		node_id = node_id,
 	}
 
 	lookup[node_id] = story_data
-	self._story_lookup[level_index] = story_data
+	self._story_lookup[flow_state_id] = story_data
 end
 
 NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_call_event_name, start_time, start_from_stop_time, node_id)
@@ -76,7 +80,7 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 	local level = Application.flow_callback_context_level()
 	local lookup = self._story_lookup[level]
 	local story_data = lookup[node_id]
-	local level_index = story_data.level_index
+	local flow_state_id = story_data.flow_state_id
 	local stories = self._playing_stories[level]
 	local story
 
@@ -86,7 +90,7 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 
 	start_time = start_time or start_from_stop_time and story and story.stop_time or 0
 
-	Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_played", level_index, start_time, false)
+	Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_played", flow_state_id, start_time, false)
 
 	if story then
 		table.clear(story)
@@ -98,6 +102,10 @@ NetworkedFlowStateManager.flow_cb_play_networked_story = function (self, client_
 		local new_story = self._playing_stories[level]
 
 		new_story[node_id] = {
+			id = nil,
+			length = nil,
+			stop_time = nil,
+			stopped = nil,
 			start_time = start_time,
 		}
 	end
@@ -128,7 +136,7 @@ NetworkedFlowStateManager.flow_cb_stop_networked_story = function (self, node_id
 	local level = Application.flow_callback_context_level()
 	local lookup = self._story_lookup[level]
 	local story_data = lookup[node_id]
-	local level_id = story_data.level_index
+	local flow_state_id = story_data.flow_state_id
 	local stories = self._playing_stories[level]
 
 	if stories then
@@ -139,7 +147,7 @@ NetworkedFlowStateManager.flow_cb_stop_networked_story = function (self, node_id
 
 			story.stop_time = stop_time
 
-			Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_stopped", level_id, stop_time)
+			Managers.state.game_session:send_rpc_clients("rpc_flow_state_story_stopped", flow_state_id, stop_time)
 		else
 			Log.warning("[NetworkedFlowStateManager]", "[flow_cb_stop_networked_story] Story(%s) not found. Please check level flow logic.", tostring(node_id))
 		end
@@ -201,16 +209,16 @@ NetworkedFlowStateManager.flow_cb_has_played_networked_story = function (self, n
 end
 
 NetworkedFlowStateManager.unregister_level = function (self, level)
-	local story_data = self._playing_stories[level]
+	local node_list = self._story_lookup[level]
 
-	self._playing_stories[level] = nil
+	if node_list then
+		self._story_lookup[level] = nil
 
-	if story_data then
-		local level_index = story_data.level_index
-
-		if level_index then
-			self._story_lookup[level_index] = nil
+		for node_id, story_data in pairs(node_list) do
+			self._story_lookup[story_data.flow_state_id] = nil
 		end
+
+		self._playing_stories[level] = nil
 	end
 end
 
@@ -228,14 +236,14 @@ NetworkedFlowStateManager._sync_stories = function (self, peer, channel)
 			local story_time_constant = NetworkConstants.story_time
 			local stories = self._story_lookup[level]
 			local story = stories[node_id]
-			local level_index = story.level_index
+			local flow_state_id = story.flow_state_id
 
 			if stopped then
-				RPC.rpc_flow_state_story_stopped(channel, level_index, math.clamp(story_data.stop_time or story_data.length, story_time_constant.min, story_time_constant.max))
+				RPC.rpc_flow_state_story_stopped(channel, flow_state_id, math.clamp(story_data.stop_time or story_data.length, story_time_constant.min, story_time_constant.max))
 			else
 				local story_id = story_data.id
 
-				RPC.rpc_flow_state_story_played(channel, level_index, math.clamp(storyteller:time(story_id), story_time_constant.min, story_time_constant.max))
+				RPC.rpc_flow_state_story_played(channel, flow_state_id, math.clamp(storyteller:time(story_id), story_time_constant.min, story_time_constant.max))
 			end
 		end
 	end
@@ -259,7 +267,7 @@ NetworkedFlowStateManager._sync_states = function (self, peer, channel)
 				end
 			end
 		else
-			Log.warning("[NetworkedFlowStateManager] Trying to hot join sync state variable for destroyed unit.")
+			Log.warning("NetworkedFlowStateManager", "Trying to hot join sync state variable for destroyed unit.")
 		end
 	end
 end
@@ -327,11 +335,11 @@ NetworkedFlowStateManager._clamp_state = function (self, state_name, type_data, 
 	return new_state
 end
 
-NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, state_network_id, new_state, only_set, is_game_object)
+NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, flow_state_id, new_state, only_set, is_game_object)
 	local unit = Managers.state.unit_spawner:unit(unit_id, not is_game_object)
 	local states = self._object_states
 	local unit_states = states[unit]
-	local state_name = unit_states.lookup[state_network_id]
+	local state_name = unit_states.lookup[flow_state_id]
 	local state = unit_states.states[state_name]
 
 	state.value = new_state
@@ -341,12 +349,12 @@ NetworkedFlowStateManager.client_flow_state_changed = function (self, unit_id, s
 	Unit.flow_event(unit, flow_event)
 end
 
-NetworkedFlowStateManager.rpc_flow_state_bool_changed = function (self, channel_id, unit_id, state_network_id, new_state, only_set, is_game_object)
-	self:client_flow_state_changed(unit_id, state_network_id, new_state, only_set, is_game_object)
+NetworkedFlowStateManager.rpc_flow_state_bool_changed = function (self, channel_id, unit_id, flow_state_id, new_state, only_set, is_game_object)
+	self:client_flow_state_changed(unit_id, flow_state_id, new_state, only_set, is_game_object)
 end
 
-NetworkedFlowStateManager.rpc_flow_state_number_changed = function (self, channel_id, unit_id, state_network_id, new_state, only_set, is_game_object)
-	self:client_flow_state_changed(unit_id, state_network_id, new_state, only_set, is_game_object)
+NetworkedFlowStateManager.rpc_flow_state_number_changed = function (self, channel_id, unit_id, flow_state_id, new_state, only_set, is_game_object)
+	self:client_flow_state_changed(unit_id, flow_state_id, new_state, only_set, is_game_object)
 end
 
 return NetworkedFlowStateManager

@@ -177,6 +177,12 @@ PlayerUnitSpawnManager.spawn_player = function (self, player, position, rotation
 	local can_spawn = game_mode_manager:can_spawn_player(player)
 
 	if can_spawn or force_spawn then
+		local mutator_respawn_modifier = Managers.state.mutator:mutator("mutator_respawn_modifier")
+
+		if mutator_respawn_modifier and mutator_respawn_modifier:is_active() then
+			character_state_optional = mutator_respawn_modifier:respawn_state()
+		end
+
 		local player_unit = self:_spawn(player, position, rotation, parent, optional_side_name, breed_name_optional, character_state_optional, optional_damage, optional_permanent_damage)
 
 		game_mode_manager:on_player_unit_spawn(player, player_unit, is_respawn)

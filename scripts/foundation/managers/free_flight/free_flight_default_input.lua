@@ -103,6 +103,7 @@ FreeFlightDefaultInput.get = function (self, action_name)
 end
 
 local null_service = {
+	input = nil,
 	get = function (self, action_name)
 		local input_type = type(self.input:get(action_name))
 

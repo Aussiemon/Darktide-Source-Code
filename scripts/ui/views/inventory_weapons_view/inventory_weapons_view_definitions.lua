@@ -219,7 +219,9 @@ local widget_definitions = {
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 	background = UIWidget.create_definition({
 		{
@@ -244,7 +246,9 @@ local widget_definitions = {
 		gamepad_action = "gamepad_secondary_action_pressed",
 		visible = false,
 		original_text = Utf8.upper(Localize("loc_discard_items_button")),
-		hotspot = {},
+		hotspot = {
+			on_pressed_sound = nil,
+		},
 	}),
 }
 local legend_inputs = {
@@ -253,6 +257,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",

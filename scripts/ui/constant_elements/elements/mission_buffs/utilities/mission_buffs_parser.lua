@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/mission_buffs/utilities/mission_buffs_parser.lua
 
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local MissionBuffsParser = {}
 
 local function _num_decimals(value)
@@ -112,7 +112,7 @@ MissionBuffsParser.get_formated_buff_description = function (buff_data, value_co
 				end
 
 				if value_color then
-					actual_format_values[key] = TextUtilities.apply_color_to_text(tostring(string_value), value_color)
+					actual_format_values[key] = Text.apply_color_to_text(tostring(string_value), value_color)
 				else
 					actual_format_values[key] = string.format("%s", string_value)
 				end

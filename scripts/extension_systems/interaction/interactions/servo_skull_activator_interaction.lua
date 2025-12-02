@@ -36,12 +36,10 @@ ServoSkullActivatorInteraction.stop = function (self, world, interactor_unit, un
 				target_unit_rotation = first_person_rotation
 			end
 
-			local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 			local servo_skull_activator_extension = ScriptUnit.extension(target_unit, "servo_skull_system")
-			local objective_name = servo_skull_activator_extension:objective_name()
+			local synchronizer_extension = servo_skull_activator_extension:synchronizer_extension()
 
-			mission_objective_zone_system:spawn_servo_skull(target_unit_position, target_unit_rotation)
-			mission_objective_zone_system:start_event(objective_name)
+			synchronizer_extension:spawn_servo_skull(target_unit_position, target_unit_rotation)
 			servo_skull_activator_extension:deactivate()
 		end
 	end

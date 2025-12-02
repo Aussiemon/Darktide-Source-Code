@@ -183,9 +183,18 @@ local action_data = {
 				sign = 1,
 				rad = math.pi,
 			},
-			alerted_fwd = {},
-			alerted_fwd_2 = {},
-			alerted_fwd_3 = {},
+			alerted_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			alerted_fwd_2 = {
+				rad = nil,
+				sign = nil,
+			},
+			alerted_fwd_3 = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_left = {
 				sign = 1,
 				rad = math.pi / 2,
@@ -215,6 +224,9 @@ local action_data = {
 			alerted_bwd = 0,
 			alerted_bwd_2 = 0,
 			alerted_bwd_3 = 0,
+			alerted_fwd = nil,
+			alerted_fwd_2 = nil,
+			alerted_fwd_3 = nil,
 			alerted_left = 0,
 			alerted_left_2 = 0,
 			alerted_left_3 = 0,
@@ -226,6 +238,9 @@ local action_data = {
 			alerted_bwd = 1.0333333333333334,
 			alerted_bwd_2 = 2.2333333333333334,
 			alerted_bwd_3 = 2.2666666666666666,
+			alerted_fwd = nil,
+			alerted_fwd_2 = nil,
+			alerted_fwd_3 = nil,
 			alerted_left = 1,
 			alerted_left_2 = 3.066666666666667,
 			alerted_left_3 = 0.6,
@@ -429,7 +444,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -507,7 +525,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -586,7 +607,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -651,7 +675,10 @@ local action_data = {
 			right = "run_into_shoot_right",
 		},
 		start_move_anim_data = {
-			run_into_shoot_fwd = {},
+			run_into_shoot_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_into_shoot_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -903,7 +930,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -1158,7 +1188,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,

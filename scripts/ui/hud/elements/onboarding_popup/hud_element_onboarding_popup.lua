@@ -3,7 +3,6 @@
 local Definitions = require("scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup_definitions")
 local HudElementOnboardingPopupSettings = require("scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local InputUtils = require("scripts/managers/input/input_utils")
 local HudElementOnboardingPopup = class("HudElementOnboardingPopup", "HudElementBase")
 
@@ -168,7 +167,7 @@ HudElementOnboardingPopup._set_widget_size_from_content = function (self, title)
 	local total_height = 0
 	local style = widget.style
 	local text_style = style.text
-	local _, text_height, _, _ = UIRenderer.text_size(self._ui_renderer, title, text_style.font_type, text_style.font_size, size)
+	local _, text_height = self:_text_size(self._ui_renderer, title, text_style, size)
 
 	total_height = text_height + (text_height + 40)
 

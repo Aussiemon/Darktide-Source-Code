@@ -72,10 +72,19 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/adamant_power_maul"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/dual_shivs"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/saw"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/ogryn/first_person/animations/2h_axe"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/human/first_person/animations/sabre"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/crowbar"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 

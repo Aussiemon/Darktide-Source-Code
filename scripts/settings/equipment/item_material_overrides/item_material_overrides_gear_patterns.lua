@@ -933,6 +933,57 @@ local material_overrides = {
 			},
 		},
 	},
+	pattern_camo_54 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_54",
+			},
+		},
+	},
+	pattern_camo_54_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_54",
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_54",
+			},
+		},
+	},
+	pattern_camo_55 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_55",
+			},
+		},
+	},
+	pattern_camo_55_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_55",
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_55",
+			},
+		},
+	},
+	pattern_camo_56 = {
+		texture_overrides = {
+			coat_pattern = {
+				resource = "content/textures/camo_patterns/camo_56",
+			},
+		},
+	},
+	pattern_camo_56_inv = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_56",
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_56",
+			},
+		},
+	},
 	pattern_camo_hestia = {
 		texture_overrides = {
 			coat_pattern = {
@@ -964,6 +1015,16 @@ local material_overrides = {
 		texture_overrides = {
 			coat_pattern = {
 				resource = "content/textures/camo_patterns/camo_default",
+			},
+		},
+	},
+	pattern_camo_44_18 = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/camo_44",
+			},
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/camo_18",
 			},
 		},
 	},

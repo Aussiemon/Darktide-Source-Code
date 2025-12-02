@@ -147,6 +147,7 @@ CraftingSettings.recipes.upgrade_item = {
 				item.traits[i] = {
 					id = "content/items/traits/unknown_trait",
 					is_fake = true,
+					rarity = nil,
 					value = 1,
 				}
 			end

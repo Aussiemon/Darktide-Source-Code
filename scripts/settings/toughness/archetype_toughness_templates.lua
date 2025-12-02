@@ -10,6 +10,7 @@ local archetype_toughness_templates = {}
 
 archetype_toughness_templates.veteran = {
 	max = 100,
+	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -28,6 +29,7 @@ archetype_toughness_templates.veteran = {
 }
 archetype_toughness_templates.psyker = {
 	max = 75,
+	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -47,6 +49,7 @@ archetype_toughness_templates.psyker = {
 }
 archetype_toughness_templates.zealot = {
 	max = 100,
+	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -65,6 +68,7 @@ archetype_toughness_templates.zealot = {
 }
 archetype_toughness_templates.ogryn = {
 	max = 75,
+	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -85,6 +89,7 @@ archetype_toughness_templates.ogryn = {
 }
 archetype_toughness_templates.adamant = {
 	max = 80,
+	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
 	regeneration_speed = {
@@ -100,6 +105,25 @@ archetype_toughness_templates.adamant = {
 	recovery_percentages = {
 		[replenish_types.melee_kill] = 0.05,
 		[replenish_types.gunslinger_crit_regen] = 0.15,
+	},
+}
+archetype_toughness_templates.broker = {
+	max = 75,
+	optional_on_hit_function = nil,
+	regeneration_delay = 3,
+	template_type = template_types.player,
+	regeneration_speed = {
+		moving = 5,
+		still = 5,
+	},
+	state_damage_modifiers = {
+		dodging = 1,
+		sliding = 0.5,
+		sprinting = 1,
+	},
+	on_depleted_function = ToughnessDepleted.spill_over,
+	recovery_percentages = {
+		[replenish_types.melee_kill] = 0.05,
 	},
 }
 

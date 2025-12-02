@@ -24,6 +24,7 @@ local Stamina = require("scripts/utilities/attack/stamina")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
+local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
 local attack_results = AttackSettings.attack_results
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
@@ -110,19 +111,10 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._block_component = unit_data_extension:write_component("block")
 
-	local damage_profile = action_settings.damage_profile
+	for sweep_index = 1, #self._sweep_splines do
+		-- Nothing
+	end
 
-	self._damage_profile = damage_profile
-	self._damage_profile_on_abort = action_settings.damage_profile_on_abort or damage_profile
-	self._damage_profile_special_active = action_settings.damage_profile_special_active or damage_profile
-	self._damage_profile_special_active_on_abort = action_settings.damage_profile_special_active_on_abort or self._damage_profile_special_active
-
-	local damage_type = action_settings.damage_type
-
-	self._damage_type = damage_type
-	self._damage_type_on_abort = action_settings.damage_type_on_abort or damage_type
-	self._damage_type_special_active = action_settings.damage_type_special_active or damage_type
-	self._damage_type_special_active_on_abort = action_settings.damage_type_special_active_on_abort or self._damage_type_special_active
 	self._saved_entries = {}
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
@@ -145,6 +137,10 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	local weapon = action_params.weapon
 
 	self._sweep_fx_source_name = weapon.fx_sources._sweep
+
+	local visual_loadout_extension = ScriptUnit.has_extension(self._player_unit, "visual_loadout_system")
+
+	self._wieldable_slot_scripts = visual_loadout_extension:current_wielded_slot_scripts()
 end
 
 ActionSweep._init_splines = function (self, action_settings)
@@ -195,8 +191,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	self._num_saved_entries = 0
 	self._time_before_processing_saved_entries = 0
 
-	local damage_profile = self._damage_profile
-	local damage_profile_special_active = self._damage_profile_special_active
+	local damage_profile, damage_profile_special_active = self:_hit_mass_damage_profile(1)
 	local is_critical_strike = self._critical_strike_component.is_active
 	local charge_level = 1
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
@@ -250,6 +245,10 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 
 	if weapon_special_implementation then
 		weapon_special_implementation:on_sweep_action_start(t)
+	end
+
+	if self._wieldable_slot_scripts then
+		WieldableSlotScripts.on_sweep_start(self._wieldable_slot_scripts, t)
 	end
 end
 
@@ -310,8 +309,7 @@ ActionSweep.server_correction_occurred = function (self)
 	local action_settings = self._action_settings
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	local charge_level = 1
-	local damage_profile = self._damage_profile
-	local damage_profile_special_active = self._damage_profile_special_active
+	local damage_profile, damage_profile_special_active = self:_damage_profile(1)
 
 	self._max_hit_mass = self:_calculate_max_hit_mass(damage_profile, power_level, charge_level)
 	self._max_hit_mass_special = self:_calculate_max_hit_mass(damage_profile_special_active, power_level, charge_level)
@@ -330,6 +328,10 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 
 	if action_settings.activate_special_during_sweep then
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false)
+	end
+
+	if self._wieldable_slot_scripts then
+		WieldableSlotScripts.on_sweep_finish(self._wieldable_slot_scripts)
 	end
 
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
@@ -857,11 +859,15 @@ ActionSweep._exit_damage_window = function (self, t, num_hit_enemies, aborted)
 	if weapon_special_implementation then
 		weapon_special_implementation:on_exit_damage_window(t, num_hit_enemies, aborted)
 	end
+
+	if self._wieldable_slot_scripts then
+		WieldableSlotScripts.on_exit_damage_window(self._wieldable_slot_scripts)
+	end
 end
 
 ActionSweep._handle_exit_procs = function (self)
 	local buff_extension = self._buff_extension
-	local damage_profile = self._damage_profile
+	local damage_profile = self:_hit_mass_damage_profile()
 	local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
 	local num_hit_enemies = self._num_hit_enemies
 	local num_killed_enemies = self._num_killed_enemies
@@ -1027,7 +1033,7 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 			hit_zone_name = hit_zone.name
 		end
 
-		abort_attack, armor_aborted_attack = self:_process_hit(t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name, hit_normal)
+		abort_attack, armor_aborted_attack = self:_process_hit(t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name, hit_normal, sweep_index)
 
 		if abort_attack then
 			self:_abort_sweep(sweep_index, t, hit_unit, hit_actor)
@@ -1043,6 +1049,10 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 		self:_start_hit_stickyness(hit_stickyness_settings, t, attack_direction)
 	elseif not already_partially_aborted then
 		self:_play_hit_animations(action_settings, abort_attack, armor_aborted_attack, special_active_at_start)
+
+		if self._wieldable_slot_scripts then
+			WieldableSlotScripts.on_sweep_hit(self._wieldable_slot_scripts)
+		end
 	end
 end
 
@@ -1241,7 +1251,7 @@ local attack_intensities = {
 	ranged = 15,
 }
 
-ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal)
+ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal, sweep_index)
 	hit_units[hit_unit] = true
 
 	local critical_strike_component = self._critical_strike_component
@@ -1292,14 +1302,15 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local breed_aborts_attack = not hit_ragdoll and target_is_alive and _breed_aborts_attack(action_settings, is_special_active, target_breed_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
 	local abort_attack = max_mass_hit or armor_aborts_attack or breed_aborts_attack
-	local damage_profile, damage_type
+	local damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort = self:_damage_profile(sweep_index)
+	local damage_type, damage_type_on_abort, damage_type_special_active, damage_type_special_active_on_abort = self:_damage_type(sweep_index)
 
 	if is_special_active then
-		damage_profile = abort_attack and self._damage_profile_special_active_on_abort or self._damage_profile_special_active
-		damage_type = abort_attack and self._damage_type_special_active_on_abort or self._damage_type_special_active
+		damage_profile = abort_attack and special_damage_profile_on_abort or special_damage_profile
+		damage_type = abort_attack and damage_type_special_active_on_abort or damage_type_special_active
 	else
-		damage_profile = abort_attack and self._damage_profile_on_abort or self._damage_profile
-		damage_type = abort_attack and self._damage_type_on_abort or self._damage_type
+		damage_profile = abort_attack and damage_profile_on_abort or damage_profile
+		damage_type = abort_attack and damage_type_on_abort or damage_type
 	end
 
 	if type(damage_type) == "table" then
@@ -1594,13 +1605,48 @@ ActionSweep._play_hit_effects = function (self, hit_unit, damage_profile, hit_po
 		external_properties.is_critical_strike = self._critical_strike_component.is_active and "true" or "false"
 		external_properties.special_active = self._weapon_action_component.special_active_at_start and "true" or "false"
 
-		self._fx_extension:trigger_gear_wwise_event_with_source(sweep_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)
-		self._fx_extension:trigger_gear_wwise_event_with_source(crit_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)
+		self._fx_extension:trigger_gear_wwise_event_with_source(sweep_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients, false)
+		self._fx_extension:trigger_gear_wwise_event_with_source(crit_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients, false)
 	end
 
 	if damage and damage > 0 and not Breed.is_objective_prop(Breed.unit_breed_or_nil(hit_unit)) then
 		Managers.state.blood:play_screen_space_blood(self._fx_extension)
 	end
+end
+
+ActionSweep._damage_profile = function (self, sweep_index)
+	local damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort = Action.damage_template(self._action_settings, sweep_index)
+
+	special_damage_profile = special_damage_profile or damage_profile
+	damage_profile_on_abort = damage_profile_on_abort or damage_profile
+	special_damage_profile_on_abort = special_damage_profile_on_abort or special_damage_profile
+
+	return damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort
+end
+
+ActionSweep._hit_mass_damage_profile = function (self)
+	return self:_damage_profile(1)
+end
+
+ActionSweep._damage_type = function (self, sweep_index)
+	local damage_type, damage_type_on_abort, damage_type_special_active, damage_type_special_active_on_abort
+	local action_settings = self._action_settings
+
+	damage_type = action_settings.damage_type
+	damage_type_on_abort = action_settings.damage_type_on_abort or damage_type
+	damage_type_special_active = action_settings.damage_type_special_active or damage_type
+	damage_type_special_active_on_abort = action_settings.damage_type_special_active_on_abort or damage_type_special_active
+
+	if action_settings.sweeps then
+		local sweep = action_settings.sweeps[sweep_index]
+
+		damage_type = sweep.damage_type or damage_type
+		damage_type_on_abort = sweep.damage_type_on_abort or damage_type
+		damage_type_special_active = sweep.damage_type_special_active or damage_type
+		damage_type_special_active_on_abort = sweep.damage_type_special_active_on_abort or damage_type_special_active
+	end
+
+	return damage_type, damage_type_special_active, damage_type_on_abort, damage_type_special_active_on_abort
 end
 
 function _dot(direction, rotation)

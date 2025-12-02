@@ -338,6 +338,7 @@ weapon_template.actions = {
 		abort_sprint = false,
 		allowed_during_sprint = false,
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_pellets",
 		spread_template = "default_spread_shotgun_p2",
 		sprint_ready_up_time = 0.2,
@@ -433,6 +434,7 @@ weapon_template.actions = {
 	action_shoot_zoomed = {
 		activate_special_on_required_ammo = true,
 		allow_shots_with_less_than_required_ammo = true,
+		anim_event = nil,
 		kind = "shoot_pellets",
 		minimum_hold_time = 0.6,
 		spread_template = "special_spread_shotgun_p2",
@@ -532,7 +534,7 @@ weapon_template.actions = {
 			buff_stat_buffs.ranged_attack_speed,
 		},
 		action_condition_func = _can_shoot_due_to_reload,
-		haptic_trigger_template_condition_func = function (condition_func_params)
+		haptic_trigger_template_condition_func = function (action_settings, condition_func_params)
 			local current_ammo_in_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			if current_ammo_in_clip >= DOUBLE_SHOT_AMMO_USAGE then
@@ -566,7 +568,7 @@ weapon_template.actions = {
 			},
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault,
-		haptic_trigger_template_condition_func = function (condition_func_params)
+		haptic_trigger_template_condition_func = function (action_settings, condition_func_params)
 			local current_ammo_in_clip = Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component)
 
 			if current_ammo_in_clip >= DOUBLE_SHOT_AMMO_USAGE then
@@ -770,9 +772,11 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		stop_alternate_fire = true,
 		total_time = 1.1,
 		uninterruptible = true,
@@ -864,9 +868,11 @@ weapon_template.actions = {
 		damage_window_start = 0.2,
 		first_person_hit_stop_anim = "attack_hit",
 		hit_armor_anim = "attack_hit",
+		hit_stop_anim = nil,
 		kind = "sweep",
 		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		stop_alternate_fire = true,
 		total_time = 1.1,
 		uninterruptible = true,
@@ -981,6 +987,7 @@ weapon_template.reload_template = ReloadTemplates.double_barrel
 weapon_template.spread_template = "default_spread_shotgun_p2"
 weapon_template.recoil_template = "assault_recoil_shotgun_p2"
 weapon_template.special_recoil_template = "special_recoil_shotgun_p2"
+weapon_template.suppression_template = "shotgun_p1_m1_suppression_assault"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_with_delay",
@@ -1014,6 +1021,7 @@ weapon_template.alternate_fire_settings = {
 	spread_template = "special_spread_shotgun_p2",
 	start_anim_event = "to_braced",
 	stop_anim_event = "to_unaim_braced",
+	suppression_template = "shotgun_p1_m1_suppression_killshot",
 	sway_template = "default_shotgun_killshot",
 	crosshair = {
 		crosshair_type = "shotgun",
@@ -1056,7 +1064,7 @@ weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.movement_curve_modifier_template = "shotgun_p2"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 
-weapon_template.haptic_trigger_template_condition_func = function (condition_func_params)
+weapon_template.haptic_trigger_template_condition_func = function (weapon_template, condition_func_params)
 	local special_active = condition_func_params.inventory_slot_component.special_active
 
 	if special_active then

@@ -173,7 +173,10 @@ local action_data = {
 			"alerted_2",
 		},
 		start_move_anim_data = {
-			alerted_fwd = {},
+			alerted_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -186,7 +189,10 @@ local action_data = {
 				sign = -1,
 				rad = math.pi / 2,
 			},
-			alerted_fwd_2 = {},
+			alerted_fwd_2 = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_bwd_2 = {
 				sign = 1,
 				rad = math.pi,
@@ -199,7 +205,10 @@ local action_data = {
 				sign = -1,
 				rad = math.pi / 2,
 			},
-			alerted_fwd_3 = {},
+			alerted_fwd_3 = {
+				rad = nil,
+				sign = nil,
+			},
 			alerted_bwd_3 = {
 				sign = 1,
 				rad = math.pi,
@@ -217,6 +226,9 @@ local action_data = {
 			alerted_bwd = 0,
 			alerted_bwd_2 = 0,
 			alerted_bwd_3 = 0,
+			alerted_fwd = nil,
+			alerted_fwd_2 = nil,
+			alerted_fwd_3 = nil,
 			alerted_left = 0,
 			alerted_left_2 = 0,
 			alerted_left_3 = 0,
@@ -228,6 +240,9 @@ local action_data = {
 			alerted_bwd = 3.8,
 			alerted_bwd_2 = 3.5,
 			alerted_bwd_3 = 3.8,
+			alerted_fwd = nil,
+			alerted_fwd_2 = nil,
+			alerted_fwd_3 = nil,
 			alerted_left = 1.5,
 			alerted_left_2 = 2.1666666666666665,
 			alerted_left_3 = 1.5,
@@ -391,7 +406,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -471,7 +489,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_assault_fwd = {},
+			move_start_assault_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_assault_bwd = {
 				sign = -1,
 				rad = math.pi,

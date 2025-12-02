@@ -13,13 +13,23 @@ BtManualTeleportAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.teleport_component = teleport_component
 
 	local teleport_position = blackboard.teleport.teleport_position
-	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	local locomotion_extension = ScriptUnit.has_extension(unit, "locomotion_system")
 
-	locomotion_extension:teleport_to(teleport_position:unbox())
+	if locomotion_extension then
+		locomotion_extension:teleport_to(teleport_position:unbox())
+	else
+		local spawn_component = blackboard.spawn
+		local teleport_position_vector = teleport_position:unbox()
 
-	local animation_extension = ScriptUnit.extension(unit, "animation_system")
+		Unit.set_local_position(unit, 1, teleport_position_vector)
+		GameSession.set_game_object_field(spawn_component.game_session, spawn_component.game_object_id, "position", teleport_position_vector)
+	end
 
-	animation_extension:anim_event("idle")
+	local animation_extension = ScriptUnit.has_extension(unit, "animation_system")
+
+	if animation_extension then
+		animation_extension:anim_event("idle")
+	end
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 

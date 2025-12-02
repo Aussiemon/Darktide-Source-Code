@@ -87,6 +87,11 @@ ScannerDisplayView.on_exit = function (self)
 	ScannerDisplayView.super.on_exit(self)
 end
 
+ScannerDisplayView.destroy = function (self)
+	self._minigame:delete()
+	ScannerDisplayView.super.destroy(self)
+end
+
 ScannerDisplayView._setup_offscreen_gui = function (self)
 	local ui_manager = Managers.ui
 	local world = self:_create_offscreen_world()

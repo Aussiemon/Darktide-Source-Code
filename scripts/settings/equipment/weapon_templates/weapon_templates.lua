@@ -160,6 +160,10 @@ local template_groups = {
 		"thunderhammer_2h_p1_m2",
 	},
 	{
+		"saws",
+		"saw_p1_m1",
+	},
+	{
 		"autoguns",
 		"autogun_p1_m1",
 		"autogun_p1_m2",
@@ -184,6 +188,31 @@ local template_groups = {
 		"bolt_pistols",
 		"boltpistol_p1_m1",
 		"boltpistol_p1_m2",
+	},
+	{
+		"dual_autopistols",
+		"dual_autopistols_p1_m1",
+	},
+	{
+		"dual_shivs",
+		"dual_shivs_p1_m1",
+		"dual_shivs_p1_m2",
+	},
+	{
+		"missile_launchers",
+		"missile_launcher",
+	},
+	{
+		"dual_stub_pistols",
+		"dual_stubpistols_p1_m1",
+	},
+	{
+		"saws",
+		"saw_p1_m1",
+	},
+	{
+		"crowbars",
+		"crowbar_p1_m1",
 	},
 	{
 		"flamers",
@@ -260,6 +289,12 @@ local template_groups = {
 		"stubrevolver_p1_m2",
 	},
 	{
+		"needlepistols",
+		"needlepistol_p1_m1",
+		"needlepistol_p1_m2",
+		"needlepistol_p1_m3",
+	},
+	{
 		"bot_weapons",
 		"bot_autogun_killshot",
 		"bot_combataxe_linesman",
@@ -277,6 +312,7 @@ local template_groups = {
 		"psyker_force_field_dome",
 		"zealot_relic",
 		"area_buff_drone",
+		"broker_stimm_field",
 	},
 	{
 		"devices",
@@ -305,6 +341,8 @@ local template_groups = {
 		"shock_grenade",
 		"fire_grenade",
 		"zealot_throwing_knives",
+		"quick_flash_grenade",
+		"tox_grenade",
 	},
 	{
 		"luggables",
@@ -323,15 +361,13 @@ local template_groups = {
 		"syringe_corruption_pocketable",
 		"syringe_power_boost_pocketable",
 		"syringe_speed_boost_pocketable",
+		"syringe_broker_pocketable",
 		"tome_pocketable",
 	},
 	{
 		"unarmed",
-		"unarmed_hub_adamant",
 		"unarmed_hub_ogryn",
-		"unarmed_hub_psyker",
-		"unarmed_hub_veteran",
-		"unarmed_hub_zealot",
+		"unarmed_hub_human",
 		"unarmed_training_grounds",
 		"unarmed",
 	},

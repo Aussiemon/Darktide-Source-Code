@@ -5,10 +5,9 @@ local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
-local Personalities = require("scripts/settings/character/personalities")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local SelectedVoiceSettings = require("scripts/settings/dialogue/selected_voice_settings")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -693,11 +692,10 @@ CosmeticsInspectView._setup_item_description = function (self, description_text,
 		widget.content.text = text
 
 		local widget_text_style = widget.style.text
-		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+		local _, text_height = self:_text_size(text, widget_text_style, {
 			max_width,
 			math.huge,
-		}, text_options)
+		})
 
 		widget.content.size[2] = text_height
 		widgets[#widgets + 1] = widget
@@ -952,8 +950,6 @@ CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 
 	local title_style = self._widgets_by_name.title.style.text
 	local sub_title_style = self._widgets_by_name.title.style.sub_text
-	local title_options = UIFonts.get_font_options_by_style(title_style)
-	local sub_title_options = UIFonts.get_font_options_by_style(sub_title_style)
 	local max_width = self._ui_scenegraph.title.size[1]
 
 	if self._context.use_store_appearance then
@@ -962,14 +958,14 @@ CosmeticsInspectView._setup_title = function (self, item, ignore_localization)
 		title_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
 	end
 
-	local title_width, title_height = self:_text_size(self._widgets_by_name.title.content.text, title_style.font_type, title_style.font_size, {
+	local title_width, title_height = self:_text_size(self._widgets_by_name.title.content.text, title_style, {
 		max_width,
 		math.huge,
-	}, title_options)
-	local sub_title_width, sub_title_height = self:_text_size(self._widgets_by_name.title.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
+	})
+	local sub_title_width, sub_title_height = self:_text_size(self._widgets_by_name.title.content.sub_text, sub_title_style, {
 		max_width,
 		math.huge,
-	}, sub_title_options)
+	})
 	local sub_title_margin = 10
 
 	sub_title_style.offset[2] = sub_title_margin + title_height
@@ -1071,11 +1067,13 @@ CosmeticsInspectView.cb_preview_voice = function (self)
 		return
 	end
 
-	local personality_key = table.nested_get(self, "_preview_profile", "lore", "backstory", "personality")
-	local personality_settings = Personalities[personality_key]
-	local sound_event = personality_settings and personality_settings.preview_sound_event
+	local selected_voice_key = table.nested_get(self, "_preview_profile", "selected_voice")
+	local selected_voice_settings = SelectedVoiceSettings[selected_voice_key]
+	local sound_event = selected_voice_settings and selected_voice_settings.preview_sound_event
 
 	if not sound_event then
+		Log.exception("CosmeticsInspectView", "Unknown voice profile: %s", selected_voice_key)
+
 		return
 	end
 
@@ -1130,14 +1128,17 @@ CosmeticsInspectView.on_exit = function (self)
 	end
 
 	self:_destroy_offscreen_gui()
+	CosmeticsInspectView.super.on_exit(self)
+end
 
+CosmeticsInspectView.destroy = function (self)
 	local image_url = self._image_url
 
 	if image_url then
 		Managers.url_loader:unload_texture(image_url)
 	end
 
-	CosmeticsInspectView.super.on_exit(self)
+	CosmeticsInspectView.super.destroy(self)
 end
 
 CosmeticsInspectView._handle_back_pressed = function (self)
@@ -1183,7 +1184,7 @@ CosmeticsInspectView._update_zoom_logic = function (self, dt, input_service)
 	self._zoom_level, self._zoom_speed = zoom_level, zoom_speed
 
 	if has_changed then
-		self:_trigger_zoom_logic()
+		self:_trigger_zoom_logic(self._camera_focus_slot_name)
 	end
 end
 
@@ -1236,7 +1237,7 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 			self._profile_spawner:assign_animation_variable(index, value)
 		end
 
-		self:_trigger_zoom_logic()
+		self:_trigger_zoom_logic(self._camera_focus_slot_name)
 	end
 
 	self:_update_zoom_logic(dt, input_service)
@@ -1369,7 +1370,7 @@ CosmeticsInspectView.cb_on_camera_zoom_toggled = function (self)
 	self._zoom_level = self._zoom_level > 0.5 and 0 or 1
 	self._zoom_speed = 0
 
-	self:_trigger_zoom_logic(nil, 0.5)
+	self:_trigger_zoom_logic(self._camera_focus_slot_name, 0.5)
 end
 
 CosmeticsInspectView.event_register_cosmetics_preview_character_spawn_point = function (self, spawn_point_unit)

@@ -270,7 +270,7 @@ templates.zealot_quickness_active = {
 		[stat_buffs.damage] = 0.01,
 		[stat_buffs.dodge_speed_multiplier] = 1.005,
 		[stat_buffs.dodge_distance_modifier] = 0.005,
-		[stat_buffs.dodge_cooldown_reset_modifier] = 0.01,
+		[stat_buffs.dodge_cooldown_reset_modifier] = -0.01,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -531,6 +531,9 @@ templates.zealot_preacher_ally_defensive = {
 }
 templates.zealot_preacher_ally_defensive_buff = {
 	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/talents/zealot_3/hud/zealot_3_tier_4_3",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 4,
 	predicted = false,
 	buff_category = buff_categories.talents_secondary,
 	duration = talent_settings_3.coop_3.duration,
@@ -539,6 +542,9 @@ templates.zealot_preacher_ally_defensive_buff = {
 	},
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_zealot_preacher_defense",
+	},
+	related_talents = {
+		"zealot_ally_damage_taken_reduced",
 	},
 }
 
@@ -686,16 +692,22 @@ templates.zealot_martyrdom_cdr = {
 	max_stacks_cap = 1,
 	predicted = false,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local unit = template_context.unit
 
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
 	end,
 	update_func = function (template_data, template_context, dt, t)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+		if not template_context.is_server then
+			return
 		end
 
 		_martyrdom_update_func(template_data, template_context, dt, t)
@@ -707,9 +719,8 @@ templates.zealot_martyrdom_cdr = {
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
-			local missing_segments = _martyrdom_missing_health_segments(template_data)
 			local cooldown = ability_cooldown_regeneration_per_stack * missing_segments
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown)
@@ -1248,8 +1259,8 @@ templates.zealot_dash_buff = {
 			template_context.buff_extension:add_internally_controlled_buff("zealot_fotf_refund_cooldown", t)
 		end
 	end,
-	specific_check_proc_func = {
-		on_hit = CheckProcFunctions.on_melee_hit,
+	specific_check_proc_funcs = {
+		[proc_events.on_hit] = CheckProcFunctions.on_melee_hit,
 	},
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context)
@@ -2072,6 +2083,9 @@ templates.zealot_weakspot_damage_reduction_effect = {
 	stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = talent_settings.zealot_weakspot_damage_reduction.damage_taken_multiplier,
 	},
+	related_talents = {
+		"zealot_weakspot_damage_reduction",
+	},
 }
 templates.zealot_stacking_melee_damage_after_dodge = {
 	class_name = "proc_buff",
@@ -2092,6 +2106,9 @@ templates.zealot_stacking_melee_damage_after_dodge = {
 
 		template_data.buff_extension:add_internally_controlled_buff("zealot_stacking_melee_damage_after_dodge_effect", t)
 	end,
+	related_talents = {
+		"zealot_stacking_melee_damage_after_dodge",
+	},
 }
 templates.zealot_stacking_melee_damage_after_dodge_effect = {
 	class_name = "buff",
@@ -2104,6 +2121,9 @@ templates.zealot_stacking_melee_damage_after_dodge_effect = {
 	max_stacks = talent_settings.zealot_stacking_melee_damage_after_dodge.max_stacks,
 	stat_buffs = {
 		[stat_buffs.melee_damage] = talent_settings.zealot_stacking_melee_damage_after_dodge.melee_damage,
+	},
+	related_talents = {
+		"zealot_stacking_melee_damage_after_dodge",
 	},
 }
 templates.zealot_bled_enemies_take_more_damage = {
@@ -2415,6 +2435,10 @@ templates.zealot_cooldown_based_on_health = {
 	max_stacks_cap = 1,
 	predicted = false,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
 		local unit = template_context.unit
 
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
@@ -2425,13 +2449,17 @@ templates.zealot_cooldown_based_on_health = {
 		template_data.timer = t + 1
 	end,
 	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
 		if t > template_data.timer then
 			local cooldown = talent_settings_3.combat_ability_cd_restore_on_damage.cooldown_regen
 			local health_percent = template_data.health_extension:current_health_percent()
 			local multiplier = math.clamp((1 - health_percent) / (1 - talent_settings_3.combat_ability_cd_restore_on_damage.max_health), 0, 1)
 			local value = cooldown * multiplier
 
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			if value > 0 then
 				template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", value)
@@ -2459,7 +2487,7 @@ templates.zealot_toughness_reduction_on_high_toughness = {
 
 		return current_toughness > talent_settings.zealot_toughness_reduction_on_high_toughness.threshold
 	end,
-	related_talent = {
+	related_talents = {
 		"veteran_tdr_on_high_toughness",
 	},
 }
@@ -2792,6 +2820,9 @@ templates.zealot_on_dodge_block_dodging_synergy = {
 	duration = talent_settings.zealot_block_dodging_synergy.on_dodge_block_cost_multiplier_duration,
 	stat_buffs = {
 		[stat_buffs.block_cost_multiplier] = talent_settings.zealot_block_dodging_synergy.on_dodge_block_cost_multiplier,
+	},
+	related_talents = {
+		"zealot_block_dodging_synergy",
 	},
 }
 templates.zealot_on_perfect_blocking_block_dodging_synergy = {
@@ -3885,19 +3916,25 @@ templates.zealot_crits_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.crits_grants_cd.duration,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.crits_grants_cd.cooldown_regen)
 		end
@@ -3944,21 +3981,27 @@ templates.zealot_weakspot_backstab_hit_cooldown_cooldown_buff = {
 	max_stacks = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
-	duration = talent_settings.zealot_combat_ability_weakspot_backstab_hit_cooldown.duration + 0.25,
+	duration = talent_settings.zealot_combat_ability_weakspot_backstab_hit_cooldown.duration,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.zealot_combat_ability_weakspot_backstab_hit_cooldown.cooldown)
 		end
@@ -4047,10 +4090,7 @@ templates.zealot_invisibility = {
 		end
 
 		local buff_extension = template_context.buff_extension
-		local can_attack_during_invisibility = false
-
-		can_attack_during_invisibility = buff_extension:has_keyword(keywords.can_attack_during_invisibility)
-
+		local can_attack_during_invisibility = not not buff_extension:has_keyword(keywords.can_attack_during_invisibility)
 		local damage_type = params.damage_type
 
 		if damage_type and (ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] or can_attack_during_invisibility) then

@@ -2,8 +2,8 @@
 
 local Promise = require("scripts/foundation/utilities/promise")
 local GlobalStatsService = class("GlobalStatsService")
-local REFRESH_INTERVAL = 30
-local REFRESH_JITTER = 3
+local REFRESH_INTERVAL = 60
+local REFRESH_JITTER = 5
 
 GlobalStatsService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
@@ -46,14 +46,16 @@ GlobalStatsService._queue_refresh = function (self, category_name, amount)
 end
 
 GlobalStatsService._trigger_subscribers = function (self, category_name, old_stats, new_stats)
-	for stat_name in pairs(self._subscribers_by_category[category_name] or {}) do
+	local subscribers_by_category = self._subscribers_by_category[category_name] or {}
+
+	for stat_name, subscribers in pairs(subscribers_by_category) do
 		local old_value = old_stats and old_stats[stat_name] or 0
 		local new_value = new_stats and new_stats[stat_name] or 0
 
 		if old_value == new_value then
 			-- Nothing
 		else
-			for object, function_name in pairs(self._subscribers_by_category[category_name][stat_name]) do
+			for object, function_name in pairs(subscribers) do
 				object[function_name](object, stat_name, new_value)
 			end
 		end
@@ -70,6 +72,8 @@ GlobalStatsService._refresh_category = function (self, category_name)
 	local backend_promise = self._backend_interface.global_stats:get_category(category_name):next(function (body)
 		return body.stats
 	end)
+
+	self._backend_promises[category_name] = backend_promise
 
 	backend_promise:catch(function (err)
 		Log.warning("GlobalStatsService", "Failed to fetch global stats for category '%s'. Default to current internally.", category_name, err)
@@ -114,7 +118,7 @@ GlobalStatsService.subscribe = function (self, object, function_name, category_n
 	local is_refreshing = self._delay_promises[category_name] ~= nil or self._backend_promises[category_name] ~= nil
 
 	if has_stats and not is_refreshing then
-		self:_queue_refresh(category_name, REFRESH_INTERVAL)
+		self:_refresh_category(category_name)
 	end
 
 	return has_stats and stats[stat_name] or default_value

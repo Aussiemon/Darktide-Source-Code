@@ -10,7 +10,9 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local Text = require("scripts/utilities/ui/text")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local MasterItems = require("scripts/backend/master_items")
@@ -18,7 +20,6 @@ local Breeds = require("scripts/settings/breed/breeds")
 local ContentBlueprints = require("scripts/ui/views/character_appearance_view/character_appearance_view_content_blueprints")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local SkinMaterialOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_skin_colors")
@@ -52,113 +53,128 @@ local BREED_TO_EVENT_SUFFIX = {
 	human = "human",
 	ogryn = "ogryn",
 }
+local SET_TO_NIL = {}
 local choices_presentation = {
-	home_planet = {
-		choice_title = "loc_character_birthplace_planet_title_name",
-		description = "loc_character_creator_home_planet_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_home_planet",
-		top_icon_texture = "content/ui/materials/icons/character_creator/home_planet",
-	},
-	childhood = {
-		choice_title = "loc_character_childhood_title_name",
-		description = "loc_character_creator_childhood_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_childhood_title_name",
-		top_icon_texture = "content/ui/materials/icons/character_creator/childhood",
-	},
-	growing_up = {
-		choice_title = "loc_character_growing_up_title_name",
-		description = "loc_character_creator_growing_up_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_growingup",
-		title = "loc_character_growing_up_title_name",
-		top_icon_texture = "content/ui/materials/icons/character_creator/growth",
-	},
-	formative_event = {
-		choice_title = "loc_character_event_title_name",
-		description = "loc_character_creator_formative_event_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
-		title = "loc_character_event_title_name",
-		top_icon_texture = "content/ui/materials/icons/character_creator/accomplishment",
-	},
-	appearance = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_commendations_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
-		title = "loc_character_create_title_appearance",
-		top_icon_texture = "content/ui/materials/icons/character_creator/appearence",
-	},
-	personality = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_personality_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_personality",
-		top_icon_texture = "content/ui/materials/icons/character_creator/personality",
-	},
-	crime = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_sentence_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_crime",
-		top_icon_texture = "content/ui/materials/icons/character_creator/sentence",
+	__default = {
+		home_planet = {
+			description = "loc_character_creator_home_planet_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_home_planet",
+			top_icon_texture = "content/ui/materials/icons/character_creator/home_planet",
+		},
+		childhood = {
+			description = "loc_character_creator_childhood_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_childhood_title_name",
+			top_icon_texture = "content/ui/materials/icons/character_creator/childhood",
+		},
+		growing_up = {
+			description = "loc_character_creator_growing_up_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_growingup",
+			title = "loc_character_growing_up_title_name",
+			top_icon_texture = "content/ui/materials/icons/character_creator/growth",
+		},
+		formative_event = {
+			description = "loc_character_creator_formative_event_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
+			title = "loc_character_event_title_name",
+			top_icon_texture = "content/ui/materials/icons/character_creator/accomplishment",
+		},
+		appearance = {
+			description = "loc_character_creator_commendations_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
+			title = "loc_character_create_title_appearance",
+			top_icon_texture = "content/ui/materials/icons/character_creator/appearence",
+		},
+		personality = {
+			description = "loc_character_creator_personality_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_personality",
+			top_icon_texture = "content/ui/materials/icons/character_creator/personality",
+		},
+		crime = {
+			description = "loc_character_creator_sentence_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_crime",
+			top_icon_texture = "content/ui/materials/icons/character_creator/sentence",
+		},
 	},
 }
-local adamant_choices_presentation = {
-	home_planet = {
-		choice_title = "loc_character_birthplace_planet_title_name",
-		description = "loc_character_creator_home_planet_introduction",
+local choices_presentation_archetype_overrides = {
+	adamant = {
+		childhood = {
+			description = "loc_character_creator_early_life_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_early_life",
+			top_icon_texture = "content/ui/materials/icons/character_creator/childhood",
+		},
+		growing_up = {
+			description = "loc_character_creator_key_event_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_growingup",
+			title = "loc_character_create_title_key_event",
+			top_icon_texture = "content/ui/materials/icons/character_creator/growth",
+		},
+		formative_event = {
+			description = "loc_character_creator_commendations_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
+			title = "loc_character_create_title_commendations",
+			top_icon_texture = "content/ui/materials/icons/character_creator/accomplishment",
+		},
+		companion_appearance = {
+			description = "loc_character_creator_commendations_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
+			title = "loc_character_create_title_appearance",
+			top_icon_texture = "content/ui/materials/icons/character_creator/companion_appearence",
+		},
+		crime = {
+			description = "loc_character_creator_precinct_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_precinct",
+			top_icon_texture = "content/ui/materials/icons/character_creator/sentence",
+		},
+	},
+	broker = {
+		home_planet = {
+			description = "loc_character_creator_gang_introduction",
+			icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
+			title = "loc_character_create_title_gang",
+			top_icon_texture = "content/ui/materials/icons/character_creator/home_planet_broker",
+		},
+	},
+}
+
+for archetype_name, overrides in pairs(choices_presentation_archetype_overrides) do
+	local choices = table.clone(choices_presentation.__default)
+
+	for choice_name, choice_overrides in pairs(overrides) do
+		if choices[choice_name] then
+			table.merge(choices[choice_name], choice_overrides)
+		else
+			choices[choice_name] = table.clone(choice_overrides)
+		end
+
+		for override_key, override_value in pairs(choice_overrides) do
+			if override_value == SET_TO_NIL then
+				choices[choice_name][override_key] = nil
+			end
+		end
+	end
+
+	choices_presentation[archetype_name] = choices
+end
+
+local restriction_datas = {
+	dlc = {
 		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_home_planet",
-		top_icon_texture = "content/ui/materials/icons/character_creator/home_planet",
+		title = "loc_term_glossary_dlc",
 	},
-	childhood = {
-		choice_title = "loc_character_childhood_title_name",
-		description = "loc_character_creator_early_life_introduction",
+	class = {
 		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_early_life",
-		top_icon_texture = "content/ui/materials/icons/character_creator/childhood",
+		unique_reason = true,
 	},
-	growing_up = {
-		choice_title = "loc_character_growing_up_title_name",
-		description = "loc_character_creator_key_event_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_growingup",
-		title = "loc_character_create_title_key_event",
-		top_icon_texture = "content/ui/materials/icons/character_creator/growth",
-	},
-	formative_event = {
-		choice_title = "loc_character_event_title_name",
-		description = "loc_character_creator_commendations_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
-		title = "loc_character_create_title_commendations",
-		top_icon_texture = "content/ui/materials/icons/character_creator/accomplishment",
-	},
-	appearance = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_commendations_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
-		title = "loc_character_create_title_appearance",
-		top_icon_texture = "content/ui/materials/icons/character_creator/appearence",
-	},
-	personality = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_personality_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_personality",
-		top_icon_texture = "content/ui/materials/icons/character_creator/personality",
-	},
-	companion_appearance = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_commendations_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_formative",
-		title = "loc_character_create_title_appearance",
-		top_icon_texture = "content/ui/materials/icons/character_creator/companion_appearence",
-	},
-	crime = {
-		choice_title = "loc_character_create_title_commendations",
-		description = "loc_character_creator_precinct_introduction",
-		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_character_create_title_precinct",
-		top_icon_texture = "content/ui/materials/icons/character_creator/sentence",
+	full_body_tattoo = {
+		disabling_reason = true,
+		title = "loc_character_create_full_body_tattoo_selected",
 	},
 }
 local eye_types = {
@@ -226,38 +242,76 @@ local function continue_validation_item_slots(self, slots)
 	return true
 end
 
-local function add_gamepad_focused_slots(self, slot, option, optional_revert_function, optional_callback_function)
+local TEMP_SLOTS = {}
+local TEMP_OPTIONS = {}
+
+local function add_gamepad_focused_slots(self, slot_array, option_map, optional_revert_function, optional_callback_function, peek_shelf)
 	self._gamepad_focused_loadout = self._gamepad_focused_loadout or {}
 
-	local stored_option = self._character_create:slot_item(slot)
+	if type(slot_array) ~= "table" then
+		TEMP_SLOTS[1] = slot_array
+		slot_array = TEMP_SLOTS
 
-	self._gamepad_focused_loadout[slot] = self._gamepad_focused_loadout[slot] or {
-		original_value = stored_option,
-		revert_func = optional_revert_function or function ()
-			local option = self._gamepad_focused_loadout[slot].original_value
+		table.clear(TEMP_OPTIONS)
 
-			self._character_create:set_item_per_slot(slot, option)
-		end,
-		callback_function = optional_callback_function,
-	}
+		TEMP_OPTIONS[slot_array[1]] = option_map
+		option_map = TEMP_OPTIONS
+	end
 
-	self._character_create:set_item_per_slot(slot, option)
-end
+	for i = 1, #slot_array do
+		local slot = slot_array[i]
+		local option = option_map[slot]
+		local stored_option = self._character_create:slot_item(slot)
 
-local function remove_gamepad_focused_slots(self, slot, revert)
-	if self._gamepad_focused_loadout and self._gamepad_focused_loadout[slot] then
-		local original_value = self._gamepad_focused_loadout[slot].original_value
+		self._gamepad_focused_loadout[slot] = self._gamepad_focused_loadout[slot] or {
+			original_value = stored_option,
+			revert_func = optional_revert_function or function ()
+				local original_option = self._gamepad_focused_loadout[slot].original_value
 
-		if revert and self._gamepad_focused_loadout[slot].revert_func then
-			self._gamepad_focused_loadout[slot].revert_func()
+				if original_option and original_option.item_group then
+					for slot_id, item in pairs(original_option) do
+						if slot_id ~= "item_group" then
+							self._character_create:set_item_per_slot(slot_id, item)
+						end
+					end
+				else
+					self._character_create:set_item_per_slot(slot, original_option)
+				end
+			end,
+			callback_function = optional_callback_function,
+		}
+
+		if not option and peek_shelf then
+			option = self._character_create:shelved_item(slot)
 		end
 
-		local callback_function = self._gamepad_focused_loadout[slot].callback_function
+		self._character_create:set_item_per_slot(slot, option)
+	end
+end
 
-		self._gamepad_focused_loadout[slot] = nil
+local function remove_gamepad_focused_slots(self, slots, revert)
+	if type(slots) ~= "table" then
+		TEMP_SLOTS[1] = slots
+		slots = TEMP_SLOTS
+	end
 
-		if callback_function then
-			callback_function(original_value)
+	for i = 1, #slots do
+		local slot = slots[i]
+
+		if self._gamepad_focused_loadout and self._gamepad_focused_loadout[slot] then
+			local original_value = self._gamepad_focused_loadout[slot].original_value
+
+			if revert and self._gamepad_focused_loadout[slot].revert_func then
+				self._gamepad_focused_loadout[slot].revert_func()
+			end
+
+			local callback_function = self._gamepad_focused_loadout[slot].callback_function
+
+			self._gamepad_focused_loadout[slot] = nil
+
+			if callback_function then
+				callback_function(original_value)
+			end
 		end
 	end
 end
@@ -294,22 +348,6 @@ local function get_eye_type_index_by_option(option)
 	return 1
 end
 
-local function sort_by_order(appearance_a, appearance_b)
-	if appearance_a.sort_order and appearance_b.sort_order then
-		return appearance_a.sort_order < appearance_b.sort_order
-	else
-		return false
-	end
-end
-
-local function sort_by_string_name(appearance_a, appearance_b)
-	if appearance_a.dev_name and appearance_b.dev_name then
-		return appearance_a.dev_name < appearance_b.dev_name
-	else
-		return false
-	end
-end
-
 local CharacterAppearanceView = class("CharacterAppearanceView", "BaseView")
 
 CharacterAppearanceView.init = function (self, settings, context)
@@ -327,6 +365,7 @@ CharacterAppearanceView.init = function (self, settings, context)
 	self._is_barber_mindwipe = context.is_barber_mindwipe
 	self._is_barber = context.is_barber_appearance or context.is_barber_mindwipe or context.is_barber_companion_appearance
 	self._waiting_for_transform = false
+	self._world_spawners = {}
 
 	CharacterAppearanceView.super.init(self, Definitions, settings, context)
 
@@ -383,7 +422,9 @@ CharacterAppearanceView.on_enter = function (self)
 		self:_create_page_indicators()
 
 		self._character_name_status = {
+			archetype = nil,
 			custom = false,
+			gender = nil,
 		}
 		self._companion_name_status = {
 			custom = false,
@@ -429,15 +470,27 @@ CharacterAppearanceView.on_enter = function (self)
 			self._character_create_promise:resolve()
 
 			self._fetch_all_profiles_promise = nil
+
+			if not self._is_barber then
+				self._character_create:randomize_presets()
+			end
 		end):catch(function (error)
 			self._character_create = CharacterCreate:new(item_definitions, {}, profile)
 
 			self._character_create_promise:resolve()
 
 			self._fetch_all_profiles_promise = nil
+
+			if not self._is_barber then
+				self._character_create:randomize_presets()
+			end
 		end)
 	else
 		self._character_create_promise:resolve()
+
+		if not self._is_barber then
+			self._character_create:randomize_presets()
+		end
 	end
 end
 
@@ -445,11 +498,7 @@ CharacterAppearanceView._archetype_page_data = function (self)
 	local profile = self._character_create:profile()
 	local archetype = profile.archetype and profile.archetype.name
 
-	if archetype == "adamant" then
-		return adamant_choices_presentation
-	else
-		return choices_presentation
-	end
+	return choices_presentation[archetype] or choices_presentation.__default
 end
 
 CharacterAppearanceView._get_pages = function (self)
@@ -502,6 +551,126 @@ CharacterAppearanceView._get_pages = function (self)
 				on_reset = callback(self._character_create, "set_planet", nil),
 				description = Localize(self:_archetype_page_data().home_planet.description),
 				top_frame = function (grid, grid_size, grid_scenegraph)
+					local page_data = self:_archetype_page_data().home_planet
+					local passes = {
+						{
+							pass_type = "texture",
+							style_id = "top_frame",
+							value = "content/ui/materials/frames/character_creator_top",
+							value_id = "top_frame",
+							style = {
+								horizontal_alignment = "center",
+								vertical_alignment = "top",
+								offset = {
+									0,
+									0,
+									2,
+								},
+							},
+						},
+						{
+							pass_type = "texture",
+							style_id = "top_frame_extra",
+							value = "content/ui/materials/effects/character_creator_top_candles",
+							value_id = "top_frame_extra",
+							style = {
+								horizontal_alignment = "center",
+								vertical_alignment = "top",
+								offset = {
+									0,
+									0,
+									2,
+								},
+							},
+						},
+						{
+							pass_type = "text",
+							style_id = "text_title",
+							value_id = "text_title",
+							value = Utf8.upper(Localize(page_data.title)),
+							style = table.merge(table.clone(CharacterAppearanceViewFontStyle.header_text_style), {
+								offset = {
+									0,
+									150,
+									3,
+								},
+							}),
+						},
+						{
+							pass_type = "texture",
+							style_id = "icon",
+							value_id = "icon",
+							value = page_data.top_icon_texture,
+							style = {
+								horizontal_alignment = "center",
+								vertical_alignment = "top",
+								size = {
+									100,
+									100,
+								},
+								offset = {
+									0,
+									30,
+									2,
+								},
+							},
+						},
+					}
+					local size = {
+						485,
+						230,
+					}
+					local offset = {
+						-(size[1] - grid_size[1]) * 0.5,
+						25 - size[2],
+						0,
+					}
+					local definition = UIWidget.create_definition(passes, grid_scenegraph, nil, size)
+
+					definition.offset = offset
+
+					return definition
+				end,
+			},
+		},
+	}
+	local gang_page = {
+		gear_visible = true,
+		name = "crime",
+		render_world = true,
+		show_character = false,
+		show_companion = false,
+		on_enter = function (page, previous_page)
+			local grids = page.grids
+
+			if grids then
+				for i = 1, #grids do
+					local grid = grids[i]
+
+					self:_populate_page_grid(1, grid)
+				end
+			end
+		end,
+		on_leave = function (page, next_page)
+			self:_reset_camera()
+			Managers.ui:play_2d_sound(UISoundEvents.stop_ui_character_create_select_cartel_loops)
+		end,
+		grids = {
+			{
+				template = "button",
+				init = function (grid_index, grid_data)
+					return self:_generate_main_grid_widgets(grid_index, grid_data)
+				end,
+				options = function ()
+					return self:_get_planet_options()
+				end,
+				selected_option = function ()
+					local option = self._character_create:planet()
+
+					return option and option.id
+				end,
+				description = Localize(self:_archetype_page_data().home_planet.description),
+				top_frame = function (page, grid_size, grid_scenegraph)
 					local page_data = self:_archetype_page_data().home_planet
 					local passes = {
 						{
@@ -969,6 +1138,7 @@ CharacterAppearanceView._get_pages = function (self)
 			self:_setup_page_widgets(widgets, widgets_by_name)
 			self:_update_appearance_background()
 			self:_toggle_continue_alternative_action(true)
+			self._character_create:set_gear_visible(false)
 
 			local grids = page.grids
 
@@ -980,14 +1150,16 @@ CharacterAppearanceView._get_pages = function (self)
 				end
 			end
 		end,
-		on_leave = function (page)
+		on_leave = function (page, next_page)
 			self:_toggle_continue_alternative_action(false)
 			self:_set_camera()
 			self:_destroy_page_widgets()
 
 			self._apperance_option_selected_index = nil
+
+			self._character_create:set_gear_visible(true)
 		end,
-		update = function ()
+		update = function (page)
 			if self._is_barber_appearance then
 				local is_disabled = true
 				local profile = self._character_create and self._character_create:profile()
@@ -999,9 +1171,11 @@ CharacterAppearanceView._get_pages = function (self)
 						slot_body_face_tattoo = loadout.slot_body_face_tattoo,
 						slot_body_face_scar = loadout.slot_body_face_scar,
 						slot_body_face_hair = loadout.slot_body_face_hair,
+						slot_body_face_makeup = loadout.slot_body_face_makeup,
 						slot_body_hair = loadout.slot_body_hair,
 						slot_body_tattoo = loadout.slot_body_tattoo,
 						slot_body_hair_color = loadout.slot_body_hair_color,
+						slot_body_face_hair_color = loadout.slot_body_face_hair_color,
 						slot_body_skin_color = loadout.slot_body_skin_color,
 						slot_body_eye_color = loadout.slot_body_eye_color,
 					}
@@ -1012,6 +1186,19 @@ CharacterAppearanceView._get_pages = function (self)
 				end
 
 				self:_update_continue_button("slot_modifications", is_disabled)
+			end
+
+			local page_widgets = self._page_grids[1].widgets
+
+			for i = 1, #page_widgets do
+				local widget = page_widgets[i]
+				local option = widget.content.option
+				local visible, available, reason, reason_display_name = self:_check_valid_option(option)
+
+				widget.content.visible = visible
+				widget.content.hide_in_grid = not visible
+
+				self:_update_widget_restrictions(widget, available, reason, reason_display_name)
 			end
 		end,
 		grids = {
@@ -1385,6 +1572,11 @@ CharacterAppearanceView._get_pages = function (self)
 				end,
 			},
 		},
+		on_continue = function ()
+			if archetype == "broker" then
+				return self:_fetch_suggested_names()
+			end
+		end,
 	}
 	local crime_page = {
 		gear_visible = true,
@@ -1718,6 +1910,15 @@ CharacterAppearanceView._get_pages = function (self)
 			name_page,
 			name_companion_page,
 		}
+	elseif archetype == "broker" then
+		pages = {
+			childhood_page,
+			growing_up_page,
+			gang_page,
+			appearance_page,
+			personality_page,
+			name_page,
+		}
 	else
 		pages = {
 			planet_page,
@@ -1828,31 +2029,34 @@ CharacterAppearanceView._create_planet_widgets = function (self)
 	for id, data in pairs(HomePlanets) do
 		local name = id
 		local planet_image = data.image
-		local planet_size = planet_image.size
-		local planet_position = data.position
-		local planet_pass = {
-			pass_type = "texture",
-			value = "content/ui/materials/base/ui_default_base",
-			value_id = name,
-			style_id = name,
-			style = {
-				offset = {
-					planet_position[1],
-					planet_position[2],
-					3,
-				},
-				size = planet_size,
-				size_addition = {
-					-planet_size[1],
-					-planet_size[2],
-				},
-				material_values = {
-					texture_map = planet_image.path,
-				},
-			},
-		}
 
-		planet_passes[#planet_passes + 1] = planet_pass
+		if planet_image then
+			local planet_size = planet_image.size
+			local planet_position = data.position
+			local planet_pass = {
+				pass_type = "texture",
+				value = "content/ui/materials/base/ui_default_base",
+				value_id = name,
+				style_id = name,
+				style = {
+					offset = {
+						planet_position[1],
+						planet_position[2],
+						3,
+					},
+					size = planet_size,
+					size_addition = {
+						-planet_size[1],
+						-planet_size[2],
+					},
+					material_values = {
+						texture_map = planet_image.path,
+					},
+				},
+			}
+
+			planet_passes[#planet_passes + 1] = planet_pass
+		end
 	end
 
 	local planets_definition = UIWidget.create_definition(planet_passes, "screen")
@@ -2266,8 +2470,6 @@ CharacterAppearanceView.event_register_character_spawn_point = function (self, s
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 
 	self._spawn_point_position = Vector3.to_array(spawn_position)
-
-	self:_spawn_profile(spawn_point_unit)
 end
 
 CharacterAppearanceView.event_register_companion_spawn_point = function (self, spawn_point_unit)
@@ -2279,6 +2481,16 @@ CharacterAppearanceView.event_register_companion_spawn_point = function (self, s
 end
 
 CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit, optional_state_machine, optional_animation_event)
+	if self._profile_spawner then
+		self._profile_spawner:destroy()
+
+		self._profile_spawner = nil
+	end
+
+	if not spawn_point_unit then
+		return
+	end
+
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
 	local profile = self._character_create:profile()
@@ -2289,20 +2501,13 @@ CharacterAppearanceView._spawn_profile = function (self, spawn_point_unit, optio
 		scale = Vector3.one()
 	end
 
-	local active_page_number = self._active_page_number
 	local active_page = self._pages[self._active_page_number]
 	local show_character = active_page.show_character
 	local show_companion = active_page.show_companion
-
-	if self._profile_spawner then
-		self._profile_spawner:destroy()
-
-		self._profile_spawner = nil
-	end
-
-	local world = self._world_spawner:world()
-	local camera = self._world_spawner:camera()
-	local unit_spawner = self._world_spawner:unit_spawner()
+	local world = Unit.world(spawn_point_unit)
+	local world_spawner = self:_world_spawner_by_world(world)
+	local camera = world_spawner:camera()
+	local unit_spawner = world_spawner:unit_spawner()
 
 	if show_companion or show_character then
 		self._profile_spawner = UIProfileSpawner:new("CharacterAppearanceView", world, camera, unit_spawner)
@@ -2445,9 +2650,11 @@ CharacterAppearanceView._show_final_popup = function (self)
 									slot_body_face_tattoo = loadout.slot_body_face_tattoo,
 									slot_body_face_scar = loadout.slot_body_face_scar,
 									slot_body_face_hair = loadout.slot_body_face_hair,
+									slot_body_face_makeup = loadout.slot_body_face_makeup,
 									slot_body_hair = loadout.slot_body_hair,
 									slot_body_tattoo = loadout.slot_body_tattoo,
 									slot_body_hair_color = loadout.slot_body_hair_color,
+									slot_body_face_hair_color = loadout.slot_body_face_hair_color,
 									slot_body_skin_color = loadout.slot_body_skin_color,
 									slot_body_eye_color = loadout.slot_body_eye_color,
 									slot_companion_body_coat_pattern = loadout.slot_companion_body_coat_pattern,
@@ -2556,7 +2763,10 @@ CharacterAppearanceView._show_final_popup = function (self)
 end
 
 CharacterAppearanceView._open_page = function (self, index)
-	self._navigation = {}
+	self._navigation = {
+		grid = nil,
+		index = nil,
+	}
 
 	local current_page = self._pages[self._active_page_number]
 
@@ -2581,31 +2791,12 @@ CharacterAppearanceView._open_page = function (self, index)
 	local current_show_character = new_page.show_character
 	local prev_show_companion = previous_page and previous_page.show_companion
 	local current_show_companion = new_page.show_companion
-	local changed_show_character = prev_show_character ~= current_show_character
-	local changed_show_companion = prev_show_companion ~= current_show_companion
-	local use_level_mindwipe = self._is_barber_mindwipe and previous_page and new_page.name == "personality" and previous_index < index
-	local remove_level_mindwipe = self._is_barber_mindwipe and previous_page and previous_page.name == "personality" and index < previous_index
-	local switch_level_mindwipe = use_level_mindwipe or remove_level_mindwipe
-	local spawn_changed_state = changed_show_character or changed_show_companion or switch_level_mindwipe
+	local render_world = new_page.render_world
+	local changed_show_character = not prev_show_character ~= not current_show_character
+	local changed_show_companion = not prev_show_companion ~= not current_show_companion
 
-	if spawn_changed_state then
-		if current_show_character or current_show_companion or switch_level_mindwipe then
-			if self._fade_animation_id then
-				self:_stop_animation(self._fade_animation_id)
-			end
-
-			self._fade_animation_id = self:_start_animation("on_level_switch")
-
-			if not self._world_spawner or switch_level_mindwipe then
-				self:_destroy_background()
-				self:_setup_background_world()
-			else
-				self:_spawn_profile(self._spawn_point_unit)
-			end
-		elseif self._profile_spawner then
-			self:_destroy_background()
-		end
-	end
+	self:_set_should_render_world(current_show_character or current_show_companion or render_world)
+	self:_set_active_world(self._active_page_name, changed_show_character or changed_show_companion)
 
 	if new_page.on_enter then
 		new_page.on_enter(new_page, previous_page)
@@ -2918,12 +3109,10 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 	local page = self._pages[self._active_page_number]
 
 	if page.update then
-		page.update()
+		page.update(page)
 	end
 
-	local world_spawner = self._world_spawner
-
-	if world_spawner then
+	for _, world_spawner in pairs(self._world_spawners) do
 		world_spawner:update(dt, t)
 	end
 
@@ -3221,15 +3410,17 @@ CharacterAppearanceView._destroy_background = function (self)
 		self._profile_spawner = nil
 	end
 
-	if self._world_spawner then
-		if self._world_spawner._level then
-			Level.trigger_level_shutdown(self._world_spawner._level)
+	for page_name, world_spawner in pairs(self._world_spawners) do
+		if world_spawner:level() then
+			Level.trigger_level_shutdown(world_spawner:level())
 		end
 
-		self._world_spawner:destroy()
+		world_spawner:destroy()
 
-		self._world_spawner = nil
+		self._world_spawners[page_name] = nil
 	end
+
+	self:_set_should_render_world(false)
 end
 
 CharacterAppearanceView.on_exit = function (self)
@@ -3265,17 +3456,46 @@ end
 CharacterAppearanceView._get_planet_options = function (self)
 	local planets = self._character_create:planet_options()
 	local planet_options = {}
+	local sorted_planets = table.keys(planets)
 
-	for id, option in pairs(planets) do
+	table.sort(sorted_planets, function (a, b)
+		return Localize(planets[a].display_name) < Localize(planets[b].display_name)
+	end)
+
+	for i = 1, #sorted_planets do
+		local id = sorted_planets[i]
+		local option = planets[id]
+
 		planet_options[#planet_options + 1] = {
 			data = option,
 			text = Localize(option.display_name),
 			value = id,
 			on_pressed_function = function (grid_index, widget, pressed_options)
-				local skip_animation = pressed_options and (pressed_options.skip_animation or pressed_options.initialization_press)
-
 				self._character_create:set_planet(id)
-				self:_move_background_to_position(option, skip_animation)
+
+				local profile = self._character_create:profile()
+				local selected_archetype = profile.archetype.name
+
+				if selected_archetype == "broker" then
+					local frames_by_planet = UISettings.inventory_frames_by_archetype[selected_archetype].by_home_planet
+
+					if frames_by_planet then
+						local frames = frames_by_planet[id]
+
+						self._widgets_by_name.corners.content.left_upper = frames.right_upper
+						self._widgets_by_name.corners.content.right_upper = frames.right_upper
+						self._widgets_by_name.corners.content.left_lower = frames.left_lower
+						self._widgets_by_name.corners.content.right_lower = frames.right_lower
+					end
+
+					local instant = pressed_options and pressed_options.initialization_press
+
+					self:_rotate_camera(Quaternion.from_euler_angles_xyz(unpack(option.rotation)), instant)
+				else
+					local skip_animation = pressed_options and (pressed_options.skip_animation or pressed_options.initialization_press)
+
+					self:_move_background_to_position(option, skip_animation)
+				end
 
 				local grid_index = 2
 				local grid_data = {
@@ -3321,6 +3541,12 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 	local area_height = max_area_height
 	local widgets = {}
 	local alignment_list = {}
+	local main_grid = self._page_grids[1]
+	local selected_main_grid_index = main_grid.grid:selected_grid_index()
+	local selected_main_widget = main_grid.widgets[selected_main_grid_index]
+	local parent_available = not selected_main_widget.content.choice_data or selected_main_widget.content.choice_data.available
+	local ignore_availability_reasons = grid_data.ignore_availability_reasons
+	local last_option_available, has_available, has_unavailable
 
 	for i = 1, num_widgets do
 		local option = options[i]
@@ -3331,6 +3557,13 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 		end
 
 		local visible, available, reason, reason_display_name = self:_check_valid_option(option)
+
+		visible = visible and parent_available
+
+		if ignore_availability_reasons then
+			reason = nil
+			reason_display_name = nil
+		end
 
 		if visible then
 			local pass_template = template.pass_template
@@ -3349,8 +3582,20 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 			}
 			widget.content.option = option
 
-			self:_add_widget_restrictions(widget, available, reason, reason_display_name)
+			self:_update_widget_restrictions(widget, available, reason, reason_display_name)
 
+			if last_option_available ~= nil and last_option_available and not available then
+				local divider_widget_definition = UIWidget.create_definition(ContentBlueprints.divider.pass_template, grid_content_scenegraph, nil, {
+					grid_width,
+					2,
+				})
+				local divider_widget = self:_create_widget("availability_divider", divider_widget_definition)
+
+				widgets[#widgets + 1] = divider_widget
+				alignment_list[#alignment_list + 1] = divider_widget
+			end
+
+			last_option_available = available
 			widgets[#widgets + 1] = widget
 			alignment_list[#alignment_list + 1] = widget
 		end
@@ -3546,20 +3791,16 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		content_width + background_margin[1] * 2,
 		0,
 	}
-	local title_font_style_options = {}
-	local description_font_style_options = {}
-	local title_font_style_options = UIFonts.get_font_options_by_style(title_font_style, title_font_style_options)
-	local description_font_style_options = UIFonts.get_font_options_by_style(description_font_style, description_font_style_options)
 	local effect_margin = 100
 	local text_margin = 20
-	local _, title_height = UIRenderer.text_size(self._ui_renderer, option_title, title_font_style.font_type, title_font_style.font_size, {
+	local title_height = Text.text_height(self._ui_renderer, option_title, title_font_style, {
 		content_width,
 		0,
-	}, title_font_style_options)
-	local _, description_height = UIRenderer.text_size(self._ui_renderer, option_description, description_font_style.font_type, description_font_style.font_size, {
+	})
+	local description_height = Text.text_height(self._ui_renderer, option_description, description_font_style, {
 		content_width,
 		0,
-	}, description_font_style_options)
+	})
 	local backstory_info_tamplates = {}
 
 	backstory_info_tamplates[#backstory_info_tamplates + 1] = {
@@ -3628,14 +3869,10 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 	if grid_data.unlocks then
 		local effect_title_font_style = CharacterAppearanceViewFontStyle.effect_title_style
 		local option_effect_title = Localize("loc_character_title_unlocks")
-		local effect_title_font_style_options = {}
-
-		UIFonts.get_font_options_by_style(effect_title_font_style, effect_title_font_style_options)
-
-		local _, effect_title_height = UIRenderer.text_size(self._ui_renderer, option_effect_title, effect_title_font_style.font_type, effect_title_font_style.font_size, {
+		local effect_title_height = Text.text_height(self._ui_renderer, option_effect_title, effect_title_font_style, {
 			content_width,
 			0,
-		}, effect_title_font_style_options)
+		})
 
 		backstory_info_tamplates[#backstory_info_tamplates + 1] = {
 			size = {
@@ -3701,14 +3938,10 @@ CharacterAppearanceView._generate_backstory_grid_widgets = function (self, grid_
 		for i = 1, #grid_data.unlocks do
 			local unlock = grid_data.unlocks[i]
 			local text_style = CharacterAppearanceViewFontStyle.reward_description_no_icon_style
-			local style = {}
-
-			UIFonts.get_font_options_by_style(text_style, style)
-
-			local _, text_height = UIRenderer.text_size(self._ui_renderer, Localize(unlock.text), text_style.font_type, text_style.font_size, {
+			local text_height = Text.text_height(self._ui_renderer, Localize(unlock.text), text_style, {
 				content_width,
 				2000,
-			}, style)
+			})
 
 			backstory_info_tamplates[#backstory_info_tamplates + 1] = {
 				size = {
@@ -3956,38 +4189,38 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 
 	for i = 1, num_widgets do
 		local option = options[i]
+		local name = grid_start_name .. "option_" .. i
+		local pass_template = template.pass_template
+		local size = template.size
+		local widget_definition = UIWidget.create_definition(pass_template, grid_content_scenegraph, nil, size)
+		local widget = self:_create_widget(name, widget_definition)
+
+		if template.init then
+			template.init(self, widget, grid_data, option, grid_index, "_on_entry_pressed")
+		end
+
+		widget.offset = {
+			0,
+			0,
+			4,
+		}
+		widget.content.option = option
+
 		local visible, available, reason, reason_display_name = self:_check_valid_option(option)
 
-		if visible then
-			local name = grid_start_name .. "option_" .. i
-			local pass_template = template.pass_template
-			local size = template.size
-			local widget_definition = UIWidget.create_definition(pass_template, grid_content_scenegraph, nil, size)
-			local widget = self:_create_widget(name, widget_definition)
+		widget.content.visible = not not visible
 
-			if template.init then
-				template.init(self, widget, grid_data, option, grid_index, "_on_entry_pressed")
-			end
+		self:_update_widget_restrictions(widget, available, reason, reason_display_name)
 
-			widget.offset = {
-				0,
-				0,
-				4,
-			}
-			widget.content.option = option
-
-			self:_add_widget_restrictions(widget, available, reason, reason_display_name)
-
-			widgets[#widgets + 1] = widget
-			alignment_list[#alignment_list + 1] = {
-				horizontal_alignment = "center",
-				size = {
-					grid_size[1],
-					size[2],
-				},
-				name = name,
-			}
-		end
+		widgets[#widgets + 1] = widget
+		alignment_list[#alignment_list + 1] = {
+			horizontal_alignment = "center",
+			size = {
+				grid_size[1],
+				size[2],
+			},
+			name = name,
+		}
 	end
 
 	local profile = self._character_create:profile()
@@ -4188,16 +4421,12 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 		local text = grid_data.description
 		local style_name = "list_description_style"
 		local font_style = CharacterAppearanceViewFontStyle[style_name]
-		local style = {}
-
-		UIFonts.get_font_options_by_style(font_style, style)
-
 		local x_offset = 20
 		local text_size = {
 			grid_description_widget.content.size[1] - x_offset * 2,
 			grid_description_widget.content.size[2],
 		}
-		local text_width, text_height = UIRenderer.text_size(self._ui_renderer, text, font_style.font_type, font_style.font_size, text_size, style)
+		local text_width, text_height = Text.text_size(self._ui_renderer, text, font_style, text_size)
 		local text_margin = 15
 
 		text_height = text_height + text_margin * 2
@@ -4227,28 +4456,39 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 	return widgets, alignment_list, support_widgets, grid_data
 end
 
-CharacterAppearanceView._add_widget_restrictions = function (self, widget, available, reason, reason_display_name)
-	if not reason then
-		return
-	end
-
+CharacterAppearanceView._update_widget_restrictions = function (self, widget, available, reason, reason_display_name)
 	widget.alpha_multiplier = available == false and 0.5 or 1
 
-	local choice_info = choices_presentation[reason]
+	if not reason then
+		if widget.style.choice_icon then
+			widget.content.use_choice_icon = false
+			widget.style.choice_icon.material_values = nil
+		end
 
-	if widget.style.choice_icon then
-		widget.content.use_choice_icon = true
-		widget.style.choice_icon.material_values = {
-			texture_map = choice_info.icon_texture,
+		widget.content.choice_data = nil
+	else
+		local choice_data = widget.content.choice_data
+
+		if choice_data and choice_data.available == available and choice_data.reason == reason and choice_data.reason_display_name == reason_display_name then
+			return
+		end
+
+		local choice_info = self:_archetype_page_data()[reason] or restriction_datas[reason]
+
+		if widget.style.choice_icon then
+			widget.content.use_choice_icon = true
+			widget.style.choice_icon.material_values = {
+				texture_map = choice_info.icon_texture,
+			}
+		end
+
+		widget.content.choice_data = {
+			visible = not not reason,
+			available = available,
+			reason = reason,
+			reason_display_name = reason_display_name,
 		}
 	end
-
-	widget.content.choice_data = {
-		visible = not not reason,
-		available = available,
-		reason = reason,
-		reason_display_name = reason_display_name,
-	}
 end
 
 CharacterAppearanceView._destroy_page_grid = function (self, index)
@@ -4301,7 +4541,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 
 	local grid_widgets, grid_alignment_list, grid_support_widgets, generated_data = grid_data.init(index, grid_data)
 
-	if not grid_widgets then
+	if not grid_widgets or table.is_empty(grid_widgets) then
 		return
 	end
 
@@ -4397,7 +4637,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 			local option_to_select = options[widget_index_to_select]
 
 			if value then
-				local is_item = type(value) == "table" and (not not value.gear_id or not not value.always_owned)
+				local is_item = type(value) == "table" and (not not value.gear_id or not not value.always_owned or not not ItemSourceSettings[value.source])
 
 				for i = 1, #options do
 					local option = options[i]
@@ -4436,6 +4676,11 @@ CharacterAppearanceView._populate_page_grid = function (self, index, grid_data, 
 	end
 end
 
+local select_path = {
+	"option",
+	"value",
+}
+
 CharacterAppearanceView._on_entry_pressed = function (self, current_widget, option, grid_index, pressed_options)
 	local page_grid = self._page_grids[grid_index]
 	local on_pressed_function = option.on_pressed_function
@@ -4466,15 +4711,33 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 		self:_check_widget_choice_detail_visibility(grid_index, widget_index)
 	end
 
+	local on_pressed_sound = table.safe_get(option, "data", "on_pressed_sound")
+
+	if on_pressed_sound then
+		Managers.ui:play_2d_sound(on_pressed_sound)
+	end
+
+	local slot_items = table.safe_get(option, "data", "slot_items")
+
+	if slot_items and not self._is_barber_mindwipe then
+		local item_definitions = MasterItems.get_cached()
+
+		for slot_name, item_name in pairs(slot_items) do
+			local item = item_definitions[item_name]
+
+			self._character_create:set_item_per_slot(slot_name, item)
+		end
+	end
+
 	local scrollbar_animation_progress = page_grid.grid:get_scrollbar_percentage_by_index(widget_index)
 
 	if is_gamepad_navigation and focused_on_gamepad_navigation and from_navigation then
-		page_grid.grid:focus_grid_index(widget_index, scrollbar_animation_progress, true)
+		page_grid.grid:focus_by_content(option.value, select_path, scrollbar_animation_progress, true)
 	elseif on_pressed_function then
-		page_grid.grid:select_grid_index(widget_index, scrollbar_animation_progress, true)
+		page_grid.grid:select_by_content(option.value, select_path, scrollbar_animation_progress, true)
 
 		if is_gamepad_navigation and (first_press_on_page or not initial_press) then
-			page_grid.grid:focus_grid_index(widget_index, scrollbar_animation_progress, true)
+			page_grid.grid:focus_by_content(option.value, select_path, scrollbar_animation_progress, true)
 		end
 	end
 
@@ -4485,9 +4748,59 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 	end
 end
 
-CharacterAppearanceView._setup_background_world = function (self)
+CharacterAppearanceView._set_should_render_world = function (self, value)
+	self._should_render_world = value
+end
+
+CharacterAppearanceView._level_names = function (self)
+	local level_settings
+
+	if self._is_barber then
+		level_settings = CharacterAppearanceViewSettings.barber_level_names
+	else
+		level_settings = CharacterAppearanceViewSettings.level_names
+	end
+
+	local level_names = level_settings.default
+	local profile = self._character_create:profile()
+	local selected_archetype = profile.archetype.name
+	local archetype_overrides = level_settings.archetype_overrides and level_settings.archetype_overrides[selected_archetype]
+
+	if archetype_overrides then
+		level_names = table.merge(table.clone(level_names), archetype_overrides)
+	end
+
+	return level_names
+end
+
+CharacterAppearanceView._state_machines = function (self)
+	local state_machine_settings
+
+	if self._is_barber then
+		state_machine_settings = CharacterAppearanceViewSettings.barber_state_machines
+	else
+		state_machine_settings = CharacterAppearanceViewSettings.state_machines
+	end
+
+	local state_machines = state_machine_settings.default
+	local profile = self._character_create:profile()
+	local selected_archetype = profile.archetype.name
+	local archetype_overrides = state_machines.archetype_overrides and state_machines.archetype_overrides[selected_archetype]
+
+	if archetype_overrides then
+		state_machines = table.merge(table.clone(state_machines), archetype_overrides)
+	end
+
+	return state_machines
+end
+
+CharacterAppearanceView._setup_background_world = function (self, page_name)
 	local breed_name = self._character_create:breed()
 	local event_suffix = BREED_TO_EVENT_SUFFIX[breed_name] or breed_name
+	local level_names = self:_level_names()
+
+	page_name = level_names[page_name] and page_name or "default"
+
 	local default_camera_event_id = "event_register_character_appearance_default_camera_" .. event_suffix
 
 	self[default_camera_event_id] = function (self, camera_unit)
@@ -4496,13 +4809,24 @@ CharacterAppearanceView._setup_background_world = function (self)
 		local viewport_name = CharacterAppearanceViewSettings.viewport_name
 		local viewport_type = CharacterAppearanceViewSettings.viewport_type
 		local viewport_layer = CharacterAppearanceViewSettings.viewport_layer
-		local shading_environment = CharacterAppearanceViewSettings.shading_environment
+		local shading_environment_settings = CharacterAppearanceViewSettings.shading_environments
 
 		if self._is_barber then
-			shading_environment = CharacterAppearanceViewSettings.barber_shading_environment
+			shading_environment_settings = CharacterAppearanceViewSettings.barber_shading_environments
 		end
 
-		self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
+		local shading_environments = shading_environment_settings.default
+		local profile = self._character_create:profile()
+		local selected_archetype = profile.archetype.name
+		local archetype_overrides = shading_environment_settings.archetype_overrides and shading_environment_settings.archetype_overrides[selected_archetype]
+
+		if archetype_overrides then
+			shading_environments = table.merge(table.clone(shading_environments), archetype_overrides)
+		end
+
+		local shading_environment = shading_environments[page_name] or shading_environments.default
+
+		self._world_spawners[page_name]:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 		self:_unregister_event(default_camera_event_id)
 	end
 
@@ -4534,39 +4858,23 @@ CharacterAppearanceView._setup_background_world = function (self)
 		self[spawn_point_event_id] = function (self, spawn_point_unit)
 			self._spawn_point_unit = spawn_point_unit
 
-			if breed_name == "ogryn" then
-				self:_spawn_profile(spawn_point_unit, "content/characters/player/ogryn/third_person/animations/menu/mindwipe", "idle")
-			else
-				self:_spawn_profile(spawn_point_unit, "content/characters/player/human/third_person/animations/menu/mindwipe", "idle")
-			end
-
 			self:_unregister_event(spawn_point_event_id)
 		end
 
 		self:_register_event(spawn_point_event_id)
 	end
 
-	local world_name = CharacterAppearanceViewSettings.world_name
+	local world_name_prefix = CharacterAppearanceViewSettings.world_name_prefix
 	local world_layer = CharacterAppearanceViewSettings.world_layer
 	local world_timer_name = CharacterAppearanceViewSettings.timer_name
+	local level_name = level_names[page_name]
 
-	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+	self._world_spawners[page_name] = UIWorldSpawner:new(world_name_prefix .. "_" .. page_name, world_layer, world_timer_name, self.view_name)
 
-	local level_name, store_level
+	self._world_spawners[page_name]:spawn_level(level_name)
 
 	if self._is_barber_mindwipe and self._active_page_name == "personality" then
-		level_name = CharacterAppearanceViewSettings.barber_mindwipe_level_name
-		store_level = true
-	elseif self._is_barber then
-		level_name = CharacterAppearanceViewSettings.barber_level_name
-	else
-		level_name = CharacterAppearanceViewSettings.level_name
-	end
-
-	self._world_spawner:spawn_level(level_name)
-
-	if store_level then
-		self._level = self._world_spawner:level()
+		self._level = self._world_spawners[page_name]:level()
 	end
 end
 
@@ -4583,6 +4891,17 @@ CharacterAppearanceView._filter_changed_items = function (self, items)
 	local original_loadout = self._original_loadout
 	local filtered_items = {}
 	local identical = true
+	local valid_backends_by_slot = self._character_create:valid_backends_by_slot()
+
+	for slot_name, valid_backends in pairs(valid_backends_by_slot) do
+		if not valid_backends[BACKEND_ENV] then
+			items[slot_name] = nil
+
+			if original_loadout[slot_name] then
+				identical = false
+			end
+		end
+	end
 
 	for slot, item in pairs(items) do
 		local original_item = original_loadout[slot]
@@ -4646,10 +4965,6 @@ CharacterAppearanceView._get_appearance_options = function (self)
 	local skin_color_options = self._character_create:slot_item_options("slot_body_skin_color")
 
 	if face_item_options and #face_item_options > 1 then
-		table.sort(face_item_options, sort_by_string_name)
-		table.sort(face_item_options, sort_by_order)
-		table.sort(skin_color_options, sort_by_order)
-
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/face_types",
@@ -4672,6 +4987,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 					},
 					{
 						grid_template = "double",
+						ignore_fallback_in_sorting = true,
 						slot_name = "slot_body_skin_color",
 						template = "icon_small_texture_hsv",
 						type = "skin_color",
@@ -4771,10 +5087,6 @@ CharacterAppearanceView._get_appearance_options = function (self)
 				end
 
 				local filtered_eye_colors = self._eye_options_by_type[eye_types[index].name]
-
-				table.sort(filtered_eye_types, sort_by_order)
-				table.sort(filtered_eye_colors, sort_by_order)
-
 				local options = self:_get_appearance_category_options({
 					{
 						grid_template = "single",
@@ -4785,6 +5097,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 					},
 					{
 						grid_template = "double",
+						ignore_fallback_in_sorting = true,
 						slot_name = "slot_body_eye_color",
 						template = "icon_small_texture_hsv",
 						type = "eye_color",
@@ -4819,10 +5132,6 @@ CharacterAppearanceView._get_appearance_options = function (self)
 	local hair_color_options = self._character_create:slot_item_options("slot_body_hair_color")
 
 	if hair_item_options and #hair_item_options > 1 then
-		table.sort(hair_item_options, sort_by_string_name)
-		table.sort(hair_item_options, sort_by_order)
-		table.sort(hair_color_options, sort_by_order)
-
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/hair_styles",
@@ -4845,6 +5154,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 					},
 					{
 						grid_template = "double",
+						ignore_fallback_in_sorting = true,
 						slot_name = "slot_body_hair_color",
 						template = "icon_small_texture",
 						type = "hair_color",
@@ -4876,13 +5186,13 @@ CharacterAppearanceView._get_appearance_options = function (self)
 	end
 
 	local face_hair_options = self._character_create:slot_item_options("slot_body_face_hair")
-	local facial_hair_color_options = self._character_create:slot_item_options("slot_body_hair_color")
+	local facial_hair_color_options = self._character_create:slot_item_options("slot_body_face_hair_color")
+
+	facial_hair_color_options = table.filter_array(facial_hair_color_options, function (option)
+		return table.contains(option.parent_slot_names, "slot_body_face_hair")
+	end)
 
 	if face_hair_options and #face_hair_options > 1 then
-		table.sort(face_hair_options, sort_by_string_name)
-		table.sort(face_hair_options, sort_by_order)
-		table.sort(facial_hair_color_options, sort_by_order)
-
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/facial_hair_styles",
@@ -4890,6 +5200,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 				local slots = {
 					"slot_body_face_hair",
 					"slot_body_hair_color",
+					"slot_body_face_hair_color",
 				}
 
 				return continue_validation_item_slots(self, slots)
@@ -4904,8 +5215,10 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						options = face_hair_options,
 					},
 					{
+						force_nil_item = true,
 						grid_template = "double",
-						slot_name = "slot_body_hair_color",
+						no_option = true,
+						slot_name = "slot_body_face_hair_color",
 						template = "icon_small_texture",
 						type = "hair_color",
 						options = facial_hair_color_options,
@@ -4935,32 +5248,27 @@ CharacterAppearanceView._get_appearance_options = function (self)
 		}
 	end
 
-	local face_tattoo_options = self._character_create:slot_item_options("slot_body_face_tattoo")
+	local face_makeup_options = self._character_create:slot_item_options("slot_body_face_makeup")
 
-	if face_tattoo_options and #face_tattoo_options > 1 then
-		table.sort(face_tattoo_options, sort_by_string_name)
-		table.sort(face_tattoo_options, sort_by_order)
-
+	if face_makeup_options and #face_makeup_options > 1 then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_face",
-			icon = "content/ui/materials/icons/item_types/face_tattoos",
+			icon = "content/ui/materials/icons/item_types/facial_makeup",
 			continue_validation = function ()
 				local slots = {
-					"slot_body_face_tattoo",
+					"slot_body_face_makeup",
 				}
 
 				return continue_validation_item_slots(self, slots)
 			end,
-			text = Localize("loc_face_tattoo"),
+			text = Localize("loc_face_makeup"),
 			on_pressed_function = function (grid_index, widget, pressed_options)
 				local options = self:_get_appearance_category_options({
 					{
 						grid_template = "triple",
-						icon_background = "content/ui/textures/icons/appearances/backgrounds/face_tattoos",
-						no_option = true,
-						slot_name = "slot_body_face_tattoo",
-						template = "icon",
-						options = face_tattoo_options,
+						slot_name = "slot_body_face_makeup",
+						template = "slot_icon",
+						options = face_makeup_options,
 					},
 				})
 
@@ -4987,12 +5295,73 @@ CharacterAppearanceView._get_appearance_options = function (self)
 		}
 	end
 
-	local body_tattoo_options = self._character_create:slot_item_options("slot_body_tattoo")
+	local all_tattoos = table.append({}, self._character_create:slot_item_options("slot_body_face_tattoo"))
 
-	if body_tattoo_options and #body_tattoo_options > 1 then
-		table.sort(body_tattoo_options, sort_by_string_name)
-		table.sort(body_tattoo_options, sort_by_order)
+	table.append(all_tattoos, self._character_create:slot_item_options("slot_body_tattoo"))
 
+	local face_tattoos, body_tattoos, full_body_tattoos = table.partition(all_tattoos, 3, function (value, face_tattoos, body_tattoos, full_body_tattoos)
+		if value.tattoo_group and value.tattoo_group ~= "" then
+			return full_body_tattoos
+		end
+
+		local slots = value.slots
+
+		if slots[1] == "slot_body_face_tattoo" then
+			return face_tattoos
+		end
+
+		return body_tattoos
+	end)
+
+	if #face_tattoos > 1 then
+		appearance_options[#appearance_options + 1] = {
+			camera_focus = "slot_body_face",
+			icon = "content/ui/materials/icons/item_types/face_tattoos",
+			continue_validation = function ()
+				local slots = {
+					"slot_body_face_tattoo",
+				}
+
+				return continue_validation_item_slots(self, slots)
+			end,
+			text = Localize("loc_face_tattoo"),
+			on_pressed_function = function (grid_index, widget, pressed_options)
+				local options = self:_get_appearance_category_options({
+					{
+						grid_template = "triple",
+						icon_background = "content/ui/textures/icons/appearances/backgrounds/face_tattoos",
+						no_option = true,
+						slot_name = "slot_body_face_tattoo",
+						template = "icon",
+						type = "face_tattoo",
+						options = face_tattoos,
+					},
+				})
+
+				for i = 1, #options do
+					local option = options[i]
+					local grid_index = 1 + i
+					local grid_data = {
+						init = function ()
+							return self:_generate_appearance_grid_widgets(grid_index, option)
+						end,
+						selected_option = function ()
+							if option.selected_option then
+								return option.selected_option()
+							end
+						end,
+						options = function ()
+							return option.options
+						end,
+					}
+
+					self:_populate_page_grid(grid_index, grid_data)
+				end
+			end,
+		}
+	end
+
+	if #body_tattoos > 1 then
 		appearance_options[#appearance_options + 1] = {
 			icon = "content/ui/materials/icons/item_types/body_tattoos",
 			continue_validation = function ()
@@ -5011,7 +5380,76 @@ CharacterAppearanceView._get_appearance_options = function (self)
 						no_option = true,
 						slot_name = "slot_body_tattoo",
 						template = "icon",
-						options = body_tattoo_options,
+						type = "body_tattoo",
+						options = body_tattoos,
+					},
+				})
+
+				for i = 1, #options do
+					local option = options[i]
+					local grid_index = 1 + i
+					local grid_data = {
+						init = function ()
+							return self:_generate_appearance_grid_widgets(grid_index, option)
+						end,
+						selected_option = function ()
+							if option.selected_option then
+								return option.selected_option()
+							end
+						end,
+						options = function ()
+							return option.options
+						end,
+					}
+
+					self:_populate_page_grid(grid_index, grid_data)
+				end
+			end,
+		}
+	end
+
+	local tattoo_groups = {}
+
+	for i = 1, #full_body_tattoos do
+		local option = full_body_tattoos[i]
+		local tattoo_group = option.tattoo_group
+		local slot = option.slots[1]
+
+		tattoo_groups[tattoo_group] = tattoo_groups[tattoo_group] or {
+			item_group = true,
+		}
+		tattoo_groups[tattoo_group][slot] = option
+	end
+
+	tattoo_groups = table.map_to_array(tattoo_groups, function (k, v)
+		return v
+	end)
+
+	if not table.is_empty(tattoo_groups) then
+		appearance_options[#appearance_options + 1] = {
+			icon = "content/ui/materials/icons/item_types/full_body_tattoos",
+			continue_validation = function ()
+				local slots = {
+					"slot_body_tattoo",
+					"slot_body_face_tattoo",
+				}
+
+				return continue_validation_item_slots(self, slots)
+			end,
+			text = Localize("loc_full_body_tattoo"),
+			on_pressed_function = function (grid_index, widget, pressed_options)
+				local options = self:_get_appearance_category_options({
+					{
+						grid_template = "triple",
+						icon_background = "content/ui/textures/icons/appearances/backgrounds/full_body_tattoos",
+						no_option = true,
+						template = "icon",
+						type = "full_body_tattoo",
+						options = tattoo_groups,
+						slot_name = {
+							"slot_body_tattoo",
+							"slot_body_face_tattoo",
+						},
 					},
 				})
 
@@ -5041,9 +5479,6 @@ CharacterAppearanceView._get_appearance_options = function (self)
 	local face_scar_options = self._character_create:slot_item_options("slot_body_face_scar")
 
 	if face_scar_options and #face_scar_options > 1 then
-		table.sort(face_scar_options, sort_by_string_name)
-		table.sort(face_scar_options, sort_by_order)
-
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/scars",
@@ -5183,11 +5618,6 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 		filtered_dog_skin_options[#filtered_dog_skin_options + 1] = dog_skin_from_dev_name[skin_dev_name]
 	end
 
-	table.sort(filtered_dog_fur_options, sort_by_string_name)
-	table.sort(filtered_dog_fur_options, sort_by_order)
-	table.sort(filtered_dog_skin_options, sort_by_order)
-	table.sort(filtered_dog_skin_options, sort_by_string_name)
-
 	appearance_options[#appearance_options + 1] = {
 		icon = "content/ui/materials/icons/item_types/fur_color",
 		text = Localize("loc_character_creator_mastiff_fur"),
@@ -5195,6 +5625,7 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 			local options = self:_get_appearance_category_options({
 				{
 					grid_template = "double",
+					ignore_availability_reasons = true,
 					slot_name = "slot_companion_body_fur_color",
 					template = "icon",
 					type = "dog_fur",
@@ -5202,6 +5633,7 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 				},
 				{
 					grid_template = "double",
+					ignore_availability_reasons = true,
 					slot_name = "slot_companion_body_skin_color",
 					template = "icon_small_texture_hsv",
 					type = "dog_skin",
@@ -5233,9 +5665,6 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 
 	local dog_coat_options = self._character_create:slot_item_options("slot_companion_body_coat_pattern")
 
-	table.sort(dog_coat_options, sort_by_string_name)
-	table.sort(dog_coat_options, sort_by_order)
-
 	appearance_options[#appearance_options + 1] = {
 		icon = "content/ui/materials/icons/item_types/fur_pattern",
 		text = Localize("loc_arbites_customization_dog_pattern"),
@@ -5244,6 +5673,7 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 				{
 					grid_template = "single",
 					icon_background = "content/ui/textures/icons/appearances/dog/fur_pattern",
+					ignore_availability_reasons = true,
 					no_option = true,
 					slot_name = "slot_companion_body_coat_pattern",
 					template = "icon",
@@ -5310,11 +5740,10 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 	local grids = {}
 
 	local function add_eye_color_grid(eye_color_options, init_pressed_options)
-		table.sort(eye_color_options, sort_by_order)
-
 		local options = self:_get_appearance_category_options({
 			{
 				grid_template = "double",
+				ignore_fallback_in_sorting = true,
 				slot_name = "slot_body_eye_color",
 				template = "icon_small_texture_hsv",
 				type = "eye_color",
@@ -5384,9 +5813,6 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 	end
 
 	local function add_dog_skin_grid(dog_skin_options, init_pressed_options)
-		table.sort(dog_skin_options, sort_by_order)
-		table.sort(dog_skin_options, sort_by_string_name)
-
 		local options = self:_get_appearance_category_options({
 			{
 				grid_template = "double",
@@ -5453,6 +5879,141 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local entry_enter = category_entry_option.on_enter
 		local entry_leave = category_entry_option.on_leave
 		local continue_validation = category_entry_option.validation
+		local ignore_availability_reasons = category_entry_option.ignore_availability_reasons
+		local force_nil_item = category_entry_option.force_nil_item
+		local ignore_fallback_in_sorting = category_entry_option.ignore_fallback_in_sorting
+		local temp_option_a, temp_option_b = {
+			value = nil,
+		}, {
+			value = nil,
+		}
+
+		if entry_options then
+			local function _is_fallback_item(option)
+				if option.is_nil_item then
+					return true
+				end
+
+				if not force_nil_item and option.is_fallback_item then
+					if type(entry_slot_name) == "table" then
+						return table.contains(entry_slot_name, option.slots[1])
+					else
+						return option.slots[1] == entry_slot_name
+					end
+				end
+
+				return false
+			end
+
+			if entry_no_option and not table.find_func_array(entry_options, _is_fallback_item) then
+				table.insert(entry_options, 1, {
+					is_nil_item = true,
+				})
+			end
+
+			local original_order = table.mirror_array(entry_options)
+
+			local function _cmp(a, b)
+				if type(a) ~= "table" or type(b) ~= "table" then
+					return original_order[a] < original_order[b]
+				end
+
+				if not a.is_nil_item ~= not b.is_nil_item then
+					return not not a.is_nil_item
+				end
+
+				if not a.is_fallback_item ~= not b.is_fallback_item and not ignore_fallback_in_sorting then
+					return not not a.is_fallback_item
+				end
+
+				temp_option_a.value, temp_option_b.value = a, b
+
+				local a_available, a_reason = self._character_create:is_option_available(temp_option_a)
+				local b_available, b_reason = self._character_create:is_option_available(temp_option_b)
+
+				if a_available ~= b_available then
+					return a_available
+				end
+
+				local a_class_specific = a_reason == "class"
+				local b_class_specific = b_reason == "class"
+
+				if a_class_specific ~= b_class_specific then
+					return a_class_specific
+				end
+
+				if a_reason ~= b_reason then
+					if a_reason and b_reason then
+						return a_reason < b_reason
+					end
+
+					return not not a_reason
+				end
+
+				local a_sort_order, b_sort_order = a.sort_order or math.huge, b.sort_order or math.huge
+
+				if a_sort_order ~= b_sort_order then
+					return a_sort_order < b_sort_order
+				end
+
+				if a.display_name and b.display_name and a.display_name ~= b.display_name then
+					local loc_a, loc_b = Localize(a.display_name), Localize(b.display_name)
+
+					if loc_a ~= loc_b then
+						return loc_a < loc_b
+					end
+				end
+
+				if a.name ~= b.name then
+					return a.name < b.name
+				end
+
+				return original_order[a] < original_order[b]
+			end
+
+			table.sort(entry_options, function (a, b)
+				local cmp_a
+
+				if type(a) == "table" and a.item_group then
+					for slot_id, item in pairs(a) do
+						local order = 0
+
+						if slot_id ~= "item_group" then
+							order = order + 1
+							original_order[item] = order
+
+							if cmp_a then
+								cmp_a = _cmp(cmp_a, item) and cmp_a or item
+							else
+								cmp_a = item
+							end
+						end
+					end
+				end
+
+				local cmp_b
+
+				if type(b) == "table" and b.item_group then
+					for slot_id, item in pairs(b) do
+						local order = 0
+
+						if slot_id ~= "item_group" then
+							order = order + 1
+							original_order[item] = order
+
+							if cmp_b then
+								cmp_b = _cmp(cmp_b, item) and cmp_b or item
+							else
+								cmp_b = item
+							end
+						end
+					end
+				end
+
+				return _cmp(cmp_a or a, cmp_b or b)
+			end)
+		end
+
 		local options = {}
 
 		grids[i] = {
@@ -5467,6 +6028,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			no_option = entry_no_option,
 			icon_background = entry_icon_background,
 			type = entry_type,
+			ignore_availability_reasons = ignore_availability_reasons,
 		}
 
 		if entry_type == "gender" then
@@ -5652,18 +6214,33 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		elseif entry_type == "hair_color" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
-				local skin_override = HairMaterialOverrides[option.material_overrides[1]]
-				local property_overrides = skin_override.property_overrides
-				local hair_rgb = property_overrides.hair_rgb
+				local index = #options + 1
+				local icon_texture = entry_no_option and index == 1 and "content/ui/textures/icons/appearances/no_option" or nil
 				local color = {
 					255,
-					hair_rgb[1] * 255,
-					hair_rgb[2] * 255,
-					hair_rgb[3] * 255,
+					255,
+					255,
+					255,
 				}
 
-				options[#options + 1] = {
-					color = color,
+				if option.material_overrides then
+					local skin_override = HairMaterialOverrides[option.material_overrides[1]]
+					local property_overrides = skin_override.property_overrides
+					local hair_rgb = property_overrides.hair_rgb
+
+					color[2] = color[2] * hair_rgb[1]
+					color[3] = color[3] * hair_rgb[2]
+					color[4] = color[4] * hair_rgb[3]
+				end
+
+				options[index] = {
+					icon_texture = icon_texture,
+					color = not icon_texture and color or {
+						0,
+						255,
+						255,
+						255,
+					},
 					value = option,
 					on_pressed_function = function (grid_index, widget, pressed_options)
 						self._character_create:set_item_per_slot(entry_slot_name, option)
@@ -5830,6 +6407,113 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			grids[i].selected_option = function ()
 				return self._character_create:slot_item(entry_slot_name)
 			end
+		elseif entry_type == "full_body_tattoo" or entry_type == "body_tattoo" or entry_type == "face_tattoo" then
+			for j = 1, #entry_options do
+				local option = entry_options[j]
+				local index = #options + 1
+				local icon_texture
+
+				if entry_no_option then
+					if index == 1 then
+						icon_texture = "content/ui/textures/icons/appearances/no_option"
+					else
+						icon_texture = string.format("content/ui/textures/icons/appearances/roman_numerals/%d", index - 1)
+					end
+				else
+					icon_texture = string.format("content/ui/textures/icons/appearances/roman_numerals/%d", index)
+				end
+
+				options[index] = {
+					value = option,
+					icon_texture = icon_texture,
+					on_pressed_function = function (grid_index, widget, pressed_options)
+						if entry_type == "full_body_tattoo" then
+							if option.is_nil_item then
+								local face_slot_item = self._character_create:slot_item("slot_body_face_tattoo")
+
+								if face_slot_item and face_slot_item.tattoo_group ~= "" then
+									self._character_create:set_item_per_slot("slot_body_face_tattoo", nil)
+									self._character_create:try_unshelve_item_per_slot("slot_body_face_tattoo")
+								end
+
+								local body_slot_item = self._character_create:slot_item("slot_body_tattoo")
+
+								if body_slot_item and body_slot_item.tattoo_group ~= "" then
+									self._character_create:set_item_per_slot("slot_body_tattoo", nil)
+									self._character_create:try_unshelve_item_per_slot("slot_body_tattoo")
+								end
+							elseif option.item_group then
+								for slot_id, item in pairs(option) do
+									if slot_id ~= "item_group" then
+										local slot_item = self._character_create:slot_item(slot_id)
+
+										if slot_item and slot_item.tattoo_group ~= "" ~= (item.tattoo_group ~= "") then
+											self._character_create:shelve_item_per_slot(slot_id, item)
+										else
+											self._character_create:set_item_per_slot(slot_id, item)
+										end
+									end
+								end
+							end
+						elseif not pressed_options or not pressed_options.initialization_press then
+							local face_slot_item = self._character_create:slot_item("slot_body_face_tattoo")
+
+							if face_slot_item and face_slot_item.tattoo_group ~= "" then
+								self._character_create:try_unshelve_item_per_slot("slot_body_face_tattoo")
+								self._character_create:set_item_per_slot("slot_body_face_tattoo", nil)
+							end
+
+							local body_slot_item = self._character_create:slot_item("slot_body_tattoo")
+
+							if body_slot_item and body_slot_item.tattoo_group ~= "" then
+								self._character_create:try_unshelve_item_per_slot("slot_body_tattoo")
+								self._character_create:set_item_per_slot("slot_body_tattoo", nil)
+							end
+
+							self._character_create:set_item_per_slot(entry_slot_name, option)
+						end
+
+						remove_gamepad_focused_slots(self, entry_slot_name)
+						self:_update_icons()
+					end,
+					on_focused_function = function (grid_index, widget)
+						if option.item_group then
+							for slot_id, item in pairs(option) do
+								if slot_id ~= "item_group" then
+									local slot_item = self._character_create:slot_item(slot_id)
+
+									if slot_item and slot_item.tattoo_group ~= "" ~= (item.tattoo_group ~= "") then
+										self._character_create:shelve_item_per_slot(slot_id, slot_item)
+									end
+								end
+							end
+						end
+
+						add_gamepad_focused_slots(self, entry_slot_name, option, nil, nil, true)
+					end,
+				}
+			end
+
+			grids[i].selected_option = function ()
+				if type(entry_slot_name) == "table" then
+					local slot_name = entry_slot_name[1]
+					local item_in_slot = self._character_create:slot_item(slot_name)
+
+					if item_in_slot then
+						for entry_i = 1, #entry_options do
+							local option = entry_options[entry_i]
+
+							if option[slot_name] and option[slot_name].name == item_in_slot.name then
+								return option
+							end
+						end
+					else
+						return table.find_by_key(entry_options, "is_nil_item", true)
+					end
+				else
+					return self._character_create:slot_item(entry_slot_name)
+				end
+			end
 		else
 			for j = 1, #entry_options do
 				local option = entry_options[j]
@@ -5879,10 +6563,32 @@ CharacterAppearanceView._check_valid_option = function (self, option)
 	local available = true
 	local reason, reason_display_name
 
-	visible = self._character_create:is_option_visible(value)
+	if value and value.value and value.value.item_group then
+		local temp_option = {
+			value = nil,
+		}
 
-	if visible then
-		available, reason, reason_display_name = self._character_create:is_option_available(value)
+		for slot_id, sub_option in pairs(value.value) do
+			temp_option.value = sub_option
+			visible = visible and self._character_create:is_option_visible(temp_option)
+
+			if visible then
+				local sub_available, sub_reason, sub_reason_display_name = self._character_create:is_option_available(temp_option)
+
+				available = available and sub_available
+				reason = reason or sub_reason
+				reason_display_name = reason_display_name or sub_reason_display_name
+			else
+				reason = nil
+				reason_display_name = nil
+			end
+		end
+	else
+		visible = self._character_create:is_option_visible(value)
+
+		if visible then
+			available, reason, reason_display_name = self._character_create:is_option_available(value)
+		end
 	end
 
 	return visible, available, reason, reason_display_name
@@ -5908,7 +6614,7 @@ CharacterAppearanceView._update_selection = function (self)
 					local widget = widgets[j]
 					local widget_option = widget.content.option
 
-					if selected_option == widget_option.value then
+					if widget_option and selected_option == widget_option.value then
 						page_grid.grid:select_widget(widget, false, true)
 
 						break
@@ -6031,7 +6737,7 @@ CharacterAppearanceView._get_crime_options = function (self)
 end
 
 CharacterAppearanceView._pan_camera = function (self, revert)
-	local world_spawner = self._world_spawner
+	local world_spawner = self._world_spawners[self._active_world]
 	local dx = 0
 	local profile = self._character_create:profile()
 	local selected_archetype = profile.archetype.name
@@ -6046,6 +6752,29 @@ CharacterAppearanceView._pan_camera = function (self, revert)
 	local func_ptr = math.easeOutCubic
 
 	world_spawner:set_target_camera_offset_for_axis("dx", dx, time, func_ptr)
+end
+
+CharacterAppearanceView._rotate_camera = function (self, target_rotation, instant)
+	local world_spawner = self._world_spawners[self._active_world]
+	local rotation_time = instant and 0 or 0.5
+	local camera_rotation = world_spawner:camera_rotation()
+	local epsilon = 0.001
+	local more_than_90_deg = Quaternion.angle(camera_rotation, target_rotation) > math.pi * 0.5 + epsilon
+	local func_ptr = math.ease_in_out_sine
+
+	if more_than_90_deg then
+		func_ptr = math.ease_in_out_cubic
+	end
+
+	world_spawner:set_target_camera_rotation(target_rotation, rotation_time, func_ptr)
+end
+
+CharacterAppearanceView._reset_camera = function (self)
+	local world_spawner = self._world_spawners[self._active_world]
+
+	if world_spawner then
+		world_spawner:reset_target_camera_rotation(0)
+	end
 end
 
 CharacterAppearanceView._generate_final_page_widgets = function (self, grid_index, grid_data, is_companion)
@@ -6069,14 +6798,10 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 	}
 	local text_style = CharacterAppearanceViewFontStyle.randomize_button_text_style
 	local randomize_text = Utf8.upper(Localize("loc_randomize"))
-	local style = {}
-
-	UIFonts.get_font_options_by_style(text_style, style)
-
-	local text_width, text_height = UIRenderer.text_size(self._ui_renderer, randomize_text, text_style.font_type, text_style.font_size, {
+	local text_width, text_height = Text.text_size(self._ui_renderer, randomize_text, text_style, {
 		math.huge,
 		500,
-	}, style)
+	})
 	local icon_width = 30
 	local text_margin = 15
 	local button_margin = {
@@ -6237,6 +6962,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 					content_id = "hotspot",
 					pass_type = "hotspot",
 					content = {
+						on_released_sound = nil,
 						on_hover_sound = UISoundEvents.default_mouse_hover,
 						on_pressed_sound = UISoundEvents.default_click,
 					},
@@ -6425,13 +7151,10 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 	local backstory_text = self:_generate_final_backstory_text()
 	local backstory_font_style = CharacterAppearanceViewFontStyle.description_style
 	local backstory_style = {}
-
-	UIFonts.get_font_options_by_style(backstory_font_style, backstory_style)
-
-	local backstory_text_width, backstory_text_height = UIRenderer.text_size(self._ui_renderer, backstory_text, backstory_font_style.font_type, backstory_font_style.font_size, {
+	local backstory_text_width, backstory_text_height = Text.text_size(self._ui_renderer, backstory_text, backstory_font_style, {
 		grid_size[1],
 		0,
-	}, backstory_style)
+	})
 	local backstory_size = {
 		grid_size[1],
 		backstory_text_height + 10,
@@ -6671,17 +7394,17 @@ CharacterAppearanceView._generate_final_backstory_text = function (self)
 	local crime_snippet = self._character_create:crime().story_snippet
 	local end_snippet = Localize("loc_character_backstory_snippet")
 	local profile = self._character_create:profile()
-	local archetype = profile.archetype and profile.archetype.name
+	local archetype = profile.archetype
 
-	if archetype == "adamant" then
-		end_snippet = Localize("loc_character_backstory_snippet_adamant")
+	if archetype.backstory_snippet then
+		end_snippet = Localize(archetype.backstory_snippet)
 	end
 
 	if self._is_barber_mindwipe then
 		end_snippet = Localize("loc_character_backstory_snippet_mindwipe")
 	end
 
-	local backstory_text = string.format("%s %s %s %s\n\n%s\n\n%s", Localize(planet_snippet), Localize(childhood_snippet), Localize(growing_up_snippet), Localize(formative_event_snippet), Localize(crime_snippet), end_snippet)
+	local backstory_text = string.format("%s %s %s %s%s\n\n%s", Localize(planet_snippet), Localize(childhood_snippet), Localize(growing_up_snippet), formative_event_snippet and Localize(formative_event_snippet) or "", crime_snippet and string.format("\n\n%s", Localize(crime_snippet)) or "", end_snippet)
 
 	return backstory_text
 end
@@ -6735,7 +7458,7 @@ CharacterAppearanceView._set_camera = function (self, camera_focus, no_height_co
 
 	self._focus_camera_unit = slot_camera_unit
 
-	local world_spawner = self._world_spawner
+	local world_spawner = self._world_spawners[self._active_world]
 	local func_ptr = math.easeOutCubic
 	local is_camera_zoomed = self:_is_camera_zoomed(camera_focus)
 	local camera_zoom_changed = self._camera_zoomed ~= is_camera_zoomed
@@ -6803,7 +7526,7 @@ CharacterAppearanceView._check_widget_choice_detail_visibility = function (self,
 	local available = presentation_data.available
 	local reason = presentation_data.reason
 	local reason_display_name = presentation_data.reason_display_name and Localize(presentation_data.reason_display_name)
-	local choice_info = reason and choices_presentation[reason]
+	local choice_info = self:_archetype_page_data()[reason] or restriction_datas[reason]
 
 	if reason then
 		self._widgets_by_name.choice_detail.content.visible = true
@@ -6818,7 +7541,15 @@ CharacterAppearanceView._check_widget_choice_detail_visibility = function (self,
 			texture_map = choice_info.icon_texture,
 		}
 
-		if reason_display_name then
+		if choice_info.disabling_reason then
+			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_disabled_reason", true, {
+				reason = reason_display_name,
+			})
+		elseif choice_info.unique_reason then
+			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_unique_reason", true, {
+				reason = reason_display_name,
+			})
+		elseif reason_display_name then
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_choice_reason", true, {
 				description = Localize(choice_info.title),
 				choice = reason_display_name,
@@ -6846,7 +7577,7 @@ CharacterAppearanceView._set_camera_height_option = function (self, camera_focus
 	local func_ptr = math.easeOutCubic
 	local profile = self._character_create:profile()
 	local selected_archetype = profile.archetype.name
-	local world_spawner = self._world_spawner
+	local world_spawner = self._world_spawners[self._active_world]
 
 	if selected_archetype == "ogryn" then
 		world_spawner:set_target_camera_offset_for_axis("dy", -0.5, time, func_ptr)
@@ -7277,6 +8008,65 @@ CharacterAppearanceView.dialogue_system = function (self)
 		return self._parent:dialogue_system()
 	else
 		return nil
+	end
+end
+
+CharacterAppearanceView._set_active_world = function (self, page_name, spawn_character_changed)
+	if not self:_level_names()[page_name] then
+		page_name = "default"
+	end
+
+	self._active_world = page_name
+
+	if not self._should_render_world then
+		self:_destroy_background()
+
+		return
+	end
+
+	local has_spawn_unit_before = self._spawn_point_unit
+
+	if not self._world_spawners[page_name] then
+		if not table.is_empty(self._world_spawners) then
+			self:_destroy_background()
+		end
+
+		if self._fade_animation_id then
+			self:_stop_animation(self._fade_animation_id)
+		end
+
+		self._fade_animation_id = self:_start_animation("on_level_switch")
+		self._spawn_point_unit = nil
+
+		self:_setup_background_world(page_name)
+	end
+
+	local has_spawn_unit_after = self._spawn_point_unit
+	local active_state_machine = self._active_state_machine
+	local state_machines = self:_state_machines()[page_name]
+	local wanted_state_machine_or_nil = state_machines and state_machines[self._character_create:breed()] or nil
+
+	self._active_state_machine = wanted_state_machine_or_nil
+	spawn_character_changed = spawn_character_changed or wanted_state_machine_or_nil ~= active_state_machine
+
+	if has_spawn_unit_after ~= has_spawn_unit_before or spawn_character_changed then
+		self:_spawn_profile(self._spawn_point_unit, wanted_state_machine_or_nil, "idle")
+	end
+
+	for other_page_name, world_spawner in pairs(self._world_spawners) do
+		if other_page_name ~= page_name then
+			world_spawner:set_world_disabled(true, true)
+		end
+	end
+
+	self._world_spawners[page_name]:set_world_disabled(false, true)
+end
+
+CharacterAppearanceView._world_spawner_by_world = function (self, world)
+	for _, world_spawner in pairs(self._world_spawners) do
+		if world_spawner:world() == world then
+			return world_spawner
+		end
 	end
 end
 

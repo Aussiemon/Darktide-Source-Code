@@ -4,7 +4,7 @@ local MutatorStatTriggerUtilities = {}
 local side_id, target_side_id = 2, 1
 
 MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde = function (composition_template, horde_template_key)
-	return function (mutator, caused_by_player)
+	return function (mutator, for_value, delta, caused_by_player)
 		if not mutator._is_server then
 			return
 		end
@@ -25,7 +25,7 @@ MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde = function (
 end
 
 MutatorStatTriggerUtilities.on_trigger_force_horde = function ()
-	return function (mutator, caused_by_player)
+	return function (mutator, for_value, delta, caused_by_player)
 		if not mutator._is_server then
 			return
 		end
@@ -35,7 +35,7 @@ MutatorStatTriggerUtilities.on_trigger_force_horde = function ()
 end
 
 MutatorStatTriggerUtilities.on_trigger_send_live_event_notification = function (notification_key)
-	return function (mutator, caused_by_player)
+	return function (mutator, for_value, delta, caused_by_player)
 		if not mutator._is_server then
 			return
 		end

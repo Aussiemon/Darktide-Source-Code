@@ -292,6 +292,23 @@ ProjectileUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	end
 end
 
+ProjectileUnitLocomotionExtension.external_move = function (self, position, rotation)
+	local projectile_unit = self._projectile_unit
+	local dynamic_actor
+
+	if self._dynamic_actor_id then
+		dynamic_actor = Unit.actor(projectile_unit, self._dynamic_actor_id)
+	end
+
+	if dynamic_actor then
+		Actor.teleport_position(dynamic_actor, position)
+		Actor.teleport_rotation(dynamic_actor, rotation)
+	end
+
+	self._position:store(position)
+	self._rotation:store(rotation)
+end
+
 ProjectileUnitLocomotionExtension.switch_to_manual_physics = function (self, position, rotation, direction, speed, angular_velocity)
 	self:_set_state(locomotion_states.manual_physics)
 	self:_switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity)

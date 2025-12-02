@@ -19,8 +19,8 @@ local AchievementUIHelper = require("scripts/managers/achievements/utility/achie
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local Promise = require("scripts/foundation/utilities/promise")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local Vo = require("scripts/utilities/vo")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local trinket_slot_order = {
@@ -122,10 +122,10 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 
 	self._grow_direction = "down"
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
-	self._weapon_zoom_fraction = -0.45
-	self._weapon_zoom_target = -0.45
 	self._min_zoom = -0.45
 	self._max_zoom = 4
+	self._weapon_zoom_fraction = self._min_zoom
+	self._weapon_zoom_target = self._min_zoom
 	self._pass_input = false
 	self._pass_draw = false
 end
@@ -184,11 +184,7 @@ InventoryWeaponCosmeticsView.on_enter = function (self)
 
 	self._world_spawner = self._parent:world_spawner()
 
-	if self._presentation_item then
-		self:_setup_weapon_preview()
-		self:_preview_item(self._presentation_item)
-	end
-
+	self:_setup_weapon_preview()
 	self:present_grid_layout({})
 	self:_register_button_callbacks()
 	self:_setup_menu_tabs()
@@ -329,6 +325,19 @@ InventoryWeaponCosmeticsView._should_refresh = function (self, dt, t)
 		return false
 	end
 
+	local server_time = Managers.backend:get_server_time(t)
+	local premium_rotation_ends_at = self._premium_rotation_ends_at
+
+	if premium_rotation_ends_at and premium_rotation_ends_at < server_time then
+		return true
+	end
+
+	if self._force_refresh then
+		self._force_refresh = false
+
+		return true
+	end
+
 	local refresh_in_seconds = self._refresh_in_seconds
 
 	refresh_in_seconds = refresh_in_seconds and math.max(refresh_in_seconds - dt, 0)
@@ -445,7 +454,6 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 			-0.3,
 			-0.25,
 		})
-		self:_set_weapon_zoom(self._weapon_zoom_fraction)
 	end
 end
 
@@ -846,11 +854,46 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 
 			return Promise.resolved(penance_track_items)
 		end)
+
+		local premium_store_promises = Promise.resolved({})
+		local count = 0
+
+		for archetype_name, archetype_data in pairs(Archetypes) do
+			count = count + 1
+
+			local archetype_name = archetype_data.name
+			local has_premium_store = Managers.data_service.store:has_character_premium_store(archetype_name)
+
+			if has_premium_store then
+				premium_store_promises[count] = self._promise_container:cancel_on_destroy(Managers.data_service.store:get_character_premium_store(archetype_name)):next(function (data)
+					local offers = data.offers
+					local catalog_validity = data.catalog_validity
+					local valid_to = catalog_validity and catalog_validity.valid_to
+
+					self._premium_rotation_ends_at = valid_to
+
+					return self:_parse_store_items(slot_name, offers, {})
+				end)
+			else
+				premium_store_promises[count] = Promise.resolved({})
+			end
+		end
+
+		slot_promises[#slot_promises + 1] = Promise.all(unpack(premium_store_promises)):next(function (stores)
+			local merged_stores = {}
+
+			for i = 1, #stores do
+				table.merge(merged_stores, stores[i])
+			end
+
+			return merged_stores
+		end)
 		promises[i] = Promise.all(unpack(slot_promises)):next(function (items)
 			return {
 				items = items[1],
 				store_items = items[2],
 				penance_track_items = items[3],
+				premium_items = items[4],
 			}
 		end)
 	end
@@ -994,11 +1037,17 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 	end
 end
 
+InventoryWeaponCosmeticsView._on_double_click = function (self, widget, element)
+	return self:cb_on_equip_pressed()
+end
+
 InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
 	local current_status = self._equip_button_status
 
 	if current_status == "equip" then
 		self:_equip_weapon_cosmetics()
+	elseif current_status == "purchase" then
+		self:cb_on_purchase_pressed()
 	end
 end
 
@@ -1022,6 +1071,7 @@ InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 		end
 
 		local is_locked = previewed_element and not not previewed_element.locked
+		local is_premium = previewed_element and previewed_element.premium_offer ~= nil
 		local is_equipped = false
 
 		if is_disabled then
@@ -1039,7 +1089,7 @@ InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 			end
 		end
 
-		target_status = is_equipped and "equipped" or is_disabled and "disabled" or is_locked and "locked" or "equip"
+		target_status = is_equipped and "equipped" or is_premium and "purchase" or is_disabled and "disabled" or is_locked and "locked" or "equip"
 	end
 
 	local current_equip_button_status = self._equip_button_status
@@ -1051,7 +1101,7 @@ InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 		button_content.hotspot.disabled = target_status == "disabled" or target_status == "equipped" or target_status == "locked"
 		button_content.visible = target_status ~= "locked"
 
-		local loc_key = target_status == "equipped" and "loc_weapon_inventory_equipped_button" or "loc_weapon_inventory_equip_button"
+		local loc_key = target_status == "equipped" and "loc_weapon_inventory_equipped_button" or target_status == "purchase" and "loc_premium_store_purchase_item" or "loc_weapon_inventory_equip_button"
 
 		button_content.original_text = Utf8.upper(Localize(loc_key))
 		self._equip_button_status = target_status
@@ -1085,9 +1135,6 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 
 	self._previewed_item = real_item or item
 	self._previewed_element = element
-
-	apply_on_preview(real_item, presentation_item)
-	self:_preview_item(presentation_item)
 
 	local item_size = {
 		700,
@@ -1139,6 +1186,8 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 	widget.offset[2] = widget.offset[2] + y_offset
 
 	self:_setup_side_panel(real_item, is_locked, 0, y_offset)
+	apply_on_preview(real_item, presentation_item)
+	self:_preview_item(presentation_item)
 end
 
 InventoryWeaponCosmeticsView._preview_item = function (self, item)
@@ -1150,7 +1199,9 @@ InventoryWeaponCosmeticsView._preview_item = function (self, item)
 	if self._weapon_preview then
 		local disable_auto_spin = false
 
-		self._weapon_preview:present_item(item, disable_auto_spin)
+		self._weapon_preview:present_item(item, disable_auto_spin, function ()
+			self:_set_weapon_zoom(self._weapon_zoom_fraction)
+		end)
 	end
 
 	local visible = true
@@ -1222,6 +1273,7 @@ InventoryWeaponCosmeticsView.update = function (self, dt, t, input_service)
 	end
 
 	self:_update_equip_button_status()
+	self:_update_vo(dt, t)
 
 	return InventoryWeaponCosmeticsView.super.update(self, dt, t, input_service)
 end
@@ -1472,6 +1524,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 		local inventory_items = items and items.items
 		local penance_track_items = items and items.penance_track_items
 		local store_items = items and items.store_items
+		local premium_items = items and items.premium_items
 		local selected_slot = ItemSlotSettings[slot_name]
 		local achievement_items = self:_achievement_items(slot_name)
 		local player = self._preview_player
@@ -1480,6 +1533,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 		local locked_achievement_items_by_name = items_by_name(achievement_items, false)
 		local locked_store_items_by_name = items_by_name(store_items, false)
 		local locked_penance_track_items_by_name = items_by_name(penance_track_items, false)
+		local locked_premium_items_by_name = items_by_name(premium_items, false)
 
 		if inventory_items then
 			for i = 1, #inventory_items do
@@ -1506,6 +1560,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 					local found_penance_track = locked_penance_track_items_by_name[item_name]
 
 					locked_penance_track_items_by_name[item_name] = nil
+					locked_premium_items_by_name[item_name] = nil
 
 					local gear_id = item.gear_id
 					local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
@@ -1616,6 +1671,40 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			end
 		end
 
+		local has_locked_premium_item = next(locked_premium_items_by_name) ~= nil
+
+		if has_locked_premium_item then
+			layout_count = layout_count + 1
+			layout[layout_count] = {
+				sort_group = 2,
+				widget_type = "divider",
+			}
+		end
+
+		for _, premium_item in pairs(locked_premium_items_by_name) do
+			local item = premium_item.item
+
+			if item then
+				local visual_item = generate_visual_item_function(premium_item.item, self._selected_item, item_type)
+
+				layout_count = layout_count + 1
+				layout[layout_count] = {
+					locked = true,
+					sort_group = 3,
+					widget_type = "item_icon",
+					item = visual_item,
+					real_item = premium_item.item,
+					slot = selected_slot,
+					store = premium_item.item,
+					premium_offer = premium_item.offer,
+					render_size = {
+						256,
+						128,
+					},
+				}
+			end
+		end
+
 		layout_by_slot[slot_name] = layout
 	end
 
@@ -1647,11 +1736,10 @@ InventoryWeaponCosmeticsView._setup_side_panel = function (self, item, is_locked
 		widget.offset[2] = y_offset
 
 		local widget_text_style = widget.style.text
-		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+		local _, text_height = self:_text_size(text, widget_text_style, {
 			max_width,
-			math.huge,
-		}, text_options)
+			1080,
+		})
 
 		y_offset = y_offset + text_height
 		widget.content.size[2] = text_height
@@ -1727,6 +1815,100 @@ InventoryWeaponCosmeticsView.is_item_owned = function (self, target_gear_id)
 	end
 
 	return false
+end
+
+InventoryWeaponCosmeticsView.cb_on_purchase_pressed = function (self)
+	local element = self._previewed_element
+	local premium_offer = element and element.premium_offer
+
+	if not premium_offer then
+		return
+	end
+
+	Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
+		store_item = {
+			offer = premium_offer,
+		},
+		parent = self,
+	})
+end
+
+InventoryWeaponCosmeticsView._update_vo = function (self, dt, t)
+	if self._hub_interaction then
+		local queued_vo_event_request = self._queued_vo_event_request
+
+		if queued_vo_event_request then
+			local delay = queued_vo_event_request.delay
+
+			if delay <= 0 then
+				local events = queued_vo_event_request.events
+				local voice_profile = queued_vo_event_request.voice_profile
+				local optional_route_key = queued_vo_event_request.optional_route_key
+				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
+				local world_spawner = self._world_spawner
+				local dialogue_system = world_spawner and self:dialogue_system()
+
+				if dialogue_system then
+					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+
+					self._queued_vo_event_request = nil
+				else
+					self._queued_vo_event_request = nil
+				end
+			else
+				queued_vo_event_request.delay = delay - dt
+			end
+		end
+
+		local current_vo_id = self._current_vo_id
+
+		if not current_vo_id then
+			return
+		end
+
+		local unit = self._vo_unit
+		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+		local is_playing = dialogue_extension:is_playing(current_vo_id)
+
+		if not is_playing then
+			self._current_vo_id = nil
+			self._current_vo_event = nil
+		end
+	end
+end
+
+InventoryWeaponCosmeticsView.dialogue_system = function (self)
+	local world_spawner = self._world_spawner
+	local world = world_spawner and world_spawner:world()
+	local extension_manager = world and Managers.ui:world_extension_manager(world)
+	local dialogue_system = extension_manager and extension_manager:system_by_extension("DialogueExtension")
+
+	return dialogue_system
+end
+
+InventoryWeaponCosmeticsView._cb_on_play_vo = function (self, id, event_name)
+	self._current_vo_event = event_name
+	self._current_vo_id = id
+end
+
+InventoryWeaponCosmeticsView.play_vo_events = function (self, events, voice_profile, optional_route_key, optional_delay, is_opinion_vo)
+	local dialogue_system = self:dialogue_system()
+
+	if optional_delay then
+		self._queued_vo_event_request = {
+			events = events,
+			voice_profile = voice_profile,
+			optional_route_key = optional_route_key,
+			delay = optional_delay,
+			is_opinion_vo = is_opinion_vo,
+		}
+	else
+		local wwise_route_key = optional_route_key or 40
+		local callback = self._vo_callback
+		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
+
+		self._vo_unit = vo_unit
+	end
 end
 
 return InventoryWeaponCosmeticsView

@@ -65,6 +65,7 @@ weapon_template.actions = {
 		death_on_explosion = true,
 		kind = "overload_explosion",
 		overload_type = "warp_charge",
+		start_input = nil,
 		total_time = 3,
 		timeline_anims = {
 			[0.933] = {

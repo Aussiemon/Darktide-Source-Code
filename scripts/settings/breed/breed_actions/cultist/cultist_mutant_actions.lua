@@ -40,6 +40,7 @@ local action_data = {
 		navigating_anim = "charge_fwd",
 		navigating_rotation_speed = 6,
 		prepare_grab_anim = "charge_grab_prep",
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -91,7 +92,10 @@ local action_data = {
 			},
 		},
 		anim_data = {
-			attack_throw_human = {},
+			attack_throw_human = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_throw_human_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -104,7 +108,10 @@ local action_data = {
 				sign = -1,
 				rad = math.pi / 2,
 			},
-			attack_throw_ogryn = {},
+			attack_throw_ogryn = {
+				rad = nil,
+				sign = nil,
+			},
 			attack_throw_ogryn_bwd = {
 				sign = 1,
 				rad = math.pi,

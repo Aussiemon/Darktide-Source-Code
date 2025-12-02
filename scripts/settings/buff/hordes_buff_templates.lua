@@ -2,37 +2,19 @@
 
 local Action = require("scripts/utilities/action/action")
 local Ammo = require("scripts/utilities/ammo")
-local Armor = require("scripts/utilities/attack/armor")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
-local HitZone = require("scripts/utilities/attack/hit_zone")
-local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
-local ImpactEffect = require("scripts/utilities/attack/impact_effect")
-local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
-local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionState = require("scripts/utilities/minion_state")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
-local Stagger = require("scripts/utilities/attack/stagger")
-local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local Stamina = require("scripts/utilities/attack/stamina")
-local Suppression = require("scripts/utilities/attack/suppression")
 local Toughness = require("scripts/utilities/toughness/toughness")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local PI = math.pi
 local PI_2 = PI * 2
@@ -40,43 +22,11 @@ local buff_categories = BuffSettings.buff_categories
 local buff_keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local armor_types = ArmorSettings.types
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
-local hit_zone_names = HitZone.hit_zone_names
-local stagger_types = StaggerSettings.stagger_types
-local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local BROADPHASE_RESULTS = {}
 local range_melee = DamageSettings.in_melee_range
-local range_close = DamageSettings.ranged_close
-local range_far = DamageSettings.ranged_far
-local grenade_replenishment_external_properties = {
-	indicator_type = "human_grenade",
-}
-local GRENADE_IMPACT_DAMAGE_TEMPLATES = {
-	fire_grenade_impact = true,
-	frag_grenade_impact = true,
-	krak_grenade_impact = true,
-	ogryn_grenade_box_cluster_impact = true,
-	ogryn_grenade_box_impact = true,
-	ogryn_grenade_impact = true,
-}
-local GRENADE_EXPLOSION_DAMAGE_TYPES = {
-	[damage_types.grenade_frag] = true,
-	[damage_types.electrocution] = true,
-	[damage_types.plasma] = true,
-	[damage_types.physical] = true,
-	[damage_types.laser] = true,
-}
-local VFX_NAMES = {
-	big_shock = "content/fx/particles/player_buffs/buff_electricity_grenade_01",
-	fire_pulse = "content/fx/particles/player_buffs/buff_fire_360angle_01",
-	healing_explosion = "content/fx/particles/player_buffs/buff_healing_area",
-	single_target_shock = "content/fx/particles/player_buffs/buff_electricity_one_target_01",
-	stagger_pulse = "content/fx/particles/player_buffs/buff_staggering_pulse",
-	veteran_shout = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
-}
 local SFX_NAMES = {
 	ammo_refil = "wwise/events/player/play_horde_mode_buff_ammo_refill",
 	burning_proc = "wwise/events/player/play_horde_mode_buff_fire_ignite",
@@ -103,8 +53,6 @@ local SFX_NAMES = {
 local templates = {}
 
 table.make_unique(templates)
-
-local _compute_fire_pulse, _give_passive_grenade_replenishment_buff, _pull_enemies_towards_position
 
 templates.hordes_buff_damage_immunity_after_game_end = {
 	class_name = "buff",

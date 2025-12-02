@@ -293,10 +293,45 @@ local particles = {
 		no_default = true,
 		switch = {
 			"wielded_weapon_template",
+			"special_active",
 		},
 		particles = {
-			thunderhammer_2h_p1_m1 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
-			thunderhammer_2h_p1_m2 = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			thunderhammer_2h_p1_m1 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			},
+			thunderhammer_2h_p1_m2 = {
+				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_activate_peak_discharge",
+			},
+			saw_p1_m1 = {
+				["false"] = "content/fx/particles/weapons/saw/saw_coating_01_idle",
+				["true"] = "content/fx/particles/weapons/saw/saw_coating_02_idle",
+			},
+		},
+	},
+	weapon_special_custom_sweep = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"special_active",
+		},
+		particles = {
+			saw_p1_m1 = {
+				["false"] = "content/fx/particles/weapons/saw/saw_coating_01_slash_01",
+				["true"] = "content/fx/particles/weapons/saw/saw_coating_02_slash_01",
+			},
+		},
+	},
+	saw_drips = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"special_active",
+		},
+		particles = {
+			saw_p1_m1 = {
+				["false"] = "content/fx/particles/weapons/saw/saw_coating_01_drips",
+				["true"] = "content/fx/particles/weapons/saw/saw_coating_02_drips",
+			},
 		},
 	},
 	wind_slash = {
@@ -539,6 +574,7 @@ local particles = {
 			syringe_corruption_pocketable = "content/fx/particles/pocketables/syringe_corruption_heal_bubbles",
 			syringe_power_boost_pocketable = "content/fx/particles/pocketables/syringe_power_boost_bubbles",
 			syringe_speed_boost_pocketable = "content/fx/particles/pocketables/syringe_speed_boost_bubbles",
+			tox_grenade = "content/fx/particles/weapons/grenades/chem_grenade/chem_grenade_holding_idle",
 			zealot_relic = "content/fx/particles/abilities/zealot_relic_emit_01",
 		},
 	},

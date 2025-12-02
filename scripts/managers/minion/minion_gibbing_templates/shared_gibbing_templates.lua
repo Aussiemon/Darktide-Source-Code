@@ -96,6 +96,12 @@ SharedGibbingTemplates.vfx.ritualist_warp_stump = {
 	node_name = "fx_blood",
 	particle_effect = "content/fx/particles/impacts/flesh/ritualist_warp_gib_02",
 }
+SharedGibbingTemplates.vfx.toxin_explosion_stump = {
+	particle_effect = "content/fx/particles/impacts/flesh/blood_broker_toxin_fountain_head_01",
+}
+SharedGibbingTemplates.vfx.toxin_gas_stump = {
+	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_broker_toxin_01",
+}
 SharedGibbingTemplates.sfx = {}
 SharedGibbingTemplates.sfx.warp_gib_lightning = {
 	sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death",
@@ -123,6 +129,8 @@ SharedGibbingTemplates.sfx.ritualist_warp_stump_head = {
 	sound_event = "wwise/events/weapon/play_heresy_minion_ritualist_death_burst_head",
 }
 SharedGibbingTemplates.head = {
+	extra_hit_zone_actors_to_destroy = nil,
+	material_overrides = nil,
 	scale_node = "",
 	gib_settings = {
 		gib_actor = "",
@@ -159,6 +167,8 @@ SharedGibbingTemplates.head = {
 	},
 }
 SharedGibbingTemplates.limb_segment = {
+	extra_hit_zone_actors_to_destroy = nil,
+	material_overrides = nil,
 	scale_node = "",
 	gib_settings = {
 		gib_actor = "",
@@ -198,6 +208,8 @@ SharedGibbingTemplates.limb_segment = {
 	},
 }
 SharedGibbingTemplates.limb_full = {
+	extra_hit_zone_actors_to_destroy = nil,
+	material_overrides = nil,
 	scale_node = "",
 	gib_settings = {
 		gib_actor = "",
@@ -237,6 +249,9 @@ SharedGibbingTemplates.limb_full = {
 	},
 }
 SharedGibbingTemplates.torso = {
+	extra_hit_zone_actors_to_destroy = nil,
+	extra_hit_zone_gibs = nil,
+	material_overrides = nil,
 	scale_node = "",
 	gib_settings = {
 		gib_actor = "",
@@ -275,6 +290,8 @@ SharedGibbingTemplates.torso = {
 	root_sound_event = SharedGibbingTemplates.sfx.root,
 }
 SharedGibbingTemplates.center_mass = {
+	extra_hit_zone_actors_to_destroy = nil,
+	material_overrides = nil,
 	scale_node = "",
 	gib_settings = {
 		gib_actor = "",

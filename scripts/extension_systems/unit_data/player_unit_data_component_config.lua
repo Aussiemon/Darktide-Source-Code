@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/unit_data/player_unit_data_component_config.lua
 
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
+local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local DisorientationSettings = require("scripts/settings/damage/disorientation_settings")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
@@ -984,6 +985,7 @@ local PlayerComponentConfig = {
 		active = "bool",
 		cooldown = "fixed_frame_time",
 		cooldown_paused = "bool",
+		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
 	},
@@ -991,6 +993,7 @@ local PlayerComponentConfig = {
 		active = "bool",
 		cooldown = "fixed_frame_time",
 		cooldown_paused = "bool",
+		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
 	},
@@ -998,6 +1001,7 @@ local PlayerComponentConfig = {
 		active = "bool",
 		cooldown = "fixed_frame_time",
 		cooldown_paused = "bool",
+		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
 	},
@@ -1072,6 +1076,7 @@ for slot_name, config in pairs(slot_configuration) do
 	end
 end
 
+local predictable_component_types = BuffArgs.predictable_component_types()
 local max_component_buffs = PlayerCharacterConstants.max_component_buffs
 local component_key_lookup = PlayerCharacterConstants.buff_component_key_lookup
 local buff_component_config = {
@@ -1085,12 +1090,20 @@ for ii = 1, max_component_buffs do
 	local active_start_time_key = key_lookup.active_start_time_key
 	local stack_count_key = key_lookup.stack_count_key
 	local proc_count_key = key_lookup.proc_count_key
+	local extra_duration_key = key_lookup.extra_duration_key
 
 	buff_component_config[template_name_key] = PREDICTED_BUFF_TEMPLATES
 	buff_component_config[start_time_key] = "fixed_frame_offset"
 	buff_component_config[active_start_time_key] = "fixed_frame_offset"
 	buff_component_config[stack_count_key] = "buff_stack_count"
 	buff_component_config[proc_count_key] = "buff_proc_count"
+	buff_component_config[extra_duration_key] = "signed_medium_time"
+
+	for param_name, component_type in pairs(predictable_component_types) do
+		local key = key_lookup[param_name]
+
+		buff_component_config[key] = component_type
+	end
 end
 
 PlayerComponentConfig.buff = buff_component_config

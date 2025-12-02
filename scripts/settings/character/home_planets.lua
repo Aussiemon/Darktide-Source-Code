@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/character/home_planets.lua
 
+local HOME_PLANETS_BROKER = require("scripts/settings/character/home_planets_broker")
 local home_planet_options = {
 	{
 		description = "loc_character_birthplace_planet_01_description",
@@ -16,6 +17,15 @@ local home_planet_options = {
 		position = {
 			3040,
 			2416,
+		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
 		},
 	},
 	{
@@ -34,6 +44,15 @@ local home_planet_options = {
 			4185,
 			2447,
 		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
+		},
 	},
 	{
 		description = "loc_character_birthplace_planet_03_description",
@@ -50,6 +69,15 @@ local home_planet_options = {
 		position = {
 			3751,
 			1698,
+		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
 		},
 	},
 	{
@@ -68,6 +96,15 @@ local home_planet_options = {
 			2426,
 			1626,
 		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
+		},
 	},
 	{
 		description = "loc_character_birthplace_planet_05_description",
@@ -84,6 +121,15 @@ local home_planet_options = {
 		position = {
 			3074,
 			822,
+		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
 		},
 	},
 	{
@@ -102,6 +148,15 @@ local home_planet_options = {
 			1472,
 			1364,
 		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
+		},
 	},
 	{
 		description = "loc_character_birthplace_planet_07_description",
@@ -118,6 +173,15 @@ local home_planet_options = {
 		position = {
 			1786,
 			2588,
+		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
 		},
 	},
 	{
@@ -136,8 +200,20 @@ local home_planet_options = {
 			1400,
 			1926,
 		},
+		visibility = {
+			archetypes = {
+				"veteran",
+				"zealot",
+				"psyker",
+				"ogryn",
+				"adamant",
+			},
+		},
 	},
 }
+
+table.append(home_planet_options, HOME_PLANETS_BROKER)
+
 local home_planet_options_by_id = {}
 
 for i = 1, #home_planet_options do
@@ -148,4 +224,4 @@ for i = 1, #home_planet_options do
 	home_planet_options_by_id[id] = home_planet_option
 end
 
-return settings("home_planet", home_planet_options_by_id)
+return settings("HomePlanet", home_planet_options_by_id)

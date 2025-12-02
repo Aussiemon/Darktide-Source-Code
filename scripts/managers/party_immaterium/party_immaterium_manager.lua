@@ -693,6 +693,7 @@ PartyImmateriumManager._handle_advertisement_request_to_join_list_update_event_t
 
 				if not join_request then
 					join_request = join_request or {
+						presence = nil,
 						presence_synced = false,
 						account_id = account_id,
 					}

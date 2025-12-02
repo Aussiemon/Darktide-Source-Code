@@ -7,8 +7,6 @@ local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -16,6 +14,7 @@ local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_d
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
+local Text = require("scripts/utilities/ui/text")
 local InventoryWeaponsView = class("InventoryWeaponsView", "ItemGridViewBase")
 
 InventoryWeaponsView.init = function (self, settings, context)
@@ -51,10 +50,8 @@ InventoryWeaponsView.on_enter = function (self)
 	self:_setup_weapon_options()
 
 	local profile = self._preview_player:profile()
-	local profile_archetype = profile.archetype
-	local archetype_name = profile_archetype.name
 
-	self:_setup_background_frames_by_archetype(archetype_name)
+	self:_setup_background_frames_by_archetype(profile)
 end
 
 InventoryWeaponsView.event_switch_mark_complete = function (self, item)
@@ -84,9 +81,17 @@ InventoryWeaponsView.event_switch_mark_complete = function (self, item)
 	end
 end
 
-InventoryWeaponsView._setup_background_frames_by_archetype = function (self, archetype_name)
+InventoryWeaponsView._setup_background_frames_by_archetype = function (self, profile)
+	local archetype = profile.archetype
 	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
-	local frame_textures = inventory_frames_by_archetype[archetype_name]
+	local frame_textures = inventory_frames_by_archetype[archetype.name]
+
+	if frame_textures.by_home_planet then
+		local planet = profile.lore.backstory.planet
+
+		frame_textures = frame_textures.by_home_planet[planet] or frame_textures
+	end
+
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
@@ -281,14 +286,20 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 		local selected_slot_name = selected_slot.name
 		local new_layout = {}
 		local items = {}
-		local equipped_item = self:equipped_item_in_slot(selected_slot_name)
+		local ITEM_TYPES = UISettings.ITEM_TYPES
 
 		for index, layout in ipairs(self._offer_items_layout) do
 			local item = layout.item
 
-			if not equipped_item or equipped_item and item and item.gear_id ~= equipped_item.gear_id then
-				new_layout[#new_layout + 1] = layout
-				items[#items + 1] = layout.item
+			if item then
+				local item_type = item.item_type
+				local slots = item.slots
+				local item_equipped = self:is_item_equipped_in_any_slot(item, slots)
+
+				if not item_equipped then
+					new_layout[#new_layout + 1] = layout
+					items[#items + 1] = layout.item
+				end
 			end
 		end
 
@@ -791,8 +802,6 @@ InventoryWeaponsView.cb_on_marks_pressed = function (self)
 		Managers.ui:open_view("inventory_weapon_marks_view", nil, nil, nil, nil, {
 			player = self._preview_player,
 			preview_item = self._previewed_item,
-			parent = self._parent,
-			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids,
 		})
 	end
 end
@@ -856,12 +865,6 @@ InventoryWeaponsView.world_spawner = function (self)
 end
 
 InventoryWeaponsView.on_exit = function (self)
-	if self._weapon_actions then
-		self:_remove_element("weapon_actions")
-
-		self._weapon_actions = nil
-	end
-
 	if self._store_promise then
 		self._store_promise:cancel()
 
@@ -1046,12 +1049,11 @@ end
 InventoryWeaponsView._calc_text_size = function (self, widget, text_and_style_id)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
 	local size = text_style.size or widget.content.size or {
 		self:_scenegraph_size(widget.scenegraph_id),
 	}
 
-	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+	return Text.text_size(self._ui_renderer, text, text_style, size)
 end
 
 InventoryWeaponsView.event_replace_list_item = function (self, item)
@@ -1100,7 +1102,7 @@ InventoryWeaponsView.replace_item_instance = function (self, item)
 			if widget_item and widget_item.gear_id == gear_id then
 				widget.content.element.item = item
 
-				self:force_update_grid_widget_icon(i)
+				self:force_update_grid_widget(i)
 
 				break
 			end

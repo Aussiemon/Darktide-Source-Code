@@ -66,10 +66,12 @@ weapon_template.action_inputs = {
 	rewield = {
 		buffer_time = 0,
 		clear_input_queue = true,
+		input_sequence = nil,
 	},
 	force_vent = {
 		buffer_time = 0,
 		clear_input_queue = true,
+		input_sequence = nil,
 	},
 	force_vent_release = {
 		buffer_time = 2,
@@ -308,6 +310,7 @@ weapon_template.actions = {
 		kind = "wield",
 		total_time = 0.5,
 		uninterruptible = true,
+		vo_tag = "ability_gunslinger",
 		anim_event_func = function (action_settings, condition_func_params, is_chain_action, previous_action)
 			local ability_extension = condition_func_params.ability_extension
 			local ability_type = "grenade_ability"
@@ -582,6 +585,7 @@ weapon_template.actions = {
 	},
 	action_unzoom = {
 		kind = "unaim",
+		start_input = nil,
 		total_time = 0.2,
 		allowed_chain_actions = {
 			combat_ability = {
@@ -602,6 +606,7 @@ weapon_template.actions = {
 		anim_event = "vent_start",
 		kind = "vent_warp_charge",
 		minimum_hold_time = 1.5,
+		start_input = nil,
 		stop_input = "force_vent_release",
 		uninterruptible = true,
 		vent_source_name = "fx_left_hand",
@@ -767,7 +772,7 @@ weapon_template.alternate_fire_settings = {
 	},
 }
 weapon_template.spread_template = "no_spread"
-weapon_template.ammo_template = "no_ammo"
+weapon_template.ammo_template = "grenade"
 weapon_template.psyker_smite = true
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
@@ -796,7 +801,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/throwing_knives"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_psyker"
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"

@@ -43,7 +43,7 @@ HitReaction.disorient_player = function (attacked_unit, unit_data_extension, dis
 	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 	local is_hit_by_melee = attack_type == AttackSettings.attack_types.melee
-	local melee_hit_on_ranged = target_wielded_slot == "slot_secondary" and is_hit_by_melee
+	local melee_hit_on_ranged = (target_wielded_slot == "slot_secondary" or target_wielded_slot == "slot_grenade_ability") and is_hit_by_melee
 	local melee_hit_on_sprinting = is_hit_by_melee and is_sprinting
 	local attack_disorientation_template = disorientation_type and disorientation_templates[disorientation_type]
 	local attack_have_stun = attack_disorientation_template and attack_disorientation_template.stun and attack_disorientation_template.stun.interrupt_delay ~= nil

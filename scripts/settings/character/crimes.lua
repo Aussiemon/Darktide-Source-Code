@@ -1,15 +1,17 @@
 ﻿-- chunkname: @scripts/settings/character/crimes.lua
 
-local CRIMES_SHARED = require("scripts/settings/character/crimes_shared")
+local CRIMES_ADAMANT = require("scripts/settings/character/crimes_adamant")
+local CRIMES_BROKER = require("scripts/settings/character/crimes_broker")
 local CRIMES_OGRYN = require("scripts/settings/character/crimes_ogryn")
 local CRIMES_PSYKER = require("scripts/settings/character/crimes_psyker")
-local CRIMES_ADAMANT = require("scripts/settings/character/crimes_adamant")
+local CRIMES_SHARED = require("scripts/settings/character/crimes_shared")
 local crime_options = {}
 
 table.append(crime_options, CRIMES_SHARED)
 table.append(crime_options, CRIMES_PSYKER)
 table.append(crime_options, CRIMES_OGRYN)
 table.append(crime_options, CRIMES_ADAMANT)
+table.append(crime_options, CRIMES_BROKER)
 
 local crime_options_by_id = {}
 

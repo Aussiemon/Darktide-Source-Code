@@ -195,8 +195,8 @@ local roamer_limits = {
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
-				max = 1,
-				num_limitations_to_add_extra = 1,
+				max = 0,
+				num_limitations_to_add_extra = 0,
 			},
 			tag_limits = {
 				elite = 1,
@@ -252,8 +252,8 @@ local roamer_limits = {
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
-				max = 1,
-				num_limitations_to_add_extra = 1,
+				max = 0,
+				num_limitations_to_add_extra = 0,
 			},
 			tag_limits = {
 				elite = 2,
@@ -545,8 +545,8 @@ local roamer_limits = {
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
-				max = 1,
-				num_limitations_to_add_extra = 1,
+				max = 0,
+				num_limitations_to_add_extra = 0,
 			},
 			tag_limits = {
 				elite = 2,
@@ -602,8 +602,8 @@ local roamer_limits = {
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
-				max = 1,
-				num_limitations_to_add_extra = 1,
+				max = 0,
+				num_limitations_to_add_extra = 0,
 			},
 			tag_limits = {
 				elite = 3,

@@ -196,10 +196,22 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 		resource_dependencies[texture_resource] = true
 	end
 
+	local material_resource = item_entry_data.material_resource
+
+	if material_resource and material_resource ~= "" then
+		resource_dependencies[material_resource] = true
+	end
+
 	local icon = item_entry_data.icon
 
 	if icon and icon ~= "" then
 		resource_dependencies[icon] = true
+	end
+
+	local icon_material = item_entry_data.icon_material
+
+	if icon_material and icon_material ~= "" then
+		resource_dependencies[icon_material] = true
 	end
 
 	local hud_icon = item_entry_data.hud_icon
@@ -285,7 +297,7 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 	local projectile_items = item.projectile_items
 
 	if projectile_items then
-		for key, item_name in pairs(projectile_items) do
+		for _, item_name in pairs(projectile_items) do
 			if item_name and item_name ~= "" then
 				local item_entry = rawget(items_dictionary, item_name)
 
@@ -308,6 +320,12 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 
 	if icon and icon ~= "" then
 		result[icon] = true
+	end
+
+	local icon_material = item.icon_material
+
+	if icon_material and icon_material ~= "" then
+		result[icon_material] = true
 	end
 
 	local weapon_skin_item = item.slot_weapon_skin

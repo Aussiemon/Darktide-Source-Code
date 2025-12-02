@@ -195,6 +195,7 @@ MissionBuffsUIManager.queue_wave_end_notification_ui = function (self, wave_num)
 	local time_left = self:get_time_left_between_waves()
 	local timer = time_left or 20
 	local ui_context_data = {
+		buffs = nil,
 		is_choice_notification = false,
 		state = "completed",
 		timer = timer,

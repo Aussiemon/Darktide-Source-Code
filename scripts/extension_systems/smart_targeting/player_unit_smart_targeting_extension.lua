@@ -8,7 +8,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local Sway = require("scripts/utilities/sway")
 local EMPTY_TABLE = {}
 local INDEX_POSITION = 1
-local INDEX_DISTANCE = 2
 local INDEX_ACTOR = 4
 local SMART_TAG_TARGETING_DELAY = 0.2
 local PlayerUnitSmartTargetingExtension = class("PlayerUnitSmartTargetingExtension")
@@ -34,7 +33,9 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
+	self._inair_state_component = unit_data_extension:read_component("inair_state")
 	self._inventory_component = unit_data_extension:read_component("inventory")
+	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._movement_state_component = unit_data_extension:read_component("movement_state")
 	self._recoil_component = unit_data_extension:read_component("recoil")
 	self._recoil_control_component = unit_data_extension:read_component("recoil_control")
@@ -121,9 +122,11 @@ PlayerUnitSmartTargetingExtension._targeting_parameters = function (self)
 	local recoil_template = weapon_extension:recoil_template()
 	local sway_template = weapon_extension:sway_template()
 	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 
-	ray_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, self._recoil_component, movement_state_component, ray_rotation)
-	ray_rotation = Sway.apply_sway_rotation(sway_template, self._sway_component, movement_state_component, ray_rotation)
+	ray_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, self._recoil_component, movement_state_component, locomotion_component, inair_state_component, ray_rotation)
+	ray_rotation = Sway.apply_sway_rotation(sway_template, self._sway_component, ray_rotation)
 
 	local forward = Quaternion.forward(ray_rotation)
 	local right = Quaternion.right(rotation_1p)
@@ -149,8 +152,6 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local min_range = precision_target_settings.min_range
 	local max_range = precision_target_settings.max_range
 	local max_unit_range = precision_target_settings.max_unit_range or max_range
-	local target_node_name = precision_target_settings.wanted_target
-	local fallback_node_name = precision_target_settings.wanted_target_fallback
 	local breed_weights = precision_target_settings.breed_weights or EMPTY_TABLE
 	local smart_tagging = precision_target_settings.smart_tagging
 	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
@@ -178,7 +179,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local Unit_get_data = Unit.get_data
 	local visibility_cache = self._visibility_cache
 	local visibility_check_frame = self._visibility_check_frame
-	local num_insignificant_targets, last_insignificant_target_was_visible = 0, false
+	local num_insignificant_targets = 0
 
 	for i = 1, num_hits do
 		local hit = hits[i]
@@ -191,7 +192,6 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 			local unit_data_extension = ScriptUnit_has_extension(hit_unit, "unit_data_system")
 			local is_valid, is_static = false, false
 			local breed = unit_data_extension and unit_data_extension:breed()
-			local is_insignificant_target = false
 
 			if smart_tagging then
 				local tag_extension = ScriptUnit_has_extension(hit_unit, "smart_tag_system")
@@ -215,7 +215,6 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 				local tags = breed.tags
 
 				if tags.horde or tags.melee and not tags.elite then
-					is_insignificant_target = true
 					num_insignificant_targets = num_insignificant_targets + 1
 
 					if num_insignificant_targets > 5 then
@@ -415,7 +414,7 @@ PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, 
 	local distance = targeting_data.distance
 	local falloff_multiplier = trajectory_assist_settings.falloff_func(range, distance)
 	local recoil_template = weapon_extension:recoil_template()
-	local recoil_multiplier = Recoil.aim_assist_multiplier(recoil_template, self._recoil_control_component, self._recoil_component, self._movement_state_component)
+	local recoil_multiplier = Recoil.aim_assist_multiplier(recoil_template, self._recoil_control_component, self._recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
 	local multiplier = trajectory_assist_settings.assist_multiplier * falloff_multiplier * recoil_multiplier
 	local wanted_rotation = Quaternion.look(targeting_data.target_position:unbox() - own_position)
 	local error_angle = Quaternion.angle(raw_aim_rotation, wanted_rotation)

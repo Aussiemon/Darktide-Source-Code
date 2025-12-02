@@ -61,6 +61,7 @@ local ui_hud_settings = {
 	color_tint_alert_2 = Color.ui_hud_red_light(255, true),
 	color_tint_alert_3 = Color.ui_hud_red_medium(255, true),
 	color_tint_alert_4 = Color.ui_hud_red_dark(255, true),
+	color_tint_ammo_not_in_use = Color.terminal_text_body_dark(255, true),
 	color_tint_ammo_low = Color.ui_hud_warp_charge_low(255, true),
 	color_tint_ammo_medium = Color.ui_hud_warp_charge_medium(255, true),
 	color_tint_ammo_high = Color.ui_hud_warp_charge_high(255, true),

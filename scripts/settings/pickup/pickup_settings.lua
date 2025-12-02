@@ -2,7 +2,19 @@
 
 local pickup_settings = {}
 
-pickup_settings.distribution_types = table.enum("guaranteed", "end_event", "mid_event", "primary", "secondary", "reward", "side_mission", "manual")
+pickup_settings.distribution_types = table.enum("end_event", "mid_event", "primary", "secondary", "reward", "guaranteed", "manual", "flow", "side_mission")
+pickup_settings.pool_types = {
+	end_event_distribution = "end_event",
+	mid_event_distribution = "mid_event",
+	primary_distribution = "primary",
+	reward_distribution = "reward",
+	secondary_distribution = "secondary",
+}
+pickup_settings.event_types = {
+	flow_spawn = "flow",
+	guaranteed_spawn = "guaranteed",
+	manual_spawn = "manual",
+}
 pickup_settings.min_chest_spawner_ratios = {
 	[pickup_settings.distribution_types.primary] = 0.25,
 	[pickup_settings.distribution_types.secondary] = 0.25,

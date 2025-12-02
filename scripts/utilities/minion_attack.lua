@@ -1168,12 +1168,13 @@ end
 
 function _get_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
 	local buff_data = action_data.apply_buff_to_target_unit
+	local allow_refresh = action_data.allow_refresh
 	local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
 	local t = Managers.time:time("gameplay")
 	local buff_keyword = buff_data.buff_keyword
 	local buff_template_name = buff_data.buff_template_name
 
-	if not buff_extension:has_keyword(buff_keyword) then
+	if allow_refresh or not buff_extension:has_keyword(buff_keyword) then
 		buff_extension:add_internally_controlled_buff(buff_template_name, t)
 	end
 end

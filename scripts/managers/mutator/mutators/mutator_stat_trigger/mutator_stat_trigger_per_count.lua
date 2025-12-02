@@ -4,11 +4,11 @@ require("scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_tri
 
 local MutatorStatTriggerPerCount = class("MutatorStatTriggerPerCount", "MutatorStatTriggerBase")
 
-MutatorStatTriggerPerCount.init = function (self, triggers, trigger_amount, trigger_once)
-	MutatorStatTriggerPerCount.super.init(self, triggers)
+MutatorStatTriggerPerCount.init = function (self, template)
+	MutatorStatTriggerPerCount.super.init(self, template)
 
-	self._trigger_amount = trigger_amount
-	self._trigger_once = trigger_once
+	self._trigger_amount = template.trigger_amount
+	self._trigger_once = template.trigger_once
 end
 
 MutatorStatTriggerPerCount._reset = function (self)
@@ -25,8 +25,8 @@ MutatorStatTriggerPerCount._should_trigger = function (self)
 	return self._tracked_stat_value >= self._trigger_amount
 end
 
-MutatorStatTriggerPerCount._trigger = function (self, mutator, caused_by_player)
-	MutatorStatTriggerPerCount.super._trigger(self, mutator, caused_by_player)
+MutatorStatTriggerPerCount._trigger = function (self, mutator, for_value, delta, caused_by_player)
+	MutatorStatTriggerPerCount.super._trigger(self, mutator, for_value, delta, caused_by_player)
 
 	self._did_trigger = true
 	self._tracked_stat_value = self._tracked_stat_value - self._trigger_amount

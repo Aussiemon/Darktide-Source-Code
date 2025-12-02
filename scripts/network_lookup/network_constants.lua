@@ -132,7 +132,7 @@ NetworkConstants.game_object_id = game_object_id
 
 local level_name_hash = Network.type_info("level_name_hash")
 
-NetworkConstants.invalid_level_name_hash = 0
+NetworkConstants.invalid_level_name_hash = level_name_hash.min
 
 local minion_anim_event = Network.type_info("minion_anim_event")
 
@@ -261,10 +261,10 @@ local ability_cooldown = Network.type_info("ability_cooldown")
 
 for name, ability in pairs(PlayerAbilities) do
 	local max_charges = ability.max_charges
-	local max_cooldown = ability.cooldown
+	local cooldown = ability.cooldown
 
-	if max_cooldown then
-		-- Nothing
+	if cooldown and type(cooldown) == "table" then
+		cooldown = cooldown.max
 	end
 end
 
@@ -274,6 +274,8 @@ local database_rules_number = TagQueryDatabase.NUM_DATABASE_RULES
 
 NetworkConstants.ammunition_large = Network.type_info("ammunition_large")
 NetworkConstants.ammunition_small = Network.type_info("ammunition_small")
+NetworkConstants.ammunition_clip_array = Network.type_info("ammunition_clip_array")
+NetworkConstants.clips_in_use = Network.type_info("clips_in_use")
 
 local particle_index = Network.type_info("particle_index")
 

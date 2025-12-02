@@ -28,6 +28,7 @@ local legend_inputs = {
 		key = "hold_skip",
 		on_pressed_callback = "on_skip_pressed",
 		use_mouse_hold = true,
+		visibility_function = nil,
 	},
 }
 

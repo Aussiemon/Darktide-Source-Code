@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/ailments/ailment_settings.lua
 
 local ailment_settings = {}
-local effects = table.enum("burning_fast", "burning_slow", "burning", "chain_lightning_ability", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "stun", "warpfire", "bleedfire")
+local effects = table.enum("bleedfire", "burning_fast", "burning_slow", "burning", "chain_lightning_ability", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "stun", "toxin_gas", "broker_brittleness", "warpfire")
 
 ailment_settings.effects = effects
 ailment_settings.effect_templates = {
@@ -85,6 +85,34 @@ ailment_settings.effect_templates = {
 			},
 			{
 				resource = "content/fx/textures/ramps/green_ramp_01",
+				slot = "effect_gradient",
+			},
+		},
+	},
+	[effects.toxin_gas] = {
+		duration = 7,
+		offset_time = 2,
+		material_textures = {
+			{
+				resource = "content/textures/ailment_masks/toxin_mask_01",
+				slot = "effect_mask",
+			},
+			{
+				resource = "content/fx/textures/ramps/yellow_white_ramp_01",
+				slot = "effect_gradient",
+			},
+		},
+	},
+	[effects.broker_brittleness] = {
+		duration = 4.5,
+		offset_time = 1.2,
+		material_textures = {
+			{
+				resource = "content/textures/ailment_masks/toxin_mask_01",
+				slot = "effect_mask",
+			},
+			{
+				resource = "content/fx/textures/ramps/brittle_purple_ramp_01",
 				slot = "effect_gradient",
 			},
 		},

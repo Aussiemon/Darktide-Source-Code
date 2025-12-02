@@ -55,6 +55,7 @@ local input_info_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "icon",
+		value = nil,
 		value_id = "icon",
 		style = {
 			horizontal_alignment = "center",

@@ -1149,12 +1149,13 @@ Vo.on_demand_vo_event = function (unit, concept, trigger_id, target_unit)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 	if dialogue_extension then
+		local concepts = VoQueryConstants.concepts
 		local event_data = dialogue_extension:get_event_data_payload()
 		local event_name = concept
 
-		if concept == VoQueryConstants.concepts.on_demand_com_wheel then
+		if concept == concepts.on_demand_com_wheel or concept == concepts.generic_mission_vo then
 			event_data.trigger_id = trigger_id
-		elseif concept == VoQueryConstants.concepts.on_demand_vo_tag_enemy then
+		elseif concept == concepts.on_demand_vo_tag_enemy then
 			local target_extension = ScriptUnit.has_extension(target_unit, "dialogue_system")
 
 			if target_extension then
@@ -1168,7 +1169,7 @@ Vo.on_demand_vo_event = function (unit, concept, trigger_id, target_unit)
 			else
 				event_data.enemy_tag = trigger_id
 			end
-		elseif concept == VoQueryConstants.concepts.on_demand_vo_tag_item then
+		elseif concept == concepts.on_demand_vo_tag_item then
 			event_data.item_tag = trigger_id
 		end
 
@@ -1177,15 +1178,37 @@ Vo.on_demand_vo_event = function (unit, concept, trigger_id, target_unit)
 end
 
 Vo.start_banter_vo_event = function (unit, trigger_id)
-	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+	local healthy_players = _get_healthy_players()
+	local num_healthy_players = #healthy_players
+	local num_new_archetypes = 0
 
-	if dialogue_extension then
-		local event_name = "start_banter"
-		local event_data = dialogue_extension:get_event_data_payload()
+	for i = 1, num_healthy_players do
+		local player = healthy_players[i]
+		local profile = player:profile()
+		local archetype_name = profile.archetype.name
 
-		event_data.trigger_id = trigger_id
+		if not _is_old_archetype(archetype_name) then
+			num_new_archetypes = num_new_archetypes + 1
+		end
+	end
 
-		dialogue_extension:trigger_dialogue_event(event_name, event_data)
+	if num_new_archetypes >= 3 then
+		Vo.mission_giver_mission_info_vo("selected_voice", "sergeant_a", "start_zone_direction_a")
+	else
+		for i = 1, num_healthy_players do
+			local player = healthy_players[i]
+			local player_unit = player.player_unit
+			local dialogue_extension = ScriptUnit.has_extension(player_unit, "dialogue_system")
+
+			if dialogue_extension then
+				local event_name = "start_banter"
+				local event_data = dialogue_extension:get_event_data_payload()
+
+				event_data.trigger_id = trigger_id
+
+				dialogue_extension:trigger_dialogue_event(event_name, event_data)
+			end
+		end
 	end
 end
 
@@ -1628,6 +1651,14 @@ function _get_random_non_threatening_player_unit(minion_unit)
 		return valid_player_units[math.random(1, num_valid_player_units)]
 	else
 		return least_threatening_unit
+	end
+end
+
+function _is_old_archetype(archetype)
+	if archetype == "adamant" or archetype == "ogryn" or archetype == "psyker" or archetype == "veteran" or archetype == "zealot" then
+		return true
+	else
+		return false
 	end
 end
 

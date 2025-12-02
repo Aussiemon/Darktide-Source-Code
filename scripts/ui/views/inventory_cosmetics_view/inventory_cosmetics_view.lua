@@ -3,17 +3,18 @@
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
-local Personalities = require("scripts/settings/character/personalities")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local SelectedVoiceSettings = require("scripts/settings/dialogue/selected_voice_settings")
+local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -23,7 +24,6 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Vo = require("scripts/utilities/vo")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
-local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_animation_emote_1 = "ui_item",
@@ -369,11 +369,10 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 		widget.offset[2] = y_offset
 
 		local widget_text_style = widget.style.text
-		local text_options = UIFonts.get_font_options_by_style(widget.style.text)
-		local _, text_height = self:_text_size(text, widget_text_style.font_type, widget_text_style.font_size, {
+		local text_height = Text.text_height(self._ui_renderer, text, widget_text_style, {
 			max_width,
 			math.huge,
-		}, text_options)
+		})
 
 		y_offset = y_offset + text_height
 		widget.content.size[2] = text_height
@@ -676,8 +675,6 @@ InventoryCosmeticsView.on_exit = function (self)
 		Wwise.set_state("options_voice_fx", "off")
 	end
 
-	self._promise_container:delete()
-
 	if self._profile_spawner then
 		self._profile_spawner:destroy()
 
@@ -693,6 +690,11 @@ InventoryCosmeticsView.on_exit = function (self)
 	self:_play_sound(UISoundEvents.default_menu_exit)
 	self:_destroy_side_panel()
 	InventoryCosmeticsView.super.on_exit(self)
+end
+
+InventoryCosmeticsView.destroy = function (self)
+	self._promise_container:delete()
+	InventoryCosmeticsView.super.destroy(self)
 end
 
 InventoryCosmeticsView._verify_items = function (self, source_items, owned_gear)
@@ -1056,17 +1058,6 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 	return layout
 end
 
-InventoryCosmeticsView._calc_text_size = function (self, widget, text_and_style_id)
-	local text = widget.content[text_and_style_id]
-	local text_style = widget.style[text_and_style_id]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	local size = text_style.size or widget.content.size or {
-		self:_scenegraph_size(widget.scenegraph_id),
-	}
-
-	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
-end
-
 InventoryCosmeticsView.is_item_owned = function (self, target_gear_id)
 	local inventory_items = self._inventory_items
 
@@ -1134,7 +1125,7 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 
 	local equipped_slot_item = self:equipped_item_in_slot(slot_name)
 
-	if not equipped_slot_item or equipped_slot_item.gear_id ~= item.gear_id then
+	if not equipped_slot_item or equipped_slot_item.gear_id ~= item.gear_id or equipped_slot_item.gear_id == nil and equipped_slot_item.name ~= item.name then
 		self._has_equipped_item = true
 
 		if item then
@@ -1207,9 +1198,17 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 	local is_disabled = not previewed_item
 	local is_locked = previewed_element and not not previewed_element.locked
 	local is_premium = previewed_element and previewed_element.premium_offer ~= nil
-	local is_equipped = false
+	local is_equipped
 
-	if not is_disabled then
+	if is_disabled then
+		is_equipped = false
+	elseif previewed_item.gear_id == nil then
+		local selected_slot = self._selected_slot
+		local selected_slot_name = selected_slot and selected_slot.name
+		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
+
+		is_equipped = equipped_item and equipped_item.gear_id == nil and equipped_item.name == previewed_item.name
+	else
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
@@ -1539,11 +1538,13 @@ InventoryCosmeticsView.cb_preview_voice = function (self)
 		return
 	end
 
-	local personality_key = table.nested_get(self, "_preview_player", "_profile", "lore", "backstory", "personality")
-	local personality_settings = Personalities[personality_key]
-	local sound_event = personality_settings and personality_settings.preview_sound_event
+	local selected_voice_key = table.nested_get(self, "_preview_player", "_profile", "selected_voice")
+	local selected_voice_settings = SelectedVoiceSettings[selected_voice_key]
+	local sound_event = selected_voice_settings and selected_voice_settings.preview_sound_event
 
 	if not sound_event then
+		Log.exception("CosmeticsInspectView", "Unknown voice profile: %s", selected_voice_key)
+
 		return
 	end
 

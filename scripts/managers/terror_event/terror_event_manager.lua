@@ -525,8 +525,9 @@ TerrorEventManager._update_event = function (self, event, dt, t)
 	event.node_index = node_index
 
 	local next_node = nodes[node_index]
+	local node_entry_condition_met = not next_node.entry_condition_function or next_node.entry_condition_function()
 
-	if not next_node.disabled then
+	if not next_node.disabled and node_entry_condition_met then
 		local next_node_type = next_node[1]
 
 		TerrorEventNodes[next_node_type].init(next_node, event, t)

@@ -24,15 +24,15 @@ ScanningInteraction.stop = function (self, world, interactor_unit, unit_data_com
 		Unit.flow_event(target_unit, "lua_event_scanned")
 
 		if zone_scannable_extension then
+			local mission_target_extension = ScriptUnit.extension(target_unit, "mission_objective_target_system")
+			local objective_name = mission_target_extension:objective_name()
+			local group_id = mission_target_extension:objective_group_id()
 			local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
-			local zone_scan_extension = mission_objective_zone_system:current_active_zone()
+			local zone_scan_extension = mission_objective_zone_system:current_active_zone(objective_name, group_id)
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+			local player = player_unit_spawn_manager:owner(interactor_unit)
 
-			if zone_scan_extension then
-				local player_unit_spawn_manager = Managers.state.player_unit_spawn
-				local player = player_unit_spawn_manager:owner(interactor_unit)
-
-				zone_scan_extension:assign_scanned_object_to_player(zone_scannable_extension, player)
-			end
+			zone_scan_extension:set_scanned(zone_scannable_extension, player)
 		end
 	end
 end

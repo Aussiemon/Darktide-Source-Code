@@ -2,6 +2,12 @@
 
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local STIMM_COLOR = {
+	255,
+	64,
+	223,
+	208,
+}
 
 local function node_highligt_change_function(content, style, _, dt)
 	local alpha_anim_progress = content.alpha_anim_progress or 0
@@ -27,7 +33,7 @@ local function node_highligt_change_function(content, style, _, dt)
 	style.color[1] = 255 * alpha_fraction
 end
 
-local function node_icon_change_function(content, style, _, dt)
+local function node_icon_change_function(content, style, _, dt, override_available_frame_intensity, override_available_base_intensity)
 	local node_data = content.node_data
 
 	if node_data then
@@ -37,10 +43,10 @@ local function node_icon_change_function(content, style, _, dt)
 
 		local intensity_speed = 8
 
-		if intensity_speed then
+		if intensity_speed and not style.ignore_intensity then
 			local intensity_anim_progress = content.intensity_anim_progress or 0
 
-			if content.has_points_spent or content.hotspot.is_hover or content.hotspot.is_selected then
+			if content.has_points_spent or content.hotspot and (content.hotspot.is_hover or content.hotspot.is_selected) then
 				intensity_anim_progress = math.min(intensity_anim_progress + dt * intensity_speed, 1)
 			else
 				intensity_anim_progress = math.max(intensity_anim_progress - dt * intensity_speed, 0)
@@ -67,15 +73,24 @@ local function node_icon_change_function(content, style, _, dt)
 				local pulse_speed = 3.5
 				local pulse_progress = 0.5 + math.sin(Application.time_since_launch() * pulse_speed) * 0.5
 				local pulse_intensity = 0.2
+				local base_intensity = not content.has_points_spent and override_available_base_intensity or -0.25
 
-				material_values.intensity = -0.25 + (highlight_intensity + math.max(pulse_intensity * pulse_progress, 0.25 * intensity_anim_progress))
+				material_values.intensity = base_intensity + (highlight_intensity + math.max(pulse_intensity * pulse_progress, 0.25 * intensity_anim_progress))
 			end
 
 			local frame_intensity = content.frame_intensity or 1
 			local frame_intensity_speed = 3
 			local max_frame_intensity
 
-			max_frame_intensity = not content.locked and (content.has_points_spent and 1 or 1.5) or 0.7
+			if not content.locked then
+				if content.has_points_spent then
+					max_frame_intensity = 1
+				else
+					max_frame_intensity = override_available_frame_intensity or 1.5
+				end
+			else
+				max_frame_intensity = 0.7
+			end
 
 			if max_frame_intensity < frame_intensity then
 				frame_intensity = math.max(frame_intensity - dt * frame_intensity_speed, max_frame_intensity)
@@ -87,10 +102,14 @@ local function node_icon_change_function(content, style, _, dt)
 			material_values.frame_intensity = frame_intensity
 		end
 
-		if not style.ignore_icon then
-			local icon = node_data.icon
+		local icon = node_data.icon
 
-			if icon and icon ~= content.icon_texture then
+		if icon and not style.ignore_icon then
+			if node_data.type == "start" then
+				if icon ~= content.icon then
+					content.icon = icon
+				end
+			elseif icon ~= content.icon_texture then
 				content.icon_texture = icon
 				material_values.icon = icon
 			end
@@ -1730,6 +1749,7 @@ return {
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
+				ignore_intensity = true,
 				vertical_alignment = "top",
 				offset = {
 					0,
@@ -1756,8 +1776,378 @@ return {
 					}),
 				},
 			},
+			change_function = node_icon_change_function,
+		},
+		{
+			pass_type = "texture",
+			style_id = "fill_texture",
+			value_id = "fill_texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					3,
+				},
+				size = {
+					134,
+					134,
+				},
+				color = Color.white(255, true),
+				material_values = {
+					fill_amount = 0.5,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			visibility_function = function (content, style)
+				return content.fill_texture ~= "content/ui/materials/base/ui_default_base"
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "center_texture",
+			value_id = "center_texture",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					0,
+				},
+				size = {
+					134,
+					134,
+				},
+				color = Color.white(255, true),
+				material_values = {
+					fill_amount = 0.5,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			visibility_function = function (content, style)
+				return content.center_texture ~= "content/ui/materials/base/ui_default_base"
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "center_texture_glass",
+			value_id = "center_texture_glass",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					2,
+				},
+				size = {
+					134,
+					134,
+				},
+				color = Color.white(200, true),
+				material_values = {
+					fill_amount = 0.5,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			visibility_function = function (content, style)
+				return content.center_texture_glass ~= "content/ui/materials/base/ui_default_base"
+			end,
 		},
 	}, "talent", nil, nil),
+	node_definition_broker_stimm = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			style_id = "chosen_effect",
+			value = "content/ui/materials/frames/talents/effects/node_selection",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				size = {
+					151.2,
+					240.79999999999998,
+				},
+				offset = {
+					0,
+					0,
+					0,
+				},
+				color = Color.white(255, true),
+				material_values = {
+					progress = 1,
+				},
+			},
+			change_function = function (content, style, _, dt)
+				local material_values = style.material_values
+				local progress = material_values.progress
+
+				if content.play_select_anim then
+					content.play_select_anim = false
+					progress = 0
+				end
+
+				if progress < 1 then
+					local selection_anim_speed = 1
+
+					progress = progress + dt * selection_anim_speed
+					material_values.progress = math.min(progress, 1)
+				end
+			end,
+		},
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+			content = {
+				hover_type = "circle",
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon",
+			value = "content/ui/materials/frames/talents/talent_icon_container",
+			value_id = "icon",
+			style = {
+				material_values = {
+					frame = "content/ui/textures/frames/talents/diamond_frame",
+					icon_mask = "content/ui/textures/frames/talents/diamond_frame_mask",
+					intensity = -0.5,
+					saturation = 1,
+				},
+				offset = {
+					0,
+					0,
+					1,
+				},
+			},
+			change_function = function (content, style, _, dt, ...)
+				node_icon_change_function(content, style, _, dt, 1, -0.5, ...)
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "frame_shadow",
+			value = "content/ui/materials/frames/talents/diamond_frame_glow",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					0,
+				},
+				size_addition = {
+					0,
+					0,
+				},
+				color = {
+					180,
+					0,
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "frame_selected",
+			value = "content/ui/materials/frames/talents/stimm_diamond_node",
+			style = {
+				offset = {
+					0,
+					0,
+					5,
+				},
+				color = Color.white(255, true),
+				material_values = {
+					fill_amount = 0,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			change_function = function (content, style, _, dt)
+				local fill_amount = style.material_values.fill_amount
+
+				if content.highlighted and content.has_points_spent then
+					local fill_speed = 2
+
+					fill_amount = math.min(fill_amount + dt * fill_speed, 1)
+				else
+					local fill_speed = 8
+
+					fill_amount = math.max(fill_amount - dt * fill_speed, 0)
+				end
+
+				style.material_values.fill_amount = fill_amount
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "highlight",
+			value = "content/ui/materials/frames/talents/diamond_frame_selected",
+			style = {
+				offset = {
+					0,
+					0,
+					3,
+				},
+				color = Color.ui_terminal(255, true),
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress)
+				local hover_alpha = anim_progress * 255
+
+				style.color[1] = hover_alpha
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "blocked",
+			value = "content/ui/materials/frames/talents/circular_blocked",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				material_values = {
+					saturation = 1,
+				},
+				offset = {
+					0,
+					0,
+					6,
+				},
+				color = Color.white(255, true),
+			},
+			change_function = function (content, style, _, dt)
+				local anim_block_speed = 5
+				local anim_blocked_progress = content.anim_blocked_progress or 0
+
+				if content.is_blocked then
+					anim_blocked_progress = math.min(anim_blocked_progress + dt * anim_block_speed, 1)
+				else
+					anim_blocked_progress = math.max(anim_blocked_progress - dt * anim_block_speed, 0)
+				end
+
+				content.anim_blocked_progress = anim_blocked_progress
+				style.color[1] = anim_blocked_progress * 255
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "blocked_highlight",
+			value = "content/ui/materials/frames/talents/diamond_frame_selected",
+			style = {
+				offset = {
+					0,
+					0,
+					4,
+				},
+				color = {
+					255,
+					246,
+					69,
+					69,
+				},
+			},
+			change_function = function (content, style)
+				local draw_blocked_highlight = content.draw_blocked_highlight
+				local block_speed = 5
+				local block_anim_progress = 0.5 + math.sin(Application.time_since_launch() * block_speed) * 0.5
+				local anim_blocked_progress = content.anim_blocked_progress or 0
+
+				style.color[1] = draw_blocked_highlight and anim_blocked_progress * (155 + 100 * block_anim_progress) or 0
+			end,
+		},
+	}, "talent", nil, nil),
+	node_connection_broker_stimm_definition = UIWidget.create_definition({
+		{
+			pass_type = "rotated_texture",
+			style_id = "line_empty",
+			value = "content/ui/materials/frames/talents/stimm_path_empty",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				color = Color.white(255, true),
+				angle = -math.pi / 4,
+				pivot = {
+					0,
+					12,
+				},
+				offset = {
+					55,
+					0,
+					0,
+				},
+				size = {
+					60,
+					24,
+				},
+			},
+		},
+		{
+			pass_type = "rotated_texture",
+			style_id = "line",
+			value = "content/ui/materials/frames/talents/stimm_path_filled",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				color = Color.white(255, true),
+				angle = -math.pi / 4,
+				pivot = {
+					0,
+					4,
+				},
+				offset = {
+					55,
+					0,
+					2,
+				},
+				size = {
+					60,
+					8,
+				},
+				material_values = {
+					fill_amount = 1,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			visibility_function = function (content, style)
+				return content.has_progressed or content.progressing
+			end,
+		},
+		{
+			pass_type = "rotated_texture",
+			style_id = "line_available",
+			value = "content/ui/materials/frames/talents/stimm_path_filled",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				color = Color.white(100, true),
+				angle = -math.pi / 4,
+				pivot = {
+					0,
+					4,
+				},
+				offset = {
+					55,
+					0,
+					2,
+				},
+				size = {
+					60,
+					8,
+				},
+				material_values = {
+					fill_amount = 1,
+					fill_color = ColorUtilities.format_color_to_material(STIMM_COLOR),
+				},
+			},
+			visibility_function = function (content)
+				return content.can_progress or content.progressing
+			end,
+		},
+	}, "talent"),
 	node_connection_definition = UIWidget.create_definition({
 		{
 			pass_type = "rotated_texture",

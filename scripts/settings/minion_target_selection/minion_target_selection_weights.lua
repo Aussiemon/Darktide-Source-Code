@@ -252,6 +252,7 @@ minion_target_selection_weights.renegade_netgunner = {
 	occupied_slots = 1,
 	archetypes = {
 		adamant = 1,
+		broker = 1,
 		ogryn = 1,
 		psyker = 1,
 		veteran = 1,

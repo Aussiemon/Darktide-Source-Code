@@ -9,12 +9,9 @@ local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MissionBuffsParser = require("scripts/ui/constant_elements/elements/mission_buffs/utilities/mission_buffs_parser")
 local MissionBuffsAllowedBuffs = require("scripts/managers/mission_buffs/mission_buffs_allowed_buffs")
 local MissionBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
-local TextUtils = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -22,12 +19,11 @@ local MissionBuffs = class("ConstantElementMissionBuffs", "ConstantElementBase")
 local DEFAULT_TIMER = 5
 local HOLD_TIMER = 2
 
-local function _calculate_text_size(widget, text_and_style_id, size, ui_renderer)
+local function _calculate_text_size(ui_renderer, widget, text_and_style_id, size)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local text_options = UIFonts.get_font_options_by_style(text_style)
 
-	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+	return Text.text_size(ui_renderer, text, text_style, size)
 end
 
 MissionBuffs.init = function (self, parent, draw_layer, start_scale)
@@ -526,16 +522,16 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 	if self._states.text == "starting" or self._states.text == "active" then
 		local title_text = self._context.title or ""
 		local original_sub_title_text = self._context.sub_title or ""
-		local sub_title_text = self._context.use_timer and self._texts_timer and string.format("%s\n%s", original_sub_title_text, TextUtilities.format_time_span_localized(self._texts_timer, false, true)) or original_sub_title_text
+		local sub_title_text = self._context.use_timer and self._texts_timer and string.format("%s\n%s", original_sub_title_text, Text.format_time_span_localized(self._texts_timer, false, true)) or original_sub_title_text
 
 		if title_text ~= self._widgets_by_name.title.content.text then
 			self._widgets_by_name.title.content.text = title_text
 
 			if title_text ~= "" then
-				local text_width, text_height = _calculate_text_size(self._widgets_by_name.title, "text", {
+				local text_width, text_height = _calculate_text_size(ui_renderer, self._widgets_by_name.title, "text", {
 					1920,
 					200,
-				}, ui_renderer)
+				})
 
 				self._widgets_by_name.title.content.size = {
 					text_width,
@@ -555,10 +551,10 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 			self._widgets_by_name.sub_title.content.text = sub_title_text
 
 			if sub_title_text ~= "" then
-				local text_width, text_height = _calculate_text_size(self._widgets_by_name.sub_title, "text", {
+				local text_width, text_height = _calculate_text_size(ui_renderer, self._widgets_by_name.sub_title, "text", {
 					1920,
 					200,
-				}, ui_renderer)
+				})
 
 				self._widgets_by_name.sub_title.content.size = {
 					text_width,
@@ -859,7 +855,7 @@ MissionBuffs._on_navigation_input_changed = function (self)
 			local widget = self._buff_widgets[i]
 			local input_action = self._using_cursor_navigation and "left_hold" or "confirm_hold"
 
-			widget.content.confirm_text = TextUtils.localize_with_button_hint(input_action, "loc_select", nil, nil, Localize("loc_input_legend_text_template"), true)
+			widget.content.confirm_text = Text.localize_with_button_hint(input_action, "loc_select", nil, nil, Localize("loc_input_legend_text_template"), true)
 		end
 	end
 end

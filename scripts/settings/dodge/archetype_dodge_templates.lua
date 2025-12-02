@@ -163,5 +163,15 @@ archetype_dodge_templates.adamant = {
 	stop_threshold = 0.25,
 	dodge_speed_at_times = default_speed_curve,
 }
+archetype_dodge_templates.broker = {
+	base_distance = 2.5,
+	consecutive_dodges_reset = 0.85,
+	dodge_cooldown = 0.15,
+	dodge_jump_override_timer = 0.5,
+	dodge_linger_time = 0.25,
+	minimum_dodge_input = 0.25,
+	stop_threshold = 0.25,
+	dodge_speed_at_times = default_speed_curve,
+}
 
 return settings("ArchetypeDodgeTemplates", archetype_dodge_templates)

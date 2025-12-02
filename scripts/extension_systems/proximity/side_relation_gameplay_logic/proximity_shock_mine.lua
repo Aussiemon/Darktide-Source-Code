@@ -64,7 +64,7 @@ ProximityShockMine.unit_entered_proximity = function (self, t, unit)
 	self._units_in_proximity[unit] = health_extension
 end
 
-ProximityShockMine.unit_left_proximity = function (self, unit)
+ProximityShockMine.unit_left_proximity = function (self, t, unit)
 	self._units_in_proximity[unit] = nil
 end
 

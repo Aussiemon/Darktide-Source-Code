@@ -41,7 +41,11 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 
 	for i = 1, max_num_template_effects do
 		template_effects[i] = {
+			global_effect_id = nil,
 			is_running = false,
+			optional_node = nil,
+			optional_unit = nil,
+			template = nil,
 			buffer_index = i,
 			template_data = {},
 			optional_position = Vector3Box(Vector3.invalid_vector()),

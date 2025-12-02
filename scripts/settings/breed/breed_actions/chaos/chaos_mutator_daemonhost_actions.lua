@@ -518,7 +518,10 @@ local action_data = {
 			},
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -908,6 +911,7 @@ local action_data = {
 		},
 	},
 	smash_obstacle = {
+		damage_type = nil,
 		rotation_duration = 0.1,
 		attack_anim_events = {
 			"attack_01",

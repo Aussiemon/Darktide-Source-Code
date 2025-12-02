@@ -1109,7 +1109,16 @@ damage_templates.shotgun_p1_m3_assault = {
 		attack = 3.5,
 		impact = 3,
 	},
-	ranges = {},
+	ranges = {
+		min = {
+			6,
+			11,
+		},
+		max = {
+			12,
+			17,
+		},
+	},
 	herding_template = HerdingTemplates.shotgun,
 	armor_damage_modifier_ranged = {
 		near = {

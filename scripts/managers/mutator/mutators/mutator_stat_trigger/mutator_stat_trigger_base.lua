@@ -2,8 +2,8 @@
 
 local MutatorStatTriggerBase = class("MutatorStatTriggerBase")
 
-MutatorStatTriggerBase.init = function (self, triggers)
-	self._triggers = triggers
+MutatorStatTriggerBase.init = function (self, template)
+	self._triggers = template.on_trigger
 
 	self:_reset()
 end
@@ -17,8 +17,8 @@ MutatorStatTriggerBase.on_stat_change = function (self, mutator, stat_delta, cau
 	self._previous_stat_value = self._tracked_stat_value
 	self._tracked_stat_value = self._tracked_stat_value + stat_delta
 
-	if self:_should_trigger() then
-		self:_trigger(mutator, caused_by_player)
+	if self:_should_trigger(stat_delta) then
+		self:_trigger(mutator, self._tracked_stat_value, stat_delta, caused_by_player)
 	end
 end
 
@@ -26,9 +26,9 @@ MutatorStatTriggerBase._should_trigger = function (self)
 	return false
 end
 
-MutatorStatTriggerBase._trigger = function (self, mutator, caused_by_player)
+MutatorStatTriggerBase._trigger = function (self, mutator, for_value, delta, caused_by_player)
 	for i = 1, #self._triggers do
-		self._triggers[i](mutator, caused_by_player)
+		self._triggers[i](mutator, for_value, delta, caused_by_player)
 	end
 end
 

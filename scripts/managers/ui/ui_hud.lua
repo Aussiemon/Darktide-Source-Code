@@ -28,6 +28,8 @@ UIHud.init = function (self, elements, visibility_groups, params)
 		WorldRenderUtils.enable_world_ui_bloom(self._world_name, self._player_viewport_name, UIHudSettings.offset_falloffs, UIHudSettings.ui_bloom_tints)
 	end
 
+	self._current_game_mode_name = Managers.state.game_mode:game_mode_name()
+
 	local uniq_id = tostring(self)
 
 	self._unique_id = self.__class_name .. "_" .. uniq_id:gsub("[%p%c%s]", "") .. "_"
@@ -60,6 +62,39 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._refresh_retained = true
 
 	Managers.event:trigger("event_on_hud_created")
+end
+
+UIHud._setup_bloom_renderer = function (self)
+	self._world_name = "level_world"
+	self._player_viewport_name = "player1"
+
+	local world = Managers.world:world(self._world_name)
+	local renderer_name = self._unique_id .. "_bloom_renderer"
+
+	self._ui_bloom_renderer = Managers.ui:create_renderer(renderer_name, world)
+
+	local gui = self._ui_bloom_renderer.gui
+	local gui_retained = self._ui_bloom_renderer.gui_retained
+	local resource_renderer_name = self._unique_id .. "_resource_renderer"
+	local material_name = "content/ui/meshes/hud_plane/hud_material_effect_no_curve"
+
+	self._ui_bloom_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
+end
+
+UIHud._destroy_bloom_renderer = function (self)
+	if self._ui_bloom_resource_renderer then
+		local renderer_name = self._unique_id .. "_resource_renderer"
+
+		self._ui_bloom_resource_renderer = nil
+
+		Managers.ui:destroy_renderer(renderer_name)
+	end
+
+	if self._ui_bloom_renderer then
+		self._ui_bloom_renderer = nil
+
+		Managers.ui:destroy_renderer(self._unique_id .. "_bloom_renderer")
+	end
 end
 
 UIHud.get_player_extension = function (self, player, extension_name)
@@ -141,21 +176,31 @@ UIHud._verify_elements = function (self, element_definitions)
 		visibility_groups_lookup[name] = settings
 	end
 
-	for _, definition in ipairs(element_definitions) do
+	local current_game_mode_name = self._current_game_mode_name
+
+	for i = #element_definitions, 1, -1 do
+		local definition = element_definitions[i]
 		local class_name = definition.class_name
-		local visibility_groups = definition.visibility_groups
+		local allowed_game_modes = definition.allowed_game_modes
+		local allowed_in_game_mode = not allowed_game_modes or table.contains(allowed_game_modes, current_game_mode_name)
 
-		for _, group_name in ipairs(visibility_groups) do
-			local visibility_group = visibility_groups_lookup[group_name]
-			local validation_function = visibility_group.validation_function
+		if allowed_in_game_mode then
+			local visibility_groups = definition.visibility_groups
 
-			if not visibility_group.visible_elements then
-				visibility_group.visible_elements = {}
+			for _, group_name in ipairs(visibility_groups) do
+				local visibility_group = visibility_groups_lookup[group_name]
+				local validation_function = visibility_group.validation_function
+
+				if not visibility_group.visible_elements then
+					visibility_group.visible_elements = {}
+				end
+
+				local visible_elements = visibility_group.visible_elements
+
+				visible_elements[class_name] = true
 			end
-
-			local visible_elements = visibility_group.visible_elements
-
-			visible_elements[class_name] = true
+		else
+			table.remove(element_definitions, i)
 		end
 	end
 end
@@ -409,6 +454,29 @@ UIHud.draw = function (self, dt, t, input_service)
 	end
 
 	render_settings.start_layer = saved_start_layer
+end
+
+UIHud._draw_render_target = function (self, render_settings)
+	local ui_bloom_renderer = self._ui_bloom_renderer
+	local resolution_width = RESOLUTION_LOOKUP.width
+	local resolution_height = RESOLUTION_LOOKUP.height
+	local gui = ui_bloom_renderer.gui
+	local color = Color(255, 255, 255, 255)
+	local ui_bloom_resource_renderer = self._ui_bloom_resource_renderer
+	local material = ui_bloom_resource_renderer.render_target_material
+	local base_render_pass = ui_bloom_resource_renderer.base_render_pass
+	local scale = self._render_scale or 1
+	local width, height = resolution_width, resolution_height
+	local position = {
+		0,
+		0,
+		0,
+	}
+	local start_layer = render_settings.start_layer or 0
+	local gui_position = Vector3(position[1] * scale, position[2] * scale, (position[3] or 0) + start_layer)
+	local gui_size = Vector3(width * scale, height * scale, 0)
+
+	Gui.bitmap(gui, material, "render_pass", "to_screen", gui_position, gui_size, color)
 end
 
 UIHud.destroy = function (self, disable_world_bloom)

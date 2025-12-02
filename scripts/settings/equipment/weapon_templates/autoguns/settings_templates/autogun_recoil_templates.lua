@@ -1022,7 +1022,6 @@ local singleshot_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, cr
 local singleshot_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(singleshot_random_scale_new))
 local burst_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(burst_scale_new))
 local burst_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(burst_random_scale_new))
-local triple_burst_offset_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(triple_burst_scale_new))
 local triple_burst_random_range_new = generate_offset_range(6, 0.01, 0.02, 0.8, create_scale(triple_burst_random_scale_new))
 
 recoil_templates.default_autogun_assault = {

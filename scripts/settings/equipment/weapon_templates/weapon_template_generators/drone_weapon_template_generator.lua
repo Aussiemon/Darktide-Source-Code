@@ -12,6 +12,7 @@ local function generate_base_template()
 	base_template.action_inputs = {
 		combat_ability = {
 			buffer_time = 0,
+			input_sequence = nil,
 		},
 		aim_drone = {
 			buffer_time = 0,
@@ -45,6 +46,7 @@ local function generate_base_template()
 		instant_release_drone = {
 			buffer_time = 0,
 			dont_queue = true,
+			input_sequence = nil,
 		},
 		cancel = {
 			buffer_time = 0,
@@ -67,6 +69,7 @@ local function generate_base_template()
 		},
 		unwield_to_previous = {
 			buffer_time = 0,
+			input_sequence = nil,
 		},
 		grenade_ability = {
 			buffer_time = 0,
@@ -167,7 +170,7 @@ local function generate_base_template()
 			uninterruptible = true,
 			weapon_handling_template = "time_scale_1",
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "aim_drone",
 				},
 			},
@@ -220,7 +223,7 @@ local function generate_base_template()
 			total_time = 0,
 			uninterruptible = true,
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "instant_release_drone",
 				},
 			},
@@ -259,7 +262,7 @@ local function generate_base_template()
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -298,7 +301,7 @@ local function generate_base_template()
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -339,7 +342,7 @@ local function generate_base_template()
 				start_modifier = 0.8,
 			},
 			conditional_state_to_action_input = {
-				auto_chain = {
+				action_end = {
 					input_name = "unwield_to_previous",
 				},
 			},
@@ -366,7 +369,7 @@ local function generate_base_template()
 	base_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/grenade"
 	base_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/adamant_drone"
 	base_template.spread_template = "lasgun"
-	base_template.ammo_template = "no_ammo"
+	base_template.ammo_template = "grenade"
 	base_template.hud_configuration = {
 		uses_ammunition = true,
 		uses_overheat = false,

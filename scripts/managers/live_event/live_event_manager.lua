@@ -518,6 +518,10 @@ LiveEventManager.refresh = function (self)
 	self._refresh_promise = Managers.backend.interfaces.tracks:get_event_tracks():next(callback(self, "_on_refresh_success"), callback(self, "_on_refresh_fail"))
 end
 
+LiveEventManager.events = function (self)
+	return self._events
+end
+
 LiveEventManager._active_event = function (self)
 	return self._events[self._active_event_id]
 end
@@ -566,6 +570,22 @@ LiveEventManager.active_progress = function (self, optional_id)
 	end
 
 	return (progress_data.value or 0) + self:_get_current_xp(id, event_id)
+end
+
+LiveEventManager.active_completion_rate = function (self, optional_id)
+	local event_id = self:active_event_id()
+
+	if not event_id then
+		return nil
+	end
+
+	local player_progress = self:active_progress(optional_id)
+	local event_data = self._events[event_id]
+	local max_tier = event_data.tiers[#event_data.tiers]
+	local max_progress = max_tier.target
+	local active_completion_rate = player_progress / max_progress
+
+	return active_completion_rate
 end
 
 LiveEventManager.active_time_left = function (self, optional_t)

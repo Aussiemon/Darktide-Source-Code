@@ -203,6 +203,7 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
+			husk_only = true,
 		},
 		emitters = {
 			vfx = {
@@ -235,6 +236,7 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
+			husk_only = true,
 		},
 		emitters = {
 			vfx = {
@@ -266,6 +268,7 @@ local line_effects = {
 			duration = 0.8,
 			early_stop_event_alias = "flyby_stop",
 			event_alias = "flyby",
+			husk_only = true,
 		},
 		emitters = {
 			vfx = {
@@ -380,6 +383,39 @@ local line_effects = {
 			vfx = {
 				default = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger",
 				start = "content/fx/particles/weapons/rifles/plasma_gun/plasma_beam_linger",
+			},
+			interval = {
+				distance = 5,
+				increase = 0,
+			},
+		},
+	},
+	needle_trail = {
+		keep_aligned = true,
+		vfx = "content/fx/particles/weapons/rifles/autogun/autogun_tracer_trail",
+		vfx_crit = "content/fx/particles/weapons/rifles/autogun/autogun_tracer_trail",
+		vfx_width = 0.0022,
+		moving_sfx = {
+			distance_offset = 2,
+			duration = 0.8,
+			early_stop_event_alias = "flyby_stop",
+			event_alias = "flyby",
+			husk_only = true,
+		},
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+				start = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail",
+			},
+			interval = {
+				distance = 5,
+				increase = 0,
+			},
+		},
+		emitters_crit = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
+				start = "content/fx/particles/weapons/rifles/autogun/autogun_smoke_trail_3p",
 			},
 			interval = {
 				distance = 5,

@@ -190,6 +190,7 @@ local widget_definitions = {
 				material_values = {
 					intensity = 0,
 					intensity_boost = 0,
+					overlay_texture = nil,
 				},
 			},
 		},

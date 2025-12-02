@@ -37,14 +37,14 @@ local scenegraph_definition = {
 }
 local ammo_text_style = {
 	drop_shadow = false,
-	font_size = 48,
 	font_type = "machine_medium",
 	line_spacing = 0.9,
+	font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
 	text_color = UIHudSettings.color_tint_main_1,
 }
 
 ammo_text_style.offset = {
-	-64,
+	0,
 	0,
 	6,
 }
@@ -87,7 +87,24 @@ input_text_style.offset = {
 input_text_style.drop_shadow = false
 input_text_style.text_color = UIHudSettings.color_tint_main_1
 
-local function _create_ammo_counter_pass_definitions()
+local divider_style = {
+	horizontal_alignment = "right",
+	vertical_alignment = "top",
+	color = Color.terminal_icon(nil, true),
+	default_color = Color.terminal_corner(nil, true),
+	highlight_color = Color.terminal_corner_hover(nil, true),
+	size = {
+		HudElementPlayerWeaponSettings.divider_width,
+		HudElementPlayerWeaponSettings.ammo_font_size_focused,
+	},
+	offset = {
+		0,
+		0,
+		2,
+	},
+}
+
+local function _create_ammo_counter_pass_definitions(clip_index)
 	local pass_definitions = {}
 
 	for ii = 1, max_ammo_digits do
@@ -101,15 +118,24 @@ local function _create_ammo_counter_pass_definitions()
 				index = ii,
 			}, ammo_text_style),
 		}
-		pass_definitions[#pass_definitions + 1] = {
-			pass_type = "text",
-			value = "",
-			value_id = string.format("ammo_spare_%d", ii),
-			style_id = string.format("ammo_spare_%d", ii),
-			style = table.merge({
-				index = ii,
-			}, ammo_spare_text_style),
-		}
+
+		if clip_index == 1 then
+			pass_definitions[#pass_definitions + 1] = {
+				pass_type = "text",
+				value = "",
+				value_id = string.format("ammo_spare_%d", ii),
+				style_id = string.format("ammo_spare_%d", ii),
+				style = table.merge({
+					index = ii,
+				}, ammo_spare_text_style),
+			}
+		else
+			pass_definitions[#pass_definitions + 1] = {
+				pass_type = "rect",
+				style_id = "divider",
+				style = divider_style,
+			}
+		end
 	end
 
 	return pass_definitions
@@ -138,8 +164,29 @@ local widget_definitions = {
 				material_values = {},
 			},
 		},
+		{
+			pass_type = "texture",
+			style_id = "icon_cooldown_done",
+			value = "content/ui/materials/hud/icons/weapon_icon_container",
+			value_id = "icon",
+			style = {
+				horizontal_alignment = "right",
+				inherit_pass_transform = "icon",
+				vertical_alignment = "center",
+				size = icon_size,
+				default_size = icon_size,
+				offset = {
+					0,
+					0,
+					4,
+				},
+				color = UIHudSettings.get_hud_color("color_tint_main_2", 0),
+				default_color = Color.terminal_corner_hover(0, true),
+				highlight_color = Color.terminal_icon(nil, true),
+				material_values = {},
+			},
+		},
 	}, "background"),
-	ammo_text = UIWidget.create_definition(_create_ammo_counter_pass_definitions(), "background"),
 	input_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
@@ -199,8 +246,215 @@ local widget_definitions = {
 				},
 			},
 		},
+		{
+			pass_type = "texture",
+			style_id = "background_glow",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "bottom",
+				offset = {
+					0,
+					0,
+					3,
+				},
+				color = {
+					127,
+					0,
+					0,
+					0,
+				},
+				uvs = {
+					{
+						1,
+						0,
+					},
+					{
+						0,
+						0,
+					},
+				},
+				scale = {
+					1,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "cooldown_done_glow",
+			value = "content/ui/materials/hud/backgrounds/terminal_background_weapon",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "bottom",
+				offset = {
+					0,
+					0,
+					3,
+				},
+				color = {
+					0,
+					255,
+					255,
+					255,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "background_stripe_wide",
+			value = "content/ui/materials/hud/stripe_thick",
+			style = {
+				aspect_ratio = 1.2,
+				clip = true,
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					3,
+				},
+				offset_scale = {
+					0,
+				},
+				active_color = {
+					255,
+					255,
+					255,
+					255,
+				},
+				color = {
+					0,
+					0,
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "background_stripe_thin_left",
+			value = "content/ui/materials/hud/stripe_thin",
+			style = {
+				aspect_ratio = 0.72,
+				clip = true,
+				horizontal_alignment = "left",
+				inherit_pass_transform = "background_stripe_wide",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					4,
+				},
+				active_color = {
+					127,
+					80,
+					80,
+					80,
+				},
+				color = {
+					0,
+					0,
+					0,
+					0,
+				},
+				offset_scale = {
+					0.325,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "background_stripe_thin_right",
+			value = "content/ui/materials/hud/stripe_thin",
+			style = {
+				aspect_ratio = 0.72,
+				clip = true,
+				horizontal_alignment = "left",
+				inherit_pass_transform = "background_stripe_wide",
+				vertical_alignment = "center",
+				offset = {
+					0,
+					0,
+					4,
+				},
+				active_color = {
+					127,
+					150,
+					150,
+					150,
+				},
+				color = {
+					0,
+					0,
+					0,
+					0,
+				},
+				offset_scale = {
+					0.65,
+				},
+			},
+		},
+	}, "background"),
+	hud_ammo_icon = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "hud_ammo_icon_x",
+			value = "x",
+			value_id = "hud_ammo_icon_x",
+			style = table.merge(table.clone(ammo_text_style), {
+				primary_counter = true,
+				offset = {
+					0,
+					0,
+					7,
+				},
+				default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default * 0.5,
+				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused * 0.5,
+			}),
+			visibility_function = function (content, style)
+				return content.hud_ammo_icon and content.hud_ammo_icon ~= "content/ui/materials/base/ui_default_base"
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "hud_ammo_icon",
+			value_id = "hud_ammo_icon",
+			style = {
+				aspect_ratio = 0.18045112781954886,
+				horizontal_alignment = "right",
+				primary_counter = true,
+				strict_lifetime = true,
+				vertical_alignment = "top",
+				offset = {
+					0,
+					0,
+					7,
+				},
+				size = {
+					[2] = HudElementPlayerWeaponSettings.ammo_font_size_default,
+				},
+				scale = {
+					nil,
+					1.25,
+				},
+				pivot_scale = {
+					nil,
+					-0.19999999999999996,
+				},
+				default_font_size = HudElementPlayerWeaponSettings.ammo_font_size_default,
+				focused_font_size = HudElementPlayerWeaponSettings.ammo_font_size_focused,
+			},
+			visibility_function = function (content, style)
+				return content.hud_ammo_icon and content.hud_ammo_icon ~= "content/ui/materials/base/ui_default_base"
+			end,
+		},
 	}, "background"),
 }
+
+for i = 1, NetworkConstants.clips_in_use.max_size do
+	widget_definitions["ammo_text_" .. i] = UIWidget.create_definition(_create_ammo_counter_pass_definitions(i), "background")
+end
 
 return {
 	widget_definitions = widget_definitions,

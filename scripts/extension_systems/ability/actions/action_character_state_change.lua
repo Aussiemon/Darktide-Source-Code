@@ -53,14 +53,16 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 	local unit = self._player_unit
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 	local movement_state_component = self._unit_data_extension:write_component("movement_state")
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
+	local locomotion_component = self._unit_data_extension:read_component("locomotion")
+	local inair_state_component = self._unit_data_extension:read_component("inair_state")
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 	local valid = true
 
 	if is_crouching then
 		local can_exit = Crouch.can_exit(unit)
 
 		if can_exit then
-			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 		end
 
 		if not can_exit then

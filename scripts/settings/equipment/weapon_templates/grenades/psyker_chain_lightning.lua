@@ -256,6 +256,7 @@ weapon_template.action_inputs = {
 	force_vent = {
 		buffer_time = 0,
 		clear_input_queue = true,
+		input_sequence = nil,
 	},
 	force_vent_release = {
 		buffer_time = 0.8,
@@ -622,6 +623,7 @@ weapon_template.actions = {
 		overload_module_class_name = "warp_charge",
 		sprint_ready_up_time = 0.4,
 		sprint_requires_press_to_interrupt = true,
+		start_input = nil,
 		stop_input = "shoot_heavy_hold_release",
 		target_buff = "psyker_protectorate_spread_charged_chain_lightning_interval",
 		target_finder_module_class_name = "chain_lightning",
@@ -686,6 +688,7 @@ weapon_template.actions = {
 		anim_event_3p = "vent_start",
 		kind = "vent_warp_charge",
 		minimum_hold_time = 0.5,
+		start_input = nil,
 		stop_input = "force_vent_release",
 		uninterruptible = true,
 		vent_source_name = "fx_left_hand",
@@ -829,7 +832,7 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/chain_lightning"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_psyker"
 
 weapon_template.action_none_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return not current_action_name or current_action_name == "none"

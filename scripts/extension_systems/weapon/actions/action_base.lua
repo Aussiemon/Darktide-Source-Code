@@ -28,12 +28,13 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	local weapon_action_component = action_context.weapon_action_component
 
 	self._weapon_action_component = weapon_action_component
+	self._ability_extension = action_context.ability_extension
 	self._first_person_component = action_context.first_person_component
+	self._inair_state_component = action_context.inair_state_component
 	self._inventory_component = action_context.inventory_component
 	self._locomotion_component = action_context.locomotion_component
 	self._movement_state_component = action_context.movement_state_component
 	self._sprint_character_state_component = action_context.sprint_character_state_component
-	self._ability_extension = action_context.ability_extension
 	self._action_settings = action_settings
 	self._is_server = action_context.is_server
 	self._is_local_unit = action_context.is_local_unit

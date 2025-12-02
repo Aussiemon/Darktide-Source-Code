@@ -87,6 +87,7 @@ local views = {
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/character_create/character_create",
+			"content/levels/ui/cartel_selection/cartel_selection",
 		},
 		enter_sound_events = {
 			UISoundEvents.character_appearence_enter,
@@ -264,6 +265,7 @@ local views = {
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/class_selection/class_selection_adamant/class_selection_adamant",
+			"content/levels/ui/class_selection/class_selection_broker/class_selection_broker",
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn",
 			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
@@ -400,7 +402,7 @@ local views = {
 		disable_game_world = true,
 		display_name = "loc_mission_board_view_display_name",
 		package = "packages/ui/views/mission_board_view/mission_board_view",
-		path = "scripts/ui/views/mission_board_view_pj/mission_board_view",
+		path = "scripts/ui/views/mission_board_view/mission_board_view",
 		preload_in_hub = "always",
 		state_bound = true,
 		use_transition_ui = true,
@@ -761,6 +763,42 @@ local views = {
 			UISoundEvents.talent_menu_exit,
 		},
 	},
+	broker_stimm_builder_view = {
+		class = "TalentBuilderView",
+		disable_game_world = true,
+		display_name = "loc_talent_builder_view_display_name",
+		package = "packages/ui/views/broker_stimm_builder_view/broker_stimm_builder_view",
+		path = "scripts/ui/views/broker_stimm_builder_view/broker_stimm_builder_view",
+		preload_in_hub = "not_ps5",
+		state_bound = true,
+		testify_flags = {
+			ui_views = false,
+		},
+		enter_sound_events = {
+			UISoundEvents.talent_menu_enter,
+		},
+		exit_sound_events = {
+			UISoundEvents.talent_menu_exit,
+		},
+	},
+	live_events_view = {
+		class = "ContractsView",
+		disable_game_world = true,
+		display_name = "loc_live_events_view_display_name",
+		package = "packages/ui/views/live_events_view/live_events_view",
+		path = "scripts/ui/views/live_events_view/live_events_view",
+		preload_in_hub = "not_ps5_nor_lockhart",
+		state_bound = true,
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.vendor_menu,
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter,
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit,
+		},
+	},
 }
 
 local function _declare_view(name, settings)
@@ -790,6 +828,7 @@ _declare_view("penance_overview_view", require("scripts/ui/views/penance_overvie
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))
+_declare_view("premium_currency_purchase_view", require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_declaration_settings"))
 _declare_view("player_survey_view", require("scripts/ui/views/player_survey_view/player_survey_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do

@@ -73,6 +73,6 @@ ability_template.keywords = {
 ability_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/psyker_smite"
 ability_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/throwing_knives"
 ability_template.smart_targeting_template = SmartTargetingTemplates.default_melee
-ability_template.hud_icon = "content/ui/materials/icons/throwables/hud/adamant_whistle"
+ability_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_non_grenade"
 
 return ability_template

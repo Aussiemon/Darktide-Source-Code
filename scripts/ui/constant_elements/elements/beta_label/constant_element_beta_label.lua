@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/beta_label/constant_element_beta_label.lua
 
 local Definitions = require("scripts/ui/constant_elements/elements/beta_label/constant_element_beta_label_definitions")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local ConstantElementBetaLabel = class("ConstantElementBetaLabel", "ConstantElementBase")
 
 ConstantElementBetaLabel.init = function (self, parent, draw_layer, start_scale)

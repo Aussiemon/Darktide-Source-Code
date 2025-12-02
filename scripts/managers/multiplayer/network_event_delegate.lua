@@ -1,6 +1,9 @@
 ﻿-- chunkname: @scripts/managers/multiplayer/network_event_delegate.lua
 
 local NetworkEventDelegate = class("NetworkEventDelegate")
+local temp_log_warning_for_missing_events = {
+	rpc_resend_mission_seed_request = true,
+}
 
 NetworkEventDelegate.init = function (self)
 	self._registered_objects = {}
@@ -12,7 +15,13 @@ NetworkEventDelegate.init = function (self)
 
 	event_meta_table.__index = function (t, key)
 		if BUILD == "release" then
-			Crashify.print_exception("NetworkEventDelegate", string.format("Network event not registered %q", key))
+			local log_warning = temp_log_warning_for_missing_events[key] or false
+
+			if log_warning then
+				Log.warning("NetworkEventDelegate", "Network event not registered %q", key)
+			else
+				Crashify.print_exception("NetworkEventDelegate", string.format("Network event not registered %q", key))
+			end
 
 			return function ()
 				return

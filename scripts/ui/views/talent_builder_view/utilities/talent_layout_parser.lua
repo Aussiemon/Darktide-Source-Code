@@ -6,7 +6,7 @@ local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local armor_types = ArmorSettings.types
 local TalentLayoutParser = {}
 
@@ -22,7 +22,7 @@ TalentLayoutParser.verify = function (talent_layout)
 	return true
 end
 
-TalentLayoutParser.pack_backend_data = function (talent_layout, points_spent_on_nodes)
+TalentLayoutParser.pack_backend_data = function (talent_layout, node_tiers)
 	local nodes = talent_layout.nodes
 	local num_nodes = #nodes
 	local node_string = ""
@@ -30,10 +30,15 @@ TalentLayoutParser.pack_backend_data = function (talent_layout, points_spent_on_
 	for i = 1, num_nodes do
 		local node = nodes[i]
 		local widget_name = node.widget_name
-		local points_spent = points_spent_on_nodes[widget_name] or 0
 
-		if points_spent > 0 then
-			node_string = string.format("%s%i|%i,", node_string, i - 1, points_spent)
+		if node_tiers[widget_name] then
+			local tier = node_tiers[widget_name]
+
+			if tier > 0 then
+				local cost = tier * (node.cost or 1)
+
+				node_string = string.format("%s%i|%i,", node_string, i - 1, cost)
+			end
 		end
 	end
 
@@ -43,7 +48,7 @@ TalentLayoutParser.pack_backend_data = function (talent_layout, points_spent_on_
 	return backend_data
 end
 
-TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, points_spent_on_nodes)
+TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, node_tiers)
 	local version_length = string.find(backend_data, ";")
 
 	if version_length == nil then
@@ -57,25 +62,29 @@ TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, 
 
 	if correct_version then
 		local nodes = talent_layout.nodes
-		local points_spent_s = string.sub(backend_data, version_length + 1)
-		local has_any_points_spent = string.len(points_spent_s) > 0
+		local cost_s = string.sub(backend_data, version_length + 1)
+		local has_any_points_spent = string.len(cost_s) > 0
 
 		if has_any_points_spent then
-			local first_char_is_a_number = tonumber(string.sub(points_spent_s, 1, 1)) ~= nil
+			local first_char_is_a_number = tonumber(string.sub(cost_s, 1, 1)) ~= nil
 
 			if first_char_is_a_number then
-				for backend_node_index, points_spent_in_node in string.gmatch(points_spent_s, "(%d+)|(%d+)") do
+				for backend_node_index, cost_in_node in string.gmatch(cost_s, "(%d+)|(%d+)") do
 					local node_index = tonumber(backend_node_index) + 1
 					local node = nodes[node_index]
 
 					if not node then
 						Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
-						table.clear(points_spent_on_nodes)
+						table.clear(node_tiers)
 
 						break
 					end
 
-					points_spent_on_nodes[tostring(node_index)] = tonumber(points_spent_in_node)
+					local tier = node.cost == 0 and 1 or tonumber(cost_in_node) / (node.cost or 1)
+
+					if tier % 1 == 0 then
+						node_tiers[node.widget_name] = tier
+					end
 				end
 			else
 				Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
@@ -86,23 +95,61 @@ TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, 
 	end
 end
 
-TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layout, points_spent_on_nodes, selected_talents)
+TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layout, node_tiers, selected_talents)
 	local nodes = talent_layout.nodes
 
 	for i = 1, #nodes do
 		local node = nodes[i]
-		local points_spent = points_spent_on_nodes[tostring(i)] or 0
+		local tier = node_tiers[node.widget_name] or 0
 
-		if points_spent > 0 then
+		if tier > 0 then
 			local talent = node.talent
 
 			if talent ~= "not_selected" and talent ~= nil then
-				local previous_points = selected_talents[talent] or 0
+				local previous_tier = selected_talents[talent] or 0
 
-				selected_talents[talent] = previous_points + points_spent
+				selected_talents[talent] = previous_tier + tier
 			end
 		end
 	end
+end
+
+local _talents_version_scratch = {}
+
+TalentLayoutParser.talents_version = function (profile)
+	table.clear(_talents_version_scratch)
+
+	local archetype = profile.archetype
+	local talent_layout_version = archetype.talent_layout_file_path and require(archetype.talent_layout_file_path).version or nil
+
+	_talents_version_scratch[#_talents_version_scratch + 1] = talent_layout_version
+
+	local specialization_talent_version = archetype.specialization_talent_layout_file_path and require(archetype.specialization_talent_layout_file_path).version or nil
+
+	_talents_version_scratch[#_talents_version_scratch + 1] = specialization_talent_version
+
+	return table.concat(_talents_version_scratch, ":")
+end
+
+TalentLayoutParser.filter_layout_talents = function (profile, layout_key, selected_talents, out_talents)
+	out_talents = out_talents or {}
+
+	local archetype = profile.archetype
+
+	if archetype[layout_key] then
+		local layout = require(archetype[layout_key])
+		local nodes = layout.nodes
+
+		for i = 1, #nodes do
+			local node = nodes[i]
+
+			if selected_talents[node.widget_name] then
+				out_talents[node.widget_name] = selected_talents[node.widget_name]
+			end
+		end
+	end
+
+	return out_talents
 end
 
 local function _num_decimals(value)
@@ -213,7 +260,7 @@ local function _calculate_damage_profile(config)
 	local is_attacked_unit_suppressed = false
 	local distance, target_unit
 	local auto_completed_action = false
-	local stagger_impact
+	local stagger_impact = 0
 
 	return DamageCalculation.calculate(damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
 end
@@ -313,7 +360,7 @@ local DEV_INFO_FUNCTIONS = {
 		config.armor_type = old_armor_type
 
 		local damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier = _calculate_damage_profile(config)
-		local base_damage_value_string = TextUtilities.apply_color_to_text(string.format("%d", base_damage), Color.ui_terminal(255, true))
+		local base_damage_value_string = Text.apply_color_to_text(string.format("%d", base_damage), Color.ui_terminal(255, true))
 		local base_damage_string = string.format("%s base damage\n", base_damage_value_string)
 		local armors_string
 
@@ -329,7 +376,7 @@ local DEV_INFO_FUNCTIONS = {
 				end
 			end
 
-			local value_string = TextUtilities.apply_color_to_text(string.format("%d%%", mod_values * 100), Color.ui_terminal(255, true))
+			local value_string = Text.apply_color_to_text(string.format("%d%%", mod_values * 100), Color.ui_terminal(255, true))
 
 			if armors_string then
 				armors_string = armors_string .. string.format("\n%s: %s", value_string, armors)
@@ -355,7 +402,7 @@ local DEV_INFO_FUNCTIONS = {
 			local path = value_config.path
 			local value, key = _value_from_path(buff_template, path)
 			local format_function = FORMATTING_FUNCTIONS[value_config.format_type] or FORMATTING_FUNCTIONS.default
-			local value_s = TextUtilities.apply_color_to_text(format_function(value, value_config), Color.ui_terminal(255, true))
+			local value_s = Text.apply_color_to_text(format_function(value, value_config), Color.ui_terminal(255, true))
 
 			values_string = values_string .. string.format("%s: %s ", key, value_s)
 		end
@@ -363,56 +410,179 @@ local DEV_INFO_FUNCTIONS = {
 		return values_string:sub(1, -1)
 	end,
 }
-local FORMAT_VALUES_TEMP = {}
 
-TalentLayoutParser.talent_description = function (talent_definition, points_spent, value_color)
-	local format_values = talent_definition.format_values
-	local actual_format_values
+local function _actual_format_values(format_values, out_table, points_spent, value_color)
+	table.clear(out_table)
 
-	if format_values then
-		actual_format_values = FORMAT_VALUES_TEMP
+	for key, config in pairs(format_values) do
+		if type(config) == "table" then
+			local value
+			local find_value_config = config.find_value
 
-		table.clear(actual_format_values)
+			if find_value_config then
+				local find_value_function = FIND_VALUE_FUNCTIONS[find_value_config.find_value_type] or FIND_VALUE_FUNCTIONS.default
 
-		for key, config in pairs(format_values) do
-			if type(config) == "table" then
-				local value
-				local find_value_config = config.find_value
-
-				if find_value_config then
-					local find_value_function = FIND_VALUE_FUNCTIONS[find_value_config.find_value_type] or FIND_VALUE_FUNCTIONS.default
-
-					value = find_value_function(find_value_config, points_spent)
-				else
-					value = config.value
-				end
-
-				local format_type = config.format_type
-				local format_function = FORMATTING_FUNCTIONS[format_type] or FORMATTING_FUNCTIONS.default
-				local string_value = format_function(value, config)
-
-				if config.prefix then
-					string_value = config.prefix .. string_value
-				end
-
-				if config.suffix then
-					string_value = string_value .. config.suffix
-				end
-
-				if value_color then
-					actual_format_values[key] = TextUtilities.apply_color_to_text(tostring(string_value), value_color)
-				else
-					actual_format_values[key] = string.format("%s", string_value)
-				end
+				value = find_value_function(find_value_config, points_spent)
 			else
-				actual_format_values[key] = config
+				value = config.value
 			end
+
+			local format_type = config.format_type
+			local format_function = FORMATTING_FUNCTIONS[format_type] or FORMATTING_FUNCTIONS.default
+			local string_value = format_function(value, config)
+
+			if config.prefix then
+				string_value = config.prefix .. string_value
+			end
+
+			if config.suffix then
+				string_value = string_value .. config.suffix
+			end
+
+			if value_color then
+				out_table[key] = Text.apply_color_to_text(tostring(string_value), value_color)
+			else
+				out_table[key] = string.format("%s", string_value)
+			end
+		else
+			out_table[key] = config
 		end
 	end
 
-	local talent_description = Managers.localization:localize(talent_definition.description, true, actual_format_values)
+	return out_table
+end
+
+local FORMAT_VALUES_TEMP = {}
+local UNIQUE_FORMAT_VALUES_TEMP = {}
+local TALENT_FORMAT_SCRATCH = {}
+
+TalentLayoutParser.talent_title = function (talent_definition, points_spent, value_color)
+	local display_name = talent_definition.display_name
+
+	if not display_name then
+		return nil
+	end
+
+	local format_values = talent_definition.format_values
+
+	format_values = format_values and _actual_format_values(format_values, FORMAT_VALUES_TEMP, points_spent, value_color)
+
+	local talent_title
+	local format_values_per_index = talent_definition.format_values_per_index or EMPTY_TABLE
+
+	if type(talent_definition.display_name) == "table" then
+		table.clear(TALENT_FORMAT_SCRATCH)
+
+		for i = 1, #talent_definition.display_name do
+			local unique_format_values = format_values_per_index[i]
+
+			unique_format_values = unique_format_values and _actual_format_values(unique_format_values, UNIQUE_FORMAT_VALUES_TEMP, points_spent, value_color)
+			TALENT_FORMAT_SCRATCH[#TALENT_FORMAT_SCRATCH + 1] = Managers.localization:localize(talent_definition.display_name[i], true, unique_format_values or format_values)
+		end
+
+		talent_title = table.concat(TALENT_FORMAT_SCRATCH, "\n")
+	else
+		talent_title = Managers.localization:localize(talent_definition.display_name, true, format_values)
+	end
+
+	return talent_title
+end
+
+TalentLayoutParser.talent_description = function (talent_definition, points_spent, value_color)
+	local format_values = talent_definition.format_values
+
+	format_values = format_values and _actual_format_values(format_values, FORMAT_VALUES_TEMP, points_spent, value_color)
+
+	local talent_description
+	local format_values_per_index = talent_definition.format_values_per_index or EMPTY_TABLE
+
+	if type(talent_definition.description) == "table" then
+		table.clear(TALENT_FORMAT_SCRATCH)
+
+		for i = 1, #talent_definition.description do
+			local unique_format_values = format_values_per_index[i]
+
+			unique_format_values = unique_format_values and _actual_format_values(unique_format_values, UNIQUE_FORMAT_VALUES_TEMP, points_spent, value_color)
+			TALENT_FORMAT_SCRATCH[#TALENT_FORMAT_SCRATCH + 1] = Managers.localization:localize(talent_definition.description[i], true, unique_format_values or format_values)
+		end
+
+		talent_description = table.concat(TALENT_FORMAT_SCRATCH, "\n")
+	else
+		talent_description = Managers.localization:localize(talent_definition.description, true, format_values)
+	end
 
 	return talent_description
+end
+
+TalentLayoutParser.node_points_spent = function (talent_layout, node_tiers)
+	local total_points = 0
+	local nodes = talent_layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+		local tier = node_tiers[node.widget_name]
+
+		if tier then
+			total_points = total_points + tier * node.cost
+		end
+	end
+
+	return total_points
+end
+
+TalentLayoutParser.profile_percent_points_used = function (profile, optional_node_tiers)
+	local archetype = profile.archetype
+	local talent_layout = require(archetype.talent_layout_file_path)
+	local node_tiers = optional_node_tiers or profile.selected_nodes
+	local max_points = profile.talent_points
+
+	return TalentLayoutParser.percent_points_used(talent_layout, node_tiers, max_points)
+end
+
+TalentLayoutParser.profile_percent_specialization_points_used = function (profile, optional_node_tiers)
+	local archetype = profile.archetype
+	local layout_path = archetype.specialization_talent_layout_file_path
+
+	if layout_path then
+		local talent_layout = require(layout_path)
+		local node_tiers = optional_node_tiers or profile.selected_nodes
+		local max_points = profile.expertise_points
+
+		return TalentLayoutParser.percent_points_used(talent_layout, node_tiers, max_points)
+	end
+
+	return 1
+end
+
+TalentLayoutParser.profile_specialization_node_points_spent = function (profile, optional_node_tiers)
+	local total_points, max_points = 0, 0
+	local archetype = profile.archetype
+	local layout_path = archetype.specialization_talent_layout_file_path
+
+	if layout_path then
+		local talent_layout = require(layout_path)
+		local node_tiers = optional_node_tiers or profile.selected_nodes
+		local nodes = talent_layout.nodes
+
+		for i = 1, #nodes do
+			local node = nodes[i]
+			local tier = node_tiers[node.widget_name]
+
+			if tier then
+				total_points = total_points + tier * node.cost
+			end
+		end
+
+		max_points = profile.expertise_points
+	end
+
+	return total_points, max_points
+end
+
+TalentLayoutParser.percent_points_used = function (talent_layout, node_tiers, max_points)
+	local points_spent = TalentLayoutParser.node_points_spent(talent_layout, node_tiers)
+
+	return max_points == 0 and 1 or points_spent / max_points
 end
 
 return TalentLayoutParser

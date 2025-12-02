@@ -88,8 +88,10 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 
 	local sway_component = unit_data_extension:read_component("sway")
 	local movement_state_component = unit_data_extension:read_component("movement_state")
+	local locomotion_component = unit_data_extension:read_component("locomotion")
+	local inair_state_component = unit_data_extension:read_component("inair_state")
 	local sway_template = weapon_extension:sway_template()
-	local sway_settings = Sway.movement_state_settings(sway_template, movement_state_component)
+	local sway_settings = Sway.movement_state_settings(sway_template, movement_state_component, locomotion_component, inair_state_component)
 	local visual_sway_settings = sway_settings and sway_settings.visual_sway_settings
 	local sway_lerp_speed = visual_sway_settings and visual_sway_settings.lerp_speed or DEFAULT_SWAY_LERP_SPEED
 	local sway_lerp_scalar = math.min(sway_lerp_speed * dt * 2, 1)
@@ -105,14 +107,14 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 	local aim_offset_y = sway_offset_y * (sway_settings and sway_settings.visual_pitch_impact_mod or 1)
 	local recoil_template = weapon_extension:recoil_template()
 	local recoil_component = unit_data_extension:read_component("recoil")
-	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component)
+	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component, locomotion_component, inair_state_component)
 	local visual_recoil_settings = movement_state_settings and movement_state_settings.visual_recoil_settings
 
 	if visual_recoil_settings then
 		local recoil_intensity = visual_recoil_settings.intensity
 		local lerp_scalar = visual_recoil_settings.lerp_scalar
 		local yaw_intensity = visual_recoil_settings.yaw_intensity or recoil_intensity * 0.5
-		local recoil_pitch_offset, recoil_yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
+		local recoil_pitch_offset, recoil_yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component)
 
 		recoil_pitch_offset = math.lerp(lerp_values.recoil_pitch_offset or 0, recoil_pitch_offset * recoil_intensity, lerp_scalar)
 		recoil_yaw_offset = math.lerp(lerp_values.recoil_yaw_offset or 0, recoil_yaw_offset * yaw_intensity, lerp_scalar)

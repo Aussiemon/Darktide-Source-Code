@@ -10,6 +10,8 @@ local loaded_template_files = {}
 
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_autopistols/settings_templates/dual_autopistol_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_stub_pistols/settings_templates/dual_stub_pistols_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/lasguns/settings_templates/lasgun_hitscan_templates", hit_scan_templates, loaded_template_files)
@@ -18,6 +20,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 
 hit_scan_templates.lasgun_assault = {
 	range = 50,
@@ -269,6 +272,7 @@ hit_scan_templates.default_plasma_killshot = {
 	damage = {
 		impact = {
 			destroy_on_impact = false,
+			explosion_template = nil,
 			damage_profile = DamageProfileTemplates.default_plasma_killshot,
 			armor_explosion = {
 				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,

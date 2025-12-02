@@ -1157,23 +1157,21 @@ templates.adamant_execution_order_cdr = {
 			return
 		end
 
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
+	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
 			return
 		end
 
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
-		end
-
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.execution_order.cdr)
 		end
@@ -1440,9 +1438,6 @@ local function _forceful_explosion(template_data, template_context)
 
 	local unit = template_context.unit
 	local world = template_context.world
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	local character_state_component = unit_data_extension:read_component("character_state")
-	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
 	local physics_world = World.physics_world(world)
 	local explosion_template = ExplosionTemplates.adamant_forceful_explosion
 	local power_level = 750
@@ -2175,7 +2170,8 @@ templates.adamant_disable_companion_buff = {
 	end,
 }
 
-local grenade_replenishment_cooldown = talent_settings.disable_companion.blitz_replenish_time
+local grenade_replenishment_cooldown = talent_settings.disable_companion.grenade_blitz_replenish_time
+local mine_replenishment_cooldown = talent_settings.disable_companion.mine_blitz_replenish_time
 local ABILITY_TYPE = "grenade_ability"
 local grenades_restored = 1
 local external_properties = {}
@@ -2193,6 +2189,10 @@ templates.adamant_grenade_replenishment = {
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 		template_data.first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 		template_data.missing_charges = 0
+
+		local is_mine = template_data.ability_extension:get_current_grenade_ability_name() == "adamant_shock_mine"
+
+		template_data.cooldown = is_mine and mine_replenishment_cooldown or grenade_replenishment_cooldown
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		if not template_data.ability_extension then
@@ -2229,7 +2229,7 @@ templates.adamant_grenade_replenishment = {
 		local next_grenade_t = template_data.next_grenade_t
 
 		if not next_grenade_t then
-			template_data.next_grenade_t = t + grenade_replenishment_cooldown
+			template_data.next_grenade_t = t + template_data.cooldown
 
 			return
 		end
@@ -2264,7 +2264,7 @@ templates.adamant_grenade_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_grenade_t - t
-		local percentage_left = time_until_next / grenade_replenishment_cooldown
+		local percentage_left = time_until_next / template_data.cooldown
 
 		return 1 - percentage_left
 	end,
@@ -2851,19 +2851,25 @@ templates.adamant_pinning_dog_kills_cdr_buff = {
 	refresh_duration_on_stack = true,
 	duration = talent_settings.pinning_dog_kills_cdr.time,
 	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 	end,
-	update_func = function (template_data, template_context)
-		local t = FixedFrame.get_latest_fixed_time()
-
-		if not template_data.timer then
-			template_data.timer = t + 1
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
 		end
 
 		if t > template_data.timer then
-			template_data.timer = t + 1
+			template_data.timer = template_data.timer + 1
 
 			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.pinning_dog_kills_cdr.regen)
 		end

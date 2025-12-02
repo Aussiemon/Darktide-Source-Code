@@ -3,8 +3,6 @@
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewDefinitions = require("scripts/ui/views/contracts_view/contracts_view_definitions")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
@@ -191,7 +189,7 @@ ContractsView._display_task_info = function (self, task_widget, task_info)
 
 	table.clear(text_extra_options)
 
-	local _, label_height = self:_text_size_for_style(label, label_style, label_default_size)
+	local _, label_height = self:_text_size(label, label_style, label_default_size)
 	local label_size = label_style.size
 
 	label_size[1] = label_default_size[1]
@@ -403,7 +401,7 @@ ContractsView._populate_task_list = function (self, tasks)
 		local task_info = tasks[i]
 		local criteria = task_info.criteria
 		local label, description, target = ContractCriteriaParser.localize_criteria(criteria)
-		local _, label_height = self:_text_size_for_style(label, task_name_style)
+		local _, label_height = self:_text_size(label, task_name_style)
 		local task_is_fulfilled = task_info.fulfilled
 		local task_progress = criteria.value / (target or 1)
 		local reward = task_info.reward.amount

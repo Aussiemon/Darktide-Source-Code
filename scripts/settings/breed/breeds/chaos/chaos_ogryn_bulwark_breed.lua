@@ -24,6 +24,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_bulwark"
 local breed_data = {
+	achievement_breed_group = "chaos_ogryn_bulwark",
 	activate_slot_system_on_spawn = true,
 	base_height = 2.5,
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",

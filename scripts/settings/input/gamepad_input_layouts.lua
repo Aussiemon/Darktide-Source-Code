@@ -140,6 +140,16 @@ local layouts = {
 		sort_order = 4,
 		input_settings = {
 			Ingame = {
+				keyboard_move_backward = nil,
+				keyboard_move_forward = nil,
+				keyboard_move_left = nil,
+				keyboard_move_right = nil,
+				look_raw = nil,
+				voip_push_to_talk = nil,
+				wield_1 = nil,
+				wield_2 = nil,
+				wield_scroll_down = nil,
+				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",
@@ -253,6 +263,16 @@ local layouts = {
 		sort_order = 5,
 		input_settings = {
 			Ingame = {
+				keyboard_move_backward = nil,
+				keyboard_move_forward = nil,
+				keyboard_move_left = nil,
+				keyboard_move_right = nil,
+				look_raw = nil,
+				voip_push_to_talk = nil,
+				wield_1 = nil,
+				wield_2 = nil,
+				wield_scroll_down = nil,
+				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r1",
 					"xbox_controller_right_shoulder",
@@ -366,6 +386,16 @@ local layouts = {
 		sort_order = 6,
 		input_settings = {
 			Ingame = {
+				keyboard_move_backward = nil,
+				keyboard_move_forward = nil,
+				keyboard_move_left = nil,
+				keyboard_move_right = nil,
+				look_raw = nil,
+				voip_push_to_talk = nil,
+				wield_1 = nil,
+				wield_2 = nil,
+				wield_scroll_down = nil,
+				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r1",
 					"xbox_controller_right_shoulder",
@@ -478,6 +508,16 @@ local layouts = {
 		sort_order = 7,
 		input_settings = {
 			Ingame = {
+				keyboard_move_backward = nil,
+				keyboard_move_forward = nil,
+				keyboard_move_left = nil,
+				keyboard_move_right = nil,
+				look_raw = nil,
+				voip_push_to_talk = nil,
+				wield_1 = nil,
+				wield_2 = nil,
+				wield_scroll_down = nil,
+				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",
@@ -591,6 +631,16 @@ local layouts = {
 		sort_order = 3,
 		input_settings = {
 			Ingame = {
+				keyboard_move_backward = nil,
+				keyboard_move_forward = nil,
+				keyboard_move_left = nil,
+				keyboard_move_right = nil,
+				look_raw = nil,
+				voip_push_to_talk = nil,
+				wield_1 = nil,
+				wield_2 = nil,
+				wield_scroll_down = nil,
+				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",

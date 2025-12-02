@@ -144,6 +144,23 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_blonde_04 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_blonde_04",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.11,
+			},
+			hair_rgb = {
+				0.6,
+				0.52,
+				0.4,
+			},
+		},
+	},
 	hair_brown_01 = {
 		texture_overrides = {
 			hair_color_gradient = {
@@ -438,6 +455,159 @@ local material_overrides = {
 				0.6,
 				0.01,
 				0,
+			},
+		},
+	},
+	hair_broker_blonde_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_blonde_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.02,
+			},
+			hair_rgb = {
+				0.78,
+				0.706,
+				0.565,
+			},
+		},
+	},
+	hair_broker_green_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_green_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.23,
+				0.396,
+				0.275,
+			},
+		},
+	},
+	hair_broker_yellow_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_yellow_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.58,
+				0.671,
+				0.31,
+			},
+		},
+	},
+	hair_broker_blue_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_blue_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.176,
+				0.4,
+				0.365,
+			},
+		},
+	},
+	hair_broker_blue_02 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_blue_02",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.11,
+				0.2,
+				0.46,
+			},
+		},
+	},
+	hair_broker_red_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_red_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.61,
+				0.23,
+				0.196,
+			},
+		},
+	},
+	hair_broker_red_02 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_red_02",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.416,
+				0.09,
+				0.09,
+			},
+		},
+	},
+	hair_broker_purple_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_purple_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.463,
+				0.22,
+				0.424,
+			},
+		},
+	},
+	hair_broker_purple_02 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_broker_purple_02",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.04,
+			},
+			hair_rgb = {
+				0.29,
+				0.19,
+				0.427,
 			},
 		},
 	},

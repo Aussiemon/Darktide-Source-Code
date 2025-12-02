@@ -10,6 +10,7 @@ local function _require_deployable(name)
 	deployable.name = name
 end
 
+_require_deployable("broker_stimm_field_crate")
 _require_deployable("medical_crate")
 _require_deployable("shock_mine")
 

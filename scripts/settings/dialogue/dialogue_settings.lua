@@ -7,6 +7,7 @@ DialogueSettings.default_voSources_path = "dialogues/generated/"
 DialogueSettings.default_lookup_path = "dialogues/generated/"
 DialogueSettings.auto_load_files = {
 	"adamant",
+	"broker",
 	"asset_vo",
 	"class_rework",
 	"enemy_vo",
@@ -131,6 +132,9 @@ DialogueSettings.level_specific_load_files = {
 		"mission_vo_core_research",
 		"conversations_core",
 	},
+	op_no_mans_land = {
+		"mission_vo_op_no_mans_land",
+	},
 	op_train = {
 		"mission_vo_op_train",
 	},
@@ -151,6 +155,9 @@ DialogueSettings.player_load_files = {
 	},
 	ogryn_c = {
 		"ogryn_c",
+	},
+	ogryn_d = {
+		"ogryn_d",
 	},
 	psyker_female_a = {
 		"psyker_a",
@@ -224,6 +231,18 @@ DialogueSettings.player_load_files = {
 		"zealot_c",
 		"zealot_male_c",
 	},
+	adamant_female_a = {
+		"adamant_a",
+		"adamant_female_a",
+	},
+	adamant_female_b = {
+		"adamant_b",
+		"adamant_female_b",
+	},
+	adamant_female_c = {
+		"adamant_c",
+		"adamant_female_c",
+	},
 	adamant_male_a = {
 		"adamant_a",
 		"adamant_male_a",
@@ -236,17 +255,29 @@ DialogueSettings.player_load_files = {
 		"adamant_c",
 		"adamant_male_c",
 	},
-	adamant_female_a = {
-		"adamant_a",
-		"adamant_female_a",
+	broker_female_a = {
+		"broker_a",
+		"broker_female_a",
 	},
-	adamant_female_b = {
-		"adamant_b",
-		"adamant_female_b",
+	broker_female_b = {
+		"broker_b",
+		"broker_female_b",
 	},
-	adamant_female_c = {
-		"adamant_c",
-		"adamant_female_c",
+	broker_female_c = {
+		"broker_c",
+		"broker_female_c",
+	},
+	broker_male_a = {
+		"broker_a",
+		"broker_male_a",
+	},
+	broker_male_b = {
+		"broker_b",
+		"broker_male_b",
+	},
+	broker_male_c = {
+		"broker_c",
+		"broker_male_c",
 	},
 }
 DialogueSettings.blocked_auto_load_files = {
@@ -350,6 +381,53 @@ DialogueSettings.stats = {
 		story_echo_zola_31_a = "hook_backstory_zola_part_8",
 		story_echo_zola_35_a = "hook_backstory_zola_part_9",
 	},
+}
+DialogueSettings.grouped_heard_speak_rules = {
+	start_zone_direction_01_b = "start_zone_direction_b",
+	start_zone_direction_02_b = "start_zone_direction_b",
+	start_zone_direction_03_b = "start_zone_direction_b",
+	start_zone_direction_04_b = "start_zone_direction_b",
+	start_zone_direction_05_b = "start_zone_direction_b",
+	start_zone_direction_06_b = "start_zone_direction_b",
+	start_zone_direction_07_b = "start_zone_direction_b",
+	start_zone_direction_08_b = "start_zone_direction_b",
+	start_zone_direction_09_b = "start_zone_direction_b",
+	start_zone_direction_10_b = "start_zone_direction_b",
+	start_zone_direction_11_b = "start_zone_direction_b",
+	start_zone_direction_12_b = "start_zone_direction_b",
+	start_zone_direction_13_b = "start_zone_direction_b",
+	start_zone_direction_14_b = "start_zone_direction_b",
+	start_zone_direction_15_b = "start_zone_direction_b",
+	start_zone_direction_16_b = "start_zone_direction_b",
+	start_zone_direction_17_b = "start_zone_direction_b",
+	start_zone_direction_18_b = "start_zone_direction_b",
+	start_zone_direction_19_b = "start_zone_direction_b",
+	start_zone_direction_20_b = "start_zone_direction_b",
+	start_zone_direction_21_b = "start_zone_direction_b",
+	start_zone_direction_22_b = "start_zone_direction_b",
+	start_zone_direction_23_b = "start_zone_direction_b",
+	start_zone_direction_24_b = "start_zone_direction_b",
+	start_zone_direction_25_b = "start_zone_direction_b",
+	start_zone_direction_26_b = "start_zone_direction_b",
+	start_zone_direction_27_b = "start_zone_direction_b",
+	start_zone_direction_28_b = "start_zone_direction_b",
+	start_zone_direction_29_b = "start_zone_direction_b",
+	start_zone_direction_30_b = "start_zone_direction_b",
+	start_zone_direction_31_b = "start_zone_direction_b",
+	start_zone_direction_32_b = "start_zone_direction_b",
+	start_zone_direction_33_b = "start_zone_direction_b",
+	start_zone_direction_34_b = "start_zone_direction_b",
+	start_zone_direction_35_b = "start_zone_direction_b",
+	start_zone_direction_36_b = "start_zone_direction_b",
+	start_zone_direction_37_b = "start_zone_direction_b",
+	start_zone_direction_38_b = "start_zone_direction_b",
+	start_zone_direction_39_b = "start_zone_direction_b",
+	start_zone_direction_40_b = "start_zone_direction_b",
+	start_zone_direction_41_b = "start_zone_direction_b",
+	start_zone_direction_42_b = "start_zone_direction_b",
+	start_zone_direction_43_b = "start_zone_direction_b",
+	start_zone_direction_44_b = "start_zone_direction_b",
+	start_zone_direction_45_b = "start_zone_direction_b",
 }
 
 return DialogueSettings

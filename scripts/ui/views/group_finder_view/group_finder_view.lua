@@ -9,11 +9,11 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
-local TextUtilities = require("scripts/utilities/ui/text")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
@@ -324,6 +324,7 @@ local function _format_group_finder_tags(backend_data)
 
 	for _, tag in ipairs(response_tags) do
 		local formatted_tag = {
+			parents = nil,
 			name = tag.name,
 			locked = tag.locked,
 			access_requirement = tag.accessRequirement,
@@ -1216,7 +1217,7 @@ GroupFinderView._generate_tags_description = function (self, tags)
 	for i = 1, #tags do
 		local tag = tags[i]
 		local new_text = text .. "[" .. tag.text .. "] "
-		local width, _ = self:_text_size_for_style(new_text, description_text_style, {
+		local width, _ = self:_text_size(new_text, description_text_style, {
 			max_length + max_length,
 			5,
 		})
@@ -1963,7 +1964,7 @@ GroupFinderView._set_state = function (self, new_state)
 		self._update_listed_group_on_update = false
 	end
 
-	Log.info("[GroupFinderView] - set state: CURRENT STATE: " .. self._state .. " | NEW STATE: " .. new_state)
+	Log.info("GroupFinderView", "set state: CURRENT STATE: %s | NEW STATE: %s", self._state, new_state)
 
 	self._state = new_state
 	self._anim_preview_progress = -0.01
@@ -2148,7 +2149,7 @@ GroupFinderView._update_group_list_time_stamp = function (self, dt, t)
 	if current_time < 60 then
 		presentation_text = Localize(time_loc_string_start)
 	else
-		local time_text = TextUtilities.format_time_span_localized(current_time, false, true)
+		local time_text = Text.format_time_span_localized(current_time, false, true)
 
 		presentation_text = Localize(time_loc_string, true, {
 			time = time_text,
@@ -2390,8 +2391,6 @@ GroupFinderView.on_exit = function (self)
 		save_manager:queue_save()
 	end
 
-	self._promise_container:delete()
-
 	if self._enter_animation_id then
 		self:_stop_animation(self._enter_animation_id)
 
@@ -2418,6 +2417,11 @@ GroupFinderView.on_exit = function (self)
 	end
 
 	GroupFinderView.super.on_exit(self)
+end
+
+GroupFinderView.destroy = function (self)
+	self._promise_container:delete()
+	GroupFinderView.super.destroy(self)
 end
 
 GroupFinderView.ui_renderer = function (self)
@@ -2635,7 +2639,16 @@ end
 GroupFinderView._cb_set_player_frame = function (self, widget, item)
 	local material_values = widget.style.character_portrait.material_values
 
-	material_values.portrait_frame_texture = item.icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.character_portrait = item.icon_material
+	else
+		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 GroupFinderView._cb_set_player_insignia = function (self, widget, item)
@@ -2664,16 +2677,16 @@ GroupFinderView._request_player_icon = function (self, profile, widget)
 end
 
 GroupFinderView._load_portrait_icon = function (self, profile, widget)
-	local load_cb = callback(self, "_cb_set_player_icon", widget)
+	local load_cb = callback(self, "_cb_set_player_icon", widget, profile)
 	local unload_cb = callback(self, "_cb_unset_player_icon", widget)
 
 	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 end
 
-GroupFinderView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+GroupFinderView._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)
 	local material_values = widget.style.character_portrait.material_values
 
-	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.character_portrait = self:_get_player_portrait_frame_material(profile)
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -2720,6 +2733,24 @@ GroupFinderView._unload_portrait_icon = function (self, widget, ui_renderer)
 
 		icon_style.color[1] = 0
 	end
+end
+
+GroupFinderView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 GroupFinderView._is_table_containing_tags = function (self, source_tags, tags)
@@ -3454,7 +3485,7 @@ GroupFinderView._update_player_request_button_decline = function (self)
 	local action = self._player_request_button_decline_input_action
 	local service_type = "View"
 	local include_input_type = false
-	local text = TextUtils.localize_with_button_hint(action, "loc_group_finder_player_request_action_decline", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local text = Text.localize_with_button_hint(action, "loc_group_finder_player_request_action_decline", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget = self._widgets_by_name.player_request_button_decline
 
 	widget.content.text = text
@@ -3465,7 +3496,7 @@ GroupFinderView._update_player_request_button_decline = function (self)
 		widget.alpha_multiplier = 1
 	end
 
-	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)
+	local width = self:_text_size(text, widget.style.text, _dummy_text_size)
 
 	self:_set_scenegraph_size("player_request_button_decline", width + 10)
 	self:_force_update_scenegraph()
@@ -3475,7 +3506,7 @@ GroupFinderView._update_player_request_button_accept = function (self)
 	local action = self._player_request_button_accept_input_action
 	local service_type = "View"
 	local include_input_type = false
-	local text = TextUtils.localize_with_button_hint(action, "loc_group_finder_player_request_action_accept", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local text = Text.localize_with_button_hint(action, "loc_group_finder_player_request_action_accept", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget = self._widgets_by_name.player_request_button_accept
 
 	widget.content.text = text
@@ -3486,7 +3517,7 @@ GroupFinderView._update_player_request_button_accept = function (self)
 		widget.alpha_multiplier = 1
 	end
 
-	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)
+	local width = self:_text_size(text, widget.style.text, _dummy_text_size)
 
 	self:_set_scenegraph_size("player_request_button_accept", width + 10)
 	self:_set_scenegraph_position("player_request_button_accept", -(width + 10 + 30))
@@ -3497,12 +3528,12 @@ GroupFinderView._update_preview_input_text = function (self)
 	local action = self._preview_button_input_action
 	local service_type = "View"
 	local include_input_type = false
-	local text = TextUtils.localize_with_button_hint(action, "loc_mission_voting_view_show_details", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local text = Text.localize_with_button_hint(action, "loc_mission_voting_view_show_details", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget = self._widgets_by_name.preview_input_text
 
 	widget.content.text = text
 
-	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)
+	local width = self:_text_size(text, widget.style.text, _dummy_text_size)
 
 	self:_set_scenegraph_size("preview_input_text", width + 10)
 end
@@ -3511,12 +3542,12 @@ GroupFinderView._update_refresh_button_text = function (self)
 	local action = self._refresh_button_input_action
 	local service_type = "View"
 	local include_input_type = false
-	local text = TextUtils.localize_with_button_hint(action, "loc_group_finder_refresh_group_list_button", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
+	local text = Text.localize_with_button_hint(action, "loc_group_finder_refresh_group_list_button", nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 	local widget = self._widgets_by_name.refresh_button
 
 	widget.content.text = text
 
-	local width = self:_text_size_for_style(text, widget.style.text, _dummy_text_size)
+	local width = self:_text_size(text, widget.style.text, _dummy_text_size)
 
 	self:_set_scenegraph_size("refresh_button", width + 10)
 end

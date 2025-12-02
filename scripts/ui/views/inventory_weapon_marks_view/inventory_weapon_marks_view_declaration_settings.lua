@@ -20,6 +20,9 @@ local view_settings = {
 	exit_sound_events = {
 		UISoundEvents.default_menu_exit,
 	},
+	dummy_data = {
+		debug_preview = true,
+	},
 }
 
 return settings("InventoryWeaponMarksViewDeclarationSettings", view_settings)

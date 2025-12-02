@@ -204,7 +204,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -247,6 +250,7 @@ local action_data = {
 		max_liquid_paint_distance = 3,
 		on_hit_buff = "renegade_flamer_hit_by_flame",
 		place_liquid_timing_speed = 7,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 200,
 		push_minions_radius = 1.25,
 		push_minions_side_relation = "allied",

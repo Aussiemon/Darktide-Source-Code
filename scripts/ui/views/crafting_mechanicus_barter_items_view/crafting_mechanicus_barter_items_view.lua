@@ -8,8 +8,6 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -18,6 +16,7 @@ local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
+local Text = require("scripts/utilities/ui/text")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)
@@ -796,6 +795,7 @@ CraftingMechanicusBarterItemsView._setup_menu_tabs = function (self, content)
 	local tab_button_template = table.clone(tab_menu_settings.button_template or ButtonPassTemplates.tab_menu_button_icon)
 
 	tab_button_template[1].style = {
+		on_released_sound = nil,
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
 	}
@@ -1379,20 +1379,16 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 
 		local sacrifice_title_text = self._widgets_by_name.sacrifice_intro.content.display_name
 		local sacrifice_title_style = self._widgets_by_name.sacrifice_intro.style.display_name
-		local sacrifice_title_font_data = UIFonts.data_by_type(sacrifice_title_style.font_type)
-		local sacrifice_title_text_options = UIFonts.get_font_options_by_style(sacrifice_title_style)
 		local sacrifice_description_text = self._widgets_by_name.sacrifice_intro.content.description
 		local sacrifice_description_style = self._widgets_by_name.sacrifice_intro.style.description
-		local sacrifice_description_font_data = UIFonts.data_by_type(sacrifice_description_style.font_type)
-		local sacrifice_description_text_options = UIFonts.get_font_options_by_style(sacrifice_description_style)
-		local _, sacrifice_intro_title_height = UIRenderer.text_size(self._ui_renderer, sacrifice_title_text, sacrifice_title_style.font_type, sacrifice_title_style.font_size, {
+		local sacrifice_intro_title_height = Text.text_height(self._ui_renderer, sacrifice_title_text, sacrifice_title_style, {
 			650,
 			2000,
-		}, sacrifice_title_text_options)
-		local _, sacrifice_description_text_height = UIRenderer.text_size(self._ui_renderer, sacrifice_description_text, sacrifice_description_style.font_type, sacrifice_description_style.font_size, {
+		})
+		local sacrifice_description_text_height = Text.text_height(self._ui_renderer, sacrifice_description_text, sacrifice_description_style, {
 			650,
 			2000,
-		}, sacrifice_description_text_options)
+		})
 		local text_margin = 60
 		local mastery_info_height = sacrifice_intro_title_height + sacrifice_description_text_height + text_margin
 

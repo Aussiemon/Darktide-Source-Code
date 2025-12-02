@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/ui/views/mission_voting_view/mission_voting_view_definitions.lua
 
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Colors = require("scripts/utilities/ui/colors")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local outer_panel_size = {
 	638,
 	850,
@@ -572,33 +572,13 @@ local widget_definitions = {
 	}, "title_bar_bottom"),
 	zone_image = UIWidget.create_definition({
 		{
-			pass_type = "texture_uv",
-			style_id = "texture",
-			value_id = "texture",
+			pass_type = "texture",
+			style_id = "zone_image",
+			value = "content/ui/materials/base/ui_default_base",
+			value_id = "zone_image",
 			style = {
-				scale_to_material = true,
-				color = {
-					255,
-					255,
-					255,
-					255,
-				},
-			},
-		},
-		{
-			pass_type = "texture_uv",
-			value = "content/ui/materials/backgrounds/terminal_basic",
-			style = {
-				scale_to_material = true,
-				color = Color.terminal_grid_background(120, true),
-				size_addition = {
-					28,
-					28,
-				},
-				offset = {
-					-14,
-					-14,
-					1,
+				material_values = {
+					texture_map = nil,
 				},
 			},
 		},
@@ -880,7 +860,7 @@ local animations = {
 				for i = 1, #styles_to_fade do
 					local style = styles_to_fade[i]
 
-					ColorUtilities.color_lerp(style.fade_out_text_color, style.text_color, anim_progress, style.text_color)
+					Colors.color_lerp(style.fade_out_text_color, style.text_color, anim_progress, style.text_color)
 				end
 
 				if params.show_details_flag then
@@ -952,7 +932,7 @@ local animations = {
 				for i = 1, #styles_to_fade do
 					local style = styles_to_fade[i]
 
-					ColorUtilities.color_lerp(style.fade_in_text_color, style.text_color, anim_progress, style.text_color)
+					Colors.color_lerp(style.fade_in_text_color, style.text_color, anim_progress, style.text_color)
 				end
 
 				if not params.show_details_flag then

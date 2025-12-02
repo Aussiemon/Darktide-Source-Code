@@ -12,6 +12,7 @@ local DECAY_RATE = 0.1
 local GRACE_TIME = 1.8
 local BARREL_THRESHOLD = 0
 local CHARGE_INCREASE_RATE = 0.05
+local MAX_VALUE = 1
 local SHOOTING_ACTIONS = {
 	flamer_gas = true,
 	flamer_gas_burst = true,
@@ -108,9 +109,11 @@ WeaponTemperatureEffects._update_overheat = function (self, unit, dt, t)
 	local weapon_template = self._weapon_template
 	local weapon_temperature_settings = weapon_template.weapon_temperature_settings
 	local barrel_threshold = weapon_temperature_settings and weapon_temperature_settings.barrel_threshold or BARREL_THRESHOLD
+	local max_value = weapon_temperature_settings and weapon_temperature_settings.max_value or MAX_VALUE
 	local barrel_value = math.clamp01((parameter_value - barrel_threshold) / (1 - barrel_threshold))
 
 	barrel_value = math.ease_sine(barrel_value)
+	barrel_value = math.lerp(0, max_value, barrel_value)
 
 	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", barrel_value)
 end

@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/collectibles/collectibles_manager.lua
 
 local Component = require("scripts/utilities/component")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local CollectiblesManager = class("CollectiblesManager")
 local CLIENT_RPCS = {
@@ -209,7 +209,7 @@ CollectiblesManager._show_destructible_notification = function (self, peer_id, l
 	local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 	if player_name and player_slot_color then
-		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+		player_name = Text.apply_color_to_text(player_name, player_slot_color)
 	end
 
 	player_name = player_name or Localize("loc_unknown_player_name")
@@ -247,7 +247,7 @@ CollectiblesManager._show_collectible_notification = function (self, peer_id, co
 	local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 	if player_name and player_slot_color then
-		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+		player_name = Text.apply_color_to_text(player_name, player_slot_color)
 	end
 
 	local delay = 0.4

@@ -21,6 +21,7 @@ local RPCS = {
 	"rpc_event_synchronizer_distribute_seeds",
 	"rpc_event_synchronizer_luggable_hide_luggable",
 	"rpc_event_synchronizer_demolition_target_override",
+	"rpc_event_synchronizer_set_servo_skull",
 }
 
 EventSynchronizerSystem.init = function (self, context, system_init_data, ...)
@@ -157,6 +158,14 @@ EventSynchronizerSystem.rpc_event_synchronizer_demolition_target_override = func
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 
 	self._unit_to_extension_map[unit]:set_override_objective_markers(override)
+end
+
+EventSynchronizerSystem.rpc_event_synchronizer_set_servo_skull = function (self, channel_id, unit_id, game_object_id)
+	local is_level_unit = true
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local skull_unit = Managers.state.unit_spawner:unit(game_object_id, false)
+
+	self._unit_to_extension_map[unit]:register_servo_skull(skull_unit)
 end
 
 return EventSynchronizerSystem

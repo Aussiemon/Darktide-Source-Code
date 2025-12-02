@@ -326,6 +326,14 @@ local formative_event_options = {
 			},
 		},
 	},
+	{
+		name = "None",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
 }
 local formative_event_options_by_id = {}
 

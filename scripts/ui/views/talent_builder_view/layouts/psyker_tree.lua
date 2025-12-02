@@ -9,7 +9,8 @@ return {
 	version = 24,
 	nodes = {
 		{
-			icon = "content/ui/textures/icons/talents/psyker/psyker_default_general_talent",
+			cost = 0,
+			icon = "content/ui/materials/frames/talents/starting_points/starting_point_psyker",
 			max_points = 1,
 			talent = "not_selected",
 			type = "start",
@@ -30,6 +31,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "psyker_1",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_1_name_2",
 			max_points = 1,
@@ -51,6 +53,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "psyker_1",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_1_name_3",
 			max_points = 1,
@@ -73,6 +76,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "psyker_1",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_warp_charge_generation_generates_toughness",
 			max_points = 1,
@@ -95,6 +99,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "psyker_1",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_4_name_2",
 			max_points = 1,
@@ -116,6 +121,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_2_name_3",
 			max_points = 1,
 			talent = "psyker_elite_kills_add_warpfire",
@@ -139,6 +145,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_base_2",
 			max_points = 1,
 			talent = "psyker_chance_to_vent_on_kill",
@@ -166,6 +173,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_2_name_3",
 			max_points = 1,
 			talent = "psyker_crits_empower_next_attack",
@@ -190,6 +198,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_5_name_3",
 			max_points = 1,
 			talent = "psyker_smite_on_hit",
@@ -208,6 +217,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_brain_burst_improved",
 			max_points = 1,
 			talent = "psyker_brain_burst_improved",
@@ -233,6 +243,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_warp_infused_shards",
 			max_points = 1,
 			talent = "psyker_grenade_throwing_knives",
@@ -259,6 +270,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_throwing_knives_piercing",
 			max_points = 1,
 			talent = "psyker_throwing_knives_piercing",
@@ -277,6 +289,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_chain_lightning",
 			max_points = 1,
 			talent = "psyker_grenade_chain_lightning",
@@ -304,6 +317,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_aura_kinetic_presence",
 			max_points = 1,
 			talent = "psyker_aura_damage_vs_elites",
@@ -329,6 +343,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_ability_increase_brain_burst_speed",
 			max_points = 1,
 			talent = "psyker_ability_increase_brain_burst_speed",
@@ -347,6 +362,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_aura_seers_presence",
 			max_points = 1,
 			talent = "psyker_cooldown_aura_improved",
@@ -369,6 +385,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_shout_vent_warp_charge",
 			max_points = 1,
 			talent = "psyker_shout_vent_warp_charge",
@@ -393,6 +410,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_ability_overcharge_stance",
 			max_points = 1,
 			talent = "psyker_combat_ability_stance",
@@ -420,6 +438,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_shout_reduces_warp_charge_generation",
 			max_points = 1,
 			talent = "psyker_shout_reduces_warp_charge_generation",
@@ -442,6 +461,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_shout_damage_per_warp_charge",
 			max_points = 1,
 			talent = "psyker_discharge_damage_debuff",
@@ -461,6 +481,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_warpfire_on_shout",
 			max_points = 1,
 			talent = "psyker_warpfire_on_shout",
@@ -480,6 +501,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_overcharge_weakspot_kill_bonuses",
 			max_points = 1,
 			talent = "psyker_overcharge_weakspot_kill_bonuses",
@@ -501,6 +523,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_overcharge_increased_movement_speed",
 			max_points = 1,
 			talent = "psyker_overcharge_increased_movement_speed",
@@ -519,6 +542,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_throwing_knives_reduced_cooldown",
 			max_points = 1,
 			talent = "psyker_throwing_knives_cast_speed",
@@ -537,6 +561,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_aura_gunslinger_aura",
 			max_points = 1,
 			talent = "psyker_aura_crit_chance_aura",
@@ -561,6 +586,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_5_name_2",
 			max_points = 1,
 			talent = "psyker_spread_warpfire_on_kill",
@@ -586,6 +612,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_3_name_2",
 			max_points = 1,
 			talent = "psyker_2_tier_3_name_2",
@@ -614,6 +641,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_4_name_3",
 			max_points = 1,
 			talent = "psyker_venting_improvements",
@@ -634,6 +662,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_2_name_2",
 			max_points = 1,
 			talent = "psyker_kills_stack_other_weapon_damage",
@@ -655,6 +684,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_overcharge_reduced_warp_charge",
 			max_points = 1,
 			talent = "psyker_overcharge_reduced_warp_charge",
@@ -676,6 +706,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_chain_lightning_improved_target_buff",
 			max_points = 1,
 			talent = "psyker_chain_lightning_improved_target_buff",
@@ -694,6 +725,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_4_name_2",
 			max_points = 1,
 			talent = "psyker_warp_charge_reduces_toughness_damage_taken",
@@ -715,6 +747,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_4_name_1",
 			max_points = 1,
 			talent = "psyker_dodge_after_crits",
@@ -737,6 +770,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_4_name_3",
 			max_points = 1,
 			talent = "psyker_improved_dodge",
@@ -758,6 +792,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_1_name_3",
 			max_points = 1,
 			talent = "psyker_increased_vent_speed",
@@ -781,6 +816,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_based_on_warp_charge",
 			max_points = 1,
 			talent = "psyker_damage_based_on_warp_charge",
@@ -802,6 +838,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_2_name_1",
 			max_points = 1,
 			talent = "psyker_guaranteed_crit_on_multiple_weakspot_hits",
@@ -824,6 +861,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_1_tier_3_name_1",
 			max_points = 1,
 			talent = "psyker_coherency_aura_size_increase",
@@ -848,6 +886,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_4_name_1",
 			max_points = 1,
 			talent = "psyker_block_costs_warp_charge",
@@ -871,6 +910,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_ability_warp_barrier",
 			max_points = 1,
 			talent = "psyker_combat_ability_force_field",
@@ -897,6 +937,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_2_name_3",
 			max_points = 1,
@@ -919,6 +960,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			group_name = "",
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_4_name_1",
 			max_points = 1,
@@ -938,6 +980,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_sphere_shield",
 			max_points = 1,
 			talent = "psyker_sphere_shield",
@@ -959,6 +1002,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_shield_extra_charge",
 			max_points = 1,
 			talent = "psyker_shield_extra_charge",
@@ -977,6 +1021,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_5",
 			type = "stat",
@@ -1000,6 +1045,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_ranged_damage_node_buff_medium_4",
 			type = "stat",
@@ -1024,6 +1070,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_melee_damage_node_buff_medium_4",
 			type = "stat",
@@ -1048,6 +1095,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_keystone_warp_syphon",
 			max_points = 1,
 			talent = "psyker_passive_souls_from_elite_kills",
@@ -1072,6 +1120,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_keystone_unnatural_talent",
 			max_points = 1,
 			talent = "psyker_new_mark_passive",
@@ -1095,6 +1144,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_keystone_empowered_psyche",
 			max_points = 1,
 			talent = "psyker_empowered_ability",
@@ -1118,6 +1168,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_2_name_2",
 			max_points = 1,
 			talent = "psyker_reduced_warp_charge_cost_and_venting_speed",
@@ -1137,6 +1188,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_1_name_1",
 			max_points = 1,
 			talent = "psyker_toughness_on_soul",
@@ -1156,6 +1208,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_5_name_2",
 			max_points = 1,
 			talent = "psyker_empowered_grenades_passive_improved",
@@ -1177,6 +1230,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_5_name_1",
 			max_points = 1,
 			talent = "psyker_empowered_chain_lightnings_replenish_toughness_to_allies",
@@ -1195,6 +1249,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_empowered_ability_on_elite_kills",
 			max_points = 1,
 			talent = "psyker_empowered_ability_on_elite_kills",
@@ -1216,6 +1271,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_mark_increased_max_stacks",
 			max_points = 1,
 			talent = "psyker_mark_increased_max_stacks",
@@ -1237,6 +1293,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_mark_kills_can_vent",
 			max_points = 1,
 			talent = "psyker_mark_kills_can_vent",
@@ -1255,6 +1312,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_mark_increased_range",
 			max_points = 1,
 			talent = "psyker_mark_increased_duration",
@@ -1276,6 +1334,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_2_name_2",
 			max_points = 1,
 			talent = "psyker_empowered_grenades_increased_max_stacks",
@@ -1295,6 +1354,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_warpfire_generate_souls",
 			max_points = 1,
 			talent = "psyker_warpfire_generate_souls",
@@ -1315,6 +1375,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_3_name_1",
 			max_points = 1,
 			talent = "psyker_aura_souls_on_kill",
@@ -1335,6 +1396,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_2_tier_5_name_1",
 			max_points = 1,
 			talent = "psyker_increased_max_souls",
@@ -1357,6 +1419,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_mark_weakspot_kills",
 			max_points = 1,
 			talent = "psyker_mark_weakspot_kills",
@@ -1376,6 +1439,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_stamina_node_buff_low_1",
 			type = "stat",
@@ -1400,6 +1464,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_movement_speed_node_buff_low_1",
 			type = "stat",
@@ -1422,6 +1487,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_4",
 			type = "stat",
@@ -1445,6 +1511,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
 			type = "stat",
@@ -1471,6 +1538,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_low_4",
 			type = "stat",
@@ -1493,6 +1561,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_warp_charge_node_buff_medium_3",
 			type = "stat",
@@ -1515,6 +1584,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_overcharge_infinite_casting",
 			max_points = 1,
 			talent = "psyker_overcharge_stance_infinite_casting",
@@ -1534,6 +1604,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_melee_attack_speed",
 			max_points = 1,
 			talent = "psyker_melee_attack_speed",
@@ -1555,6 +1626,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_cleave_from_peril",
 			max_points = 1,
 			talent = "psyker_cleave_from_peril",
@@ -1580,6 +1652,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_nearby_soulblaze_reduced_damage",
 			max_points = 1,
 			talent = "psyker_killing_enemy_with_warpfire_boosts",
@@ -1601,6 +1674,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_blocking_soulblaze",
 			max_points = 1,
 			talent = "psyker_melee_weaving",
@@ -1624,6 +1698,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_warp_glass_cannon",
 			max_points = 1,
 			talent = "psyker_warp_glass_cannon",
@@ -1643,6 +1718,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_warp_attacks_rending",
 			max_points = 1,
 			talent = "psyker_warp_attacks_rending",
@@ -1662,6 +1738,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_ranged_shots_soulblaze",
 			max_points = 1,
 			talent = "psyker_ranged_crits_vent",
@@ -1683,6 +1760,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_soulblaze_reduces_damage_taken",
 			max_points = 1,
 			talent = "psyker_reload_speed_warp_charge",
@@ -1703,6 +1781,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_chain_lightning_heavy_attacks",
 			max_points = 1,
 			talent = "psyker_chain_lightning_heavy_attacks",
@@ -1721,6 +1800,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_alternative_peril_explosion",
 			max_points = 1,
 			talent = "psyker_alternative_peril_explosion",
@@ -1740,6 +1820,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_force_staff_bonus",
 			max_points = 1,
 			talent = "psyker_force_staff_bonus",
@@ -1764,6 +1845,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_force_staff_quick_attack_bonus",
 			max_points = 1,
 			talent = "psyker_force_staff_quick_attack_bonus",
@@ -1787,6 +1869,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_to_peril_conversion",
 			max_points = 1,
 			talent = "psyker_damage_to_peril_conversion",
@@ -1807,6 +1890,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_resistance_stun_immunity",
 			max_points = 1,
 			talent = "psyker_damage_resistance_stun_immunity",
@@ -1829,6 +1913,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_vs_ogryns_and_monsters",
 			max_points = 1,
 			talent = "psyker_damage_vs_ogryns_and_monsters",
@@ -1850,6 +1935,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			icon = "content/ui/textures/icons/talents/psyker/psyker_stat_mix",
 			max_points = 1,
 			talent = "psyker_stat_mix",
@@ -1869,6 +1955,7 @@ return {
 			},
 		},
 		{
+			cost = 1,
 			max_points = 1,
 			talent = "base_crit_chance_node_buff_low_1",
 			type = "stat",

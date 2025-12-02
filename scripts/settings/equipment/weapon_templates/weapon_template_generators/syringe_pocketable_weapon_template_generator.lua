@@ -8,7 +8,7 @@ local PocketableUtils = require("scripts/settings/equipment/weapon_templates/poc
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
-local function generate_base_template(buff_name, validate_target_func, hud_icon, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use)
+local function generate_base_template(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, use_ability_charge, undroppable, auto_use)
 	local base_template = {}
 
 	base_template.action_inputs = {
@@ -17,7 +17,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 			input_sequence = {
 				{
 					input = "action_one_pressed",
-					value = true,
+					value = not auto_use and true or false,
 				},
 			},
 		},
@@ -218,6 +218,8 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 			buff_name = buff_name,
 			remove_item_from_inventory = consume_on_use,
 			validate_target_func = validate_target_func,
+			use_ability_charge = use_ability_charge,
+			ability_type = use_ability_charge and "pocketable_ability" or nil,
 		},
 		action_flair = {
 			abort_sprint = false,
@@ -347,6 +349,8 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 			remove_item_from_inventory = consume_on_use,
 			validate_target_func = validate_target_func,
 			assist_notification_type = assist_notification_type,
+			use_ability_charge = use_ability_charge,
+			ability_type = use_ability_charge and "pocketable_ability" or nil,
 		},
 		action_inspect = {
 			anim_end_event = "inspect_end",
@@ -361,53 +365,56 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 			},
 		},
 	}
-	base_template.actions.action_aim_give = {
-		aim_ready_up_time = 0,
-		allowed_during_lunge = true,
-		allowed_during_sprint = true,
-		anim_end_event = "share_aim_end",
-		anim_event = "share_aim",
-		clear_on_hold_release = true,
-		kind = "target_ally",
-		minimum_hold_time = 0.01,
-		sprint_ready_up_time = 0,
-		start_input = "aim_give",
-		stop_input = "aim_give_release",
-		uninterruptible = true,
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action"
-		end,
-		validate_target_func = PocketableUtils.validate_give_pocketable_small_target_func,
-		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
-		allowed_chain_actions = {
-			aim_give_release = {
-				action_name = "action_give",
+
+	if givable then
+		base_template.actions.action_aim_give = {
+			aim_ready_up_time = 0,
+			allowed_during_lunge = true,
+			allowed_during_sprint = true,
+			anim_end_event = "share_aim_end",
+			anim_event = "share_aim",
+			clear_on_hold_release = true,
+			kind = "target_ally",
+			minimum_hold_time = 0.01,
+			sprint_ready_up_time = 0,
+			start_input = "aim_give",
+			stop_input = "aim_give_release",
+			uninterruptible = true,
+			total_time = math.huge,
+			anim_end_event_condition_func = function (unit, data, end_reason)
+				return end_reason ~= "new_interrupting_action"
+			end,
+			validate_target_func = PocketableUtils.validate_give_pocketable_small_target_func,
+			smart_targeting_template = SmartTargetingTemplates.target_ally_close,
+			allowed_chain_actions = {
+				aim_give_release = {
+					action_name = "action_give",
+				},
+				combat_ability = {
+					action_name = "combat_ability",
+				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+				wield = {
+					action_name = "action_unwield",
+				},
 			},
-			combat_ability = {
-				action_name = "combat_ability",
+		}
+		base_template.actions.action_give = {
+			allowed_during_sprint = true,
+			anim_end_event = "share_aim_end",
+			anim_event = "share_ally",
+			assist_notification_type = "gifted",
+			give_time = 0.7,
+			kind = "give_pocketable",
+			total_time = 0.7,
+			smart_targeting_template = SmartTargetingTemplates.target_ally_close,
+			validate_target_func = PocketableUtils.validate_give_pocketable_small_target_func,
+			voice_event_data = {
+				voice_tag_concept = "on_demand_com_wheel",
+				voice_tag_id = "com_take_this",
 			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
-		},
-	}
-	base_template.actions.action_give = {
-		allowed_during_sprint = true,
-		anim_end_event = "share_aim_end",
-		anim_event = "share_ally",
-		assist_notification_type = "gifted",
-		give_time = 0.7,
-		kind = "give_pocketable",
-		total_time = 0.7,
-		smart_targeting_template = SmartTargetingTemplates.target_ally_close,
-		validate_target_func = PocketableUtils.validate_give_pocketable_small_target_func,
-		voice_event_data = {
-			voice_tag_concept = "on_demand_com_wheel",
-			voice_tag_id = "com_take_this",
-		},
-	}
+		}
+	end
 
 	table.add_missing(base_template.actions, BaseTemplateSettings.actions)
 
@@ -436,7 +443,6 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 	base_template.sprint_template = "default"
 	base_template.stamina_template = "default"
 	base_template.toughness_template = "default"
-	base_template.hud_icon = hud_icon
 	base_template.hud_icon_small = hud_icon_small
 	base_template.swap_pickup_name = pickup_name
 	base_template.give_pickup_name = pickup_name
@@ -480,6 +486,10 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon,
 		local target_unit = action_module_target_finder_component.target_unit_1
 
 		return current_action_name == "action_aim_give" and target_unit == nil
+	end
+
+	if undroppable then
+		table.insert(base_template.keywords, "undroppable")
 	end
 
 	return base_template

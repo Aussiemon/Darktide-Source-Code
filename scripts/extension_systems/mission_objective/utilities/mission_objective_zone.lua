@@ -6,15 +6,21 @@ local MissionObjectiveZone = class("MissionObjectiveZone", "MissionObjectiveBase
 
 MissionObjectiveZone.ZONE_TYPES = table.enum("none", "capture", "scan")
 
-local ZONE_TYPES = MissionObjectiveZone.ZONE_TYPES
-
 MissionObjectiveZone.init = function (self, peer_id)
 	MissionObjectiveZone.super.init(self, peer_id)
 
 	self._current_zone_progression = 0
 	self._start_counter = false
-	self._zone_type = ZONE_TYPES.none
 	self._override_marked_units = nil
+end
+
+MissionObjectiveZone.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+	MissionObjectiveZone.super.start_objective(self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+
+	local zone_synchronizer_extension = self:synchronizer_extension()
+	local stages = zone_synchronizer_extension:num_zones_in_mission_objective()
+
+	self:set_stage_count(stages)
 end
 
 MissionObjectiveZone.start_stage = function (self, stage)
@@ -46,61 +52,30 @@ MissionObjectiveZone.update_progression = function (self)
 		self:propagate_objective_increment()
 	end
 
-	local progression = 0
 	local current_progression = self:incremented_progression()
-	local progression_percent = 0
-	local zone_type = self._zone_type
+	local progression = mission_objective_zone_synchronizer_extension:zone_progression()
 
-	if zone_type == ZONE_TYPES.none then
-		zone_type = mission_objective_zone_synchronizer_extension:zone_type()
+	if current_progression < progression then
+		local progression_percent = progression / start_num_active_units
 
-		if zone_type then
-			self._zone_type = zone_type
-		end
-	end
-
-	if zone_type == ZONE_TYPES.capture then
-		progression = mission_objective_zone_synchronizer_extension:progression(ZONE_TYPES.capture)
-		progression_percent = progression / start_num_active_units
-	elseif zone_type == ZONE_TYPES.scan then
-		local zone_progression = mission_objective_zone_synchronizer_extension:zone_progression()
-		local num_zones_in_mission_objective = mission_objective_zone_synchronizer_extension:num_zones_in_mission_objective()
-
-		if self._current_zone_progression ~= zone_progression then
-			self._current_zone_progression = zone_progression
-
-			local new_progression = -current_progression
-
-			self:update_increment(new_progression)
-
-			current_progression = self:incremented_progression()
-
-			self:set_max_increment(0)
-			self:propagate_objective_increment()
-		end
-
-		progression = mission_objective_zone_synchronizer_extension:progression(ZONE_TYPES.scan)
-		progression_percent = zone_progression / num_zones_in_mission_objective
-	end
-
-	if zone_type == ZONE_TYPES.scan and current_progression < progression then
-		local increment = progression - current_progression
-
-		self:update_increment(increment)
+		self:set_increment(progression)
+		self:set_progression(progression_percent)
 		self:propagate_objective_increment()
+
+		if self:max_progression_achieved() then
+			self:stage_done()
+		end
+	end
+end
+
+MissionObjectiveZone.max_progression_achieved = function (self)
+	local mission_objective_zone_synchronizer_extension = self:synchronizer_extension()
+
+	if mission_objective_zone_synchronizer_extension:uses_servo_skull() then
+		return false
 	end
 
-	if self:has_second_progression() then
-		local second_progression = mission_objective_zone_synchronizer_extension:second_progression()
-
-		self:set_second_progression(second_progression)
-	end
-
-	self:set_progression(progression_percent)
-
-	if self:max_progression_achieved() then
-		self:stage_done()
-	end
+	return MissionObjectiveZone.super.max_progression_achieved(self)
 end
 
 MissionObjectiveZone.set_go_to_marker = function (self, unit)

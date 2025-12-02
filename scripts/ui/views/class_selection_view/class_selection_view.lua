@@ -5,12 +5,14 @@ local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_vie
 local ClassSelectionViewTestify = GameParameters.testify and require("scripts/ui/views/class_selection_view/class_selection_view_testify")
 local ContentBlueprints = require("scripts/ui/views/class_selection_view/class_selection_view_blueprints")
 local Definitions = require("scripts/ui/views/class_selection_view/class_selection_view_definitions")
+local DLCUtils = require("scripts/utilities/dlc_utils")
+local ItemUtils = require("scripts/utilities/items")
+local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
@@ -208,7 +210,7 @@ ClassSelectionView.update = function (self, dt, t, input_service)
 		Testify:poll_requests_through_handler(ClassSelectionViewTestify, self)
 	end
 
-	return ClassSelectionView.super.update(self, dt, t, input_service)
+	return ClassSelectionView.super.update(self, dt, t, self._is_in_blocked_state and input_service:null_service() or input_service)
 end
 
 ClassSelectionView._on_continue_pressed = function (self)
@@ -216,6 +218,140 @@ ClassSelectionView._on_continue_pressed = function (self)
 		self:_play_sound(UISoundEvents.character_create_class_confirm)
 	end
 
+	local profile = self._character_create:profile()
+	local archetype = profile.archetype
+
+	if not archetype.requires_dlc_reconciliation then
+		self._is_in_blocked_state = false
+
+		Managers.event:trigger("event_create_new_character_continue")
+
+		return
+	end
+
+	self._widgets_by_name.continue_button.visible = false
+	self._widgets_by_name.continue_button.disabled = true
+	self._is_in_blocked_state = true
+
+	local product_ids = DLCUtils.get_ids_for_auth_method(archetype.requires_dlc_reconciliation, Backend:get_auth_method())
+	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(product_ids) or Promise.resolved({
+		show_popup_function = nil,
+		product_ids = product_ids,
+	})
+
+	self._promise_container:cancel_on_destroy(product_id_promise)
+	product_id_promise:next(callback(self, "_cb_on_product_ids_fetched"), function (error)
+		Log.error("ClassSelectionView", "error fetching dlc ids '%s'", error)
+
+		self._widgets_by_name.continue_button.visible = true
+		self._widgets_by_name.continue_button.disabled = false
+		self._is_in_blocked_state = false
+
+		return Promise.resolved()
+	end)
+end
+
+ClassSelectionView._cb_on_product_ids_fetched = function (self, promise_data)
+	local promise
+
+	if promise_data.product_ids == nil then
+		promise = Promise.resolved({
+			dlcUpdates = {},
+		})
+	else
+		promise = Managers.backend.interfaces.external_payment:reconcile_dlc(promise_data.product_ids)
+	end
+
+	promise = self._promise_container:cancel_on_destroy(promise)
+
+	Managers.event:trigger("event_start_waiting", promise, LoadingStateData.WAIT_REASON.backend)
+	promise:next(function (dlc_data)
+		self:_cb_on_dlc_reconcile_success(dlc_data, promise_data.show_popup_function)
+	end, function (error)
+		Log.error("ClassSelectionView", "error reconciling dlc '%s'", error)
+
+		self._is_in_blocked_state = false
+
+		Managers.event:trigger("event_create_new_character_continue")
+
+		return Promise.resolved()
+	end)
+end
+
+ClassSelectionView._cb_on_dlc_reconcile_success = function (self, data, show_popup_function)
+	if data.dlcUpdates and #data.dlcUpdates > 0 then
+		local dlc_updates = data.dlcUpdates
+
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		local delayed_gear_promise = show_popup_function and show_popup_function() or Promise.delay(1)
+
+		delayed_gear_promise:next(function ()
+			self:_trigger_item_grant_notifications_for_dlcs(dlc_updates)
+			Managers.data_service.gear:fetch_gear():next(function (gear)
+				self._character_create:refresh_gear(gear)
+
+				self._is_in_blocked_state = false
+
+				Managers.event:trigger("event_create_new_character_continue")
+			end, function (error)
+				Log.error("ClassSelectionView", "error fetching gear '%s'", error)
+
+				self._is_in_blocked_state = false
+
+				Managers.event:trigger("event_create_new_character_continue")
+			end)
+		end)
+
+		return
+	end
+
+	self._is_in_blocked_state = false
+
+	Managers.event:trigger("event_create_new_character_continue")
+end
+
+ClassSelectionView._trigger_item_grant_notifications_for_dlcs = function (self, dlc_updates)
+	for i = 1, #dlc_updates do
+		local dlc = dlc_updates[i]
+
+		for j = 1, #dlc.rewards do
+			local reward = dlc.rewards[j]
+			local gear_id = reward.gearId
+			local master_id = reward.masterId
+
+			if gear_id and master_id then
+				local item = MasterItems.get_item(master_id)
+
+				if item then
+					local item_type = item.item_type
+
+					if not table.array_contains(Managers.dlc.ITEM_TYPE_NOTIFICATION_BLACKLIST, item_type) then
+						self:_trigger_item_grant_notification(master_id)
+					end
+
+					ItemUtils.mark_item_id_as_new({
+						gear_id = gear_id,
+						item_type = item_type,
+					}, true)
+				end
+			end
+		end
+	end
+end
+
+ClassSelectionView._trigger_currency_notification = function (self, currency_type, amount)
+	Managers.event:trigger("event_add_notification_message", "currency", {
+		currency = currency_type,
+		amount = amount,
+	})
+end
+
+ClassSelectionView._trigger_item_grant_notification = function (self, master_item_id)
+	Managers.event:trigger("event_add_notification_message", "item_granted", MasterItems.get_item(master_item_id))
+end
+
+ClassSelectionView._cb_on_dlc_popup_closed = function (self)
 	Managers.event:trigger("event_create_new_character_continue")
 end
 
@@ -262,8 +398,6 @@ ClassSelectionView._on_quit_pressed = function (self)
 end
 
 ClassSelectionView.on_exit = function (self)
-	self._promise_container:delete()
-
 	if self._input_legend_element then
 		self._input_legend_element = nil
 
@@ -277,6 +411,11 @@ ClassSelectionView.on_exit = function (self)
 	end
 
 	ClassSelectionView.super.on_exit(self)
+end
+
+ClassSelectionView.destroy = function (self)
+	self._promise_container:delete()
+	ClassSelectionView.super.destroy(self)
 end
 
 ClassSelectionView._handle_input = function (self, input_service)
@@ -431,20 +570,17 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 			end
 		end
 
-		if option.archetype_selection_locked then
-			icon_style.icon.material_values.icon_unselected = option.archetype_selection_unselected_locked
-			icon_style.icon.material_values.icon_selected = option.archetype_selection_locked
+		icon_style.icon.material_values.icon_unselected = option.archetype_selection_icon
+		icon_style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon
+
+		if option.archetype_selection_icon_locked then
+			icon_style.icon.material_values.icon_unselected = option.archetype_selection_icon_locked
+			icon_style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon_locked
 		end
 
 		icon_style.icon.material_values.blur_opacity = 0
 
-		local is_archetype_available_promise = Promise.resolved({
-			available = true,
-		})
-
-		if option.is_available and option.archetype_selection_locked then
-			is_archetype_available_promise = option:is_available()
-		end
+		local is_archetype_available_promise = DLCUtils.is_archetype_available(option)
 
 		self._current_archetype_available_promise = is_archetype_available_promise
 
@@ -453,7 +589,7 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 				icon_style.icon.material_values.icon_unselected = option.archetype_selection_icon
 				icon_style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon
 
-				if option.archetype_selection_locked then
+				if option.archetype_selection_icon_locked then
 					icon_style.icon.material_values.blur_opacity = 0.1
 				end
 			end
@@ -507,8 +643,8 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 	local archetype_options_widgets = self._archetype_options_widgets
 	local selected_archetype_widget
 
-	for i = 1, #archetype_options_widgets do
-		local widget = archetype_options_widgets[i]
+	for ii = 1, #archetype_options_widgets do
+		local widget = archetype_options_widgets[ii]
 		local content = widget.content
 		local is_selected = selected_archetype.archetype_title == content.archetype_title
 
@@ -536,11 +672,7 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 		self._current_archetype_available_promise:cancel()
 	end
 
-	local is_archetype_available_promise = Promise:resolved(false)
-
-	if selected_archetype.is_available then
-		is_archetype_available_promise = selected_archetype:is_available()
-	end
+	local is_archetype_available_promise = DLCUtils.is_archetype_available(selected_archetype)
 
 	if not is_archetype_available_promise:is_fulfilled() then
 		self._widgets_by_name.continue_button.visible = false
@@ -562,7 +694,7 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 				style.icon.material_values.icon_unselected = option.archetype_selection_icon
 				style.icon.material_values.icon_selected = option.archetype_selection_highlight_icon
 
-				if option.archetype_selection_locked then
+				if option.archetype_selection_icon_locked then
 					style.icon.material_values.blur_opacity = 0.1
 				end
 			end
@@ -572,9 +704,10 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 			if result.available then
 				self:_on_continue_pressed()
 			else
-				selected_archetype:acquire_callback(function (is_success)
+				Managers.dlc:open_dlc_view(selected_archetype.requires_dlc, selected_archetype.deluxe_dlc, function (is_success)
 					if is_success then
 						self:_on_archetype_pressed(selected_archetype)
+						self._character_create:refresh_dlcs()
 					end
 				end)
 			end
@@ -592,11 +725,10 @@ ClassSelectionView._update_archetype_info = function (self)
 	local max_width = self._ui_scenegraph.archetype_info.size[1] - title_margin
 	local title = Localize(selected_archetype.archetype_title)
 	local title_style = widget.style.title
-	local title_style_options = UIFonts.get_font_options_by_style(title_style)
-	local title_width, title_height = self:_text_size(title, title_style.font_type, title_style.font_size, {
+	local title_width, title_height = self:_text_size(title, title_style, {
 		max_width,
 		2000,
-	}, title_style_options)
+	})
 	local initial_offset = widget.style.title.offset[2]
 
 	widget.style.divider.offset[2] = initial_offset + title_height + vertical_margin
@@ -816,6 +948,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 		local base_class_loadout = {
 			ability = {},
 			blitz = {},
+			pocketable = {},
 			aura = {},
 			iconics = {},
 		}
@@ -894,12 +1027,12 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			local add = false
 
 			if talent then
-				display_name = talent.display_name
+				display_name = TalentLayoutParser.talent_title(talent, 1, Color.ui_terminal(255, true))
 				description = TalentLayoutParser.talent_description(talent, 1, Color.ui_terminal(255, true))
 				add = true
 			elseif data.base_talent then
 				description = data.description
-				display_name = data.display_name
+				display_name = TalentLayoutParser.talent_title(data, 1, Color.ui_terminal(255, true))
 				add = true
 			end
 

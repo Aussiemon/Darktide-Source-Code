@@ -364,15 +364,6 @@ MinionPerceptionExtension.alert = function (self, enemy_unit, force_alert)
 			local vo_event = "alerted_idle"
 
 			Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
-		else
-			local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
-
-			if buff_extension and buff_extension:has_keyword("invisible") then
-				local breed_name = self._breed.name
-				local vo_event = "alerted_idle_invisible"
-
-				Vo.enemy_generic_vo_event(unit, vo_event, breed_name)
-			end
 		end
 	end
 end

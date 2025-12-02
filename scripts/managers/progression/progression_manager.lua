@@ -11,6 +11,7 @@ local Mastery = require("scripts/utilities/mastery")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
+local SessionStats = require("scripts/settings/stats/session_stats")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 
 local function _info(...)
@@ -790,35 +791,26 @@ end
 
 ProgressionManager._parse_team_stats = function (self, account_data)
 	local session_statistics = account_data.sessionStatistics
-	local total_kills = self:_get_session_stat(session_statistics, "team_kills") or 0
-	local total_deaths = self:_get_session_stat(session_statistics, "team_deaths") or 0
+	local team = self._session_report.team
 
-	self._session_report.team.total_kills = total_kills
-	self._session_report.team.total_deaths = total_deaths
-end
+	for _, stat in ipairs(session_statistics) do
+		local name = stat.typePath
+		local values = stat.sessionValue
 
-ProgressionManager._get_session_stat = function (self, session_statistics, stat_type)
-	for i, stat in ipairs(session_statistics) do
-		local type_path = stat.typePath
+		if not values then
+			-- Nothing
+		else
+			local should_compact = SessionStats[name] and table.size(SessionStats[name].stats) == 1
 
-		if type_path == stat_type then
-			local session_value = stat.sessionValue
+			if should_compact then
+				local first_key = next(values)
 
-			if not session_value then
-				Log.error("ProgressionManager", "Missing sessionValue for %s", stat_type)
-
-				return
+				values = values[first_key]
+			else
+				values = table.clone(values)
 			end
 
-			local value = session_value.none
-
-			if not value then
-				Log.error("ProgressionManager", "Missing sessionValue.none for %s", stat_type)
-
-				return
-			end
-
-			return value
+			team[name] = values
 		end
 	end
 end
@@ -1169,6 +1161,8 @@ local _card_animations = {
 	levelUp = EndPlayerViewAnimations.level_up_show_content,
 	salary = EndPlayerViewAnimations.salary_card_show_content,
 	weaponDrop = EndPlayerViewAnimations.item_reward_show_content,
+	havocOrder = EndPlayerViewAnimations.havoc_card_show_content,
+	track = EndPlayerViewAnimations.weapon_card_show_content,
 }
 
 ProgressionManager._calculate_report_time = function (self, profile, participant_report)

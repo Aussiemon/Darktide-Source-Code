@@ -44,6 +44,7 @@ WeaponCustomization._construct_attach_settings = function (self, unit, world, in
 		from_script_component = true,
 		from_ui_profile_spawner = false,
 		is_first_person = false,
+		item_definitions = nil,
 		world = world,
 		character_unit = unit,
 		in_editor = in_editor,
@@ -77,10 +78,10 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 		return
 	end
 
-	local item = self:get_data(unit, "item")
+	local item_name = self:get_data(unit, "item")
 
-	if item == "" then
-		Log.error("WeaponCustomization", "Item definition: %s missing for unit: %s", item, unit)
+	if item_name == "" then
+		Log.error("WeaponCustomization", "Item definition: %s missing for unit: %s", item_name, unit)
 
 		return
 	end
@@ -89,10 +90,10 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
-	local item_data = rawget(attach_settings.item_definitions, item)
+	local item_data = rawget(attach_settings.item_definitions, item_name)
 
 	if not item_data then
-		Log.error("WeaponCustomization", "Invalid item definition: %s for unit: %s", item, unit)
+		Log.error("WeaponCustomization", "Invalid item definition: %s for unit: %s", item_name, unit)
 
 		return
 	end
@@ -105,13 +106,27 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 
 	self:_spawn_item_attachments(unit, item_data, skin_data)
 
-	for _, material_override in pairs(item_data.material_overrides) do
-		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+	if item_data.material_overrides then
+		for _, material_override in pairs(item_data.material_overrides) do
+			VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+		end
 	end
 
-	if skin_data then
+	if item_data.material_override_items then
+		for _, material_override_item in pairs(item_data.material_override_items) do
+			VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override_item, self._in_editor, attach_settings.item_definitions)
+		end
+	end
+
+	if skin_data and skin_data.material_overrides then
 		for _, material_override in pairs(skin_data.material_overrides) do
 			VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+		end
+	end
+
+	if skin_data and skin_data.material_override_items then
+		for _, material_override_item in pairs(skin_data.material_override_items) do
+			VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override_item, self._in_editor, attach_settings.item_definitions)
 		end
 	end
 
@@ -136,6 +151,12 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 	for _, material_override in pairs(unit_material_overrides) do
 		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 	end
+
+	local material_override_items = self:get_data(unit, "material_override_items")
+
+	for _, material_override in pairs(material_override_items) do
+		VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override, self._in_editor, attach_settings.item_definitions)
+	end
 end
 
 WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, skin_data)
@@ -150,8 +171,8 @@ WeaponCustomization._spawn_item_attachments = function (self, unit, item_data, s
 
 		local num_attached_units = 0
 
-		for i = 1, #sorted_attachments do
-			local key = sorted_attachments[i]
+		for ii = 1, #sorted_attachments do
+			local key = sorted_attachments[ii]
 			local attachment_slot_data = attachments[key]
 			local mission_template
 			local attachment_units_by_unit = VisualLoadoutCustomization.attach_hierarchy(attachment_slot_data, skin_overrides, attach_settings, unit, item_data.name, key, false, false, false, mission_template)
@@ -188,9 +209,9 @@ end
 
 WeaponCustomization.destroy = function (self, unit, is_editor)
 	local world = self._world
-	local i = 1
+	local ii = 1
 	local array_size = 0
-	local attachment = Unit.get_data(unit, "attached_items", i)
+	local attachment = Unit.get_data(unit, "attached_items", ii)
 	local unit_array_size = Unit.data_table_size(unit, "attached_items") or 0
 
 	while array_size < unit_array_size do
@@ -202,13 +223,13 @@ WeaponCustomization.destroy = function (self, unit, is_editor)
 			end
 
 			World.destroy_unit(world, attachment)
-			Unit.set_data(unit, "attached_items", i, nil)
+			Unit.set_data(unit, "attached_items", ii, nil)
 
 			array_size = array_size + 1
 		end
 
-		i = i + 1
-		attachment = Unit.get_data(unit, "attached_items", i)
+		ii = ii + 1
+		attachment = Unit.get_data(unit, "attached_items", ii)
 	end
 end
 
@@ -260,6 +281,13 @@ WeaponCustomization.component_data = {
 		ui_name = "Material Override",
 		ui_type = "text_box_array",
 		validator = "contentpathsallowed",
+	},
+	material_override_items = {
+		category = "Attachment Item Material Overrides",
+		filter = "item",
+		size = 1,
+		ui_name = "Material Override Items",
+		ui_type = "resource_array",
 	},
 }
 

@@ -24,6 +24,7 @@ local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local MinionDissolveUtility = require("scripts/extension_systems/scripted_scenario/minion_dissolve_utility")
 local attack_results = AttackSettings.attack_results
+local attack_types = AttackSettings.attack_types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local damage_types = DamageSettings.damage_types
 local MAX_POWER_LEVEL = PowerLevelSettings.max_power_level
@@ -369,10 +370,68 @@ end
 
 local function _ensure_has_ammo(player)
 	local player_unit = player.player_unit
+	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-	local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
 
-	inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
+	if visual_loadout_extension:is_equipped("slot_primary") then
+		local primary = unit_data_extension:write_component("slot_primary")
+
+		primary.current_ammunition_reserve = primary.max_ammunition_reserve
+	end
+
+	if visual_loadout_extension:is_equipped("slot_secondary") then
+		local secondary = unit_data_extension:write_component("slot_secondary")
+
+		secondary.current_ammunition_reserve = secondary.max_ammunition_reserve
+	end
+end
+
+local function _ensure_has_special_charges(player)
+	local player_unit = player.player_unit
+	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
+	if visual_loadout_extension:is_equipped("slot_primary") then
+		local primary = unit_data_extension:write_component("slot_primary")
+
+		primary.num_special_charges = 1
+	end
+
+	if visual_loadout_extension:is_equipped("slot_secondary") then
+		local secondary = unit_data_extension:write_component("slot_secondary")
+
+		secondary.num_special_charges = 1
+	end
+end
+
+local function _ensure_no_ammo(player)
+	local player_unit = player.player_unit
+	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
+	if visual_loadout_extension:is_equipped("slot_primary") then
+		local primary = unit_data_extension:write_component("slot_primary")
+
+		Ammo.move_clip_to_reserve(primary)
+
+		local current_ammo_in_reserve = primary.current_ammunition_reserve
+
+		Ammo.remove_from_reserve(primary, current_ammo_in_reserve)
+
+		primary.num_special_charges = 0
+	end
+
+	if visual_loadout_extension:is_equipped("slot_secondary") then
+		local secondary = unit_data_extension:write_component("slot_secondary")
+
+		Ammo.move_clip_to_reserve(secondary)
+
+		local current_ammo_in_reserve = secondary.current_ammunition_reserve
+
+		Ammo.remove_from_reserve(secondary, current_ammo_in_reserve)
+
+		secondary.num_special_charges = 0
+	end
 end
 
 local function _reset_if_knocked_down(scenario_system, unit, t, reset_delay)
@@ -1167,8 +1226,9 @@ steps.use_activated_weapon_special_attack = {
 		local weapon_action_component = unit_data_extension:write_component("weapon_action")
 		local special_active = inventory_slot_component.special_active
 		local special_active_at_start = weapon_action_component.special_active_at_start
-		local valid_attack_result = attack_result == attack_results.died
-		local progress_step = (special_active or special_active_at_start) and valid_attack_result
+		local special_damage = event_data.damage_profile.name == "dual_shivs_throwing_knives"
+		local valid_attack_result = attack_result == attack_results.died or special_damage
+		local progress_step = (special_active or special_active_at_start or special_damage) and valid_attack_result
 
 		if progress_step then
 			step_data.hit_count = step_data.hit_count + 1
@@ -1761,6 +1821,90 @@ steps.veteran_ranger_blitz_prompt = {
 steps.zealot_maniac_blitz_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_display_info(TrainingGroundsInfoLookup.maniac_blitz)
+	end,
+}
+steps.broker_blitz_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.broker_blitz)
+	end,
+}
+steps.stagger_enemies_grenade_loop = {
+	events = {
+		"tg_on_attack_execute",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.stagger_count = 0
+		step_data.target_stagger_count = 5
+
+		local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			{
+				breed_name = "renegade_shocktrooper",
+				relative_position = Vector3(-1.5, 7, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+			{
+				breed_name = "renegade_gunner",
+				relative_position = Vector3(0, 8, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+			{
+				breed_name = "renegade_shocktrooper",
+				relative_position = Vector3(1.5, 7, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+		})
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local condition_met = step_data.stagger_count >= step_data.target_stagger_count
+
+		if condition_met then
+			step_data.grace_t = step_data.grace_t or t + 2.5
+
+			return t > step_data.grace_t
+		end
+
+		local player_unit = player.player_unit
+		local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
+
+		if ability_extension:remaining_ability_charges("grenade_ability") == 0 then
+			local grenade_pack_exists = ALIVE[step_data.grenade_pack_unit]
+
+			if not grenade_pack_exists then
+				local reference_unit = player.player_unit
+
+				step_data.grenade_pack_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+			end
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		local explosion = event_data.attack_type == attack_types.explosion
+
+		if _target_damaged(event_data) and explosion then
+			step_data.stagger_count = step_data.stagger_count + 1
+
+			local play_sound = false
+			local t = FixedFrame.get_latest_fixed_time()
+
+			if not step_data.last_sound_t or t > step_data.last_sound_t + 0.1 then
+				step_data.last_sound_t = t
+				play_sound = true
+			end
+
+			_set_objective_tracker_value("broker_blitz", step_data.stagger_count, play_sound)
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+
+		_despawn_pickup(step_data.grenade_pack_unit)
 	end,
 }
 steps.stun_enemies_grenade_loop = {
@@ -2765,6 +2909,8 @@ steps.sprint_dodge_flank_enemies = {
 		step_data.bridge_spawn_data = _spawn_unit_directional_unit(player, nil, nil, "sprint_dodge_bridge_vfx", t, DEFAULT_SPAWN_DURATION)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_no_ammo(player)
+
 		local bridge_ready = step_data.bridge_spawn_data.done
 
 		if not scenario_data.bridge_spawned and bridge_ready then
@@ -2821,6 +2967,8 @@ steps.sprint_dodge_kill_enemies = {
 		step_data.killed_enemies = 0
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_no_ammo(player)
+
 		local enemies = scenario_data.enemies
 		local locked_enemies = step_data.locked_enemies
 		local condition_met = true
@@ -3075,6 +3223,8 @@ steps.toughness_wait_for_kill = {
 		})
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_no_ammo(player)
+
 		return step_data.kill_count >= step_data.target_kill_count
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
@@ -3246,6 +3396,90 @@ steps.combat_ability_prompt_psyker_protectorate = {
 steps.combat_ability_prompt_adamant_buff_drone = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_display_info(TrainingGroundsInfoLookup.combat_ability_adamant)
+	end,
+}
+steps.combat_ability_prompt_broker = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_broker)
+	end,
+}
+steps.combat_ability_loop_broker = {
+	events = {
+		"tg_on_successful_dodge",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.dodge_count = 0
+		step_data.target_dodge_count = 30
+		step_data.enemies = {}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_has_ammo(player)
+
+		if step_data.dodge_count >= step_data.target_dodge_count then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_gunner",
+					relative_position = Vector3(-1, 12, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_gunner",
+					relative_position = Vector3(1, 12, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+			})
+		end
+
+		local buff_extension = ScriptUnit.has_extension(player.player_unit, "buff_system")
+		local ability_active = buff_extension and buff_extension:has_keyword("broker_combat_ability_focus")
+		local buff_name = "tg_player_unperceivable"
+		local exists = ALIVE[player.player_unit]
+		local has_buff = exists and scenario_data.unique_buffs and scenario_data.unique_buffs[buff_name]
+
+		if ability_active then
+			if has_buff then
+				_remove_unique_buff(player.player_unit, buff_name, scenario_data)
+			end
+		elseif not has_buff then
+			_add_unique_buff(player.player_unit, buff_name, scenario_data)
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		step_data.dodge_count = step_data.dodge_count + 1
+
+		_set_objective_tracker_value("combat_ability_broker", step_data.dodge_count, true)
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
 	end,
 }
 steps.combat_ability_loop_veteran_ranger = {
@@ -3830,6 +4064,68 @@ steps.weapon_special_prompt_chainsword = {
 		_display_info(TrainingGroundsInfoLookup.weapon_special_chainsword)
 	end,
 }
+steps.weapon_special_prompt_dual_shivs = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.weapon_special_dual_shivs)
+	end,
+}
+steps.use_dual_shivs_special_attack = {
+	events = {
+		"tg_on_attack_execute",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.kill_count = 0
+		step_data.target_kill_count = 3
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_has_special_charges(player)
+
+		if step_data.kill_count >= step_data.target_kill_count then
+			return true
+		end
+
+		if not HEALTH_ALIVE[step_data.enemy_unit] then
+			if not step_data.grace_timer then
+				step_data.grace_timer = t + 1
+
+				_dissolve_unit(step_data.enemy_unit, t)
+			elseif t > step_data.grace_timer then
+				step_data.grace_timer = nil
+
+				local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
+				local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+					{
+						breed_name = "renegade_melee",
+						relative_position = Vector3(0, 6, 0),
+						relative_look_direction = -Vector3.forward(),
+					},
+				})
+
+				step_data.spawned_once = true
+				step_data.enemy_unit = spawned_enemies[1]
+			end
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		local target_died = event_data.attack_result == attack_results.died
+
+		if target_died then
+			local throwing_knife = event_data.damage_profile.name == "dual_shivs_throwing_knives"
+			local toxin = event_data.damage_profile.name == "toxin_variant_3"
+
+			if throwing_knife or toxin then
+				step_data.kill_count = step_data.kill_count + 1
+
+				_set_objective_tracker_value("weapon_special_dual_shivs", step_data.kill_count, true)
+			end
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		_dissolve_unit(step_data.enemy_unit, t)
+	end,
+}
 steps.weapon_special_prompt_forcesword = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_display_info(TrainingGroundsInfoLookup.weapon_special_forcesword)
@@ -4165,6 +4461,10 @@ steps.healing_self_and_others_spawn_bot = {
 
 		scenario_data.bot_unit = bot_player.player_unit
 
+		local buff_extension = ScriptUnit.extension(scenario_data.bot_unit, "buff_system")
+
+		buff_extension:add_internally_controlled_buff("tg_no_aura_radius", t)
+
 		return true
 	end,
 }
@@ -4172,15 +4472,6 @@ steps.spawn_med_and_ammo_kits = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		do
 			local player_unit = player.player_unit
-			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-			local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
-
-			Ammo.move_clip_to_reserve(inventory_slot_component)
-
-			local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
-
-			Ammo.remove_from_reserve(inventory_slot_component, current_ammo_in_reserve)
-
 			local health_extension = ScriptUnit.extension(player_unit, "health_system")
 			local half_health = health_extension:max_health() * 0.5
 			local current_health = health_extension:current_health()
@@ -4303,6 +4594,16 @@ steps.wait_for_full_ammo = {
 
 		step_data.placed_ammo_pos = Vector3Box()
 		scenario_data.placed_units = {}
+
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
+
+		Ammo.move_clip_to_reserve(inventory_slot_component)
+
+		local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
+
+		Ammo.remove_from_reserve(inventory_slot_component, current_ammo_in_reserve)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local player_unit = player.player_unit

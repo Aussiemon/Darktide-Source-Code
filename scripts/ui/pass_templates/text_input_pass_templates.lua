@@ -4,7 +4,6 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local _math_max = math.max
 local _math_min = math.min
 local _math_clamp = math.clamp
@@ -347,7 +346,12 @@ local text_input_base = {
 				if PS5ImeDialog.is_finished() then
 					local result, text = PS5ImeDialog.close()
 
-					content.input_text = result == PS5ImeDialog.END_STATUS_OK and text or content.input_text
+					content.input_text = result == PS5ImeDialog.END_STATUS_OK and text or content.input_text or ""
+					content.caret_position = _utf8_string_length(content.input_text)
+					content.selected_text = nil
+					content._selection_start = nil
+					content._selection_end = nil
+					content.is_writing = false
 				elseif hotspot.on_pressed then
 					local is_writing = not content.is_writing
 
@@ -356,6 +360,9 @@ local text_input_base = {
 						local description = content.virtual_keyboard_description or ""
 						local input_text = content.input_text or ""
 						local max_length = content.max_length
+
+						content.selected_text = input_text
+
 						local keyboard_options = {
 							title = title,
 							placeholder = input_text,

@@ -14,6 +14,7 @@ local CLIENT_RPCS = {
 	"rpc_set_player_respawn_time",
 	"rpc_fetch_session_report",
 	"rpc_client_tag_remaining_enemies",
+	"rpc_client_tag_enemies_inside_area",
 }
 
 local function _log(...)
@@ -51,6 +52,7 @@ GameModeCoopCompleteObjective.init = function (self, game_mode_context, game_mod
 	if self._is_server then
 		Managers.event:register(self, "in_safe_volume", "in_safe_volume")
 		Managers.event:register(self, "event_tag_remaining_enemies", "_tag_remaining_enemies")
+		Managers.event:register(self, "event_tag_enemies_inside_area", "_tag_enemies_inside_area")
 
 		self._persistent_data_humans = {}
 		self._persistent_data_bots = {}
@@ -67,6 +69,7 @@ GameModeCoopCompleteObjective.destroy = function (self)
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
 		Managers.event:unregister(self, "event_tag_remaining_enemies")
+		Managers.event:unregister(self, "event_tag_enemies_inside_area")
 	else
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -280,7 +283,7 @@ GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, uni
 	GameModeCoopCompleteObjective.super.on_player_unit_spawn(self, player)
 
 	if self._is_server then
-		Managers.event:trigger("mission_buffs_event_player_spawned", player, is_respawn)
+		Managers.event:trigger("mission_buffs_event_player_spawned", player, is_respawn, unit)
 		self:_set_ready_time_to_spawn(player, nil)
 
 		if is_respawn then
@@ -324,6 +327,12 @@ GameModeCoopCompleteObjective.on_player_unit_despawn = function (self, player)
 
 	if self._is_server and respawn_settings and has_timer then
 		local time = respawn_settings.respawn_time or DEFAULT_RESPAWN_TIME
+		local mutator_respawn_modifier = Managers.state.mutator:mutator("mutator_respawn_modifier")
+
+		if mutator_respawn_modifier and mutator_respawn_modifier:is_active() then
+			time = mutator_respawn_modifier:time()
+		end
+
 		local current_time = Managers.time:time("gameplay")
 		local time_until_respawn = current_time + time
 
@@ -599,6 +608,33 @@ GameModeCoopCompleteObjective._tag_remaining_enemies = function (self)
 					outline_system:add_outline(unit, "hordes_tagged_remaining_target")
 				end
 			end
+		end
+	end
+end
+
+GameModeCoopCompleteObjective.rpc_client_tag_enemies_inside_area = function (self, channel_id, origin, radius)
+	self:_tag_enemies_inside_area(origin, radius)
+end
+
+local DEFAULT_ENEMY_SIDE_NAME = "villains"
+local BROADPHASE_RESULTS = {}
+
+GameModeCoopCompleteObjective._tag_enemies_inside_area = function (self, origin, radius)
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_client_tag_enemies_inside_area", origin, radius)
+	end
+
+	local outline_system = Managers.state.extension:system("outline_system")
+
+	if not DEDICATED_SERVER and outline_system then
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+		local num_hits = broadphase.query(broadphase, origin, radius, BROADPHASE_RESULTS, DEFAULT_ENEMY_SIDE_NAME)
+
+		for i = 1, num_hits do
+			local enemy_unit = BROADPHASE_RESULTS[i]
+
+			outline_system:add_outline(enemy_unit, "hordes_tagged_remaining_target")
 		end
 	end
 end

@@ -12,10 +12,9 @@ local HealthStateTransitions = require("scripts/extension_systems/character_stat
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Luggable = require("scripts/utilities/luggable")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local Vo = require("scripts/utilities/vo")
 local Toughness = require("scripts/utilities/toughness/toughness")
+local Vo = require("scripts/utilities/vo")
 local PlayerCharacterStateKnockedDown = class("PlayerCharacterStateKnockedDown", "PlayerCharacterStateBase")
 local assist_anims = CharacterStateAssistSettings.anim_settings.knocked_down
 local proc_events = BuffSettings.proc_events
@@ -66,7 +65,6 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 
 	local is_server = self._is_server
 	local animation_extension = self._animation_extension
-	local fx_extension = self._fx_extension
 	local health_extension = self._health_extension
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
@@ -118,7 +116,6 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateKnockedDown.super.on_exit(self, unit, t, next_state)
 
 	local is_server = self._is_server
-	local fx_extension = self._fx_extension
 	local health_extension = self._health_extension
 	local inventory_component = self._inventory_component
 	local knocked_down_state_input = self._knocked_down_state_input

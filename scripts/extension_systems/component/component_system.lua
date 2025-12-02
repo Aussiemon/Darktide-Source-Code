@@ -9,6 +9,7 @@ local RPCS = {
 	"rpc_animation_play_client",
 	"rpc_networked_unique_randomize_roll",
 	"rpc_prop_on_hit_physics",
+	"rpc_trigger_flow_on_unit",
 }
 
 ComponentSystem.init = function (self, context, system_init_data, ...)

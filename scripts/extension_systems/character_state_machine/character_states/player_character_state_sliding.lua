@@ -128,7 +128,7 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	end
 
 	if next_state == "falling" and movement_state_component.is_crouching and not Crouch.crouch_input(self._input_extension, true, false, true) and Crouch.can_exit(unit) then
-		Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+		Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, self._movement_state_component, self._locomotion_component, self._inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 	end
 
 	if next_state == "walking" then
@@ -153,7 +153,9 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local locomotion_steering = self._locomotion_steering_component
 	local locomotion = self._locomotion_component
 	local input_source = self._input_extension
-	local move_state_component = self._movement_state_component
+	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local velocity_current = locomotion.velocity_current
 
 	self._fx_extension:run_looping_sound(self._sliding_loop_alias, FX_SOURCE_NAME, nil, fixed_frame)
@@ -176,7 +178,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local flat_move_speed_sq = Vector3.length_squared(Vector3.flat(self._locomotion_component.velocity_current))
 
 	if commit_period_over or flat_move_speed_sq < 4 then
-		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t, true)
+		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t, true)
 	end
 
 	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._talent_extension, is_crouching, self._breed)
@@ -209,7 +211,7 @@ end
 PlayerCharacterStateSliding._do_material_query = function (self)
 	local length = 0.3
 	local raycast_position = self._locomotion_component.position + Vector3(0, 0, length * 0.5)
-	local hit, material, position, normal, hit_unit, hit_actor = MaterialQuery.query_material(self._physics_world, raycast_position, raycast_position - Vector3(0, 0, length), "slide")
+	local hit, material, _, _, _, _ = MaterialQuery.query_material(self._physics_world, raycast_position, raycast_position - Vector3(0, 0, length), "slide")
 
 	if hit and material then
 		return material
@@ -237,11 +239,13 @@ PlayerCharacterStateSliding._check_transition = function (self, unit, t, next_st
 	end
 
 	local anim_extension = self._animation_extension
-	local move_state_component = self._movement_state_component
+	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 
-	if commit_period_over and input_source:get("jump") and (not is_crouching or Crouch.can_exit(unit)) and move_state_component.can_jump then
+	if commit_period_over and input_source:get("jump") and (not is_crouching or Crouch.can_exit(unit)) and movement_state_component.can_jump then
 		if is_crouching then
-			Crouch.exit(unit, self._first_person_extension, anim_extension, self._weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			Crouch.exit(unit, self._first_person_extension, anim_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 		end
 
 		return "jumping"

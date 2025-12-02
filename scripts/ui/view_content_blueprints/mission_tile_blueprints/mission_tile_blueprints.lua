@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/view_content_blueprints/mission_tile_blueprints/mission_tile_blueprints.lua
 
-local Styles = require("scripts/ui/views/mission_board_view_pj/mission_board_view_styles")
-local Settings = require("scripts/ui/views/mission_board_view_pj/mission_board_view_settings")
+local Styles = require("scripts/ui/views/mission_board_view/mission_board_view_styles")
+local Settings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -9,12 +9,9 @@ local MissionTypes = require("scripts/settings/mission/mission_types")
 local Dimensions = Settings.dimensions
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local TextUtilities = require("scripts/utilities/ui/text")
 local Blueprints = {}
 local HOVERED_SIZE_MULTIPLIER = 0.1
 local SELECTED_SIZE_MULTIPLIER = 0.2
@@ -30,30 +27,47 @@ local DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY = {
 local DETAIL_FRAME_Y_OFFSET_BY_CATEGORY = {
 	common = -6,
 	default = 0,
-	event = -6,
+	event = 0,
 	maelstrom = -6,
-	story = -12,
+	story = -6,
 }
+local DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY = {
+	common = 1.6,
+	default = 1.25,
+	event = 1.85,
+	maelstrom = 1.85,
+	story = 1.85,
+	story_no_bg = 1.25,
+}
+
+local function _adjust_color(color, k)
+	if not color then
+		return {
+			255,
+			255,
+			255,
+			255,
+		}
+	end
+
+	return {
+		color[1],
+		math.clamp(color[2] * k, 0, 255),
+		math.clamp(color[3] * k, 0, 255),
+		math.clamp(color[4] * k, 0, 255),
+	}
+end
+
 local _default_text_width = Dimensions.details_width - 2 * Dimensions.sidebar_buffer
 local _internal_text_size = {
 	0,
 	2000,
 }
 
-local function text_height(ui_renderer, text, style, optional_width_delta)
-	_internal_text_size[1] = _default_text_width + (optional_width_delta or 0)
-
-	local font_options = UIFonts.get_font_options_by_style(style)
-	local _, height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, _internal_text_size, font_options)
-
-	return height
-end
-
 local function text_size(ui_renderer, text, style, optional_width_delta)
 	_internal_text_size[1] = _default_text_width + (optional_width_delta or 0)
 
-	local font_options = UIFonts.get_font_options_by_style(style)
-	local width, height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, _internal_text_size, font_options)
+	local width, height = Text.text_size(ui_renderer, text, style, _internal_text_size)
 
 	return width, height
 end
@@ -267,7 +281,8 @@ do
 			local content, style = widget.content, widget.style
 			local category = mission_data and mission_data.category or "common"
 			local palette_name = creation_context.palette_name or "default"
-			local size_modifier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local is_large = creation_context.is_large
 			local tile_size = is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
 
@@ -327,7 +342,8 @@ do
 			local is_large = creation_context.is_large
 			local tile_size = is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
 			local category = mission_data and mission_data.category or "common"
-			local size_modifier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 
 			content.fluff_frame = math.random_array_entry(Settings.fluff_frames)
 			style.fluff_frame.size = {
@@ -438,14 +454,26 @@ do
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
 			local is_large = creation_context.is_large
-			local tile_size = is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
-			local category = mission_data and mission_data.category or "common"
-			local category_data = Styles.gradient_by_category[category] or Styles.gradient_by_category.default
-			local size_modifier = Settings.mission_widgets_size_multipliers[category] or 1
-			local slected_frame_size_addition = category ~= "common" and not creation_context.skip_background_frame and 100 or 80
+			local tile_size = content.size
+			local category = mission_data and mission_data.category or "default"
+			local is_story = creation_context.is_story or category == "story"
+			local category_data = Styles.gradient_by_category[is_story and "story" or category] or Styles.gradient_by_category.default
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
+			local slected_frame_size_addition = 0
+
+			if is_story then
+				if creation_context.skip_background_frame then
+					slected_frame_size_addition = DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY.story_no_bg
+				else
+					slected_frame_size_addition = DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY.story
+				end
+			else
+				slected_frame_size_addition = DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY[category] or DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY.default
+			end
+
 			local selected_frame_size = {
-				tile_size[1] + slected_frame_size_addition,
-				tile_size[2] + slected_frame_size_addition,
+				tile_size[1] * slected_frame_size_addition,
+				tile_size[2] * slected_frame_size_addition,
 			}
 
 			style.selected_frame_detail.size = {
@@ -464,7 +492,7 @@ do
 				tile_size[1] * size_modifier,
 				tile_size[2] * size_modifier,
 			}
-			style.selected_frame_detail.offset[2] = DETAIL_FRAME_Y_OFFSET_BY_CATEGORY[category] or 0
+			style.selected_frame_detail.offset[2] = DETAIL_FRAME_Y_OFFSET_BY_CATEGORY[is_story and "story" or category] or 0
 
 			if category_data then
 				style.selected_frame_detail.default_gradient = category_data.default_gradient
@@ -539,14 +567,15 @@ do
 		init = function (widget, mission_data, creation_context)
 			local content, style = widget.content, widget.style
 			local category = mission_data and mission_data.category or "common"
-			local size_modifier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local is_large = creation_context.is_large
 			local tile_size = is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
 			local background_tile_size = is_large and {
 				600,
 				500,
 			} or Dimensions.small_mission_background_size
-			local selected_frame_multiplier = DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY[category] or DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY.default
+			local selected_frame_multiplier = DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY[is_story and "story" or category] or DETAIL_FRAME_SIZE_MULTYPLIER_BY_CATEGORY.default
 			local selected_frame_size = {
 				tile_size[1] + 80 * selected_frame_multiplier,
 				tile_size[2] + 80 * selected_frame_multiplier,
@@ -576,7 +605,7 @@ do
 			content.is_locked = creation_context.is_locked
 			content.category = category
 
-			local category_data = Styles.gradient_by_category[category] or Styles.gradient_by_category.default
+			local category_data = Styles.gradient_by_category[is_story and "story" or category] or Styles.gradient_by_category.default
 
 			style.selected_frame_glow.default_gradient = category_data.default_gradient
 			style.selected_frame_glow.selected_gradient = category_data.selected_gradient
@@ -585,7 +614,7 @@ do
 			style.background_frame.disabled_gradient = category_data.disabled_gradient
 			style.selected_frame_glow.material_values.gradient_map = category_data.selected_gradient
 			style.background_frame.material_values.gradient_map = content.is_locked and category_data.disabled_gradient or category_data.selected_gradient
-			style.background_frame.visible = mission_data.category ~= "common"
+			style.background_frame.visible = mission_data and mission_data.category ~= "common" or is_story
 			style.selected_frame_glow.visible = true
 		end,
 	}
@@ -682,7 +711,8 @@ do
 			content.expiry_game_time = mission_data.expiry_game_time
 
 			local category = mission_data and mission_data.category or "common"
-			local size_multiplier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_multiplier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local default_parent_tile_size = Dimensions.small_mission_size
 			local parent_tile_y_size = default_parent_tile_size[2] * size_multiplier
 			local timer_bar_offset = {
@@ -702,7 +732,7 @@ do
 			style.timer_bar.default_size = table.shallow_copy(style.timer_bar.size)
 			style.timer_background.default_size = table.shallow_copy(style.timer_bar.size)
 
-			local mission_type_colors = Styles.colors.color_by_mission_type and Styles.colors.color_by_mission_type[category]
+			local mission_type_colors = Styles.colors.color_by_mission_type and Styles.colors.color_by_mission_type[is_story and "story" or category]
 
 			if mission_type_colors then
 				style.timer_bar.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
@@ -710,7 +740,7 @@ do
 				style.timer_bar.hover_color = table.shallow_copy(mission_type_colors.hover_color)
 			end
 
-			style.timer_bar.visible = category ~= "story"
+			style.timer_bar.visible = not is_story
 		end,
 	}
 	local large_mission_vertical_spacing = Dimensions.sidebar_small_buffer - 8
@@ -1002,7 +1032,8 @@ do
 			local palette_name = creation_context.palette_name or "default"
 			local content, style = widget.content, widget.style
 			local category = mission_data and mission_data.category or "common"
-			local detail_colors = Styles.colors.color_by_mission_type[category] or Styles.colors.color_by_mission_type.default
+			local is_story = creation_context.is_story or category == "story"
+			local detail_colors = Styles.colors.color_by_mission_type[is_story and "story" or category] or Styles.colors.color_by_mission_type.default
 
 			style.location_frame.selected_color = table.shallow_copy(detail_colors.selected_color)
 			style.location_corner.selected_color = table.shallow_copy(detail_colors.selected_color)
@@ -1012,7 +1043,7 @@ do
 			style.location_corner.default_color = content.is_locked and table.shallow_copy(detail_colors.disabled_color) or table.shallow_copy(detail_colors.default_color)
 
 			local initial_size = creation_context.is_large and Dimensions.large_mission_size or Dimensions.small_mission_size
-			local size_modifier = Settings.mission_widgets_size_multipliers[category] or 1
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local image_modifier = 1
 			local location_lock_size = creation_context.is_large and 75.60000000000001 or 47.040000000000006
 
@@ -1093,7 +1124,7 @@ do
 			style.location_lock.visible = is_locked
 			content.is_large = creation_context.is_large
 
-			local mission_type_colors = Styles.colors.color_by_mission_type[category]
+			local mission_type_colors = Styles.colors.color_by_mission_type[is_story and "story" or category]
 
 			if mission_type_colors then
 				style.location_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
@@ -1199,7 +1230,7 @@ do
 				style = {
 					drop_shadow = true,
 					font_size = 18,
-					font_type = "trim_mono_bold",
+					font_type = "kode_mono_bold",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "center",
@@ -1230,19 +1261,19 @@ do
 			local mission_name = mission_data.map
 			local mission_template = MissionTemplates[mission_name]
 			local category = mission_data and mission_data.category or "common"
+			local is_story = creation_context.is_story or category == "story"
 			local icon_settings = Settings.mission_category_icons.undefined
 
 			if category ~= "maelstrom" then
-				icon_settings = Settings.mission_category_icons[category] or Settings.mission_category_icons.undefined
+				icon_settings = Settings.mission_category_icons[is_story and "story" or category] or Settings.mission_category_icons.undefined
 			else
-				icon_settings = Settings.mission_category_icons[category] or Settings.mission_category_icons.undefined
+				icon_settings = Settings.mission_category_icons[is_story and "story" or category] or Settings.mission_category_icons.undefined
 			end
 
 			content.mission_type_icon = icon_settings.mission_board_icon
 
 			local is_locked = creation_context.is_locked
-			local mission_category = mission_data.category
-			local category_data = Styles.gradient_by_category[mission_category] or Styles.gradient_by_category.default
+			local category_data = Styles.gradient_by_category[is_story and "story" or category] or Styles.gradient_by_category.default
 			local noise_offset = _generate_noise_offset(-6, 6)
 			local mission_icon_offset = {
 				style.mission_type_icon.offset[1] + noise_offset[1],
@@ -1292,12 +1323,13 @@ do
 
 			local text_key = icon_settings.name or "n/a"
 			local localized_text = Localize(text_key)
+			local is_story = creation_context.is_story or category == "story"
 
-			if category == "story" then
+			if is_story then
 				local display_order = creation_context.display_order or ""
 
 				if display_order and display_order ~= "" then
-					local roman_numaral = TextUtilities.convert_to_roman_numerals(display_order)
+					local roman_numaral = Text.convert_to_roman_numerals(display_order)
 
 					localized_text = string.format("%s %s", localized_text, roman_numaral)
 				end
@@ -1410,8 +1442,9 @@ do
 
 			local is_locked = creation_context.is_locked
 			local mission_category = mission_data.category
-			local category_colors = Styles.colors.color_by_mission_type[mission_category] or Styles.colors.color_by_mission_type.default
-			local category_data = Styles.gradient_by_category[mission_category] or Styles.gradient_by_category.default
+			local is_story = creation_context.is_story or mission_category == "story"
+			local category_colors = Styles.colors.color_by_mission_type[is_story and "story" or mission_category] or Styles.colors.color_by_mission_type.default
+			local category_data = Styles.gradient_by_category[is_story and "story" or mission_category] or Styles.gradient_by_category.default
 
 			style.main_objective_frame.default_gradient = category_data.default_gradient
 			style.main_objective_frame.selected_gradient = category_data.selected_gradient
@@ -1505,7 +1538,9 @@ do
 		init = function (widget, mission_data, creation_context)
 			local palette_name = creation_context.palette_name or "default"
 			local content, style = widget.content, widget.style
-			local category_colors = Styles.colors.color_by_mission_type[mission_category] or Styles.colors.color_by_mission_type.default
+			local mission_category = mission_data and mission_data.category or "common"
+			local is_story = creation_context.is_story or mission_category == "story"
+			local category_colors = Styles.colors.color_by_mission_type[is_story and "story" or mission_category] or Styles.colors.color_by_mission_type.default
 
 			style.side_objective_background.color = Styles.colors[palette_name].background
 			style.side_objective_frame.default_color = category_colors.corner_color
@@ -1549,7 +1584,7 @@ do
 
 				content.side_objective_icon = mission_data.flags.side and side_mission_template and icon
 
-				local category_data = Styles.gradient_by_category[mission_category] or Styles.gradient_by_category.default
+				local category_data = Styles.gradient_by_category[is_story and "story" or mission_category] or Styles.gradient_by_category.default
 
 				style.side_objective_icon.default_gradient = category_data.default_gradient
 				style.side_objective_icon.selected_gradient = category_data.selected_gradient
@@ -1847,7 +1882,8 @@ do
 			end
 
 			local category = mission_data and mission_data.category or "common"
-			local size_multiplier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_multiplier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local default_parent_tile_size = Dimensions.small_mission_size
 			local parent_tile_y_size = default_parent_tile_size[2] * size_multiplier
 
@@ -1986,7 +2022,7 @@ do
 				value_id = "banner_text",
 				style = {
 					font_size = 14,
-					font_type = "trim_mono_bold",
+					font_type = "kode_mono_bold",
 					horizontal_alignment = "center",
 					text_horizontal_alignment = "right",
 					text_vertical_alignment = "bottom",
@@ -2149,7 +2185,7 @@ do
 				value_id = "header_text",
 				style = {
 					font_size = 14,
-					font_type = "trim_mono_medium",
+					font_type = "kode_mono_medium",
 					horizontal_alignment = "center",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "top",
@@ -2265,7 +2301,7 @@ do
 				value_id = "display_order_text",
 				style = {
 					font_size = 16,
-					font_type = "trim_mono_medium",
+					font_type = "kode_mono_medium",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "center",
 					text_vertical_alignment = "center",
@@ -2418,18 +2454,19 @@ do
 			}
 
 			local category = mission_data.category or "default"
-			local size_multiplier = Settings.mission_widgets_size_multipliers[category] or 1
+			local is_story = creation_context.is_story or category == "story"
+			local size_multiplier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
 			local default_parent_tile_size = Dimensions.small_mission_size
 			local parent_tile_y_size = default_parent_tile_size[2] * size_multiplier
-			local roman_numeral = TextUtilities.convert_to_roman_numerals(display_order)
+			local roman_numeral = Text.convert_to_roman_numerals(display_order)
 
 			content.display_order_text = roman_numeral
 			content.default_display_order_text = roman_numeral
-			style.display_order_background.visible = category == "story"
-			style.display_order_text_frame.visible = category == "story"
-			style.display_order_text.visible = category == "story"
+			style.display_order_background.visible = is_story
+			style.display_order_text_frame.visible = is_story
+			style.display_order_text.visible = is_story
 
-			local mission_type_colors = Styles.colors.color_by_mission_type[category] or Styles.colors.color_by_mission_type.default
+			local mission_type_colors = Styles.colors.color_by_mission_type[is_story and "story" or category] or Styles.colors.color_by_mission_type.default
 
 			style.display_order_text.text_color = table.shallow_copy(mission_type_colors.default_color)
 			style.display_order_text_frame.color = table.shallow_copy(mission_type_colors.default_color)
@@ -2439,6 +2476,415 @@ do
 			style.display_order_text_frame.hover_color = table.shallow_copy(mission_type_colors.hover_color)
 			style.display_order_text.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
 			style.display_order_text_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
+		end,
+	}
+	local highest_difficulty_completed_icon = {
+		pass_templates = {},
+		init = function (widget, mission_data, creation_context)
+			return
+		end,
+	}
+	local tile_button_background_hotspot = {
+		pass_templates = {
+			{
+				content_id = "hotspot",
+				pass_type = "hotspot",
+				style_id = "hotspot",
+				style = {
+					anim_hover_speed = 10,
+					anim_select_speed = 10,
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+				},
+				content = {
+					on_hover_sound = UISoundEvents.mission_board_node_hover,
+					on_pressed_sound = UISoundEvents.mission_board_node_pressed,
+				},
+			},
+			{
+				pass_type = "rect",
+				style_id = "background",
+				style = {
+					horizontal_alignment = "center",
+					vertical_alignment = "center",
+					offset = {
+						0,
+						0,
+						-1,
+					},
+					default_offset = {
+						0,
+						0,
+						-1,
+					},
+				},
+			},
+			{
+				pass_type = "texture",
+				style_id = "background_frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
+				value_id = "background_frame",
+				style = {
+					horizontal_alignment = "center",
+					scale_to_material = true,
+					vertical_alignment = "center",
+					offset = {
+						0,
+						0,
+						2,
+					},
+					default_offset = {
+						0,
+						0,
+						2,
+					},
+				},
+				change_function = function (content, style, animations, dt)
+					color_by_selection_state(content, style, animations, dt)
+				end,
+			},
+			{
+				pass_type = "texture",
+				style_id = "selected_frame_detail",
+				value = "content/ui/materials/mission_board/mission_frame_selected_corner",
+				style = {
+					anim_hover_speed = 2.5,
+					anim_select_speed = 2.5,
+					horizontal_alignment = "center",
+					scale_to_material = true,
+					vertical_alignment = "center",
+					offset = {
+						0,
+						0,
+						-1,
+					},
+					default_size = Dimensions.small_mission_size,
+					material_values = {},
+				},
+				change_function = function (content, style, animations, dt)
+					local hotspot = content.hotspot
+					local is_selected = hotspot.is_selected
+					local is_selected_mission_board = hotspot.is_selected_mission_board
+					local is_focused = hotspot.is_focused
+
+					_update_size_by_selection_state(content, style, animations, dt)
+
+					local was_selected = style.is_selected
+					local currently_selected = is_selected or is_focused or is_selected_mission_board
+
+					if was_selected ~= currently_selected then
+						style.is_selected = currently_selected
+
+						if currently_selected then
+							style.material_values.gradient_map = style.selected_gradient
+						else
+							style.material_values.gradient_map = style.default_gradient
+						end
+					end
+
+					style.color[1] = 255 * hotspot.anim_select_progress
+				end,
+			},
+		},
+		init = function (widget, mission_data, creation_context)
+			local content, style = widget.content, widget.style
+			local category = mission_data and mission_data.category or "common"
+			local palette_name = creation_context.palette_name or "default"
+			local is_story = creation_context.is_story or category == "story"
+			local size_modifier = Settings.mission_widgets_size_multipliers[is_story and "story" or category] or 1
+			local is_large = creation_context.is_large
+			local tile_size = content.size or Dimensions.static_widget_size
+
+			style.background.size = {
+				tile_size[1],
+				tile_size[2],
+			}
+			style.background.default_size = {
+				tile_size[1],
+				tile_size[2],
+			}
+			style.hotspot.size = {
+				tile_size[1],
+				tile_size[2],
+			}
+			style.hotspot.default_size = {
+				tile_size[1],
+				tile_size[2],
+			}
+			style.background_frame.size = {
+				tile_size[1],
+				tile_size[2],
+			}
+			style.background_frame.default_size = {
+				tile_size[1],
+				tile_size[2],
+			}
+
+			local mission_type_colors = Styles.colors.color_by_mission_type.default
+
+			style.background_frame.color = table.shallow_copy(mission_type_colors.default_color)
+			style.background_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
+			style.background_frame.selected_color = table.shallow_copy(mission_type_colors.selected_color)
+			style.background_frame.hover_color = table.shallow_copy(mission_type_colors.hover_color)
+			style.background_frame.disabled_color = table.shallow_copy(mission_type_colors.disabled_color)
+			style.selected_frame_detail.size = {
+				tile_size[1],
+				tile_size[2] + 32,
+			}
+			style.selected_frame_detail.default_size = {
+				tile_size[1],
+				tile_size[2] + 32,
+			}
+			style.selected_frame_detail.offset[2] = 0
+
+			local category_data = Styles.gradient_by_category.default
+
+			if category_data then
+				style.selected_frame_detail.default_gradient = category_data.default_gradient
+				style.selected_frame_detail.selected_gradient = category_data.selected_gradient
+				style.selected_frame_detail.material_values.gradient_map = category_data.selected_gradient
+			end
+
+			style.background.color = {
+				255,
+				0,
+				0,
+				0,
+			}
+			content.is_locked = creation_context.is_locked
+		end,
+	}
+	local tile_button_icon = {
+		pass_templates = {
+			{
+				pass_type = "texture",
+				style_id = "static_button_icon",
+				value = "content/ui/materials/base/ui_gradient_color_base",
+				value_id = "static_button_icon",
+				style = {
+					horizontal_alignment = "left",
+					vertical_alignment = "center",
+					size = {
+						60,
+						60,
+					},
+					default_size = {
+						60,
+						60,
+					},
+					offset = {
+						0,
+						0,
+						4,
+					},
+					default_offset = {
+						0,
+						0,
+						4,
+					},
+					material_values = {
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
+						texture_map = "content/ui/textures/icons/mission_types_pj/mission_type_quick",
+					},
+				},
+				change_function = function (content, style, animations, dt)
+					gradient_map_by_category_change_function(content, style, animations, dt)
+				end,
+			},
+			{
+				pass_type = "rotated_texture",
+				style_id = "static_button_icon_frame",
+				value = "content/ui/materials/frames/frame_tile_2px",
+				value_id = "static_button_icon_frame",
+				style = {
+					horizontal_alignment = "left",
+					vertical_alignment = "center",
+					angle = math.degrees_to_radians(180),
+					size = {
+						60,
+						60,
+					},
+					default_size = {
+						60,
+						60,
+					},
+					offset = {
+						0,
+						0,
+						5,
+					},
+					default_offset = {
+						0,
+						0,
+						5,
+					},
+				},
+				change_function = function (content, style, animations, dt)
+					color_by_selection_state(content, style, animations, dt)
+				end,
+			},
+		},
+		init = function (widget, mission_data, creation_context)
+			local content, style = widget.content, widget.style
+			local category = mission_data and mission_data.category or "common"
+			local palette_name = creation_context.palette_name or "default"
+			local is_story = creation_context.is_story or category == "story"
+
+			style.static_button_icon.material_values.texture_map = creation_context.icon or "content/ui/textures/icons/mission_types_pj/mission_type_quick"
+			style.static_button_icon.size = {
+				content.size[2],
+				content.size[2],
+			}
+			style.static_button_icon.default_size = {
+				content.size[2],
+				content.size[2],
+			}
+			style.static_button_icon_frame.size = {
+				content.size[2],
+				content.size[2],
+			}
+			style.static_button_icon_frame.default_size = {
+				content.size[2],
+				content.size[2],
+			}
+
+			local mission_type_colors = Styles.colors.color_by_mission_type.default
+
+			style.static_button_icon_frame.color = table.shallow_copy(mission_type_colors.default_color)
+			style.static_button_icon_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
+			style.static_button_icon_frame.selected_color = table.shallow_copy(mission_type_colors.selected_color)
+			style.static_button_icon_frame.hover_color = table.shallow_copy(mission_type_colors.hover_color)
+
+			local category_data = Styles.gradient_by_category[is_story and "story" or category] or Styles.gradient_by_category.default
+
+			if category_data then
+				style.static_button_icon.selected_gradient = category_data.selected_gradient
+				style.static_button_icon.default_gradient = category_data.default_gradient
+				style.static_button_icon.disabled_gradient = category_data.disabled_gradient
+				style.static_button_icon.material_values.gradient_map = category_data.default_gradient
+			end
+		end,
+	}
+	local tile_button_header_text = {
+		pass_templates = {
+			{
+				pass_type = "text",
+				style_id = "static_header_text",
+				value = "",
+				value_id = "static_header_text",
+				style = {
+					font_size = 16,
+					font_type = "kode_mono_bold",
+					horizontal_alignment = "left",
+					text_horizontal_alignment = "left",
+					text_vertical_alignment = "bottom",
+					vertical_alignment = "center",
+					offset = {
+						70,
+						-4,
+						5,
+					},
+					text_color = table.shallow_copy(Styles.colors.default.terminal_text_dark),
+				},
+				change_function = function (content, style, animations, dt)
+					color_by_selection_state(content, style, animations, dt)
+
+					local hotspot = content.hotspot or content.parent.hotspot
+					local is_hovered = hotspot and hotspot.is_hover
+					local is_selected = hotspot and hotspot.is_selected
+
+					style.font_size = 16 + 1 * (hotspot.anim_hover_progress or 0) + 2 * (hotspot.anim_select_progress or 0)
+				end,
+			},
+		},
+		init = function (widget, mission_data, creation_context)
+			local content, style = widget.content, widget.style
+			local category = mission_data and mission_data.category or "common"
+			local palette_name = creation_context.palette_name or "default"
+			local is_story = creation_context.is_story or category == "story"
+			local header_text = creation_context.header_text
+
+			if not header_text then
+				style.static_header_text.visible = false
+
+				return
+			end
+
+			style.static_header_text.size = {
+				content.size[1] - content.size[2] + 4,
+				content.size[2],
+			}
+			style.static_header_text.offset[1] = content.size[2] + 4
+			content.static_header_text = header_text
+
+			local text_color = Styles.colors.default.terminal_text_dark
+
+			style.static_header_text.text_color = table.shallow_copy(text_color)
+			style.static_header_text.default_color = content.is_locked and _adjust_color(text_color, 0.5) or table.shallow_copy(text_color)
+			style.static_header_text.selected_color = _adjust_color(text_color, 1.35)
+			style.static_header_text.hover_color = _adjust_color(text_color, 1.15)
+			style.static_header_text.disabled_color = _adjust_color(text_color, 0.5)
+		end,
+	}
+	local tile_button_sub_header_text = {
+		pass_templates = {
+			{
+				pass_type = "text",
+				style_id = "static_sub_header_text",
+				value = "",
+				value_id = "static_sub_header_text",
+				style = {
+					font_size = 12,
+					font_type = "kode_mono_regular",
+					horizontal_alignment = "left",
+					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
+					vertical_alignment = "center",
+					offset = {
+						70,
+						4,
+						5,
+					},
+					text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color),
+				},
+				change_function = function (content, style, animations, dt)
+					color_by_selection_state(content, style, animations, dt)
+
+					local hotspot = content.hotspot or content.parent.hotspot
+					local is_hovered = hotspot and hotspot.is_hover
+					local is_selected = hotspot and hotspot.is_selected
+
+					style.font_size = 12 + 1 * (hotspot.anim_hover_progress or 0) + 2 * (hotspot.anim_select_progress or 0)
+				end,
+			},
+		},
+		init = function (widget, mission_data, creation_context)
+			local content, style = widget.content, widget.style
+			local category = mission_data and mission_data.category or "common"
+			local palette_name = creation_context.palette_name or "default"
+			local is_story = creation_context.is_story or category == "story"
+			local sub_header_text = creation_context.sub_header_text
+
+			if not sub_header_text then
+				style.static_sub_header_text.visible = false
+
+				return
+			end
+
+			style.static_sub_header_text.size = {
+				content.size[1] - content.size[2] + 4,
+				content.size[2],
+			}
+			style.static_sub_header_text.offset[1] = content.size[2] + 4
+			content.static_sub_header_text = sub_header_text
+
+			local text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color)
+
+			style.static_sub_header_text.text_color = table.shallow_copy(text_color)
+			style.static_sub_header_text.default_color = content.is_locked and _adjust_color(text_color, 0.5) or table.shallow_copy(text_color)
+			style.static_sub_header_text.selected_color = _adjust_color(text_color, 1.35)
+			style.static_sub_header_text.hover_color = _adjust_color(text_color, 1.15)
+			style.static_sub_header_text.disabled_color = _adjust_color(text_color, 0.5)
 		end,
 	}
 
@@ -2465,6 +2911,13 @@ do
 		mission_circumstance,
 		display_order_text,
 	}
+	Blueprints.replay_mission_upsell_tile_pass_templates = {
+		background_hotspot,
+		fluff_frame,
+		category_background_details,
+		selected_state_details,
+		mission_location,
+	}
 	Blueprints.static_mission_pass_templates = {
 		background_hotspot,
 		fluff_frame,
@@ -2473,6 +2926,12 @@ do
 		decorative_eagle,
 		banner,
 		header_text,
+	}
+	Blueprints.small_static_tile_pass_templates = {
+		tile_button_background_hotspot,
+		tile_button_icon,
+		tile_button_header_text,
+		tile_button_sub_header_text,
 	}
 end
 

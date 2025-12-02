@@ -92,6 +92,20 @@ Breed.enemy_type = function (breed_or_nil)
 	return enemy_type
 end
 
+Breed.human_sized = function (breed_or_nil)
+	if not breed_or_nil then
+		return false
+	end
+
+	local attack_breed_tags = breed_or_nil.tags
+
+	if attack_breed_tags and (attack_breed_tags.ogryn or attack_breed_tags.monster) then
+		return false
+	end
+
+	return true
+end
+
 Breed.unit_breed_or_nil = function (unit)
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 

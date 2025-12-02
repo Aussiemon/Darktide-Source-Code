@@ -191,7 +191,7 @@ TelemetryManager.post_batch = function (self, shutdown)
 		end
 
 		self:_remove_events_of_type(self._events_in_flight, "post_batch")
-		table.merge_array(self._events, self._events_in_flight)
+		table.append(self._events, self._events_in_flight)
 		table.clear(self._events_in_flight)
 
 		self._batch_in_flight = nil

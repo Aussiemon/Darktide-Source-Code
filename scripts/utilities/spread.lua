@@ -5,12 +5,12 @@ local Spread = {}
 local _spread_values
 local PI_2 = math.pi * 2
 
-Spread.add_immediate_spread = function (t, spread_template, spread_control_component, movement_state_component, spread_type, optional_num_hits)
+Spread.add_immediate_spread = function (t, spread_template, spread_control_component, movement_state_component, locomotion_component, inair_state_component, spread_type, optional_num_hits)
 	if not spread_template then
 		return
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local movement_state_settings = spread_template[weapon_movement_state]
 	local new_immediate_pitch, new_immediate_yaw = _spread_values(movement_state_settings, spread_control_component, spread_type, optional_num_hits)
 
@@ -18,12 +18,12 @@ Spread.add_immediate_spread = function (t, spread_template, spread_control_compo
 	spread_control_component.immediate_yaw = new_immediate_yaw
 end
 
-Spread.add_immediate_spread_from_shooting = function (t, spread_template, spread_control_component, movement_state_component, shooting_status_component, spread_type)
+Spread.add_immediate_spread_from_shooting = function (t, spread_template, spread_control_component, movement_state_component, locomotion_component, inair_state_component, shooting_status_component, spread_type)
 	if not spread_template then
 		return
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local movement_state_settings = spread_template[weapon_movement_state]
 	local num_shots = shooting_status_component.num_shots
 	local new_immediate_pitch, new_immediate_yaw = _spread_values(movement_state_settings, spread_control_component, spread_type, num_shots)

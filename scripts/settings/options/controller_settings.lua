@@ -848,6 +848,7 @@ settings_definitions[#settings_definitions + 1] = {
 }
 
 local template_functions = {
+	group_header = nil,
 	boolean = construct_interface_settings_boolean,
 	value_slider = construct_interface_settings_value_slider,
 	percent_slider = construct_interface_settings_percent_slider,

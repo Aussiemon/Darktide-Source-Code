@@ -2,7 +2,7 @@
 
 local Havoc = require("scripts/utilities/havoc")
 local Promise = require("scripts/foundation/utilities/promise")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local CampaignSettings = require("scripts/settings/campaign/campaign_settings")
 local Danger = require("scripts/utilities/danger")
 local MissionBoardService = class("MissionBoardService")
@@ -153,6 +153,10 @@ MissionBoardService.is_difficulty_unlocked = function (self, difficulty_name)
 	return requested_index <= current_index
 end
 
+MissionBoardService.get_campaigns_data = function (self)
+	return self._backend_interface.mission_board:get_campaigns_data()
+end
+
 MissionBoardService.get_progression_unlock_data = function (self)
 	return self._backend_interface.mission_board:get_progression_unlock_data()
 end
@@ -179,6 +183,26 @@ end
 
 MissionBoardService.get_has_character_been_asked_to_skip_campaign = function (self)
 	return self._backend_interface.mission_board:get_has_character_been_asked_to_skip_campaign()
+end
+
+MissionBoardService.is_campaign_active = function (self, campaign_id)
+	local campaigns_data = self:get_campaigns_data()
+
+	if not campaigns_data or table.is_empty(campaigns_data) then
+		return false
+	end
+
+	for _, campaign_data in pairs(campaigns_data) do
+		if campaign_data.id == campaign_id then
+			if campaign_data.active then
+				return true
+			else
+				return false
+			end
+		end
+	end
+
+	return false
 end
 
 MissionBoardService._build_campaign_order = function (self)
@@ -388,7 +412,7 @@ MissionBoardService.get_block_reason = function (self, type, key, optional_categ
 	campaign_name = Localize(campaign_name)
 
 	table.sort(missing_prerequisites)
-	table.for_each(missing_prerequisites, TextUtils.convert_to_roman_numerals)
+	table.for_each(missing_prerequisites, Text.convert_to_roman_numerals)
 
 	local chapters = table.concat(missing_prerequisites, ",")
 

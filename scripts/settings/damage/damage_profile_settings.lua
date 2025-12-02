@@ -1,7 +1,9 @@
 ﻿-- chunkname: @scripts/settings/damage/damage_profile_settings.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local armor_types = ArmorSettings.types
+local damage_types = DamageSettings.damage_types
 local damage_profile_settings = {}
 
 damage_profile_settings.default_crit_mod = 0
@@ -259,6 +261,28 @@ damage_profile_settings.finesse_crit_mod = {
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 	},
 }
+damage_profile_settings.saw_crit_mod = {
+	attack = {
+		[armor_types.unarmored] = damage_lerp_values.lerp_0_15,
+		[armor_types.armored] = damage_lerp_values.lerp_0_15,
+		[armor_types.resistant] = damage_lerp_values.lerp_0_15,
+		[armor_types.player] = damage_lerp_values.no_damage,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_15,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_15,
+		[armor_types.void_shield] = damage_lerp_values.lerp_0_05,
+	},
+	impact = {
+		[armor_types.unarmored] = damage_lerp_values.no_damage,
+		[armor_types.armored] = damage_lerp_values.no_damage,
+		[armor_types.resistant] = damage_lerp_values.no_damage,
+		[armor_types.player] = damage_lerp_values.no_damage,
+		[armor_types.berserker] = damage_lerp_values.no_damage,
+		[armor_types.super_armor] = damage_lerp_values.no_damage,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
+		[armor_types.void_shield] = damage_lerp_values.no_damage,
+	},
+}
 damage_profile_settings.no_cleave = {
 	attack = {
 		0.001,
@@ -348,6 +372,23 @@ damage_profile_settings.fold_cleave = {
 		2.5,
 		2.5,
 	},
+}
+damage_profile_settings.grenade_impact_damage_templates = {
+	broker_flash_grenade_impact = true,
+	broker_missile_launcher_impact = true,
+	fire_grenade_impact = true,
+	frag_grenade_impact = true,
+	krak_grenade_impact = true,
+	ogryn_grenade_box_cluster_impact = true,
+	ogryn_grenade_box_impact = true,
+	ogryn_grenade_impact = true,
+}
+damage_profile_settings.grenade_explosion_damage_types = {
+	[damage_types.grenade_frag] = true,
+	[damage_types.electrocution] = true,
+	[damage_types.plasma] = true,
+	[damage_types.physical] = true,
+	[damage_types.laser] = true,
 }
 
 return damage_profile_settings

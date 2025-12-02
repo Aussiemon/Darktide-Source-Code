@@ -744,6 +744,7 @@ StepperPassTemplates.terminal_stepper = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		content = {
+			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.default_select,
 		},
@@ -1225,7 +1226,7 @@ Styles.difficulty_stepper.frame_bottom = {
 }
 Styles.difficulty_stepper.difficulty_text = {
 	font_size = 34,
-	font_type = "trim_mono_medium",
+	font_type = "kode_mono_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -1336,7 +1337,7 @@ Styles.difficulty_stepper.difficulty_indicator.frame = {
 	offset = {
 		0,
 		0,
-		10,
+		20,
 	},
 	default_size = {
 		28,
@@ -1357,7 +1358,7 @@ Styles.difficulty_stepper.difficulty_indicator.background = {
 	offset = {
 		0,
 		0,
-		9,
+		19,
 	},
 	default_size = {
 		26,
@@ -1371,7 +1372,7 @@ Styles.difficulty_stepper.difficulty_indicator.background = {
 }
 Styles.difficulty_stepper.difficulty_indicator.hotspot = table.clone(Styles.difficulty_stepper.difficulty_indicator.frame)
 Styles.difficulty_stepper.difficulty_indicator.frame_fill = table.clone(Styles.difficulty_stepper.difficulty_indicator.frame)
-Styles.difficulty_stepper.difficulty_indicator.frame_fill.offset[3] = 12
+Styles.difficulty_stepper.difficulty_indicator.frame_fill.offset[3] = 22
 Styles.difficulty_stepper.difficulty_indicator.icon = {
 	size = {
 		22,
@@ -1388,7 +1389,7 @@ Styles.difficulty_stepper.difficulty_indicator.icon = {
 	offset = {
 		0,
 		0,
-		11,
+		21,
 	},
 }
 Styles.difficulty_stepper.difficulty_indicator.indicator_locked = {
@@ -1399,7 +1400,7 @@ Styles.difficulty_stepper.difficulty_indicator.indicator_locked = {
 	offset = {
 		0,
 		0,
-		13,
+		23,
 	},
 	default_size = {
 		22,

@@ -78,7 +78,7 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 
 		return Promise.resolved({})
 	end)
-	local latencies_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
+	local latencies_promise = Managers.data_service.region_latency:get_region_latencies()
 
 	return Promise.all(platform_alias_promise, cross_play_promise, platform_blocklist_promise, latencies_promise):catch(function (r)
 		return Promise.rejected("unknown_error")

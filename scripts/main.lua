@@ -3,6 +3,7 @@
 Main = Main or {}
 
 require("scripts/boot_init")
+require("scripts/foundation/utilities/log")
 require("scripts/foundation/utilities/class")
 require("scripts/foundation/utilities/patches")
 require("scripts/foundation/utilities/settings")
@@ -27,6 +28,7 @@ Main.init = function (self)
 	ParameterResolver.resolve_command_line()
 	ParameterResolver.resolve_game_parameters()
 	ParameterResolver.resolve_dev_parameters()
+	Log.load_config_from_parameters(GameParameters, DevParameters)
 
 	local fps = DEDICATED_SERVER and GameParameters.tick_rate or 30
 
@@ -136,9 +138,7 @@ function on_reload(refreshed_resources)
 end
 
 function on_activate(active)
-	if rawget(_G, "Log") then
-		Log.info("Main", "LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
-	end
+	Log.info("Main", "LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
 
 	if active and rawget(_G, "Managers") then
 		if Managers.dlc then

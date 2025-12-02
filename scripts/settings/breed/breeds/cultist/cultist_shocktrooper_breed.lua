@@ -23,6 +23,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "cultist_shocktrooper"
 local breed_data = {
+	achievement_breed_group = "shocktrooper",
 	aggro_inventory_slot = "slot_ranged_weapon",
 	base_height = 1.9,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
@@ -430,7 +431,9 @@ local breed_data = {
 	},
 	outline_config = {},
 	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller_no_suppression,
-	tokens = {},
+	tokens = {
+		pounced = nil,
+	},
 	companion_pounce_setting = {
 		companion_pounce_action = "human",
 		pounce_anim_event = "leap_attack",

@@ -184,6 +184,10 @@ MinigameBase.should_exit = function (self)
 	return self:is_completed()
 end
 
+MinigameBase.blocks_weapon_actions = function (self)
+	return false
+end
+
 MinigameBase.uses_action = function (self)
 	return true
 end

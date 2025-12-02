@@ -40,7 +40,10 @@ end
 
 SaveManager.save = function (self, optional_callback)
 	local save_info = {
+		icon = nil,
 		title = "Darktide",
+		title_id = nil,
+		user_id = nil,
 		name = self._folder_name,
 		files = {
 			{
@@ -146,6 +149,8 @@ SaveManager.load = function (self, optional_callback)
 	_info("LOADING...")
 
 	local load_info = {
+		title_id = nil,
+		user_id = nil,
 		name = self._folder_name,
 		files = {
 			{

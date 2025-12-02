@@ -2,9 +2,7 @@
 
 local Definitions = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup_definitions")
 local ViewElementTutorialPopupSettings = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")

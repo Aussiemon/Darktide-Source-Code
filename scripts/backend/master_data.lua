@@ -87,8 +87,18 @@ local function _process_batch_slice(data, max_events_per_batch, process_func)
 	end)
 end
 
+local _inject_archetype = {}
+
 local function _patch_non_released_dlcs(item_data)
-	return
+	for archetype_name, items in pairs(_inject_archetype) do
+		if items[item_data.name] then
+			item_data.archetypes = item_data.archetypes or {}
+
+			if not table.contains(item_data.archetypes, archetype_name) then
+				table.insert(item_data.archetypes, archetype_name)
+			end
+		end
+	end
 end
 
 local function _include_item_definition(item_data)
@@ -155,6 +165,7 @@ MasterData._get_local_items_metadata = function (self)
 	local promise = Promise.new()
 
 	promise:resolve({
+		url = nil,
 		version = self._local_item_version,
 	})
 

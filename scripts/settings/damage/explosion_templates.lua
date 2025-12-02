@@ -23,6 +23,7 @@ extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/setti
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_explosion_templates", explosion_templates, loaded_template_files)
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_explosion_templates", explosion_templates, loaded_template_files)
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_explosion_templates", explosion_templates, loaded_template_files)
+extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_explosion_templates", explosion_templates, loaded_template_files)
 
 for name, template in pairs(explosion_templates) do
 	if template.close_radius then

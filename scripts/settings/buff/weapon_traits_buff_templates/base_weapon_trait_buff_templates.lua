@@ -11,6 +11,7 @@ local ConditionalFunctions = require("scripts/settings/buff/helper_functions/con
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -1517,7 +1518,7 @@ base_templates.power_bonus_on_hitting_single_enemy_with_all = {
 		[stat_buffs.power_level_modifier] = 0.05,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_hit_all_pellets_on_same,
+	check_proc_func = ConditionalFunctions.all(CheckProcFunctions.on_hit_all_pellets_on_same, CheckProcFunctions.attacked_unit_is_minion),
 }
 base_templates.increased_sprint_speed = {
 	class_name = "proc_buff",
@@ -2441,6 +2442,15 @@ base_templates.increased_weakspot_damage_against_bleeding = {
 	predicted = false,
 	conditional_stat_buffs = {
 		[stat_buffs.melee_weakspot_damage_vs_bleeding] = 1,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+base_templates.increased_weakspot_damage_against_toxin_status = {
+	class_name = "buff",
+	hide_icon_in_hud = true,
+	predicted = false,
+	conditional_stat_buffs = {
+		[stat_buffs.melee_weakspot_damage_vs_toxin_status] = 1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }

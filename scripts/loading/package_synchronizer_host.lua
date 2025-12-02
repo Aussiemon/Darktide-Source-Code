@@ -220,8 +220,10 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	syncs[sync_peer_id] = syncs[sync_peer_id] or {}
 
 	local sync_data = {
+		after_sync_spawn_pose_box = nil,
 		handled_notify_clients = false,
 		handled_profile_changes = false,
+		wield_slot_after_sync = nil,
 		sync_change_id = sync_change_id,
 		changed_profile_fields = changed_profile_fields,
 	}
@@ -374,7 +376,7 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 				end
 			end
 
-			item_altered = item_altered or self:_item_instance_altered(slot_name, item, profile, new_profile)
+			item_altered = item_altered or self:_instance_or_dependency_items_altered(slot_name, profile, new_profile)
 
 			if item_altered then
 				changed_loadout_items[slot_name] = {
@@ -455,11 +457,11 @@ local function _compare_modifier_list(modifier_list_a, modifier_list_b, idintifi
 	return true
 end
 
-PackageSynchronizerHost._item_instance_altered = function (self, slot_name, item, profile, new_profile)
+PackageSynchronizerHost._item_instance_altered = function (self, slot_name, profile, new_profile)
 	local old_profile_slot_item_data = profile.loadout_item_data[slot_name]
 	local new_profile_slot_item_data = new_profile.loadout_item_data[slot_name]
-	local old_overrides = old_profile_slot_item_data.overrides
-	local new_overrides = new_profile_slot_item_data.overrides
+	local old_overrides = old_profile_slot_item_data and old_profile_slot_item_data.overrides
+	local new_overrides = new_profile_slot_item_data and new_profile_slot_item_data.overrides
 
 	if old_overrides == nil and new_overrides == nil then
 		return false
@@ -475,6 +477,55 @@ PackageSynchronizerHost._item_instance_altered = function (self, slot_name, item
 
 	if not _compare_modifier_list(old_overrides.traits, new_overrides.traits, "id", "rarity") then
 		return true
+	end
+
+	return false
+end
+
+local _checked_slots_scratch = {}
+
+PackageSynchronizerHost._instance_or_dependency_items_altered = function (self, slot_name, profile, new_profile, recursive_checked_slots)
+	if not recursive_checked_slots then
+		table.clear(_checked_slots_scratch)
+
+		recursive_checked_slots = _checked_slots_scratch
+	end
+
+	local checked_slots = recursive_checked_slots
+
+	if checked_slots[slot_name] then
+		return false
+	end
+
+	checked_slots[slot_name] = true
+
+	local altered = false
+	local previous_loadout_item_data = profile.loadout_item_data
+	local previous_item_name = previous_loadout_item_data[slot_name] and previous_loadout_item_data[slot_name].id or nil
+	local new_loadout_item_data = new_profile.loadout_item_data
+	local new_item_name = new_loadout_item_data[slot_name] and new_loadout_item_data[slot_name].id or nil
+
+	if previous_item_name ~= new_item_name then
+		return true
+	end
+
+	if self:_item_instance_altered(slot_name, profile, new_profile) then
+		return true
+	end
+
+	local slot_configuration = PlayerCharacterConstants.slot_configuration
+	local slot_dependencies = slot_configuration[slot_name].slot_dependencies
+
+	if slot_dependencies then
+		for i = 1, #slot_dependencies do
+			local slot_dependency = slot_dependencies[i]
+
+			altered = altered or self:_instance_or_dependency_items_altered(slot_dependency, profile, new_profile, checked_slots)
+
+			if altered then
+				return true
+			end
+		end
 	end
 
 	return false
@@ -1127,6 +1178,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 	end
 
 	local data = {
+		channel_id = nil,
 		enabled = false,
 		ready = false,
 		peer_states = new_peer_states,

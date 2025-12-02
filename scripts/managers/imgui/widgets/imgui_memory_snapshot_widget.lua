@@ -17,6 +17,7 @@ Widget.new = function (display_name, optional_width)
 		filter = "",
 		memory_layout_name_max_size = 0,
 		single_column = true,
+		snapshot_data = nil,
 		type = "debug_memory_snapshot",
 		window_height = 0,
 		window_width = 0,
@@ -406,11 +407,9 @@ local function validate()
 	local args = {
 		Application.argv(),
 	}
-	local memory_override_idx = table.find({
-		Application.argv(),
-	}, "--lua-heap-mb-size")
+	local memory_override_idx = table.index_of(args, "--lua-heap-mb-size")
 
-	if not memory_override_idx or (tonumber(args[15]) or 0) < 2048 then
+	if not memory_override_idx or (tonumber(args[memory_override_idx + 1]) or 0) < 2048 then
 		return false, "[Not enough lua memory. Run the game with '--lua-heap-mb-size 2048' or more]"
 	end
 

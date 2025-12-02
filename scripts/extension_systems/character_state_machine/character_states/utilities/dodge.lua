@@ -199,8 +199,9 @@ Dodge.sucessful_dodge = function (dodging_unit, attacking_unit, attack_type, dod
 		local behaviour_extension = ScriptUnit.has_extension(attacking_unit, "behavior_system")
 		local attack_action = behaviour_extension and behaviour_extension:running_action()
 		local previously_dodged = behaviour_extension and behaviour_extension.dodged_before and behaviour_extension:dodged_before(dodging_unit)
+		local dodging_unit_buff_keywords = dodging_unit_buff_extension and dodging_unit_buff_extension:keywords() or nil
 
-		Managers.stats:record_private("hook_dodged_attack", dodging_player, breed_name, attack_type, dodge_type, attack_action, previously_dodged)
+		Managers.stats:record_private("hook_dodged_attack", dodging_player, breed_name, attack_type, dodge_type, attack_action, previously_dodged, dodging_unit_buff_keywords)
 	end
 end
 

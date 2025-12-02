@@ -509,7 +509,11 @@ HordePacing._setup_next_horde = function (self, template, optional_timer_modifie
 	local horde_template
 
 	if limit_reached_for_ambush_horde then
-		horde_template = HordeTemplates.far_vector_horde
+		if template.horde_type_for_limited_ambush_hordes then
+			horde_template = HordeTemplates[template.horde_type_for_limited_ambush_hordes]
+		else
+			horde_template = HordeTemplates.far_vector_horde
+		end
 	else
 		horde_template = templates[math.random(1, #templates)]
 	end

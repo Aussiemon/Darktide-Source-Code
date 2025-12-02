@@ -161,10 +161,6 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 			extension_manager:system("weapon_system"):delete_units()
 		end
 
-		if extension_manager:has_system("mission_objective_zone_system") then
-			extension_manager:system("mission_objective_zone_system"):delete_units()
-		end
-
 		if extension_manager:has_system("fx_system") then
 			extension_manager:system("fx_system"):delete_units()
 		end

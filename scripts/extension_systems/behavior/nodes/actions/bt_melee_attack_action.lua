@@ -835,6 +835,10 @@ BtMeleeAttackAction._update_moving_attack = function (self, unit, dt, t, action_
 
 	if not action_data.ignore_animation_movement_speed and scratchpad.start_animation_wanted_movement_speed then
 		applied_movement_speed = MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+
+		if action_data.movement_speed_multiplier then
+			applied_movement_speed = applied_movement_speed * action_data.movement_speed_multiplier
+		end
 	end
 
 	if action_data.catch_up_movementspeed and applied_movement_speed and applied_movement_speed > MIN_APPLIED_MOVEMENTSPEED_FOR_CATCHUP and scratchpad.attack_timing then

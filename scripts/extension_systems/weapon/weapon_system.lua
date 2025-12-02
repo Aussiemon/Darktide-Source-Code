@@ -276,9 +276,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 							intervening_cover = not cover_has_health
 						end
 
-						local valid_target = true
-
-						if valid_target and not intervening_cover then
+						if not intervening_cover then
 							local damage_profile, damage_type
 
 							if close_hit then
@@ -312,7 +310,13 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 								local enemy_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
 								if enemy_buff_extension then
-									enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+									if type(on_hit_buff_template_name) == "table" then
+										for i = 1, #on_hit_buff_template_name do
+											enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name[i], t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+										end
+									else
+										enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+									end
 								end
 							end
 

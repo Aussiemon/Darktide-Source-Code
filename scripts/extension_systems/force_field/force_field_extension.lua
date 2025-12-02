@@ -413,7 +413,12 @@ ForceFieldExtension.on_death = function (self, t)
 	local unit = self._unit
 
 	Unit.set_unit_visibility(unit, false, true)
-	Unit.destroy_actor(unit, Unit.actor(unit, self._sphere_shield and "g_shield" or "g_wall"))
+
+	local actor = Unit.actor(unit, self._sphere_shield and "g_shield" or "g_wall")
+
+	if actor then
+		Unit.destroy_actor(unit, actor)
+	end
 
 	if self._is_server then
 		self._health_extension:send_stat_data()

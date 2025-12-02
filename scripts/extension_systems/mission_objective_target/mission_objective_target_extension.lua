@@ -130,10 +130,10 @@ MissionObjectiveTargetExtension.set_objective_name = function (self, objective_n
 	end
 end
 
-MissionObjectiveTargetExtension.set_objective_group_id = function (self, objective_group_id)
+MissionObjectiveTargetExtension.set_objective_group_id = function (self, objective_group_id, sync)
 	self._objective_group_id = objective_group_id
 
-	if self._is_server then
+	if self._is_server and sync then
 		local unit = self._unit
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local unit_is_level_unit, unit_id = unit_spawner_manager:game_object_id_or_level_index(unit)

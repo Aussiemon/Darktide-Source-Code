@@ -674,7 +674,9 @@ CameraSettings.player_dead = {
 		near_range = 0.08,
 		root_object_name = "j_camera_attach",
 		vertical_fov = 65,
-		tree_transitions = {},
+		tree_transitions = {
+			default = nil,
+		},
 		node_transitions = {
 			default = CameraTransitionTemplates.dead,
 		},

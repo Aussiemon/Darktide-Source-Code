@@ -2,6 +2,7 @@
 
 local vo_query_constants = {
 	concepts = {
+		generic_mission_vo = "generic_mission_vo",
 		interaction_vo = "interaction_vo",
 		on_demand_com_wheel = "on_demand_com_wheel",
 		on_demand_vo_tag_enemy = "on_demand_vo_tag_enemy",
@@ -26,7 +27,7 @@ local vo_query_constants = {
 		smart_tag_vo_pickup_container = "pup_container",
 		smart_tag_vo_pickup_control_rod = "pup_control_rod",
 		smart_tag_vo_pickup_deployed_ammo_crate = "pup_deployed_ammo_crate",
-		smart_tag_vo_pickup_deployed_medical_crate = "pup_deployed_medical_crate",
+		smart_tag_vo_pickup_deployed_medical_crate = "found_health_booster_low_on_health",
 		smart_tag_vo_pickup_forge_metal = "pup_forge_metal",
 		smart_tag_vo_pickup_medical_crate = "pup_medical_crate",
 		smart_tag_vo_pickup_platinum = "pup_platinum",

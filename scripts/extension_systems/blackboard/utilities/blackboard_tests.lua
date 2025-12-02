@@ -50,8 +50,10 @@ local function _test_read_component(blackboard, component_name, field_name, fiel
 end
 
 local function _init_and_run_tests(blackboard_object)
+	local original_fassert = fassert
 	local original_ferror = ferror
 
+	fassert = mockup_fassert
 	ferror = mockup_ferror
 	Blackboard = blackboard_object
 
@@ -96,6 +98,7 @@ local function _init_and_run_tests(blackboard_object)
 
 	Blackboard.validate(blackboard)
 
+	fassert = original_fassert
 	ferror = original_ferror
 end
 

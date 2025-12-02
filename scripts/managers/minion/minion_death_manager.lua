@@ -331,6 +331,26 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 	local victim_side = side_system.side_by_unit[unit]
 	local victim_buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local victim_is_bleeding = victim_buff_extension:has_keyword(buff_keywords.bleeding)
+
+	if victim_buff_extension then
+		local param_table = victim_buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.dying_unit = unit
+			param_table.attacking_unit = attacking_unit_or_nil
+			param_table.attack_type = attack_type_or_nil
+			param_table.damage_profile_name = damage_profile.name
+			param_table.damage_type = damage_type_or_nil
+			param_table.breed_name = breed.name
+			param_table.side_name = victim_side:name()
+			param_table.position = Vector3Box(victim_position)
+			param_table.tags = breed.tags
+			param_table.dying_unit_id_or_level_index = unit_id
+
+			victim_buff_extension:add_proc_event(proc_events.on_death, param_table)
+		end
+	end
+
 	local player_units = victim_side.valid_enemy_player_units
 
 	for i = 1, #player_units do

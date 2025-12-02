@@ -8,6 +8,10 @@ local blood_ball = {
 }
 local unarmored = {
 	sfx = {
+		blocked = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
@@ -45,8 +49,27 @@ local unarmored = {
 			},
 		},
 	},
-	vfx = {},
+	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		died = blood_ball,
 		damage = blood_ball,
 	},
@@ -54,6 +77,10 @@ local unarmored = {
 local armored, super_armor
 local disgustingly_resilient = {
 	sfx = {
+		blocked = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
 		weakspot_died = {
 			{
 				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
@@ -91,8 +118,27 @@ local disgustingly_resilient = {
 			},
 		},
 	},
-	vfx = {},
+	vfx = {
+		blocked = nil,
+		damage = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
+	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		died = blood_ball,
 		damage = blood_ball,
 	},
@@ -100,6 +146,14 @@ local disgustingly_resilient = {
 local resistant, berserker
 local player = {
 	sfx = {
+		blocked = nil,
+		damage_negated = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_sword_captain",
@@ -136,6 +190,14 @@ local player = {
 		},
 	},
 	vfx = {
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		died = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		damage = {
 			{
 				effects = {
@@ -154,6 +216,14 @@ local player = {
 		},
 	},
 	blood_ball = {
+		blocked = nil,
+		damage_negated = nil,
+		damage_reduced = nil,
+		dead = nil,
+		shield_blocked = nil,
+		shove = nil,
+		weakspot_damage = nil,
+		weakspot_died = nil,
 		died = blood_ball,
 		damage = blood_ball,
 	},

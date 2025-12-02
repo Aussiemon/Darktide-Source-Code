@@ -11,6 +11,7 @@ local PlayerProgressionUnlocks = require("scripts/settings/player/player_progres
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
@@ -79,8 +80,8 @@ InventoryBackgroundView.on_enter = function (self)
 
 	self:_set_preview_wield_slot_name(wielded_slot)
 
-	self._show_talents_tab = false
 	self._has_empty_talent_nodes = false
+	self._has_empty_specialization_talent_nodes = false
 
 	self:_register_event("event_inventory_view_equip_item", "event_inventory_view_equip_item")
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
@@ -89,6 +90,7 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_register_event("event_discard_items", "event_discard_items")
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 	self:_register_event("event_player_talent_node_updated", "event_player_talent_node_updated")
+	self:_register_event("event_player_specialization_talent_node_updated", "event_player_specialization_talent_node_updated")
 	self:_register_event("event_item_icon_updated", "event_item_icon_updated")
 	self:_register_event("event_switch_mark", "event_switch_mark")
 	self:_register_event("event_mastery_traits_update", "event_mastery_traits_update")
@@ -96,14 +98,18 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_setup_background_world()
 
 	local profile_archetype = profile.archetype
-	local archetype_name = profile_archetype.name
 
-	self:_setup_background_frames_by_archetype(archetype_name)
+	self:_setup_background_frames_by_archetype(profile)
 
 	local talent_layout_file_path = profile_archetype and profile_archetype.talent_layout_file_path
 
 	self._active_talent_loadout = talent_layout_file_path and require(talent_layout_file_path)
+
+	local specialization_talent_layout_file_path = profile_archetype and profile_archetype.specialization_talent_layout_file_path
+
+	self._active_specialization_talent_loadout = specialization_talent_layout_file_path and require(specialization_talent_layout_file_path)
 	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
+	self._specialization_talents_icons_package_id = Managers.data_service.specialization_talent:load_icons_for_profile(profile, "InventoryBackgroundView")
 	self._widgets_by_name.character_insigna.content.visible = false
 end
 
@@ -194,9 +200,17 @@ InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id, it
 	end)
 end
 
-InventoryBackgroundView._setup_background_frames_by_archetype = function (self, archetype_name)
+InventoryBackgroundView._setup_background_frames_by_archetype = function (self, profile)
+	local archetype = profile.archetype
 	local inventory_frames_by_archetype = UISettings.inventory_frames_by_archetype
-	local frame_textures = inventory_frames_by_archetype[archetype_name]
+	local frame_textures = inventory_frames_by_archetype[archetype.name]
+
+	if frame_textures.by_home_planet then
+		local planet = profile.lore.backstory.planet
+
+		frame_textures = frame_textures.by_home_planet[planet] or frame_textures
+	end
+
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.corner_top_left.content.texture = frame_textures.left_upper
@@ -261,7 +275,7 @@ end
 
 InventoryBackgroundView._load_portrait_icon = function (self)
 	local profile = self._presentation_profile
-	local load_cb = callback(self, "_cb_set_player_icon")
+	local load_cb = callback(self, "_cb_set_player_icon", profile)
 	local unload_cb = callback(self, "_cb_unset_player_icon")
 	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 
@@ -284,10 +298,10 @@ InventoryBackgroundView._unload_portrait_icon = function (self)
 	self._portrait_loaded_info = nil
 end
 
-InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
+InventoryBackgroundView._cb_set_player_icon = function (self, profile, grid_index, rows, columns, render_target)
 	local widget = self._widgets_by_name.character_portrait
 
-	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.texture = self:_get_player_portrait_frame_material(profile)
 
 	local material_values = widget.style.texture_portrait.material_values
 
@@ -337,12 +351,14 @@ InventoryBackgroundView._unload_portrait_frame = function (self, ui_renderer)
 	local widget = self._widgets_by_name.character_portrait
 
 	if not self.destroyed then
+		widget.content.texture = UISettings.portrait_frame_default_material
+
 		local material_values = widget.style.texture_portrait.material_values
 
 		material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
 	end
 
-	UIWidget.set_visible(widget, ui_renderer, true)
+	UIWidget.set_visible(widget, ui_renderer, false)
 
 	local icon_load_id = frame_loaded_info.icon_load_id
 
@@ -352,18 +368,19 @@ InventoryBackgroundView._unload_portrait_frame = function (self, ui_renderer)
 end
 
 InventoryBackgroundView._cb_set_player_frame = function (self, item)
-	local icon
-
-	if item.icon then
-		icon = item.icon
-	else
-		icon = "content/ui/textures/nameplates/portrait_frames/default"
-	end
-
 	local widget = self._widgets_by_name.character_portrait
 	local material_values = widget.style.texture_portrait.material_values
 
-	material_values.portrait_frame_texture = icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.texture = item.icon_material
+	else
+		widget.content.texture = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 InventoryBackgroundView._request_player_insignia = function (self, item, ui_renderer)
@@ -429,6 +446,24 @@ InventoryBackgroundView._cb_set_player_insignia = function (self, item)
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 0
 	widget.content.visible = (item.icon or item.icon_material) and true or false
+end
+
+InventoryBackgroundView._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 InventoryBackgroundView._fetch_character_progression = function (self, player)
@@ -617,9 +652,17 @@ InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 end
 
 InventoryBackgroundView.event_player_talent_node_updated = function (self, equipped_talents)
-	self:_update_has_empty_talent_nodes(equipped_talents)
+	self:_update_has_empty_talent_nodes(equipped_talents, self._current_profile_equipped_specialization_talents)
 
 	self._current_profile_equipped_talents = equipped_talents
+
+	self:_update_presets_missing_warning_marker()
+end
+
+InventoryBackgroundView.event_player_specialization_talent_node_updated = function (self, equipped_talents)
+	self:_update_has_empty_talent_nodes(self._current_profile_equipped_talents, equipped_talents)
+
+	self._current_profile_equipped_specialization_talents = equipped_talents
 
 	self:_update_presets_missing_warning_marker()
 end
@@ -748,6 +791,13 @@ InventoryBackgroundView.cb_on_clear_all_talents_pressed = function (self)
 	view_instance:cb_on_clear_all_talents_pressed()
 end
 
+InventoryBackgroundView.cb_on_help_pressed = function (self)
+	local active_view = self._active_view
+	local view_instance = Managers.ui:view_instance(active_view)
+
+	view_instance:cb_on_help_pressed()
+end
+
 InventoryBackgroundView.cb_on_item_stats_toggled = function (self)
 	local active_view = self._active_view
 	local view_instance = Managers.ui:view_instance(active_view)
@@ -777,25 +827,14 @@ InventoryBackgroundView.has_new_items_by_type = function (self, item_type)
 	return not not self._new_items_gear_ids_by_type[item_type] and not not not table.is_empty(self._new_items_gear_ids_by_type[item_type])
 end
 
-InventoryBackgroundView._update_has_empty_talent_nodes = function (self, optional_selected_nodes)
-	local has_empty_talent_nodes = false
+InventoryBackgroundView._update_has_empty_talent_nodes = function (self, optional_talent_nodes, optional_specialization_talent_nodes)
 	local player = self:_player()
 	local profile = player:profile()
 
 	if profile then
-		local talent_points = profile.talent_points or 0
-		local points_spent = 0
-
-		for widget_name, points_spent_on_node in pairs(optional_selected_nodes or profile.selected_nodes) do
-			points_spent = points_spent + points_spent_on_node
-		end
-
-		if points_spent < talent_points then
-			has_empty_talent_nodes = true
-		end
+		self._has_empty_talent_nodes = TalentLayoutParser.profile_percent_points_used(profile, optional_talent_nodes) < 1
+		self._has_empty_specialization_talent_nodes = TalentLayoutParser.profile_percent_specialization_points_used(profile, optional_specialization_talent_nodes) < 1
 	end
-
-	self._has_empty_talent_nodes = has_empty_talent_nodes
 end
 
 InventoryBackgroundView._setup_top_panel = function (self)
@@ -1512,6 +1551,75 @@ InventoryBackgroundView._setup_top_panel = function (self)
 		},
 	}
 
+	if profile_archetype.specialization_talent_layout_file_path then
+		local specialization_required_level = 5
+
+		self._views_settings[#self._views_settings + 1] = {
+			display_name = "loc_broker_stimm_builder_view_display_name",
+			view_name = "broker_stimm_builder_view",
+			update = function (content, style, dt)
+				content.hotspot.disabled = not self:is_inventory_synced()
+
+				if not self._preview_player or self._preview_player:profile().current_level < specialization_required_level then
+					content.hotspot.disabled = true
+					content.context_text = Localize("loc_requires_level", true, {
+						level = specialization_required_level,
+					})
+				else
+					content.context_text = nil
+				end
+
+				if not self._is_own_player or self._is_readonly then
+					return
+				end
+
+				content.show_alert = self._has_empty_specialization_talent_nodes
+				content.show_modified = self._warning_talent
+			end,
+			context = {
+				can_exit = true,
+				player_mode = true,
+			},
+			enter = function ()
+				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+					self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+				end
+
+				self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+			end,
+			leave = function ()
+				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
+					self.transition_animation_id = self:_stop_animation(self._transition_animation_id)
+				end
+
+				self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+
+				return {
+					force_instant_camera = true,
+				}
+			end,
+			view_context = {
+				can_exit = true,
+				player_mode = true,
+				camera_settings = {
+					{
+						"event_inventory_set_target_camera_offset",
+						is_ogryn and 5.2 or 3.5,
+						0,
+						0,
+					},
+					{
+						"event_inventory_set_target_camera_rotation",
+						false,
+					},
+					{
+						"event_inventory_set_camera_default_focus",
+					},
+				},
+			},
+		}
+	end
+
 	local views_settings = self._views_settings
 
 	for i = 1, #views_settings do
@@ -1591,7 +1699,7 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 end
 
 InventoryBackgroundView._can_swap_weapon = function (self)
-	return self._active_view ~= "talent_builder_view" and self._active_view ~= "masteries_overview_view"
+	return self._active_view ~= "talent_builder_view" and self._active_view ~= "masteries_overview_view" and self._active_view ~= "broker_stimm_builder_view"
 end
 
 InventoryBackgroundView._force_select_panel_index = function (self, index)
@@ -1627,6 +1735,7 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 		preview_profile_equipped_items = self._preview_profile_equipped_items,
 		current_profile_equipped_items = self._current_profile_equipped_items,
 		current_profile_equipped_talents = self._current_profile_equipped_talents,
+		current_profile_equipped_specialization_talents = self._current_profile_equipped_specialization_talents,
 		changeable_context = additional_context_data,
 		is_readonly = self._is_readonly,
 	}
@@ -1681,6 +1790,18 @@ InventoryBackgroundView._remove_profile_presets = function (self)
 	end
 end
 
+local talent_pages = {
+	"_active_talent_loadout",
+}
+
+table.insert(talent_pages, "_active_specialization_talent_loadout")
+
+local cached_talents = {
+	"_current_profile_equipped_talents",
+}
+
+table.insert(cached_talents, "_current_profile_equipped_specialization_talents")
+
 InventoryBackgroundView.event_on_player_preset_created = function (self, profile_preset_id)
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local active_profile_preset = active_profile_preset_id and ProfileUtils.get_profile_preset(active_profile_preset_id)
@@ -1689,12 +1810,9 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 		return
 	end
 
-	local new_loadout = {}
-	local new_talents, new_talents_version
+	local new_loadout, new_talents, new_talents_version
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_layout = self._active_talent_loadout
-	local active_layout_version = active_layout.version
 
 	if active_profile_preset then
 		local loadout = active_profile_preset.loadout
@@ -1704,33 +1822,39 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 		new_talents = talents and table.create_copy(nil, talents) or {}
 		new_talents_version = active_profile_preset.talents_version
 	else
-		local loadout = profile.loadout
+		new_loadout = {}
+		new_talents = {}
+		new_talents_version = TalentLayoutParser.talents_version(profile)
 
-		new_talents_version = active_layout_version
+		for i = 1, #talent_pages do
+			local active_layout = self[talent_pages[i]]
 
-		local current_profile_equipped_talents = self._current_profile_equipped_talents
+			if active_layout then
+				local current_profile_equipped_talents = self[cached_talents[i]]
 
-		if current_profile_equipped_talents then
-			new_talents = table.clone(current_profile_equipped_talents)
-		else
-			local selected_nodes = profile.selected_nodes
+				if current_profile_equipped_talents then
+					table.merge(new_talents, current_profile_equipped_talents)
+				else
+					local selected_nodes = profile.selected_nodes
 
-			if selected_nodes then
-				local nodes = active_layout.nodes
+					if selected_nodes then
+						local nodes = active_layout.nodes
 
-				new_talents = {}
+						for i = 1, #nodes do
+							local node = nodes[i]
+							local widget_name = node.widget_name
+							local node_tier = selected_nodes[widget_name]
 
-				for node_index_s, points_spent_on_node in pairs(selected_nodes) do
-					local node_index = tonumber(node_index_s)
-					local node = nodes[node_index]
-					local node_name = node.widget_name
-
-					new_talents[node_name] = points_spent_on_node
+							if node_tier then
+								new_talents[widget_name] = node_tier
+							end
+						end
+					end
 				end
-			else
-				new_talents = {}
 			end
 		end
+
+		local loadout = profile.loadout
 
 		for slot_name, item in pairs(loadout) do
 			if self:_valid_slot_for_archetype(slot_name) and item.gear_id then
@@ -1757,14 +1881,17 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 end
 
 InventoryBackgroundView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
-	local active_layout = self._active_talent_loadout
-	local active_layout_version = active_layout.version
+	local player = self._preview_player
+	local profile = player:profile()
+	local active_talents_version = TalentLayoutParser.talents_version(profile)
 	local previously_active_profile_preset_id = self._active_profile_preset_id
 
 	if previously_active_profile_preset_id then
-		local current_profile_equipped_talents = self._current_profile_equipped_talents
+		local all_talents = {}
 
-		ProfileUtils.save_talent_nodes_for_profile_preset(previously_active_profile_preset_id, current_profile_equipped_talents, active_layout_version)
+		TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
+		TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
+		ProfileUtils.save_talent_nodes_for_profile_preset(previously_active_profile_preset_id, all_talents, active_talents_version)
 	end
 
 	if profile_preset and profile_preset.loadout then
@@ -1788,16 +1915,18 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 
 	if profile_preset then
-		local active_talent_loadout = self._active_talent_loadout
-		local active_talent_version = active_talent_loadout.version
+		local active_talent_version = TalentLayoutParser.talents_version(profile)
 
 		if profile_preset.talents_version == active_talent_version then
-			self._current_profile_equipped_talents = profile_preset.talents or {}
+			self._current_profile_equipped_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
+			self._current_profile_equipped_specialization_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
 		else
 			self._current_profile_equipped_talents = {}
+			self._current_profile_equipped_specialization_talents = {}
 		end
 	else
 		self:_apply_current_talents_to_profile()
+		self:_apply_current_specialization_talents_to_profile()
 	end
 
 	self._active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
@@ -1842,8 +1971,9 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 
 		self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
 	else
-		local active_talent_loadout = self._active_talent_loadout
-		local active_talent_version = active_talent_loadout.version
+		local player = self._preview_player
+		local profile = player:profile()
+		local active_talent_version = TalentLayoutParser.talents_version(profile)
 		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 		for i = 1, #presets do
@@ -2093,6 +2223,7 @@ InventoryBackgroundView.on_exit = function (self)
 	self:_unload_portrait_frame(self._ui_renderer)
 	self:_unload_insignia(self._ui_renderer)
 	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
+	Managers.data_service.talents:release_icons(self._specialization_talents_icons_package_id)
 
 	if self._active_view then
 		if Managers.ui:view_active(self._active_view) then
@@ -2123,10 +2254,11 @@ InventoryBackgroundView.on_exit = function (self)
 
 	InventoryBackgroundView.super.on_exit(self)
 
-	if self._entered and not self._is_readonly and self:is_inventory_synced() then
+	if not self._is_readonly and self:is_inventory_synced() then
 		self:_equip_local_changes()
 		self:_save_current_talents_to_profile_preset()
 		self:_apply_current_talents_to_profile()
+		self:_apply_current_specialization_talents_to_profile()
 	end
 end
 
@@ -2138,11 +2270,14 @@ InventoryBackgroundView._save_current_talents_to_profile_preset = function (self
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if active_profile_preset_id then
-		local active_layout = self._active_talent_loadout
-		local active_layout_version = active_layout.version
-		local current_profile_equipped_talents = self._current_profile_equipped_talents
+		local player = self._preview_player
+		local profile = player:profile()
+		local active_talents_version = TalentLayoutParser.talents_version(profile)
+		local all_talents = {}
 
-		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, current_profile_equipped_talents, active_layout_version)
+		TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
+		TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
+		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, all_talents, active_talents_version)
 	end
 end
 
@@ -2187,13 +2322,32 @@ InventoryBackgroundView._apply_current_talents_to_profile = function (self)
 	local active_talent_loadout = self._active_talent_loadout
 
 	if active_talent_loadout then
-		local points_spent_on_nodes = self._current_profile_equipped_talents
+		local node_tiers = self._current_profile_equipped_talents
 
-		if points_spent_on_nodes then
+		if node_tiers then
 			local player = self._preview_player
 			local talent_service = Managers.data_service.talents
 
-			talent_service:set_talents_v2(player, active_talent_loadout, points_spent_on_nodes)
+			talent_service:set_talents_v2(player, active_talent_loadout, node_tiers)
+		end
+	end
+end
+
+InventoryBackgroundView._apply_current_specialization_talents_to_profile = function (self)
+	if not self._is_own_player or self._is_readonly then
+		return
+	end
+
+	local active_talent_loadout = self._active_specialization_talent_loadout
+
+	if active_talent_loadout then
+		local node_tiers = self._current_profile_equipped_specialization_talents
+
+		if node_tiers then
+			local player = self._preview_player
+			local talent_service = Managers.data_service.specialization_talent
+
+			talent_service:set_specialization_talents(player, active_talent_loadout, node_tiers)
 		end
 	end
 end
@@ -2317,7 +2471,7 @@ end
 
 InventoryBackgroundView.draw = function (self, dt, t, input_service, layer)
 	if not self:is_inventory_synced() then
-		input_service:null_service()
+		input_service = input_service:null_service()
 	end
 
 	InventoryBackgroundView.super.draw(self, dt, t, input_service, layer)
@@ -2568,7 +2722,7 @@ InventoryBackgroundView.start_present_item = function (self, item)
 	local previewer_reference_name = self._reference_name
 	local ui_weapon_spawner = UIWeaponSpawner:new(previewer_reference_name, world, camera, unit_spawner)
 
-	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation)
+	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, nil, nil, true, nil, nil)
 
 	local ignore_spin_randomness = true
 

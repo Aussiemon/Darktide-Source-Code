@@ -6,8 +6,12 @@ local PlasmagunOverheatEffects = class("PlasmagunOverheatEffects")
 local SFX_ALIAS = "weapon_overload"
 local LOOPING_SFX_ALIAS = "weapon_overload_loop"
 local LOOPING_VFX_ALIAS = "weapon_overload_loop"
-local _vfx_external_properties = {}
-local _sfx_external_properties = {}
+local _vfx_external_properties = {
+	stage = nil,
+}
+local _sfx_external_properties = {
+	stage = nil,
+}
 local _slot_components, _is_cinematic_active
 
 PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)

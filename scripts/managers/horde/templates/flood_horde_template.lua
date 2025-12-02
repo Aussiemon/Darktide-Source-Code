@@ -153,8 +153,9 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 		local breed_list = {}
 
 		for j = 1, spawns_per_location do
-			local breed_name = spawn_list[num_spawned + 1]
+			local breed_name = spawn_list[horde.spawn_list_idx]
 
+			horde.spawn_list_idx = horde.spawn_list_idx + 1
 			num_spawned = num_spawned + 1
 			breed_list[#breed_list + 1] = breed_name
 		end
@@ -177,7 +178,10 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 			local spawn_position = nearby_occluded_positions[math.random(1, #nearby_occluded_positions)]
 
 			if spawn_position then
-				local breed_name = spawn_list[i]
+				local breed_name = spawn_list[horde.spawn_list_idx]
+
+				horde.spawn_list_idx = horde.spawn_list_idx + 1
+
 				local param_table = minion_spawn_manager:request_param_table()
 
 				param_table.optional_aggro_state = aggro_states.aggroed
@@ -201,7 +205,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local wanted_position, _ = MainPathQueries.position_from_distance(check_travel_distance)
 
 	if not wanted_position then
-		Log.info("FloodHorde", "\t\tCouldn't find path position at travel distance %.2f.", check_travel_distance)
+		Log.info("FloodHorde", "'%d' \t\tCouldn't find path position at travel distance %.2f.", horde.group_id, check_travel_distance)
 
 		return num_spawned
 	end
@@ -210,7 +214,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 	local in_line_of_sight = HordeUtilities.position_has_line_of_sight_to_any_enemy_player(horde.physics_world, wanted_position, side, collision_filter)
 
 	if in_line_of_sight then
-		Log.info("FloodHorde", "\t\tFallback spawn position in line of sight of enemy player(s).")
+		Log.info("FloodHorde", "'%d' \t\tFallback spawn position in line of sight of enemy player(s).", horde.group_id)
 
 		return num_spawned
 	end
@@ -222,7 +226,10 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 		local spawn_position = HordeUtilities.try_find_spawn_position(nav_world, wanted_position, i, NUM_COLUMNS, MAX_SPAWN_POSITION_ATTEMPTS)
 
 		if spawn_position then
-			local breed_name = spawn_list[i]
+			local breed_name = spawn_list[horde.spawn_list_idx]
+
+			horde.spawn_list_idx = horde.spawn_list_idx + 1
+
 			local param_table = minion_spawn_manager:request_param_table()
 
 			param_table.optional_aggro_state = aggro_states.aggroed
@@ -235,7 +242,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 		end
 	end
 
-	Log.info("FloodHorde", "\t\tSpawned %d minions at fallback mainpath.", spawns_left)
+	Log.info("FloodHorde", "'%d' \t\tSpawned %d minions at fallback mainpath.", horde.group_id, spawns_left)
 
 	return num_spawned
 end
@@ -255,6 +262,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local horde = {
 		attempts = 0,
 		num_spawned = 0,
+		spawn_list_idx = 1,
 		template_name = horde_template.name,
 		side = side,
 		target_side = target_side,
@@ -279,7 +287,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	horde.next_flood_spawn_at = math.random_range(horde_template.spawn_frequency[1], horde_template.spawn_frequency[2])
 	horde.num_spawned = horde.num_spawned + num_spawned
 
-	Log.info("FloodHorde", "Starting flood horde, will try to spawn %d minions.", total_num_to_spawn)
+	Log.info("FloodHorde", "Starting flood horde '%d', will try to spawn '%d' minions.", horde.group_id, total_num_to_spawn)
 
 	return horde, path_position, target_unit
 end
@@ -321,11 +329,11 @@ horde_template.update = function (horde, dt, t)
 
 	if horde.num_spawned >= horde.num_to_spawn or horde.attempts > MAX_ATTEMPTS then
 		group_system:unlock_group_id(horde.group_id)
-		Log.info("FloodHorde", "Finished, spawned total %d minions.", horde.num_spawned)
+		Log.info("FloodHorde", "Finished '%d', spawned total %d minions.", horde.group_id, horde.num_spawned)
 	elseif num_spawned == 0 then
 		horde.attempts = horde.attempts + 1
 
-		Log.info("FloodHorde", "Failed to spawn minions.. trying again.. %d attempts", horde.attempts)
+		Log.info("FloodHorde", "Failed '%d' to spawn minions.. trying again.. %d attempts", horde.group_id, horde.attempts)
 	else
 		horde.attempts = 0
 

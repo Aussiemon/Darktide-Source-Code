@@ -2,7 +2,7 @@
 
 local AchievementCategories = require("scripts/settings/achievements/achievement_categories")
 local MasterItems = require("scripts/backend/master_items")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local _item_type_group_lookup = UISettings.item_type_group_lookup
 local AchievementUIHelper = {}
@@ -84,7 +84,7 @@ AchievementUIHelper.localized_title = function (achievement_definition)
 	local localized_title = Localize(achievement_definition.title, loc_title_variables ~= nil, loc_title_variables)
 
 	if flags.private_only then
-		localized_title = string.format("%s %s", localized_title, TextUtils.apply_color_to_text("", Color.terminal_text_warning_light(255, true)))
+		localized_title = string.format("%s %s", localized_title, Text.apply_color_to_text("", Color.terminal_text_warning_light(255, true)))
 	end
 
 	return localized_title
@@ -111,7 +111,7 @@ AchievementUIHelper.localized_description = function (achievement_definition, se
 
 	if flags.private_only then
 		private_description = string.format("\n %s: %s", Localize("loc_private_tag_name"), Localize("loc_private_tag_description"))
-		private_description = TextUtils.apply_color_to_text(private_description, Color.terminal_text_warning_dark(255, true))
+		private_description = Text.apply_color_to_text(private_description, Color.terminal_text_warning_dark(255, true))
 
 		if not separate_private_discription then
 			localized_description = string.format("%s%s", localized_description, private_description)
@@ -161,21 +161,7 @@ AchievementUIHelper.is_achievements_from_same_family = function (a_achievement_d
 end
 
 AchievementUIHelper.get_achievement_family_order = function (achievement_definition)
-	local family = AchievementUIHelper.get_family(achievement_definition)
-	local num_family_achievements = #family
-
-	if num_family_achievements > 1 then
-		for i = 1, num_family_achievements do
-			local family_achievement = family[i]
-			local family_achievement_id = family_achievement.id
-
-			if family_achievement_id == achievement_definition.id then
-				return i
-			end
-		end
-	end
-
-	return nil
+	return achievement_definition.family_index
 end
 
 AchievementUIHelper.add_favorite_achievement = function (id, queue_save)

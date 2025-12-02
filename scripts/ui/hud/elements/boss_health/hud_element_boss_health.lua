@@ -98,14 +98,6 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		end
 	end
 
-	local is_depleted_interrupter = boss_extension:boss_is_depleted_interrupter()
-
-	if is_depleted_interrupter then
-		localized_display_name = Localize("loc_void_depleted_prefix", true, {
-			breed = localized_display_name,
-		})
-	end
-
 	self:_set_active(true)
 
 	local health_bar_logic = HudHealthBarLogic:new(HudElementBossHealthSettings)

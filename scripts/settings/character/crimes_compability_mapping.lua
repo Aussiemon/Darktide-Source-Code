@@ -1,6 +1,10 @@
 ﻿-- chunkname: @scripts/settings/character/crimes_compability_mapping.lua
 
 local compability_map = {
+	adamant_1 = "option_13",
+	adamant_2 = "option_14",
+	adamant_3 = "option_15",
+	adamant_4 = "option_16",
 	ogryn_1 = "option_9",
 	ogryn_2 = "option_10",
 	ogryn_3 = "option_11",

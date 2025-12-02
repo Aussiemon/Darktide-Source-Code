@@ -1,197 +1,27 @@
 ﻿-- chunkname: @scripts/managers/pacing/specials_pacing/templates/havoc_specials_pacing_template.lua
 
-local DEFAULT_FORESHADOW_STINGERS = {
-	chaos_hound = "wwise/events/minions/play_enemy_chaos_hound_spawn",
-	renegade_netgunner = "wwise/events/minions/play_minion_special_netgunner_spawn",
-}
-local DEFAULT_FORESHADOW_STINGER_TIMERS = {
-	chaos_hound = 5,
-	cultist_mutant = 5,
-	renegade_netgunner = 4,
-}
-local DEFAULT_SPAWN_STINGERS = {
-	chaos_poxwalker_bomber = "wwise/events/minions/play_minion_special_poxwalker_bomber_spawn",
-	cultist_mutant = "wwise/events/minions/play_minion_special_mutant_charger_spawn",
-}
-local DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION = {
-	cultist_grenadier = "ahead",
-	renegade_grenadier = "ahead",
-	renegade_sniper = "ahead",
-}
-local DEFAULT_OPTIONAL_MAINPATH_OFFSET = {
-	cultist_grenadier = 30,
-	renegade_grenadier = 30,
-	renegade_sniper = 40,
-}
-local DEFAULT_BREEDS = {
-	all = {
-		"chaos_hound",
-		"chaos_poxwalker_bomber",
-		"cultist_mutant",
-		"grenadier",
-		"renegade_netgunner",
-		"renegade_sniper",
-		"flamer",
-	},
-	disablers = {
-		"chaos_hound",
-		"renegade_netgunner",
-		"cultist_mutant",
-	},
-	scramblers = {
-		"chaos_poxwalker_bomber",
-		"grenadier",
-		"renegade_sniper",
-		"flamer",
-	},
-}
-local DEFAULT_COORDINATED_STRIKE_BREEDS = {
-	"chaos_hound",
-	"chaos_poxwalker_bomber",
-	"cultist_mutant",
-	"renegade_netgunner",
-	"flamer",
-}
-local DEFAULT_RUSH_PREVENTION_BREEDS = {
-	"chaos_hound",
-	"cultist_mutant",
-}
-local DEFAULT_LONER_PREVENTION_BREEDS = {
-	"chaos_hound",
-	"cultist_mutant",
-	"renegade_netgunner",
-}
-local DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS = {
-	"chaos_hound",
-	"cultist_mutant",
-	"renegade_netgunner",
-}
-local FACTION_BOUND_BREEDS = {
-	flamer = {
-		cultist = "cultist_flamer",
-		renegade = "renegade_flamer",
-	},
-	grenadier = {
-		cultist = "cultist_grenadier",
-		renegade = "renegade_grenadier",
-	},
-}
-local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
-	chaos_beast_of_nurgle = 30,
-	chaos_hound = 25,
-	chaos_plague_ogryn = 30,
-	chaos_poxwalker_bomber = 35,
-	chaos_spawn = 30,
-	cultist_flamer = 20,
-	cultist_grenadier = 20,
-	cultist_mutant = 25,
-	renegade_flamer = 15,
-	renegade_grenadier = 20,
-	renegade_netgunner = 28,
-	renegade_sniper = 30,
-}
-local DEFAULT_MIN_SPAWNERS_RANGES = {
-	max = 49,
-	min = 20,
-}
-local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
-	{
-		0,
-		0,
-		1,
-		1,
-	},
-	{
-		0,
-		1,
-		1,
-		2,
-	},
-	{
-		2,
-		2,
-		3,
-		3,
-	},
-	{
-		3,
-		3,
-		3,
-		3,
-	},
-	{
-		4,
-		4,
-		4,
-		4,
-	},
-}
-local DEFAULT_DISABLER_OVERRIDE_DURATION = {
-	360,
-	240,
-	160,
-	100,
-	80,
-}
-local DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE = {
-	chaos_hound = 0.75,
-	cultist_mutant = 0.25,
-	renegade_netgunner = 0.5,
-}
-local LOW_MAX_OF_SAME = {
-	chaos_beast_of_nurgle = 1,
-	chaos_hound = 1,
-	chaos_plague_ogryn = 2,
-	chaos_poxwalker_bomber = 1,
-	chaos_spawn = 2,
-	cultist_flamer = 2,
-	cultist_grenadier = 1,
-	cultist_mutant = 1,
-	flamer = 2,
-	grenadier = 2,
-	renegade_flamer = 2,
-	renegade_grenadier = 2,
-	renegade_netgunner = 1,
-	renegade_sniper = 2,
-}
-local DEFAULT_MAX_OF_SAME = {
-	chaos_beast_of_nurgle = 1,
-	chaos_hound = 2,
-	chaos_plague_ogryn = 2,
-	chaos_poxwalker_bomber = 2,
-	chaos_spawn = 2,
-	cultist_flamer = 2,
-	cultist_grenadier = 1,
-	cultist_mutant = 3,
-	flamer = 2,
-	grenadier = 2,
-	renegade_flamer = 2,
-	renegade_grenadier = 2,
-	renegade_netgunner = 2,
-	renegade_sniper = 2,
-}
-local HIGH_MAX_OF_SAME = {
-	chaos_beast_of_nurgle = 1,
-	chaos_hound = 2,
-	chaos_plague_ogryn = 2,
-	chaos_poxwalker_bomber = 3,
-	chaos_spawn = 2,
-	cultist_flamer = 2,
-	cultist_grenadier = 2,
-	cultist_mutant = 4,
-	flamer = 2,
-	grenadier = 3,
-	renegade_flamer = 2,
-	renegade_grenadier = 2,
-	renegade_netgunner = 2,
-	renegade_sniper = 3,
-}
-local ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS = {
-	cultist_grenadier = 2,
-	cultist_mutant = 5,
-	renegade_grenadier = 2,
-	renegade_sniper = 0,
-}
+local SpecialPacingTemplateSettings = require("scripts/managers/pacing/specials_pacing/templates/special_pacing_template_settings")
+local GamemodeSpecificSettings = SpecialPacingTemplateSettings.havoc
+local ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS = GamemodeSpecificSettings.always_update_at_challange_rating_breeds
+local DEFAULT_BREEDS = SpecialPacingTemplateSettings.default_breeds
+local DEFAULT_COORDINATED_STRIKE_BREEDS = SpecialPacingTemplateSettings.default_coordinated_strike_breeds
+local DEFAULT_DISABLER_OVERRIDE_DURATION = GamemodeSpecificSettings.default_disabler_override_duration
+local DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE = GamemodeSpecificSettings.default_disabler_target_alone_player_chance
+local DEFAULT_FORESHADOW_STINGER_TIMERS = SpecialPacingTemplateSettings.default_foreshadow_stinger_timers
+local DEFAULT_FORESHADOW_STINGERS = SpecialPacingTemplateSettings.default_foreshadow_stingers
+local DEFAULT_LONER_PREVENTION_BREEDS = SpecialPacingTemplateSettings.default_loner_prevention_breeds
+local DEFAULT_MAX_OF_SAME = GamemodeSpecificSettings.default_max_of_same
+local DEFAULT_MIN_DISTANCES_FROM_TARGET = GamemodeSpecificSettings.default_min_distances_from_target
+local DEFAULT_MIN_SPAWNERS_RANGES = GamemodeSpecificSettings.default_min_spawners_ranges
+local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = GamemodeSpecificSettings.default_num_allowed_disabled_per_alive_targets
+local DEFAULT_OPTIONAL_MAINPATH_OFFSET = SpecialPacingTemplateSettings.default_optional_mainpath_offset
+local DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION = SpecialPacingTemplateSettings.default_optional_prefered_spawn_direction
+local DEFAULT_RUSH_PREVENTION_BREEDS = SpecialPacingTemplateSettings.default_rush_prevention_breeds
+local DEFAULT_SPAWN_STINGERS = SpecialPacingTemplateSettings.default_spawn_stingers
+local DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS = SpecialPacingTemplateSettings.default_speed_running_prevention_breeds
+local FACTION_BOUND_BREEDS = SpecialPacingTemplateSettings.faction_bound_breeds
+local HIGH_MAX_OF_SAME = GamemodeSpecificSettings.high_max_of_same
+local LOW_MAX_OF_SAME = GamemodeSpecificSettings.low_max_of_same
 local specials_pacing_template = {
 	name = "havoc_specials",
 	resistance_templates = {

@@ -70,7 +70,11 @@ MonsterPacing._setup_timer_based_monster_pacing = function (self, dt, t, side_id
 		boss_patrols = {},
 		monsters = {},
 	}
-	self._amount_allowed_by_type = {}
+	self._amount_allowed_by_type = {
+		boss_patrols = 0,
+		monsters = 0,
+		total = 0,
+	}
 end
 
 local function _sort_spawners(spawner_1, spawner_2)
@@ -91,7 +95,7 @@ MonsterPacing._generate_spawns = function (self, template)
 	end
 
 	local spawn_type_point_sections, num_spawn_type_sections = self._spawn_type_point_sections, self._num_spawn_type_sections
-	local _, num_sections = next(num_spawn_type_sections)
+	local num_sections = 0
 	local valid_spawn_types = table.clone(MonsterSettings.used_spawn_types)
 
 	for spawn_type, spawn_point_sections in pairs(spawn_type_point_sections) do
@@ -103,6 +107,8 @@ MonsterPacing._generate_spawns = function (self, template)
 			table.remove(valid_spawn_types, index)
 			Log.warning("MonsterPacing", "Removed %s monster spawn type since found no spawners.", spawn_type)
 		else
+			num_sections = num_sections > 0 and num_sections or current_num_sections
+
 			for i = 1, current_num_sections do
 				-- Nothing
 			end

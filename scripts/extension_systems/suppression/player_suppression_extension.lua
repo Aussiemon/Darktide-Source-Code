@@ -42,6 +42,8 @@ PlayerSuppressionExtension.init = function (self, extension_init_context, unit, 
 
 	if is_server then
 		self._movement_state_component = unit_data_extension:write_component("movement_state")
+		self._locomotion_component = unit_data_extension:write_component("locomotion")
+		self._inair_state_component = unit_data_extension:write_component("inair_state")
 		self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	end
 
@@ -154,9 +156,11 @@ PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cos
 	if num_suppression_hits >= NUM_HITS_FOR_LOW_SUPPRESSION and self._suppression_delay <= 0 then
 		local weapon_extension = self._weapon_extension
 		local movement_state_component = self._movement_state_component
+		local locomotion_component = self._locomotion_component
+		local inair_state_component = self._inair_state_component
 		local suppression_component = self._suppression_component
 		local suppression_template = weapon_extension:suppression_template()
-		local movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+		local movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 		local suppression_movement_template
 
 		if suppression_template and suppression_component then

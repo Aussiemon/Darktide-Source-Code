@@ -22,8 +22,8 @@ ProcBuff.init = function (self, context, template, start_time, instance_id, ...)
 	self._num_off_cooldown_keywords = template.off_cooldown_keywords and #template.off_cooldown_keywords
 end
 
-ProcBuff.set_buff_component = function (self, buff_component, component_keys, component_index)
-	ProcBuff.super.set_buff_component(self, buff_component, component_keys, component_index)
+ProcBuff.set_buff_component = function (self, buff_component, component_keys, component_index, predicted_params)
+	ProcBuff.super.set_buff_component(self, buff_component, component_keys, component_index, predicted_params)
 
 	local active_start_time = self._active_start_time
 
@@ -69,7 +69,7 @@ ProcBuff.set_active_start_time = function (self, active_start_time)
 	self._active_start_time = active_start_time
 end
 
-ProcBuff.is_proc_active = function (self)
+ProcBuff.is_proc_active = function (self, t)
 	local t = FixedFrame.get_latest_fixed_time()
 
 	return self:_is_proc_active(t)
@@ -182,8 +182,8 @@ ProcBuff._cooldown_duration = function (self)
 	return cooldown_duration
 end
 
-ProcBuff.update = function (self, dt, t, portable_random)
-	ProcBuff.super.update(self, dt, t, portable_random)
+ProcBuff.update = function (self, dt, t, portable_random, fixed_frame)
+	ProcBuff.super.update(self, dt, t, portable_random, fixed_frame)
 
 	local template = self._template
 	local template_data = self._template_data

@@ -3,8 +3,7 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -201,6 +200,8 @@ local grid_blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_pressed_sound = nil,
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 				},
 			},
@@ -324,8 +325,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 20
 		end,
@@ -393,8 +393,7 @@ local grid_blueprints = {
 
 			local size = content.size
 			local text_style = style.text
-			local text_options = UIFonts.get_font_options_by_style(text_style)
-			local height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
 		end,
@@ -413,6 +412,7 @@ local grid_blueprints = {
 				content_id = "hotspot",
 				pass_type = "hotspot",
 				content = {
+					on_released_sound = nil,
 					on_hover_sound = UISoundEvents.default_mouse_hover,
 					on_pressed_sound = UISoundEvents.default_click,
 				},

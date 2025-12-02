@@ -4,14 +4,10 @@ local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mi
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local MissionSettings = require("scripts/settings/mission/mission_settings")
+local SideMissionTypes = require("scripts/settings/mission/side_mission_types")
 local mission_zone_ids = MissionSettings.mission_zone_ids
 local mission_game_mode_names = MissionSettings.mission_game_mode_names
-local main_objective_names = MissionSettings.main_objective_names
 local MissionManager = class("MissionManager")
-
-MissionManager.SIDE_MISSION_TYPES = table.enum("none", "luggable", "collect")
-
-local SIDE_MISSION_TYPES = MissionManager.SIDE_MISSION_TYPES
 
 MissionManager._num_missions_started = MissionManager._num_missions_started or 0
 
@@ -32,7 +28,7 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 	self._mission = mission
 	self._side_mission = side_mission
 	self._side_mission_name = side_mission_name
-	self._side_mission_type = SIDE_MISSION_TYPES.none
+	self._side_mission_type = SideMissionTypes.none
 
 	if side_mission then
 		self:_set_side_mission_type(side_mission.side_objective_type)
@@ -80,11 +76,11 @@ MissionManager._set_side_mission_type = function (self, side_mission_type)
 end
 
 MissionManager.side_mission_is_pickup = function (self)
-	return self._side_mission_type == SIDE_MISSION_TYPES.collect
+	return self._side_mission_type == SideMissionTypes.collect
 end
 
 MissionManager.side_mission_is_luggable = function (self)
-	return self._side_mission_type == SIDE_MISSION_TYPES.luggable
+	return self._side_mission_type == SideMissionTypes.luggable
 end
 
 MissionManager.mission_type_index = function (self)

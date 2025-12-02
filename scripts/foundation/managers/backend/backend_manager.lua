@@ -46,7 +46,7 @@ BackendManager.init = function (self, default_headers_ctr)
 	self._promises = {}
 	self._initialized = false
 	self._initialize_promise = nil
-	self.interfaces = BackendInterface.new()
+	self.interfaces = BackendInterface:new()
 	self._slow_internet_notification_delay = 0
 	self._slow_internet_ticks = PriorityQueue:new()
 	self._inflight_title_requests = {}
@@ -344,13 +344,7 @@ BackendManager.authenticate = function (self)
 end
 
 BackendManager._set_backend_env = function (self, title_service_url)
-	local match = string.match(title_service_url, "https://bsp%-td%-(.+)%.fatsharkgames%.se")
-
-	if match then
-		rawset(_G, "BACKEND_ENV", match)
-	end
-
-	match = string.match(title_service_url, "https://bsp%-td%-(.+)%.atoma%.cloud")
+	local match = string.match(title_service_url, "https://bsp%-td%-(.+)%.atoma%.cloud") or string.match(title_service_url, "https://bsp%-td%-(.+)%.fatsharkgames%.se")
 
 	if match then
 		rawset(_G, "BACKEND_ENV", match)
@@ -382,6 +376,10 @@ BackendManager.title_request = function (self, path, options)
 	end
 
 	local should_cache = not options or options.method == "GET"
+
+	if options and options.headers and options.headers["Cache-Control"] then
+		should_cache = should_cache and options.headers["Cache-Control"] ~= "no-cache"
+	end
 
 	if should_cache then
 		for key, value in pairs(self._inflight_title_requests) do
@@ -558,6 +556,8 @@ BackendManager.sync_time_result = function (self, t, id, mapping)
 end
 
 BackendManager.get_server_time = function (self, t)
+	t = t or Managers.time:time("main")
+
 	if self.server_time_game_start_epoch then
 		return self.server_time_game_start_epoch + t * 1000
 	else
@@ -600,7 +600,7 @@ BackendManager.update_backend_settings = function (self)
 		self._backend_settings = backend_settings
 		self._settings_promise = nil
 	end):catch(function (error)
-		Log.warning("Failed to fetch backend settings.")
+		Log.warning("BackendManager", "Failed to fetch backend settings.")
 
 		self._settings_promise = nil
 

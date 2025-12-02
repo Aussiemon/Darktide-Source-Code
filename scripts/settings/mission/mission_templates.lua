@@ -13,14 +13,14 @@ end
 
 _extract_mission_templates("scripts/settings/mission/templates/dust_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/entertainment_mission_templates")
-_extract_mission_templates("scripts/settings/mission/templates/operations_mission_templates")
+_extract_mission_templates("scripts/settings/mission/templates/horde_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/hub_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/onboarding_mission_templates")
+_extract_mission_templates("scripts/settings/mission/templates/operations_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/prologue_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/tank_foundry_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/throneside_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/transit_mission_templates")
-_extract_mission_templates("scripts/settings/mission/templates/horde_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/void_mission_templates")
 _extract_mission_templates("scripts/settings/mission/templates/watertown_mission_templates")
 

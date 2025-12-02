@@ -212,8 +212,6 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 		all_items[slot_name] = item
 	end
 
-	self:_resolve_base_units(all_items, profile_packages)
-
 	local talents = profile.talents
 	local ability_items = self:_resolve_ability_packages(archetype, talents, profile_packages, mission, game_mode_settings, profile)
 
@@ -221,6 +219,7 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 		all_items[slot_name] = item
 	end
 
+	self:_resolve_base_units(all_items, profile_packages)
 	self:_resolve_profile_properties(all_items, archetype, selected_voice, sound_dependencies, particle_dependencies, decal_dependencies)
 	self:_resolve_archetype_dependencies(archetype, sound_dependencies, particle_dependencies, decal_dependencies)
 	_add_package_chunk("sound_dependencies", sound_dependencies, profile_packages)
@@ -274,9 +273,8 @@ local class_loadout = {}
 
 PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, talents, profile_packages, mission, game_mode_settings, profile)
 	local force_base_talents = game_mode_settings and game_mode_settings.force_base_talents
-	local selected_nodes = CharacterSheet.convert_talents_to_node_layout(profile, talents)
 
-	CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, selected_nodes)
+	CharacterSheet.class_loadout(profile, class_loadout, force_base_talents, talents)
 	table.clear(temp_abilities)
 	table.clear(temp_abilities_items)
 

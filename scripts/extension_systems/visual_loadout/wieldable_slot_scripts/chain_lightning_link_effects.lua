@@ -45,7 +45,9 @@ local TARGET_NODE_NAME = "enemy_aim_target_02"
 local DEFAULT_HAND = "both"
 local VISUAL_JUMP_TIME = 0.05
 local NO_TARGET_JUMP_TIME = 0.2
-local _vfx_external_properties = {}
+local _vfx_external_properties = {
+	power = nil,
+}
 local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name
 local MAX_NUM_FX_DATA_TABLES = 128
 local MAX_NUM_EFFECTS_PER_TABLE = 6

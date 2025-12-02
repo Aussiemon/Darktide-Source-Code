@@ -4,10 +4,8 @@ local Items = require("scripts/utilities/items")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Colors = require("scripts/utilities/ui/colors")
-local TextUtilities = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 
@@ -204,9 +202,8 @@ ViewElementCraftingRecipeBlueprints.description = {
 	size_function = function (parent, config, ui_renderer)
 		local style = description_text_style
 		local base_size = ViewElementCraftingRecipeBlueprints.description.size
-		local text_options = UIFonts.get_font_options_by_style(style)
 		local text = config.unlocalized_text or config.text and Localize(config.text) or "AWWWW"
-		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, base_size, text_options)
+		local text_height = Text.text_height(ui_renderer, text, style, base_size)
 
 		return {
 			430,
@@ -307,14 +304,13 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 	size_function = function (parent, config, ui_renderer)
 		local style = weapon_perk_style
 		local text = Items.trait_description(config.item, config.rarity, config.value)
-		local text_options = UIFonts.get_font_options_by_style(style)
 		local size = ViewElementCraftingRecipeBlueprints.perk_button.size
 		local size_addition = style.size_addition
 		local actual_text_size = {
 			430 + (size_addition[1] or 0),
 			size[2] + (size_addition[2] or 0),
 		}
-		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, actual_text_size, text_options)
+		local text_height = Text.text_height(ui_renderer, text, style, actual_text_size)
 
 		return {
 			430,
@@ -326,6 +322,7 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select,
 			},
@@ -547,8 +544,7 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 	size_function = function (parent, config, ui_renderer)
 		local style = weapon_traits_description_style
 		local text = Items.trait_description(config.item, config.rarity, config.value)
-		local text_options = UIFonts.get_font_options_by_style(style)
-		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, style.size, text_options)
+		local text_height = Text.text_height(ui_renderer, text, style, style.size)
 
 		return {
 			430,
@@ -560,6 +556,7 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 			content_id = "hotspot",
 			pass_type = "hotspot",
 			content = {
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select,
 			},
@@ -749,9 +746,8 @@ ViewElementCraftingRecipeBlueprints.warning = {
 	size_function = function (parent, config, ui_renderer)
 		local style = description_text_style
 		local base_size = ViewElementCraftingRecipeBlueprints.warning.size
-		local text_options = UIFonts.get_font_options_by_style(style)
 		local text = config.unlocalized_text or config.text or "AWWWW"
-		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, base_size, text_options)
+		local text_height = Text.text_height(ui_renderer, text, style, base_size)
 
 		return {
 			430,
@@ -809,7 +805,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			local cost = costs[i]
 			local cost_type = cost.type
 			local wallet_settings = WalletSettings[cost_type]
-			local amount_label = TextUtilities.format_currency(cost.amount)
+			local amount_label = Text.format_currency(cost.amount)
 			local price_style = table.clone(UIFontSettings.body)
 
 			price_style.text_horizontal_alignment = "right"
@@ -835,7 +831,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 				style = price_style,
 			}
 
-			local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
+			local price_text_size = Text.text_size(ui_renderer, amount_label, price_style)
 
 			x_offset = x_offset - price_text_size - 5
 			passes[#passes + 1] = {
@@ -884,7 +880,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			local has_cost = cost.amount > 0
 			local cost_type = cost.type
 			local wallet_settings = WalletSettings[cost_type]
-			local amount_label = TextUtilities.format_currency(cost.amount)
+			local amount_label = Text.format_currency(cost.amount)
 
 			content[cost_type] = amount_label
 
@@ -893,9 +889,9 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			price_style.offset[1] = x_offset
 
 			if has_cost then
-				local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
+				local price_text_width = Text.text_width(ui_renderer, amount_label, price_style, price_style)
 
-				x_offset = x_offset - price_text_size - 5
+				x_offset = x_offset - price_text_width - 5
 				style["icon_" .. i].offset[1] = x_offset
 				x_offset = x_offset - 28 - 12
 			end
@@ -949,6 +945,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			style_id = "hotspot_1",
 			content = {
 				hover_progress = 0,
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select,
 			},
@@ -1096,6 +1093,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			style_id = "hotspot_2",
 			content = {
 				hover_progress = 0,
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select,
 			},
@@ -1262,6 +1260,7 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 			style_id = "hotspot_3",
 			content = {
 				hover_progress = 0,
+				on_released_sound = nil,
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select,
 			},

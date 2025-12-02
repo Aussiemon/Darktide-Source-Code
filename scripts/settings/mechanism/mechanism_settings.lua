@@ -79,6 +79,7 @@ local mechanism_settings = {
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default",
+			required_index = nil,
 		},
 		loader_paths = {},
 	},
@@ -92,6 +93,7 @@ local mechanism_settings = {
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default",
+			required_index = nil,
 		},
 		loader_paths = {},
 	},

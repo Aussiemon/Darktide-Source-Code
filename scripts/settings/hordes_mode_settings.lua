@@ -60,4 +60,4 @@ local hordes_mode_settings = {
 	end,
 }
 
-return settings("hordes_mode_settings", hordes_mode_settings)
+return settings("HordesModeSettings", hordes_mode_settings)

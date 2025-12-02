@@ -2,7 +2,7 @@
 
 local HudElementMissionObjective = class("HudElementMissionObjective")
 
-HudElementMissionObjective.init = function (self, objective)
+HudElementMissionObjective.init = function (self, objective, id)
 	self._objective = objective
 	self._objective_name = objective:name()
 	self._state = "default"
@@ -26,7 +26,9 @@ HudElementMissionObjective.init = function (self, objective)
 	self._marker_distances = {}
 	self._objective_category = objective:objective_category()
 	self._locally_added = objective:locally_added()
+	self._additional_height = 0
 	self._sort_order = nil
+	self._id = id
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
@@ -123,6 +125,7 @@ HudElementMissionObjective.synchronize_objective = function (self)
 	self._max_counter_amount = objective:max_incremented_progression()
 	self._hide_max_increment = objective:max_increment_hidden()
 	self._icon = objective:icon()
+	self._additional_height = objective:additional_height()
 	self._use_counter = objective:use_counter()
 	self._progress_bar = objective:progress_bar()
 	self._progress_bar_icon = objective:progress_bar_icon()
@@ -210,6 +213,10 @@ HudElementMissionObjective._remove_unit_markers = function (self, unit)
 	end
 end
 
+HudElementMissionObjective.id = function (self)
+	return self._id
+end
+
 HudElementMissionObjective.sort_order = function (self)
 	return self._sort_order
 end
@@ -284,6 +291,10 @@ end
 
 HudElementMissionObjective.icon = function (self)
 	return self._icon
+end
+
+HudElementMissionObjective.additional_height = function (self)
+	return self._additional_height
 end
 
 HudElementMissionObjective.objective_category = function (self)

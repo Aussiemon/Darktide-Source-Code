@@ -1022,6 +1022,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_close_pressed",
+		visibility_function = nil,
 	},
 	{
 		alignment = "right_alignment",

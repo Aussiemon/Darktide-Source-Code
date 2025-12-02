@@ -22,6 +22,11 @@ local COLORS = {
 		trim_color = Vector3Box(0, 0, 0.3),
 		emissive_color = Vector3Box(0, 0.5, 0.85),
 	},
+	syringe_broker_pocketable = {
+		emissive_multiplier = 1,
+		trim_color = Vector3Box(0.75, 0, 0),
+		emissive_color = Vector3Box(0.8, 0.2, 0.1),
+	},
 }
 
 SyringeCaseColor.init = function (self, unit)

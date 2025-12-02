@@ -34,7 +34,7 @@ MutatorSpawnerNodeEnemyTemplate._do_spawn = function (self, spawn_position, ahea
 		position_offset = 4,
 		num_slots = #breed_data,
 	}
-	local spawn_locations = self._enemy_placement_method(nav_world, Vector3Box(spawn_position), placement_settings, nil)
+	local spawn_locations = self._enemy_placement_method(nav_world, Vector3Box(spawn_position), placement_settings, nil, MutatorSpawnerNodeEnemyTemplate.super:placement_logic_functions())
 	local want_to_spawn = #breed_data
 
 	if want_to_spawn <= #spawn_locations then

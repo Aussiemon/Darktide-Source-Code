@@ -4,7 +4,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISequenceAnimator = require("scripts/managers/ui/ui_sequence_animator")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local HudElementBase = class("HudElementBase")
 
 HudElementBase.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -272,33 +272,8 @@ HudElementBase._localize = function (self, text, no_cache, context)
 	return Managers.localization:localize(text, no_cache, context)
 end
 
-HudElementBase._text_size = function (self, ui_renderer, text, font_type, font_size, optional_size, options)
-	return UIRenderer.text_size(ui_renderer, text, font_type, font_size, optional_size, options)
-end
-
-local _temp_optional_size = {
-	0,
-	0,
-}
-
-HudElementBase._text_size_for_style = function (self, ui_renderer, text, text_style, optional_size)
-	optional_size = optional_size or text_style.size
-
-	if optional_size then
-		_temp_optional_size[1] = optional_size[1]
-		_temp_optional_size[2] = optional_size[2]
-
-		local size_addition = text_style.size_addition
-
-		if size_addition then
-			_temp_optional_size[1] = _temp_optional_size[1] + size_addition[1]
-			_temp_optional_size[2] = _temp_optional_size[2] + size_addition[2]
-		end
-	end
-
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-
-	return UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, optional_size and _temp_optional_size, text_options)
+HudElementBase._text_size = function (self, ui_renderer, text, style, optional_size, use_max_extents)
+	return Text.text_size(ui_renderer, text, style, optional_size, use_max_extents)
 end
 
 HudElementBase._register_event = function (self, event_name, function_name)

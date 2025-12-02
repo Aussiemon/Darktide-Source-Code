@@ -52,4 +52,10 @@ ForcedPlayerOrientation.pre_update = function (self, main_t, main_dt, input, sen
 	self._orientation.roll = 0
 end
 
+ForcedPlayerOrientation.orientation_offset = function (self)
+	local yaw_offset, pitch_offset, roll_offset = Orientation.recoil_offset(self._orientation, self._min_pitch, self._max_pitch, self._weapon_extension, self._recoil_component, self._movement_state_component, self._locomotion_component, self._inair_state_component)
+
+	return yaw_offset, pitch_offset, roll_offset
+end
+
 return ForcedPlayerOrientation

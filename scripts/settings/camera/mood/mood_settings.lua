@@ -2,7 +2,7 @@
 
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
 local status = table.enum("active", "inactive", "removing")
 
 mood_settings.mood_types = types
@@ -31,6 +31,8 @@ mood_settings.priority = {
 	types.warped_high_to_critical,
 	types.warped_critical,
 	types.adamant_combat_ability_charge,
+	types.broker_combat_ability_focus,
+	types.broker_combat_ability_punk_rage,
 	types.ogryn_combat_ability_charge,
 	types.ogryn_combat_ability_shout,
 	types.ogryn_combat_ability_stance,
@@ -41,6 +43,7 @@ mood_settings.priority = {
 	types.syringe_ability,
 	types.syringe_power,
 	types.syringe_speed,
+	types.syringe_broker,
 	types.story_echo,
 }
 mood_settings.moods = {
@@ -235,6 +238,7 @@ mood_settings.moods = {
 	[types.sprinting_overtime] = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.1,
+		particle_effects_on_enter = nil,
 	},
 	[types.zealot_combat_ability_dash] = {
 		blend_in_time = 0.1,
@@ -247,6 +251,46 @@ mood_settings.moods = {
 		blend_out_time = 0.2,
 		shading_environment = "content/shading_environments/moods/adamant_charge_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+	},
+	[types.broker_combat_ability_focus] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.03,
+		shading_environment = "content/shading_environments/moods/broker_gunslinger_focus_mood",
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_broker_focus",
+		},
+		looping_sound_start_events = {
+			"wwise/events/player/play_player_ability_broker_focus_start",
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_player_ability_broker_focus_stop",
+		},
+		wwise_state = {
+			group = "player_ability",
+			off_state = "none",
+			on_state = "broker_focus",
+		},
+	},
+	[types.broker_combat_ability_punk_rage] = {
+		blend_in_time = 0.03,
+		blend_out_time = 0.03,
+		shading_environment = "content/shading_environments/moods/broker_punk_rage_mood",
+		looping_sound_start_events = {
+			"wwise/events/player/play_player_ability_broker_rage_start",
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_player_ability_broker_rage_stop",
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_broker_punk_rage",
+		},
+		wwise_state = {
+			group = "player_ability",
+			off_state = "none",
+			on_state = "broker_punkrage",
+		},
 	},
 	[types.ogryn_combat_ability_charge] = {
 		blend_in_time = 0.1,
@@ -465,6 +509,26 @@ mood_settings.moods = {
 			group = "player_ability",
 			off_state = "none",
 			on_state = "syringe_speed",
+		},
+	},
+	[types.syringe_broker] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		shading_environment = "content/shading_environments/moods/stimms_concentration_yellow_mood_01",
+		looping_sound_start_events = {
+			"wwise/events/player/play_syringe_broker_start",
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_syringe_broker_stop",
+		},
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/player_screen_broker_stimm_syringe",
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		wwise_state = {
+			group = "player_ability",
+			off_state = "none",
+			on_state = "syringe_broker",
 		},
 	},
 	[types.story_echo] = {

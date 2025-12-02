@@ -1,15 +1,14 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/blocking/hud_element_stamina.lua
 
-local Definitions = require("scripts/ui/hud/elements/blocking/hud_element_stamina_definitions")
+local hud_element_stamina_definitions = require("scripts/ui/hud/elements/blocking/hud_element_stamina_definitions")
 local HudElementStaminaSettings = require("scripts/ui/hud/elements/blocking/hud_element_stamina_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local Stamina = require("scripts/utilities/attack/stamina")
-local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local HudElementStamina = class("HudElementStamina", "HudElementBase")
 local STAMINA_NODGES_COLOR = HudElementStaminaSettings.STAMINA_NODGES_COLOR
 
 HudElementStamina.init = function (self, parent, draw_layer, start_scale)
-	HudElementStamina.super.init(self, parent, draw_layer, start_scale, Definitions)
+	HudElementStamina.super.init(self, parent, draw_layer, start_scale, hud_element_stamina_definitions)
 
 	self._stamina_chunk_width = 0
 	self._last_stamina_fraction = 1
@@ -18,7 +17,7 @@ HudElementStamina.init = function (self, parent, draw_layer, start_scale)
 		stamina = 1,
 		starting_stamina = 1,
 	}
-	self._stamina_nodge_widget = self:_create_widget("stamina_nodge", Definitions.stamina_nodges_definition)
+	self._stamina_nodge_widget = self:_create_widget("stamina_nodge", hud_element_stamina_definitions.stamina_nodges_definition)
 
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
@@ -84,7 +83,7 @@ HudElementStamina._update_stamina_amount = function (self)
 
 			if stamina_component and base_stamina_template then
 				local player_unit = player_extensions.unit
-				local current, max = Stamina.current_and_max_value(player_unit, stamina_component, base_stamina_template)
+				local _, max = Stamina.current_and_max_value(player_unit, stamina_component, base_stamina_template)
 
 				num_stamina_chunks = max
 			end
@@ -109,7 +108,7 @@ HudElementStamina._update_visibility = function (self, dt)
 	local visibility_setting = self._visibility_setting
 	local should_always_be_visible = visibility_setting == "always_stamina" or visibility_setting == "always_both"
 	local is_visibility_enabled = should_always_be_visible or visibility_setting ~= "stamina_disabled" and visibility_setting ~= "both_disabled"
-	local draw = should_always_be_visible or false
+	local draw = not not should_always_be_visible
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 	local check_stamina_usage_status = is_visibility_enabled and not should_always_be_visible
@@ -162,17 +161,6 @@ HudElementStamina._draw_widgets = function (self, dt, t, input_service, ui_rende
 		render_settings.alpha_multiplier = previous_alpha_multiplier
 	end
 end
-
-local STAMINA_STATE_COLORS = {
-	empty = {
-		100,
-		UIHudSettings.color_tint_secondary_3[2],
-		UIHudSettings.color_tint_secondary_3[3],
-		UIHudSettings.color_tint_secondary_3[4],
-	},
-	half = UIHudSettings.color_tint_main_3,
-	full = UIHudSettings.color_tint_main_1,
-}
 
 HudElementStamina._draw_stamina_chunks = function (self, dt, t, ui_renderer)
 	local num_stamina_chunks = self._num_stamina_chunks

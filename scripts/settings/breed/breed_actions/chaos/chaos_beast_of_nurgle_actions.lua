@@ -65,7 +65,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -102,7 +105,10 @@ local action_data = {
 			right = "turn_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			turn_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -140,7 +146,10 @@ local action_data = {
 			right = "change_target_right",
 		},
 		change_target_anim_data = {
-			change_target_fwd = {},
+			change_target_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			change_target_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -180,7 +189,10 @@ local action_data = {
 			right = "turn_right",
 		},
 		start_move_anim_data = {
-			alerted_fwd = {},
+			alerted_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			turn_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -240,7 +252,10 @@ local action_data = {
 			right = "run_start_right",
 		},
 		start_move_anim_data = {
-			run_start_fwd = {},
+			run_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			run_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -285,6 +300,7 @@ local action_data = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_corruptor_distortion",
 		only_apply_buff_once = true,
 		place_liquid_timing_speed = 20,
+		push_minions_damage_type = nil,
 		push_minions_power_level = 2000,
 		push_minions_radius = 2,
 		push_minions_side_relation = "allied",
@@ -372,7 +388,10 @@ local action_data = {
 			},
 		},
 		anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -487,7 +506,10 @@ local action_data = {
 		throw_test_distance = 13,
 		vo_event = "monster_release",
 		anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			turn_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -595,7 +617,10 @@ local action_data = {
 			right = "move_start_right",
 		},
 		start_move_anim_data = {
-			move_start_fwd = {},
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			move_start_bwd = {
 				sign = 1,
 				rad = math.pi,
@@ -1092,6 +1117,7 @@ local action_data = {
 		stagger_immune = true,
 	},
 	smash_obstacle = {
+		damage_type = nil,
 		rotation_duration = 0,
 		attack_anim_events = {
 			"attack_sneeze",
@@ -1124,7 +1150,10 @@ local action_data = {
 			right = "turn_right",
 		},
 		start_move_anim_data = {
-			walk_fwd = {},
+			walk_fwd = {
+				rad = nil,
+				sign = nil,
+			},
 			turn_bwd = {
 				sign = -1,
 				rad = math.pi,
@@ -1142,11 +1171,13 @@ local action_data = {
 			turn_bwd = 0.13333333333333333,
 			turn_left = 0.1,
 			turn_right = 0.1,
+			walk_fwd = nil,
 		},
 		start_rotation_durations = {
 			turn_bwd = 0.4666666666666667,
 			turn_left = 0.5,
 			turn_right = 0.5,
+			walk_fwd = nil,
 		},
 		alerted_durations = {
 			turn_bwd = 0.6666666666666666,

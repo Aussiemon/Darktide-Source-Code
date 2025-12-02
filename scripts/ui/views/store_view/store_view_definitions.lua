@@ -675,6 +675,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_close_menu",
 		input_action = "back",
 		on_pressed_callback = "cb_on_back_pressed",
+		visibility_function = nil,
 	},
 }
 local anim_start_delay = 0
@@ -713,6 +714,20 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
+				for i = 1, #widgets do
+					widgets[i].alpha_multiplier = anim_progress
+				end
+			end,
+		},
+	},
+	grid_exit = {
+		{
+			end_time = 0.25,
+			name = "fade_out",
+			start_time = 0,
+			update = function (parent, ui_scenegraph, _scenegraph_definition, widgets, progress, params)
+				local anim_progress = 1 - math.easeOutCubic(progress)
 
 				for i = 1, #widgets do
 					widgets[i].alpha_multiplier = anim_progress

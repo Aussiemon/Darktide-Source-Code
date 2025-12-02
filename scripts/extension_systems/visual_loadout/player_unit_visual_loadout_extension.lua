@@ -649,10 +649,12 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
+	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
 	local profile = self._player:profile()
 
 	if profile.gender == "female" then
 		deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
+		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 	end
 
 	local breed = self._unit_data_extension:breed()
@@ -660,7 +662,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local mission = self._mission
 	local equipment_component = self._equipment_component
 
-	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, breed_name, mission, equipment)
+	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, deform_override_items, breed_name, mission, equipment)
 
 	if slot_config.slot_type == "luggable" then
 		local luggable_extension = ScriptUnit.extension(optional_existing_unit_3p, "luggable_system")
@@ -959,6 +961,10 @@ PlayerUnitVisualLoadoutExtension.is_wielding = function (self)
 	return self._inventory_component.wielded_slot ~= self.NO_WIELDED_SLOT
 end
 
+PlayerUnitVisualLoadoutExtension.is_equipped = function (self, slot_name)
+	return self._inventory_component[slot_name] ~= self.UNEQUIPPED_SLOT
+end
+
 PlayerUnitVisualLoadoutExtension.source_fx_for_slot = function (self, slot_name)
 	return self._fx_sources[slot_name]
 end
@@ -972,7 +978,7 @@ PlayerUnitVisualLoadoutExtension.force_update_item_visibility = function (self)
 end
 
 PlayerUnitVisualLoadoutExtension._update_item_visibility = function (self, first_person_mode)
-	self._equipment_component.update_item_visibility(self._equipment, self._inventory_component.wielded_slot, self._unit, self._first_person_unit, first_person_mode)
+	self._equipment_component.update_item_visibility(self._equipment, self._inventory_component.wielded_slot, self._unit, self._first_person_unit, first_person_mode, self._item_definitions)
 
 	local inventory_component = self._inventory_component
 	local slot_name = inventory_component.wielded_slot

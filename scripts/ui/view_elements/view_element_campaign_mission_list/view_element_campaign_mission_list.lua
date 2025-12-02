@@ -137,14 +137,40 @@ ViewElementCampaignMissionList.init = function (self, parent, draw_layer, start_
 	self._context = context
 
 	self:_create_offscreen_renderer()
+
+	self._current_filters = table.clone(DEFAULT_FILTERS)
+	self._selected_panel_id = "player-journey"
+	self._selected_panel_index = 1
+end
+
+ViewElementCampaignMissionList.initialize_data = function (self)
+	local parent = self:parent()
+	local campaign_data = parent._mission_board_logic:get_campaigns_data()
+
+	self._campaigns_data = campaign_data
+
+	self:_setup_panel_widgets()
+end
+
+ViewElementCampaignMissionList.on_enter = function (self)
+	self:set_visibility(true)
+	self:refresh_mission_list()
+	self:_start_animation("title_enter", nil, {
+		ui_renderer = self._ui_renderer,
+	})
+end
+
+ViewElementCampaignMissionList.on_exit = function (self)
+	self._background_entry_done = nil
+	self._exit_animation = self:_start_animation("title_exit", nil, {
+		ui_renderer = self._ui_renderer,
+	})
 end
 
 ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 	if not self:visible() then
 		return
 	end
-
-	ViewElementCampaignMissionList.super.update(self, dt, t, input_service)
 
 	local parent = self:parent()
 	local has_synced_data = parent._mission_board_logic:has_synced_missions_data()
@@ -210,11 +236,13 @@ ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 					tile_hotspot.is_selected = is_selected
 
 					local debrief_widget = cell_data.debrief_widget
-					local debrief_content = debrief_widget.content
-					local debrief_hotspot = debrief_content.hotspot
 
-					tile_hotspot.is_selected = is_selected
-					debrief_hotspot.is_selected = is_selected
+					if debrief_widget then
+						local debrief_content = debrief_widget.content
+						local debrief_hotspot = debrief_content.hotspot
+
+						debrief_hotspot.is_selected = is_selected
+					end
 
 					if cell_data.data.id == selected_mission_id then
 						self._selected_row = row
@@ -225,7 +253,20 @@ ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 		end
 	end
 
+	for _, widget in pairs(self._panel_button_widgets) do
+		local content = widget.content
+		local hotspot = content.panel_button_hotspot
+
+		hotspot.is_selected = content.index == self._selected_panel_index
+	end
+
+	if input_service:get("back") and not self._exit_animation then
+		parent:set_selected_mission("qp_mission_widget", true)
+		self:on_exit()
+	end
+
 	self:_handle_gamepad_input(dt, t, input_service)
+	ViewElementCampaignMissionList.super.update(self, dt, t, input_service)
 end
 
 ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, input_service)
@@ -370,6 +411,10 @@ ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, in
 
 			self:_queue_debrief_video(circumstance)
 		end
+	elseif input_service:get("navigate_secondary_right_pressed") then
+		self:_switch_next_campaign_tab()
+	elseif input_service:get("navigate_secondary_left_pressed") then
+		self:_switch_previous_campaign_tab()
 	end
 end
 
@@ -394,6 +439,12 @@ ViewElementCampaignMissionList.draw = function (self, dt, t, ui_renderer, render
 
 	if self._scrollbar_widget then
 		UIWidget.draw(self._scrollbar_widget, ui_renderer)
+	end
+
+	if self._panel_button_widgets then
+		for _, widget in pairs(self._panel_button_widgets) do
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	UIRenderer.end_pass(ui_renderer)
@@ -515,6 +566,8 @@ ViewElementCampaignMissionList._setup_grid = function (self, rows, cols)
 
 		for col = 1, cols do
 			grid[row][col] = {
+				data = nil,
+				widget = nil,
 				row = row,
 				col = col,
 			}
@@ -694,13 +747,18 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 		for c = 1, #grid[r] do
 			local existing_data = grid[r][c]
 
-			if existing_data and existing_data.data and existing_data.data.map == mission_data.key then
+			if existing_data and existing_data.data and existing_data.data.map == mission_data.mission then
 				return idx
 			end
 		end
 	end
 
-	local mission = self:_get_mission_by_key(mission_data.key)
+	local mission = self:_get_mission_by_key(mission_data.mission)
+
+	if not mission then
+		return
+	end
+
 	local mission_template = MissionTemplates[mission.map]
 	local title = Localize(mission_template.mission_name)
 	local sub_title = Localize(Zones[mission_template.zone_id].name)
@@ -709,7 +767,9 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local theme = parent:_get_ui_theme()
 	local is_locked = parent._mission_board_logic:is_mission_locked(mission)
 	local cell_data = {}
-	local display_order = self:_get_mission_display_order(mission_data.key)
+	local display_order = self:_get_mission_display_order(mission_data.mission, mission_data.campaign) or 1
+	local unlock_data = parent._mission_board_logic:get_mission_unlock_data(mission_data.mission, mission_data.category)
+	local is_story_mission = parent._mission_board_logic:is_story_mission(mission)
 	local creation_context = {
 		skip_background_frame = true,
 		row = row,
@@ -717,6 +777,7 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 		location_texture = texture,
 		is_locked = is_locked or false,
 		display_order = display_order,
+		is_story = is_story_mission,
 	}
 	local widget = self:_widget_from_blueprint("mission_" .. idx, "mission_tile", mission, creation_context)
 	local theme_slots = theme.slots.small
@@ -725,9 +786,9 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	widget.content.hotspot.pressed_callback = callback(self, "on_mission_tile_pressed", mission, slot)
 	widget.visible = false
 	cell_data.widget = widget
-	cell_data.name = "cell_" .. mission_data.key
+	cell_data.name = "cell_" .. mission_data.mission
 	cell_data.data = mission
-	cell_data.unlock_data = mission_data
+	cell_data.unlock_data = unlock_data
 	cell_data.is_locked = is_locked
 	cell_data.slot = slot
 	cell_data.row = row
@@ -741,70 +802,75 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	idx = idx + 1
 
 	if mission_data.children and #mission_data.children > 0 then
-		local child_1 = mission_data.children[1]
+		local child_1 = self:_get_campaign_mission_data(mission_data.children[1])
 
-		col = col + 1
+		if child_1 and child_1.campaign == mission_data.campaign then
+			col = col + 1
 
-		local first_child_row = #mission_data.children >= 2 and row - 1 or row
+			local first_child_row = #mission_data.children >= 2 and row - 1 or row
 
-		if #child_1.prerequisites > 1 then
-			first_child_row = 2
+			if #child_1.parents > 1 then
+				first_child_row = 2
+			end
+
+			idx = self:_recursive_mission_placement(grid, child_1, first_child_row, col, idx)
 		end
 
-		idx = self:_recursive_mission_placement(grid, child_1, first_child_row, col, idx)
+		local child_2 = self:_get_campaign_mission_data(mission_data.children[2])
 
-		local child_2 = mission_data.children[2]
-
-		if child_2 then
+		if child_2 and child_2.campaign == mission_data.campaign and child_2 then
 			idx = self:_recursive_mission_placement(grid, child_2, row + 1, col, idx)
 		end
+
+		return idx
 	end
 
 	return idx
 end
 
-ViewElementCampaignMissionList._populate_grid = function (self, grid, filtered_missions, ordered_story_missions, tree_like_mission_data)
+ViewElementCampaignMissionList._populate_mission_grid = function (self, campaign_missions, filtered_missions)
 	local grid = self._mission_grid or {}
 	local idx = 1
-	local mission_head = ordered_story_missions[1]
-	local head_tree_data = tree_like_mission_data[mission_head.key]
+	local mission_head = campaign_missions[1]
 
-	self:_recursive_mission_placement(grid, head_tree_data, 2, 1, idx)
+	self:_recursive_mission_placement(grid, mission_head, 2, 1, idx)
 
-	for i = #ordered_story_missions, 1, -1 do
-		local mission_data = ordered_story_missions[i]
+	for i = #campaign_missions, 1, -1 do
+		local mission_data = campaign_missions[i]
 
 		if mission_data then
-			local tree_data = tree_like_mission_data[mission_data.key]
-			local parents = tree_data and tree_data.prerequisites
+			local parents = mission_data.parents
 
 			if parents and #parents > 1 then
-				local child = self:_get_cell_by_name(mission_data.key)
-				local parent_1 = self:_get_cell_by_name(parents[1].key)
-				local parent_2 = self:_get_cell_by_name(parents[2].key)
-				local new_child_col = child.col or 1
-				local should_move_child = false
+				local child = self:_get_cell_by_name(mission_data.mission)
+				local parent_1 = self:_get_cell_by_name(parents[1].mission)
+				local parent_2 = self:_get_cell_by_name(parents[2].mission)
 
-				if parent_1.col ~= parent_2.col then
-					if parent_1.col > parent_2.col then
-						new_child_col = parent_1.col + 1
-					else
-						new_child_col = parent_2.col + 1
+				if child and parent_1 and parent_2 then
+					local new_child_col = child.col or 1
+					local should_move_child = false
+
+					if parent_1.col ~= parent_2.col then
+						if parent_1.col > parent_2.col then
+							new_child_col = parent_1.col + 1
+						else
+							new_child_col = parent_2.col + 1
+						end
+
+						should_move_child = true
 					end
 
-					should_move_child = true
-				end
+					if should_move_child then
+						if grid[child.row] and grid[child.row][child.col] then
+							grid[child.row][child.col] = {
+								row = child.row,
+								col = child.col,
+							}
+						end
 
-				if should_move_child then
-					if grid[child.row] and grid[child.row][child.col] then
-						grid[child.row][child.col] = {
-							row = child.row,
-							col = child.col,
-						}
+						child.col = new_child_col
+						grid[child.row][new_child_col] = child
 					end
-
-					child.col = new_child_col
-					grid[child.row][new_child_col] = child
 				end
 			end
 		end
@@ -831,20 +897,16 @@ ViewElementCampaignMissionList._populate_grid = function (self, grid, filtered_m
 
 	local line_widgets = {}
 
-	for i = 1, #ordered_story_missions do
-		local mission_data = ordered_story_missions[i]
+	for i = 1, #campaign_missions do
+		local mission_data = campaign_missions[i]
 
-		if mission_data then
-			local tree_data = tree_like_mission_data[mission_data.key]
+		if mission_data and mission_data and mission_data.children and #mission_data.children > 0 then
+			for _, child in ipairs(mission_data.children) do
+				local start_cell = self:_get_cell_by_name(mission_data.mission)
+				local end_cell = self:_get_cell_by_name(child.mission)
 
-			if tree_data and tree_data.children and #tree_data.children > 0 then
-				for _, child in ipairs(tree_data.children) do
-					local start_cell = self:_get_cell_by_name(mission_data.key)
-					local end_cell = self:_get_cell_by_name(child.key)
-
-					if start_cell and end_cell then
-						local widgets = self:_create_line_connection(grid, start_cell, end_cell)
-					end
+				if start_cell and end_cell then
+					local widgets = self:_create_line_connection(grid, start_cell, end_cell)
 				end
 			end
 		end
@@ -881,22 +943,10 @@ ViewElementCampaignMissionList._populate_grid = function (self, grid, filtered_m
 	self._mission_grid = grid
 
 	self:_setup_scrollbar()
-
-	local campaign_header = CampaignSettings["player-journey"].display_name
-
-	self._widgets_by_name.campaign_header.content.default_header_text = Utf8.upper(Localize(campaign_header))
 end
 
 ViewElementCampaignMissionList.set_visibility = function (self, value)
 	ViewElementCampaignMissionList.super.set_visibility(self, value)
-
-	if value then
-		self:_start_animation("title_enter", nil, {
-			ui_renderer = self._ui_renderer,
-		})
-	else
-		self._background_entry_done = nil
-	end
 end
 
 ViewElementCampaignMissionList._setup_mission_data = function (self, missions, ordered_story_missions)
@@ -962,17 +1012,21 @@ ViewElementCampaignMissionList._get_mission_by_key = function (self, mission_key
 		end
 	end
 
-	return {}
+	return nil
 end
 
-ViewElementCampaignMissionList._get_mission_display_order = function (self, mission_key)
-	if not self._ordered_story_missions then
+ViewElementCampaignMissionList._get_mission_display_order = function (self, mission_key, mission_campaign)
+	if not self._campaigns_data then
 		return nil
 	end
 
-	for i, mission_data in ipairs(self._ordered_story_missions) do
-		if mission_data.key == mission_key then
-			return i
+	for i, campaign in ipairs(self._campaigns_data) do
+		if campaign.id == mission_campaign then
+			for display_order, missions in pairs(campaign.missions) do
+				if missions and missions.mission == mission_key then
+					return display_order
+				end
+			end
 		end
 	end
 
@@ -1091,37 +1145,145 @@ ViewElementCampaignMissionList._destroy_offscreen_renderer = function (self)
 	end
 end
 
-ViewElementCampaignMissionList.refresh_mission_list = function (self)
+ViewElementCampaignMissionList._get_campaign_required_categories = function (self, campaign_data, campaign_id)
+	local required_categories = {}
+
+	if campaign_data and campaign_id then
+		for _, mission in pairs(campaign_data.missions) do
+			if mission and mission.category and not table.contains(required_categories, mission.category) then
+				required_categories[#required_categories + 1] = mission.category
+			end
+		end
+	end
+
+	return required_categories
+end
+
+ViewElementCampaignMissionList._setup_panel_widgets = function (self)
+	local num_campaigns = table.size(self._campaigns_data)
+	local tab_width = self._ui_scenegraph.list_panel.size[1] / num_campaigns
+	local tab_height = self._ui_scenegraph.list_panel.size[2]
+	local panel_button_widgets = {}
+
+	for i, campaign_data in pairs(self._campaigns_data) do
+		local campaign_id = campaign_data.id
+		local panel_button_definition = Definitions.create_list_panel_widget("list_panel")
+		local panel_button_widget = UIWidget.init("panel_button_" .. campaign_id, panel_button_definition)
+		local content = panel_button_widget.content
+		local campaign_settings = CampaignSettings[campaign_id]
+		local display_name = campaign_settings and campaign_settings.display_name or campaign_id
+
+		content.default_panel_button_campaign_title = Utf8.upper(Localize(display_name))
+		content.size = {
+			tab_width,
+			tab_height,
+		}
+		content.id = campaign_id
+		content.index = i
+		panel_button_widgets[#panel_button_widgets + 1] = panel_button_widget
+
+		panel_button_widget.content.panel_button_hotspot.pressed_callback = function ()
+			if not table.find(self._current_filters.required_campaign, campaign_id) then
+				local optional_filters = {}
+
+				optional_filters.required_campaign = {
+					campaign_id,
+				}
+
+				local required_categories = self:_get_campaign_required_categories(campaign_data, campaign_id)
+
+				optional_filters.required_category = required_categories
+
+				self:refresh_mission_list(optional_filters)
+
+				self._selected_panel_index = i
+			end
+		end
+	end
+
+	for i, widget in ipairs(panel_button_widgets) do
+		widget.offset = {
+			(i - 1) * tab_width,
+			0,
+			1,
+		}
+	end
+
+	self._panel_button_widgets = panel_button_widgets
+
+	local left_stepper = self._widgets_by_name.panel_stepper_left
+	local left_stepper_content = left_stepper.content
+
+	left_stepper_content.hotspot.pressed_callback = callback(self, "_switch_previous_campaign_tab")
+
+	local right_stepper = self._widgets_by_name.panel_stepper_right
+
+	right_stepper.content.hotspot.pressed_callback = callback(self, "_switch_next_campaign_tab")
+end
+
+ViewElementCampaignMissionList._get_campaign_mission_data = function (self, data)
+	if not data then
+		return nil
+	end
+
+	local campaign_data = self._campaigns_data
+
+	for _, campaign in pairs(campaign_data) do
+		if data.campaign == campaign.id then
+			for _, mission_data in pairs(campaign.missions) do
+				if mission_data.mission == data.mission then
+					return mission_data
+				end
+			end
+		end
+	end
+end
+
+ViewElementCampaignMissionList._get_campaign_missions = function (self, campaign_id)
+	for _, campaign in pairs(self._campaigns_data) do
+		if campaign.id == campaign_id then
+			return campaign.missions
+		end
+	end
+
+	return {}
+end
+
+ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_filters)
 	local parent = self:parent()
 	local page_index = parent._mission_board_logic:get_current_page_index() or 1
 	local difficulty_data = DangerSettings[page_index]
 	local challenge = difficulty_data and difficulty_data.challenge
 	local resistance = difficulty_data and difficulty_data.resistance
-	local pj_filter = {}
+	local filter = {}
 
-	pj_filter.challenge = challenge
-	pj_filter.resistance = resistance
-	pj_filter.required_category = {
+	filter.challenge = challenge
+	filter.resistance = resistance
+	filter.required_category = optional_filters and optional_filters.required_category or self._current_filters.required_category or {
 		"story",
 	}
-	pj_filter.required_campaign = {
+	filter.required_campaign = optional_filters and optional_filters.required_campaign or self._current_filters.required_campaign or {
 		"player-journey",
 	}
 
-	local pj_filters = {
-		pj_filter,
+	local filters = {
+		filter,
 	}
+
+	self._current_filters = filter
+
 	local grid = self:_setup_grid()
-	local filtered_missions = parent._mission_board_logic:get_missions_by_filters(pj_filters) or {}
-	local ordered_story_missions = parent._mission_board_logic:_get_ordered_story_missions()
-	local tree_like_mission_data = self:_setup_mission_data(filtered_missions, ordered_story_missions)
 
 	self._mission_grid = grid
-	self._missions = filtered_missions
-	self._tree_like_mission_data = tree_like_mission_data
-	self._ordered_story_missions = ordered_story_missions
 
-	self:_populate_grid(grid, filtered_missions, ordered_story_missions, tree_like_mission_data)
+	local filtered_missions = parent._mission_board_logic:get_missions_by_filters(filters) or {}
+
+	self._missions = filtered_missions
+
+	local campaign_id = optional_filters and optional_filters.required_campaign[1] or self._current_filters.required_campaign[1] or "player-journey"
+	local campaign_missions = self:_get_campaign_missions(campaign_id)
+
+	self:_populate_mission_grid(campaign_missions, filtered_missions)
 
 	if self._selected_row and self._selected_col then
 		local cell = _get_grid_cell_data(self._mission_grid, self._selected_row, self._selected_col)
@@ -1136,14 +1298,17 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self)
 			scrollbar_content.scroll_value = self._scroll_percentage or 0
 		end
 	else
-		local head_mission = self._ordered_story_missions[1]
-		local mission_data = self:_get_mission_by_key(head_mission.key)
-		local theme = parent:_get_ui_theme()
-		local slots = theme.slots.small
-		local slot = slots[1]
+		local head_mission = campaign_missions[1]
+		local mission_data = self:_get_mission_by_key(head_mission.mission)
 
-		parent:set_selected_mission(mission_data.id)
-		parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
+		if mission_data then
+			local theme = parent:_get_ui_theme()
+			local slots = theme.slots.small
+			local slot = slots[1]
+
+			parent:set_selected_mission(mission_data.id, true)
+			parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
+		end
 	end
 
 	self:_start_mission_list_entry_animation()
@@ -1171,6 +1336,62 @@ ViewElementCampaignMissionList.on_mission_tile_pressed = function (self, mission
 	if parent then
 		parent:set_selected_mission(mission_data.id)
 		parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
+	end
+end
+
+ViewElementCampaignMissionList._switch_previous_campaign_tab = function (self)
+	local parent = self:parent()
+	local new_selected_index = self._selected_panel_index - 1 > 1 and self._selected_panel_index - 1 or 1
+
+	if new_selected_index == self._selected_panel_index then
+		return
+	end
+
+	self._selected_panel_index = new_selected_index
+
+	local campaign_id = self._panel_button_widgets[self._selected_panel_index].content.id
+
+	if not table.find(self._current_filters.required_campaign, campaign_id) then
+		local optional_filters = {}
+
+		optional_filters.required_campaign = {
+			campaign_id,
+		}
+
+		local campaign_data = parent._mission_board_logic:get_data_by_campaign(campaign_id)
+		local required_categories = self:_get_campaign_required_categories(campaign_data, campaign_id)
+
+		optional_filters.required_category = required_categories
+
+		self:refresh_mission_list(optional_filters)
+	end
+end
+
+ViewElementCampaignMissionList._switch_next_campaign_tab = function (self)
+	local parent = self:parent()
+	local new_selected_index = self._selected_panel_index + 1 < #self._panel_button_widgets and self._selected_panel_index + 1 or #self._panel_button_widgets
+
+	if new_selected_index == self._selected_panel_index then
+		return
+	end
+
+	self._selected_panel_index = new_selected_index
+
+	local campaign_id = self._panel_button_widgets[self._selected_panel_index].content.id
+
+	if not table.find(self._current_filters.required_campaign, campaign_id) then
+		local optional_filters = {}
+
+		optional_filters.required_campaign = {
+			campaign_id,
+		}
+
+		local campaign_data = parent._mission_board_logic:get_data_by_campaign(campaign_id)
+		local required_categories = self:_get_campaign_required_categories(campaign_data, campaign_id)
+
+		optional_filters.required_category = required_categories
+
+		self:refresh_mission_list(optional_filters)
 	end
 end
 

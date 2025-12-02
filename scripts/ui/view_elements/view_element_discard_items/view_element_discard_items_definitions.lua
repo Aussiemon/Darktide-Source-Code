@@ -418,6 +418,7 @@ local widget_definitions = {
 		visible = true,
 		original_text = Localize("loc_select"),
 		hotspot = {
+			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.mastery_select_weapon,
 		},
@@ -426,6 +427,7 @@ local widget_definitions = {
 		visible = true,
 		original_text = Localize("loc_unselect"),
 		hotspot = {
+			on_released_sound = nil,
 			on_hover_sound = UISoundEvents.default_mouse_hover,
 			on_pressed_sound = UISoundEvents.weapons_select_weapon,
 		},

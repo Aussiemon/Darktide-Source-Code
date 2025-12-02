@@ -22,6 +22,7 @@ Settings.debrief_settings = {
 		60,
 	},
 }
+Settings.panel_height = 48
 Settings.debrief_videos = {
 	player_journey_01 = "debriefing_01",
 	player_journey_010 = "debriefing_12",
@@ -40,6 +41,9 @@ Settings.debrief_videos = {
 	player_journey_07_B = "debriefing_09",
 	player_journey_08 = "debriefing_10",
 	player_journey_09 = "debriefing_11",
+	story_nomansland_01 = "debriefing_nml_01",
+	story_nomansland_02 = "debriefing_nml_02",
+	story_nomansland_03 = "debriefing_nml_03",
 }
 
 return settings("ViewElementCampaignMissionListSettings", Settings)

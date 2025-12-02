@@ -11,8 +11,8 @@ Recoil.set_shooting = function (recoil_control_component, shooting)
 	end
 end
 
-Recoil.first_person_offset = function (recoil_template, read_recoil_component, movement_state_component)
-	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component)
+Recoil.first_person_offset = function (recoil_template, read_recoil_component, movement_state_component, locomotion_component, inair_state_component)
+	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component, locomotion_component, inair_state_component)
 	local first_person_offset_scalar = 1
 
 	if movement_state_settings then
@@ -25,8 +25,8 @@ Recoil.first_person_offset = function (recoil_template, read_recoil_component, m
 	return pitch_offset * first_person_offset_scalar, yaw_offset * first_person_offset_scalar
 end
 
-Recoil.weapon_offset = function (recoil_template, read_recoil_component, movement_state_component)
-	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component)
+Recoil.weapon_offset = function (recoil_template, read_recoil_component, movement_state_component, locomotion_component, inair_state_component)
+	local movement_state_settings = Recoil.recoil_movement_state_settings(recoil_template, movement_state_component, locomotion_component, inair_state_component)
 	local weapon_offset_scalar = 0
 
 	if movement_state_settings then
@@ -39,12 +39,12 @@ Recoil.weapon_offset = function (recoil_template, read_recoil_component, movemen
 	return pitch_offset * weapon_offset_scalar, yaw_offset * weapon_offset_scalar
 end
 
-Recoil.recoil_movement_state_settings = function (recoil_template, movement_state_component)
+Recoil.recoil_movement_state_settings = function (recoil_template, movement_state_component, locomotion_component, inair_state_component)
 	if not recoil_template then
 		return
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local movement_state_settings = recoil_template[weapon_movement_state]
 
 	return movement_state_settings
@@ -52,7 +52,7 @@ end
 
 local TEMP_PITCH_RANGE, TEMP_YAW_RANGE = Script.new_array(2), Script.new_array(2)
 
-Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_control_component, movement_state_component, fp_rotation, unit)
+Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_control_component, movement_state_component, locomotion_component, inair_state_component, fp_rotation, unit)
 	if not recoil_template then
 		return
 	end
@@ -62,7 +62,7 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 	local num_shots = recoil_control_component.num_shots
 	local new_num_shots = num_shots + 1
 	local seed = recoil_control_component.seed
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local random_pitch, random_yaw
 	local movement_state_settings = recoil_template[weapon_movement_state]
 	local deterministic_recoil = buff_extension:has_keyword(buff_keywords.deterministic_recoil)
@@ -141,12 +141,12 @@ function _dampen_target_to_max_angle(current_angle, added_angle, angle_limit)
 	return added_angle * damping * damping
 end
 
-Recoil.aim_assist_multiplier = function (recoil_template, recoil_control_component, recoil_component, movement_state_component)
+Recoil.aim_assist_multiplier = function (recoil_template, recoil_control_component, recoil_component, movement_state_component, locomotion_component, inair_state_component)
 	if not recoil_template then
 		return 1
 	end
 
-	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
+	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component, locomotion_component, inair_state_component)
 	local aim_assist_settings = recoil_template[weapon_movement_state].aim_assist
 
 	if not aim_assist_settings then
@@ -156,8 +156,8 @@ Recoil.aim_assist_multiplier = function (recoil_template, recoil_control_compone
 	return aim_assist_settings.multiplier_function(aim_assist_settings, recoil_control_component, recoil_component)
 end
 
-Recoil.apply_weapon_recoil_rotation = function (recoil_template, recoil_component, movement_state_component, current_rotation)
-	local pitch_offset, yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component)
+Recoil.apply_weapon_recoil_rotation = function (recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component, current_rotation)
+	local pitch_offset, yaw_offset = Recoil.weapon_offset(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component)
 	local pitch_rotation = Quaternion(Vector3.right(), pitch_offset)
 	local yaw_rotation = Quaternion(Vector3.up(), yaw_offset)
 	local combined_offset = Quaternion.multiply(yaw_rotation, pitch_rotation)

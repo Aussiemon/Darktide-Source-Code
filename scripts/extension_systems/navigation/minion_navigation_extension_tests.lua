@@ -2,6 +2,7 @@
 
 local unit_alive = Unit.alive
 local self = {
+	current_unit = nil,
 	max_size = 8,
 	total_time = 120,
 	trigger_time = 0,

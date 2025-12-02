@@ -15,7 +15,7 @@ Hordes._get_horde_settings = function (self)
 	return Managers.backend:title_request(url):next(function (data)
 		return data.body
 	end):catch(function (err)
-		Log.info("[Hordes] Error in _get_horde_settings:", err)
+		Log.info("Hordes", "Error in _get_horde_settings:", err)
 
 		return Promise.rejected(err)
 	end)
@@ -24,7 +24,7 @@ end
 Hordes.get_horde_setting_from_the_backend = function (self)
 	return self:_get_horde_settings():next(function (result)
 		if not result then
-			Log.info("[Hordes] Missing 'settings' from backend.")
+			Log.info("Hordes", "Missing 'settings' from backend.")
 
 			return {}
 		end
@@ -39,7 +39,7 @@ Hordes.get_horde_setting_from_the_backend = function (self)
 
 		return result
 	end):catch(function (err)
-		Log.info("[Hordes] Error fetching settings:", err)
+		Log.info("Hordes", "Error fetching settings:", err)
 
 		return Promise.rejected(err)
 	end)

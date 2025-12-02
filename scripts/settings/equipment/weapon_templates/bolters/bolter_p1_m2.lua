@@ -249,6 +249,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.3,
 		sprint_requires_press_to_interrupt = true,
@@ -328,6 +329,7 @@ weapon_template.actions = {
 	},
 	action_shoot_zoomed = {
 		ammunition_usage = 1,
+		anim_event = nil,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		start_input = "zoom_shoot",
@@ -508,6 +510,7 @@ weapon_template.actions = {
 		anim_event = "attack_push",
 		damage_window_end = 0.3,
 		damage_window_start = 0.13333333333333333,
+		hit_stop_anim = nil,
 		kind = "sweep",
 		range_mod = 1.15,
 		sprint_requires_press_to_interrupt = true,

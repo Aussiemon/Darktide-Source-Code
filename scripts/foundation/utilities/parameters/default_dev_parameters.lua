@@ -7,6 +7,7 @@ local categories = {
 	"Action",
 	"Animation",
 	"Auspex",
+	"Auto Event",
 	"Backend",
 	"Behavior_tree",
 	"Blackboard",
@@ -36,11 +37,12 @@ local categories = {
 	"Dev Print",
 	"Dialogue",
 	"Difficulty",
+	"DLC",
 	"Effects",
 	"Equipment",
 	"Error",
 	"Event",
-	"Explosion Rework Testing",
+	"Explosion",
 	"Feature Info",
 	"FGRL",
 	"Force Field",
@@ -101,6 +103,7 @@ local categories = {
 	"Projectile",
 	"ProximitySystem",
 	"Push",
+	"Renderer",
 	"Respawn",
 	"Roamers",
 	"Rumble & Haptics",
@@ -1740,6 +1743,73 @@ params.log_resolve_sound_fallback = {
 		"debug",
 	},
 }
+params.simulate_color_blindness = {
+	category = "Renderer",
+	value = false,
+	options = {
+		false,
+		"common_deuteranomaly",
+		"rare_protanomaly",
+		"very_rare_tritanomaly",
+	},
+	on_value_set = function (new_value)
+		local mode
+
+		if new_value == "rare_protanomaly" then
+			mode = 0
+		elseif new_value == "common_deuteranomaly" then
+			mode = 1
+		elseif new_value == "very_rare_tritanomaly" then
+			mode = 2
+		end
+
+		if mode then
+			Application.set_render_setting("color_blindness_mode", mode)
+			Application.set_render_setting("simulate_color_blindness", "true")
+		else
+			Application.set_render_setting("simulate_color_blindness", "false")
+		end
+	end,
+}
+params.debug_rendering = {
+	category = "Renderer",
+	value = false,
+	options = {
+		false,
+		"bloom_visualization",
+		"cached_shadow_atlas_visualization",
+		"eye_adaptation_visualization",
+		"gbuffer_albedo_lab_luminance_clipping_visualization",
+		"gbuffer_albedo_lab_luminance_visualization",
+		"gbuffer_albedo_visualization",
+		"gbuffer_albedo_xyz_luminance_clipping_visualization",
+		"gbuffer_albedo_xyz_luminance_visualization",
+		"gbuffer_ambient_diffuse_visualization",
+		"gbuffer_ao_visualization",
+		"gbuffer_metallic_visualization",
+		"gbuffer_normal_visualization",
+		"gbuffer_roughness_visualization",
+		"gbuffer_specular_visualization",
+		"gbuffer_sun_shadow_visualization",
+		"gbuffer_velocity_visualization",
+		"light_shafts_visualization",
+		"shadow_atlas_visualization",
+		"static_shadow_visualization",
+		"sun_shadow_map_visualization",
+	},
+	on_value_set = function (new_value)
+		Application.console_command("renderer", "settings", "debug_rendering", new_value and "true" or "false")
+
+		local options = params.renderer_settings.options
+
+		for i = 2, #options do
+			local setting_name = options[i]
+			local setting_value = setting_name == new_value and "true" or "false"
+
+			Application.set_render_setting(setting_name, setting_value)
+		end
+	end,
+}
 
 local function _debug_slots_options()
 	local SlotTypeSettings = require("scripts/settings/slot/slot_type_settings")
@@ -2787,6 +2857,10 @@ params.player_friendly_fire = {
 	category = "Difficulty",
 	value = false,
 }
+params.disable_all_dlc_ownership = {
+	category = "DLC",
+	value = false,
+}
 params.debug_chaos_hound = {
 	category = "Chaos Hound",
 	value = false,
@@ -2906,6 +2980,10 @@ params.disable_trickle_horde_pacing = {
 }
 params.debug_horde_pacing = {
 	category = "Hordes",
+	value = false,
+}
+params.debug_auto_events = {
+	category = "Auto Event",
 	value = false,
 }
 params.hordes_mode_override_wave_number = {
@@ -3064,6 +3142,45 @@ params.verbose_party_log = {
 	category = "Party",
 	value = false,
 }
+params.debug_payload = {
+	category = "Payload",
+	value = false,
+}
+params.draw_payload_proximity_check = {
+	category = "Payload",
+	value = false,
+}
+params.draw_payload_turret_aiming = {
+	category = "Payload",
+	value = false,
+}
+params.draw_payload_smooth_movement_pathing = {
+	category = "Payload",
+	value = false,
+}
+params.draw_payload_smooth_movement_floor_normal_calculation = {
+	category = "Payload",
+	value = false,
+}
+params.draw_payload_smooth_movement_orientation_calculation = {
+	category = "Payload",
+	value = false,
+}
+params.override_payload_normal_adjustment_speed = {
+	category = "Payload",
+	num_decimals = 2,
+	value = 0,
+}
+params.override_payload_movement_lerping_speed = {
+	category = "Payload",
+	num_decimals = 2,
+	value = 0,
+}
+params.override_payload_vertical_movement_speed_modifier = {
+	category = "Payload",
+	num_decimals = 2,
+	value = 0,
+}
 params.verbose_presence_log = {
 	category = "Presence",
 	value = false,
@@ -3087,33 +3204,6 @@ params.enemy_outlines = {
 params.disable_outlines = {
 	category = "Hud",
 	value = false,
-}
-params.simulate_color_blindness = {
-	category = "Hud",
-	value = "off",
-	options = {
-		"off",
-		"rare_protanomaly",
-		"common_deuteranomaly",
-		"very_rare_tritanomaly",
-	},
-	on_value_set = function (new_value)
-		local on = true
-		local mode = 0
-
-		if new_value == "off" then
-			on = false
-		else
-			mode = new_value == "rare_protanomaly" and 0 or new_value == "common_deuteranomaly" and 1 or 2
-		end
-
-		if on then
-			Application.set_render_setting("color_blindness_mode", mode)
-			Application.set_render_setting("simulate_color_blindness", "true")
-		else
-			Application.set_render_setting("simulate_color_blindness", "false")
-		end
-	end,
 }
 params.show_debug_charge_hud = {
 	category = "Hud",
@@ -3716,6 +3806,14 @@ params.debug_draw_world_marker_component = {
 	category = "UI",
 	value = false,
 }
+params.ui_unsafe_view_destroy = {
+	category = "UI",
+	value = true,
+}
+params.log_weapon_icon_offsets = {
+	category = "UI",
+	value = false,
+}
 params.override_stun_type = {
 	category = "Damage",
 	value = false,
@@ -4263,8 +4361,12 @@ params.disable_achievement_backend_update = {
 		end
 	end,
 }
+params.show_penances_as_not_completed = {
+	category = "Achievements",
+	value = false,
+}
 params.debug_trophies = {
-	category = "Game Mode",
+	category = "Achievements",
 	value = false,
 }
 params.debug_shading_environment = {
@@ -5647,16 +5749,12 @@ local function _draw_broadphase_spheres_of_all_units_in_broadphase()
 	end
 end
 
-params.broadphase_use_seperate_query_for_destructibles = {
-	category = "Explosion Rework Testing",
-	value = true,
-}
 params.show_broadphase_sphere_upon_spawning = {
-	category = "Explosion Rework Testing",
+	category = "Explosion",
 	value = false,
 }
 params.show_broadphase_spheres_for_explosion_targets = {
-	category = "Explosion Rework Testing",
+	category = "Explosion",
 	value = false,
 	on_value_set = function (new_value, old_value)
 		if new_value then
@@ -5665,19 +5763,12 @@ params.show_broadphase_spheres_for_explosion_targets = {
 		end
 	end,
 }
-params.switch_to_explosion_physics_overlap = {
-	category = "Explosion Rework Testing",
-	value = false,
-}
 params.keep_empty_server_alive = {
 	value = false,
 }
 params.category_log_levels = {
 	hidden = true,
-	value = {
-		"Log Internal",
-		2,
-	},
+	value = {},
 }
 params.max_external_time_step = {
 	num_decimals = 1,

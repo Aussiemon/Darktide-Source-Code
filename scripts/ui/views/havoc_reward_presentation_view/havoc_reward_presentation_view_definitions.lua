@@ -4,7 +4,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local badge_size = {
@@ -326,7 +326,7 @@ local reward_defintions = {
 		local currency_data = WalletSettings[config.currency]
 
 		widget.content.currency = currency_data.icon_texture_big
-		widget.content.text = TextUtilities.format_currency(config.value)
+		widget.content.text = Text.format_currency(config.value)
 		widget.style.text.material = currency_data.font_gradient_material
 		widget.content.value = config.value
 	end,
@@ -766,7 +766,7 @@ local function weekly_anim_reward_entry(start_time, end_time, widget_index)
 				if final_value then
 					local anim_value = math.ceil(final_value * anim_progress)
 
-					content.text = TextUtilities.format_currency(anim_value)
+					content.text = Text.format_currency(anim_value)
 
 					if not content.value_sound_played then
 						parent:_play_sound(UISoundEvents.end_screen_summary_currency_summation)

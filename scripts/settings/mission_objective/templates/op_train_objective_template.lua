@@ -4,9 +4,11 @@ local mission_objective_templates = {
 	op_train = {
 		objectives = {
 			objective_flash_train_reach_locomotive = {
+				additional_height = 20,
 				description = "loc_objective_op_train_timer_desc",
 				event_type = "end_event",
 				header = "loc_objective_op_train_timer_header",
+				hud_sort_order = -2,
 				mission_objective_type = "timed",
 				music_wwise_state = "operation_stage_1",
 				objective_category = "overarching",
@@ -22,9 +24,11 @@ local mission_objective_templates = {
 				},
 			},
 			objective_flash_train_alert = {
+				additional_height = 20,
 				description = "loc_objective_op_train_alert_header",
 				duration = 30,
 				header = "loc_objective_op_train_alert_desc",
+				hud_sort_order = -2,
 				mission_objective_type = "timed",
 				music_wwise_state = "operation_stage_3",
 				objective_category = "overarching",

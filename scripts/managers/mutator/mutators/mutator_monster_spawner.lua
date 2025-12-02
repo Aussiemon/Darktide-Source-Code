@@ -49,6 +49,10 @@ MutatorMonsterSpawner.init = function (self, is_server, network_event_delegate, 
 	self._allowed_per_section = {}
 	self._section_probabillity = {}
 	self._num_to_spawn = self._template_data.num_to_spawn or self._template_data.num_to_spawn_per_mission[mission_name]
+
+	if type(self._num_to_spawn) == "table" then
+		self._num_to_spawn = math.random(self._num_to_spawn[1], self._num_to_spawn[2])
+	end
 end
 
 MutatorMonsterSpawner.destroy = function (self)
@@ -130,18 +134,6 @@ MutatorMonsterSpawner.update = function (self, dt, t)
 
 		if spawn_travel_distance <= ahead_travel_distance then
 			if self._injection_template then
-				if self._injection_template.spawn_event_props then
-					local event_props_reference, _, props_idx = math.random_array_entry(self._injection_template.spawn_event_props)
-					local spawn_position = monster.position:unbox()
-					local spawn_rotation = Quaternion.axis_angle(Vector3.up(), math.random() * (math.pi * 2))
-
-					Managers.state.level_instance:spawn_level_instance(event_props_reference, spawn_position, spawn_rotation)
-
-					if #self._injection_template.spawn_event_props > 1 then
-						table.swap_delete(self._injection_template.spawn_event_props, props_idx)
-					end
-				end
-
 				self._injection_template.spawn(self._template_data, monster, ahead_target_unit, 2)
 				table.remove(monsters, i)
 

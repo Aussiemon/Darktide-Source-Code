@@ -6,9 +6,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local Items = require("scripts/utilities/items")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Text = require("scripts/utilities/ui/text")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -79,54 +77,10 @@ end
 
 local bar_offset = 150 - bar_width
 local default_button_content = {
+	on_released_sound = nil,
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select,
 }
-
-local function _style_text_height(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
-	local text_size = style.size
-	local text_additional_size = style.size_addition
-	local calculate_size = {
-		text_size[1] or 0,
-		text_size[2] or 0,
-	}
-
-	if text_additional_size then
-		calculate_size = {
-			calculate_size[1] + text_additional_size[1],
-			calculate_size[2] + text_additional_size[2],
-		}
-	end
-
-	local use_max_extents = true
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, calculate_size, text_options, use_max_extents)
-
-	return text_height
-end
-
-local function _style_text_width(text, style, ui_renderer)
-	local text_font_data = UIFonts.data_by_type(style.font_type)
-	local text_font = text_font_data.path
-	local text_size = style.size
-	local text_additional_size = style.size_addition
-	local calculate_size = text_size
-
-	if text_additional_size then
-		calculate_size = {
-			text_size[1] + text_additional_size[1],
-			text_size[2] + text_additional_size[2],
-		}
-	end
-
-	local use_max_extents = true
-	local text_options = UIFonts.get_font_options_by_style(style)
-	local text_width, _ = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, calculate_size, text_options, use_max_extents)
-
-	return text_width
-end
 
 local function generate_blueprints_function(grid_size, optional_item)
 	local grid_width = grid_size[1]
@@ -1539,97 +1493,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 		return pass_templates
 	end
 
-	local function _update_pattern_type(widget, parent, ui_renderer)
-		local content = widget.content
-		local style = widget.style
-		local attack_index, chain_index = 1, 1
-
-		if parent.current_attack_index then
-			attack_index, chain_index = parent:current_attack_index()
-		end
-
-		if content.current_attack_index == attack_index and content.current_chain_index == chain_index then
-			return
-		end
-
-		local spacing = 5
-		local item = content.item
-		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
-		local displayed_attacks = weapon_template.displayed_attacks
-		local min_desc_size = 20
-		local desc_size = 0
-
-		if displayed_attacks then
-			local statistics_template = weapon_template.displayed_weapon_stats and WeaponUIStatsTemplates[weapon_template.displayed_weapon_stats] or weapon_template.displayed_weapon_stats_table
-			local damage_actions = statistics_template.damage
-			local action_table = damage_actions[attack_index]
-			local action_name = action_table and action_table[chain_index] and action_table[chain_index].action_name
-			local action = action_name and weapon_template.actions[action_name]
-			local explosion_template = action and Action.explosion_template(action)
-
-			content.extra_information = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
-
-			local is_ranged_weapon = Items.is_weapon_template_ranged(item)
-			local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
-			local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
-			local key = weapon_action_display_order_array[attack_index]
-			local data = displayed_attacks[key]
-
-			if data then
-				local attack_type = data.attack_chain and data.attack_chain[chain_index] or data.type
-
-				if attack_type then
-					local attack_type_icon = UISettings.weapon_action_type_icons[attack_type]
-					local display_name = UISettings.attack_type_lookup[attack_type]
-
-					display_name = display_name or data.display_name
-					display_name = Localize(display_name)
-
-					local desc_id = UISettings.attack_type_desc_lookup[attack_type] or data.desc
-					local desc = desc_id and Localize(desc_id) or ""
-
-					if desc ~= "" then
-						local desc_style = style.extra_information
-						local text_options = UIFonts.get_font_options_by_style(desc_style)
-						local text_size = {
-							desc_style.size[1],
-							2000,
-						}
-						local _, text_height = UIRenderer.text_size(ui_renderer, desc, desc_style.font_type, desc_style.font_size, text_size, text_options)
-
-						desc_size = math.max(min_desc_size, text_height) - min_desc_size
-					end
-
-					content.attack_type_icon = attack_type_icon
-					content.attack_type_name = display_name
-					content.attack_type_desc = desc
-
-					local attack_type_icon_style = style.attack_type_icon
-					local attack_type_name_style = style.attack_type_name
-					local attack_type_desc_style = style.attack_type_desc
-					local text_width = _style_text_width(display_name, attack_type_name_style, ui_renderer)
-
-					attack_type_name_style.text_color[1] = 255
-					attack_type_desc_style.text_color[1] = 255
-					attack_type_icon_style.offset[1] = -text_width * 0.5 - attack_type_icon_style.size[1] - spacing
-				end
-			end
-		end
-
-		content.current_attack_index = attack_index
-		content.current_chain_index = chain_index
-
-		local original_offset = 115
-		local original_bottom_size = 160
-		local original_top_size = 150
-
-		style.tile_top.size[2] = original_top_size + desc_size
-		style.corner_top.size[2] = original_top_size + desc_size
-		style.tile_bottom.offset[2] = original_offset + desc_size
-		style.corner_bottom.offset[2] = original_offset + desc_size
-		style.detailed_bottom.size[2] = original_bottom_size + desc_size
-	end
-
 	local function _update_connection_line(old_attack_index, old_chain_index, new_attack_index, new_chain_index, content, style)
 		content["icon_hotspot_" .. old_attack_index .. "_" .. old_chain_index].is_selected = false
 
@@ -2279,8 +2142,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
-	local weapon_header_icon_width = grid_width * 0.5
-	local weapon_header_icon_height = 95
+	local weapon_header_icon_width = 230.4
+	local weapon_header_icon_height = 86.4
 	local blueprints = {
 		equipped = {
 			size = {
@@ -2301,7 +2164,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		weapon_header = {
 			size = {
 				grid_width,
-				110,
+				120,
 			},
 			pass_template = {
 				_generate_background_pass(),
@@ -2327,15 +2190,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 					value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
 					value_id = "icon",
 					style = {
-						horizontal_alignment = "center",
+						horizontal_alignment = "right",
 						vertical_alignment = "top",
 						size = {
 							weapon_header_icon_width,
 							weapon_header_icon_height,
 						},
 						offset = {
-							weapon_header_icon_width * 0.5,
-							20,
+							-20,
+							30,
 							3,
 						},
 						color = Color.terminal_icon(nil, true),
@@ -2416,7 +2279,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				local rarity_name_style = style.rarity_name
 				local height_margin = -2
-				local sub_display_name_text_height = _style_text_height(sub_display_name, weapon_sub_display_name_style, ui_renderer)
+				local sub_display_name_text_height = Text.text_height(ui_renderer, sub_display_name, weapon_sub_display_name_style, nil, true)
 
 				rarity_name_style.offset[2] = weapon_sub_display_name_style.offset[2] + sub_display_name_text_height + height_margin
 
@@ -2430,7 +2293,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style.weapon_special_icon.visible = true
 					style.weapon_special_text.visible = true
 
-					local rarity_name_text_height = _style_text_height(rarity_name, weapon_rarity_name_style, ui_renderer)
+					local rarity_name_text_height = Text.text_height(ui_renderer, rarity_name, weapon_rarity_name_style, nil, true)
 
 					style.weapon_special_icon.offset[2] = rarity_name_style.offset[2] + rarity_name_text_height
 					style.weapon_special_text.offset[2] = rarity_name_style.offset[2] + rarity_name_text_height
@@ -2457,7 +2320,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Items.display_name(item) .. "\n" .. Items.sub_display_name(item, nil, true)
-				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, item_display_name_style, nil, true)
 				local entry_height = math.max(0, text_height + 40)
 
 				return {
@@ -2548,7 +2411,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style.background.visible = not not element.add_background
 				style.background_shadow.visible = not not element.add_background_shadow
 
-				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
+				local display_name_text_height = Text.text_height(ui_renderer, display_name, item_display_name_style, nil, true)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 			end,
@@ -2563,7 +2426,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local profile = element.profile
 				local display_name = ProfileUtils.title_item_name_no_color(item, profile)
 				local text = display_name .. "\n" .. Items.sub_display_name(item)
-				local text_height = _style_text_height(text, item_display_name_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, item_display_name_style, nil, true)
 				local entry_height = math.max(0, text_height + 40)
 
 				return {
@@ -2655,7 +2518,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style.background.visible = not not element.add_background
 				style.background_shadow.visible = not not element.add_background_shadow
 
-				local display_name_text_height = _style_text_height(display_name, item_display_name_style, ui_renderer)
+				local display_name_text_height = Text.text_height(ui_renderer, display_name, item_display_name_style, nil, true)
 
 				sub_display_name_style.offset[2] = sub_display_name_style.offset[2] + display_name_text_height
 			end,
@@ -2968,7 +2831,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 				style.background.visible = not not element.add_background
 
 				local item = element.item
-				local display_name = Items.display_name(item)
 				local sub_display_name = Items.sub_display_name(item)
 				local rarity_name_style = style.rarity_name
 
@@ -3447,7 +3309,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				content.text = Items.keywords_text(item)
 
-				local text_width = _style_text_width(content.text, style.text, ui_renderer)
+				local text_width = Text.text_width(ui_renderer, content.text, style.text, nil, true)
 				local frame_style = style.frame
 
 				frame_style.size[1] = text_width + 50
@@ -3635,7 +3497,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				while attack_icon_style and attack_value_style do
 					local text = content["attack_value_" .. index]
-					local text_width = _style_text_width(text, attack_value_style, ui_renderer)
+					local text_width = Text.text_width(ui_renderer, text, attack_value_style, nil, true)
 					local icon_width = attack_icon_style.size[1]
 					local size = (text_width * 0.5 + icon_width * 0.5 + spacing) * 0.5
 
@@ -3664,7 +3526,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
 				local description = Items.trait_description(perk_item, perk_rarity, perk_value)
-				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, description, weapon_perk_style, nil, true)
 				local entry_height = math.max(20, text_height)
 
 				return {
@@ -3796,7 +3658,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 
 				if ui_renderer then
-					local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
+					local text_height = Text.text_height(ui_renderer, description, weapon_perk_style, nil, true)
 					local entry_height = math.max(20, text_height)
 
 					widget.content.size[2] = entry_height
@@ -3816,7 +3678,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_value = element.trait_value
 				local trait_rarity = element.trait_rarity
 				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
-				local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
+				local description_height = Text.text_height(ui_renderer, description, weapon_traits_description_style, nil, true)
 				local entry_height = math.max(68, description_height + weapon_traits_description_style.offset[2])
 
 				return {
@@ -3988,7 +3850,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				end
 
 				if ui_renderer then
-					local description_height = _style_text_height(description, weapon_traits_description_style, ui_renderer)
+					local description_height = Text.text_height(ui_renderer, description, weapon_traits_description_style, nil, true)
 					local entry_height = math.max(68, description_height + weapon_traits_description_style.offset[2])
 
 					widget.content.size[2] = entry_height
@@ -4004,7 +3866,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local trait_value = element.trait_value or 0
 				local trait_rarity = element.trait_rarity
 				local description = Items.trait_description(trait_item, trait_rarity, trait_value)
-				local text_height = _style_text_height(description, weapon_perk_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, description, weapon_perk_style, nil, true)
 				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height)
 
 				return {
@@ -4066,7 +3928,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local description = item.description
 				local description_localized = description and Localize(description) or ""
-				local description_height = _style_text_height(description_localized, description_style, ui_renderer)
+				local description_height = Text.text_height(ui_renderer, description_localized, description_style, nil, true)
 				local entry_height = math.max(0, description_height + 8)
 
 				return {
@@ -4109,7 +3971,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local text = Localize("loc_item_source_obtained_title")
-				local text_height = _style_text_height(text, obtained_header_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, obtained_header_style, nil, true)
 				local entry_height = math.max(0, text_height)
 
 				return {
@@ -4142,7 +4004,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local label = element.label or ""
-				local label_height = _style_text_height(label, obtained_label_style, ui_renderer)
+				local label_height = Text.text_height(ui_renderer, label, obtained_label_style, nil, true)
 				local entry_height = math.max(0, label_height + 8)
 
 				return {
@@ -4178,7 +4040,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local description = element.description or ""
-				local description_height = _style_text_height(description, achievement_description_style, ui_renderer)
+				local description_height = Text.text_height(ui_renderer, description, achievement_description_style, nil, true)
 				local entry_height = math.max(0, description_height + 8)
 
 				return {
@@ -4216,7 +4078,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Items.weapon_skin_requirement_text(item)
-				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, weapon_skin_requirement_style, nil, true)
 				local entry_height = math.max(0, text_height + 10)
 
 				return {
@@ -4254,7 +4116,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Items.class_requirement_text(item)
-				local text_height = _style_text_height(text, weapon_skin_requirement_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, weapon_skin_requirement_style, nil, true)
 				local entry_height = math.max(0, text_height + 10)
 
 				return {
@@ -4292,7 +4154,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Localize("loc_item_equippable_on_header")
-				local text_height = _style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, weapon_skin_requirement_header_style, nil, true)
 				local entry_height = math.max(0, text_height + 10)
 
 				weapon_skin_requirement_header_style.size[2] = entry_height
@@ -4328,7 +4190,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
 				local text = Localize("loc_item_equippable_on_header")
-				local text_height = _style_text_height(text, weapon_skin_requirement_header_style, ui_renderer)
+				local text_height = Text.text_height(ui_renderer, text, weapon_skin_requirement_header_style, nil, true)
 				local entry_height = math.max(0, text_height + 10)
 
 				weapon_skin_requirement_header_style.size[2] = entry_height
@@ -4364,7 +4226,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local data = element.data
 				local special_description = data.desc and Localize(data.desc) or ""
-				local special_description_height = _style_text_height(special_description, special_description_style, ui_renderer)
+				local special_description_height = Text.text_height(ui_renderer, special_description, special_description_style, nil, true)
 				local entry_height = math.max(0, special_description_height)
 
 				return {
@@ -4636,7 +4498,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						description = Localize(display_name .. "_mouseover")
 					end
 
-					local keyword_height = _style_text_height(description, weapon_keyword_desc_style, ui_renderer)
+					local keyword_height = Text.text_height(ui_renderer, description, weapon_keyword_desc_style, nil, true)
 
 					entry_height = entry_height < keyword_height and keyword_height or entry_height
 				end
@@ -4767,7 +4629,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local item = element.item
 				local item_description = item.description
 				local entry_height = 0
-				local desciption_height = _style_text_height(Localize(item_description), weapon_description_desc_style, ui_renderer)
+				local desciption_height = Text.text_height(ui_renderer, Localize(item_description), weapon_description_desc_style, nil, true)
 
 				entry_height = desciption_height or entry_height
 
@@ -4853,14 +4715,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				rarity_name_style.size[1] = widget.content.size[1]
 
-				local rarity_name_text_width = _style_text_width(content.rarity_name, rarity_name_style, ui_renderer)
+				local rarity_name_text_width = Text.text_width(ui_renderer, content.rarity_name, rarity_name_style, nil, true)
 				local display_name_style = style.display_name
 
 				display_name_style.size_addition[1] = -(rarity_name_text_width + 10)
 
-				local display_name_text_height = _style_text_height(content.display_name, display_name_style, ui_renderer)
+				local display_name_text_height = Text.text_height(ui_renderer, content.display_name, display_name_style, nil, true)
 				local sub_display_name_style = style.sub_display_name
-				local sub_display_name_name_text_height = _style_text_height(content.sub_display_name, sub_display_name_style, ui_renderer)
+				local sub_display_name_name_text_height = Text.text_height(ui_renderer, content.sub_display_name, sub_display_name_style, nil, true)
 				local spacing = 5
 
 				style.sub_display_name.offset[2] = display_name_text_height + spacing
@@ -4877,7 +4739,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 					style.text_description.offset[2] = style.sub_display_name.offset[2] + sub_display_name_name_text_height + spacing
 
-					local text_description_text_height = _style_text_height(content.text_description, text_description_style, ui_renderer)
+					local text_description_text_height = Text.text_height(ui_renderer, content.text_description, text_description_style, nil, true)
 
 					calculated_height = style.text_description.offset[2] + text_description_text_height
 				end
@@ -5555,69 +5417,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 45,
-							150,
 						},
 						offset = {
 							0,
 							0,
 							0,
-						},
-						color = Color.terminal_text_body_dark(255, true),
-					},
-				},
-				{
-					pass_type = "texture",
-					style_id = "corner_top",
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "top",
-						size = {
-							grid_width - 45,
-							150,
-						},
-						offset = {
-							0,
-							0,
-							1,
-						},
-						color = Color.terminal_text_body_dark(255, true),
-					},
-				},
-				{
-					pass_type = "texture",
-					style_id = "tile_bottom",
-					value = "content/ui/materials/frames/frame_tile_1px",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "top",
-						size = {
-							grid_width - 45,
-							35,
-						},
-						offset = {
-							0,
-							115,
-							2,
-						},
-						color = Color.terminal_text_body_dark(255, true),
-					},
-				},
-				{
-					pass_type = "texture",
-					style_id = "corner_bottom",
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style = {
-						horizontal_alignment = "center",
-						vertical_alignment = "top",
-						size = {
-							grid_width - 45,
-							35,
-						},
-						offset = {
-							0,
-							115,
-							3,
 						},
 						color = Color.terminal_text_body_dark(255, true),
 					},
@@ -5631,12 +5435,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 						vertical_alignment = "top",
 						size = {
 							grid_width - 35,
-							160,
 						},
 						offset = {
 							0,
 							-5,
 							0,
+						},
+						size_addition = {
+							0,
+							10,
 						},
 						color = Color.terminal_text_body_dark(255, true),
 					},
@@ -5644,6 +5451,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "texture",
 					style_id = "attack_type_icon",
+					value = nil,
 					value_id = "attack_type_icon",
 					style = {
 						horizontal_alignment = "center",
@@ -5664,16 +5472,40 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end,
 				},
 				{
+					pass_type = "texture",
+					style_id = "tile_bottom",
+					value = "content/ui/materials/frames/frame_tile_1px",
+					style = {
+						horizontal_alignment = "center",
+						vertical_alignment = "top",
+						size = {
+							grid_width - 45,
+							1,
+						},
+						offset = {
+							0,
+							115,
+							2,
+						},
+						color = Color.terminal_text_body_dark(255, true),
+					},
+					visibility_function = function (content, style)
+						return content.extra_information ~= ""
+					end,
+				},
+				{
 					pass_type = "text",
 					style_id = "attack_type_name",
+					value = nil,
 					value_id = "attack_type_name",
 					style = table.merge_recursive(table.clone(weapon_attack_type_display_name_header_style), {
 						font_size = 20,
+						material = nil,
 						text_horizontal_alignment = "center",
 						text_vertical_alignment = "top",
 						offset = {
 							0,
-							20,
+							0,
 							0,
 						},
 						text_color = Color.white(0, true),
@@ -5682,6 +5514,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "text",
 					style_id = "attack_type_desc",
+					value = nil,
 					value_id = "attack_type_desc",
 					style = table.merge_recursive(table.clone(weapon_attack_type_desc_style), {
 						font_size = 20,
@@ -5689,7 +5522,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						text_vertical_alignment = "top",
 						offset = {
 							40,
-							60,
+							0,
 							0,
 						},
 					}),
@@ -5705,7 +5538,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						text_vertical_alignment = "top",
 						offset = {
 							40,
-							120,
+							0,
 							0,
 						},
 						text_color = Color.terminal_text_body_dark(255, true),
@@ -5718,7 +5551,111 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.item = element.item
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
-				_update_pattern_type(widget, parent, ui_renderer)
+				local content = widget.content
+				local style = widget.style
+				local attack_index, chain_index = 1, 1
+
+				if parent.current_attack_index then
+					attack_index, chain_index = parent:current_attack_index()
+				end
+
+				if content.current_attack_index == attack_index and content.current_chain_index == chain_index then
+					return
+				end
+
+				local spacing = 5
+				local item = content.item
+				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+				local displayed_attacks = weapon_template.displayed_attacks
+				local margin = 20
+				local desc_margin = 20
+				local extra_information_margin = 20
+				local new_height = 0
+
+				if displayed_attacks then
+					local is_ranged_weapon = Items.is_weapon_template_ranged(item)
+					local weapon_action_title_display_names = is_ranged_weapon and UISettings.weapon_action_title_display_names or UISettings.weapon_action_title_display_names_melee
+					local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
+					local key = weapon_action_display_order_array[attack_index]
+					local data = displayed_attacks[key]
+
+					if data then
+						local attack_type = data.attack_chain and data.attack_chain[chain_index] or data.type
+
+						if attack_type then
+							local attack_type_icon_style = style.attack_type_icon
+							local attack_type_name_style = style.attack_type_name
+							local attack_type_desc_style = style.attack_type_desc
+							local attack_extra_info_style = style.extra_information
+							local attack_type_icon = UISettings.weapon_action_type_icons[attack_type]
+							local display_name = UISettings.attack_type_lookup[attack_type]
+
+							display_name = display_name or data.display_name
+							display_name = Localize(display_name)
+
+							local title_width, title_height = Text.text_size(ui_renderer, display_name, attack_type_name_style, {
+								attack_type_name_style.size[1],
+								2000,
+							}, true)
+
+							attack_type_icon_style.offset[1] = -title_width * 0.5 - attack_type_icon_style.size[1] - spacing
+							attack_type_name_style.offset[2] = margin
+
+							if title_height > 0 then
+								new_height = new_height + title_height
+							end
+
+							attack_type_name_style.text_color[1] = 255
+							attack_type_desc_style.text_color[1] = 255
+
+							local desc_id = UISettings.attack_type_desc_lookup[attack_type] or data.desc
+							local desc = desc_id and Localize(desc_id) or ""
+							local desc_height = Text.text_height(ui_renderer, desc, attack_type_desc_style, {
+								attack_type_desc_style.size[1],
+								2000,
+							})
+
+							attack_type_desc_style.offset[2] = new_height + desc_margin + margin
+
+							if desc_height > 0 then
+								new_height = new_height + desc_margin + desc_height
+							end
+
+							local statistics_template = weapon_template.displayed_weapon_stats and WeaponUIStatsTemplates[weapon_template.displayed_weapon_stats] or weapon_template.displayed_weapon_stats_table
+							local damage_actions = statistics_template.damage
+							local action_table = damage_actions[attack_index]
+							local action_name = action_table and action_table[chain_index] and action_table[chain_index].action_name
+							local action = action_name and weapon_template.actions[action_name]
+							local explosion_template = action and Action.explosion_template(action)
+							local extra_info = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
+							local extra_info_height = Text.text_height(ui_renderer, extra_info, attack_extra_info_style, {
+								attack_extra_info_style.size[1],
+								2000,
+							})
+							local title_bottom_extra_size = 10
+
+							attack_extra_info_style.offset[2] = new_height + extra_information_margin + margin
+							style.tile_bottom.offset[2] = attack_extra_info_style.offset[2] - title_bottom_extra_size * 0.5
+
+							if extra_info_height > 0 then
+								new_height = new_height + extra_information_margin + extra_info_height + title_bottom_extra_size - margin
+							end
+
+							content.attack_type_icon = attack_type_icon
+							content.attack_type_name = display_name
+							content.attack_type_desc = desc
+							content.extra_information = extra_info
+						end
+					end
+				end
+
+				if new_height > 0 then
+					new_height = new_height + margin * 2
+				end
+
+				content.current_attack_index = attack_index
+				content.current_chain_index = chain_index
+				widget.content.size[2] = new_height
 			end,
 		},
 		damage_grid = {
@@ -6184,6 +6121,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "texture",
 					style_id = "hover_icon",
+					value = nil,
 					value_id = "hover_icon",
 					style = {
 						horizontal_alignment = "center",
@@ -6206,9 +6144,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "text",
 					style_id = "hover_icon_name",
+					value = nil,
 					value_id = "hover_icon_name",
 					style = table.merge_recursive(table.clone(weapon_attack_type_display_name_header_style), {
 						font_size = 20,
+						material = nil,
 						text_horizontal_alignment = "center",
 						text_vertical_alignment = "top",
 						offset = {
@@ -6222,6 +6162,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "text",
 					style_id = "hover_icon_desc",
+					value = nil,
 					value_id = "hover_icon_desc",
 					style = table.merge_recursive(table.clone(weapon_attack_type_desc_style), {
 						font_size = 20,
@@ -6312,7 +6253,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						local icon_name = content["icon_name_" .. index]
 						local icon = content["icon_" .. index]
 						local description = content["desc_" .. index]
-						local text_height = _style_text_height(description, style.hover_icon_desc, ui_renderer) + 20
+						local text_height = Text.text_height(ui_renderer, description, style.hover_icon_desc, nil, true) + 20
 
 						style.hover_bg.color[1] = 210
 						style.hover_frame.color[1] = 255

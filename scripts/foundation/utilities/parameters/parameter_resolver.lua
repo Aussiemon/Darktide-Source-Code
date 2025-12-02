@@ -6,10 +6,10 @@ local DefaultDevParameters = require("scripts/foundation/utilities/parameters/de
 GameParameters = GameParameters or {}
 DevParameters = DevParameters or {}
 ParameterResolver = ParameterResolver or {}
-ParameterResolver.DEBUG_TAG = "[ParameterResolver]"
+ParameterResolver.DEBUG_TAG = "ParameterResolver"
 
-local function debug(str, ...)
-	print(string.format(ParameterResolver.DEBUG_TAG .. " " .. str, ...))
+local function debug(fmt, ...)
+	Log.info(ParameterResolver.DEBUG_TAG, fmt, ...)
 end
 
 ParameterResolver.resolve_command_line = function ()

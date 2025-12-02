@@ -143,5 +143,18 @@ weapon_sprint_templates.ninja_l = {
 		lerp_perfect = 1,
 	},
 }
+weapon_sprint_templates.ninja_2 = {
+	sprint_forward_deceleration = 2.3,
+	sprint_sideway_acceleration = 7,
+	sprint_sideway_deceleration = 7,
+	sprint_forward_acceleration = {
+		lerp_basic = 0.4,
+		lerp_perfect = 0.9,
+	},
+	sprint_speed_mod = {
+		lerp_basic = 0.4,
+		lerp_perfect = 0.9,
+	},
+}
 
 return settings("WeaponSprintTemplates", weapon_sprint_templates)

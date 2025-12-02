@@ -7,6 +7,7 @@ local SocialConstants = require("scripts/managers/data_service/services/social/s
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementPlayerSocialPopupContentList = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup_content_list")
 local social_service = Managers.data_service.social
 local OnlineStatus = SocialConstants.OnlineStatus
@@ -429,7 +430,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 			header_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
 		end
 
-		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
+		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header, profile)
 		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header, self._ui_renderer)
 
 		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
@@ -451,10 +452,10 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 	self:_start_fade_animation("open")
 end
 
-ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.portrait
 
-	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
+	widget.content.portrait = self:_get_player_portrait_frame_material(profile)
 
 	local material_values = portrait_style.material_values
 
@@ -479,10 +480,18 @@ ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget, ui_
 end
 
 ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
-	local icon = item.icon
-	local portrait_style = widget.style.portrait
+	local material_values = widget.style.portrait.material_values
 
-	portrait_style.material_values.portrait_frame_texture = icon
+	if item.icon_material and item.icon_material ~= "" then
+		if material_values.portrait_frame_texture then
+			material_values.portrait_frame_texture = nil
+		end
+
+		widget.content.portrait = item.icon_material
+	else
+		widget.content.portrait = UISettings.portrait_frame_default_material
+		material_values.portrait_frame_texture = item.icon
+	end
 end
 
 ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui_renderer)
@@ -492,6 +501,24 @@ ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui
 	local material_values = widget_style.portrait.material_values
 
 	material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
+end
+
+ViewElementPlayerSocialPopup._get_player_portrait_frame_material = function (self, profile)
+	local frame_material = UISettings.portrait_frame_default_material
+
+	if profile and type(profile) == "table" then
+		local loadout = profile.loadout
+
+		if loadout then
+			local frame_item = loadout.slot_portrait_frame
+
+			if frame_item and frame_item.icon_material and frame_item.icon_material ~= "" then
+				frame_material = frame_item.icon_material
+			end
+		end
+	end
+
+	return frame_material
 end
 
 local _padding_item = {

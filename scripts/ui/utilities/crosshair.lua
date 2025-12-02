@@ -24,13 +24,15 @@ Crosshair.position = function (dt, t, ui_hud, ui_renderer, current_x, current_y,
 		local recoil_template = weapon_extension:recoil_template()
 		local recoil_component = unit_data_extension:read_component("recoil")
 		local movement_state_component = unit_data_extension:read_component("movement_state")
+		local locomotion_component = unit_data_extension:read_component("locomotion")
+		local inair_state_component = unit_data_extension:read_component("inair_state")
 
-		shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, shoot_rotation)
+		shoot_rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component, shoot_rotation)
 
 		local sway_component = unit_data_extension:read_component("sway")
 		local sway_template = weapon_extension:sway_template()
 
-		shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, movement_state_component, shoot_rotation)
+		shoot_rotation = Sway.apply_sway_rotation(sway_template, sway_component, shoot_rotation)
 
 		local range = 50
 		local shoot_direction = Quaternion.forward(shoot_rotation)

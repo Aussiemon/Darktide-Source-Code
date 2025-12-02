@@ -1,17 +1,22 @@
 ﻿-- chunkname: @scripts/ui/views/news_view/news_view.lua
 
-local Promise = require("scripts/foundation/utilities/promise")
 local Definitions = require("scripts/ui/views/news_view/news_view_definitions")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local WidgetSlideBlueprints = require("scripts/ui/views/news_view/news_view_blueprints")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
-local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
 local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
+local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local WidgetSlideBlueprints = require("scripts/ui/views/news_view/news_view_blueprints")
 local NewsView = class("NewsView", "BaseView")
 
 NewsView.init = function (self, settings, context)
-	self._slide_position = {}
+	self._promise_container = PromiseContainer:new()
+	self._slide_position = {
+		current = nil,
+		previous = nil,
+	}
 	self._initialized = false
 	self._url_textures = {}
 
@@ -121,7 +126,7 @@ end
 NewsView._load_slides = function (self)
 	self._initialized = false
 
-	Managers.data_service.news:get_news():next(function (raw_news)
+	local slides_promise = Managers.data_service.news:get_news():next(function (raw_news)
 		local slide_data = {
 			starting_slide_index = 1,
 			slides = raw_news,
@@ -129,6 +134,8 @@ NewsView._load_slides = function (self)
 
 		self:_initialize_slides(slide_data)
 	end)
+
+	self._promise_container:cancel_on_destroy(slides_promise)
 end
 
 NewsView._add_viewed_slide = function (self, slide_to_add)
@@ -149,7 +156,8 @@ NewsView.on_enter = function (self)
 
 	self:_setup_grid()
 	Managers.telemetry_events:open_view(self._telemetry_view_name, false, self._telemetry_id)
-	Promise.until_value_is_true(function ()
+
+	local initialize_promise = Promise.until_value_is_true(function ()
 		return self._initialized
 	end):next(function ()
 		local slides = self._slides
@@ -168,12 +176,19 @@ NewsView.on_enter = function (self)
 			Managers.ui:close_view(self.view_name)
 		end
 	end)
+
+	self._promise_container:cancel_on_destroy(initialize_promise)
 end
 
 NewsView.on_exit = function (self)
 	NewsView.super.on_exit(self)
 	Managers.telemetry_events:close_view(self._telemetry_view_name)
 	self:_unload_url_textures()
+end
+
+NewsView.destroy = function (self)
+	self._promise_container:delete()
+	NewsView.super.destroy(self)
 end
 
 NewsView._create_slide_page_circles = function (self)
@@ -357,7 +372,7 @@ NewsView.load_texture = function (self, image_url, image_element)
 
 		url_textures[#url_textures + 1] = image_url
 
-		Managers.url_loader:load_texture(image_url):next(function (data)
+		local promise = Managers.url_loader:load_texture(image_url, nil, "news_view"):next(function (data)
 			style.texture.material_values.texture = data.texture
 			url_textures[image_url] = data
 		end):catch(function (error)
@@ -365,6 +380,8 @@ NewsView.load_texture = function (self, image_url, image_element)
 
 			Log.error("NewsService", "Error fetching news images", error_string)
 		end)
+
+		self._promise_container:cancel_on_destroy(promise)
 	end
 end
 

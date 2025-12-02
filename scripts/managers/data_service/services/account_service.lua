@@ -182,8 +182,8 @@ AccountService._has_created_first_character = function (self)
 	end)
 end
 
-AccountService.set_has_created_first_character = function (self)
-	return Managers.backend.interfaces.account:set_has_created_first_character("true"):catch(function (error)
+AccountService.set_has_created_first_character = function (self, character_id)
+	return Managers.backend.interfaces.account:set_has_created_first_character("true", character_id):catch(function (error)
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})

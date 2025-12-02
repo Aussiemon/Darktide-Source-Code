@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/achievements/achievement_breed_groups.lua
 
+local Breeds = require("scripts/settings/breed/breeds")
 local BreedQueries = require("scripts/utilities/breed_queries")
 local minion_breeds = BreedQueries.minion_breeds()
 local path = "content/ui/textures/icons/achievements/"
@@ -71,10 +72,12 @@ AchievementBreedGroups.all = {
 AchievementBreedGroups.chaos = {
 	"chaos_hound",
 	"chaos_newly_infected",
+	"chaos_armored_infected",
 	"chaos_ogryn_bulwark",
 	"chaos_ogryn_executor",
 	"chaos_ogryn_gunner",
-	"chaos_plague_ogryn",
+	"chaos_mutated_poxwalker",
+	"chaos_lesser_mutated_poxwalker",
 	"chaos_poxwalker",
 	"chaos_poxwalker_bomber",
 }
@@ -134,6 +137,21 @@ AchievementBreedGroups.renegade_elite = {
 	"renegade_plasma_gunner",
 	"renegade_shocktrooper",
 }
+
+local breeds_by_achievement_breed_group = {}
+
+for breed_name, breed in pairs(Breeds) do
+	local breed_group_name = breed.achievement_breed_group
+
+	if breed_group_name then
+		if not breeds_by_achievement_breed_group[breed_group_name] then
+			breeds_by_achievement_breed_group[breed_group_name] = {}
+		end
+
+		breeds_by_achievement_breed_group[breed_group_name][breed_name] = true
+	end
+end
+
 AchievementBreedGroups.special_and_elite_breed_lookup = {
 	{
 		local_variable = "loc_breed_flamer_generic_desc",
@@ -141,6 +159,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_flamer_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_flamer",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.flamer,
 	},
 	{
 		local_variable = "loc_breed_grenadier_generic_desc",
@@ -148,6 +167,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_grenadier_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_grenadier",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.grenadier,
 	},
 	{
 		local_variable = "loc_breed_berzerker_generic_desc",
@@ -155,6 +175,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_berzerker_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_rager",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.berzerker,
 	},
 	{
 		local_variable = "loc_breed_gunner_generic_desc",
@@ -162,6 +183,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_gunner_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_gunner",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.gunner,
 	},
 	{
 		local_variable = "loc_breed_display_name_renegade_netgunner",
@@ -169,6 +191,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_renegade_netgunner",
 		icon = path .. "havoc_achievements/havoc_missions_trappers",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.renegade_netgunner,
 	},
 	{
 		local_variable = "loc_breed_display_name_renegade_sniper",
@@ -176,6 +199,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_renegade_sniper",
 		icon = path .. "havoc_achievements/havoc_missions_sniper",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.renegade_sniper,
 	},
 	{
 		local_variable = "loc_breed_display_name_renegade_executor",
@@ -183,6 +207,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_renegade_executor",
 		icon = path .. "havoc_achievements/havoc_missions_mauler",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.renegade_executor,
 	},
 	{
 		local_variable = "loc_breed_shocktrooper_generic_desc",
@@ -190,6 +215,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_shocktrooper_generic_name",
 		icon = path .. "havoc_achievements/havoc_missions_shocktrooper",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.shocktrooper,
 	},
 	{
 		local_variable = "loc_breed_display_name_cultist_mutant",
@@ -197,6 +223,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_cultist_mutant",
 		icon = path .. "havoc_achievements/havoc_missions_charger",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.cultist_mutant,
 	},
 	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_bulwark",
@@ -204,6 +231,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_bulwark",
 		icon = path .. "havoc_achievements/havoc_missions_bulwark",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.chaos_ogryn_bulwark,
 	},
 	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_executor",
@@ -211,6 +239,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_executor",
 		icon = path .. "havoc_achievements/havoc_missions_crusher_exec",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.chaos_ogryn_executor,
 	},
 	{
 		local_variable = "loc_breed_display_name_chaos_ogryn_gunner",
@@ -218,6 +247,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_chaos_ogryn_gunner",
 		icon = path .. "havoc_achievements/havoc_missions_reaper",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.chaos_ogryn_gunner,
 	},
 	{
 		local_variable = "loc_breed_display_name_chaos_hound",
@@ -225,6 +255,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_chaos_hound",
 		icon = path .. "havoc_achievements/havoc_missions_pox_hound_penance",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.chaos_hound,
 	},
 	{
 		local_variable = "loc_breed_display_name_renegade_plasma_gunner",
@@ -232,6 +263,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_renegade_plasma_gunner",
 		icon = path .. "havoc_achievements/havoc_missions_plasma_gunner",
 		targets = breed_kill_targets.elite,
+		breeds_in_group = breeds_by_achievement_breed_group.renegade_plasma_gunner,
 	},
 	{
 		local_variable = "loc_breed_display_name_chaos_poxwalker_bomber",
@@ -239,6 +271,7 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 		title_local_variable = "loc_breed_display_name_chaos_poxwalker_bomber",
 		icon = path .. "havoc_achievements/havoc_missions_poxbuster",
 		targets = breed_kill_targets.special,
+		breeds_in_group = breeds_by_achievement_breed_group.chaos_poxwalker_bomber,
 	},
 }
 AchievementBreedGroups.companion = {

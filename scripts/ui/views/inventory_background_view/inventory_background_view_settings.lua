@@ -21,7 +21,6 @@ local inventory_background_view = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
-		"slot_support_ability",
 		"slot_combat_ability",
 		"slot_grenade_ability",
 	},
@@ -40,6 +39,13 @@ local inventory_background_view = {
 	ignored_validation_slots = {},
 	animations_per_archetype = {
 		adamant = {
+			initial_event = "character_customization_idle",
+			events = {
+				"character_customization_crime_select_idle",
+				"character_customization_idle",
+			},
+		},
+		broker = {
 			initial_event = "character_customization_idle",
 			events = {
 				"character_customization_crime_select_idle",

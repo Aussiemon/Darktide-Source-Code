@@ -13,6 +13,12 @@ local actions_lookup = {
 			input_action = "weapon_extra_pressed",
 		},
 	},
+	weapon_special_dual_shivs = {
+		{
+			description = "loc_tg_weapon_special_shivs",
+			input_action = "weapon_extra_pressed",
+		},
+	},
 	weapon_special_forcesword = {
 		{
 			description = "loc_tg_input_description_melee_special_force_sword",

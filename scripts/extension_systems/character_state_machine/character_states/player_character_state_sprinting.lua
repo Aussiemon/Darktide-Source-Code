@@ -145,7 +145,7 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local has_weapon_action_input, weapon_action_input = _check_input(t, self._action_input_extension, self._weapon_extension, weapon_template, has_sprinting_buff)
 	local wants_sprint = sprint_input and not has_weapon_action_input
 	local sprint_character_state_component = self._sprint_character_state_component
-	local move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
+	local move_direction, move_speed, new_x, new_y, wants_to_stop, _ = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
 	local old_y = locomotion_steering.local_move_y
 	local decreasing_speed = new_y < old_y
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
@@ -156,8 +156,10 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	locomotion_steering.local_move_x = new_x
 	locomotion_steering.local_move_y = new_y
 
-	local movement_state = self._movement_state_component
-	local old_method = movement_state.method
+	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
+	local old_method = movement_state_component.method
 	local sprint_move_speed = base_sprint_template.sprint_move_speed
 	local new_method, wants_sprint_camera
 
@@ -176,19 +178,19 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 
 	local animation_ext = self._animation_extension
 
-	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, movement_state, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
+	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 
 	if old_method ~= new_method then
 		animation_ext:anim_event(new_method)
 
-		movement_state.method = new_method
+		movement_state_component.method = new_method
 
 		animation_ext:anim_event_1p(new_method)
 	end
 
 	local run_move_speed = constants.move_speed
 	local sprint_momentum = math.max((move_speed - run_move_speed) / (sprint_move_speed - run_move_speed), 0)
-	local wants_slide = movement_state.is_crouching
+	local wants_slide = movement_state_component.is_crouching
 
 	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_weapon_action_input, weapon_action_input, move_direction, move_speed_without_weapon_actions)
 end

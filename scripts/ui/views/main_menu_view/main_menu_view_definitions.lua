@@ -4,7 +4,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
-local TextUtils = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local text_style = table.clone(UIFontSettings.body_small)
@@ -748,7 +748,7 @@ local widget_definitions = {
 			pass_type = "text",
 			style_id = "gamertag_style",
 			value_id = "gamertag_input",
-			value = TextUtils.localize_with_button_hint("cycle_list_secondary", "loc_switch_profile", nil, DefaultViewInputSettings.service_type, Localize("loc_input_legend_text_template")),
+			value = Text.localize_with_button_hint("cycle_list_secondary", "loc_switch_profile", nil, DefaultViewInputSettings.service_type, Localize("loc_input_legend_text_template")),
 			style = gamertag_input_style,
 		},
 	}, "gamertag_input") or nil,

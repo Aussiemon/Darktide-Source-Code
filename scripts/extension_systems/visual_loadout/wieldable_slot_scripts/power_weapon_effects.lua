@@ -176,8 +176,9 @@ PowerWeaponEffects._start_vfx_loop = function (self)
 
 	if resolved then
 		local world = self._world
-		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
-		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._special_active_fx_source_name)
+		local fx_extension = self._fx_extension
+		local new_effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
+		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(self._special_active_fx_source_name)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

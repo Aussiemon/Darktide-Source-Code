@@ -71,6 +71,7 @@ weapon_template.action_inputs = {
 	unwield = {
 		buffer_time = 0,
 		clear_input_queue = true,
+		input_sequence = nil,
 	},
 }
 

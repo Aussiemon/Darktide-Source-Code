@@ -14,6 +14,7 @@ local item_slot_settings = {
 			"slot_body_hair_color",
 			"slot_body_hair",
 			"slot_gear_head",
+			"slot_body_face_makeup",
 		},
 	},
 	slot_body_face_tattoo = {
@@ -32,7 +33,12 @@ local item_slot_settings = {
 		slot_type = "body",
 		slot_dependencies = {
 			"slot_body_hair_color",
+			"slot_body_face_hair_color",
 		},
+	},
+	slot_body_face_makeup = {
+		show_in_character_create = true,
+		slot_type = "body",
 	},
 	slot_body_torso = {
 		show_in_character_create = true,
@@ -99,6 +105,16 @@ local item_slot_settings = {
 	slot_body_hair_color = {
 		show_in_character_create = true,
 		slot_type = "body",
+	},
+	slot_body_face_hair_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+		slot_dependencies = {
+			"slot_body_hair_color",
+		},
+		forced_parent_slot_names = {
+			"slot_body_face_hair",
+		},
 	},
 	slot_body_skin_color = {
 		show_in_character_create = true,
@@ -347,6 +363,9 @@ local item_slot_settings = {
 	slot_set = {},
 	inspect_pose = {},
 	slot_net = {
+		slot_type = "vfx",
+	},
+	slot_prop = {
 		slot_type = "vfx",
 	},
 }

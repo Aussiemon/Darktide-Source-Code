@@ -5,8 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementWintrackMasterySettings = require("scripts/ui/view_elements/view_element_wintrack_mastery/view_element_wintrack_mastery_settings")
 local MasteryContentBlueprints = require("scripts/ui/views/mastery_view/mastery_view_blueprints")
 local ViewElementWintrack = require("scripts/ui/view_elements/view_element_wintrack/view_element_wintrack")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
+local Text = require("scripts/utilities/ui/text")
 local ViewElementWintrackMastery = class("ViewElementWintrackMastery", "ViewElementWintrack")
 
 ViewElementWintrackMastery.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -236,17 +235,15 @@ ViewElementWintrackMastery._on_reward_items_hover_start = function (self, items,
 		self._widgets_by_name.tooltip.content.visible = description ~= "" or title ~= "" or icon
 		icon_style.size = icon_size
 
-		local title_font_style_options = UIFonts.get_font_options_by_style(title_font_style)
-		local description_font_style_options = UIFonts.get_font_options_by_style(description_font_style)
 		local tooltip_size = self._ui_scenegraph.tooltip.size
-		local _, title_height = UIRenderer.text_size(self._ui_resource_renderer, title, title_font_style.font_type, title_font_style.font_size, {
+		local title_height = Text.text_height(self._ui_resource_renderer, title, title_font_style, {
 			tooltip_size[1] - 40,
 			0,
-		}, title_font_style_options)
-		local _, description_height = UIRenderer.text_size(self._ui_resource_renderer, description, description_font_style.font_type, description_font_style.font_size, {
+		})
+		local description_height = Text.text_height(self._ui_resource_renderer, description, description_font_style, {
 			tooltip_size[1] - 40,
 			0,
-		}, description_font_style_options)
+		})
 		local added_margin = 40
 
 		title_font_style.offset[2] = added_margin * 0.5

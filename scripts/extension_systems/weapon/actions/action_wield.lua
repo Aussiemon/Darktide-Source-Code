@@ -3,6 +3,7 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
+local Vo = require("scripts/utilities/vo")
 local ActionWield = class("ActionWield", "ActionWeaponBase")
 
 ActionWield.start = function (self, action_settings, ...)
@@ -18,6 +19,13 @@ ActionWield.start = function (self, action_settings, ...)
 
 	if self._peeking_component.in_cover then
 		PlayerUnitPeeking.on_enter_cover(self._animation_extension)
+	end
+
+	local vo_tag = action_settings.vo_tag
+	local player_unit = self._player_unit
+
+	if vo_tag then
+		Vo.play_combat_ability_event(player_unit, vo_tag)
 	end
 end
 

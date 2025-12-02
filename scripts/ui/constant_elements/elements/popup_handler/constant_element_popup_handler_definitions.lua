@@ -429,6 +429,7 @@ local wallet_definitions = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "texture",
+		value = nil,
 		value_id = "texture",
 		style = {
 			horizontal_alignment = "right",

@@ -48,6 +48,8 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 	local scenario_system = self
 
 	self._objective_marker_data = {
+		current_unit = nil,
+		marker_id = nil,
 		units = {},
 		datas = {},
 		remove_when_dead = {},
@@ -80,12 +82,6 @@ ScriptedScenarioSystem.destroy = function (self)
 		end
 	end
 
-	for local_bot_id, _ in pairs(self._scenario_bots) do
-		BotSpawning.despawn_bot_character(local_bot_id)
-
-		self._scenario_bots[local_bot_id] = nil
-	end
-
 	GwNavTraverseLogic.destroy(self._traverse_logic)
 
 	self._traverse_logic = nil
@@ -112,10 +108,6 @@ end
 ScriptedScenarioSystem.on_remove_extension = function (self, unit, extension_name)
 	ScriptedScenarioSystem.super.on_remove_extension(self, unit, extension_name)
 	self:_remove_directional_unit(unit)
-end
-
-ScriptedScenarioSystem.enabled = function (self)
-	return self._enabled
 end
 
 ScriptedScenarioSystem.update = function (self, context, dt, t)
@@ -156,6 +148,10 @@ ScriptedScenarioSystem.fixed_update = function (self, context, dt, t, frame)
 	ScriptedScenarioSystem.super.fixed_update(self, context, dt, t, frame)
 
 	if not self._enabled then
+		return
+	end
+
+	if not ALIVE[self._player.player_unit] then
 		return
 	end
 
@@ -588,7 +584,7 @@ ScriptedScenarioSystem._register_events = function (self, scenario, events)
 		if not tracked_events[event_name] then
 			tracked_events[event_name] = {}
 
-			Managers.event:register_with_parameters(self, "_on_event", event_name, event_name)
+			Managers.event:register_with_parameters(self, event_name, "_on_event", event_name)
 		end
 
 		Log.info("TrainingGrounds", "Event registered (%s)", event_name)
@@ -814,6 +810,11 @@ end
 
 ScriptedScenarioSystem._update_objective_marker = function (self)
 	local marker_data = self._objective_marker_data
+
+	if not ALIVE[self._player.player_unit] then
+		return
+	end
+
 	local best_unit
 	local best_distance_sq = math.huge
 	local units = marker_data.units

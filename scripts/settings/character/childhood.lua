@@ -401,6 +401,83 @@ local childhood_options = {
 			},
 		},
 	},
+	{
+		description = "loc_character_childhood_19_description",
+		display_name = "loc_character_childhood_19_name",
+		name = "Broker 1",
+		story_snippet = "loc_character_childhood_19_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_20_description",
+		display_name = "loc_character_childhood_20_name",
+		name = "Broker 2",
+		story_snippet = "loc_character_childhood_20_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_21_description",
+		display_name = "loc_character_childhood_21_name",
+		name = "Broker 3",
+		story_snippet = "loc_character_childhood_21_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_22_description",
+		display_name = "loc_character_childhood_22_name",
+		name = "Broker 4",
+		story_snippet = "loc_character_childhood_22_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_23_description",
+		display_name = "loc_character_childhood_23_name",
+		name = "Broker 5",
+		story_snippet = "loc_character_childhood_23_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_24_description",
+		display_name = "loc_character_childhood_24_name",
+		name = "Broker 6",
+		story_snippet = "loc_character_childhood_24_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
+	{
+		description = "loc_character_childhood_25_description",
+		display_name = "loc_character_childhood_25_name",
+		name = "Broker 7",
+		story_snippet = "loc_character_childhood_25_description_snippet",
+		visibility = {
+			archetypes = {
+				"broker",
+			},
+		},
+	},
 }
 local childhood_option_by_id = {}
 

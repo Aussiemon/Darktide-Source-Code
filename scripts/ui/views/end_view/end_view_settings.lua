@@ -35,7 +35,6 @@ local end_view_settings = {
 		"slot_pocketable",
 		"slot_pocketable_small",
 		"slot_luggable",
-		"slot_support_ability",
 		"slot_combat_ability",
 		"slot_grenade_ability",
 	},
@@ -87,6 +86,9 @@ local end_view_settings = {
 		player_journey_07_B = "debriefing_09",
 		player_journey_08 = "debriefing_10",
 		player_journey_09 = "debriefing_11",
+		story_nomansland_01 = "debriefing_nml_01",
+		story_nomansland_02 = "debriefing_nml_02",
+		story_nomansland_03 = "debriefing_nml_03",
 	},
 }
 

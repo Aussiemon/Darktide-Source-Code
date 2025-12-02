@@ -515,7 +515,7 @@ PackageManager.apply_backend_game_settings = function (self)
 		local package_name = info[2]
 
 		if chance >= math.random() then
-			print(string.format("[PackageManager] Loading extra persistent package '%s'", package_name))
+			Log.info("PackageManager", "Loading extra persistent package '%s'", package_name)
 			self:load(package_name)
 		end
 	end

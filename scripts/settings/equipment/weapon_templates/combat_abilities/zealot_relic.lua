@@ -20,6 +20,7 @@ weapon_template.action_inputs = {
 	},
 	combat_ability = {
 		buffer_time = 0,
+		input_sequence = nil,
 	},
 	channel = {
 		buffer_time = 0.2,
@@ -123,7 +124,7 @@ weapon_template.actions = {
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "channel",
 			},
 		},
@@ -165,7 +166,7 @@ weapon_template.actions = {
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
-			auto_chain = {
+			action_end = {
 				input_name = "wield_previous",
 			},
 		},
@@ -182,7 +183,7 @@ weapon_template.actions = {
 }
 weapon_template.actions.grenade_ability_zealot_throwing_knives = table.clone_instance(BaseTemplateSettings.actions.grenade_ability_zealot_throwing_knives)
 weapon_template.actions.grenade_ability_zealot_throwing_knives.conditional_state_to_action_input = {
-	auto_chain = {
+	action_end = {
 		input_name = "wield_previous",
 	},
 }

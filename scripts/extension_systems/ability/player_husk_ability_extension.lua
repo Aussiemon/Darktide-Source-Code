@@ -187,6 +187,13 @@ PlayerHuskAbilityExtension.is_cooldown_paused = function (self, ability_type)
 	return component.cooldown_paused
 end
 
+PlayerHuskAbilityExtension.pause_cooldown = function (self, ability_type)
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	component.cooldown_paused = true
+end
+
 PlayerHuskAbilityExtension.remaining_ability_cooldown = function (self, ability_type)
 	local enabled = self:ability_enabled(ability_type)
 
@@ -290,6 +297,10 @@ PlayerHuskAbilityExtension.get_current_ability_cooldown_time = function (self)
 end
 
 PlayerHuskAbilityExtension.get_current_ability_name = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.get_current_grenade_ability_name = function (self)
 	error("not allowed to call on husk")
 end
 

@@ -9,10 +9,6 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 
 	local application_parameters = Development.application_parameter
 
-	local function printf(...)
-		print(string.format(...))
-	end
-
 	local function first_char(s)
 		return s:sub(1, 1)
 	end
@@ -58,7 +54,7 @@ Development.init_application_parameters = function (args, do_pretty_print_args)
 			value,
 		}
 
-		printf("[parse_application_parameters] multiple defintions of '%s' using [%s]. old value [%s]", parameter_name, table.concat(t, ", "), table.concat(old, ", "))
+		Log.info("parse_application_parameters", "multiple definitions of '%s' using [%s]. old value [%s]", parameter_name, table.concat(t, ", "), table.concat(old, ", "))
 	end
 
 	local function copy_parameter_value(parameter_name)

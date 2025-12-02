@@ -2,6 +2,7 @@
 
 local unlock_config = {
 	adamant = require("scripts/settings/weapon_unlock/weapon_unlock_settings_adamant"),
+	broker = require("scripts/settings/weapon_unlock/weapon_unlock_settings_broker"),
 	ogryn = require("scripts/settings/weapon_unlock/weapon_unlock_settings_ogryn"),
 	psyker = require("scripts/settings/weapon_unlock/weapon_unlock_settings_psyker"),
 	veteran = require("scripts/settings/weapon_unlock/weapon_unlock_settings_veteran"),

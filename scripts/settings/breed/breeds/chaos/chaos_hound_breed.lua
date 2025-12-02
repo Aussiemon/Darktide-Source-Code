@@ -24,6 +24,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_hound"
 local breed_data = {
+	achievement_breed_group = "chaos_hound",
 	base_height = 1.5,
 	base_unit = "content/characters/enemy/chaos_hound/third_person/base",
 	bone_lod_radius = 1.5,

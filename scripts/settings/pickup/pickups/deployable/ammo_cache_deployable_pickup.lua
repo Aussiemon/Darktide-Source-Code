@@ -3,6 +3,7 @@
 local pickup_data = {
 	ammo_crate = true,
 	auto_tag_on_spawn = true,
+	deployable = true,
 	description = "loc_pickup_deployable_ammo_crate_01",
 	group = "ammo",
 	interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_ammo",

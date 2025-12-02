@@ -51,5 +51,16 @@ action_handler_settings.combo_increase = {
 action_handler_settings.combo_hold = {
 	"windup",
 }
+action_handler_settings.gameplay_time_scale_limits = {
+	ranged_load_special = 2,
+	reload_special = 2,
+	reload_state = 2,
+	shoot = 2,
+	shoot_hit_scan = 2,
+	shoot_pellets = 2,
+	shoot_projectile = 2,
+	spawn_projectile = 2,
+	sweep = 2,
+}
 
 return settings("ActionHandlerSettings", action_handler_settings)

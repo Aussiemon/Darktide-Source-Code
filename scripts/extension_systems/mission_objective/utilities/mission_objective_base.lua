@@ -41,6 +41,7 @@ MissionObjectiveBase.init = function (self)
 	self._use_hud = true
 	self._use_hud_changed = false
 	self._hide_widget = false
+	self._additional_height = 0
 	self._use_counter = true
 	self._progress_bar = false
 	self._progress_bar_icon = nil
@@ -73,8 +74,9 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 	self._music_ignore_start_event = mission_objective_data.music_ignore_start_event or false
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = mission_objective_data.hidden ~= true
-	self._use_counter = mission_objective_data.progress_bar ~= true or mission_objective_data.progress_timer ~= true
+	self._use_counter = mission_objective_data.progress_bar ~= true and mission_objective_data.progress_timer ~= true
 	self._hide_widget = mission_objective_data.hide_widget or false
+	self._additional_height = mission_objective_data.additional_height or 0
 	self._progress_bar = mission_objective_data.progress_bar or false
 	self._progress_bar_icon = mission_objective_data.progress_bar_icon
 	self._progress_timer = mission_objective_data.progress_timer or false
@@ -179,9 +181,7 @@ MissionObjectiveBase._get_active_units = function (self)
 	local registered_units = self._registered_units
 	local registered_stage_units = {}
 
-	if registered_units then
-		registered_stage_units = registered_units[self._stage]
-	end
+	registered_stage_units = registered_units and registered_units[self._stage] or registered_stage_units
 
 	local units_sorted_by_id = self:_sort_units_by_id(registered_stage_units)
 	local synchronizer_extension = self._synchronizer_extension
@@ -246,16 +246,7 @@ MissionObjectiveBase.update_progression = function (self)
 end
 
 MissionObjectiveBase.progression_to_flow = function (self)
-	local units = self._objective_units
 	local ALIVE = ALIVE
-
-	for unit, _ in pairs(units) do
-		if ALIVE[unit] then
-			Unit.set_flow_variable(unit, "lua_var_objective_progression", self._progression)
-			Unit.flow_event(unit, "lua_event_objective_progression")
-		end
-	end
-
 	local synchronizer_unit = self._synchronizer_unit
 
 	if synchronizer_unit and ALIVE[synchronizer_unit] then
@@ -535,6 +526,10 @@ end
 
 MissionObjectiveBase.hide_widget = function (self)
 	return self._hide_widget
+end
+
+MissionObjectiveBase.additional_height = function (self)
+	return self._additional_height
 end
 
 MissionObjectiveBase.popups_enabled = function (self)

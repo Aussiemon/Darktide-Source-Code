@@ -35,7 +35,7 @@ gibbing_settings.gib_push_force = {
 }
 gibbing_settings.gibbing_power = gibbing_settings.gibbing_thresholds
 gibbing_settings.max_extra_hit_zone_gibs = 3
-gibbing_settings.gibbing_types = table.enum("default", "ballistic", "boltshell", "crushing", "explosion", "fire", "implosion", "laser", "plasma", "sawing", "warp_lightning", "warp_shard", "warp_wind_slash_high", "warp")
+gibbing_settings.gibbing_types = table.enum("default", "ballistic", "boltshell", "crushing", "explosion", "fire", "implosion", "laser", "plasma", "sawing", "warp_lightning", "warp_shard", "warp_wind_slash_high", "warp", "toxin")
 gibbing_settings.gib_push_force_multipliers = {
 	[hit_zone_names.head] = 0.25,
 	[hit_zone_names.upper_left_arm] = 0.75,

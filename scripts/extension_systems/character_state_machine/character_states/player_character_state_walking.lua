@@ -94,13 +94,15 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	local move_settings = self._movement_settings_component
 	local movement_state = self._movement_state_component
 	local input_extension = self._input_extension
-	local move_state_component = self._movement_state_component
+	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local velocity_current = locomotion.velocity_current
 
 	weapon_extension:update_weapon_actions(fixed_frame)
 	self._ability_extension:update_ability_actions(fixed_frame)
 
-	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
+	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 
 	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._talent_extension, is_crouching, self._breed)
 
@@ -167,12 +169,14 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 	end
 
 	local movement_state_component = self._movement_state_component
+	local locomotion_component = self._locomotion_component
+	local inair_state_component = self._inair_state_component
 	local weapon_action_component = self._weapon_action_component
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
 	if Sprint.check(t, unit, movement_state_component, self._sprint_character_state_component, input_source, self._locomotion_component, weapon_action_component, self._combat_ability_action_component, self._alternate_fire_component, weapon_template, self._constants, self._buff_extension) then
 		if movement_state_component.is_crouching then
-			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 		end
 
 		return "sprinting"
@@ -199,7 +203,7 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 		return "dodging"
 	end
 
-	local current_weapon_action_name, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
+	local _, weapon_action_setting = Action.current_action(weapon_action_component, weapon_template)
 	local action_prevents_jump = weapon_action_setting and weapon_action_setting.action_prevents_jump
 	local jump_input = not action_prevents_jump and movement_state_component.can_jump and input_source:get("jump")
 
@@ -217,7 +221,7 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 
 	if jump_input and (not is_crouching or Crouch.can_exit(unit)) then
 		if is_crouching then
-			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
 		end
 
 		return "jumping"

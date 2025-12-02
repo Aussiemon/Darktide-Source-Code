@@ -9,6 +9,7 @@ DLCPurchaseView.init = function (self, settings, context)
 	self._context = context or {}
 	self._outside_cb_on_store_view_finished = context.on_flow_finished_callback
 	self._dlc_settings = self._context.dlc_settings
+	self._dlc_settings_deluxe = self._context.dlc_settings_deluxe
 
 	DLCPurchaseView.super.init(self, DLCPurchaseViewDefinitions, settings, context)
 
@@ -26,13 +27,13 @@ DLCPurchaseView.on_enter = function (self)
 
 	self:_setup_input_legend()
 
-	self._widgets_by_name.dlc_name_title.content.text = Localize(self._dlc_settings.loc_name_generic)
+	self._widgets_by_name.dlc_name_title.content.text = Localize(self._dlc_settings.loc_name)
 	self._widgets_by_name.standard_dlc_button.content.sub_title = Localize("loc_term_glossary_dlc")
 	self._widgets_by_name.deluxe_dlc_button.content.sub_title = Localize("loc_term_glossary_dlc")
-	self._widgets_by_name.standard_dlc_button.content.title = Localize(self._dlc_settings.standard.loc_name)
-	self._widgets_by_name.deluxe_dlc_button.content.title = Localize(self._dlc_settings.deluxe.loc_name)
-	self._widgets_by_name.standard_dlc_button.style.texture.material_values.main_texture = self._dlc_settings.standard.image
-	self._widgets_by_name.deluxe_dlc_button.style.texture.material_values.main_texture = self._dlc_settings.deluxe.image
+	self._widgets_by_name.standard_dlc_button.content.title = Localize(self._dlc_settings.loc_name)
+	self._widgets_by_name.deluxe_dlc_button.content.title = Localize(self._dlc_settings_deluxe.loc_name)
+	self._widgets_by_name.standard_dlc_button.style.texture.material_values.main_texture = self._dlc_settings.image
+	self._widgets_by_name.deluxe_dlc_button.style.texture.material_values.main_texture = self._dlc_settings_deluxe.image
 	self._dlc_buttons_ordered = {
 		self._widgets_by_name.standard_dlc_button,
 		self._widgets_by_name.deluxe_dlc_button,
@@ -60,8 +61,8 @@ end
 DLCPurchaseView._register_button_callbacks = function (self)
 	local backend_auth_method = Backend:get_auth_method()
 
-	self._widgets_by_name.standard_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings.standard.ids[backend_auth_method].id, "standard")
-	self._widgets_by_name.deluxe_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings.deluxe.ids[backend_auth_method].id, "deluxe")
+	self._widgets_by_name.standard_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings.ids[backend_auth_method].id, "standard")
+	self._widgets_by_name.deluxe_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings_deluxe.ids[backend_auth_method].id, "deluxe")
 end
 
 DLCPurchaseView._on_store_button_pressed = function (self, product_id, button_key)

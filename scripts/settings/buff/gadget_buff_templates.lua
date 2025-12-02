@@ -1,11 +1,8 @@
 ﻿-- chunkname: @scripts/settings/buff/gadget_buff_templates.lua
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local Keywords = BuffSettings.keywords
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local stat_buffs = BuffSettings.stat_buffs
 local meta_stat_buffs = BuffSettings.meta_stat_buffs
-local proc_events = BuffSettings.proc_events
 
 local function value_lerp_2dp(min, max, lerp_t)
 	local value = math.lerp(min, max, lerp_t)

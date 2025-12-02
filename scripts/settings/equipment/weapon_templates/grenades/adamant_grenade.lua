@@ -6,6 +6,6 @@ local weapon_template = grenade_weapon_template_generator()
 
 weapon_template.projectile_template = ProjectileTemplates.adamant_grenade
 weapon_template.actions.action_wield.total_time = 0.5
-weapon_template.hud_icon = "content/ui/materials/icons/throwables/hud/adamant_grenade"
+weapon_template.hud_icon_small = "content/ui/materials/icons/throwables/hud/small/party_grenade"
 
 return weapon_template
