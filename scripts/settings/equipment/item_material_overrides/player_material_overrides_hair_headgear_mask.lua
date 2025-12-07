@@ -391,6 +391,32 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_mask_half_left_08 = {
+		property_overrides = {
+			hair_mask_types_invert = {
+				0,
+				0,
+				0,
+			},
+			hair_mask_x = {
+				-0.5,
+				-0.078,
+			},
+			hair_mask_y = {
+				-1,
+				-1,
+			},
+			hair_mask_z = {
+				-1,
+				-1,
+			},
+			hair_mask_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+	},
 	hair_mask_half_shrink_left_side = {
 		property_overrides = {
 			hair_mask_types_invert = {

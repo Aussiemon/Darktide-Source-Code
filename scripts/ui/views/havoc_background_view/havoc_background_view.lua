@@ -43,6 +43,10 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 	}
 
 	local on_complete_callback = callback(function ()
+		if self._destroyed then
+			return
+		end
+
 		self._rewards.current.charges = self.havoc_order.charges
 		self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
 
@@ -85,6 +89,10 @@ HavocBackgroundView.revoke_mission = function (self)
 		end
 
 		local on_complete_callback = callback(function ()
+			if self._destroyed then
+				return
+			end
+
 			self._rewards.current.charges = self.havoc_order.charges
 			self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
 
@@ -150,6 +158,10 @@ HavocBackgroundView.event_havoc_background_on_end_time_met = function (self)
 	self._rewards = nil
 
 	local on_complete_callback = callback(function ()
+		if self._destroyed then
+			return
+		end
+
 		if self._current_state == "key" then
 			self:_close_active_view()
 			self:_setup_key_ui()
@@ -257,7 +269,13 @@ HavocBackgroundView.on_enter = function (self)
 end
 
 HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callback)
-	return Managers.data_service.havoc:latest():next(function (latest_data)
+	if self._initialization_promise then
+		self._initialization_promise:cancel()
+
+		self._initialization_promise = nil
+	end
+
+	self._initialization_promise = Managers.data_service.havoc:latest():next(function (latest_data)
 		if self._destroyed then
 			return
 		end
@@ -420,12 +438,19 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 						self.havoc_order.participants = ongoing_havoc_data[1].eligibleParticipants
 					end
 
+					self._initialization_promise = nil
+
 					if on_complete_callback then
 						on_complete_callback()
 					end
 				end)
 			else
+				if self._destroyed then
+					return
+				end
+
 				self._loading = nil
+				self._initialization_promise = nil
 
 				if on_complete_callback then
 					on_complete_callback()
@@ -436,6 +461,8 @@ HavocBackgroundView._initialize_havoc_state = function (self, on_complete_callba
 		if self._destroyed then
 			return
 		end
+
+		self._initialization_promise = nil
 
 		Managers.ui:close_view(self.view_name)
 		Managers.event:trigger("event_add_notification_message", "alert", {
@@ -450,6 +477,10 @@ HavocBackgroundView._on_view_load_complete = function (self, loaded)
 	end
 
 	local on_complete_callback = callback(function ()
+		if self._destroyed then
+			return
+		end
+
 		if self:is_view_requirements_complete() then
 			self:_on_view_requirements_complete()
 		end
@@ -479,8 +510,34 @@ HavocBackgroundView.event_reset_havoc_background_view = function (self)
 end
 
 HavocBackgroundView.on_exit = function (self)
+	if self._initialization_promise then
+		self._initialization_promise:cancel()
+
+		self._initialization_promise = nil
+	end
+
 	Managers.event:unregister(self, "event_reset_havoc_background_view")
 	HavocBackgroundView.super.on_exit(self)
+end
+
+HavocBackgroundView.delete = function (self)
+	if self._initialization_promise then
+		self._initialization_promise:cancel()
+
+		self._initialization_promise = nil
+	end
+
+	HavocBackgroundView.super.delete(self)
+end
+
+HavocBackgroundView.destroy = function (self)
+	if self._initialization_promise then
+		self._initialization_promise:cancel()
+
+		self._initialization_promise = nil
+	end
+
+	HavocBackgroundView.super.destroy(self)
 end
 
 HavocBackgroundView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -554,6 +611,10 @@ HavocBackgroundView.reinitialize = function (self)
 	self._rewards = nil
 
 	local on_complete_callback = callback(function ()
+		if self._destroyed then
+			return
+		end
+
 		if self._rewards then
 			self:_setup_rewarding_ui()
 		elseif self._current_state == "off_cadence" then

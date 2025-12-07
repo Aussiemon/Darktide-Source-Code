@@ -102,6 +102,29 @@ local abilities = {
 		archetypes = {
 			"broker",
 		},
+		pause_cooldown_settings = {
+			pause_fulfilled_func = function (context, component)
+				if not context.is_server then
+					return not component.cooldown_paused
+				end
+
+				local proximity_system = Managers.state.extension:system("proximity_system")
+				local proximity_units = proximity_system:proximity_units_by_owner(context.unit)
+
+				if proximity_units then
+					for i = 1, #proximity_units do
+						local proximity_extension = ScriptUnit.extension(proximity_units[i], "proximity_system")
+						local has_job, job_instance = proximity_extension:has_job()
+
+						if has_job and job_instance.__class_name == "ProximityBrokerStimmField" then
+							return false
+						end
+					end
+				end
+
+				return true
+			end,
+		},
 	},
 	broker_ability_syringe = {
 		ability_group = "broker_syringe",

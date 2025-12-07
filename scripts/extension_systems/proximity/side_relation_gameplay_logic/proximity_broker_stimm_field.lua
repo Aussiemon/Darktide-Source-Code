@@ -112,17 +112,9 @@ ProximityBrokerStimmField.init = function (self, logic_context, init_data, owner
 			end
 		end
 	end
-
-	if ability_settings.disable_ability_for_duration then
-		ability_extension:set_ability_enabled("combat_ability", false)
-	end
 end
 
 ProximityBrokerStimmField.destroy = function (self)
-	if ability_settings.disable_ability_for_duration then
-		self._ability_extension:set_ability_enabled("combat_ability", true)
-	end
-
 	local units_in_proximity = self._units_in_proximity
 	local t = FixedFrame.get_latest_fixed_time()
 	local linger_time = self._linger_time

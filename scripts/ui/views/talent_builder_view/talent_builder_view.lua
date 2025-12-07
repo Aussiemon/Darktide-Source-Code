@@ -100,7 +100,7 @@ TalentBuilderView.on_enter = function (self)
 
 			local profile_preset_talents_version = profile_preset.talents_version
 
-			if profile_preset_talents_version ~= active_talents_version then
+			if not TalentLayoutParser.is_same_version(profile_preset_talents_version, active_talents_version) then
 				talents = {}
 			else
 				talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", context and context.current_profile_equipped_talents or profile_preset.talents) or {}
@@ -210,7 +210,7 @@ TalentBuilderView.event_on_profile_preset_changed = function (self, profile_pres
 	local talents
 
 	if previously_active_profile_preset_id and profile_preset then
-		if talents_version ~= active_talent_version then
+		if not TalentLayoutParser.is_same_version(talents_version, active_talent_version) then
 			talents = {}
 		else
 			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}

@@ -162,7 +162,7 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 			local backstory_items_promise = self:_fetch_backstory_items()
 
 			backstory_items_promise:next(function (backstory_items)
-				self._old_backstory_items = self:_get_current_backstory_items_ids(backstory_items)
+				self._possible_backstory_items = table.invert(backstory_items)
 				self._all_backstory_items = backstory_items
 			end)
 		end
@@ -1416,7 +1416,15 @@ CharacterCreate.transform = function (self, character_id, operation_cost)
 	end
 
 	for slot_id, item in pairs(backstory_items) do
-		parsed_profile.inventory[slot_id] = backstory_items[slot_id]
+		if slots_to_equip[slot_id] then
+			parsed_profile.inventory[slot_id] = backstory_items[slot_id]
+		else
+			local actual_item = real_profile_gear[slot_id]
+
+			parsed_profile.inventory[slot_id] = actual_item and {
+				id = actual_item.name,
+			} or nil
+		end
 	end
 
 	local character_interface = Managers.backend.interfaces.characters
@@ -1554,7 +1562,7 @@ CharacterCreate._get_current_backstory_items_ids = function (self, backstory_ite
 end
 
 CharacterCreate._replace_old_backstory_items_in_loadouts = function (self, slots_to_equip, granted_items)
-	local old_backstory_items = self._old_backstory_items
+	local possible_backstory_items = self._possible_backstory_items
 	local new_backstory_items = {}
 
 	if #granted_items > 0 then
@@ -1580,8 +1588,8 @@ CharacterCreate._replace_old_backstory_items_in_loadouts = function (self, slots
 		local profile_preset = profile_presets[i]
 		local preset_loadout = profile_preset.loadout
 
-		for slot, id in pairs(old_backstory_items) do
-			if preset_loadout[slot] == id then
+		for slot, id in pairs(preset_loadout) do
+			if possible_backstory_items[id] then
 				ProfileUtils.save_item_id_for_profile_preset(profile_preset.id, slot, new_backstory_items[slot])
 			end
 		end

@@ -85,7 +85,7 @@ _system_require("player_visibility", "player_visibility_extension")
 _system_require("point_of_interest", "point_of_interest_system")
 _system_require("projectile_damage", "projectile_damage_extension")
 _system_require("prop_collision", "prop_collision_extension")
-_system_require("proximity", "side_relation_proximity_extension")
+_system_require("proximity", "proximity_system", "side_relation_proximity_extension")
 _system_require("recoil", "player_unit_weapon_recoil_extension")
 _system_require("respawn_beacon", "respawn_beacon_system")
 _system_require("scanner_display", "scanner_display_extension")
@@ -1080,7 +1080,7 @@ local systems = {
 	},
 	{
 		"proximity_system",
-		"ExtensionSystemBase",
+		"ProximitySystem",
 		false,
 		false,
 		true,

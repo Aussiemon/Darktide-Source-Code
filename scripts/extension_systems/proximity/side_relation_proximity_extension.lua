@@ -135,6 +135,12 @@ SideRelationProximityExtension.is_job_canceled = function (self)
 	return self._job_logic:is_job_canceled()
 end
 
+SideRelationProximityExtension.has_job = function (self)
+	local logic = self._job_logic
+
+	return not not logic, logic
+end
+
 local dead_units = {}
 
 SideRelationProximityExtension._update_unit_alive_check = function (self, unit, dt, t)

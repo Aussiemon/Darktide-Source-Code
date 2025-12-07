@@ -324,8 +324,10 @@ MissionBoardView._open_current_page = function (self)
 	self:_change_ui_theme(page_settings.ui_theme)
 
 	local widgets_by_name = self._widgets_by_name
+	local view_element_campaign_mission_list = self:_element("mission_list")
+	local mission_list_visible = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 
-	widgets_by_name.gamepad_cursor.visible = InputDevice.gamepad_active
+	widgets_by_name.gamepad_cursor.visible = InputDevice.gamepad_active and not mission_list_visible
 	widgets_by_name.play_button.content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
 
 	local quick_play_settings = page_settings.qp
@@ -1338,9 +1340,11 @@ MissionBoardView._play_button_input = function (self, input_service)
 end
 
 MissionBoardView._virtual_cursor_input = function (self, input_service, dt, t)
+	local view_element_campaign_mission_list = self:_element("mission_list")
+	local mission_list_visible = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 	local gamepad_cursor = self._widgets_by_name.gamepad_cursor
 	local last_pressed_device = InputDevice.last_pressed_device
-	local cursor_active = last_pressed_device and last_pressed_device:type() ~= "mouse"
+	local cursor_active = last_pressed_device and last_pressed_device:type() ~= "mouse" and not mission_list_visible
 
 	gamepad_cursor.visible = cursor_active
 
@@ -1503,12 +1507,19 @@ MissionBoardView._set_gamepad_cursor = function (self, widget)
 	local offset = widget.offset
 	local size_x, size_y = widget.content.size[1], widget.content.size[2]
 	local x, y = offset[1] + 0.5 * size_x, offset[2] + 0.5 * size_y
+	local pos = Vector3Box.unbox(self._gamepad_cursor_current_pos)
+	local target_pos = Vector3Box.unbox(self._gamepad_cursor_target_pos)
+	local vel = Vector3Box.unbox(self._gamepad_cursor_current_vel)
+	local avg_vel = Vector3Box.unbox(self._gamepad_cursor_average_vel)
 
-	self._gamepad_cursor_target_pos[1] = x
-	self._gamepad_cursor_target_pos[2] = y
-	self._gamepad_cursor_current_pos[1] = x
-	self._gamepad_cursor_current_pos[2] = y
-
+	Vector3.set_xyz(pos, x, y, pos[3])
+	Vector3.set_xyz(target_pos, x, y, target_pos[3])
+	Vector3.set_xyz(vel, 0, 0, 0)
+	Vector3.set_xyz(avg_vel, 0, 0, 0)
+	Vector3Box.store(self._gamepad_cursor_current_pos, pos)
+	Vector3Box.store(self._gamepad_cursor_target_pos, target_pos)
+	Vector3Box.store(self._gamepad_cursor_current_vel, vel)
+	Vector3Box.store(self._gamepad_cursor_average_vel, avg_vel)
 	self:_set_scenegraph_position("gamepad_cursor_pivot", x, y)
 	self:_set_scenegraph_size("gamepad_cursor", size_x, size_y)
 end
@@ -1708,7 +1719,9 @@ MissionBoardView._has_replay_campaign_missions = function (self)
 end
 
 MissionBoardView._callback_open_replay_campaign_missions_view = function (self)
-	if self._is_loading or self._selected_mission_id == "campaign_playlist_upsell" then
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	if view_element_campaign_mission_list and view_element_campaign_mission_list:is_playing_transition_animation() or self._is_loading or self._selected_mission_id == "campaign_playlist_upsell" then
 		return
 	end
 
@@ -1716,20 +1729,23 @@ MissionBoardView._callback_open_replay_campaign_missions_view = function (self)
 
 	widgets_by_name.gamepad_cursor.visible = false
 
-	local view_element_campaign_mission_list = self:_element("mission_list")
-
 	view_element_campaign_mission_list:on_enter()
 	self:_update_telemetry_name(false)
 end
 
 MissionBoardView._callback_close_replay_campaign_missions_view = function (self)
-	self:set_selected_mission("qp_mission_widget", true)
+	local view_element_campaign_mission_list = self:_element("mission_list")
+
+	if view_element_campaign_mission_list and view_element_campaign_mission_list:is_playing_transition_animation() then
+		return
+	end
+
+	self:_play_sound("story_mission_exit")
+	self:_set_selected_quickplay(true, true)
 
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.gamepad_cursor.visible = InputDevice.gamepad_active
-
-	local view_element_campaign_mission_list = self:_element("mission_list")
 
 	view_element_campaign_mission_list:on_exit()
 	self:_open_current_page()
@@ -1751,6 +1767,8 @@ MissionBoardView._on_back_pressed = function (self)
 	local view_element_campaign_mission_list = self:_element("mission_list")
 
 	if view_element_campaign_mission_list and view_element_campaign_mission_list:visible() then
+		self:_callback_close_replay_campaign_missions_view()
+
 		return
 	end
 

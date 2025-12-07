@@ -199,10 +199,14 @@ templates.syringe_ability_boost_buff = {
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 
-		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+		local duration = template_context.template.duration
 
-		if duration_increase ~= 0 then
-			template_context.buff:add_duration(duration_increase)
+		if duration then
+			local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+			if duration_increase ~= 0 then
+				template_context.buff:add_duration(duration_increase)
+			end
 		end
 	end,
 	update_func = function (template_data, template_context, dt, t)
@@ -258,10 +262,14 @@ templates.syringe_power_boost_buff = {
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 		Managers.stats:record_private("hook_red_stimm_active", template_context.player)
 
-		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+		local duration = template_context.template.duration
 
-		if duration_increase ~= 0 then
-			template_context.buff:add_duration(duration_increase)
+		if duration then
+			local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+			if duration_increase ~= 0 then
+				template_context.buff:add_duration(duration_increase)
+			end
 		end
 	end,
 	stop_func = function (template_data, template_context)
@@ -305,10 +313,14 @@ templates.syringe_speed_boost_buff = {
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 		Managers.stats:record_private("hook_blue_stimm_active", template_context.player)
 
-		local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+		local duration = template_context.template.duration
 
-		if duration_increase ~= 0 then
-			template_context.buff:add_duration(duration_increase)
+		if duration then
+			local duration_increase = template_context.buff_extension:stat_buffs().syringe_duration
+
+			if duration_increase ~= 0 then
+				template_context.buff:add_duration(duration_increase)
+			end
 		end
 	end,
 	stop_func = function (template_data, template_context)

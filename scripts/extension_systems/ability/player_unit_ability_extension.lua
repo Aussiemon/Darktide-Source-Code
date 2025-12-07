@@ -172,6 +172,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_handler:set_action_context(action_context)
 
 	self._pause_cooldown_context = {
+		is_server = self._is_server,
 		unit = unit,
 		unit_data_extension = unit_data_extension,
 		inventory_component = unit_data_extension:read_component("inventory"),
@@ -498,7 +499,7 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 				local pause_cooldown_settings = ability.pause_cooldown_settings
 				local pause_fulfilled_func = pause_cooldown_settings and pause_cooldown_settings.pause_fulfilled_func
 
-				if pause_fulfilled_func and pause_fulfilled_func(pause_cooldown_context) then
+				if pause_fulfilled_func and pause_fulfilled_func(pause_cooldown_context, component) then
 					component.cooldown_paused = false
 				else
 					cooldown = cooldown + dt

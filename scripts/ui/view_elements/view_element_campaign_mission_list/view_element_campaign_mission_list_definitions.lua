@@ -1076,6 +1076,7 @@ animations.title_enter = {
 			local bottom_detail = widgets.bottom_detail
 
 			bottom_detail.content.entry_animation_done = true
+			parent._enter_animation = nil
 		end,
 	},
 }

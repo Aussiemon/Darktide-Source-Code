@@ -790,6 +790,25 @@ table.mirror_array_inplace = function (t)
 	return t
 end
 
+table.invert = function (t)
+	local out = {}
+
+	for k, v in pairs(t) do
+		out[v] = k
+	end
+
+	return out
+end
+
+table.invert_inplace = function (t)
+	for k, v in pairs(t) do
+		t[k] = nil
+		t[v] = k
+	end
+
+	return t
+end
+
 table.ukeys = function (t, output)
 	return table.keys(t.__data, output)
 end

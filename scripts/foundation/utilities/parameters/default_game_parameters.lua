@@ -112,5 +112,13 @@ DefaultGameParameters.extra_persistent_package = ""
 DefaultGameParameters.persistent_breeds_lockhart = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
 
 return DefaultGameParameters

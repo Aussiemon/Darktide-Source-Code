@@ -155,13 +155,15 @@ end
 ViewElementCampaignMissionList.on_enter = function (self)
 	self:set_visibility(true)
 	self:refresh_mission_list()
-	self:_start_animation("title_enter", nil, {
+
+	self._enter_animation = self:_start_animation("title_enter", nil, {
 		ui_renderer = self._ui_renderer,
 	})
 end
 
 ViewElementCampaignMissionList.on_exit = function (self)
 	self._background_entry_done = nil
+	self._enter_animation = nil
 	self._exit_animation = self:_start_animation("title_exit", nil, {
 		ui_renderer = self._ui_renderer,
 	})
@@ -260,13 +262,12 @@ ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 		hotspot.is_selected = content.index == self._selected_panel_index
 	end
 
-	if input_service:get("back") and not self._exit_animation then
-		parent:set_selected_mission("qp_mission_widget", true)
-		self:on_exit()
-	end
-
 	self:_handle_gamepad_input(dt, t, input_service)
 	ViewElementCampaignMissionList.super.update(self, dt, t, input_service)
+end
+
+ViewElementCampaignMissionList.is_playing_transition_animation = function (self)
+	return not not self._exit_animation or not not self._enter_animation
 end
 
 ViewElementCampaignMissionList._handle_gamepad_input = function (self, dt, t, input_service)
@@ -947,6 +948,9 @@ end
 
 ViewElementCampaignMissionList.set_visibility = function (self, value)
 	ViewElementCampaignMissionList.super.set_visibility(self, value)
+
+	self._enter_animation = nil
+	self._exit_animation = nil
 end
 
 ViewElementCampaignMissionList._setup_mission_data = function (self, missions, ordered_story_missions)
@@ -1289,7 +1293,11 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_f
 		local cell = _get_grid_cell_data(self._mission_grid, self._selected_row, self._selected_col)
 
 		if cell and cell.data then
-			self:on_mission_tile_pressed(cell.data, cell.slot)
+			local mission_data = cell.data
+			local slot = cell.slot
+
+			parent:set_selected_mission(mission_data.id)
+			parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
 
 			local scrollbar_widget = self._scrollbar_widget
 			local scrollbar_content = scrollbar_widget and scrollbar_widget.content

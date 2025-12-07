@@ -184,10 +184,13 @@ templates.warp_fire = {
 									valid_target = true
 								else
 									local blackboard = BLACKBOARDS[target_unit]
-									local perception_component = blackboard.perception
 
-									if perception_component.aggro_state == "aggroed" then
-										valid_target = true
+									if blackboard then
+										local perception_component = blackboard.perception
+
+										if perception_component.aggro_state == "aggroed" then
+											valid_target = true
+										end
 									end
 								end
 

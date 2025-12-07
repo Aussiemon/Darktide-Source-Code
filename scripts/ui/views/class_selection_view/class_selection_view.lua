@@ -281,13 +281,11 @@ end
 ClassSelectionView._cb_on_dlc_reconcile_success = function (self, data, show_popup_function)
 	if data.dlcUpdates and #data.dlcUpdates > 0 then
 		local dlc_updates = data.dlcUpdates
-
-		Managers.data_service.gear:invalidate_gear_cache()
-
-		local delayed_gear_promise = show_popup_function and show_popup_function() or Promise.delay(1)
+		local delayed_gear_promise = show_popup_function and show_popup_function() or Promise.resolved()
 
 		delayed_gear_promise:next(function ()
 			self:_trigger_item_grant_notifications_for_dlcs(dlc_updates)
+			self:_inject_reconciled_gear_into_local_inventory(dlc_updates)
 			Managers.data_service.gear:fetch_gear():next(function (gear)
 				self._character_create:refresh_gear(gear)
 
@@ -335,6 +333,33 @@ ClassSelectionView._trigger_item_grant_notifications_for_dlcs = function (self, 
 						item_type = item_type,
 					}, true)
 				end
+			end
+		end
+	end
+end
+
+ClassSelectionView._inject_reconciled_gear_into_local_inventory = function (self, dlc_updates)
+	for i = 1, #dlc_updates do
+		local dlc = dlc_updates[i]
+
+		for j = 1, #dlc.rewards do
+			local reward = dlc.rewards[j]
+			local gear_id = reward.gearId
+			local master_id = reward.masterId
+
+			if gear_id and master_id then
+				local rewarded_master_item = MasterItems.get_item(master_id)
+
+				rewarded_master_item.uuid = gear_id
+				rewarded_master_item.masterDataInstance = {
+					id = master_id,
+					overrides = {},
+					slots = rewarded_master_item.slots,
+				}
+
+				local _, gear = ItemUtils.track_reward_item_to_gear(rewarded_master_item)
+
+				Managers.data_service.gear:on_gear_created(gear_id, gear)
 			end
 		end
 	end

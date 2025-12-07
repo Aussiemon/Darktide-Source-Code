@@ -131,6 +131,10 @@ TalentLayoutParser.talents_version = function (profile)
 	return table.concat(_talents_version_scratch, ":")
 end
 
+TalentLayoutParser.is_same_version = function (left, right)
+	return (tonumber(left) or left) == (tonumber(right) or right)
+end
+
 TalentLayoutParser.filter_layout_talents = function (profile, layout_key, selected_talents, out_talents)
 	out_talents = out_talents or {}
 

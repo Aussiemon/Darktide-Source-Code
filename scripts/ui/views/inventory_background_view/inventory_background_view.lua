@@ -1768,6 +1768,9 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 					local item_gear_id = item and item.gear_id
 
 					if item_gear_id ~= preset_item_gear_id then
+						local preset_item = self:_get_inventory_item_by_id(preset_item_gear_id)
+
+						Log.warning("InventoryBackgroundView", "Deselecting active preset due to previewed item %s in slot %s not matching expected item %s", item and item.name or nil, slot_name, preset_item and preset_item.name or nil)
 						self._profile_presets_element:remove_active_profile_preset()
 
 						current_preset = nil
@@ -1917,7 +1920,7 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	if profile_preset then
 		local active_talent_version = TalentLayoutParser.talents_version(profile)
 
-		if profile_preset.talents_version == active_talent_version then
+		if TalentLayoutParser.is_same_version(profile_preset.talents_version, active_talent_version) then
 			self._current_profile_equipped_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
 			self._current_profile_equipped_specialization_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
 		else
@@ -1989,7 +1992,7 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 				local warning_talent = false
 				local preset_talents_version = preset.talents_version
 
-				if not preset_talents_version or active_talent_version ~= preset_talents_version then
+				if not preset_talents_version or not TalentLayoutParser.is_same_version(active_talent_version, preset_talents_version) then
 					show_modified = true
 					warning_talent = true
 				end
