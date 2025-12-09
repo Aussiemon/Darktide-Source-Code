@@ -344,7 +344,7 @@ animations.info_description_enter = {
 			local style = objective_info_widget.style
 			local char_index = math.floor(content.description_num_characters * progress)
 
-			content.objective_description = string.sub(content.default_description, 1, char_index)
+			content.objective_description = Utf8.sub_string(content.default_description, 1, char_index)
 
 			local od_from_color = style.objective_description.from_color
 			local frame_from_color = style.frame.color
@@ -408,7 +408,7 @@ animations.info_description_enter = {
 					local style = widget.style
 					local char_index = math.floor(content.amount_num_characters * progress)
 
-					content.amount = string.sub(content.default_text, 1, char_index)
+					content.amount = Utf8.sub_string(content.default_text, 1, char_index)
 				end
 			end
 
@@ -418,7 +418,7 @@ animations.info_description_enter = {
 			if objective_info_content.has_mission_giver then
 				local char_index = math.floor(objective_info_content.mission_giver_num_characters * progress)
 
-				objective_info_content.mission_giver_name = string.sub(objective_info_content.mission_giver_default_text, 1, char_index)
+				objective_info_content.mission_giver_name = Utf8.sub_string(objective_info_content.mission_giver_default_text, 1, char_index)
 			end
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)

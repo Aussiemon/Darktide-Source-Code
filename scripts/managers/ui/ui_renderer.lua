@@ -1365,6 +1365,9 @@ end
 
 UIRenderer.scaled_font_size_by_width = function (self, text, font_type, font_size, max_width)
 	local scale = self.scale
+
+	max_width = max_width * scale
+
 	local min_font_size = 1
 	local scaled_font_size = UIFonts.scaled_size(font_size, scale)
 	local text_width = UIRenderer.text_size(self, text, font_type, scaled_font_size)
@@ -1378,11 +1381,7 @@ UIRenderer.scaled_font_size_by_width = function (self, text, font_type, font_siz
 			font_size = math.max(font_size - 1, min_font_size)
 			scaled_font_size = UIFonts.scaled_size(font_size, scale)
 			text_width = math.floor(UIRenderer.text_size(self, text, font_type, scaled_font_size))
-		until text_width <= max_width
-
-		local num_char = Utf8.string_length(text)
-
-		text = Utf8.sub_string(text, 1, num_char) .. "..."
+		until text_width < max_width
 	end
 
 	return font_size

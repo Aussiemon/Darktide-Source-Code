@@ -108,8 +108,7 @@ InventoryBackgroundView.on_enter = function (self)
 	local specialization_talent_layout_file_path = profile_archetype and profile_archetype.specialization_talent_layout_file_path
 
 	self._active_specialization_talent_loadout = specialization_talent_layout_file_path and require(specialization_talent_layout_file_path)
-	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
-	self._specialization_talents_icons_package_id = Managers.data_service.specialization_talent:load_icons_for_profile(profile, "InventoryBackgroundView")
+	self._talent_icons_package_ids = Managers.data_service.talents:load_icons_for_profile(profile, "InventoryBackgroundView")
 	self._widgets_by_name.character_insigna.content.visible = false
 end
 
@@ -651,20 +650,32 @@ InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 	end)
 end
 
-InventoryBackgroundView.event_player_talent_node_updated = function (self, equipped_talents)
-	self:_update_has_empty_talent_nodes(equipped_talents, self._current_profile_equipped_specialization_talents)
+InventoryBackgroundView.event_player_talent_node_updated = function (self, original_equipped_talents)
+	local equipped_talents = table.clone(original_equipped_talents)
+
+	self:_update_has_empty_talent_nodes(equipped_talents, nil)
+
+	local player = self._preview_player
+	local profile = player:profile()
+	local is_talent_selection_valid = TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", equipped_talents)
+
+	if is_talent_selection_valid then
+		self._valid_profile_equipped_talents = equipped_talents
+	end
 
 	self._current_profile_equipped_talents = equipped_talents
 
-	self:_update_presets_missing_warning_marker()
+	self:_save_current_talents_to_profile_preset()
+	self:_update_missing_warning_marker()
 end
 
 InventoryBackgroundView.event_player_specialization_talent_node_updated = function (self, equipped_talents)
-	self:_update_has_empty_talent_nodes(self._current_profile_equipped_talents, equipped_talents)
+	self:_update_has_empty_talent_nodes(nil, equipped_talents)
 
 	self._current_profile_equipped_specialization_talents = equipped_talents
 
-	self:_update_presets_missing_warning_marker()
+	self:_save_current_talents_to_profile_preset()
+	self:_update_missing_warning_marker()
 end
 
 InventoryBackgroundView.event_player_profile_updated = function (self)
@@ -832,6 +843,8 @@ InventoryBackgroundView._update_has_empty_talent_nodes = function (self, optiona
 	local profile = player:profile()
 
 	if profile then
+		optional_talent_nodes = optional_talent_nodes or self._current_profile_equipped_talents
+		optional_specialization_talent_nodes = optional_specialization_talent_nodes or self._current_profile_equipped_specialization_talents
 		self._has_empty_talent_nodes = TalentLayoutParser.profile_percent_points_used(profile, optional_talent_nodes) < 1
 		self._has_empty_specialization_talent_nodes = TalentLayoutParser.profile_percent_specialization_points_used(profile, optional_specialization_talent_nodes) < 1
 	end
@@ -1506,7 +1519,8 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			end
 
 			content.show_alert = self._has_empty_talent_nodes
-			content.show_modified = self._warning_talent
+			content.show_modified = self._modified_talents
+			content.show_warning = self._invalid_talents
 		end,
 		context = {
 			can_exit = true,
@@ -1560,7 +1574,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			update = function (content, style, dt)
 				content.hotspot.disabled = not self:is_inventory_synced()
 
-				if not self._preview_player or self._preview_player:profile().current_level < specialization_required_level then
+				local preview_profile = self._preview_player:profile()
+
+				if not self._preview_player or preview_profile.current_level < specialization_required_level then
 					content.hotspot.disabled = true
 					content.context_text = Localize("loc_requires_level", true, {
 						level = specialization_required_level,
@@ -1573,8 +1589,13 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					return
 				end
 
-				content.show_alert = self._has_empty_specialization_talent_nodes
-				content.show_modified = self._warning_talent
+				local save_manager = Managers.save
+				local save_data = save_manager:account_data()
+				local seen_points_per_character = save_data and save_data.last_viewed_max_specialization_points or {}
+				local seen_points = seen_points_per_character[preview_profile.character_id] or 0
+				local max_points = TalentLayoutParser.profile_max_specialization_node_points(preview_profile)
+
+				content.show_alert = seen_points < max_points
 			end,
 			context = {
 				can_exit = true,
@@ -1586,6 +1607,29 @@ InventoryBackgroundView._setup_top_panel = function (self)
 				end
 
 				self.transition_animation_id = self:_start_animation("transition_fade", self._widgets_by_name, self)
+
+				if not self._is_own_player or self._is_readonly then
+					return
+				end
+
+				local save_manager = Managers.save
+				local save_data = save_manager:account_data()
+
+				if save_data then
+					local seen_points_per_character = save_data.last_viewed_max_specialization_points or {}
+
+					save_data.last_viewed_max_specialization_points = seen_points_per_character
+
+					local preview_profile = self._preview_player:profile()
+					local seen_points = seen_points_per_character[preview_profile.character_id] or 0
+					local max_points = TalentLayoutParser.profile_max_specialization_node_points(self._preview_player:profile())
+
+					if seen_points ~= max_points then
+						save_data.last_viewed_max_specialization_points[preview_profile.character_id] = max_points
+
+						save_manager:queue_save()
+					end
+				end
 			end,
 			leave = function ()
 				if self._transition_animation_id and self:_is_animation_active(self._transition_animation_id) then
@@ -1753,7 +1797,6 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 
 	self:_register_event("event_on_profile_preset_changed")
 	self:_register_event("event_on_player_preset_created")
-	self:_register_event("event_player_save_changes_to_current_preset")
 
 	local current_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local current_preset = current_preset_id and ProfileUtils.get_profile_preset(current_preset_id)
@@ -1887,15 +1930,6 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	local player = self._preview_player
 	local profile = player:profile()
 	local active_talents_version = TalentLayoutParser.talents_version(profile)
-	local previously_active_profile_preset_id = self._active_profile_preset_id
-
-	if previously_active_profile_preset_id then
-		local all_talents = {}
-
-		TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
-		TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
-		ProfileUtils.save_talent_nodes_for_profile_preset(previously_active_profile_preset_id, all_talents, active_talents_version)
-	end
 
 	if profile_preset and profile_preset.loadout then
 		local equipped_previous_slots = {}
@@ -1921,15 +1955,21 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 		local active_talent_version = TalentLayoutParser.talents_version(profile)
 
 		if TalentLayoutParser.is_same_version(profile_preset.talents_version, active_talent_version) then
-			self._current_profile_equipped_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
-			self._current_profile_equipped_specialization_talents = profile_preset.talents and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
+			local preset_talents = profile_preset.talents or {}
+
+			self._current_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+			self._current_profile_equipped_specialization_talents = TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents)
+
+			local is_talent_selection_valid = TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", preset_talents)
+
+			if is_talent_selection_valid then
+				self._valid_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+			end
 		else
 			self._current_profile_equipped_talents = {}
+			self._valid_profile_equipped_talents = {}
 			self._current_profile_equipped_specialization_talents = {}
 		end
-	else
-		self:_apply_current_talents_to_profile()
-		self:_apply_current_specialization_talents_to_profile()
 	end
 
 	self._active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
@@ -1943,6 +1983,8 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 			text = Localize("loc_inventory_error_loadout_items"),
 		})
 	end
+
+	self:_update_has_empty_talent_nodes()
 end
 
 InventoryBackgroundView._has_loadout_slot = function (self, slots)
@@ -1965,19 +2007,34 @@ InventoryBackgroundView._has_cosmetic_slot = function (self, slots)
 	return has_cosmetic_slot
 end
 
-InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
+InventoryBackgroundView._update_missing_warning_marker = function (self)
 	local presets = ProfileUtils.get_profile_presets()
+	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
-	if not presets or #presets == 0 then
-		local show_warning = not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots)
-		local show_modified = not table.is_empty(self._modified_slots)
+	if not presets or #presets == 0 or not active_profile_preset_id then
+		local loadout = self._current_profile_equipped_items
+		local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, true)
 
-		self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
-	else
+		self._invalid_slots = table.merge(table.merge({}, invalid_slots), duplicated_slots)
+		self._modified_slots = modified_slots
+
+		local player = self._preview_player
+		local profile = player:profile()
+
+		self._invalid_talents = self._current_profile_equipped_talents and not TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", self._current_profile_equipped_talents) or false
+
+		if self._profile_presets_element then
+			local show_warning = not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or self._invalid_talents
+			local show_modified = not table.is_empty(self._modified_slots) or self._modified_talents
+
+			self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
+		end
+	end
+
+	if presets then
 		local player = self._preview_player
 		local profile = player:profile()
 		local active_talent_version = TalentLayoutParser.talents_version(profile)
-		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 		for i = 1, #presets do
 			local preset = presets[i]
@@ -1989,12 +2046,18 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 				local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, is_read_only)
 				local show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 				local show_modified = not table.is_empty(modified_slots)
-				local warning_talent = false
+				local invalid_talents = false
+				local modified_talents = false
 				local preset_talents_version = preset.talents_version
 
 				if not preset_talents_version or not TalentLayoutParser.is_same_version(active_talent_version, preset_talents_version) then
 					show_modified = true
-					warning_talent = true
+					modified_talents = true
+				end
+
+				if not TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", preset.talents) then
+					invalid_talents = true
+					show_warning = true
 				end
 
 				self._profile_presets_element:show_profile_preset_missing_items_warning(show_warning, show_modified, preset.id)
@@ -2002,7 +2065,8 @@ InventoryBackgroundView._update_presets_missing_warning_marker = function (self)
 				if active_preset then
 					self._invalid_slots = table.merge(table.merge({}, invalid_slots), duplicated_slots)
 					self._modified_slots = modified_slots
-					self._warning_talent = warning_talent
+					self._invalid_talents = invalid_talents
+					self._modified_talents = modified_talents
 
 					self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
 				end
@@ -2225,8 +2289,7 @@ InventoryBackgroundView.on_exit = function (self)
 	self:_unload_portrait_icon()
 	self:_unload_portrait_frame(self._ui_renderer)
 	self:_unload_insignia(self._ui_renderer)
-	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
-	Managers.data_service.talents:release_icons(self._specialization_talents_icons_package_id)
+	Managers.data_service.talents:release_icons(self._talent_icons_package_ids)
 
 	if self._active_view then
 		if Managers.ui:view_active(self._active_view) then
@@ -2259,9 +2322,7 @@ InventoryBackgroundView.on_exit = function (self)
 
 	if not self._is_readonly and self:is_inventory_synced() then
 		self:_equip_local_changes()
-		self:_save_current_talents_to_profile_preset()
 		self:_apply_current_talents_to_profile()
-		self:_apply_current_specialization_talents_to_profile()
 	end
 end
 
@@ -2275,11 +2336,17 @@ InventoryBackgroundView._save_current_talents_to_profile_preset = function (self
 	if active_profile_preset_id then
 		local player = self._preview_player
 		local profile = player:profile()
-		local active_talents_version = TalentLayoutParser.talents_version(profile)
 		local all_talents = {}
+		local active_talents_version = TalentLayoutParser.talents_version(profile)
 
-		TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
-		TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
+		if self._current_profile_equipped_talents then
+			TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
+		end
+
+		if self._current_profile_equipped_specialization_talents then
+			TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
+		end
+
 		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, all_talents, active_talents_version)
 	end
 end
@@ -2313,45 +2380,32 @@ InventoryBackgroundView._check_toggle_companion = function (self)
 	end
 end
 
-InventoryBackgroundView.event_player_save_changes_to_current_preset = function (self)
-	self:_save_current_talents_to_profile_preset()
-end
-
 InventoryBackgroundView._apply_current_talents_to_profile = function (self)
 	if not self._is_own_player or self._is_readonly then
 		return
 	end
 
-	local active_talent_loadout = self._active_talent_loadout
+	local talent_info, specialization_talent_info
 
-	if active_talent_loadout then
-		local node_tiers = self._current_profile_equipped_talents
-
-		if node_tiers then
-			local player = self._preview_player
-			local talent_service = Managers.data_service.talents
-
-			talent_service:set_talents_v2(player, active_talent_loadout, node_tiers)
-		end
-	end
-end
-
-InventoryBackgroundView._apply_current_specialization_talents_to_profile = function (self)
-	if not self._is_own_player or self._is_readonly then
-		return
+	if self._active_talent_loadout and self._valid_profile_equipped_talents then
+		talent_info = {
+			layout = self._active_talent_loadout,
+			node_tiers = self._valid_profile_equipped_talents,
+		}
 	end
 
-	local active_talent_loadout = self._active_specialization_talent_loadout
+	if self._active_specialization_talent_loadout and self._current_profile_equipped_specialization_talents then
+		specialization_talent_info = {
+			layout = self._active_specialization_talent_loadout,
+			node_tiers = self._current_profile_equipped_specialization_talents,
+		}
+	end
 
-	if active_talent_loadout then
-		local node_tiers = self._current_profile_equipped_specialization_talents
+	if talent_info or specialization_talent_info then
+		local player = self._preview_player
+		local talent_service = Managers.data_service.talents
 
-		if node_tiers then
-			local player = self._preview_player
-			local talent_service = Managers.data_service.specialization_talent
-
-			talent_service:set_specialization_talents(player, active_talent_loadout, node_tiers)
-		end
+		talent_service:set_talents_v2(player, talent_info, specialization_talent_info)
 	end
 end
 
@@ -2597,9 +2651,6 @@ InventoryBackgroundView._setup_inventory = function (self)
 	self._preview_profile_equipped_items = player_loadout
 	self._starting_profile_equipped_items = self._context and self._context.starting_profile_equipped_items or table.clone_instance(player_loadout)
 	self._current_profile_equipped_items = self._context and self._context.current_profile_equipped_items or table.clone_instance(player_loadout)
-
-	self:_update_valid_items_list()
-
 	self._widgets_by_name.loading.content.visible = false
 
 	self:_setup_top_panel()
@@ -3040,11 +3091,9 @@ end
 InventoryBackgroundView._update_loadout_validation = function (self)
 	if self._profile_presets_element then
 		self._profile_presets_element:sync_profiles_states()
-		self:_update_presets_missing_warning_marker()
-	elseif self._current_profile_equipped_items then
-		self:_validate_loadout(self._current_profile_equipped_items)
 	end
 
+	self:_update_missing_warning_marker()
 	self:_update_valid_items_list()
 end
 

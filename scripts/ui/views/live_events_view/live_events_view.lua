@@ -129,6 +129,12 @@ LiveEventsView._draw_widgets = function (self, dt, t, input_service, ui_renderer
 		end
 	end
 
+	if self._reward_line_widgets then
+		for _, widget in pairs(self._reward_line_widgets) do
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
 	LiveEventsView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 end
 
@@ -218,7 +224,7 @@ LiveEventsView._on_entry_selected = function (self, event_id)
 		Log.warning("Missing LiveEvents data for event template " .. tostring(template_name))
 	end
 
-	local height = Styles.spacing.text_top_padding + Styles.spacing.event_name_height
+	local height = Styles.spacing.text_top_padding + Styles.spacing.event_name_height + 20
 
 	base_content.event_name = event_data and Localize(event_data.name) or "n/a"
 
@@ -231,7 +237,7 @@ LiveEventsView._on_entry_selected = function (self, event_id)
 		local lore_text_height = TextUtilities.text_height(self._ui_renderer, event_lore, lore_text_style, lore_text_style.size, true)
 
 		lore_text_style.size[2] = lore_text_height
-		height = height + lore_text_height + 20
+		height = height + lore_text_height + 46
 	else
 		base_style.event_lore.visible = false
 	end
@@ -245,7 +251,7 @@ LiveEventsView._on_entry_selected = function (self, event_id)
 
 	description_text_style.size[2] = description_text_height
 	description_text_style.offset[2] = height + 20
-	height = height + description_text_height + 40
+	height = height + description_text_height + 60
 
 	if event_data and event_data.event_context then
 		local event_context = Localize(event_data.event_context)
@@ -285,10 +291,20 @@ LiveEventsView._create_reward_widgets = function (self, event)
 		table.clear(self._reward_widgets)
 	end
 
+	if self._reward_line_widgets then
+		for _, widget in pairs(self._reward_line_widgets) do
+			self:_unregister_widget_name(widget.name)
+		end
+
+		table.clear(self._reward_line_widgets)
+	end
+
 	local reward_widgets = {}
+	local line_widgets = {}
 	local tiers = event.tiers or {}
 	local progress_bar_size = self._ui_scenegraph.event_progress_bar.size
 	local bar_width = progress_bar_size[1]
+	local rewards_box_width = self._ui_scenegraph.rewards_box.size[1]
 	local num_tiers = #tiers
 	local max_target_exp = tiers[num_tiers] and tiers[num_tiers].target or 1
 	local reward_start_x = -(#tiers * (Styles.sizes.reward_size[1] + 40)) / 2
@@ -301,15 +317,30 @@ LiveEventsView._create_reward_widgets = function (self, event)
 			local tier_index = k
 			local reward_index = j
 			local reward = rewards[j]
-			local widget_definition = Definitions.create_reward_widget("event_progress_bar", reward, tier_index, reward_index)
+			local widget_definition = Definitions.create_reward_widget("rewards_box", reward, tier_index, reward_index)
+			local target_line_definition = UIWidget.create_definition({
+				{
+					pass_type = "texture",
+					style_id = "line",
+					value = "content/ui/materials/mission_board/mission_line",
+					value_id = "line",
+					style = Styles.reward.bar_connection_line,
+				},
+			}, "event_progress_bar")
 			local reward_widget = self:_create_widget("reward_widget_" .. tier_index .. "_" .. reward_index, widget_definition)
+			local line_widget = self:_create_widget("reward_line_widget_" .. tier_index .. "_" .. reward_index, target_line_definition)
+
+			line_widgets[#line_widgets + 1] = line_widget
+
 			local tier_target_exp = tier.target or 1
-			local spacing = tier_target_exp / max_target_exp * bar_width
-			local offset_x = spacing - 2
+			local rewards_spacing = tier_target_exp / max_target_exp * rewards_box_width
+			local line_spacing = tier_target_exp / max_target_exp * bar_width
+			local offset_x = rewards_spacing - 2
 
 			reward_widgets[#reward_widgets + 1] = reward_widget
 			reward_widget.offset[1] = offset_x - Styles.sizes.reward_size[1] / 2
-			reward_widget.offset[2] = -120
+			reward_widget.offset[2] = 0
+			line_widget.offset[1] = line_spacing - 2
 
 			if reward.type == "item" then
 				local item = MasterItems.get_item(reward.id)
@@ -325,6 +356,7 @@ LiveEventsView._create_reward_widgets = function (self, event)
 	end
 
 	self._reward_widgets = reward_widgets
+	self._reward_line_widgets = line_widgets
 
 	self:_setup_event_progress_bar(event)
 end
@@ -339,13 +371,17 @@ LiveEventsView._setup_event_progress_bar = function (self, event)
 	local max_progress = tiers[num_tiers] and tiers[num_tiers].target or 1
 	local actual_progress = current_progress / max_progress
 
+	event_progress_bar_content.progress = actual_progress or 0
 	event_progress_bar_content.current_progress = actual_progress or 0
 	event_progress_bar_content.max_progress = max_progress
+	event_progress_bar_style.bar.color = Color.golden_rod(255, true)
+	event_progress_bar_widget.dirty = true
 
+	local progress_text_widget = self._widgets_by_name.progress_text
 	local progress_text = string.format("%.0f%%", actual_progress * 100) .. " [" .. tostring(current_progress) .. "/" .. tostring(max_progress) .. "]"
 
-	event_progress_bar_content.progress_text = progress_text
-	event_progress_bar_widget.dirty = true
+	progress_text_widget.content.progress_text = progress_text
+	progress_text_widget.dirty = true
 end
 
 LiveEventsView._request_item_icon = function (self, widget, item, ui_renderer)

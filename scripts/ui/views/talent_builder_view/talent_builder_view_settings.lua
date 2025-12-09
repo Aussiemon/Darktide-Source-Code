@@ -214,7 +214,7 @@ local talent_builder_view_settings = {
 			},
 		},
 		broker_stimm = {
-			display_name = "loc_glossary_talent_default",
+			display_name = "loc_stimm_lab_recipe",
 			frame = "content/ui/textures/frames/talents/diamond_frame",
 			gradient_map = "content/ui/textures/color_ramps/talent_default",
 			icon_mask = "content/ui/textures/frames/talents/diamond_frame_mask",

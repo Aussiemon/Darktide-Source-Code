@@ -26,14 +26,7 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 	local unit_data_extension = action_context.unit_data_extension
 
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
-
-	local ability_template_tweak_data = self._ability_template_tweak_data
-	local slot_to_wield = action_settings.auto_wield_slot or ability_template_tweak_data.auto_wield_slot
-
-	if slot_to_wield then
-		self._inventory_slot_secondary_component = unit_data_extension:write_component(slot_to_wield)
-	end
-
+	self._inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
 	self._ability_type = action_settings.ability_type or "none"
 
 	local player_unit = self._player_unit

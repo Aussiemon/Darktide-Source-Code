@@ -911,6 +911,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_both_ears_and_chin_neck = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0.717,
+				0.373,
+				0.754,
+			},
+			negative_mask = {
+				0,
+				0.251,
+				0.263,
+				0.32,
+			},
+		},
+	},
 	mask_face_both_ears_chin_nose = {
 		property_overrides = {
 			positive_mask = {

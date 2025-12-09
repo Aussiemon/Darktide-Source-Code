@@ -570,6 +570,12 @@ end
 local function _add_frame(component_size, has_bonus, is_pack)
 	local top_frame_material = "content/ui/materials/frames/premium_store/offer_card_upper_regular"
 	local bottom_frame_material = "content/ui/materials/frames/premium_store/offer_card_lower_regular"
+	local material_values = {
+		texture_size = {
+			component_size[1] + 20,
+			30,
+		},
+	}
 	local offset_top = {
 		0,
 		-15,
@@ -581,18 +587,16 @@ local function _add_frame(component_size, has_bonus, is_pack)
 		6,
 	}
 
-	if is_pack then
-		top_frame_material = "content/ui/materials/frames/premium_store/offer_card_upper_golden_1"
-		bottom_frame_material = "content/ui/materials/frames/premium_store/offer_card_lower_golden_1"
-		offset_top[2] = -10
-		offset_bottom[2] = 10
-	end
-
 	if has_bonus then
 		top_frame_material = "content/ui/materials/frames/premium_store/offer_card_upper_sale"
 		bottom_frame_material = "content/ui/materials/frames/premium_store/offer_card_lower_sale"
 		offset_top[2] = -15
 		offset_bottom[2] = 15
+	elseif is_pack then
+		top_frame_material = "content/ui/materials/frames/premium_store/offer_card_upper_golden_1"
+		bottom_frame_material = "content/ui/materials/frames/premium_store/offer_card_lower_golden_1"
+		offset_top[2] = -10
+		offset_bottom[2] = 10
 	end
 
 	return function (blueprint)
@@ -611,6 +615,7 @@ local function _add_frame(component_size, has_bonus, is_pack)
 						30,
 					},
 					offset = offset_top,
+					material_values = material_values,
 					size_addition = {
 						20,
 						0,
@@ -631,6 +636,7 @@ local function _add_frame(component_size, has_bonus, is_pack)
 						30,
 					},
 					offset = offset_bottom,
+					material_values = material_values,
 					size_addition = {
 						20,
 						0,

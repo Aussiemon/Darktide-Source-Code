@@ -206,10 +206,9 @@ TalentBuilderView.event_on_profile_preset_changed = function (self, profile_pres
 	local active_talent_version = TalentLayoutParser.talents_version(profile)
 	local talents_version = profile_preset and profile_preset.talents_version
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
-	local previously_active_profile_preset_id = self._active_profile_preset_id
 	local talents
 
-	if previously_active_profile_preset_id and profile_preset then
+	if profile_preset then
 		if not TalentLayoutParser.is_same_version(talents_version, active_talent_version) then
 			talents = {}
 		else

@@ -156,6 +156,82 @@ TalentLayoutParser.filter_layout_talents = function (profile, layout_key, select
 	return out_talents
 end
 
+local function _node_by_name(name, layout)
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+		local widget_name = node.widget_name
+
+		if widget_name == name then
+			return node
+		end
+	end
+end
+
+local temp_ignore_list = {}
+
+local function _can_node_traverse_to_start(node, selected_talents, layout, ignore_list, step_count)
+	step_count = (step_count or 0) + 1
+
+	if not ignore_list then
+		ignore_list = temp_ignore_list
+
+		table.clear(ignore_list)
+	end
+
+	ignore_list[node.widget_name] = true
+
+	local parents = node.parents
+
+	for i = 1, #parents do
+		local parent_name = parents[i]
+
+		if not ignore_list[parent_name] then
+			local parent_node = _node_by_name(parent_name, layout)
+
+			if parent_node then
+				if parent_node.type == "start" then
+					return true, step_count
+				elseif selected_talents[parent_name] then
+					local could_traverse_parent, parent_step_count = _can_node_traverse_to_start(parent_node, selected_talents, layout, ignore_list, step_count)
+
+					if could_traverse_parent then
+						return true, parent_step_count
+					end
+				end
+			end
+		end
+	end
+
+	return false, 0
+end
+
+TalentLayoutParser.is_talent_selection_valid = function (profile, layout_key, selected_talents)
+	local archetype = profile.archetype
+
+	if not archetype[layout_key] then
+		return true
+	end
+
+	local layout = require(archetype[layout_key])
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+
+		if selected_talents[node.widget_name] then
+			local valid_node = _can_node_traverse_to_start(node, selected_talents, layout)
+
+			if not valid_node then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
 local function _num_decimals(value)
 	local only_decimals = value - math.floor(value)
 	local has_digit_10 = false
@@ -581,6 +657,10 @@ TalentLayoutParser.profile_specialization_node_points_spent = function (profile,
 	end
 
 	return total_points, max_points
+end
+
+TalentLayoutParser.profile_max_specialization_node_points = function (profile)
+	return profile.expertise_points or 0
 end
 
 TalentLayoutParser.percent_points_used = function (talent_layout, node_tiers, max_points)

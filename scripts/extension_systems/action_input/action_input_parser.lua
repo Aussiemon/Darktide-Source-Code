@@ -277,6 +277,11 @@ ActionInputParser.action_transitioned_with_automatic_input = function (self, act
 	local has_first_entry = first_entry_action_input ~= NO_ACTION_INPUT
 	local hierarchy_position = self._hierarchy_position[ring_buffer_index]
 	local template_name = self._action_component.template_name
+
+	if template_name == "none" then
+		return
+	end
+
 	local network_lookup = self._ACTION_INPUT_NETWORK_LOOKUP[template_name]
 	local sequences = self._sequences[ring_buffer_index]
 	local base_hierarchy = self._ACTION_INPUT_HIERARCHY[template_name]

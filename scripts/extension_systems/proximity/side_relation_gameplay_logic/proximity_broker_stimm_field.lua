@@ -112,6 +112,8 @@ ProximityBrokerStimmField.init = function (self, logic_context, init_data, owner
 			end
 		end
 	end
+
+	self._has_syringe = has_syringe or has_broker_syringe
 end
 
 ProximityBrokerStimmField.destroy = function (self)
@@ -298,6 +300,15 @@ ProximityBrokerStimmField._add_buff_to_unit = function (self, t, unit)
 				reappliable_buff = false,
 				local_id = local_id,
 			}
+		end
+
+		if self._has_syringe then
+			local owner_buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local param_table = owner_buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				owner_buff_extension:add_proc_event(BuffSettings.proc_events.on_syringe_used, param_table)
+			end
 		end
 	end
 end

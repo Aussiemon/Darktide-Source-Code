@@ -1186,7 +1186,7 @@ animations.mission_tile_entry = {
 			style.display_order_text.visible = true
 			style.display_order_text_frame.visible = true
 
-			local num_characters = Utf8.string_length(content.default_display_order_text)
+			local num_characters = string.len(content.default_display_order_text)
 
 			content.display_order_text_num_characters = num_characters
 		end,

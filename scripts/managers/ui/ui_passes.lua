@@ -789,6 +789,10 @@ UIPasses.text = {
 
 		if size then
 			gui_size = Gui.scale_vector3(size, ui_scale)
+
+			if ui_style.text_fit_with then
+				font_size = UIRenderer.scaled_font_size_by_width(ui_renderer, text, font_type, font_size, gui_size[1])
+			end
 		end
 
 		retained_id = UIRenderer.script_draw_text(ui_renderer, text, font_size, font_type, gui_position, gui_size, text_color, temp_text_options, retained_id)

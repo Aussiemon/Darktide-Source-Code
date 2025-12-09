@@ -10,8 +10,8 @@ local function profile_overrides(item_definitions)
 		},
 		broker = {
 			loadout = {
-				slot_primary = item_definitions["content/items/weapons/player/melee/combatknife_p1_m1"],
-				slot_secondary = item_definitions["content/items/weapons/player/ranged/autogun_p1_m1"],
+				slot_primary = item_definitions["content/items/weapons/player/melee/dual_shivs_p1_m1"],
+				slot_secondary = item_definitions["content/items/weapons/player/ranged/dual_autopistols_p1_m1"],
 			},
 		},
 		ogryn = {

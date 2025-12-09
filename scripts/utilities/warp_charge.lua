@@ -79,7 +79,7 @@ WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component
 	local use_charge = charge_template.use_charge
 	local base_add_percentage = charge_template.warp_charge_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
-	local new_warp_charge, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
+	local new_warp_charge, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, prevent_explosion, charge_template)
 
 	if prevent_explosion then
 		new_state = nil
@@ -129,8 +129,9 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 
 	if first_charge and additional_charge_on_start then
 		local additional_add_percentage = buff_multiplier * additional_charge_on_start
+		local prevent_explosion = true
 
-		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_add_percentage, current_percentage, true)
+		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_add_percentage, current_percentage, prevent_explosion, charge_template)
 	end
 
 	local new_warp_charge = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, full_charge_add_percentage, duration, current_percentage)

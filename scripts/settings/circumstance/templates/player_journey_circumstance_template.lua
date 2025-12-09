@@ -1,11 +1,14 @@
 ﻿-- chunkname: @scripts/settings/circumstance/templates/player_journey_circumstance_template.lua
 
 local circumstance_templates = {}
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
+local base_mission_overrides = MissionOverrides.merge("stats_story", "stats_default")
 
 circumstance_templates.player_journey_01 = {
 	minion_health_modifier = -0.3,
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_01_replacement",
 		"mutator_no_monsters",
@@ -22,6 +25,7 @@ circumstance_templates.player_journey_02 = {
 	minion_health_modifier = -0.2,
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_02_replacement",
 		"mutator_no_monsters",
@@ -38,6 +42,7 @@ circumstance_templates.player_journey_03 = {
 	minion_health_modifier = -0.1,
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_03_replacement",
 		"mutator_no_monsters",
@@ -53,6 +58,7 @@ circumstance_templates.player_journey_03 = {
 circumstance_templates.player_journey_04 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_04_replacement",
 		"mutator_no_monsters",
@@ -68,6 +74,7 @@ circumstance_templates.player_journey_04 = {
 circumstance_templates.player_journey_05 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_05_replacement",
 		"mutator_no_witches",
@@ -82,6 +89,7 @@ circumstance_templates.player_journey_05 = {
 circumstance_templates.player_journey_06_A = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_06_A_replacement",
 		"mutator_no_witches",
@@ -96,6 +104,7 @@ circumstance_templates.player_journey_06_A = {
 circumstance_templates.player_journey_07_A = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_07_A_replacement",
 		"mutator_no_witches",
@@ -110,6 +119,7 @@ circumstance_templates.player_journey_07_A = {
 circumstance_templates.player_journey_06_B = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_06_B_replacement",
 		"mutator_no_witches",
@@ -124,6 +134,7 @@ circumstance_templates.player_journey_06_B = {
 circumstance_templates.player_journey_07_B = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_07_B_replacement",
 		"mutator_no_witches",
@@ -141,6 +152,7 @@ circumstance_templates.player_journey_08 = {
 		"renegade_twin_captain",
 		"renegade_twin_captain_two",
 	},
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_08_replacement",
 		"mutator_no_witches",
@@ -159,6 +171,7 @@ circumstance_templates.player_journey_09 = {
 		"renegade_twin_captain",
 		"renegade_twin_captain_two",
 	},
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_09_replacement",
 		"mutator_no_witches",
@@ -173,6 +186,7 @@ circumstance_templates.player_journey_09 = {
 circumstance_templates.player_journey_010 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_toxic_gas_twins",
 		"mutator_no_hordes",
@@ -192,6 +206,7 @@ circumstance_templates.player_journey_010 = {
 circumstance_templates.player_journey_011_A = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_player_journey_011_A_replacement",
 		"mutator_no_witches",
@@ -205,6 +220,7 @@ circumstance_templates.player_journey_011_A = {
 circumstance_templates.player_journey_012_A = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_no_witches",
 	},
@@ -217,6 +233,7 @@ circumstance_templates.player_journey_012_A = {
 circumstance_templates.player_journey_013_A = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_no_witches",
 	},
@@ -229,6 +246,7 @@ circumstance_templates.player_journey_013_A = {
 circumstance_templates.player_journey_011_B = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_no_witches",
 	},
@@ -241,6 +259,7 @@ circumstance_templates.player_journey_011_B = {
 circumstance_templates.player_journey_014 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = base_mission_overrides,
 	mutators = {
 		"mutator_no_witches",
 	},
@@ -250,10 +269,5 @@ circumstance_templates.player_journey_014 = {
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
 	},
 }
-
-for _, template in pairs(circumstance_templates) do
-	template.is_default = true
-	template.is_story = true
-end
 
 return circumstance_templates

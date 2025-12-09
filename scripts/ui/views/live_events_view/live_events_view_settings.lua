@@ -19,12 +19,12 @@ Settings.ui_item_display_sizes = {
 		88,
 	},
 	PORTRAIT_FRAME = {
-		81,
-		90,
+		72,
+		80,
 	},
 	CHARACTER_INSIGNIA = {
-		36,
-		90,
+		32,
+		80,
 	},
 }
 Settings.ui_item_display_offsets = {
@@ -34,13 +34,13 @@ Settings.ui_item_display_offsets = {
 		12,
 	},
 	PORTRAIT_FRAME = {
-		12,
-		7.5,
+		12.299999999999997,
+		8.299999999999997,
 		12,
 	},
 	CHARACTER_INSIGNIA = {
-		34.5,
-		7.5,
+		32.3,
+		8.299999999999997,
 		12,
 	},
 }

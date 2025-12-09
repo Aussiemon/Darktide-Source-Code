@@ -220,14 +220,12 @@ MutatorBase._register_event_listeners = function (self)
 
 	local event_listeners = self._template.trigger_on_events
 
-	if not event_listeners or #event_listeners == 0 then
+	if not event_listeners then
 		return
 	end
 
-	for i = 1, #event_listeners do
-		local event_trigger = event_listeners[i]
-
-		Managers.event:register(self, event_trigger, "_on_" .. event_trigger)
+	for event_trigger, event_settings in pairs(event_listeners) do
+		Managers.event:register_with_parameters(self, event_trigger, "_on_" .. event_trigger, event_settings or {})
 	end
 end
 
@@ -238,13 +236,11 @@ MutatorBase._remove_event_listeners = function (self)
 
 	local event_listeners = self._template.trigger_on_events
 
-	if not event_listeners or #event_listeners == 0 then
+	if not event_listeners then
 		return
 	end
 
-	for i = 1, #event_listeners do
-		local event_trigger = event_listeners[i]
-
+	for event_trigger, _ in pairs(event_listeners) do
 		Managers.event:unregister(self, event_trigger)
 	end
 end

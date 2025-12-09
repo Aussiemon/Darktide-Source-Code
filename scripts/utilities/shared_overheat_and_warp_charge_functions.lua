@@ -2,14 +2,34 @@
 
 local SharedOverheatAndWarpChargeFunctions = {}
 
-SharedOverheatAndWarpChargeFunctions.add_immediate = function (charge_level, use_charge, add_percentage, current_percentage, prevent_explosion)
+SharedOverheatAndWarpChargeFunctions.add_immediate = function (charge_level, use_charge, add_percentage, current_percentage, prevent_explosion, charge_template, inventory_slot_component_or_nil)
 	local added_percentage = use_charge and add_percentage * charge_level or add_percentage
 	local new_percentage = current_percentage + added_percentage
 	local clamped_percentage = math.clamp(new_percentage, 0, 1)
 	local new_state
 
 	if not prevent_explosion and current_percentage >= 1 and new_percentage > 1 then
-		new_state = "exploding"
+		local can_explode = charge_template.explode_action
+
+		if can_explode then
+			new_state = "exploding"
+		else
+			if inventory_slot_component_or_nil then
+				local writes = rawget(inventory_slot_component_or_nil, "__write_tracks").overheat_state
+
+				if writes then
+					for state_name, callstack in pairs(writes) do
+						Log.info("OveheatDebug", "state_name: %s\n%s", state_name, callstack)
+					end
+				else
+					Log.info("OveheatDebug", "No previous writes to overheat_state")
+				end
+			else
+				Log.info("OveheatDebug", "Was warp charge")
+			end
+
+			Log.exception("OveheatDebug", "Attempted to enter exploding state without being able to explode")
+		end
 	end
 
 	return clamped_percentage, new_state

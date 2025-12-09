@@ -167,7 +167,6 @@ talent_settings.broker = {
 			fov_multiplier = 1.1,
 			max_charges = 1,
 			max_stacks = 1,
-			needle_pistol_direct_hit_grace_time = 1,
 			outline_angle = 0.5,
 			outline_duration = 10,
 			outline_highlight_offset = 0,
@@ -236,7 +235,7 @@ talent_settings.broker = {
 			max_charges = 3,
 		},
 		missile_launcher = {
-			max_charges = 2,
+			max_charges = 3,
 		},
 	},
 	coherency = {

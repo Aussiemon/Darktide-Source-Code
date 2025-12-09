@@ -435,26 +435,26 @@ weapon_template.actions = {
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
 		action_movement_curve = {
 			{
-				modifier = 0.75,
+				modifier = 0.95,
 				t = 0.05,
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.95,
 				t = 0.15,
 			},
 			{
-				modifier = 0.725,
+				modifier = 0.925,
 				t = 0.175,
 			},
 			{
-				modifier = 0.85,
+				modifier = 0.95,
 				t = 0.3,
 			},
 			{
-				modifier = 0.8,
+				modifier = 0.9,
 				t = 1,
 			},
-			start_modifier = 0.5,
+			start_modifier = 0.9,
 		},
 		allowed_chain_actions = {
 			wield = {

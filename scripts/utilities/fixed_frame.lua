@@ -16,7 +16,7 @@ FixedFrame.clamp_to_fixed_time = function (not_fixed_t)
 	return math.round(not_fixed_t / fixed_time_step) * fixed_time_step
 end
 
-FixedFrame.to_fixed_Frame = function (fixed_t)
+FixedFrame.to_fixed_frame = function (fixed_t)
 	local fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	return math.round(fixed_t / fixed_time_step)

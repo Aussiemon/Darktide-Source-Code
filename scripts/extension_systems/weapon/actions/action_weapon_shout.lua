@@ -237,6 +237,10 @@ ActionWeaponShout._collect_targets = function (self, t, action_settings, side, a
 				local within_range = to_target_distance_squared <= shout_range_squared
 				local within_close_range = to_target_distance_squared <= CLOSE_RANGE
 
+				if action_settings.close_range_dot_product and dot < action_settings.close_range_dot_product then
+					within_close_range = false
+				end
+
 				if not target_units[enemy_unit] and (within_angle and within_range or not within_angle and within_close_range) then
 					self._num_hits = self._num_hits + 1
 					target_units[enemy_unit] = to_target_distance_squared

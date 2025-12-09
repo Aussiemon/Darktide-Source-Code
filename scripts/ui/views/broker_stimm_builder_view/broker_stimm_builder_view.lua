@@ -669,27 +669,6 @@ BrokerStimmBuilderView.update = function (self, dt, t, input_service)
 
 	widgets_by_name.specialization_talents_resource.content.text = string.format("%s/%s", self:_points_available(), self:_max_node_points())
 
-	local player = self._preview_player
-
-	if player then
-		local profile = player:profile()
-
-		widgets_by_name.summary_header.content.viscocity_text = string.format("%s%%", self:_max_node_points() == 0 and 0 or math.round(TalentLayoutParser.profile_percent_specialization_points_used(profile, self._node_widget_tiers) * 100))
-
-		local syringe_ability = PlayerAbilities.broker_ability_syringe
-		local lerp_cooldown = syringe_ability.cooldown
-		local temp_profile = self._temp_profile or {}
-
-		self._temp_profile = temp_profile
-		temp_profile.selected_nodes = self._node_widget_tiers
-		temp_profile.archetype = profile.archetype
-		temp_profile.expertise_points = profile.expertise_points
-
-		local cooldown = syringe_ability.cooldown_lerp_func(self._temp_profile, lerp_cooldown.min, lerp_cooldown.max)
-
-		widgets_by_name.summary_header.content.cooldown_text = string.format("%ss", cooldown)
-	end
-
 	local selected_node = self._selected_node
 	local selected_node_widget = selected_node and self._widgets_by_name[selected_node.widget_name]
 	local tooltip_node_widget = selected_node_widget or self._can_draw_tooltip and self._hovered_node_widget
@@ -754,7 +733,7 @@ BrokerStimmBuilderView.draw = function (self, dt, t, input_service, layer)
 end
 
 BrokerStimmBuilderView.draw_layout = function (self, dt, t, input_service, layer)
-	self:_update_center_progress(t)
+	self:_update_center_progress(dt, t)
 	BrokerStimmBuilderView.super.draw_layout(self, dt, t, input_service, layer)
 end
 
@@ -1038,44 +1017,77 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 	end
 end
 
-BrokerStimmBuilderView._update_center_progress = function (self, t)
+BrokerStimmBuilderView._update_center_progress = function (self, dt, t)
 	local max_points = self:_max_node_points()
 	local available_points = self:_points_available()
-	local center_filled = max_points == 0 and 0 or available_points / max_points
+	local target_fill = max_points == 0 and 0 or available_points / max_points
 	local start_node = self:start_node()
 	local content = start_node.content
-	local outer_fill_anim_time = 1
 
-	if content.last_center_filled ~= center_filled then
-		content.fill_on_change = content.current_filled or center_filled
-		content.fill_on_change_t = t
+	content.velocity = content.velocity or 0
 
-		if content.last_center_filled == 1 then
-			content.last_zero_t = t - math.max(outer_fill_anim_time - (t - (content.last_zero_t or t)), 0)
-		elseif center_filled == 1 then
-			content.last_zero_t = t - math.max(outer_fill_anim_time - (t - (content.last_zero_t or t)), 0)
-		elseif not content.last_zero_t then
-			content.last_zero_t = 0
+	local current_fill = content.current_fill or target_fill
+	local diff = target_fill - current_fill
+
+	if diff ~= 0 or not content.current_fill then
+		local target_velocity = math.remap(0, 1, 0.01, 10, math.abs(diff)) * math.sign(diff)
+		local dt_multiplier = math.abs(target_velocity) < math.abs(content.velocity) and 40 or 2
+
+		content.velocity = math.lerp(content.velocity, target_velocity, dt * dt_multiplier)
+
+		local step = content.velocity * dt
+
+		if math.abs(step) > math.abs(diff) then
+			current_fill = target_fill
+		else
+			current_fill = current_fill + step
 		end
 
-		content.last_center_filled = center_filled
+		current_fill = math.clamp01(current_fill)
+		content.current_fill = current_fill
+		start_node.style.center_texture.material_values.fill_amount = math.remap(0, 1, 0.21, 0.76, current_fill)
+
+		local player = self._preview_player
+
+		if player then
+			local widgets_by_name = self._widgets_by_name
+			local profile = player:profile()
+
+			widgets_by_name.summary_header.content.viscocity_text = string.format("%s%%", math.round((1 - content.current_fill) * 100))
+
+			local syringe_ability = PlayerAbilities.broker_ability_syringe
+			local lerp_cooldown = syringe_ability.cooldown
+			local temp_profile = self._temp_profile or {}
+
+			self._temp_profile = temp_profile
+			temp_profile.selected_nodes = self._node_widget_tiers
+			temp_profile.archetype = profile.archetype
+			temp_profile.expertise_points = profile.expertise_points
+
+			local cooldown = syringe_ability.cooldown_lerp_func(self._temp_profile, lerp_cooldown.min, lerp_cooldown.max, 1 - current_fill)
+
+			widgets_by_name.summary_header.content.cooldown_text = string.format("%ss", cooldown)
+		end
 	end
 
-	local from = content.fill_on_change
-	local to = center_filled
-	local anim_time = 1
-	local progress = math.ease_in_out_quart(math.clamp01(t - content.fill_on_change_t / anim_time))
-	local fill = math.lerp_clamped(from, to, progress)
+	local outer_fill_anim_time = 1
+	local should_have_fill = self:_node_points_spent() > 0
 
-	start_node.style.center_texture.material_values.fill_amount = math.remap(0, 1, 0.21, 0.78, fill)
-	content.current_filled = fill
+	content.outer_filled = content.outer_filled or should_have_fill and 1 or 0
 
-	local outer_from = max_points == 0 and 1 or center_filled == 1 and 1 or 0
+	local outer_from = should_have_fill and 0 or 1
 	local outer_to = outer_from == 1 and 0 or 1
-	local outer_progress = math.ease_in_out_quart(math.clamp01(t - content.last_zero_t / outer_fill_anim_time))
+
+	if content.had_fill ~= should_have_fill or not content.change_outer_fill_t then
+		content.had_fill = should_have_fill
+		content.change_outer_fill_t = t - math.ilerp(outer_from, outer_to, content.outer_filled) * outer_fill_anim_time
+	end
+
+	local outer_progress = math.ease_in_out_quart(math.clamp01((t - content.change_outer_fill_t) / outer_fill_anim_time))
 	local outer_fill = math.lerp_clamped(outer_from, outer_to, outer_progress)
 
 	start_node.style.fill_texture.material_values.fill_amount = outer_fill
+	content.outer_filled = outer_fill
 
 	local invert = outer_from == 1
 

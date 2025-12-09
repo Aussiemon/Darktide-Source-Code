@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/impact_fx/impact_fx_needle.lua
 
-local THIS_WHOLE_FILE_IS_FULL_OF_TEMP
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")

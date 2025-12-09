@@ -749,7 +749,7 @@ weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "assault"
 weapon_template.movement_curve_modifier_template = "dual_autopistols_p1"
-weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.dual_autopistols
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.haptic_trigger_template = HapticTriggerTemplates.ranged.dual_auto
 

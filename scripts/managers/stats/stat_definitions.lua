@@ -6,6 +6,7 @@ local AchievementWeaponGroups = require("scripts/settings/achievements/achieveme
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local StatConfigMacros = require("scripts/managers/stats/utility/stat_config_macros")
 local Breeds = require("scripts/settings/breed/breeds")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -1539,9 +1540,7 @@ do
 			},
 		},
 		include_condition = function (self, config)
-			local circumstance = CircumstanceTemplates[config.circumstance_name]
-
-			return circumstance and not circumstance.is_default
+			return StatConfigMacros.has_circumstance(config)
 		end,
 	}
 	stat_definitions.mission_twins = {
@@ -1772,7 +1771,7 @@ do
 
 	do
 		local story_circumstances = table.filter_array(table.keys(CircumstanceTemplates), function (name)
-			return CircumstanceTemplates[name].is_story
+			return table.nested_get(CircumstanceTemplates, name, "mission_overrides", "stat_settings", "story") == true
 		end)
 
 		table.sort(story_circumstances)
@@ -7876,52 +7875,35 @@ do
 	}
 end
 
-do
-	local saints_circumstances = {
-		saints_core = true,
-		saints_core_darkness = true,
-		saints_core_gas = true,
-		saints_core_hunt_grou = true,
-		saints_core_more_res = true,
-		saints_core_ventilation = true,
-		saints_core_waves_spec = true,
-	}
-
-	stat_definitions.hook_saint_points_acquired = {
-		flags = {
-			StatFlags.hook,
-			StatFlags.team,
+stat_definitions.hook_saint_points_acquired = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+	data = {
+		stat_override = "saints",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.saint_points_acquired = {
+	flags = {
+		StatFlags.no_recover,
+	},
+	triggers = {
+		{
+			id = "hook_saint_points_acquired",
+			trigger = StatMacros.increment_by,
 		},
-		data = {
-			circumstances = saints_circumstances,
-		},
-		include_condition = function (self, config)
-			local circumstance_name = config.circumstance_name
-
-			return self.data.circumstances[circumstance_name]
-		end,
-	}
-	stat_definitions.saint_points_acquired = {
-		flags = {
-			StatFlags.no_recover,
-		},
-		triggers = {
-			{
-				id = "hook_saint_points_acquired",
-				trigger = StatMacros.increment_by,
-			},
-		},
-		data = {
-			circumstances = saints_circumstances,
-		},
-		include_condition = function (self, config)
-			local circumstance_name = config.circumstance_name
-
-			return self.data.circumstances[circumstance_name]
-		end,
-	}
-end
-
+	},
+	data = {
+		stat_override = "saints",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
 stat_definitions = _stat_data
 
 for _, stat in pairs(stat_definitions) do

@@ -140,15 +140,21 @@ local abilities = {
 			max = 75,
 			min = 15,
 		},
-		cooldown_lerp_func = function (profile, min, max)
+		cooldown_lerp_func = function (profile, min, max, override_viscosity)
 			local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 			local used_points, max_points = TalentLayoutParser.profile_specialization_node_points_spent(profile)
 
-			if used_points <= 0 then
-				return 0
+			if used_points <= 1 then
+				override_viscosity = nil
+
+				if used_points <= 0 then
+					min = 0
+				end
 			end
 
-			local viscosity = (used_points - 1) / (max_points - 1)
+			local viscosity = override_viscosity
+
+			viscosity = viscosity or math.clamp01((used_points - 1) / (max_points - 1))
 
 			return math.ceil(math.lerp(min, max, viscosity))
 		end,

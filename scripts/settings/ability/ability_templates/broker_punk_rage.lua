@@ -29,6 +29,7 @@ ability_template.actions = {
 		allowed_during_sprint = true,
 		anim = "ability_buff",
 		anim_3p = "ability_buff",
+		auto_wield_slot = "slot_primary",
 		block_weapon_actions = false,
 		kind = "stance_change",
 		prevent_sprint = false,

@@ -8,10 +8,10 @@ local InitializeWanError = require("scripts/managers/error/errors/initialize_wan
 local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
+local PSNRestrictions = require("scripts/managers/account/psn_restrictions")
+local PsPlusError = require("scripts/managers/error/errors/ps_plus_error")
 local ServiceUnavailableError = require("scripts/managers/error/errors/service_unavailable_error")
 local SignInError = require("scripts/managers/error/errors/sign_in_error")
-local PsPlusError = require("scripts/managers/error/errors/ps_plus_error")
-local PSNRestrictions = require("scripts/managers/account/psn_restrictions")
 local AccountService = class("AccountService")
 
 AccountService.init = function (self, backend_interface)
@@ -34,12 +34,25 @@ local function _init_network_client(account_id)
 	end
 end
 
+local function user_settings_apply_backend_game_settings()
+	if REAL_PLATFORM == "win32" then
+		local parameter_value = GameParameters.subresource_tlsf_allocator_win32
+		local current_value = Application.user_setting("render_settings", "subresource_tlsf_allocator")
+
+		if parameter_value ~= current_value then
+			Application.set_user_setting("render_settings", "subresource_tlsf_allocator", parameter_value)
+			Application.save_user_settings()
+		end
+	end
+end
+
 local function _resolve_backend_game_settings()
 	return Managers.backend.interfaces.game_settings:resolve_backend_game_settings():next(function ()
 		ErrorCodes.apply_backend_game_settings()
 		Managers.telemetry:apply_backend_game_settings()
 		Managers.package:apply_backend_game_settings()
 		Managers.multiplayer_session:apply_backend_game_settings()
+		user_settings_apply_backend_game_settings()
 
 		return nil
 	end)

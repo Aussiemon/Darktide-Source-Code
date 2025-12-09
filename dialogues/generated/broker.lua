@@ -2,7 +2,7 @@
 
 return function ()
 	define_rule({
-		category = "player_ability_vo",
+		category = "player_prio_1",
 		database = "broker",
 		name = "ability_01_a",
 		response = "ability_01_a",
@@ -20,6 +20,12 @@ return function ()
 				OP.EQ,
 				"ability_focus",
 			},
+			{
+				"user_context",
+				"enemies_distant",
+				OP.GT,
+				0,
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
@@ -27,7 +33,7 @@ return function ()
 		},
 	})
 	define_rule({
-		category = "player_ability_vo",
+		category = "player_prio_1",
 		database = "broker",
 		name = "ability_02_a",
 		response = "ability_02_a",
@@ -45,6 +51,12 @@ return function ()
 				OP.EQ,
 				"ability_rage",
 			},
+			{
+				"user_context",
+				"enemies_distant",
+				OP.GT,
+				0,
+			},
 		},
 		on_done = {},
 		heard_speak_routing = {
@@ -52,7 +64,7 @@ return function ()
 		},
 	})
 	define_rule({
-		category = "player_ability_vo",
+		category = "player_prio_1",
 		database = "broker",
 		name = "ability_03_a",
 		response = "ability_03_a",
@@ -69,6 +81,12 @@ return function ()
 				"ability_name",
 				OP.EQ,
 				"ability_stimm",
+			},
+			{
+				"user_context",
+				"enemies_distant",
+				OP.GT,
+				0,
 			},
 		},
 		on_done = {},

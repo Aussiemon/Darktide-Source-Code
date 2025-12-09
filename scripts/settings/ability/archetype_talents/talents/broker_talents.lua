@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/ability/archetype_talents/talents/broker_talents.lua
 
-local THIS_WHOLE_FILE_IS_TEMP
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -450,11 +449,15 @@ archetype_talents.talents = {
 		},
 	},
 	broker_ability_stimm_field = {
-		description = "loc_talent_broker_ability_stimm_field_desc",
+		description = "loc_talent_broker_ability_stimm_field_desc_3",
 		display_name = "loc_talent_broker_ability_stimm_field",
 		icon = "content/ui/textures/icons/talents/broker/broker_talent_ability_stimm_field",
 		name = "",
 		format_values = {
+			duration = {
+				format_type = "number",
+				value = talent_settings.combat_ability.stimm_field.life_time,
+			},
 			total_corruption_heal = {
 				format_type = "number",
 				value = talent_settings.combat_ability.stimm_field.life_time / talent_settings.combat_ability.stimm_field.interval * talent_settings.combat_ability.stimm_field.corruption_heal_amount,
@@ -560,6 +563,14 @@ archetype_talents.talents = {
 			max_charges = {
 				format_type = "number",
 				value = talent_settings.blitz.flash_grenade.max_charges_default,
+			},
+			num_kills = {
+				format_type = "number",
+				value = talent_settings.blitz.flash_grenade.num_kills,
+			},
+			num_charges = {
+				format_type = "number",
+				value = talent_settings.blitz.flash_grenade.num_charges,
 			},
 		},
 		player_ability = {
@@ -1842,6 +1853,10 @@ archetype_talents.talents = {
 			toxin = {
 				format_type = "loc_string",
 				value = "loc_term_glossary_broker_toxin",
+			},
+			stimm = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_stimm",
 			},
 			restore = {
 				format_type = "percentage",

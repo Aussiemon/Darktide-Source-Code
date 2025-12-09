@@ -214,6 +214,98 @@ function _end_outlines(template_data, template_context)
 	template_data.enemies_to_tag = nil
 end
 
+local function _bespoke_needlepistol_close_range_kill_start(template_data, template_context)
+	template_data.tagged_enemies = {}
+	template_data.untagged_enemies = {}
+
+	local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+	template_data.inventory = unit_data_extension:read_component("inventory")
+end
+
+local GRACE_FRAMES = 1
+
+local function _bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
+	local frame = FixedFrame.to_fixed_frame(t)
+
+	for unit, tagged_frame in pairs(template_data.tagged_enemies) do
+		local buff_ext = ScriptUnit.has_extension(unit, "buff_system")
+
+		if not buff_ext or not buff_ext:has_keyword(keywords.toxin) then
+			if tagged_frame < frame - GRACE_FRAMES then
+				template_data.untagged_enemies[unit] = true
+			end
+		else
+			template_data.tagged_enemies[unit] = frame
+		end
+	end
+
+	for unit, _ in pairs(template_data.untagged_enemies) do
+		template_data.tagged_enemies[unit] = nil
+	end
+
+	table.clear(template_data.untagged_enemies)
+end
+
+local allowed_items = table.set({
+	"content/items/weapons/player/ranged/needlepistol_p1_m1",
+	"content/items/weapons/player/ranged/needlepistol_p1_m2",
+})
+
+local function _bespoke_needlepistol_close_range_kill_check_proc_hit(params, template_data, template_context, t)
+	local is_needler = params.attacking_item and params.attacking_item.name and allowed_items[params.attacking_item.name]
+
+	if not template_context.is_server then
+		return false
+	elseif not is_needler then
+		return false
+	elseif not HEALTH_ALIVE[params.attacked_unit] then
+		return false
+	elseif params.attack_type ~= attack_types.ranged then
+		return false
+	elseif not template_data.inventory or template_data.inventory.wielded_slot ~= "slot_secondary" then
+		return false
+	end
+
+	return true
+end
+
+local function _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
+	if not template_context.is_server then
+		return false
+	elseif not template_data.tagged_enemies[params.dying_unit] then
+		return false
+	elseif params.damage_type ~= "toxin" then
+		return false
+	end
+
+	local hit_world_position = params.position and params.position:unbox()
+
+	if not hit_world_position then
+		return false
+	end
+
+	local attacking_unit = params.attacking_unit
+	local close_range_squared = DamageSettings.ranged_close^2
+	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
+	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
+	local is_within_distance = distance_squared <= close_range_squared
+
+	return is_within_distance
+end
+
+local function _bespoke_needle_pistol_close_range_kill_proc_hit(params, template_data, template_context, t)
+	local frame = FixedFrame.to_fixed_frame(t)
+
+	template_data.tagged_enemies[params.attacked_unit] = frame
+end
+
+local function _bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
+	if params.dying_unit then
+		template_data.tagged_enemies[params.dying_unit] = nil
+	end
+end
+
 local function _extend_ability_duration(start_time, template_context, max_duration, added_duration, divisor, t)
 	local time_since_start = t - start_time
 	local steps = math.floor(time_since_start / max_duration)
@@ -367,17 +459,8 @@ templates.broker_focus_stance = {
 		template_data.sub_2_rending = talent_extension:has_special_rule("broker_focus_rending")
 		template_data.sub_3_cooldown = talent_extension:has_special_rule("broker_focus_cooldown_regain")
 		template_data.cooldown_restored = 0
-		template_data.inventory = unit_data_extension:read_component("inventory")
 
-		local visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
-		local weapon_template = visual_loadout_extension and visual_loadout_extension:weapon_template_from_slot("slot_secondary")
-		local weapon_keywords = weapon_template and weapon_template.keywords
-
-		if weapon_keywords and table.contains(weapon_keywords, "needlepistol") then
-			template_data.needlepistol = true
-		end
-
-		template_data.tagged_enemies = {}
+		_bespoke_needlepistol_close_range_kill_start(template_data, template_context)
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.mood_handler then
@@ -402,61 +485,26 @@ templates.broker_focus_stance = {
 			_update_enemies_to_tag(template_data, template_context)
 			_update_outlines(template_data, template_context, dt, t)
 		end
+
+		_bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
 	end,
 	specific_check_proc_funcs = {
 		[proc_events.on_kill] = CheckProcFunctions.on_ranged_close_kill,
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return false
-			elseif not template_data.focus_improved then
-				return false
-			elseif not HEALTH_ALIVE[params.attacked_unit] then
-				return false
-			elseif params.attack_type ~= attack_types.ranged then
-				return false
-			elseif not template_data.needlepistol then
-				return false
-			elseif not template_data.inventory or template_data.inventory.wielded_slot ~= "slot_secondary" then
-				return false
-			end
-
-			return true
+			return _bespoke_needlepistol_close_range_kill_check_proc_hit(params, template_data, template_context, t)
 		end,
 		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
-			if not template_context.is_server then
-				return false
-			end
-
-			local tagged_enemy_t = template_data.tagged_enemies[params.dying_unit]
-
-			if not tagged_enemy_t then
-				return false
-			elseif t > tagged_enemy_t + talent_settings.combat_ability.focus.needle_pistol_direct_hit_grace_time then
-				return false
-			elseif params.attacking_unit == template_context.unit and params.damage_type == "needle" then
-				return false
-			end
-
-			local hit_world_position = params.position and params.position:unbox()
-
-			if not hit_world_position then
-				return false
-			end
-
-			local attacking_unit = params.attacking_unit
-			local close_range_squared = DamageSettings.ranged_close^2
-			local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
-			local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
-			local is_within_distance = distance_squared <= close_range_squared
-
-			return is_within_distance
+			return _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
 		end,
 	},
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
-			template_data.tagged_enemies[params.attacked_unit] = t
+			_bespoke_needle_pistol_close_range_kill_proc_hit(params, template_data, template_context, t)
 		end,
-		[proc_events.on_minion_death] = _focus_proc_func,
+		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
+			_focus_proc_func(params, template_data, template_context, t)
+			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
+		end,
 		[proc_events.on_kill] = _focus_proc_func,
 	},
 	stop_func = function (template_data, template_context, extension_destroyed)
@@ -650,12 +698,6 @@ templates.broker_punk_rage_stance = {
 		template_data.duration_extend_talent = talent_extension:has_special_rule("broker_rage_duration_extend")
 		template_data.inventory_component = template_data.unit_data_extension:read_component("inventory")
 		template_data.start_t = Managers.time:time("gameplay")
-
-		local wielded_slot = template_data.inventory_component.wielded_slot
-
-		if wielded_slot ~= "slot_primary" then
-			PlayerUnitVisualLoadout.wield_slot("slot_primary", unit, 0, false)
-		end
 
 		local player = Managers.player:player_by_unit(unit)
 		local camera_handler = player and player.camera_handler
@@ -1175,28 +1217,41 @@ templates.broker_passive_restore_toughness_on_weakspot_kill = {
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
-		template_data.weakspot_hit_target_number = math.huge
-		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+		template_data.toughness_granted_this_attack = 0
+		template_data.last_target_index = math.huge
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
 			return
 		end
 
-		local player_unit = template_context.unit
+		if params.is_instakill then
+			return
+		end
+
+		if params.target_index <= template_data.last_target_index then
+			template_data.toughness_granted_this_attack = 0
+		end
+
 		local toughness_percentage = talent_settings.broker_passive_restore_toughness_on_weakspot_kill.default
 
-		if params.target_number > template_data.weakspot_hit_target_number then
-			return
-		elseif params.hit_weakspot and params.is_critical_strike then
+		if params.hit_weakspot and params.is_critical_strike then
 			toughness_percentage = talent_settings.broker_passive_restore_toughness_on_weakspot_kill.critical
 		elseif params.hit_weakspot or params.is_critical_strike then
 			toughness_percentage = talent_settings.broker_passive_restore_toughness_on_weakspot_kill.weakspot
 		end
 
-		template_data.weakspot_hit_target_number = params.target_number
+		local toughness_to_grant = toughness_percentage - template_data.toughness_granted_this_attack
 
-		Toughness.replenish_percentage(player_unit, toughness_percentage)
+		if toughness_to_grant > 0 then
+			template_data.toughness_granted_this_attack = template_data.toughness_granted_this_attack + toughness_to_grant
+
+			local player_unit = template_context.unit
+
+			Toughness.replenish_percentage(player_unit, toughness_percentage)
+		end
+
+		template_data.last_target_index = params.target_index
 	end,
 }
 templates.broker_passive_reduced_toughness_damage_during_reload = {
@@ -1568,6 +1623,7 @@ templates.broker_passive_ramping_backstabs = {
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)
 		template_data.buff_ids = {}
 	end,
@@ -1597,6 +1653,24 @@ templates.broker_ramping_backstabs_stat_buff = {
 		[stat_buffs.melee_power_level_modifier] = talent_settings.broker_passive_ramping_backstabs.melee_power_level_modifier,
 	},
 }
+
+local function _blitz_charge_on_kill_proc_func(params, template_data, template_context, t)
+	local max_ability_charges = template_data.ability_extension:max_ability_charges("grenade_ability")
+	local remaining_ability_charges = template_data.ability_extension:remaining_ability_charges("grenade_ability")
+
+	if remaining_ability_charges < max_ability_charges then
+		local num_kills = template_data.tracked_kills + 1
+
+		if num_kills >= talent_settings.blitz.flash_grenade.num_kills then
+			num_kills = 0
+
+			template_data.ability_extension:restore_ability_charge("grenade_ability", talent_settings.blitz.flash_grenade.num_charges)
+		end
+
+		template_data.tracked_kills = num_kills
+	end
+end
+
 templates.broker_passive_blitz_charge_on_kill = {
 	always_show_in_hud = true,
 	class_name = "proc_buff",
@@ -1609,29 +1683,38 @@ templates.broker_passive_blitz_charge_on_kill = {
 	check_proc_func = CheckProcFunctions.on_close_kill,
 	proc_events = {
 		[proc_events.on_kill] = 1,
+		[proc_events.on_hit] = 1,
+		[proc_events.on_minion_death] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 		template_data.tracked_kills = 0
+
+		_bespoke_needlepistol_close_range_kill_start(template_data, template_context)
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local max_ability_charges = template_data.ability_extension:max_ability_charges("grenade_ability")
-		local remaining_ability_charges = template_data.ability_extension:remaining_ability_charges("grenade_ability")
-
-		if remaining_ability_charges < max_ability_charges then
-			local num_kills = template_data.tracked_kills + 1
-
-			if num_kills >= talent_settings.blitz.flash_grenade.num_kills then
-				num_kills = 0
-
-				template_data.ability_extension:restore_ability_charge("grenade_ability", talent_settings.blitz.flash_grenade.num_charges)
-			end
-
-			template_data.tracked_kills = num_kills
-		end
+	update_func = function (template_data, template_context, dt, t)
+		_bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
 	end,
+	specific_check_proc_funcs = {
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			return _bespoke_needlepistol_close_range_kill_check_proc_hit(params, template_data, template_context, t)
+		end,
+		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
+			return _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
+		end,
+	},
+	specific_proc_func = {
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			_bespoke_needle_pistol_close_range_kill_proc_hit(params, template_data, template_context, t)
+		end,
+		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
+			_blitz_charge_on_kill_proc_func(params, template_data, template_context, t)
+			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
+		end,
+		[proc_events.on_kill] = _blitz_charge_on_kill_proc_func,
+	},
 	visual_stack_count = function (template_data, template_context)
 		return template_data.tracked_kills
 	end,
@@ -2024,6 +2107,13 @@ templates.broker_passive_damage_on_reload_buff = {
 		return base_damage + damage_per_ammo_stage * ammo_stage
 	end,
 }
+
+local instakill_params_scratch = {}
+local instakill_passalong_params = {
+	"attack_type",
+}
+
+instakill_passalong_params[0] = #instakill_passalong_params
 templates.broker_passive_melee_crit_instakill = {
 	class_name = "proc_buff",
 	health_by_damage_threshold = 2,
@@ -2045,12 +2135,35 @@ templates.broker_passive_melee_crit_instakill = {
 			return
 		end
 
+		if Breed.enemy_type(Breeds[params.breed_name]) == "captain" then
+			return
+		end
+
 		local threshold = (params.actual_damage_dealt or params.damage_dealt or 0) * template_context.template.health_by_damage_threshold
 
 		if health_extension:current_health() < threshold * 0.5 then
+			table.clear(instakill_params_scratch)
+
+			instakill_params_scratch[1] = "instakill"
+			instakill_params_scratch[2] = true
+			instakill_params_scratch[3] = "attacking_unit"
+			instakill_params_scratch[4] = template_context.unit
+
+			local next_idx = 5
+
+			for i = 1, instakill_passalong_params[0] do
+				local param = instakill_passalong_params[i]
+
+				if params[param] ~= nil then
+					instakill_params_scratch[next_idx] = param
+					instakill_params_scratch[next_idx + 1] = params[param]
+					next_idx = next_idx + 2
+				end
+			end
+
 			local damage_profile = DamageProfileTemplates.default
 
-			Attack.execute(params.attacked_unit, damage_profile, "instakill", true, "attacking_unit", template_context.unit, "attack_type", params.attack_type)
+			Attack.execute(params.attacked_unit, damage_profile, unpack(instakill_params_scratch))
 		end
 	end,
 }
@@ -2140,6 +2253,7 @@ templates.broker_passive_cleave_on_cleave = {
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
 	proc_func = function (params, template_data, template_context, t)
 		if params.target_number >= template_context.template.min_targets then
 			if not template_data.procced then
@@ -2671,6 +2785,10 @@ templates.broker_passive_melee_damage_carry_over = {
 		[proc_events.on_kill] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
+		if params.is_instakill then
+			return false
+		end
+
 		if not template_context.buff:is_proc_active() then
 			return true
 		end
@@ -2921,6 +3039,32 @@ templates.broker_keystone_chemical_dependency = {
 		template_context.buff_extension:add_internally_controlled_buff("broker_keystone_chemical_dependency_stack", t)
 	end,
 }
+
+local STATISTICS_UPDATE_INTERVAL = 10
+
+local function record_broker_max_stacks_of_chemical_dependency(template_data, template_context, exited_max_stacks)
+	if not template_context.is_server then
+		return
+	end
+
+	if template_data.max_stacks_timestamp then
+		local current_time = FixedFrame.get_latest_fixed_time()
+		local time_spent_at_max_stacks = math.round(current_time - template_data.max_stacks_timestamp)
+
+		if template_context.player and time_spent_at_max_stacks > 0 then
+			Managers.stats:record_private("hook_broker_exited_max_stacks_of_chemical_dependency", template_context.player, time_spent_at_max_stacks)
+		end
+
+		template_data.max_stacks_timestamp = current_time
+
+		if exited_max_stacks then
+			template_data.max_stacks_timestamp = nil
+		end
+	end
+
+	template_data.record_stats_t = FixedFrame.get_latest_fixed_time() + STATISTICS_UPDATE_INTERVAL
+end
+
 templates.broker_keystone_chemical_dependency_stack = {
 	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_chemical_dependency",
@@ -2974,37 +3118,26 @@ templates.broker_keystone_chemical_dependency_stack = {
 			template_context.buff:add_max_stacks_cap(template.sub_3_max_stacks_cap - template.max_stacks_cap)
 			template_context.buff:add_duration(template.sub_3_duration - template.duration)
 		end
+
+		template_data.record_stats_t = 0
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if t > template_data.record_stats_t then
+			record_broker_max_stacks_of_chemical_dependency(template_data, template_context, false)
+		end
 	end,
 	on_remove_stack_func = function (template_data, template_context, change, new_stack_count)
-		if template_context.is_server and template_data.reached_max_stacks_t then
-			local current_time = FixedFrame.get_latest_fixed_time()
-			local time_spent_at_max_stacks = math.round(current_time - template_data.reached_max_stacks_t)
-
-			if template_context.player and time_spent_at_max_stacks > 0 then
-				Managers.stats:record_private("hook_broker_exited_max_stacks_of_chemical_dependency", template_context.player, time_spent_at_max_stacks)
-			end
-
-			template_data.reached_max_stacks_t = nil
-		end
+		record_broker_max_stacks_of_chemical_dependency(template_data, template_context, true)
 	end,
 	on_reached_max_stack_func = function (template_data, template_context)
 		if template_context.is_server then
 			local t = FixedFrame.get_latest_fixed_time()
 
-			template_data.reached_max_stacks_t = t
+			template_data.max_stacks_timestamp = t
 		end
 	end,
 	stop_func = function (template_data, template_context, extension_destroyed)
-		if template_context.is_server and template_data.reached_max_stacks_t then
-			local current_time = FixedFrame.get_latest_fixed_time()
-			local time_spent_at_max_stacks = math.round(current_time - template_data.reached_max_stacks_t)
-
-			if template_context.player and time_spent_at_max_stacks > 0 then
-				Managers.stats:record_private("hook_broker_exited_max_stacks_of_chemical_dependency", template_context.player, time_spent_at_max_stacks)
-			end
-
-			template_data.reached_max_stacks_t = nil
-		end
+		record_broker_max_stacks_of_chemical_dependency(template_data, template_context, true)
 	end,
 }
 templates.broker_keystone_adrenaline_junkie = {

@@ -18,7 +18,6 @@ local SERVICES = {
 	player_survey = require("scripts/managers/data_service/services/player_survey_service"),
 	havoc = require("scripts/managers/data_service/services/havoc_service"),
 	region_latency = require("scripts/managers/data_service/services/region_latency_service"),
-	specialization_talent = require("scripts/managers/data_service/services/specialization_talent_service"),
 }
 local DataServiceManager = class("DataServiceManager")
 

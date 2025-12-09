@@ -99,6 +99,43 @@ damage_templates.dual_stub_pistols_base = {
 			},
 		},
 	},
+	crit_mod = {
+		attack = {
+			[armor_types.unarmored] = {
+				0,
+				0.25,
+			},
+			[armor_types.armored] = {
+				0,
+				0.25,
+			},
+			[armor_types.resistant] = {
+				0,
+				0.25,
+			},
+			[armor_types.player] = {
+				0,
+				0.25,
+			},
+			[armor_types.berserker] = {
+				0,
+				0.25,
+			},
+			[armor_types.super_armor] = {
+				0,
+				0.2,
+			},
+			[armor_types.disgustingly_resilient] = {
+				0,
+				0.25,
+			},
+			[armor_types.void_shield] = {
+				0,
+				0.1,
+			},
+		},
+		impact = crit_impact_armor_mod,
+	},
 	power_distribution = {
 		attack = {
 			210,
@@ -139,6 +176,7 @@ damage_templates.dual_stub_pistols_base = {
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 1.5,
+			crit_boost = 0.3,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75,
@@ -183,6 +221,43 @@ damage_templates.dual_stub_pistols_special = {
 			},
 		},
 	},
+	crit_mod = {
+		attack = {
+			[armor_types.unarmored] = {
+				0,
+				0.3,
+			},
+			[armor_types.armored] = {
+				0,
+				0.3,
+			},
+			[armor_types.resistant] = {
+				0,
+				0.3,
+			},
+			[armor_types.player] = {
+				0,
+				0.3,
+			},
+			[armor_types.berserker] = {
+				0,
+				0.3,
+			},
+			[armor_types.super_armor] = {
+				0,
+				0.2,
+			},
+			[armor_types.disgustingly_resilient] = {
+				0,
+				0.3,
+			},
+			[armor_types.void_shield] = {
+				0,
+				0.1,
+			},
+		},
+		impact = crit_impact_armor_mod,
+	},
 	power_distribution = {
 		attack = {
 			210,
@@ -222,7 +297,7 @@ damage_templates.dual_stub_pistols_special = {
 	gib_push_force = GibbingSettings.gib_push_force.ranged_light,
 	targets = {
 		default_target = {
-			crit_boost = 0.6,
+			crit_boost = 0.385,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.75,

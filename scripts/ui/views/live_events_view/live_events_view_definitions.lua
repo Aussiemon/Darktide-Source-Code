@@ -5,6 +5,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -97,12 +98,26 @@ local scenegraph_definition = {
 		vertical_alignment = "bottom",
 		position = {
 			0,
-			-20,
+			-60,
 			2,
 		},
 		size = {
 			1200,
-			40,
+			20,
+		},
+	},
+	rewards_box = {
+		horizontal_alignment = "center",
+		parent = "event_progress_bar",
+		vertical_alignment = "bottom",
+		position = {
+			0,
+			-116,
+			2,
+		},
+		size = {
+			1200 - (Styles.sizes.reward_icon_size[1] - 20),
+			Styles.sizes.reward_icon_size[2],
 		},
 	},
 }
@@ -113,6 +128,13 @@ local entry_base = UIWidget.create_definition({
 		value = "content/ui/materials/dividers/horizontal_frame_big_upper",
 		value_id = "top_detail",
 		style = Styles.entry.top_detail,
+	},
+	{
+		pass_type = "texture",
+		style_id = "top_center_detail",
+		value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_skull_gray",
+		value_id = "top_center_detail",
+		style = Styles.entry.top_center_detail,
 	},
 	{
 		pass_type = "texture",
@@ -127,6 +149,13 @@ local entry_base = UIWidget.create_definition({
 		value = "event_name",
 		value_id = "event_name",
 		style = Styles.texts.event_name,
+	},
+	{
+		pass_type = "texture",
+		style_id = "event_name_divider",
+		value = "content/ui/materials/dividers/skull_center_02",
+		value_id = "event_name_divider",
+		style = Styles.texts.event_name_divider,
 	},
 	{
 		pass_type = "text",
@@ -154,6 +183,11 @@ local entry_base = UIWidget.create_definition({
 		style_id = "rewards_track_text",
 		value_id = "rewards_track_text",
 		style = Styles.texts.rewards_track_text,
+	},
+	{
+		pass_type = "rect",
+		style_id = "background_rect",
+		style = Styles.entry.background_rect,
 	},
 	{
 		pass_type = "texture",
@@ -186,17 +220,9 @@ local function create_reward_widget(scenegraph_id, reward, tier_index, reward_in
 		value_id = "background",
 		style = Styles.reward.background,
 	}
-	local bar_connection_line = {
-		pass_type = "texture",
-		style_id = "bar_connection_line",
-		value = "content/ui/materials/backgrounds/default_square",
-		value_id = "bar_connection_line",
-		style = Styles.reward.bar_connection_line,
-	}
 
 	passes[#passes + 1] = reward_frame_pass
 	passes[#passes + 1] = reward_background_pass
-	passes[#passes + 1] = bar_connection_line
 
 	if reward_type == "currency" then
 		local reward_icon_pass = {
@@ -233,44 +259,22 @@ local function create_reward_widget(scenegraph_id, reward, tier_index, reward_in
 	return widget_definition
 end
 
-local event_progress_bar = UIWidget.create_definition({
-	{
-		pass_type = "texture",
-		style_id = "background",
-		value = "content/ui/materials/backgrounds/default_square",
-		value_id = "background",
-		style = Styles.event_progress_bar.background,
-	},
-	{
-		pass_type = "texture",
-		style_id = "fill",
-		value = "content/ui/materials/backgrounds/default_square",
-		value_id = "fill",
-		style = Styles.event_progress_bar.fill,
-		change_function = function (content, style)
-			local current_progress = content.current_progress or 0
-
-			style.size[1] = math.floor(style.default_size[1] * current_progress)
-		end,
-	},
-	{
-		pass_type = "texture",
-		style_id = "frame",
-		value = "content/ui/materials/frames/frame_tile_2px",
-		value_id = "frame",
-		style = Styles.event_progress_bar.frame,
-	},
-	{
-		pass_type = "text",
-		style_id = "progress_text",
-		value = "0%",
-		value_id = "progress_text",
-		style = Styles.event_progress_bar.progress_text,
-	},
-}, "event_progress_bar")
+local event_progress_bar_content_override = {
+	progress = 0,
+	bar_length = scenegraph_definition.event_progress_bar.size[1],
+}
+local event_progress_bar = UIWidget.create_definition(BarPassTemplates.experience_bar, "event_progress_bar", event_progress_bar_content_override)
 local widget_definitions = {
 	entry_base = entry_base,
 	event_progress_bar = event_progress_bar,
+	progress_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "progress_text",
+			value_id = "progress_text",
+			style = Styles.event_progress_bar.progress_text,
+		},
+	}, "event_progress_bar"),
 }
 
 return {

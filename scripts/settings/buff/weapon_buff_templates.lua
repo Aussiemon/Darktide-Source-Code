@@ -604,23 +604,24 @@ templates.power_maul_p2_special_hit_primer = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[buff_proc_events.on_weapon_special_activate] = 1,
-		[buff_proc_events.on_weapon_special_deactivate] = 1,
 		[buff_proc_events.on_hit] = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	specific_check_proc_funcs = {
 		[buff_proc_events.on_hit] = CheckProcFunctions.on_melee_hit,
 	},
+	start_func = function (template_data, template_context)
+		local player_unit = template_context.unit
+		local slot_name = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+
+		template_data.inventory_slot_component = unit_data_extension:read_component(slot_name)
+	end,
 	specific_proc_func = {
-		[buff_proc_events.on_weapon_special_activate] = function (params, template_data, template_context)
-			template_data.active = true
-		end,
-		[buff_proc_events.on_weapon_special_deactivate] = function (params, template_data, template_context)
-			template_data.active = false
-		end,
 		[buff_proc_events.on_hit] = function (params, template_data, template_context)
-			if not template_data.active then
+			local inventory_slot_component = template_data and template_data.inventory_slot_component
+
+			if not inventory_slot_component.special_active then
 				return
 			end
 

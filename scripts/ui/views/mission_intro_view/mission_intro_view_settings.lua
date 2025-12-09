@@ -51,6 +51,9 @@ local mission_intro_view_settings = {
 		},
 		broker = {
 			"mission_briefing_pose_02",
+			"mission_briefing_pose_04",
+			"mission_briefing_pose_05",
+			"mission_briefing_pose_06",
 		},
 		ogryn = {
 			"mission_briefing_pose_01",

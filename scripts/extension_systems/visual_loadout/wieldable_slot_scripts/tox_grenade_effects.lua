@@ -72,7 +72,7 @@ end
 
 ToxGrenadeEffects.on_action = function (self, action_settings, t)
 	if action_settings.kind == "throw_grenade" then
-		self._on_action_frame = FixedFrame.to_fixed_Frame(t)
+		self._on_action_frame = FixedFrame.to_fixed_frame(t)
 		self._stop_t = t + action_settings.spawn_at_time
 	end
 end

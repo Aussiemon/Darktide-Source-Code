@@ -189,13 +189,13 @@ damage_templates.dual_shivs_light_ninja = {
 			crit_boost = 0.7,
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
 					[armor_types.armored] = damage_lerp_values.lerp_0_5,
 					[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -211,7 +211,7 @@ damage_templates.dual_shivs_light_ninja = {
 			},
 			power_distribution = {
 				attack = {
-					60,
+					65,
 					100,
 				},
 				impact = {
@@ -384,13 +384,13 @@ damage_templates.dual_shivs_light_linesman = {
 			crit_boost = 0.5,
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
 					[armor_types.armored] = damage_lerp_values.lerp_0_5,
 					[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {

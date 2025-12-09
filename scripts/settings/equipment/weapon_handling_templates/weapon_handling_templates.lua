@@ -652,7 +652,10 @@ local weapon_handling_templates = {
 			max_shots = nil,
 		},
 		critical_strike = {
-			chance_modifier = 0.05,
+			chance_modifier = {
+				lerp_basic = 0.01,
+				lerp_perfect = 0.06,
+			},
 		},
 	},
 	dual_stubpistols_spin_shot = {

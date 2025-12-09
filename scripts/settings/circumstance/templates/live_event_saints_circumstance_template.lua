@@ -12,7 +12,9 @@ local core_mutators = {
 	"mutator_saints_headshot_parasite_enemies",
 	"mutator_saints_nurgle_hordes",
 }
-local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, nil, "saints_core")
+local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
+	"stats_saints",
+}, "saints_core")
 local circumstance_templates = table.reduce({
 	base_templates,
 }, table.merge, {})

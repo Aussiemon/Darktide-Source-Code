@@ -176,6 +176,8 @@ Styles.debrief_video.hotspot = {
 	},
 	size = DebriefSettings.size,
 	default_size = DebriefSettings.size,
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
 }
 Styles.debrief_video.debrief_icon = {
 	horizontal_alignment = "center",

@@ -52,6 +52,22 @@ footstep_intervals_templates.combat_knife = {
 	sprinting = 0.35,
 	walking = 0.35,
 }
+footstep_intervals_templates.dual_autopistols = {
+	crouch_walking = 0.61,
+	crouch_walking_alternate_fire = 0.77,
+	sprinting = 0.35,
+	sprinting_overtime = 0.36,
+	walking = 0.4,
+	walking_alternate_fire = 0.58,
+}
+footstep_intervals_templates.dual_stubpistols = {
+	crouch_walking = 0.61,
+	crouch_walking_alternate_fire = 0.77,
+	sprinting = 0.38,
+	sprinting_overtime = 0.41,
+	walking = 0.4,
+	walking_alternate_fire = 0.58,
+}
 footstep_intervals_templates.forcesword = {
 	crouch_walking = 0.61,
 	sprinting = 0.37,

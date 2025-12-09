@@ -397,6 +397,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip_blast = {
 		abort_sprint = true,
+		close_range_dot_product = 0,
 		kind = "weapon_shout",
 		prevent_sprint = true,
 		reverse_direction = true,

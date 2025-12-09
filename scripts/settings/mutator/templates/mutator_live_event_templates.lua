@@ -133,7 +133,7 @@ local mutator_templates = {
 		asset_package = "packages/content/live_events/stolen_rations/stolen_rations_ui_assets",
 		class = "scripts/managers/mutator/mutators/mutator_player_buff",
 		trigger_on_events = {
-			"mission_buffs_event_player_spawned",
+			mission_buffs_event_player_spawned = {},
 		},
 		externally_controlled_buffs = {
 			"live_event_stolen_rations_destroy_ranged",
@@ -144,7 +144,7 @@ local mutator_templates = {
 		asset_package = "packages/content/live_events/stolen_rations/stolen_rations_ui_assets",
 		class = "scripts/managers/mutator/mutators/mutator_player_buff",
 		trigger_on_events = {
-			"event_player_action_use_syringe",
+			event_player_action_use_syringe = {},
 		},
 		externally_controlled_buffs = {
 			"live_event_stolen_rations_recover_syringe",
@@ -170,7 +170,7 @@ local mutator_templates = {
 					{
 						class = "scripts/managers/mutator/mutators/mutator_stat_trigger/mutator_stat_trigger_per_count",
 						template = {
-							trigger_amount = 50,
+							trigger_amount = 100,
 							trigger_once = false,
 							on_trigger = {
 								MutatorStatTriggerUtilities.on_trigger_spawn_event_enemies_as_horde(EnemyCompositions.live_event_stolen_rations_stat_destroy_boss, "flood_horde"),

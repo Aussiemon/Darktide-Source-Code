@@ -1,10 +1,13 @@
 ﻿-- chunkname: @scripts/settings/circumstance/templates/live_story_nomansland_circumstance_template.lua
 
 local circumstance_templates = {}
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
+local mission_overrides = MissionOverrides.merge("stats_story", "stats_default")
 
 circumstance_templates.story_nomansland_01 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = mission_overrides,
 	mutators = {
 		"mutator_havoc_armored_infected",
 	},
@@ -18,6 +21,7 @@ circumstance_templates.story_nomansland_01 = {
 circumstance_templates.story_nomansland_02 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = mission_overrides,
 	mutators = {
 		"mutator_havoc_armored_infected",
 		"mutator_only_traitor_guard_faction",
@@ -32,6 +36,7 @@ circumstance_templates.story_nomansland_02 = {
 circumstance_templates.story_nomansland_03 = {
 	theme_tag = "default",
 	wwise_state = "None",
+	mission_overrides = mission_overrides,
 	mutators = {
 		"mutator_havoc_armored_infected",
 		"mutator_only_traitor_guard_faction",
@@ -43,10 +48,5 @@ circumstance_templates.story_nomansland_03 = {
 		mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
 	},
 }
-
-for _, template in pairs(circumstance_templates) do
-	template.is_default = true
-	template.is_story = true
-end
 
 return circumstance_templates

@@ -5,18 +5,18 @@ require("scripts/foundation/utilities/color")
 local Styles = {}
 local sizes = {
 	entry_width = 1420,
-	text_max_width = 1240,
+	text_max_width = 1040,
 	reward_size = {
-		105,
-		105,
+		96.6,
+		96.6,
 	},
 	reward_icon_size = {
-		104,
-		88,
+		52,
+		44,
 	},
 	reward_currency_icon_size = {
-		67.60000000000001,
 		57.2,
+		48.400000000000006,
 	},
 	reward_icon_size_addition = {
 		0,
@@ -31,7 +31,7 @@ local spacing = {
 	button_spacing = 60,
 	entry_padding = 60,
 	event_name_height = 60,
-	reward_track_spacing = 260,
+	reward_track_spacing = 300,
 	text_top_padding = 30,
 }
 
@@ -54,6 +54,20 @@ Styles.texts.event_name = {
 		50,
 	},
 }
+Styles.texts.event_name_divider = {
+	horizontal_alignment = "center",
+	vertical_alignment = "top",
+	size = {
+		468,
+		22,
+	},
+	color = Color.terminal_text_body(255, true),
+	offset = {
+		0,
+		spacing.text_top_padding + spacing.event_name_height,
+		10,
+	},
+}
 Styles.texts.event_lore = {
 	font_size = 18,
 	font_type = "proxima_nova_medium",
@@ -64,7 +78,7 @@ Styles.texts.event_lore = {
 	text_color = Color.terminal_text_body(255, true),
 	offset = {
 		0,
-		spacing.text_top_padding + 70,
+		spacing.text_top_padding + spacing.event_name_height + 40,
 		10,
 	},
 	size = {
@@ -104,7 +118,7 @@ Styles.texts.event_description = {
 		10,
 	},
 	size = {
-		sizes.text_max_width,
+		sizes.text_max_width - 100,
 		400,
 	},
 }
@@ -129,11 +143,30 @@ Styles.texts.rewards_track_text = {
 Styles.entry = {}
 Styles.entry.background = {
 	horizontal_alignment = "center",
+	scale_to_material = true,
 	color = Color.terminal_grid_background(nil, true),
+	offset = {
+		0,
+		-12,
+		-4,
+	},
+	size_addition = {
+		20,
+		26,
+	},
+}
+Styles.entry.background_rect = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	color = Color.terminal_background(150, true),
 	offset = {
 		0,
 		0,
 		-5,
+	},
+	size_addition = {
+		-2,
+		-2,
 	},
 }
 Styles.entry.top_detail = {
@@ -147,6 +180,20 @@ Styles.entry.top_detail = {
 	offset = {
 		0,
 		-14,
+		2,
+	},
+}
+Styles.entry.top_center_detail = {
+	horizontal_alignment = "center",
+	vertical_alignment = "top",
+	size = {
+		288,
+		102,
+	},
+	color = Color.white(255, true),
+	offset = {
+		0,
+		-55.080000000000005,
 		2,
 	},
 }
@@ -173,7 +220,7 @@ Styles.reward.background = {
 		0,
 		10,
 	},
-	color = Color.black(120, true),
+	color = Color.black(225, true),
 }
 Styles.reward.frame = {
 	horizontal_alignment = "left",
@@ -206,7 +253,7 @@ Styles.reward.currency_icon = {
 	horizontal_alignment = "left",
 	size = sizes.reward_currency_icon_size,
 	offset = {
-		16,
+		20,
 		8,
 		12,
 	},
@@ -220,7 +267,7 @@ Styles.reward.currency_icon = {
 	material_values = {},
 }
 Styles.reward.amount = {
-	font_size = 22,
+	font_size = 20,
 	font_type = "proxima_nova_bold",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "center",
@@ -233,7 +280,7 @@ Styles.reward.amount = {
 	},
 	offset = {
 		0,
-		sizes.reward_size[2] - 36,
+		sizes.reward_icon_size[2] + 20,
 		15,
 	},
 	size = {
@@ -250,8 +297,8 @@ Styles.reward.bar_connection_line = {
 	},
 	color = Color.terminal_text_body(200, true),
 	offset = {
-		sizes.reward_size[1] * 0.5 - 2,
-		sizes.reward_size[2] + 8,
+		0,
+		-30,
 		2,
 	},
 }
@@ -298,7 +345,7 @@ Styles.event_progress_bar.progress_text = {
 	text_color = Color.golden_rod(255, true),
 	offset = {
 		0,
-		0,
+		40,
 		2,
 	},
 	size = {

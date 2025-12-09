@@ -343,6 +343,12 @@ NodeBuilderViewBase._on_node_widget_right_pressed = function (self, widget)
 			self:_remove_node_point_on_widget(widget)
 
 			success = true
+
+			local node_type = node_data.type
+
+			if node_type == "aura" or node_type == "tactical" or node_type == "ability" then
+				self:_remove_node_points_on_child_nodes_of_node(node_data)
+			end
 		end
 	end
 
@@ -1176,6 +1182,36 @@ NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget)
 	local instant_tooltip = true
 
 	self:_setup_tooltip_info(widget.content.node_data, instant_tooltip)
+end
+
+NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self, node_data)
+	local children = node_data.children
+
+	if not children then
+		return
+	end
+
+	local node_type = node_data.type
+	local widgets_by_name = self._widgets_by_name
+
+	for i = 1, #children do
+		local child_node = self:active_layout_node_by_name(children[i])
+
+		if child_node then
+			local child_node_type = child_node.type
+			local valid = (node_type == "ability" or node_type == "ability_modifier") and child_node_type == "ability_modifier" or (node_type == "tactical" or node_type == "tactical_modifier") and child_node_type == "tactical_modifier" or (node_type == "aura" or node_type == "aura_modifier") and child_node_type == "aura_modifier"
+
+			if valid then
+				local child_widget_name = child_node.widget_name
+				local child_widget = child_widget_name and widgets_by_name[child_widget_name]
+
+				if child_widget then
+					self:_remove_node_point_on_widget(child_widget)
+					self:_remove_node_points_on_child_nodes_of_node(child_node)
+				end
+			end
+		end
+	end
 end
 
 NodeBuilderViewBase._set_zoom = function (self, zoom)

@@ -309,6 +309,10 @@ StoreView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.aquila_button.content.hotspot.pressed_callback = function ()
+		if not self._category_panel then
+			return
+		end
+
 		self:_cb_on_grid_exit_done()
 
 		if self._page_panel then
@@ -374,8 +378,6 @@ StoreView.cb_on_aquilas_closed = function (self, success)
 		self:_update_wallets()
 	end
 
-	self._input_legend_element:set_visibility(true)
-
 	local path = {
 		page_index = self._selected_page_index,
 		category_index = self._selected_category_index,
@@ -383,8 +385,14 @@ StoreView.cb_on_aquilas_closed = function (self, success)
 
 	self._selected_category_index = nil
 	self._selected_page_index = nil
+
+	if self.closing_view then
+		return
+	end
+
 	self._widgets_by_name.aquila_button.content.visible = true
 
+	self._input_legend_element:set_visibility(true)
 	self:_open_navigation_path(path)
 end
 

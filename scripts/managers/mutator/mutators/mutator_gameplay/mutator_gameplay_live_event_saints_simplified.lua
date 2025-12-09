@@ -27,7 +27,11 @@ MutatorGameplayLiveEventSaintsSimplified.destroy = function (self)
 	MutatorGameplayLiveEventSaintsSimplified.super.destroy(self)
 end
 
-MutatorGameplayLiveEventSaintsSimplified._shrine_interaction_success = function (self)
+MutatorGameplayLiveEventSaintsSimplified._shrine_interaction_success = function (self, triggered_on_level)
+	if self._level ~= triggered_on_level then
+		return
+	end
+
 	self:show_objective_popup_notification(self:_get_notification_key())
 	self:_spawn_enemy_composition(self:_get_enemy_composition())
 

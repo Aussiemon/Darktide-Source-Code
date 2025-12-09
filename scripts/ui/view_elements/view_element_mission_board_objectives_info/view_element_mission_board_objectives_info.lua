@@ -596,13 +596,13 @@ ViewElementMissionBoardObjectivesInfo._update_panel_tabs_offset = function (self
 		local num_title_characters = content.title_text_num_characters or Utf8.string_length(content.default_title_text) or 0
 		local char_index = math.floor(num_title_characters * selection_progress)
 
-		content.objectives_panel_title = string.sub(content.default_title_text, 1, char_index)
+		content.objectives_panel_title = Utf8.sub_string(content.default_title_text, 1, char_index)
 
 		if content.default_sub_title_text ~= "" then
 			local num_subtitle_characters = content.sub_title_text_num_characters or Utf8.string_length(content.default_sub_title_text) or 0
 			local sub_char_index = math.floor(num_subtitle_characters * selection_progress)
 
-			content.objectives_panel_sub_title = string.sub(content.default_sub_title_text, 1, sub_char_index)
+			content.objectives_panel_sub_title = Utf8.sub_string(content.default_sub_title_text, 1, sub_char_index)
 		else
 			content.objectives_panel_sub_title = ""
 		end

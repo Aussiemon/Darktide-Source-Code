@@ -185,7 +185,7 @@ damage_templates.broker_missile_launcher_explosion_close = {
 			[armor_types.resistant] = 2,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 1.35,
-			[armor_types.super_armor] = 2,
+			[armor_types.super_armor] = 2.4,
 			[armor_types.disgustingly_resilient] = 0.75,
 			[armor_types.void_shield] = 1.1,
 		},
@@ -220,7 +220,7 @@ overrides.broker_missile_launcher_explosion = {
 		{
 			"power_distribution",
 			"attack",
-			900,
+			1300,
 		},
 		{
 			"power_distribution",

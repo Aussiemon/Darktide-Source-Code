@@ -53,8 +53,6 @@ SawCoatingEffects.fixed_update = function (self, unit, dt, t, frame)
 end
 
 SawCoatingEffects.update = function (self, unit, dt, t)
-	self._t = t
-
 	self:_update_weapon_special(dt, t)
 	self:_update_coating_color(dt, t)
 end
@@ -83,7 +81,7 @@ end
 
 SawCoatingEffects.update_first_person_mode = function (self, first_person_mode)
 	self._is_in_first_person = first_person_mode
-	self._restart_vfx_t = self._t
+	self._restart_vfx_t = Managers.time:time("gameplay")
 end
 
 SawCoatingEffects.wield = function (self)
@@ -136,7 +134,7 @@ SawCoatingEffects.on_sweep_start = function (self, t)
 	end
 
 	self._start_slash_drips_at_t = t + SLASH_DRIPS_STARTUP_DELAY
-	self._slash_drips_end_t = self._t + SLASH_DRIPS_DURATION
+	self._slash_drips_end_t = Managers.time:time("gameplay") + SLASH_DRIPS_DURATION
 end
 
 SawCoatingEffects.on_sweep_finish = function (self)
@@ -149,7 +147,7 @@ end
 
 SawCoatingEffects.on_sweep_hit = function (self)
 	if self._slash_drips_end_t then
-		self._slash_drips_end_t = self._t + SLASH_DRIPS_DURATION
+		self._slash_drips_end_t = Managers.time:time("gameplay") + SLASH_DRIPS_DURATION
 	end
 end
 
@@ -199,10 +197,10 @@ SawCoatingEffects._reset_cloud = function (self)
 	local cloud_alias = VFX_LOOP_ALIASES.cloud_alias
 
 	if self._loop_ids[cloud_alias] then
-		self:_stop_vfx_loop(true, self._loop_ids[cloud_alias])
+		self:_stop_vfx_loop(false, self._loop_ids[cloud_alias])
 	end
 
-	self:_start_vfx_loop(cloud_alias, FX_IDLE_SOURCE_NAME, self._t)
+	self:_start_vfx_loop(cloud_alias, FX_IDLE_SOURCE_NAME, Managers.time:time("gameplay"))
 end
 
 SawCoatingEffects.destroy = function (self)

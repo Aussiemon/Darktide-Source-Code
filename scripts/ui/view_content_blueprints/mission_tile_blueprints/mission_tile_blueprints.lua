@@ -2887,6 +2887,46 @@ do
 			style.static_sub_header_text.disabled_color = _adjust_color(text_color, 0.5)
 		end,
 	}
+	local has_new = {
+		pass_templates = {
+			{
+				pass_type = "texture",
+				style_id = "has_new_icon",
+				value = "content/ui/materials/base/ui_gradient_color_base",
+				value_id = "has_new_icon",
+				style = {
+					horizontal_alignment = "right",
+					vertical_alignment = "center",
+					size = {
+						24,
+						24,
+					},
+					offset = {
+						0,
+						0,
+						10,
+					},
+					material_values = {
+						gradient_map = "content/ui/textures/mission_board/gradient_digital_circumstances",
+						texture_map = "content/ui/textures/mission_board/exclamation_mark",
+					},
+				},
+				visibility_function = function (content, style)
+					return content.has_new == true
+				end,
+			},
+		},
+		init = function (widget, mission_data, creation_context)
+			local content, style = widget.content, widget.style
+
+			content.has_new = creation_context.has_new or false
+			style.has_new_icon.size = {
+				content.size[2] - 18,
+				content.size[2] - 18,
+			}
+			style.has_new_icon.offset[1] = -8
+		end,
+	}
 
 	Blueprints.small_mission_tile_pass_templates = {
 		background_hotspot,
@@ -2932,6 +2972,7 @@ do
 		tile_button_icon,
 		tile_button_header_text,
 		tile_button_sub_header_text,
+		has_new,
 	}
 end
 

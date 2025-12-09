@@ -3,6 +3,7 @@
 local HazardPropOverrides = require("scripts/settings/circumstance/mission_overrides/hazard_prop_overrides")
 local HealthStationOverrides = require("scripts/settings/circumstance/mission_overrides/health_station_overrides")
 local PickupOverrides = require("scripts/settings/circumstance/mission_overrides/pickup_overrides")
+local StatOverrides = require("scripts/settings/circumstance/mission_overrides/stat_overrides")
 local MissionOverrides = {}
 
 local function add_overrides(destination, source)
@@ -14,6 +15,7 @@ end
 add_overrides(MissionOverrides, HazardPropOverrides)
 add_overrides(MissionOverrides, HealthStationOverrides)
 add_overrides(MissionOverrides, PickupOverrides)
+add_overrides(MissionOverrides, StatOverrides)
 
 MissionOverrides.append = function (t, ...)
 	local arg_count = select("#", ...)

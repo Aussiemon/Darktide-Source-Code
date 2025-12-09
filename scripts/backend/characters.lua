@@ -3,16 +3,19 @@
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local Interface = {
 	"fetch",
 	"create",
 	"delete",
 	"equip_items_in_slots",
 }
+local DATA_MODES = table.enum("get", "set")
 local Characters = class("Characters")
 
 Characters.init = function (self)
-	return
+	self._queue_by_character = {}
+	self._promise_container = PromiseContainer:new()
 end
 
 Characters.equip_item_slot = function (self, character_id, slot_name, gear_id)
@@ -165,20 +168,49 @@ Characters.delete_character = function (self, character_id)
 	end)
 end
 
-Characters.set_talents_v2 = function (self, character_id, talents)
-	return self:set_data(character_id, "vocation", {
-		talents = talents,
-	})
+Characters.set_talents_v2 = function (self, character_id, talent_info, specialization_talent_info)
+	local promise = Promise.new()
+	local num_requests = (talent_info and 1 or 0) + (specialization_talent_info and 1 or 0)
+	local num_completed = 0
+	local talent_result, specialization_talents_result
+
+	if talent_info then
+		self:set_data(character_id, "vocation", {
+			talents = talent_info.packed_talents,
+		}):next(function (result)
+			num_completed = num_completed + 1
+			talent_result = result
+
+			if num_completed == num_requests then
+				promise:resolve({
+					talents = talent_result,
+					expertise = specialization_talents_result,
+				})
+			end
+		end)
+	end
+
+	if specialization_talent_info then
+		self:set_data(character_id, "vocation", {
+			expertise = specialization_talent_info.packed_talents,
+		}):next(function (result)
+			num_completed = num_completed + 1
+			specialization_talents_result = result
+
+			if num_completed == num_requests then
+				promise:resolve({
+					talents = talent_result,
+					expertise = specialization_talents_result,
+				})
+			end
+		end)
+	end
+
+	return promise
 end
 
 Characters.get_talents_v2 = function (self, character_id)
 	return self:get_data(character_id, "vocation", "talents")
-end
-
-Characters.set_specialization_talents = function (self, character_id, specialization_talents)
-	return self:set_data(character_id, "vocation", {
-		expertise = specialization_talents,
-	})
 end
 
 Characters.set_character_height = function (self, character_id, value)
@@ -264,28 +296,107 @@ Characters.get_narrative_event = function (self, character_id, event_name, optio
 end
 
 Characters.set_data = function (self, character_id, section, data)
-	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
-		method = "PUT",
-		body = {
-			data = data,
-		},
-	}):next(function (data)
-		return nil
-	end)
+	return self:_queue_data_set(character_id, section, data)
+end
+
+Characters._queue_data_set = function (self, character_id, section, data)
+	local character_queue = self._queue_by_character[character_id] or {}
+
+	self._queue_by_character[character_id] = character_queue
+
+	local section_queue = character_queue[section] or {}
+
+	character_queue[section] = section_queue
+
+	local was_empty = table.is_empty(section_queue)
+	local resolvable = Promise.new()
+
+	section_queue[#section_queue + 1] = {
+		mode = DATA_MODES.set,
+		data = data,
+		promise = resolvable,
+	}
+
+	self._promise_container:cancel_on_destroy(resolvable)
+
+	if was_empty then
+		self:_pop_data_queue(character_id, section)
+	end
+
+	return resolvable
 end
 
 Characters.get_data = function (self, character_id, section, part, optional_account_id)
-	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), nil, optional_account_id):next(function (data)
-		if part then
-			if #data.body.data > 0 then
-				return data.body.data[1].value[part]
-			else
-				return nil
+	return self:_queue_data_get(character_id, section, part, optional_account_id)
+end
+
+Characters._queue_data_get = function (self, character_id, section, part, optional_account_id)
+	local character_queue = self._queue_by_character[character_id] or {}
+
+	self._queue_by_character[character_id] = character_queue
+
+	local section_queue = character_queue[section] or {}
+
+	character_queue[section] = section_queue
+
+	local was_empty = table.is_empty(section_queue)
+	local resolvable = Promise.new()
+
+	section_queue[#section_queue + 1] = {
+		mode = DATA_MODES.get,
+		part = part,
+		optional_account_id = optional_account_id,
+		promise = resolvable,
+	}
+
+	self._promise_container:cancel_on_destroy(resolvable)
+
+	if was_empty then
+		self:_pop_data_queue(character_id, section)
+	end
+
+	return resolvable
+end
+
+Characters._pop_data_queue = function (self, character_id, section)
+	local section_queue = self._queue_by_character[character_id][section]
+	local next_request = section_queue[1]
+
+	if not next_request then
+		return
+	end
+
+	if next_request.mode == DATA_MODES.set then
+		return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
+			method = "PUT",
+			body = {
+				data = next_request.data,
+			},
+		}):next(function (data)
+			next_request.promise:resolve(data)
+			table.remove(section_queue, 1)
+			self:_pop_data_queue(character_id, section)
+
+			return nil
+		end)
+	elseif next_request.mode == DATA_MODES.get then
+		local optional_account_id = next_request.optional_account_id
+		local part = next_request.part
+
+		return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), nil, optional_account_id):next(function (data)
+			if part then
+				if #data.body.data > 0 then
+					data = data.body.data[1].value[part]
+				else
+					data = nil
+				end
 			end
-		else
-			return data
-		end
-	end)
+
+			next_request.promise:resolve(data)
+			table.remove(section_queue, 1)
+			self:_pop_data_queue(character_id, section)
+		end)
+	end
 end
 
 Characters.check_name = function (self, name, name_type)
@@ -301,6 +412,10 @@ Characters.check_name = function (self, name, name_type)
 	}):next(function (data)
 		return data.body
 	end)
+end
+
+Characters.destroy = function (self)
+	self._promise_container:delete()
 end
 
 implements(Characters, Interface)

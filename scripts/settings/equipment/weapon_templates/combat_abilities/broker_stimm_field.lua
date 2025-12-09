@@ -5,27 +5,23 @@ local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.broker
+local SETTINGS = talent_settings.combat_ability.stimm_field
 local weapon_template = {}
 
 weapon_template.action_inputs = {
 	ability_pressed = {
-		buffer_time = 0.1,
+		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
+				input = "combat_ability_pressed",
 				value = true,
 			},
 		},
 	},
 	ability_released = {
-		buffer_time = 0.1,
-		input_sequence = {
-			{
-				input = "combat_ability_hold",
-				value = false,
-				time_window = math.huge,
-			},
-		},
+		buffer_time = 0,
+		dont_queue = true,
+		input_sequence = nil,
 	},
 	unwield_to_previous = {
 		buffer_time = 0,
@@ -36,33 +32,32 @@ weapon_template.action_inputs = {
 weapon_template.action_input_hierarchy = {
 	{
 		input = "ability_pressed",
-		transition = {
-			{
-				input = "ability_released",
-				transition = "base",
-			},
-			{
-				input = "unwield_to_previous",
-				transition = "base",
-			},
-		},
+		transition = "base",
+	},
+	{
+		input = "ability_released",
+		transition = "base",
 	},
 	{
 		input = "unwield_to_previous",
-		transition = "base",
+		transition = "stay",
 	},
 }
-
-local SETTINGS = talent_settings.combat_ability.stimm_field
-
 weapon_template.actions = {
 	action_wield = {
+		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim_event = "equip_crate",
 		kind = "wield",
+		prevent_sprint = true,
 		start_input = "ability_pressed",
 		total_time = 0,
 		uninterruptible = true,
+		conditional_state_to_action_input = {
+			action_end = {
+				input_name = "ability_released",
+			},
+		},
 		allowed_chain_actions = {
 			ability_released = {
 				action_name = "action_release",
@@ -71,14 +66,15 @@ weapon_template.actions = {
 	},
 	action_release = {
 		ability_type = "combat_ability",
+		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim_cancel_event = "action_finished",
 		anim_event = "drop",
 		kind = "place_deployable",
+		prevent_sprint = true,
 		remove_item_from_inventory = false,
-		start_input = "ability_released",
+		start_input = nil,
 		total_time = 0.54,
-		uninterruptible = true,
 		use_ability_charge = true,
 		use_aim_date = false,
 		vo_tag = "ability_stimm",
@@ -86,6 +82,7 @@ weapon_template.actions = {
 		place_configuration = {
 			allow_aim_upwards_deployment = true,
 			distance = 2,
+			force_place = true,
 		},
 		conditional_state_to_action_input = {
 			action_end = {

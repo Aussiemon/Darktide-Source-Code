@@ -24,6 +24,23 @@ local function _valid_unit_from_actor(actor)
 	return unit_hit
 end
 
+local function _can_place(hit, position, normal)
+	return position and hit and Vector3.dot(normal, Vector3.up()) > 0.7 or false
+end
+
+local function _raycast_down_from_pos(physics_world, from_pos, direction, place_distance)
+	local hit, pos, _, normal, actor = PhysicsWorld.raycast(physics_world, from_pos, direction, place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
+
+	return hit, pos, normal, actor
+end
+
+local function _force_place(physics_world, from_pos, place_distance, downwards_length_modifier)
+	local hit, pos, normal, actor = _raycast_down_from_pos(physics_world, from_pos, Vector3.down(), place_distance)
+	local can_place = _can_place(hit, pos, normal)
+
+	return can_place, pos, normal, actor
+end
+
 AimPlacement.from_unit = function (physics_world, unit)
 	local unit_pos = Unit.world_position(unit, 1)
 	local unit_rot = Unit.world_rotation(unit, 1)
@@ -35,36 +52,33 @@ AimPlacement.from_unit = function (physics_world, unit)
 	return can_place, position, unit_rot, unit_hit
 end
 
-local OPTIONAL_AIM_UPWARDS_DEPLOYMENT_DISTANCE_MODIFIER = 5
+local OPTIONAL_AIM_UPWARDS_DEPLOYMENT_MULTIPLIER = 5
 
 AimPlacement.from_configuration = function (physics_world, place_configuration, first_person_component)
 	local look_position = first_person_component.position
 	local look_rotation = first_person_component.rotation
 	local look_direction = Quaternion.forward(look_rotation)
 	local place_distance = place_configuration.distance
-	local hit, position, _, normal, actor = PhysicsWorld.raycast(physics_world, look_position, look_direction, place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
+	local hit, position, normal, actor = _raycast_down_from_pos(physics_world, look_position, look_direction, place_distance)
+	local downwards_length_modifier = 1
+
+	if place_configuration.allow_aim_upwards_deployment then
+		downwards_length_modifier = OPTIONAL_AIM_UPWARDS_DEPLOYMENT_MULTIPLIER
+	end
 
 	if not hit then
-		local downwards_length_modifier = 1
-
-		if place_configuration.allow_aim_upwards_deployment then
-			downwards_length_modifier = OPTIONAL_AIM_UPWARDS_DEPLOYMENT_DISTANCE_MODIFIER
-		end
-
 		local downward_raycast_position = look_position + look_direction * place_distance
 
-		hit, position, _, normal, actor = PhysicsWorld.raycast(physics_world, downward_raycast_position, Vector3.down(), place_distance * downwards_length_modifier, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
+		hit, position, normal, actor = _raycast_down_from_pos(physics_world, downward_raycast_position, Vector3.down(), place_distance * downwards_length_modifier)
 	end
 
-	local can_place = false
+	local can_place = _can_place(hit, position, normal)
 
-	if position then
-		if Vector3.dot(normal, Vector3.up()) > 0.7 then
-			can_place = true
-		end
-	else
-		position = Vector3.zero()
+	if not can_place and place_configuration.force_place then
+		can_place, position, normal, actor = _force_place(physics_world, look_position, place_distance, downwards_length_modifier)
 	end
+
+	position = position or Vector3.zero()
 
 	local unit_hit = _valid_unit_from_actor(actor)
 	local look_direction_flat = Vector3.flat(look_direction)

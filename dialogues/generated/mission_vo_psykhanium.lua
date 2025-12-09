@@ -449,6 +449,39 @@ return function ()
 	define_rule({
 		category = "vox_prio_0",
 		database = "mission_vo_psykhanium",
+		name = "horde_break_ice_a",
+		response = "horde_break_ice_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"horde_break_ice_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
 		name = "horde_claim_prize_a",
 		response = "horde_claim_prize_a",
 		wwise_route = 42,
@@ -688,6 +721,72 @@ return function ()
 				"trigger_id",
 				OP.EQ,
 				"horde_objective_reminder_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "horde_open_gate_a",
+		response = "horde_open_gate_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"horde_open_gate_a",
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		database = "mission_vo_psykhanium",
+		name = "horde_restore_power_a",
+		response = "horde_restore_power_a",
+		wwise_route = 42,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"horde_restore_power_a",
 			},
 			{
 				"user_context",

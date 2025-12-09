@@ -238,6 +238,7 @@ InventoryWeaponCosmeticsView.on_exit = function (self)
 	self:_destroy_forward_gui()
 	self:_destroy_side_panel()
 	self:_equip_items_on_server()
+	self._promise_container:delete()
 	InventoryWeaponCosmeticsView.super.on_exit(self)
 end
 

@@ -43,6 +43,10 @@ local toxin_green = {
 	0.15,
 	0.5,
 }
+local toxin_purple = {
+	0.7,
+	0.075,
+}
 local flash_quick = {
 	0.35,
 	0.35,
@@ -593,6 +597,108 @@ wounds_templates.chain_toxin = {
 					5,
 				},
 				color_brightness = toxin_green,
+				duration = linger_medium,
+			},
+		},
+	},
+}
+wounds_templates.chain_toxin_purple = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					2.5,
+					3,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					2.25,
+					2.5,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_purple,
+				duration = linger_medium,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = false,
+				radius = {
+					3.5,
+					5,
+				},
+				color_brightness = toxin_purple,
 				duration = linger_medium,
 			},
 		},
@@ -1488,6 +1594,7 @@ wounds_templates.chainsword_sawing = table.clone(wounds_templates.chain_light)
 wounds_templates.chainaxe = table.clone(wounds_templates.chain_light)
 wounds_templates.chainaxe_sawing = table.clone(wounds_templates.chain_light)
 wounds_templates.saw = table.clone(wounds_templates.chain_toxin)
+wounds_templates.saw_secondary = table.clone(wounds_templates.chain_toxin_purple)
 wounds_templates.thunder_hammer = table.clone(wounds_templates.blunt)
 wounds_templates.thunder_hammer_active = table.clone(wounds_templates.energy_blunt)
 wounds_templates.power_maul = table.clone(wounds_templates.shock_blunt)

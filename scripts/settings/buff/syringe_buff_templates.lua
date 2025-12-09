@@ -178,6 +178,7 @@ templates.syringe_heal_corruption_buff = {
 templates.syringe_ability_boost_buff = {
 	class_name = "buff",
 	duration = 15,
+	effect = 3,
 	hud_icon = "content/ui/textures/icons/buffs/hud/syringe_ability_buff_hud",
 	predicted = false,
 	skip_tactical_overlay = true,
@@ -199,6 +200,10 @@ templates.syringe_ability_boost_buff = {
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 
+		local template = template_context.template
+
+		template_data.effect = template.effect
+
 		local duration = template_context.template.duration
 
 		if duration then
@@ -215,7 +220,7 @@ templates.syringe_ability_boost_buff = {
 		local missing_ability_charges = ability_extension:missing_ability_charges(ability_type)
 
 		if missing_ability_charges > 0 then
-			local effect = 3
+			local effect = template_data.effect
 			local reduce_time = dt * effect
 
 			ability_extension:reduce_ability_cooldown_time(ability_type, reduce_time)

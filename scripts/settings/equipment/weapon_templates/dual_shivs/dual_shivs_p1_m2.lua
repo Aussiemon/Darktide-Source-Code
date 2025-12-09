@@ -559,7 +559,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_swing_right_lhand_offhand_sweep",
@@ -617,7 +617,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_swing_left",
@@ -642,7 +642,7 @@ weapon_template.actions = {
 		anim_event = "attack_stab_left_diagonal_lhand",
 		anim_event_3p = "attack_swing_up_diagonal_02",
 		attack_direction_override = "left",
-		damage_window_end = 0.2916666666666667,
+		damage_window_end = 0.30833333333333335,
 		damage_window_start = 0.225,
 		first_person_hit_stop_anim = "hit_stop",
 		hit_armor_anim = "attack_hit_shield",
@@ -675,7 +675,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_stab_left_diagonal_lhand_offhand_sweep",
@@ -733,7 +733,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_swing_right_v02",
@@ -791,7 +791,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_swing_up_diagonal_lhand_offhand_sweep",
@@ -850,7 +850,7 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		hit_zone_priority = hit_zone_priority,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweeps = {
 			{
 				matrices_data_location = "content/characters/player/human/first_person/animations/dual_shivs/attack_swing_left_diagonal_rhand",
@@ -1033,7 +1033,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = large_weapon_box,
 		sweep_process_mode = ActionSweepSettings.multi_sweep_process_mode.shared,
 		sweeps = {
 			{

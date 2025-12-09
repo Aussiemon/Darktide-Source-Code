@@ -317,11 +317,13 @@ animations.mission_area_info_enter = {
 		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 			local widget = widgets.mission_area_info
 			local content = widget.content
-			local mission_title_char_idx = math.floor(content.mission_title_num_chars * progress)
-			local mission_sub_title_char_idx = math.floor(content.mission_sub_title_num_chars * progress)
+			local mission_title_char_idx = math.ceil(content.mission_title_num_chars * progress)
+			local mission_sub_title_char_idx = math.ceil(content.mission_sub_title_num_chars * progress)
+			local title_string = Utf8.sub_string(content.default_mission_title, 1, mission_title_char_idx)
+			local sub_title_string = Utf8.sub_string(content.default_mission_sub_title, 1, mission_sub_title_char_idx)
 
-			content.mission_title = string.sub(content.default_mission_title, 1, mission_title_char_idx)
-			content.mission_sub_title = string.sub(content.default_mission_sub_title, 1, mission_sub_title_char_idx)
+			content.mission_title = title_string
+			content.mission_sub_title = sub_title_string
 		end,
 		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 			parent._mission_area_enter_anim_id = nil

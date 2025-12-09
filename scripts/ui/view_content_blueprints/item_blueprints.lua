@@ -913,12 +913,6 @@ local function generate_blueprints_function(grid_size)
 					})
 
 					content.required_level = required_level_text
-
-					local required_level_style = style.required_level
-					local required_level_text_width = Text.text_size(ui_renderer, required_level_text, required_level_style) or 0
-					local required_level_background_style = style.required_level_background
-
-					required_level_background_style.size[1] = required_level_text_width + 40
 				end
 
 				local rarity_color = Items.rarity_color(item)

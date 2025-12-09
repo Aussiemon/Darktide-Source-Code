@@ -188,6 +188,13 @@ local penance_overview_view_settings = {
 		},
 		broker = {
 			"basic_training",
+			"slide_dodge",
+			"coherency_toughness",
+			"fast_headshot_1",
+			"enemies_1",
+			"kill_renegades_1",
+			"mission_circumstace_1",
+			"amount_of_chests_opened_1",
 		},
 		ogryn = {
 			"basic_training",

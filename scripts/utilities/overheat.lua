@@ -43,7 +43,7 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 	local use_charge = charge_template.use_charge
 	local base_add_percentage = charge_template.overheat_percent or 0
 	local add_percentage = buff_multiplier * base_add_percentage
-	local new_heat, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage)
+	local new_heat, new_state = SharedFunctions.add_immediate(charge_level, use_charge, add_percentage, current_percentage, false, charge_template, inventory_slot_component)
 
 	inventory_slot_component.overheat_last_charge_at_t = t
 	inventory_slot_component.overheat_current_percentage = new_heat

@@ -1303,7 +1303,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
 	local abort_attack = max_mass_hit or armor_aborts_attack or breed_aborts_attack
 	local damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort = self:_damage_profile(sweep_index)
-	local damage_type, damage_type_on_abort, damage_type_special_active, damage_type_special_active_on_abort = self:_damage_type(sweep_index)
+	local damage_type, damage_type_special_active, damage_type_on_abort, damage_type_special_active_on_abort = self:_damage_type(sweep_index)
 
 	if is_special_active then
 		damage_profile = abort_attack and special_damage_profile_on_abort or special_damage_profile
@@ -1641,9 +1641,9 @@ ActionSweep._damage_type = function (self, sweep_index)
 		local sweep = action_settings.sweeps[sweep_index]
 
 		damage_type = sweep.damage_type or damage_type
-		damage_type_on_abort = sweep.damage_type_on_abort or damage_type
-		damage_type_special_active = sweep.damage_type_special_active or damage_type
-		damage_type_special_active_on_abort = sweep.damage_type_special_active_on_abort or damage_type_special_active
+		damage_type_on_abort = sweep.damage_type_on_abort or damage_type_on_abort or damage_type
+		damage_type_special_active = sweep.damage_type_special_active or damage_type_special_active or damage_type
+		damage_type_special_active_on_abort = sweep.damage_type_special_active_on_abort or damage_type_special_active_on_abort or damage_type_special_active
 	end
 
 	return damage_type, damage_type_special_active, damage_type_on_abort, damage_type_special_active_on_abort

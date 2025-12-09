@@ -619,6 +619,7 @@ MissionBoardView._set_static_campaign_playlist_widget = function (self)
 		is_story = true,
 		sub_header_text = Localize("loc_glossary_completed") .. " (" .. tostring(completed_campaign) .. "/" .. tostring(total_campaign) .. ")",
 		header_text = Localize("loc_story_mission_menu_access_button_text"),
+		has_new = completed_campaign ~= total_campaign,
 	}, callback(self, "_callback_open_replay_campaign_missions_view"))
 end
 

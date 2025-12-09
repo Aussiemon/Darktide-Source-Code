@@ -159,6 +159,8 @@ ViewElementCampaignMissionList.on_enter = function (self)
 	self._enter_animation = self:_start_animation("title_enter", nil, {
 		ui_renderer = self._ui_renderer,
 	})
+
+	self:_play_sound("story_mission_enter")
 end
 
 ViewElementCampaignMissionList.on_exit = function (self)
@@ -167,6 +169,8 @@ ViewElementCampaignMissionList.on_exit = function (self)
 	self._exit_animation = self:_start_animation("title_exit", nil, {
 		ui_renderer = self._ui_renderer,
 	})
+
+	self:_play_sound("story_mission_exit")
 end
 
 ViewElementCampaignMissionList.update = function (self, dt, t, input_service)

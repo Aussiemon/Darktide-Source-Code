@@ -33,11 +33,18 @@ local function _set_talents_backend_response_fail(result)
 	end
 end
 
-TalentsService.set_talents_v2 = function (self, player, layout, node_tiers)
+TalentsService.set_talents_v2 = function (self, player, talent_info, specialization_talent_info)
+	if talent_info then
+		talent_info.packed_talents = TalentLayoutParser.pack_backend_data(talent_info.layout, talent_info.node_tiers)
+	end
+
+	if specialization_talent_info then
+		specialization_talent_info.packed_talents = TalentLayoutParser.pack_backend_data(specialization_talent_info.layout, specialization_talent_info.node_tiers)
+	end
+
 	local character_id = player:character_id()
-	local talents = TalentLayoutParser.pack_backend_data(layout, node_tiers)
 	local backend = self._backend_interface.characters
-	local promise = backend:set_talents_v2(character_id, talents)
+	local promise = backend:set_talents_v2(character_id, talent_info, specialization_talent_info)
 
 	promise:next(callback(_set_backend_response_success, player), _set_talents_backend_response_fail):catch(function (err)
 		_set_talents_backend_response_fail(err)
@@ -48,15 +55,37 @@ end
 
 TalentsService.load_icons_for_profile = function (self, profile, reference_name, callback, prioritize)
 	local archetype = profile.archetype
-	local talents_package_path = archetype.talents_package_path
-	local load_id = Managers.package:load(talents_package_path, reference_name, callback, prioritize)
+	local load_ids = {}
+	local proxy_cb, num_done = nil, 0
 
-	return load_id
+	if callback then
+		function proxy_cb(...)
+			num_done = num_done + 1
+
+			if num_done >= #load_ids then
+				callback(...)
+			end
+		end
+	end
+
+	local talents_package_path = archetype.talents_package_path
+
+	load_ids[#load_ids + 1] = Managers.package:load(talents_package_path, reference_name, proxy_cb, prioritize)
+
+	local specialization_talent_package_path = archetype.specialization_talent_package_path
+
+	if specialization_talent_package_path then
+		load_ids[#load_ids + 1] = Managers.package:load(specialization_talent_package_path, reference_name, proxy_cb, prioritize)
+	end
+
+	return load_ids
 end
 
-TalentsService.release_icons = function (self, load_id)
-	if load_id then
-		Managers.package:release(load_id)
+TalentsService.release_icons = function (self, load_ids)
+	if load_ids then
+		for i = 1, #load_ids do
+			Managers.package:release(load_ids[i])
+		end
 	end
 end
 

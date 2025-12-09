@@ -347,7 +347,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack or false, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, close_explosion_hit)
+		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack or false, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, close_explosion_hit, instakill)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_owner_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -514,7 +514,7 @@ function _already_procced(triggered_proc_events_or_nil, proc_event)
 	return triggered_proc_events_or_nil[proc_event]
 end
 
-function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, close_explosion_hit)
+function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, close_explosion_hit, instakill)
 	local side_system = Managers.state.extension:system("side_system")
 	local attacker_is_player = Breed.is_player(attacker_owner_breed_or_nil)
 	local target_is_ally = side_system:is_ally(attacking_owner_unit, attacked_unit)
@@ -566,6 +566,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
 			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.is_instakill = instakill
 			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
 			attacker_param_table.one_hit_kill = one_hit_kill
 			attacker_param_table.attack_result = attack_result
@@ -607,6 +608,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
 			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.is_instakill = instakill
 			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
 			attacker_param_table.one_hit_kill = one_hit_kill
 			attacker_param_table.attack_result = attack_result

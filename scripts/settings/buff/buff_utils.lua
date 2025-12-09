@@ -3,7 +3,6 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local armor_types = ArmorSettings.types

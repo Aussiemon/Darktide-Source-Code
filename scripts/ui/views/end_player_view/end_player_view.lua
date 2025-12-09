@@ -69,7 +69,7 @@ EndPlayerView.on_enter = function (self)
 	local profile = player:profile()
 	local load_callback = callback(self, "_create_cards")
 
-	self._talent_icons_package_id = Managers.data_service.talents:load_icons_for_profile(profile, "EndPlayerView", load_callback, true)
+	self._talent_icons_package_ids = Managers.data_service.talents:load_icons_for_profile(profile, "EndPlayerView", load_callback, true)
 
 	table.clear(self._timed_visibility_widgets)
 end
@@ -94,7 +94,7 @@ EndPlayerView.on_exit = function (self)
 
 	Managers.event:trigger("end_of_round_blur_background_world", 0)
 	EndPlayerView.super.on_exit(self)
-	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
+	Managers.data_service.talents:release_icons(self._talent_icons_package_ids)
 
 	if self._weapon_icon_renderer then
 		self._weapon_icon_renderer = nil

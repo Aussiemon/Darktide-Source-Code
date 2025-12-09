@@ -365,6 +365,10 @@ MissionBoard.get_campaigns_data = function (self)
 	return self._campaigns_data
 end
 
+MissionBoard.destroy = function (self)
+	self._promise_container:delete()
+end
+
 implements(MissionBoard, Interface)
 
 return MissionBoard

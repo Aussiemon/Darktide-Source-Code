@@ -573,6 +573,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_navy_06 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_mars_02",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_navy_03",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_navy_03",
+			},
+		},
+	},
 	color_2_colour_red_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -635,6 +648,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_red_05",
+			},
+		},
+	},
+	color_2_colour_red_06 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_red_06",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_black_01",
 			},
 		},
 	},
@@ -1587,6 +1613,19 @@ local material_overrides = {
 			},
 		},
 	},
+	color_2_colour_mars_21 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_mars_14",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_brown_06",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_brown_06",
+			},
+		},
+	},
 	color_2_colour_desert_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -2351,6 +2390,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_forest_14",
+			},
+		},
+	},
+	color_3_colour_forest_15 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_city_03",
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_forest_03",
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_forest_03",
 			},
 		},
 	},

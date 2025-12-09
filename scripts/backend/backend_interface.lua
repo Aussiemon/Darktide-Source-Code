@@ -69,4 +69,9 @@ BackendInterface.init = function (self)
 	self.wintracks = Wintracks:new()
 end
 
+BackendInterface.destroy = function (self)
+	self.characters:delete()
+	self.mission_board:delete()
+end
+
 return BackendInterface

@@ -3151,6 +3151,7 @@ menu_panel_button_style.offset = {
 	0,
 	3,
 }
+menu_panel_button_style.text_fit_with = true
 
 local menu_panel_context_style = table.clone(UIFontSettings.header_5)
 
