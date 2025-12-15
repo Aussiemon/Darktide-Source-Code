@@ -16,8 +16,12 @@ local function _try_enter_lockout(unit, new_heat, inventory_slot_component)
 			local use_overheat_soft_lockout = buff_extension:has_keyword(buff_keywords.use_overheat_soft_lockout)
 
 			if use_overheat_soft_lockout then
+				Overheat.track_heat_change(inventory_slot_component, "soft_lockout", "_try_enter_lockout")
+
 				inventory_slot_component.overheat_state = "soft_lockout"
 			else
+				Overheat.track_heat_change(inventory_slot_component, "lockout", "_try_enter_lockout")
+
 				inventory_slot_component.overheat_state = "lockout"
 			end
 		end
@@ -47,6 +51,11 @@ Overheat.increase_immediate = function (t, charge_level, inventory_slot_componen
 
 	inventory_slot_component.overheat_last_charge_at_t = t
 	inventory_slot_component.overheat_current_percentage = new_heat
+
+	if new_state and current_state ~= new_state then
+		Overheat.track_heat_change(inventory_slot_component, new_state, "Overheat.increase_immediate")
+	end
+
 	inventory_slot_component.overheat_state = new_state or current_state
 
 	_try_enter_lockout(unit, new_heat, inventory_slot_component)
@@ -61,6 +70,10 @@ Overheat.decrease_immediate = function (remove_percentage, inventory_slot_compon
 
 	if inventory_slot_component.overheat_state ~= "lockout" or new_percentage ~= 0 then
 		return
+	end
+
+	if current_state ~= new_state then
+		Overheat.track_heat_change(inventory_slot_component, new_state, "Overheat.decrease_immediate")
 	end
 
 	inventory_slot_component.overheat_state = new_state or current_state
@@ -152,6 +165,8 @@ Overheat.update = function (dt, t, inventory_slot_component, weapon_template, un
 	inventory_slot_component.overheat_current_percentage = new_heat
 
 	if inventory_slot_component.overheat_state == "lockout" and new_heat == 0 then
+		Overheat.track_heat_change(inventory_slot_component, "idle", "Overheat.update")
+
 		inventory_slot_component.overheat_state = "idle"
 	end
 end
@@ -165,6 +180,8 @@ end
 
 Overheat.start_venting = function (t, inventory_slot_component, vent_configuration)
 	local vent_interval = vent_configuration.vent_interval
+
+	Overheat.track_heat_change(inventory_slot_component, "decreasing", "Overheat.start_venting")
 
 	inventory_slot_component.overheat_state = "decreasing"
 	inventory_slot_component.overheat_remove_at_t = t + vent_interval
@@ -196,10 +213,14 @@ Overheat.update_venting = function (dt, t, player, inventory_slot_component, ven
 end
 
 Overheat.stop_venting = function (inventory_slot_component)
+	Overheat.track_heat_change(inventory_slot_component, "idle", "Overheat.stop_venting")
+
 	inventory_slot_component.overheat_state = "idle"
 end
 
 Overheat.clear = function (inventory_slot_component)
+	Overheat.track_heat_change(inventory_slot_component, "idle", "Overheat.clear")
+
 	inventory_slot_component.overheat_state = "idle"
 	inventory_slot_component.overheat_last_charge_at_t = 0
 	inventory_slot_component.overheat_remove_at_t = 0
@@ -245,6 +266,57 @@ Overheat.wants_overheat_character_state = function (unit, unit_data_extension)
 	end
 
 	return false, nil
+end
+
+local tracks = {}
+local track_index = 0
+local track_size = 10
+
+Overheat.track_heat_change = function (inventory_slot_component, to_state, source)
+	track_index = math.index_wrapper(track_index + 1, track_size)
+
+	local track = tracks[track_index]
+
+	if not track then
+		track = {
+			"frame: ",
+			"",
+			"from state: ",
+			"",
+			"to state: ",
+			"",
+			"percentage: ",
+			"",
+			"source: ",
+			"",
+		}
+		tracks[track_index] = track
+	end
+
+	local FixedFrame = require("scripts/utilities/fixed_frame")
+
+	track[2] = FixedFrame.get_latest_fixed_frame()
+	track[4] = inventory_slot_component.overheat_state
+	track[6] = to_state or "no state?"
+	track[8] = inventory_slot_component.overheat_current_percentage
+	track[10] = source
+end
+
+Overheat.dump_heat_changes = function ()
+	local dump = {}
+
+	for i = track_index + 1, track_index + track_size do
+		local track = tracks[math.index_wrapper(i, track_size)]
+
+		if track then
+			for track_i = 1, #track, 2 do
+				dump[track_i] = track[track_i]
+				dump[track_i + 1] = string.pad_right(tostring(track[track_i + 1]) .. ", ", 14, " ")
+			end
+
+			Log.info("OverheatDebug", table.concat(dump, ""))
+		end
+	end
 end
 
 return Overheat

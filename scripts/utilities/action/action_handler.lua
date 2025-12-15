@@ -671,10 +671,11 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 end
 
 ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_params, actions, action_objects, action_params)
-	local t = fixed_frame * Managers.state.game_session.fixed_time_step
+	local dt = Managers.state.game_session.fixed_time_step
+	local t = fixed_frame * dt
 	local registered_components = self._registered_components
 	local handler_data = registered_components[id]
-	local action_name, action_settings, used_input, transition_type, automatic_input, reset_combo = self:_check_new_actions(handler_data, actions, condition_func_params, t, action_params)
+	local action_name, action_settings, used_input, transition_type, automatic_input, reset_combo = self:_check_new_actions(handler_data, actions, condition_func_params, t, dt, action_params)
 
 	if action_name and not self._block_actions then
 		if automatic_input then
@@ -758,7 +759,7 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 	return true
 end
 
-ActionHandler._check_chain_actions = function (self, handler_data, current_action_settings, current_action_start_t, current_action_end_t, t, actions, condition_func_params, action_params, template, action_input, used_input)
+ActionHandler._check_chain_actions = function (self, handler_data, current_action_settings, current_action_start_t, current_action_end_t, t, dt, actions, condition_func_params, action_params, template, action_input, used_input)
 	local component = handler_data.component
 	local allowed_chain_actions = current_action_settings.allowed_chain_actions or EMPTY_TABLE
 	local running_action_state_to_action_input = current_action_settings.running_action_state_to_action_input or EMPTY_TABLE
@@ -819,7 +820,7 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 			local func = conditional_state_funcs[conditional_state]
 			local chain_action = allowed_chain_actions[conditional_action_input]
 
-			if chain_action and func(condition_func_params, action_params, remaining_time, t) then
+			if chain_action and func(condition_func_params, action_params, remaining_time, t, dt, current_action_settings, current_action_t) then
 				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 
 				if chain_action_validated then
@@ -964,7 +965,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 	end
 end
 
-ActionHandler._check_new_actions = function (self, handler_data, actions, condition_func_params, t, action_params)
+ActionHandler._check_new_actions = function (self, handler_data, actions, condition_func_params, t, dt, action_params)
 	local running_action = handler_data.running_action
 	local has_running_action = running_action ~= nil
 	local component = handler_data.component
@@ -982,7 +983,7 @@ ActionHandler._check_new_actions = function (self, handler_data, actions, condit
 		local allow_chain_actions = running_action:allow_chain_actions()
 
 		if allow_chain_actions then
-			return self:_check_chain_actions(handler_data, action_settings, start_t, end_t, t, actions, condition_func_params, action_params, template, action_input, used_input)
+			return self:_check_chain_actions(handler_data, action_settings, start_t, end_t, t, dt, actions, condition_func_params, action_params, template, action_input, used_input)
 		end
 	end
 

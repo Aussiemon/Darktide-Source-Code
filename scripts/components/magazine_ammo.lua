@@ -19,6 +19,7 @@ MagazineAmmo.editor_init = function (self, unit)
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
 	self._ammo_offset = ammo_offset < max_ammo and ammo_offset or max_ammo - 1
+	self._show_magazine = true
 	self._unit = unit
 
 	self:_update_ammo_representation(unit, true)
@@ -54,6 +55,7 @@ MagazineAmmo.init = function (self, unit)
 	self._max_ammo = max_ammo
 	self._ammo = math.min(ammo, max_ammo)
 	self._ammo_offset = ammo_offset < max_ammo and ammo_offset or max_ammo - 1
+	self._show_magazine = true
 	self._unit = unit
 
 	self:enable(unit)
@@ -122,10 +124,11 @@ MagazineAmmo._update_ammo_representation = function (self, unit, animate)
 		Unit.set_scalar_for_materials(unit, "ammo_mask", fraction)
 	end
 
+	Unit.set_unit_visibility(unit, self._show_magazine, true)
 	Unit.set_visibility(unit, self._top_bullet_visibility_group_name, remaining_ammo > 0)
 end
 
-MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo)
+MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo, show_magazine)
 	ammo = math.max(0, ammo - 1)
 	max_ammo = math.max(0, max_ammo - 1)
 
@@ -133,8 +136,9 @@ MagazineAmmo.set_ammo = function (self, unit, ammo, max_ammo)
 		self._max_ammo = max_ammo
 	end
 
-	if self._ammo ~= ammo then
+	if self._ammo ~= ammo or self._show_magazine ~= show_magazine then
 		self._ammo = ammo
+		self._show_magazine = show_magazine
 
 		self:_update_ammo_representation(unit, true)
 	end

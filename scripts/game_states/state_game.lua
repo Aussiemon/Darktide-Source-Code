@@ -215,13 +215,14 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
 	local language = Managers.localization:language()
+	local is_modded = tostring(rawget(_G, "Mods") ~= nil)
 
 	Managers.backend = BackendManager:new(function ()
 		return {
 			["request-id"] = math.uuid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
-			["is-modded"] = rawget(_G, "Mods") ~= nil,
+			["is-modded"] = is_modded,
 		}
 	end)
 	Managers.steam = SteamManager:new()

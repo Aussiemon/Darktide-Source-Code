@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_action_handler_data.lua
 
+local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
@@ -645,6 +646,15 @@ weapon_action_data.conditional_state_functions = {
 		if HAS_STEAM and Managers.steam:is_overlay_active() then
 			return true
 		end
+	end,
+	deployable_placed = function (condition_func_params, action_params, remaining_time, t, dt, action_settings, time_in_action)
+		local finish_time = action_settings.total_time
+		local place_time = action_settings.place_time or finish_time
+		local time_scale = condition_func_params.weapon_action_component.time_scale
+		local can_place_t = t - condition_func_params.action_place_component.can_place_time - dt
+		local result = condition_func_params.action_place_component.can_place and ActionUtility.is_within_trigger_time(can_place_t, dt, place_time / time_scale)
+
+		return result
 	end,
 }
 weapon_action_data.action_kind_to_running_action_chain_event = {

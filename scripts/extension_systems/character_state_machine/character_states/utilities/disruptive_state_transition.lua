@@ -12,12 +12,17 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 		local configuration = Overheat.configuration(visual_loadout_extension, slot_name)
 		local explode_action = configuration.explode_action
 
-		next_state_params.slot_name = slot_name
-		next_state_params.reason = "overheat"
-		next_state_params.explode_action = explode_action
-		next_state_params.wield_slot = nil
+		if explode_action then
+			next_state_params.slot_name = slot_name
+			next_state_params.reason = "overheat"
+			next_state_params.explode_action = explode_action
+			next_state_params.wield_slot = nil
 
-		return "exploding"
+			return "exploding"
+		else
+			Overheat.dump_heat_changes()
+			Log.exception("OveheatDebug", "Attempted to enter exploding state without being able to explode. Slot name: %s", slot_name)
+		end
 	end
 
 	local warp_charge_explode = WarpCharge.wants_warp_charge_character_state(unit, unit_data_extension)

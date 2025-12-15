@@ -91,7 +91,7 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 
 	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
 
-	if self._ability_pause_cooldown_setting then
+	if self._ability_pause_cooldown_setting and not self._ability_pause_cooldown_setting.manual_pause then
 		self._ability_extension:pause_cooldown(self._ability_type)
 	end
 end

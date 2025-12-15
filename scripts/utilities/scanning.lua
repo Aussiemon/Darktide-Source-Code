@@ -109,18 +109,17 @@ Scanning.check_line_of_sight_to_unit = function (physics_world, first_person_com
 end
 
 Scanning.find_scannable_unit = function (physics_world, first_person_component, scan_settings)
-	local scannable_units = Managers.state.extension:system("mission_objective_zone_system"):scannable_units()
 	local line_of_sight_unit = Scanning.check_direct_line_of_sight(physics_world, first_person_component, scan_settings.distance.near)
 
 	if line_of_sight_unit then
 		return line_of_sight_unit, true
 	end
 
+	local scannable_units = Managers.state.extension:system("mission_objective_zone_system"):scannable_units()
 	local best_score = -math.huge
 	local best_unit, best_scan_exension
 
-	for i = 1, #scannable_units do
-		local scannable_unit = scannable_units[i]
+	for scannable_unit, _ in pairs(scannable_units) do
 		local scannable_extension = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
 		local is_active = scannable_extension:is_active()
 

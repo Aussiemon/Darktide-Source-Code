@@ -70,9 +70,6 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_start_t_7bit = true,
 	fixed_frame_offset_start_t_9bit = true,
 }
-local track_field_writes = table.set({
-	"overheat_state",
-})
 local script_id_string_32 = Script.id_string_32
 local NETWORK_NAME_ID_TO_FIELD_ID = {}
 local NETWORK_ID_TO_NAME = {}
@@ -559,11 +556,6 @@ local WRITE_META = {
 		local networked_value
 		local data = rawget(t, "__data")
 		local is_server = rawget(t, "__is_server")
-		local track_value_before
-
-		if not is_server and track_field_writes[field_name] then
-			track_value_before = data[rawget(t, "__blackboard").index][field_name]
-		end
 
 		if data_type == "Vector3" or data_type == "Quaternion" then
 			local actual_value
@@ -701,13 +693,6 @@ local WRITE_META = {
 				end
 			end
 		end
-
-		if not is_server and track_field_writes[field_name] and value ~= track_value_before then
-			local write_tracks = rawget(t, "__write_tracks")
-
-			write_tracks[field_name] = write_tracks[field_name] or {}
-			write_tracks[field_name][value ~= nil and value or "nil"] = Script.callstack()
-		end
 	end,
 }
 
@@ -725,7 +710,6 @@ PlayerUnitDataExtension._create_write_component = function (self, component_name
 		__name = component_name,
 		__data_ext = self,
 		__is_server = self._is_server,
-		__write_tracks = {},
 	}
 
 	setmetatable(component, WRITE_META)
@@ -1206,10 +1190,6 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 		end
 
 		if not correct then
-			if track_field_writes[field_name] then
-				mispredict_info("(%i) Mispredict! %s:%s client:%s server:%s", frame_index, component_name, field_name, type(real_simulated_value) == "table" and string.format("{%s}", _concat_table(real_simulated_value, ",")) or tostring(real_simulated_value), type(authoritative_value) == "table" and string.format("{%s}", _concat_table(authoritative_value, ",")) or tostring(authoritative_value))
-			end
-
 			mispredict = true
 
 			telemetry_reporter:register_event(time_since_last_mispredict, component_name, field_name)

@@ -297,6 +297,8 @@ NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_l
 					end
 				end
 			end
+		else
+			return true, step_count
 		end
 	end
 

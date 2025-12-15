@@ -3,9 +3,8 @@
 local Deployables = require("scripts/settings/deployables/deployables")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
-local talent_settings = TalentSettings.broker
-local SETTINGS = talent_settings.combat_ability.stimm_field
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 
 weapon_template.action_inputs = {
@@ -28,15 +27,46 @@ weapon_template.action_inputs = {
 		dont_queue = true,
 		input_sequence = nil,
 	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs,
+			},
+		},
+	},
 }
 weapon_template.action_input_hierarchy = {
 	{
 		input = "ability_pressed",
-		transition = "base",
+		transition = {
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "ability_released",
+				transition = "base",
+			},
+		},
 	},
 	{
 		input = "ability_released",
-		transition = "base",
+		transition = {
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "unwield_to_previous",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "wield",
+		transition = "stay",
 	},
 	{
 		input = "unwield_to_previous",
@@ -44,6 +74,14 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 weapon_template.actions = {
+	action_unwield = {
+		allowed_during_sprint = true,
+		kind = "unwield",
+		start_input = "wield",
+		total_time = 0,
+		uninterruptible = true,
+		allowed_chain_actions = {},
+	},
 	action_wield = {
 		abort_sprint = true,
 		allowed_during_sprint = true,
@@ -62,6 +100,9 @@ weapon_template.actions = {
 			ability_released = {
 				action_name = "action_release",
 			},
+			wield = {
+				action_name = "action_unwield",
+			},
 		},
 	},
 	action_release = {
@@ -69,15 +110,18 @@ weapon_template.actions = {
 		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim_cancel_event = "action_finished",
-		anim_event = "drop",
+		can_drop_anim_event = "drop",
 		kind = "place_deployable",
+		pause_ability_cooldown = true,
+		place_time = 0.54,
 		prevent_sprint = true,
 		remove_item_from_inventory = false,
 		start_input = nil,
-		total_time = 0.54,
+		try_until_placed = true,
 		use_ability_charge = true,
 		use_aim_date = false,
 		vo_tag = "ability_stimm",
+		total_time = math.huge,
 		deployable_settings = Deployables.broker_stimm_field_crate,
 		place_configuration = {
 			allow_aim_upwards_deployment = true,
@@ -85,13 +129,16 @@ weapon_template.actions = {
 			force_place = true,
 		},
 		conditional_state_to_action_input = {
-			action_end = {
+			deployable_placed = {
 				input_name = "unwield_to_previous",
 			},
 		},
 		allowed_chain_actions = {
 			unwield_to_previous = {
 				action_name = "action_unwield_to_previous",
+			},
+			wield = {
+				action_name = "action_unwield",
 			},
 		},
 	},

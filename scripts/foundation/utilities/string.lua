@@ -159,3 +159,35 @@ string.is_snake_case = function (str)
 
 	return true
 end
+
+string.pad_right = function (str, target_length, pad_str, cache)
+	local str_size = #str
+	local pad_size = #pad_str
+
+	if cache then
+		local slack = math.max(0, target_length - str_size)
+		local cached = cache[slack]
+
+		if cached then
+			return str .. cached
+		end
+
+		cache[slack] = string.pad_right("", slack, pad_str)
+
+		return str .. cache[slack]
+	end
+
+	local padding = ""
+
+	for i = str_size + pad_size, target_length, pad_size do
+		padding = padding .. pad_str
+	end
+
+	local rest = (target_length - str_size) % pad_size
+
+	if rest ~= 0 then
+		padding = padding .. string.sub(pad_str, 1, rest)
+	end
+
+	return str .. padding
+end

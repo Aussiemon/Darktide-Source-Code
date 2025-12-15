@@ -149,7 +149,6 @@ end
 
 HudElementOvercharge._update_overheat = function (self, dt)
 	local overheat_level = 0
-	local overheat_state = ""
 	local overheat_configuration
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
@@ -187,7 +186,6 @@ HudElementOvercharge._update_overheat = function (self, dt)
 				local slot_component = player_unit_data_extension:read_component(wanted_slot)
 
 				overheat_level = slot_component.overheat_current_percentage
-				overheat_state = slot_component.overheat_state
 			end
 		end
 	end

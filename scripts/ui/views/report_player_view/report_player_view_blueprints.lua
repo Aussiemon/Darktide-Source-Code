@@ -306,7 +306,7 @@ local blueprints = {
 
 			parent._report_details = content.input_text
 
-			if content.selected_text and not content.is_writing then
+			if PLATFORM ~= "xbs" and PLATFORM ~= "ps5" and content.selected_text and not content.is_writing then
 				content.selected_text = nil
 				content._selection_start = nil
 				content._selection_end = nil

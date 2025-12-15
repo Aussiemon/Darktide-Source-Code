@@ -7693,7 +7693,7 @@ CharacterAppearanceView._handle_input = function (self, input_service)
 		local support_widgets = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name
 
 		if not used_input then
-			local name_input_widget = support_widgets.name_input
+			local name_input_widget = support_widgets and support_widgets.name_input
 
 			if name_input_widget and input_service:get("hotkey_menu_special_2") then
 				self:_randomize_character_name(name_input_widget)
@@ -7701,7 +7701,7 @@ CharacterAppearanceView._handle_input = function (self, input_service)
 		end
 
 		if not used_input then
-			local companion_name_input_widget = support_widgets.companion_name_input
+			local companion_name_input_widget = support_widgets and support_widgets.companion_name_input
 
 			if companion_name_input_widget and input_service:get("hotkey_menu_special_2") then
 				self:_randomize_companion_name(companion_name_input_widget)

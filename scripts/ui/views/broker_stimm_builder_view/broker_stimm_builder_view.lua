@@ -1710,7 +1710,7 @@ BrokerStimmBuilderView.cb_on_help_pressed = function (self)
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_stimm_lab_recipe"),
+				text = Localize("loc_broker_stimm_builder_view_display_name"),
 				style = {
 					font_size = 30,
 				},
@@ -1724,7 +1724,7 @@ BrokerStimmBuilderView.cb_on_help_pressed = function (self)
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_stimm_lab_onboarding_desc_tree"),
+				text = Localize("loc_stimm_lab_onboarding_desc_tree_2"),
 			},
 			{
 				widget_type = "dynamic_spacing",
@@ -1779,10 +1779,9 @@ BrokerStimmBuilderView.cb_on_help_pressed = function (self)
 			},
 			{
 				widget_type = "text",
-				text = Localize("loc_stimm_lab_onboarding_desc_points", true, {
-					volume = 5,
-					min_duration = lerp_cooldown.min,
-					max_duration = lerp_cooldown.max,
+				text = Localize("loc_stimm_lab_onboarding_desc_points_2", true, {
+					amount = 5,
+					level = 5,
 				}),
 			},
 			{

@@ -72,6 +72,8 @@ WeaponSpecialCharging.on_special_deactivation = function (self, t)
 	local overheat_state = self._inventory_slot_component.overheat_state
 
 	if use_overheat_soft_lockout and overheat_state == "soft_lockout" then
+		Overheat.track_heat_change(self._inventory_slot_component, "lockout", "WeaponSpecialCharging:on_special_deactivation")
+
 		self._inventory_slot_component.overheat_state = "lockout"
 	end
 

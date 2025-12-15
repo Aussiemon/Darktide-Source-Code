@@ -7,7 +7,7 @@ local Vo = require("scripts/utilities/vo")
 local proc_events = BuffSettings.proc_events
 local ActionPlaceForceField = class("ActionPlaceForceField", "ActionPlaceBase")
 
-ActionPlaceForceField._calculate_placement_data = function (self)
+ActionPlaceForceField._calculate_placement_data = function (self, t)
 	local owner_unit = self._player_unit
 	local position = POSITION_LOOKUP[owner_unit]
 	local rotation = Unit.local_rotation(owner_unit, 1)
@@ -29,7 +29,9 @@ ActionPlaceForceField._calculate_placement_data = function (self)
 		end
 	end
 
-	return true, position, rotation, unit_hit
+	local can_place_time
+
+	return true, can_place_time, position, rotation, unit_hit
 end
 
 ActionPlaceForceField._place_unit = function (self, action_settings, position, rotation, placed_on_unit)

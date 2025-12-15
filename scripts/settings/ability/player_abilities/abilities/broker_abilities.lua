@@ -103,6 +103,7 @@ local abilities = {
 			"broker",
 		},
 		pause_cooldown_settings = {
+			manual_pause = true,
 			pause_fulfilled_func = function (context, component)
 				if not context.is_server then
 					return not component.cooldown_paused

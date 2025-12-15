@@ -20,6 +20,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
 
 	local unit_components = {}
 	local attachments_1p = slot.attachments_by_unit_1p[unit_1p]
@@ -31,6 +32,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
+				is_first_person = true,
 				unit = attachment_unit,
 				component = component,
 			}
@@ -46,6 +48,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 
 		for _, component in ipairs(components) do
 			unit_components[#unit_components + 1] = {
+				is_first_person = false,
 				unit = attachment_unit,
 				component = component,
 			}
@@ -53,6 +56,7 @@ MagazineAmmo.init = function (self, context, slot, weapon_template, fx_sources, 
 	end
 
 	self._unit_components = unit_components
+	self._show_magazine = true
 end
 
 MagazineAmmo.fixed_update = function (self, unit, dt, t, frame)
@@ -87,6 +91,16 @@ MagazineAmmo.update = function (self, unit, dt, t)
 		if show_magazine_ammo_time <= time_in_action then
 			show_full_magazine = true
 		end
+
+		local show_magazine_time = reload_state.show_magazine_time or 0
+
+		self._show_magazine = show_magazine_time <= time_in_action
+
+		local hide_magazine_time = reload_state.hide_magazine_time
+
+		if hide_magazine_time then
+			self._show_magazine = self._show_magazine and time_in_action < hide_magazine_time[1] or time_in_action >= hide_magazine_time[2]
+		end
 	end
 
 	local ammo_in_magazine
@@ -106,8 +120,9 @@ MagazineAmmo.update = function (self, unit, dt, t)
 
 	for ii = 1, num_components do
 		local display = unit_components[ii]
+		local show_magazine = self._show_magazine and display.is_first_person == (self._first_person_extension and self._first_person_extension:is_in_first_person_mode())
 
-		display.component:set_ammo(display.unit, ammo_in_magazine, max_ammo_clip)
+		display.component:set_ammo(display.unit, ammo_in_magazine, max_ammo_clip, show_magazine)
 	end
 end
 

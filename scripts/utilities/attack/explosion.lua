@@ -149,20 +149,34 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 			end
 
 			if is_valid_target then
-				hit_units[hit_unit] = true
+				local is_unit_within_range = true
+				local hit_distance_squared = Vector3.distance_squared(source_position, Actor.position(hit_actor))
+				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+				local target_breed = unit_data_extension and unit_data_extension:breed() or nil
 
-				if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
-					local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
-					local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
+				if target_breed and Breed.is_player(target_breed) then
+					local breed_broadphase_radius_halved = (target_breed.broadphase_radius or 1) * 0.5
+					local valid_distance_squared = (breed_broadphase_radius_halved + radius) * (breed_broadphase_radius_halved + radius)
 
-					if damage_allowed and has_health then
-						attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
-						attack_units_hit_actors[hit_unit] = hit_actor
-						number_of_attack_units = number_of_attack_units + 1
-						attack_units_array[number_of_attack_units] = hit_unit
+					is_unit_within_range = hit_distance_squared <= valid_distance_squared
+				end
 
-						if optional_hit_units_table then
-							optional_hit_units_table[hit_unit] = true
+				if is_unit_within_range then
+					hit_units[hit_unit] = true
+
+					if hit_unit ~= attacking_unit_owner_unit or friendly_fire_override then
+						local damage_allowed = friendly_fire_override or side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit)
+						local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
+
+						if damage_allowed and has_health then
+							attack_units_distance_sq[hit_unit] = hit_distance_squared
+							attack_units_hit_actors[hit_unit] = hit_actor
+							number_of_attack_units = number_of_attack_units + 1
+							attack_units_array[number_of_attack_units] = hit_unit
+
+							if optional_hit_units_table then
+								optional_hit_units_table[hit_unit] = true
+							end
 						end
 					end
 				end

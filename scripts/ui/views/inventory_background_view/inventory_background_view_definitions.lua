@@ -474,6 +474,13 @@ local legend_inputs = {
 				return true
 			end
 
+			if active_view == "broker_stimm_builder_view" then
+				local view_instance = Managers.ui:view_instance(active_view)
+				local tutorial_overlay = view_instance and view_instance:tutorial_overlay()
+
+				return not tutorial_overlay or not tutorial_overlay:is_active()
+			end
+
 			return false
 		end,
 	},

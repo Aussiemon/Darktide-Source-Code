@@ -154,7 +154,7 @@ local function _remove_text(input_text, selection_start, selection_end, caret_po
 end
 
 local function _input_active_visibility_function(content, style)
-	return content.is_writing
+	return content.is_writing or content.console_is_writing
 end
 
 local function _placeholder_text_visibility_function(content, style)
@@ -177,7 +177,7 @@ local text_input_base = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		change_function = function (hotspot_content, style)
-			if PLATFORM == "xbs" then
+			if PLATFORM == "xbs" or PLATFORM == "ps5" then
 				return
 			end
 
@@ -347,11 +347,11 @@ local text_input_base = {
 					local result, text = PS5ImeDialog.close()
 
 					content.input_text = result == PS5ImeDialog.END_STATUS_OK and text or content.input_text or ""
-					content.caret_position = _utf8_string_length(content.input_text)
+					content.caret_position = _utf8_string_length(content.input_text) + 1
 					content.selected_text = nil
 					content._selection_start = nil
 					content._selection_end = nil
-					content.is_writing = false
+					content.console_is_writing = nil
 				elseif hotspot.on_pressed then
 					local is_writing = not content.is_writing
 
@@ -362,6 +362,13 @@ local text_input_base = {
 						local max_length = content.max_length
 
 						content.selected_text = input_text
+						content._selection_start = 1
+						content.caret_position = _utf8_string_length(input_text) + 1
+						content._selection_end = content.caret_position
+						content.display_text = input_text
+						content._input_text_first_visible_pos = 1
+						content._selection_changed = true
+						content.console_is_writing = true
 
 						local keyboard_options = {
 							title = title,

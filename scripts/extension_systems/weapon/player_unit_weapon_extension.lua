@@ -237,6 +237,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_place.position = Vector3.zero()
 	action_place.rotation = Quaternion.identity()
 	action_place.can_place = false
+	action_place.can_place_time = 0
 	action_place.aiming_place = false
 	action_place.placed_on_unit = nil
 	action_place.rotation_step = 0

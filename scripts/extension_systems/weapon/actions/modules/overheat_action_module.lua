@@ -16,6 +16,8 @@ OverheatActionModule.init = function (self, is_server, player_unit, action_setti
 end
 
 OverheatActionModule.start = function (self, action_settings, t)
+	Overheat.track_heat_change(self._inventory_slot_component, "increasing", "OverheatActionModule:start")
+
 	self._inventory_slot_component.overheat_state = "increasing"
 end
 
@@ -28,6 +30,8 @@ OverheatActionModule.fixed_update = function (self, dt, t)
 end
 
 OverheatActionModule.finish = function (self, reason, data, t)
+	Overheat.track_heat_change(self._inventory_slot_component, "idle", "OverheatActionModule:finish")
+
 	self._inventory_slot_component.overheat_state = "idle"
 end
 
@@ -35,6 +39,8 @@ OverheatActionModule.running_action_state = function (self, t, time_in_action)
 	local current_heat = self._inventory_slot_component.overheat_current_percentage
 
 	if current_heat >= 0.99 then
+		Overheat.track_heat_change(self._inventory_slot_component, "idle", "OverheatActionModule:running_action_state")
+
 		self._inventory_slot_component.overheat_state = "idle"
 
 		return "overheating"

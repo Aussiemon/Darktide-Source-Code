@@ -816,6 +816,7 @@ local PlayerComponentConfig = {
 	action_place = {
 		aiming_place = "bool",
 		can_place = "bool",
+		can_place_time = "fixed_frame_offset",
 		placed_on_unit = "Unit",
 		position = "Vector3",
 		rotation = "Quaternion",

@@ -9,6 +9,7 @@ local reload_template = {
 	},
 	eject_mag = {
 		anim_1p = "reload_start",
+		show_magazine_ammo_time = 1.45,
 		time = 2.31,
 		state_transitions = {
 			cock_weapon = 1.45,
@@ -19,9 +20,14 @@ local reload_template = {
 			refill_ammunition = 1.95,
 			remove_ammunition = 0.333,
 		},
+		hide_magazine_time = {
+			0.333,
+			1.45,
+		},
 	},
 	fit_new_mag = {
 		anim_1p = "reload_middle",
+		show_magazine_ammo_time = 0.8,
 		time = 1.583,
 		state_transitions = {
 			cock_weapon = 0.8,
@@ -30,15 +36,24 @@ local reload_template = {
 		functionality = {
 			refill_ammunition = 1.233,
 		},
+		hide_magazine_time = {
+			0,
+			0.8,
+		},
 	},
 	cock_weapon = {
 		anim_1p = "reload_end",
+		show_magazine_ammo_time = 0,
 		time = 0.58,
 		state_transitions = {
 			eject_mag = 0.3,
 		},
 		functionality = {
 			refill_ammunition = 0.3,
+		},
+		hide_magazine_time = {
+			0,
+			0,
 		},
 	},
 }

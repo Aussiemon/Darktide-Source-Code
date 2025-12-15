@@ -39,6 +39,13 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 		end
 	end
 
+	if action_settings.pause_ability_cooldown then
+		local ability_type = action_settings.ability_type
+		local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
+
+		ability_extension:pause_cooldown(ability_type)
+	end
+
 	local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 
 	if buff_extension then
