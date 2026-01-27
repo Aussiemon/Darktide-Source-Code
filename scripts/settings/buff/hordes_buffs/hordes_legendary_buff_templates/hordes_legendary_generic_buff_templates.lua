@@ -641,7 +641,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 				local world = template_context.world
 
 				if not template_data.on_screen_effect_swing_id then
-					template_data.on_screen_effect_swing_id = World.create_particles(world, VFX_NAMES.enchance_melee_screen_effect, Vector3(0, 0, 1))
+					template_data.on_screen_effect_swing_id = World.create_particles(world, VFX_NAMES.enchance_melee_screen_effect, Vector3(0, 0, 1), nil, nil, template_context.particle_group)
 				end
 
 				if template_data.on_screen_effect_id then
@@ -688,7 +688,7 @@ templates.hordes_buff_boosted_melee_attack_on_cooldown = {
 
 			WwiseWorld.trigger_resource_event(wwise_world, SFX_NAMES.enhanced_swing, template_context.unit)
 
-			template_data.on_screen_effect_id = World.create_particles(world, VFX_NAMES.enchance_melee_screen_effect_less_intense, Vector3(0, 0, 1))
+			template_data.on_screen_effect_id = World.create_particles(world, VFX_NAMES.enchance_melee_screen_effect_less_intense, Vector3(0, 0, 1), nil, nil, template_context.particle_group)
 		end
 	end,
 	stop_func = function (template_data, template_context)

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/unarmed/unarmed_hub_human.lua
 
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local weapon_template = {}
 
 weapon_template.action_inputs = {}
@@ -14,13 +15,28 @@ weapon_template.actions = {
 	},
 }
 weapon_template.breed_anim_state_machine_3p = {
-	human = "content/characters/player/human/third_person/animations/hub_veteran",
-	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
+	human = "content/characters/player/human/third_person/animations/unarmed_hub",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed_hub",
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/unarmed",
 	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
 }
+weapon_template.state_machine_initialization_variables = {}
+
+for archetype_name in pairs(ArchetypeSettings.archetype_names) do
+	weapon_template.state_machine_initialization_variables[archetype_name .. "_active"] = function (unit_3p)
+		local player = Managers.state.player_unit_spawn:owner(unit_3p)
+
+		if player then
+			local profile = player:profile()
+			local archetype = profile.archetype
+
+			return archetype.name == archetype_name and 1 or 0
+		end
+	end
+end
+
 weapon_template.keywords = {
 	"unarmed",
 }

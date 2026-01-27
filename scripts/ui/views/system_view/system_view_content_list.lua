@@ -612,7 +612,7 @@ local default_list = {
 						close_on_pressed = true,
 						text = "loc_popup_button_quit_game",
 						callback = callback(function ()
-							Application.quit()
+							Managers.multiplayer_session:leave("quit_game")
 						end),
 					},
 					{

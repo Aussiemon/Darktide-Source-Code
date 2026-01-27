@@ -6,6 +6,7 @@ local Styles = require("scripts/ui/views/live_events_view/live_events_view_style
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
+local InputDevice = require("scripts/managers/input/input_device")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -120,6 +121,20 @@ local scenegraph_definition = {
 			Styles.sizes.reward_icon_size[2],
 		},
 	},
+	reward_tooltip = {
+		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "top",
+		position = {
+			0,
+			0,
+			100,
+		},
+		size = {
+			1,
+			1,
+		},
+	},
 }
 local entry_base = UIWidget.create_definition({
 	{
@@ -198,6 +213,18 @@ local entry_base = UIWidget.create_definition({
 	},
 }, "entries_anchor")
 
+local function _reward_elements_change_function(content, style, dt, animations)
+	local hotspot = content.hotspot or content.parent.hotspot
+
+	if hotspot.is_hover then
+		style.color = style.hover_color
+	elseif InputDevice.gamepad_active and hotspot.is_selected then
+		style.color = style.selected_color
+	else
+		style.color = style.default_color
+	end
+end
+
 local function create_reward_widget(scenegraph_id, reward, tier_index, reward_index)
 	local reward_type = reward.type
 	local amount = reward.amount
@@ -212,6 +239,15 @@ local function create_reward_widget(scenegraph_id, reward, tier_index, reward_in
 		value = "content/ui/materials/frames/frame_tile_2px",
 		value_id = "frame",
 		style = Styles.reward.frame,
+		change_function = _reward_elements_change_function,
+	}
+	local reward_corner_frame_pass = {
+		pass_type = "texture",
+		style_id = "frameframe_corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		value_id = "frame_corner",
+		style = Styles.reward.frame_corner,
+		change_function = _reward_elements_change_function,
 	}
 	local reward_background_pass = {
 		pass_type = "texture",
@@ -220,9 +256,17 @@ local function create_reward_widget(scenegraph_id, reward, tier_index, reward_in
 		value_id = "background",
 		style = Styles.reward.background,
 	}
+	local reward_hotspot_pass = {
+		content_id = "hotspot",
+		pass_type = "hotspot",
+		style_id = "hotspot",
+		style = Styles.reward.hotspot,
+	}
 
 	passes[#passes + 1] = reward_frame_pass
 	passes[#passes + 1] = reward_background_pass
+	passes[#passes + 1] = reward_hotspot_pass
+	passes[#passes + 1] = reward_corner_frame_pass
 
 	if reward_type == "currency" then
 		local reward_icon_pass = {
@@ -264,6 +308,58 @@ local event_progress_bar_content_override = {
 	bar_length = scenegraph_definition.event_progress_bar.size[1],
 }
 local event_progress_bar = UIWidget.create_definition(BarPassTemplates.experience_bar, "event_progress_bar", event_progress_bar_content_override)
+local reward_info_tooltip = UIWidget.create_definition({
+	{
+		pass_type = "texture",
+		style_id = "item_info_upper",
+		value = "content/ui/materials/frames/item_info_upper",
+		value_id = "item_info_upper",
+		style = Styles.tooltip.item_info_upper,
+	},
+	{
+		pass_type = "texture",
+		style_id = "item_info_lower",
+		value = "content/ui/materials/frames/item_info_lower",
+		value_id = "item_info_lower",
+		style = Styles.tooltip.item_info_lower,
+	},
+	{
+		pass_type = "text",
+		style_id = "reward_tooltip_type",
+		value_id = "reward_tooltip_type",
+		style = Styles.tooltip.reward_tooltip_type,
+	},
+	{
+		pass_type = "text",
+		style_id = "reward_tooltip_info",
+		value_id = "reward_tooltip_info",
+		style = Styles.tooltip.reward_tooltip_info,
+	},
+	{
+		pass_type = "text",
+		style_id = "reward_tooltip_rarity",
+		value_id = "reward_tooltip_rarity",
+		style = Styles.tooltip.reward_tooltip_rarity,
+	},
+	{
+		pass_type = "text",
+		style_id = "reward_tooltip_target_xp",
+		value_id = "reward_tooltip_target_xp",
+		style = Styles.tooltip.reward_tooltip_target_xp,
+	},
+	{
+		pass_type = "rect",
+		style_id = "background_rect",
+		style = Styles.tooltip.background_rect,
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/terminal_basic",
+		value_id = "background",
+		style = Styles.tooltip.reward_tooltip_background,
+	},
+}, "reward_tooltip")
 local widget_definitions = {
 	entry_base = entry_base,
 	event_progress_bar = event_progress_bar,
@@ -275,6 +371,7 @@ local widget_definitions = {
 			style = Styles.event_progress_bar.progress_text,
 		},
 	}, "event_progress_bar"),
+	reward_info_tooltip = reward_info_tooltip,
 }
 
 return {

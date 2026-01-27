@@ -61,6 +61,7 @@ TagQueryLoader.init = function (self, tagquery_database, dialogue_templates_dest
 		end,
 	}
 	self.tagquery_database = tagquery_database
+	self.loaded_files = Script.new_map(32)
 end
 
 TagQueryLoader.invalid_rules_from_group = function (self, rule_group_name)
@@ -162,7 +163,9 @@ TagQueryLoader.try_remove_invalid_rules_from_group = function (self, rule_group_
 end
 
 TagQueryLoader.load_file = function (self, filename, rule_group_name)
-	local file_function = require(filename)
+	local file_function = dofile(filename)
+
+	self.loaded_files[filename] = true
 
 	setfenv(file_function, self.file_environment)
 
@@ -180,24 +183,11 @@ TagQueryLoader.load_file = function (self, filename, rule_group_name)
 end
 
 TagQueryLoader.unload_file = function (self, filename, rule_group_name)
-	if package.loaded[filename] then
+	if self.loaded_files[filename] then
+		self.loaded_files[filename] = nil
+
 		local num_rules_before = self.tagquery_database:num_rules()
-		local load_order = package.load_order
-		local n_load_order = #load_order
-		local found_file
-
-		for i = n_load_order, 1, -1 do
-			if load_order[i] == filename then
-				found_file = true
-				package.loaded[filename] = nil
-
-				table.remove(load_order, i)
-
-				break
-			end
-		end
-
-		local file_function = require(filename)
+		local file_function = dofile(filename)
 
 		setfenv(file_function, self.unload_file_environment)
 		file_function()

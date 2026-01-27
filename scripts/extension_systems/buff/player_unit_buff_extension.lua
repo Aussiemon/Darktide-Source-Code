@@ -23,10 +23,6 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 	self._buff_component = buff_component
 	self._on_screen_effects = {}
 	self._active_effect_templates = {}
-
-	local buff_context = self._buff_context
-
-	buff_context.player = extension_init_data.player
 	self._max_component_buffs = MAX_COMPONENT_BUFFS
 	self._component_buffs = Script.new_array(MAX_COMPONENT_BUFFS)
 	self._fx_system = Managers.state.extension:system("fx_system")
@@ -791,7 +787,7 @@ PlayerUnitBuffExtension.start_on_screen_effect = function (self, index, on_scree
 	end
 
 	local on_screen_effects = self._on_screen_effects[index]
-	local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
+	local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1), nil, nil, self._particle_group)
 
 	on_screen_effects[#on_screen_effects + 1] = {
 		particle_id = on_screen_effect_id,

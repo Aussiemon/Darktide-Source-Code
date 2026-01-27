@@ -145,8 +145,46 @@ local hit_stickyness_settings_heavy = {
 		instances = 1,
 		damage_profile = DamageProfileTemplates.saw_heavy_sticky_rip,
 		damage_type = damage_types.saw_rip_heavy,
-		damage_profile_special_active = DamageProfileTemplates.saw_heavy_sticky_ap_rip,
-		damage_type_special_active = damage_types.saw_rip_heavy,
+	},
+	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
+	movement_curve = {
+		{
+			modifier = 0.3,
+			t = 0.5,
+		},
+		{
+			modifier = 0.45,
+			t = 0.55,
+		},
+		{
+			modifier = 0.65,
+			t = 0.6,
+		},
+		{
+			modifier = 0.7,
+			t = 1,
+		},
+		{
+			modifier = 1,
+			t = 1.3,
+		},
+		start_modifier = 0.15,
+	},
+}
+local hit_stickyness_settings_heavy_ap = {
+	always_sticky = true,
+	disable_vertical_force_view = true,
+	disallow_chain_actions = true,
+	disallow_dodging = false,
+	dodge_stamina_drain_percentage = 0.35,
+	duration = 0.425,
+	sensitivity_modifier = 0.1,
+	start_anim_event = "attack_hit_stick",
+	stop_anim_event = "yank_out",
+	damage = {
+		instances = 1,
+		damage_profile = DamageProfileTemplates.saw_heavy_sticky_ap_rip,
+		damage_type = damage_types.saw_rip_heavy,
 	},
 	disallowed_hit_zones = melee_sticky_disallowed_hit_zones,
 	movement_curve = {
@@ -448,6 +486,7 @@ weapon_template.actions = {
 			},
 		},
 		hit_stickyness_settings = hit_stickyness_settings_heavy,
+		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_ap,
 		damage_profile = DamageProfileTemplates.saw_heavy_sticky,
 		damage_type = damage_types.saw_heavy,
 		damage_profile_special_active = DamageProfileTemplates.saw_heavy_sticky_ap,
@@ -1507,6 +1546,7 @@ weapon_template.actions = {
 			},
 		},
 		hit_stickyness_settings = hit_stickyness_settings_heavy,
+		hit_stickyness_settings_special_active = hit_stickyness_settings_heavy_ap,
 		damage_profile = DamageProfileTemplates.saw_heavy_sticky,
 		damage_type = damage_types.saw_heavy,
 		damage_profile_special_active = DamageProfileTemplates.saw_heavy_sticky_ap,

@@ -142,6 +142,7 @@ end
 
 MissionObjectiveZoneScanExtension.set_scanned = function (self, scannable_extension, player)
 	scannable_extension:set_active(false)
+	Managers.stats:record_private("hook_scan", player)
 
 	self._current_progression = self._current_progression + 1
 

@@ -402,7 +402,7 @@ ProcBuff._start_proc_active_fx = function (self)
 			local on_screen_effect = player_effects.on_screen_effect
 
 			if on_screen_effect then
-				local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
+				local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1), nil, nil, template_context.particle_group)
 				local stop_type = "destroy"
 
 				table.insert(active_vfx, {

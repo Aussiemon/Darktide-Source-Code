@@ -59,6 +59,14 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		breed = extension_init_data.breed,
 		fixed_time_step = Managers.state.game_session.fixed_time_step,
 	}
+
+	if GameParameters.destroy_unmanaged_particles then
+		local particle_group = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
+
+		self._buff_context.particle_group = particle_group
+		self._particle_group = particle_group
+	end
+
 	self._index = 0
 	self._buffs = {}
 	self._muted_external_buffs = {}
@@ -1025,7 +1033,7 @@ BuffExtensionBase._start_node_effects = function (self, template_name, node_effe
 				local active_node_vfx = active_node_vfx_effects[node_index]
 
 				if not active_node_vfx[particle_effect] then
-					local effect_id = World.create_particles(world, particle_effect, node_position)
+					local effect_id = World.create_particles(world, particle_effect, node_position, nil, nil, buff_context.particle_group)
 
 					if vfx.material_emission then
 						local mesh_name_or_nil = vfx.emission_mesh_name

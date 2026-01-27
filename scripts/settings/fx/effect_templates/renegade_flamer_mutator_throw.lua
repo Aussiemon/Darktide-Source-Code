@@ -21,7 +21,7 @@ local function _start_effect(unit, position, node, template_data, template_conte
 
 	for i = 1, #VFX do
 		local fx_name = VFX[i]
-		local vfx_particle_id = World.create_particles(world, fx_name, position, Quaternion.identity())
+		local vfx_particle_id = World.create_particles(world, fx_name, position, Quaternion.identity(), nil, template_data.particle_group)
 
 		World.link_particles(world, vfx_particle_id, unit, node, Matrix4x4.identity(), "stop")
 		table.insert(template_data.vfx_particle_ids, vfx_particle_id)

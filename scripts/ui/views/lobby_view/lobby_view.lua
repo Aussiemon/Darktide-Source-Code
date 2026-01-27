@@ -1385,7 +1385,7 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 							local profile = slot.player:profile()
 
-							CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
+							CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents, true)
 
 							local loadout_id = talent_widget.content.loadout_id
 							local loadout = class_loadout[loadout_id]
@@ -1655,7 +1655,7 @@ LobbyView._check_loadout_changes = function (self)
 				end
 			end
 
-			CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents)
+			CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents, true)
 
 			if not table.is_empty(spawn_slot.talent_widgets) then
 				for f = 1, #spawn_slot.talent_widgets do

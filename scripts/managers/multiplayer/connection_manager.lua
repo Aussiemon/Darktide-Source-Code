@@ -2,6 +2,7 @@
 
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
 local NetworkTableCacheConfig = require("scripts/settings/network/network_table_cache_config")
+local QoSConfigs = require("scripts/settings/network/qos_configs")
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManager = class("ConnectionManager")
 
@@ -775,6 +776,14 @@ ConnectionManager._initialize_network = function (self)
 	Log.info("ConnectionManager", "Setting ping timeout to %f", pong_timeout)
 	Network.set_pong_timeout(pong_timeout)
 	require("scripts/network_lookup/network_constants")
+
+	if GameParameters.qos_config ~= "" then
+		local qos_config = QoSConfigs[GameParameters.qos_config]
+
+		if qos_config then
+			Network.set_qos_config(qos_config)
+		end
+	end
 
 	if GameParameters.testify then
 		ConnectionManagerTestify.register_testify_connection_events(self)

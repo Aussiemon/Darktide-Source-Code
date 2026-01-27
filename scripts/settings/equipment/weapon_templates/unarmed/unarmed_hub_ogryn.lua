@@ -14,8 +14,8 @@ weapon_template.actions = {
 	},
 }
 weapon_template.breed_anim_state_machine_3p = {
-	human = "content/characters/player/human/third_person/animations/unarmed",
-	ogryn = "content/characters/player/ogryn/third_person/animations/hub_ogryn",
+	human = "content/characters/player/human/third_person/animations/unarmed_hub",
+	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed_hub",
 }
 weapon_template.breed_anim_state_machine_1p = {
 	human = "content/characters/player/human/first_person/animations/unarmed",

@@ -2,6 +2,7 @@
 
 require("scripts/foundation/utilities/color")
 
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Styles = {}
 local sizes = {
 	entry_width = 1420,
@@ -25,6 +26,10 @@ local sizes = {
 	event_button_size = {
 		380,
 		50,
+	},
+	tooltip_size = {
+		400,
+		120,
 	},
 }
 local spacing = {
@@ -222,6 +227,16 @@ Styles.reward.background = {
 	},
 	color = Color.black(225, true),
 }
+Styles.reward.hotspot = {
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
+	size = sizes.reward_size,
+	offset = {
+		0,
+		0,
+		11,
+	},
+}
 Styles.reward.frame = {
 	horizontal_alignment = "left",
 	size = sizes.reward_size,
@@ -231,6 +246,22 @@ Styles.reward.frame = {
 		11,
 	},
 	color = Color.terminal_frame(255, true),
+	default_color = Color.terminal_frame(255, true),
+	hover_color = Color.terminal_frame_hover(255, true),
+	selected_color = Color.terminal_frame_selected(255, true),
+}
+Styles.reward.frame_corner = {
+	horizontal_alignment = "left",
+	size = sizes.reward_size,
+	offset = {
+		0,
+		0,
+		12,
+	},
+	color = Color.terminal_corner(255, true),
+	hover_color = Color.terminal_corner_hover(255, true),
+	selected_color = Color.terminal_corner_selected(255, true),
+	default_color = Color.terminal_corner(255, true),
 }
 Styles.reward.icon = {
 	horizontal_alignment = "left",
@@ -365,6 +396,139 @@ Styles.event_progress_bar.frame = {
 		0,
 		0,
 		2,
+	},
+}
+Styles.tooltip = {}
+Styles.tooltip.background_rect = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	size = sizes.tooltip_size,
+	color = Color.terminal_background(185, true),
+	offset = {
+		0,
+		0,
+		-2,
+	},
+	size_addition = {
+		-2,
+		-2,
+	},
+}
+Styles.tooltip.reward_tooltip_background = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "center",
+	size = sizes.tooltip_size,
+	color = Color.terminal_grid_background(nil, true),
+	offset = {
+		0,
+		0,
+		-1,
+	},
+	size_addition = {
+		20,
+		26,
+	},
+}
+Styles.tooltip.item_info_upper = {
+	horizontal_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		424,
+		28.8,
+	},
+	color = Color.white(255, true),
+	offset = {
+		0,
+		-(sizes.tooltip_size[2] * 0.5),
+		0,
+	},
+}
+Styles.tooltip.item_info_lower = {
+	horizontal_alignment = "center",
+	vertical_alignment = "center",
+	size = {
+		424,
+		28.8,
+	},
+	color = Color.white(255, true),
+	offset = {
+		0,
+		sizes.tooltip_size[2] * 0.5,
+		0,
+	},
+}
+Styles.tooltip.reward_tooltip_type = {
+	font_size = 20,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = Color.white(255, true),
+	offset = {
+		10,
+		-(sizes.tooltip_size[2] * 0.5) + 20,
+		2,
+	},
+	size = {
+		380,
+		20,
+	},
+}
+Styles.tooltip.reward_tooltip_info = {
+	font_size = 18,
+	font_type = "proxima_nova_medium",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = Color.white(255, true),
+	offset = {
+		10,
+		-(sizes.tooltip_size[2] * 0.5) + 46,
+		2,
+	},
+	size = {
+		380,
+		20,
+	},
+}
+Styles.tooltip.reward_tooltip_rarity = {
+	font_size = 18,
+	font_type = "proxima_nova_medium",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = Color.white(255, true),
+	offset = {
+		10,
+		8,
+		2,
+	},
+	size = {
+		380,
+		20,
+	},
+}
+Styles.tooltip.reward_tooltip_target_xp = {
+	font_size = 20,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "center",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		10,
+		32,
+		2,
+	},
+	size = {
+		380,
+		20,
 	},
 }
 Styles.sizes = sizes

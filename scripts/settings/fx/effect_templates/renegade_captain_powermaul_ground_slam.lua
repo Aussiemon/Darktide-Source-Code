@@ -11,7 +11,7 @@ local resources = {
 
 local function _start_vfx(unit, position, node, template_data, template_context)
 	local world = template_context.world
-	local vfx_particle_id = World.create_particles(world, VFX, position, Quaternion.identity())
+	local vfx_particle_id = World.create_particles(world, VFX, position, Quaternion.identity(), nil, template_data.particle_group)
 
 	World.link_particles(world, vfx_particle_id, unit, node, Matrix4x4.identity(), "stop")
 

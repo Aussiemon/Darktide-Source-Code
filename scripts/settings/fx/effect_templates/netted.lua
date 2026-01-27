@@ -19,7 +19,7 @@ local effect_template = {
 
 		local node_index = Unit_node(unit, NODE_NAME)
 		local node_position = Unit_world_position(unit, node_index)
-		local effect_id = World.create_particles(world, VFX, node_position)
+		local effect_id = World.create_particles(world, VFX, node_position, nil, nil, template_data.particle_group)
 		local orphaned_policy = "destroy"
 
 		World.link_particles(world, effect_id, unit, node_index, Matrix4x4.identity(), orphaned_policy)

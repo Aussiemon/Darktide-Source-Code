@@ -39,6 +39,12 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 		is_server = extension_init_data.is_local_unit,
 	}
 
+	if GameParameters.destroy_unmanaged_particles then
+		local player_particle_group = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
+
+		self._equipped_ability_effect_scripts_context.player_particle_group_id = player_particle_group
+	end
+
 	self:_read_game_object(game_session, game_object_id)
 
 	self._last_read_t = 0

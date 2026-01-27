@@ -44,6 +44,14 @@ TelemetryEvents.init = function (self, telemetry_manager, connection_manager)
 
 	self._context = {}
 
+	if DEDICATED_SERVER then
+		if self._connection_manager:is_dedicated_mission_server() then
+			self._context.host_type = "mission_server"
+		else
+			self._context.host_type = "hub_server"
+		end
+	end
+
 	self:game_startup()
 end
 
@@ -140,6 +148,9 @@ end
 TelemetryEvents.game_startup = function (self)
 	local event = self:_create_event("game_startup")
 
+	event:set_data({
+		host_type = self._context.host_type,
+	})
 	self._manager:register_event(event)
 end
 

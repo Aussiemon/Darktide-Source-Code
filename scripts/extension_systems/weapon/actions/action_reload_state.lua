@@ -56,7 +56,6 @@ end
 ActionReloadState._start_reload_state = function (self, reload_template, inventory_slot_component, action_reload_component, t)
 	action_reload_component.has_refilled_ammunition = false
 	action_reload_component.has_removed_ammunition = false
-	action_reload_component.has_cleared_overheat = false
 
 	local wielded_slot = self._inventory_component.wielded_slot
 	local condition_func_params = self._weapon_extension:condition_func_params(wielded_slot)
@@ -94,7 +93,6 @@ ActionReloadState._update_functionality = function (self, reload_state, time_in_
 	local action_reload_component = self._action_reload_component
 	local has_refilled_ammunition = action_reload_component.has_refilled_ammunition
 	local has_removed_ammunition = action_reload_component.has_removed_ammunition
-	local has_cleared_overheat = action_reload_component.has_cleared_overheat
 
 	for functionality, time in pairs(reload_state.functionality) do
 		if time_in_action >= time / time_scale then
@@ -116,7 +114,7 @@ ActionReloadState._update_functionality = function (self, reload_state, time_in_
 				ReloadStates.reload(inventory_slot_component)
 
 				action_reload_component.has_refilled_ammunition = true
-			elseif functionality == "clear_overheat" and not has_cleared_overheat then
+			elseif functionality == "clear_overheat" and dt > 0 then
 				local remove_percentage = dt * (reload_state.overheat_clear_speed or 1)
 
 				Overheat.decrease_immediate(remove_percentage, inventory_slot_component)

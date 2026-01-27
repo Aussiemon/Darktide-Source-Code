@@ -113,6 +113,9 @@ local ErrorCodesLookup = {
 	transport_error = {
 		code = 2020,
 	},
+	remote_aborted = {
+		code = 2021,
+	},
 	no_references = {
 		code = 2099,
 	},

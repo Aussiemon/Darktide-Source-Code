@@ -201,6 +201,11 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	aquilas_background_top = {
+		horizontal_alignment = "center",
+		parent = "aquilas_background",
+		vertical_alignment = "top",
+	},
 	grid_aquilas_content = {
 		horizontal_alignment = "center",
 		parent = "grid_aquilas_pivot",
@@ -271,10 +276,10 @@ local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
 
 required_aquilas_title_style.font_size = 40
 required_aquilas_title_style.text_horizontal_alignment = "center"
-required_aquilas_title_style.text_vertical_alignment = "top"
+required_aquilas_title_style.text_vertical_alignment = "center"
 required_aquilas_title_style.offset = {
 	0,
-	-55,
+	-45,
 	2,
 }
 
@@ -345,13 +350,6 @@ local widget_definitions = {
 			},
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value_id = "",
-			style = required_aquilas_title_style,
-			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button")),
-		},
-		{
 			pass_type = "texture",
 			style_id = "top",
 			value = "content/ui/materials/frames/premium_store/currency_upper",
@@ -390,6 +388,17 @@ local widget_definitions = {
 			},
 		},
 	}, "aquilas_background", {
+		visible = true,
+	}),
+	page_title_text = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "title",
+			value_id = "",
+			style = required_aquilas_title_style,
+			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button")),
+		},
+	}, "aquilas_background_top", {
 		visible = true,
 	}),
 	grid_interaction = UIWidget.create_definition({

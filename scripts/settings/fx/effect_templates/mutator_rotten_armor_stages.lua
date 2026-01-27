@@ -97,7 +97,7 @@ function _create_particles(template_data, template_context, index)
 		node_index = 1
 	end
 
-	local effect_id = World.create_particles(world, VFX[template_data.current_damage_index], unit_position)
+	local effect_id = World.create_particles(world, VFX[template_data.current_damage_index], unit_position, nil, nil, template_data.particle_group)
 	local orphaned_policy = "destroy"
 
 	World.link_particles(world, effect_id, unit, node_index, Matrix4x4.identity(), orphaned_policy)

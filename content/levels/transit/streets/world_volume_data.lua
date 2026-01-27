@@ -1018,6 +1018,54 @@ local volume_data = {
 	},
 	{
 		height = 2,
+		name = "volume_navexclusive",
+		type = "core/gwnav/volumes/gwnavexclusivetagvolume",
+		alt_max_vector = {
+			185.75,
+			-2.5,
+			-7.125,
+		},
+		alt_min_vector = {
+			185.75,
+			-2.5,
+			-9.125,
+		},
+		bottom_points = {
+			{
+				186.625,
+				-4,
+				-9.125,
+			},
+			{
+				186.625,
+				-1,
+				-9.125,
+			},
+			{
+				185.25,
+				-1,
+				-9.125,
+			},
+			{
+				185.25,
+				-4,
+				-9.125,
+			},
+		},
+		color = {
+			255,
+			255,
+			0,
+			0,
+		},
+		up_vector = {
+			0,
+			0,
+			1,
+		},
+	},
+	{
+		height = 2,
 		name = "volume_blocker_streets_003",
 		type = "content/volume_types/player_mover_blocker",
 		alt_max_vector = {

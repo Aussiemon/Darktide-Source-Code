@@ -8,7 +8,9 @@ local broker_stimms = {
 	lore = "loc_broker_stimms_description_lore",
 	name = "loc_broker_stimms_name",
 	stat = "broker_stimms_points_acquired",
-	item_rewards = {},
+	item_rewards = {
+		"content/items/2d/insignias/insignia_event_stimms",
+	},
 }
 
 return broker_stimms

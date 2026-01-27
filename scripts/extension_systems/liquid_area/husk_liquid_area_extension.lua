@@ -17,6 +17,7 @@ HuskLiquidAreaExtension.init = function (self, extension_init_context, unit, ext
 	self._traverse_logic = extension_init_context.traverse_logic
 	self._unit = unit
 	self._flow = {}
+	self._particle_group = World.create_particle_group(world)
 
 	local template = extension_init_data.template
 
@@ -51,7 +52,13 @@ HuskLiquidAreaExtension.init = function (self, extension_init_context, unit, ext
 	local additional_unit_vfx = template.additional_unit_vfx
 
 	if additional_unit_vfx then
-		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, position, Quaternion.identity())
+		local particle_group
+
+		if GameParameters.destroy_unmanaged_particles then
+			particle_group = self._particle_group
+		end
+
+		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, position, Quaternion.identity(), nil, particle_group)
 	end
 
 	self._area_template_name = template.name
@@ -105,6 +112,7 @@ HuskLiquidAreaExtension.destroy = function (self)
 	end
 
 	self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(CLIENT_RPCS))
+	World.destroy_particle_group(world, self._particle_group)
 end
 
 HuskLiquidAreaExtension.update = function (self, unit, dt, t, context, listener_position_or_nil)
@@ -193,7 +201,13 @@ HuskLiquidAreaExtension._add_liquid = function (self, unit_position, real_index,
 	local vfx_name_rim = self._vfx_name_rim
 
 	if vfx_name_rim then
-		rim_particle_id = World.create_particles(self._world, vfx_name_rim, position, rotation)
+		local particle_group
+
+		if GameParameters.destroy_unmanaged_particles then
+			particle_group = self._particle_group
+		end
+
+		rim_particle_id = World.create_particles(self._world, vfx_name_rim, position, rotation, nil, particle_group)
 	end
 
 	self._flow[real_index] = {
@@ -274,7 +288,13 @@ HuskLiquidAreaExtension._set_liquid_filled = function (self, real_index)
 			if self._drawer then
 				liquid.filled_particle_id = self._drawer:add_cell(position, rotation)
 			else
-				liquid.filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+				local particle_group
+
+				if GameParameters.destroy_unmanaged_particles then
+					particle_group = self._particle_group
+				end
+
+				liquid.filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation, nil, particle_group)
 			end
 		else
 			liquid.filled_particle_id = nil

@@ -49,7 +49,7 @@ local effect_template = {
 
 		local screen_effect_distortion_settings = AMBIENCE_SETTINGS.screen_effect_distortion
 		local screen_distortion_particle_effect = screen_effect_distortion_settings.particle_effect
-		local screen_effect_distortion_id = World.create_particles(world, screen_distortion_particle_effect, Vector3(0, 0, 1))
+		local screen_effect_distortion_id = World.create_particles(world, screen_distortion_particle_effect, Vector3(0, 0, 1), nil, nil, template_data.particle_group)
 
 		template_data.screen_effect_distortion_id = screen_effect_distortion_id
 
@@ -62,7 +62,7 @@ local effect_template = {
 		local fog_particle_effect = fog_settings.particle_effect
 		local position = Unit.world_position(unit, 1)
 		local fog_position = position + Vector3.up()
-		local fog_effect_id = World.create_particles(world, fog_particle_effect, fog_position)
+		local fog_effect_id = World.create_particles(world, fog_particle_effect, fog_position, nil, nil, template_data.particle_group)
 
 		template_data.fog_effect_id = fog_effect_id
 		template_data.intensity_sin_value = 0
@@ -79,7 +79,7 @@ local effect_template = {
 
 		if screen_effect_frost_settings then
 			local screen_effect_frost_particle_effect = screen_effect_frost_settings.particle_effect
-			local screen_effect_frost_id = World.create_particles(world, screen_effect_frost_particle_effect, Vector3(0, 0, 1))
+			local screen_effect_frost_id = World.create_particles(world, screen_effect_frost_particle_effect, Vector3(0, 0, 1), nil, nil, template_data.particle_group)
 
 			template_data.screen_effect_frost_id = screen_effect_frost_id
 			template_data.screen_frost_intensity = 0

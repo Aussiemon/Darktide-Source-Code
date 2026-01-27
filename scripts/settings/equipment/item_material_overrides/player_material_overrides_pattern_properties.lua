@@ -353,70 +353,70 @@ local material_overrides = {
 	},
 	pattern_02_tiling_11 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				11,
 			},
 		},
 	},
 	pattern_02_tiling_12 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				12,
 			},
 		},
 	},
 	pattern_02_tiling_13 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				13,
 			},
 		},
 	},
 	pattern_02_tiling_14 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				14,
 			},
 		},
 	},
 	pattern_02_tiling_15 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				15,
 			},
 		},
 	},
 	pattern_02_tiling_16 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				16,
 			},
 		},
 	},
 	pattern_02_tiling_17 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				17,
 			},
 		},
 	},
 	pattern_02_tiling_18 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				18,
 			},
 		},
 	},
 	pattern_02_tiling_19 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				19,
 			},
 		},
 	},
 	pattern_02_tiling_20 = {
 		property_overrides = {
-			pattern_1_tiling = {
+			pattern_2_tiling = {
 				20,
 			},
 		},

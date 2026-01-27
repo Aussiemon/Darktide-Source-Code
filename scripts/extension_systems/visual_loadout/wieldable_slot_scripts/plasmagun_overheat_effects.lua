@@ -29,6 +29,11 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._slot = slot
 	self._world = context.world
 	self._wwise_world = wwise_world
+
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	self._fx_extension = fx_extension
 	self._visual_loadout_extension = visual_loadout_extension
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
@@ -98,7 +103,7 @@ PlasmagunOverheatEffects._update_vfx = function (self, overheat_configuration, o
 			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_VFX_ALIAS, _vfx_external_properties)
 
 			if resolved then
-				local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+				local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 				World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 
@@ -193,7 +198,7 @@ PlasmagunOverheatEffects._update_screenspace = function (self, overheat_percenta
 	local low_threshold = overheat_configuration.thresholds.low
 
 	if self._is_local_unit and not self._on_screen_effect_id and low_threshold < overheat_percentage then
-		self._on_screen_effect_id = World.create_particles(self._world, self._on_screen_effect, Vector3(0, 0, 1))
+		self._on_screen_effect_id = World.create_particles(self._world, self._on_screen_effect, Vector3(0, 0, 1), nil, nil, self._particle_group_id)
 	elseif self._on_screen_effect_id and overheat_percentage <= low_threshold then
 		World.destroy_particles(self._world, self._on_screen_effect_id)
 

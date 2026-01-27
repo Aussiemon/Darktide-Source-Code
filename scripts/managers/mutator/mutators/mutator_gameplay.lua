@@ -14,7 +14,7 @@ local CLIENT_RPCS = {
 MutatorGameplay.init = function (self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
 	MutatorGameplay.super.init(self, is_server, network_event_delegate, mutator_template, nav_world, world, level_seed)
 
-	self._gameplay_levels = {}
+	self._gameplay_instance_keys = {}
 	self._gameplay_instances = {}
 	self._gameplay_module = require(self._template.gameplay_template.path)
 	self._notifications = self._template.gameplay_template.settings.notifications
@@ -38,6 +38,10 @@ MutatorGameplay.activate = function (self)
 	Managers.event:register(self, "mutator_gameplay_start_module", "_on_event_mutator_gameplay_start_module")
 	Managers.event:register(self, "mutator_gameplay_stop_module", "_on_event_mutator_gameplay_stop_module")
 	Managers.event:register(self, "mutator_pickup_collected", "_on_event_mutator_pickup_collected")
+
+	if self._template.gameplay_template.start_module_on_activate then
+		self:_on_event_mutator_gameplay_start_module(self._world)
+	end
 end
 
 MutatorGameplay.deactivate = function (self)
@@ -56,8 +60,8 @@ MutatorGameplay.deactivate = function (self)
 	Managers.event:unregister(self, "mutator_gameplay_stop_module")
 	Managers.event:unregister(self, "mutator_pickup_collected")
 
-	for i = 1, #self._gameplay_levels do
-		local instance, is_valid = self:gameplay_instance(self._gameplay_levels[i])
+	for i = 1, #self._gameplay_instance_keys do
+		local instance, is_valid = self:gameplay_instance(self._gameplay_instance_keys[i])
 
 		if is_valid then
 			instance:delete()
@@ -65,12 +69,12 @@ MutatorGameplay.deactivate = function (self)
 	end
 
 	table.clear(self._gameplay_instances)
-	table.clear(self._gameplay_levels)
+	table.clear(self._gameplay_instance_keys)
 end
 
 MutatorGameplay.update = function (self, dt, t)
-	for i = 1, #self._gameplay_levels do
-		local gameplay_instance, is_valid = self:gameplay_instance(self._gameplay_levels[i])
+	for i = 1, #self._gameplay_instance_keys do
+		local gameplay_instance, is_valid = self:gameplay_instance(self._gameplay_instance_keys[i])
 
 		if is_valid then
 			gameplay_instance:update(dt, t)
@@ -78,20 +82,20 @@ MutatorGameplay.update = function (self, dt, t)
 	end
 end
 
-MutatorGameplay._on_event_mutator_gameplay_start_module = function (self, triggered_on_level)
-	if self._gameplay_instances[triggered_on_level] then
-		Log.warning("MutatorGameplay", "instance of '%s' already created for level '%s'", self._template.gameplay_template.path, Level.name(triggered_on_level))
+MutatorGameplay._on_event_mutator_gameplay_start_module = function (self, instance_key)
+	if self._gameplay_instances[instance_key] then
+		Log.warning("MutatorGameplay", "instance of '%s' already created for instance_key '%s'", self._template.gameplay_template.path, instance_key)
 
 		return
 	end
 
-	table.insert(self._gameplay_levels, triggered_on_level)
+	table.insert(self._gameplay_instance_keys, instance_key)
 
-	self._gameplay_instances[triggered_on_level] = self._gameplay_module:new(self, self._template.gameplay_template.settings, triggered_on_level)
+	self._gameplay_instances[instance_key] = self._gameplay_module:new(self, self._template.gameplay_template.settings, instance_key)
 end
 
-MutatorGameplay._on_event_mutator_gameplay_stop_module = function (self, triggered_on_level)
-	local gameplay_instance, is_valid = self:gameplay_instance(triggered_on_level)
+MutatorGameplay._on_event_mutator_gameplay_stop_module = function (self, instance_key)
+	local gameplay_instance, is_valid = self:gameplay_instance(instance_key)
 
 	if not is_valid then
 		Log.warning("MutatorGameplay", "instance of '%s' not valid on destroy attempt", self._template.gameplay_template.path)
@@ -100,13 +104,13 @@ MutatorGameplay._on_event_mutator_gameplay_stop_module = function (self, trigger
 	end
 
 	gameplay_instance:delete()
-	table.swap_delete(self._gameplay_levels, table.index_of(self._gameplay_levels, triggered_on_level))
+	table.swap_delete(self._gameplay_instance_keys, table.index_of(self._gameplay_instance_keys, instance_key))
 
-	self._gameplay_instances[triggered_on_level] = nil
+	self._gameplay_instances[instance_key] = nil
 end
 
-MutatorGameplay.gameplay_instance = function (self, level)
-	local gameplay_instance = self._gameplay_instances[level]
+MutatorGameplay.gameplay_instance = function (self, instance_key)
+	local gameplay_instance = self._gameplay_instances[instance_key]
 
 	return gameplay_instance, gameplay_instance and not gameplay_instance.__destroyed
 end
@@ -188,8 +192,8 @@ MutatorGameplay.hot_join_sync = function (self, sender, channel)
 
 	local did_handle = false
 
-	for i = 1, #self._gameplay_levels do
-		local gameplay_instance, is_valid = self:gameplay_instance(self._gameplay_levels[i])
+	for i = 1, #self._gameplay_instance_keys do
+		local gameplay_instance, is_valid = self:gameplay_instance(self._gameplay_instance_keys[i])
 
 		if is_valid then
 			did_handle = true

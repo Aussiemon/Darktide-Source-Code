@@ -140,7 +140,7 @@ StatsManager._update_rpcs = function (self, user)
 
 		dirty[stat_key] = false
 
-		local value_to_send = math.round(data[stat_key])
+		local value_to_send = math.round(data[stat_key] or stat.default)
 		local rpc_data = self:_get_smallest_send_rpc(value_to_send)
 
 		value_to_send = math.clamp(value_to_send, rpc_data.min, rpc_data.max)

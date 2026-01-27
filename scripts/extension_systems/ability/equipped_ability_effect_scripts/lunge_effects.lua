@@ -21,6 +21,7 @@ LungeEffects.init = function (self, equipped_ability_effect_scripts_context, abi
 	self._world = equipped_ability_effect_scripts_context.world
 	self._buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	self._active_looping_vfx_ids = {}
+	self._player_particle_group_id = equipped_ability_effect_scripts_context.player_particle_group_id
 end
 
 LungeEffects.extensions_ready = function (self, world, unit)
@@ -91,12 +92,12 @@ LungeEffects._start_looping_conditional_effects = function (self)
 		local rotation = Matrix4x4.rotation(Matrix4x4.identity())
 		local right_trail_pose = Matrix4x4.from_quaternion_position(rotation, Vector3(0.3, 0, 0))
 		local left_tril_pose = Matrix4x4.from_quaternion_position(rotation, Vector3(-0.3, 0, 0))
-		local right_effect_id = World.create_particles(world, fire_trail_particle_effect, effect_position)
+		local right_effect_id = World.create_particles(world, fire_trail_particle_effect, effect_position, nil, nil, self._player_particle_group_id)
 
 		World.link_particles(world, right_effect_id, unit, 1, right_trail_pose, orphaned_policy)
 		table.insert(active_looping_vfx_ids, right_effect_id)
 
-		local left_effect_id = World.create_particles(world, fire_trail_particle_effect, effect_position)
+		local left_effect_id = World.create_particles(world, fire_trail_particle_effect, effect_position, nil, nil, self._player_particle_group_id)
 
 		World.link_particles(world, left_effect_id, unit, 1, left_tril_pose, orphaned_policy)
 		table.insert(active_looping_vfx_ids, left_effect_id)

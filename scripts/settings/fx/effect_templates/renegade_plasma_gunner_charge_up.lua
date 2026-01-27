@@ -81,7 +81,7 @@ local effect_template = {
 			local inventory_item = visual_loadout_extension:slot_item("slot_ranged_weapon")
 			local attachment_unit, node_index = MinionVisualLoadout.attachment_unit_and_node_from_node_name(inventory_item, FX_SOURCE_NAME)
 			local position = Unit.world_position(attachment_unit, node_index)
-			local vfx_particle_id = World.create_particles(world, MUZZLE_VFX, position, Quaternion.identity())
+			local vfx_particle_id = World.create_particles(world, MUZZLE_VFX, position, Quaternion.identity(), nil, template_data.particle_group)
 
 			World.link_particles(world, vfx_particle_id, attachment_unit, node_index, Matrix4x4.identity(), "stop")
 

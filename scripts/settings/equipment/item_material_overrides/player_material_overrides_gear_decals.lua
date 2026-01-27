@@ -44,6 +44,7 @@ local decal_table = {
 	decal_atlas_v_leader_grunt_01 = "content/textures/gear_decals/decal_atlas_v_leader_grunt_01",
 	decal_atlas_veteran_01 = "content/textures/gear_decals/decal_atlas_veteran_01",
 	decal_atlas_veteran_02 = "content/textures/gear_decals/decal_atlas_veteran_02",
+	decal_atlas_winter_01 = "content/textures/gear_decals/decal_atlas_winter_01",
 	decal_atlas_z_preacher_maniac_01 = "content/textures/gear_decals/decal_atlas_z_preacher_maniac_01",
 	decal_atlas_zealot_01 = "content/textures/gear_decals/decal_atlas_zealot_01",
 	decal_atlas_zola = "content/textures/gear_decals/decal_atlas_zola",

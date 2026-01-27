@@ -138,6 +138,7 @@ MasterData._get_items_from_backend = function (self, version, url)
 
 		promise = Managers.backend:url_request(url, {
 			require_auth = true,
+			response_timeout_seconds = 30,
 		})
 	else
 		promise = self:_get_items_metadata():next(function (metadata)
@@ -145,6 +146,7 @@ MasterData._get_items_from_backend = function (self, version, url)
 
 			return Managers.backend:url_request(metadata.url, {
 				require_auth = true,
+				response_timeout_seconds = 30,
 			})
 		end)
 	end

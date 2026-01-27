@@ -681,6 +681,7 @@ PremiumCurrencyPurchaseView._create_aquilas_presentation = function (self, offer
 	end
 
 	self._widgets_by_name.aquilas_background.content.visible = true
+	self._widgets_by_name.page_title_text.content.visible = true
 
 	if IS_PLAYSTATION then
 		local POSITION = {
@@ -718,6 +719,7 @@ PremiumCurrencyPurchaseView._destroy_aquilas_presentation = function (self)
 	end
 
 	self._widgets_by_name.aquilas_background.content.visible = false
+	self._widgets_by_name.page_title_text.content.visible = false
 
 	if IS_PLAYSTATION and self._ps_store_icon_showing then
 		NpCommerceDialog.hide_ps_store_icon()
@@ -952,6 +954,7 @@ PremiumCurrencyPurchaseView.update = function (self, dt, t, input_service)
 	end
 
 	self._widgets_by_name.aquilas_background.visible = not self._show_loading
+	self._widgets_by_name.page_title_text.content.visible = not self._show_loading
 
 	local wallet_width = self._wallet_element:get_size()[1]
 

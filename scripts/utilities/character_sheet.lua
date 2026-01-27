@@ -3,6 +3,13 @@
 local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
 local CharacterSheet = {}
+
+local function _info_print(mute_log, ...)
+	if not mute_log then
+		Log.info(...)
+	end
+end
+
 local BASE_TALENT_STEP_COUNT = -1
 local _fill_combat_ability_or_grenade_ability_or_coherency, _add_modifier
 local talent_layouts = {
@@ -71,7 +78,7 @@ local function _handle_buff_tier(buff_tiers, selected_talents, talent_name, buff
 	end
 end
 
-local function _by_furthest_from_start(previous_talent, talent_name, value, archetype)
+local function _by_furthest_from_start(previous_talent, talent_name, value, archetype, mute_log)
 	local previous_step_count = previous_talent and previous_talent.step_count or BASE_TALENT_STEP_COUNT
 	local found, step_count, is_unique
 
@@ -94,7 +101,7 @@ local function _by_furthest_from_start(previous_talent, talent_name, value, arch
 	end
 
 	if previous_step_count ~= BASE_TALENT_STEP_COUNT and step_count < previous_step_count then
-		Log.info("CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", previous_talent.talent_name, talent_name, previous_step_count, step_count)
+		_info_print(mute_log, "CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", previous_talent.talent_name, talent_name, previous_step_count, step_count)
 
 		return previous_talent
 	elseif previous_talent then
@@ -107,7 +114,7 @@ local function _by_furthest_from_start(previous_talent, talent_name, value, arch
 				return previous_talent
 			end
 		else
-			Log.info("CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", talent_name, previous_talent.talent_name, step_count, previous_step_count)
+			_info_print(mute_log, "CharacterSheet", "Selecting talent (%s) over (%s) due to higher prio. (%s > %s)", talent_name, previous_talent.talent_name, step_count, previous_step_count)
 		end
 	end
 
@@ -143,7 +150,7 @@ local HANDLED_NODE_GROUPS = {}
 local NODES_BY_TALENT = {}
 local NON_BASE_TALENTS = {}
 
-CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_talents)
+CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_talents, mute_log)
 	local ability, blitz, aura = destination.ability or TRASH_TABLE, destination.blitz or TRASH_TABLE, destination.aura or TRASH_TABLE
 	local pocketable = destination.pocketable or TRASH_TABLE
 	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics, modifiers = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics, destination.modifiers
@@ -355,13 +362,13 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
+								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
 							end
 						else
 							local buff_template_name = passive.buff_template_name
 							local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
+							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -376,7 +383,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 							local identifier = coherency.identifier
 							local prev_best_identifier = COHERENCY_IDENTIFIERS_FOUND[identifier]
 
-							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype)
+							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -394,12 +401,12 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier]
 
-								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, sub_special_rule_name, archetype)
+								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, sub_special_rule_name, archetype, mute_log)
 							end
 						else
 							local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[identifier]
 
-							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, special_rule_name, archetype)
+							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, special_rule_name, archetype, mute_log)
 						end
 					end
 				end
@@ -409,7 +416,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 				if player_ability then
 					if player_ability.ability_type == "combat_ability" then
 						local previous_ability = ABILITIES_FOUND.ability
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.ability = chosen_ability
 						combat_ability = chosen_ability.value.player_ability.ability
@@ -417,7 +424,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						_add_modifier(modifiers, "ability", chosen_ability.value)
 					elseif player_ability.ability_type == "grenade_ability" then
 						local previous_ability = ABILITIES_FOUND.blitz
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.blitz = chosen_ability
 						grenade_ability = chosen_ability.value.player_ability.ability
@@ -425,7 +432,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						_add_modifier(modifiers, "blitz", chosen_ability.value)
 					elseif player_ability.ability_type == "pocketable_ability" then
 						local previous_ability = ABILITIES_FOUND.pocketable
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.pocketable = chosen_ability
 						pocketable_ability = chosen_ability.value.player_ability.ability
@@ -435,7 +442,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
 					end
 				elseif talent.coherency then
-					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent_name, talent, archetype)
+					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent_name, talent, archetype, mute_log)
 				end
 			end
 		end

@@ -59,7 +59,7 @@ local effect_template = {
 			local physics_world = template_data.physics_world
 			local flamer_data = template_data.flamer_data
 
-			Flamer.update_shooting_fx(t, unit, vfx, sfx, wwise_world, world, physics_world, aim_position, control_point_1, control_point_2, flamer_data)
+			Flamer.update_shooting_fx(t, unit, vfx, sfx, wwise_world, world, physics_world, aim_position, control_point_1, control_point_2, flamer_data, template_data.particle_group)
 		end
 	end,
 	stop = function (template_data, template_context)
@@ -106,11 +106,11 @@ function _switch_state(previous_state, new_state, template_data, template_contex
 	if new_state == STATES.aiming then
 		local t = Managers.time:time("gameplay")
 
-		Flamer.start_aiming_fx(t, unit, vfx, sfx, wwise_world, world, template_data.flamer_data)
+		Flamer.start_aiming_fx(t, unit, vfx, sfx, wwise_world, world, template_data.flamer_data, template_data.particle_group)
 	elseif new_state == STATES.shooting then
 		local t = Managers.time:time("gameplay")
 
-		Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, template_data.flamer_data)
+		Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, template_data.flamer_data, template_data.particle_group)
 	end
 
 	template_data.state = new_state

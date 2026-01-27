@@ -4,6 +4,7 @@ local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
@@ -59,6 +60,8 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 
 	local local_player = Managers.player:local_player(1)
 	local account_id = local_player:account_id()
+
+	self._promise_container = PromiseContainer:new()
 
 	if GameParameters.prod_like_backend and account_id ~= PlayerManager.NO_ACCOUNT_ID and not Managers.party_immaterium:is_started() then
 		Managers.party_immaterium:start()
@@ -188,7 +191,7 @@ StateMainMenu._skip_prologue = function (self)
 end
 
 StateMainMenu._refresh_profiles = function (self)
-	return Managers.data_service.profiles:fetch_all_profiles():next(function (profile_data)
+	return self._promise_container:cancel_on_destroy(Managers.data_service.profiles:fetch_all_profiles()):next(function (profile_data)
 		local profiles = profile_data.profiles
 		local selected_profile = profile_data.selected_profile
 		local gear = profile_data.gear
@@ -604,6 +607,10 @@ StateMainMenu.on_exit = function (self)
 		Managers.event:trigger("event_remove_ui_popup", self._reconnect_popup_id)
 
 		self._reconnect_popup_id = nil
+	end
+
+	if self._promise_container then
+		self._promise_container:delete()
 	end
 
 	local promise = self._promise

@@ -24,6 +24,10 @@ ForceWeaponWindSlashStageEffects.init = function (self, context, slot, weapon_te
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	local unit_data_extension = ScriptUnit.extension(context.owner_unit, "unit_data_system")
 	local fx_extension = context.fx_extension
 
@@ -114,7 +118,7 @@ ForceWeaponWindSlashStageEffects._update_stage_interfacing = function (self, cur
 		local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(PARTICLE_STAGE_ALIAS_FX, _external_properties)
 
 		if resolved then
-			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 			World.link_particles(world, new_effect_id, self._vfx_link_unit, self._vfx_link_node, Matrix4x4.identity(), "stop")
 		end
@@ -125,7 +129,7 @@ ForceWeaponWindSlashStageEffects._update_stage_interfacing = function (self, cur
 			local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(PARTICLE_STAGE_SCREENSPACE_ALIAS_FX, _external_properties)
 
 			if resolved then
-				World.create_particles(world, effect_name, Vector3(0, 0, 1), Quaternion.identity(), Vector3.one())
+				World.create_particles(world, effect_name, Vector3(0, 0, 1), Quaternion.identity(), Vector3.one(), self._particle_group_id)
 			end
 		end
 
@@ -157,7 +161,7 @@ ForceWeaponWindSlashStageEffects._update_particle_loop = function (self, current
 
 		if resolved then
 			local world = self._world
-			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 			World.link_particles(world, new_effect_id, self._vfx_link_unit, self._vfx_link_node, Matrix4x4.identity(), "stop")
 

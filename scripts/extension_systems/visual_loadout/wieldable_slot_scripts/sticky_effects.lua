@@ -18,6 +18,10 @@ StickyEffects.init = function (self, context, slot, weapon_template, fx_sources,
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
 
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	local unit_data_extension = context.unit_data_extension
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
@@ -120,7 +124,7 @@ StickyEffects._start_stickyness = function (self, t)
 		if resolved_vfx then
 			local world = self._world
 			local vfx_link_unit, vfx_link_node = self._vfx_link_unit, self._vfx_link_node
-			local effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 			World.link_particles(world, effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

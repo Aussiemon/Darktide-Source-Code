@@ -54,19 +54,10 @@ state_machine_settings["content/characters/player/ogryn/third_person/animations/
 state_machine_settings["content/characters/player/ogryn/third_person/animations/unarmed"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
-state_machine_settings["content/characters/player/human/third_person/animations/hub_veteran"] = {
+state_machine_settings["content/characters/player/human/third_person/animations/unarmed_hub"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
-state_machine_settings["content/characters/player/human/third_person/animations/hub_psyker"] = {
-	blend_time = DEFAULT_BLEND_TIME,
-}
-state_machine_settings["content/characters/player/human/third_person/animations/hub_zealot"] = {
-	blend_time = DEFAULT_BLEND_TIME,
-}
-state_machine_settings["content/characters/player/ogryn/third_person/animations/hub_ogryn"] = {
-	blend_time = DEFAULT_BLEND_TIME,
-}
-state_machine_settings["content/characters/player/human/third_person/animations/hub_adamant"] = {
+state_machine_settings["content/characters/player/ogryn/third_person/animations/unarmed_hub"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/human/third_person/animations/shock_mine"] = {

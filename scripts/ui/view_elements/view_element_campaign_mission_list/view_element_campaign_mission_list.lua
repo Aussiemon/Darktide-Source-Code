@@ -247,7 +247,7 @@ ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 						local debrief_content = debrief_widget.content
 						local debrief_hotspot = debrief_content.hotspot
 
-						debrief_hotspot.is_selected = is_selected
+						debrief_hotspot.parent_is_selected = is_selected
 					end
 
 					if cell_data.data.id == selected_mission_id then
@@ -772,7 +772,7 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local theme = parent:_get_ui_theme()
 	local is_locked = parent._mission_board_logic:is_mission_locked(mission)
 	local cell_data = {}
-	local display_order = self:_get_mission_display_order(mission_data.mission, mission_data.campaign) or 1
+	local display_order = self:_get_mission_display_order(mission_data.mission, mission_data.category, mission_data.campaign) or 1
 	local unlock_data = parent._mission_board_logic:get_mission_unlock_data(mission_data.mission, mission_data.category)
 	local is_story_mission = parent._mission_board_logic:is_story_mission(mission)
 	local creation_context = {
@@ -1023,22 +1023,10 @@ ViewElementCampaignMissionList._get_mission_by_key = function (self, mission_key
 	return nil
 end
 
-ViewElementCampaignMissionList._get_mission_display_order = function (self, mission_key, mission_campaign)
-	if not self._campaigns_data then
-		return nil
-	end
+ViewElementCampaignMissionList._get_mission_display_order = function (self, mission_key, mission_category, campaign)
+	local parent = self:parent()
 
-	for i, campaign in ipairs(self._campaigns_data) do
-		if campaign.id == mission_campaign then
-			for display_order, missions in pairs(campaign.missions) do
-				if missions and missions.mission == mission_key then
-					return display_order
-				end
-			end
-		end
-	end
-
-	return nil
+	return parent._mission_board_logic:get_campaign_mission_display_order(mission_key, mission_category, campaign)
 end
 
 ViewElementCampaignMissionList._set_selected_mission = function (self, mission_id)

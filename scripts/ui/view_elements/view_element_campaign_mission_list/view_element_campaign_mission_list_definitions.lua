@@ -582,7 +582,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
 
-				return InputDevice.gamepad_active and hotspot.is_selected
+				return InputDevice.gamepad_active and hotspot.parent_is_selected
 			end,
 			change_function = function (content, style, animation, dt)
 				if not InputDevice.gamepad_active then

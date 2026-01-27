@@ -63,7 +63,6 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 		wwise_world = self._wwise_world,
 		game_session = game_session,
 	}
-	self._latest_player_particle_group_id = 0
 	self.unit_to_particle_group_lookup = Script.new_map(256)
 	self._spawned_impact_fx_units = Script.new_map(8)
 
@@ -80,14 +79,16 @@ end
 
 FxSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
 	if extension_name == "PlayerUnitFxExtension" then
-		local player_particle_group_id = self._latest_player_particle_group_id + 1
+		local player_particle_group_id = World.create_particle_group(world)
 
-		self._latest_player_particle_group_id = player_particle_group_id
 		extension_init_data.player_particle_group_id = player_particle_group_id
 		self.unit_to_particle_group_lookup[unit] = player_particle_group_id
-	end
+	elseif extension_name == "MinionFxExtension" then
+		local particle_group_id = World.create_particle_group(world)
 
-	if extension_name == "ProjectileFxExtension" then
+		extension_init_data.particle_group_id = particle_group_id
+		self.unit_to_particle_group_lookup[unit] = particle_group_id
+	elseif extension_name == "ProjectileFxExtension" then
 		local owner_unit = extension_init_data.owner_unit
 		local player_particle_group_id = owner_unit and self.unit_to_particle_group_lookup[owner_unit]
 
@@ -113,20 +114,26 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 	end
 
 	local unit_to_particle_group_lookup = self.unit_to_particle_group_lookup
+	local particle_group_id = unit_to_particle_group_lookup[unit]
+	local destroy_particles_in_group = false
 
 	if extension_name == "PlayerUnitFxExtension" then
-		local unit_to_particle_group_id = unit_to_particle_group_lookup[unit]
+		self:_delete_units_belonging_to_particle_group(particle_group_id)
 
-		self:_delete_units_belonging_to_particle_group(unit_to_particle_group_id)
-
-		unit_to_particle_group_lookup[unit] = nil
-	end
-
-	if extension_name == "ProjectileFxExtension" then
-		unit_to_particle_group_lookup[unit] = nil
+		destroy_particles_in_group = true
+	elseif extension_name == "MinionFxExtension" then
+		-- Nothing
 	end
 
 	FxSystem.super.on_remove_extension(self, unit, extension_name)
+
+	if destroy_particles_in_group then
+		local world = Unit.world(unit)
+
+		World.destroy_particle_group(world, particle_group_id)
+	end
+
+	unit_to_particle_group_lookup[unit] = nil
 end
 
 FxSystem.destroy = function (self)
@@ -237,6 +244,12 @@ FxSystem._start_template_effect = function (self, template_effect, template, opt
 	local template_data, template_context = template_effect.template_data, self._template_context
 
 	template_data.unit, template_data.node, template_data.position = optional_unit, optional_node, optional_position
+
+	if GameParameters.destroy_unmanaged_particles and optional_unit then
+		local particle_group_id_or_nil = self.unit_to_particle_group_lookup[optional_unit]
+
+		template_data.particle_group = particle_group_id_or_nil
+	end
 
 	template.start(template_data, template_context)
 

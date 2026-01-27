@@ -26,6 +26,11 @@ PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._slot_name = slot.name
 	self._world = context.world
 	self._wwise_world = context.wwise_world
+
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	self._special_active_fx_source_name = fx_sources[FX_SOURCE_NAME]
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 
@@ -101,7 +106,7 @@ PowerWeaponEffects._play_single_vfx = function (self, particle_alias, fx_source_
 	if resolved then
 		local world = self._world
 		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(fx_source_name)
-		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 	end

@@ -2438,7 +2438,7 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 
 	local num_destinations = #destination_units
 	local player_manager = Managers.player
-	local players = player_manager:human_players()
+	local players = player_manager:players()
 	local index = 0
 	local local_player = player_manager:local_player(1)
 
@@ -2466,10 +2466,12 @@ FlowCallbacks.teleport_team_to_locations = function (params)
 			local yaw = Quaternion.yaw(target_rotation)
 			local roll = 0
 
-			if (DEDICATED_SERVER or local_player:peer_id() ~= player:peer_id()) and channel_id then
-				RPC.rpc_client_set_local_player_orientation(channel_id, yaw, pitch, roll)
-			elseif local_player:peer_id() == player:peer_id() then
-				local_player:set_orientation(yaw, pitch, roll)
+			if player:type() ~= "BotPlayer" then
+				if (DEDICATED_SERVER or local_player:peer_id() ~= player:peer_id()) and channel_id then
+					RPC.rpc_client_set_local_player_orientation(channel_id, yaw, pitch, roll)
+				elseif local_player:peer_id() == player:peer_id() then
+					local_player:set_orientation(yaw, pitch, roll)
+				end
 			end
 		end
 	end

@@ -40,13 +40,13 @@ local effect_template = {
 		template_data.was_camera_following_target = Effect.update_targeted_by_ranged_minion_wwise_parameters(target_unit, wwise_world, source_id, nil)
 
 		local world, position, pose = template_context.world, Vector3.zero(), Matrix4x4.identity()
-		local muzzle_1_particle_id = World.create_particles(world, SHOOT_VFX, position)
+		local muzzle_1_particle_id = World.create_particles(world, SHOOT_VFX, position, nil, nil, template_data.particle_group)
 
 		World.link_particles(world, muzzle_1_particle_id, attachment_unit, fx_muzzle_1_node_index, pose, ORPHANED_POLICY)
 
 		template_data.muzzle_1_particle_id = muzzle_1_particle_id
 
-		local muzzle_2_particle_id = World.create_particles(world, SHOOT_VFX, position)
+		local muzzle_2_particle_id = World.create_particles(world, SHOOT_VFX, position, nil, nil, template_data.particle_group)
 
 		World.link_particles(world, muzzle_2_particle_id, attachment_unit, fx_muzzle_2_node_index, pose, ORPHANED_POLICY)
 

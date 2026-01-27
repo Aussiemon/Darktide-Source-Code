@@ -73,7 +73,7 @@ function _start_fx(target_unit, template_data, template_context)
 	local wwise_world = template_context.wwise_world
 	local hit_fx_node = Unit.node(target_unit, HIT_PARTICLE_NODE_NAME)
 	local hit_fx_position = Unit.world_position(target_unit, hit_fx_node)
-	local hit_particle_id = World.create_particles(world, HIT_PARTICLE_NAME, hit_fx_position)
+	local hit_particle_id = World.create_particles(world, HIT_PARTICLE_NAME, hit_fx_position, nil, nil, template_data.particle_group)
 
 	template_data.hit_particle_id = hit_particle_id
 
@@ -84,7 +84,7 @@ function _start_fx(target_unit, template_data, template_context)
 	local daemonhost_unit = template_data.unit
 	local daemonhost_fx_node = Unit.node(daemonhost_unit, GRAB_FX_NODE_NAME)
 	local daemonhost_fx_position = Unit.world_position(daemonhost_unit, daemonhost_fx_node)
-	local fx_particle_id = World.create_particles(world, GRAB_FX_PARTICLE_NAME, daemonhost_fx_position)
+	local fx_particle_id = World.create_particles(world, GRAB_FX_PARTICLE_NAME, daemonhost_fx_position, nil, nil, template_data.particle_group)
 	local pose = Matrix4x4.identity()
 	local orphaned_policy = "destroy"
 

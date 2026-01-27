@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/player_panel_base/hud_element_player_panel_base.lua
 
+local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local Ammo = require("scripts/utilities/ammo")
 local HudElementTeamPlayerPanelHubSettings = require("scripts/ui/hud/elements/team_player_panel_hub/hud_element_team_player_panel_hub_settings")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
@@ -10,7 +11,6 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local WalletSettings = require("scripts/settings/wallet_settings")
 
 local function _apply_color_to_text(text, color)
 	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
@@ -855,10 +855,20 @@ HudElementPlayerPanelBase._set_status_icon = function (self, status_icon, status
 end
 
 HudElementPlayerPanelBase._get_grenade_ability_status = function (self, player, dead, inventory_component, visual_loadout_extension, ability_extension)
-	local _, hud_icon
+	local equipped_abilities, _, hud_icon
 
 	if not dead and inventory_component and visual_loadout_extension then
 		_, hud_icon = self:_has_item_in_slot(inventory_component, visual_loadout_extension, "slot_grenade_ability")
+	end
+
+	if not hud_icon and ability_extension then
+		equipped_abilities = ability_extension:equipped_abilities()
+
+		local ability = equipped_abilities.grenade_ability
+		local ability_template_name = ability and ability.ability_template
+		local ability_template = ability_template_name and AbilityTemplates[ability_template_name]
+
+		hud_icon = ability_template and ability_template.hud_icon_small
 	end
 
 	local max_status = 3
@@ -871,7 +881,8 @@ HudElementPlayerPanelBase._get_grenade_ability_status = function (self, player, 
 		return max_status, false, hud_icon
 	end
 
-	local equipped_abilities = ability_extension:equipped_abilities()
+	equipped_abilities = equipped_abilities or ability_extension:equipped_abilities()
+
 	local ability_id = "grenade_ability"
 	local ability = equipped_abilities[ability_id]
 

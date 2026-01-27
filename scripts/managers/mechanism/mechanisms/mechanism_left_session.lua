@@ -32,6 +32,8 @@ MechanismLeftSession.init = function (self, ...)
 		self:_leave_party()
 	elseif reason == "leave_mission_stay_in_party" then
 		-- Nothing
+	elseif reason == "quit_game" then
+		Application.quit()
 	else
 		self._next_state = StateExitToMainMenu
 	end

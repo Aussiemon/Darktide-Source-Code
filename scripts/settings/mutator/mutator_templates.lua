@@ -20,6 +20,7 @@ _extract_mutator_templates("scripts/settings/mutator/templates/mutator_positive_
 _extract_mutator_templates("scripts/settings/mutator/templates/mutator_stagger_overrides_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/mutator_live_event_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_saints_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_broker_stimms_templates")
 
 for name, mutator_data in pairs(mutator_templates) do
 	mutator_data.name = name

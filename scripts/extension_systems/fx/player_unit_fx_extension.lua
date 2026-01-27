@@ -366,8 +366,6 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 			moving_sfx[i] = nil
 		end
 	end
-
-	World.destroy_particle_group(self._world, self._player_particle_group_id)
 end
 
 PlayerUnitFxExtension._event_player_profile_updated = function (self, synced_peer_id, synced_local_player_id, synced_profile)
@@ -1480,8 +1478,13 @@ PlayerUnitFxExtension._add_moving_vfx = function (self, position, direction, spe
 
 	if effect_name then
 		local rotation = Quaternion.look(direction)
+		local particle_group
 
-		effect_id = World.create_particles(world, effect_name, position, rotation)
+		if GameParameters.destroy_unmanaged_particles then
+			particle_group = self._player_particle_group_id
+		end
+
+		effect_id = World.create_particles(world, effect_name, position, rotation, nil, particle_group)
 	end
 
 	data.effect_id = effect_id

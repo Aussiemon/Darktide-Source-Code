@@ -24,7 +24,7 @@ local effect_template = {
 		local world = template_context.world
 		local node = Unit.node(unit, VFX_FOLEY_NODE_NAME)
 		local node_pos = Unit.world_position(unit, node)
-		local particle_id = World.create_particles(world, VFX_FOLEY_NAME, node_pos)
+		local particle_id = World.create_particles(world, VFX_FOLEY_NAME, node_pos, nil, nil, template_data.particle_group)
 		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 
 		World.link_particles(world, particle_id, unit, node, Matrix4x4.identity(), "stop")

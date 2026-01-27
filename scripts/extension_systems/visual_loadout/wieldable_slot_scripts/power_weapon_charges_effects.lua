@@ -18,6 +18,10 @@ PowerWeaponChargesEffects.init = function (self, context, slot, weapon_template,
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	local unit_data_extension = context.unit_data_extension
 
 	self._fx_extension = context.fx_extension
@@ -109,7 +113,7 @@ PowerWeaponChargesEffects._update_threshold_effects = function (self, state, sta
 		if resolved_vfx then
 			local fx_source_name = self._fx_sources[THRESHOLD_FX_SOURCE]
 			local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(fx_source_name)
-			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+			local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 			World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 		end

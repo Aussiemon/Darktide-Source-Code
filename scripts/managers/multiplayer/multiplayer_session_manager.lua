@@ -76,7 +76,7 @@ MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_r
 	local rpc_sent = false
 	local host_type = self:host_type()
 
-	if host_type == HOST_TYPES.mission_server and (leave_reason == "leave_mission" or leave_reason == "leave_mission_stay_in_party") then
+	if host_type == HOST_TYPES.mission_server and (leave_reason == "leave_mission" or leave_reason == "leave_mission_stay_in_party" or leave_reason == "quit_game") then
 		local host_channel = Managers.connection:host_channel()
 
 		if host_channel then

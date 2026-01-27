@@ -5,8 +5,8 @@ local BaseLiveEventTemplate = {}
 local default_ui = {
 	description = false,
 	display_name = false,
-	icon = "content/ui/materials/icons/circumstances/live_event_01",
-	mission_board_icon = "content/ui/materials/mission_board/circumstances/live_event_01",
+	icon = "content/ui/materials/icons/mission_types/mission_type_event",
+	mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_event",
 }
 local default_circumstance = {
 	theme_tag = "default",

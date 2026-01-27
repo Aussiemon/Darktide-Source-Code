@@ -3478,7 +3478,7 @@ stat_definitions.total_scans = {
 		{
 			id = "hook_scan",
 			trigger = function (self, stat_data, amount)
-				return increment_by(self, stat_data, amount)
+				return increment(self, stat_data)
 			end,
 		},
 	},
@@ -7899,6 +7899,60 @@ stat_definitions.saint_points_acquired = {
 	},
 	data = {
 		stat_override = "saints",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.hook_on_syringe_use_team = {
+	flags = {
+		StatFlags.team,
+	},
+	triggers = {
+		{
+			id = "hook_on_syringe_use",
+			trigger = StatMacros.forward,
+		},
+	},
+	data = {
+		stat_override = "live_event_broker_stimms",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.broker_stimms_points_acquired = {
+	flags = {
+		StatFlags.no_recover,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	data = {
+		stat_override = "live_event_broker_stimms",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_stimms_used_team = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_on_syringe_use",
+			trigger = function (self, stat_data, amount)
+				return constant(self, stat_data, 1)
+			end,
+		},
+	},
+	data = {
+		stat_override = "live_event_broker_stimms",
 	},
 	include_condition = function (self, config)
 		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)

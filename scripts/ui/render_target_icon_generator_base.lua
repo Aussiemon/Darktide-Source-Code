@@ -280,6 +280,18 @@ RenderTargetIconGeneratorBase.unload_request_reference = function (self, referen
 		end
 	end
 
+	if callbacks and not keep_reference then
+		callbacks[reference_id] = nil
+	end
+
+	if destroy_callbacks and not keep_reference then
+		destroy_callbacks[reference_id] = nil
+	end
+
+	if not keep_reference then
+		references_lookup[reference_id] = nil
+	end
+
 	if #references_array == 0 then
 		local grid_index = unload_request.grid_index
 		local atlas_id = unload_request.atlas_id
@@ -295,18 +307,6 @@ RenderTargetIconGeneratorBase.unload_request_reference = function (self, referen
 			requests_by_size[unload_request_size_key][request_id].atlas_id = nil
 		else
 			requests_by_size[unload_request_size_key][request_id] = nil
-		end
-
-		if callbacks and not keep_reference then
-			callbacks[reference_id] = nil
-		end
-
-		if destroy_callbacks and not keep_reference then
-			destroy_callbacks[reference_id] = nil
-		end
-
-		if not keep_reference then
-			references_lookup[reference_id] = nil
 		end
 
 		for i = 1, #self._requests_queue_order do

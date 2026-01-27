@@ -126,7 +126,7 @@ end
 NewsView._load_slides = function (self)
 	self._initialized = false
 
-	local slides_promise = Managers.data_service.news:get_news():next(function (raw_news)
+	self._promise_container:cancel_on_destroy(Managers.data_service.news:get_news()):next(function (raw_news)
 		local slide_data = {
 			starting_slide_index = 1,
 			slides = raw_news,
@@ -134,8 +134,6 @@ NewsView._load_slides = function (self)
 
 		self:_initialize_slides(slide_data)
 	end)
-
-	self._promise_container:cancel_on_destroy(slides_promise)
 end
 
 NewsView._add_viewed_slide = function (self, slide_to_add)
@@ -156,10 +154,9 @@ NewsView.on_enter = function (self)
 
 	self:_setup_grid()
 	Managers.telemetry_events:open_view(self._telemetry_view_name, false, self._telemetry_id)
-
-	local initialize_promise = Promise.until_value_is_true(function ()
+	self._promise_container:cancel_on_destroy(Promise.until_value_is_true(function ()
 		return self._initialized
-	end):next(function ()
+	end)):next(function ()
 		local slides = self._slides
 
 		if slides and #slides > 0 then
@@ -176,8 +173,6 @@ NewsView.on_enter = function (self)
 			Managers.ui:close_view(self.view_name)
 		end
 	end)
-
-	self._promise_container:cancel_on_destroy(initialize_promise)
 end
 
 NewsView.on_exit = function (self)
@@ -372,7 +367,7 @@ NewsView.load_texture = function (self, image_url, image_element)
 
 		url_textures[#url_textures + 1] = image_url
 
-		local promise = Managers.url_loader:load_texture(image_url, nil, "news_view"):next(function (data)
+		self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(image_url, nil, "news_view")):next(function (data)
 			style.texture.material_values.texture = data.texture
 			url_textures[image_url] = data
 		end):catch(function (error)
@@ -380,8 +375,6 @@ NewsView.load_texture = function (self, image_url, image_element)
 
 			Log.error("NewsService", "Error fetching news images", error_string)
 		end)
-
-		self._promise_container:cancel_on_destroy(promise)
 	end
 end
 

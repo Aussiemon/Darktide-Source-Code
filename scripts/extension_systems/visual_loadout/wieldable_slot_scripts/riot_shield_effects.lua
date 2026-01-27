@@ -25,6 +25,10 @@ RiotShieldEffects.init = function (self, context, slot, weapon_template, fx_sour
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	local unit_data_extension = context.unit_data_extension
 	local fx_extension = context.fx_extension
 	local visual_loadout_extension = context.visual_loadout_extension
@@ -244,7 +248,7 @@ RiotShieldEffects._start_windup_vfx_loop = function (self)
 
 	if resolved then
 		local world = self._world
-		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 		local from_unit, from_node = self._fx_extension:vfx_spawner_unit_and_node(self._fx_source_from_name)
 		local to_unit, to_node = self._fx_extension:vfx_spawner_unit_and_node(self._fx_source_to_name)
 		local from_pos = Unit.world_position(from_unit, from_node)
@@ -322,7 +326,7 @@ RiotShieldEffects._trigger_activation_vfx = function (self)
 		local spawn_rot = Quaternion.look(Vector3.normalize(Vector3.flat(Quaternion.forward(rotation))))
 		local from_unit, from_node = self._fx_extension:vfx_spawner_unit_and_node(self._fx_source_from_name)
 		local spawn_pos = Unit.world_position(from_unit, from_node)
-		local new_effect_id = World.create_particles(world, effect_name, spawn_pos, spawn_rot)
+		local new_effect_id = World.create_particles(world, effect_name, spawn_pos, spawn_rot, nil, self._particle_group_id)
 	end
 end
 
@@ -366,7 +370,7 @@ RiotShieldEffects._start_passive_vfx_loop = function (self)
 
 	if resolved then
 		local world = self._world
-		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero(), nil, nil, self._particle_group_id)
 		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._fx_source_passive_loop_name)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")

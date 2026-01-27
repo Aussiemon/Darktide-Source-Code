@@ -291,5 +291,37 @@ PickupOverrides.add_stolen_rations = {
 		},
 	},
 }
+PickupOverrides.pickups_more_syringes = {
+	pickup_settings = {
+		mid_event = {
+			wounds = {
+				syringe_ability_boost_pocketable = flat(2),
+				syringe_power_boost_pocketable = flat(2),
+				syringe_speed_boost_pocketable = flat(2),
+			},
+		},
+		end_event = {
+			wounds = {
+				syringe_ability_boost_pocketable = flat(2),
+				syringe_power_boost_pocketable = flat(2),
+				syringe_speed_boost_pocketable = flat(2),
+			},
+		},
+		primary = {
+			wounds = {
+				syringe_ability_boost_pocketable = flat(10),
+				syringe_power_boost_pocketable = flat(10),
+				syringe_speed_boost_pocketable = flat(10),
+			},
+		},
+		secondary = {
+			wounds = {
+				syringe_ability_boost_pocketable = flat(10),
+				syringe_power_boost_pocketable = flat(10),
+				syringe_speed_boost_pocketable = flat(10),
+			},
+		},
+	},
+}
 
 return PickupOverrides

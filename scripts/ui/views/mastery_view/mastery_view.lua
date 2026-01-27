@@ -1087,6 +1087,7 @@ end
 MasteryView._setup_milestones = function (self)
 	local milestones = self._milestones
 	local milestone_rewards_by_level = {}
+	local max_level = 0
 
 	for i = 1, #milestones do
 		local milestone = milestones[i]
@@ -1101,6 +1102,7 @@ MasteryView._setup_milestones = function (self)
 			type = milestone.type,
 		}
 
+		max_level = math.max(max_level, milestone.level)
 		milestone_rewards_by_level[milestone.level] = milestone_rewards_by_level[milestone.level] or {}
 
 		local next_index = #milestone_rewards_by_level[milestone.level] + 1
@@ -1108,9 +1110,15 @@ MasteryView._setup_milestones = function (self)
 		milestone_rewards_by_level[milestone.level][next_index] = milestone_data
 	end
 
+	for i = 1, max_level do
+		if not milestone_rewards_by_level[i] then
+			milestone_rewards_by_level[i] = {}
+		end
+	end
+
 	local wintrack_rewards = {}
 
-	for level, rewards in ipairs(milestone_rewards_by_level) do
+	for level, rewards in pairs(milestone_rewards_by_level) do
 		wintrack_rewards[#wintrack_rewards + 1] = {
 			points_required = level,
 			items = rewards,

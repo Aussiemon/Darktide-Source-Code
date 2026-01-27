@@ -455,7 +455,9 @@ PlayerHuskVisualLoadoutExtension.rpc_player_unequip_item_from_slot = function (s
 
 		Managers.state.decal:unregister_decal_unit_ids(decal_unit_ids)
 
-		if self._slot_configuration[slot_name].slot_type == "weapon" then
+		local slot_config = self._slot_configuration[slot_name]
+
+		if slot_config.slot_type == "weapon" or GameParameters.destroy_unmanaged_particles and slot_config.slot_type == "ability" then
 			self._fx_extension:destroy_particle_group()
 		end
 	end

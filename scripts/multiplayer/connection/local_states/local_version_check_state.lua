@@ -33,26 +33,24 @@ LocalVersionCheckState.update = function (self, dt)
 		}
 	end
 
-	local state, reason = Network.channel_state(shared_state.channel_id)
+	if self._approved == nil then
+		local state, reason = Network.channel_state(shared_state.channel_id)
 
-	if state == "disconnecting" or state == "disconnected" then
-		Log.info("LocalVersionCheckState", "Connection channel disconnected")
+		if state == "disconnecting" or state == "disconnected" then
+			Log.info("LocalVersionCheckState", "Connection channel disconnected")
 
-		return "disconnected", {
-			engine_reason = reason,
-		}
-	end
-
-	if self._approved ~= nil then
-		if self._approved then
-			return "versions matched"
-		else
-			Log.info("LocalVersionCheckState", "Version mismatch")
-
-			return "versions mismatched", {
-				game_reason = "version_mismatch",
+			return "disconnected", {
+				engine_reason = reason,
 			}
 		end
+	elseif self._approved then
+		return "versions matched"
+	else
+		Log.info("LocalVersionCheckState", "Version mismatch")
+
+		return "versions mismatched", {
+			game_reason = "version_mismatch",
+		}
 	end
 end
 

@@ -789,7 +789,7 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 
 		Managers.state.decal:unregister_decal_unit_ids(decal_unit_ids)
 
-		if slot_config.slot_type == "weapon" then
+		if slot_config.slot_type == "weapon" or GameParameters.destroy_unmanaged_particles and slot_config.slot_type == "ability" then
 			self._fx_extension:destroy_particle_group()
 		end
 	end

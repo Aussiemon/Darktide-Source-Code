@@ -226,7 +226,6 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 
 	action_reload.has_refilled_ammunition = false
 	action_reload.has_removed_ammunition = false
-	action_reload.has_cleared_overheat = false
 
 	local action_unwield = unit_data_extension:write_component("action_unwield")
 

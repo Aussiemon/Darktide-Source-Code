@@ -872,7 +872,6 @@ local PlayerComponentConfig = {
 		num_pellets_fired = "ammunition_small",
 	},
 	action_reload = {
-		has_cleared_overheat = "bool",
 		has_refilled_ammunition = "bool",
 		has_removed_ammunition = "bool",
 	},

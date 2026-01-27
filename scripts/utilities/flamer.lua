@@ -22,7 +22,7 @@ Flamer.start_aiming_fx = function (t, unit, vfx, sfx, wwise_world, world, data)
 	end
 end
 
-Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data)
+Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data, optional_particle_group)
 	local from_unit = data.from_unit
 	local from_node = data.from_node
 	local start_position = _get_start_position(from_unit, from_node)
@@ -31,7 +31,7 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data
 		local muzzle_particle_name = vfx.muzzle_particle
 
 		if muzzle_particle_name then
-			local muzzle_particle_id = World.create_particles(world, muzzle_particle_name, start_position, Quaternion.identity())
+			local muzzle_particle_id = World.create_particles(world, muzzle_particle_name, start_position, Quaternion.identity(), nil, optional_particle_group)
 			local orphaned_policy = "stop"
 
 			World.link_particles(world, muzzle_particle_id, from_unit, from_node, Matrix4x4.identity(), orphaned_policy)
@@ -42,7 +42,7 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data
 		local flamer_particle_name = vfx.flamer_particle
 
 		if flamer_particle_name then
-			local flamer_particle_id = World.create_particles(world, flamer_particle_name, start_position, Quaternion.identity())
+			local flamer_particle_id = World.create_particles(world, flamer_particle_name, start_position, Quaternion.identity(), nil, optional_particle_group)
 			local orphaned_policy = "stop"
 
 			World.link_particles(world, flamer_particle_id, from_unit, from_node, Matrix4x4.identity(), orphaned_policy)
@@ -110,7 +110,7 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data
 	data.start_t = t
 end
 
-Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, physics_world, aim_position, control_point_1, control_point_2, data)
+Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, physics_world, aim_position, control_point_1, control_point_2, data, optional_particle_group)
 	local from_unit = data.from_unit
 	local from_node = data.from_node
 	local start_position = _get_start_position(from_unit, from_node)
@@ -128,7 +128,7 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 			if dynamic_hit_particle_id then
 				World.move_particles(world, dynamic_hit_particle_id, dynamic_hit_position, directional_rotation)
 			else
-				data.dynamic_hit_particle_id = World.create_particles(world, vfx.hit_dynamic_particle, dynamic_hit_position, directional_rotation)
+				data.dynamic_hit_particle_id = World.create_particles(world, vfx.hit_dynamic_particle, dynamic_hit_position, directional_rotation, nil, optional_particle_group)
 			end
 
 			local hit_dynamic_velocity_variable = data.hit_dynamic_velocity_variable
@@ -158,7 +158,7 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 			if ground_impact_particle_id then
 				World.move_particles(world, ground_impact_particle_id, ground_hit_position, tangent_rotation)
 			else
-				data.ground_impact_particle_id = World.create_particles(world, ground_impact_particle_name, ground_hit_position, tangent_rotation)
+				data.ground_impact_particle_id = World.create_particles(world, ground_impact_particle_name, ground_hit_position, tangent_rotation, nil, optional_particle_group)
 			end
 
 			local ground_impact_velocity_variable = data.ground_impact_velocity_variable

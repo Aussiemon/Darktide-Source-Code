@@ -754,50 +754,8 @@ MasteriesOverviewView._get_milestones_data = function (self, mastery_id)
 		return
 	end
 
-	local milestones_data = {}
 	local mastery_data = self._masteries[mastery_id]
-	local milestones = mastery_data.milestones
-	local pattern_data = UISettings.weapon_patterns[mastery_id]
-	local pattern_marks = pattern_data.marks
-	local claimed_level = mastery_data.claimed_level or -1
-
-	for i = 1, #milestones do
-		local milestone = milestones[i]
-		local unlocked_level = milestone.level and milestone.level - 1 or 0
-		local milestones_ui_data = Mastery.get_milestone_ui_data(milestone)
-		local start_claim, end_claim = Mastery.get_levels_to_claim(mastery_data)
-
-		for f = 1, #milestones_ui_data do
-			local milestone_ui_data = milestones_ui_data[f]
-
-			milestones_data[#milestones_data + 1] = {
-				icon = milestone_ui_data.icon,
-				level = milestone.level,
-				display_name = milestone_ui_data.display_name,
-				unlocked = unlocked_level <= claimed_level,
-				can_unlock = start_claim <= end_claim and unlocked_level == start_claim,
-				text = milestone_ui_data.text,
-				icon_size = milestone_ui_data.icon_size,
-				icon_color = milestone_ui_data.icon_color,
-				icon_material_values = milestone_ui_data.icon_material_values,
-				type = milestone_ui_data.type,
-				sort_order = milestone_ui_data.sort_order,
-			}
-		end
-	end
-
-	table.sort(milestones_data, function (a, b)
-		local a_level = a.level or 0
-		local b_level = b.level or 0
-		local a_sort_order = a.sort_order or math.huge
-		local b_sort_order = b.sort_order or math.huge
-
-		if a_level == b_level then
-			return a_sort_order < b_sort_order
-		else
-			return a_level < b_level
-		end
-	end)
+	local milestones_data = Mastery.get_milestones_ui_data(mastery_data)
 
 	return Promise.resolved(milestones_data)
 end

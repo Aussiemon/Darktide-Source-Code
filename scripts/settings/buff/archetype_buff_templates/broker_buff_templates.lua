@@ -7,6 +7,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BrokerBuffUtils = require("scripts/settings/buff/broker_buff_utils")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -214,97 +215,12 @@ function _end_outlines(template_data, template_context)
 	template_data.enemies_to_tag = nil
 end
 
-local function _bespoke_needlepistol_close_range_kill_start(template_data, template_context)
-	template_data.tagged_enemies = {}
-	template_data.untagged_enemies = {}
-
-	local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
-
-	template_data.inventory = unit_data_extension:read_component("inventory")
-end
-
-local GRACE_FRAMES = 1
-
-local function _bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
-	local frame = FixedFrame.to_fixed_frame(t)
-
-	for unit, tagged_frame in pairs(template_data.tagged_enemies) do
-		local buff_ext = ScriptUnit.has_extension(unit, "buff_system")
-
-		if not buff_ext or not buff_ext:has_keyword(keywords.toxin) then
-			if tagged_frame < frame - GRACE_FRAMES then
-				template_data.untagged_enemies[unit] = true
-			end
-		else
-			template_data.tagged_enemies[unit] = frame
-		end
-	end
-
-	for unit, _ in pairs(template_data.untagged_enemies) do
-		template_data.tagged_enemies[unit] = nil
-	end
-
-	table.clear(template_data.untagged_enemies)
-end
-
-local allowed_items = table.set({
-	"content/items/weapons/player/ranged/needlepistol_p1_m1",
-	"content/items/weapons/player/ranged/needlepistol_p1_m2",
-})
-
-local function _bespoke_needlepistol_close_range_kill_check_proc_hit(params, template_data, template_context, t)
-	local is_needler = params.attacking_item and params.attacking_item.name and allowed_items[params.attacking_item.name]
-
-	if not template_context.is_server then
-		return false
-	elseif not is_needler then
-		return false
-	elseif not HEALTH_ALIVE[params.attacked_unit] then
-		return false
-	elseif params.attack_type ~= attack_types.ranged then
-		return false
-	elseif not template_data.inventory or template_data.inventory.wielded_slot ~= "slot_secondary" then
-		return false
-	end
-
-	return true
-end
-
-local function _bespoke_needle_pistol_close_range_kill_check_proc_minion_death(params, template_data, template_context, t)
-	if not template_context.is_server then
-		return false
-	elseif not template_data.tagged_enemies[params.dying_unit] then
-		return false
-	elseif params.damage_type ~= "toxin" then
-		return false
-	end
-
-	local hit_world_position = params.position and params.position:unbox()
-
-	if not hit_world_position then
-		return false
-	end
-
-	local attacking_unit = params.attacking_unit
-	local close_range_squared = DamageSettings.ranged_close^2
-	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
-	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
-	local is_within_distance = distance_squared <= close_range_squared
-
-	return is_within_distance
-end
-
-local function _bespoke_needle_pistol_close_range_kill_proc_hit(params, template_data, template_context, t)
-	local frame = FixedFrame.to_fixed_frame(t)
-
-	template_data.tagged_enemies[params.attacked_unit] = frame
-end
-
-local function _bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
-	if params.dying_unit then
-		template_data.tagged_enemies[params.dying_unit] = nil
-	end
-end
+local _bespoke_needlepistol_close_range_kill_start = BrokerBuffUtils.bespoke_needlepistol_close_range_kill_start
+local _bespoke_needlepistol_close_range_kill_update = BrokerBuffUtils.bespoke_needlepistol_close_range_kill_update
+local _bespoke_needlepistol_close_range_kill_check_proc_hit = BrokerBuffUtils.bespoke_needlepistol_close_range_kill_check_proc_hit
+local _bespoke_needle_pistol_close_range_kill_check_proc_minion_death = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_check_proc_minion_death
+local _bespoke_needle_pistol_close_range_kill_proc_hit = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_proc_hit
+local _bespoke_needle_pistol_close_range_kill_proc_on_minion_death = BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_proc_on_minion_death
 
 local function _extend_ability_duration(start_time, template_context, max_duration, added_duration, divisor, t)
 	local time_since_start = t - start_time
@@ -780,6 +696,10 @@ templates.broker_punk_rage_stance = {
 		end,
 	},
 	stop_func = function (template_data, template_context, extension_destroyed)
+		if extension_destroyed then
+			return
+		end
+
 		template_context.buff_extension:add_internally_controlled_buff("broker_punk_rage_exhaustion", template_data.t)
 
 		if template_context.is_server then
@@ -2865,10 +2785,10 @@ templates.broker_passive_melee_attacks_apply_toxin = {
 	end,
 }
 templates.broker_passive_blitz_inflicts_toxin = {
+	buff_to_add = "neurotoxin_interval_buff3",
 	class_name = "proc_buff",
 	predicted = false,
-	stacks_to_add = talent_settings.broker_passive_blitz_inflicts_toxin.stacks,
-	buff_to_add = talent_settings.broker_passive_blitz_inflicts_toxin.toxin_buff,
+	stacks_to_add = 3,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},

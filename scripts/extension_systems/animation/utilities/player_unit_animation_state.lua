@@ -41,10 +41,10 @@ end
 PlayerUnitAnimationState.set_anim_state_machine = function (player_unit, first_person_unit, weapon_template, is_local_unit, anim_variables_3p, anim_variables_1p)
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local breed_name = unit_data_extension:breed_name()
-	local anim_state_machine_3p, anim_state_machine_1p = WeaponTemplate.state_machines(weapon_template, breed_name)
+	local anim_state_machine_3p, anim_state_machine_1p, initialization_variables_or_nil = WeaponTemplate.state_machines(weapon_template, breed_name)
 
-	_set_anim_state_machine(player_unit, anim_state_machine_3p)
-	_set_anim_state_machine(first_person_unit, anim_state_machine_1p)
+	_set_anim_state_machine(player_unit, player_unit, anim_state_machine_3p, initialization_variables_or_nil)
+	_set_anim_state_machine(first_person_unit, player_unit, anim_state_machine_1p, initialization_variables_or_nil)
 	PlayerUnitAnimationState.cache_anim_variable_ids(player_unit, first_person_unit, anim_variables_3p, anim_variables_1p, anim_state_machine_3p, anim_state_machine_1p)
 
 	local aim_extension = ScriptUnit.has_extension(player_unit, "aim_system")
@@ -108,11 +108,23 @@ PlayerUnitAnimationState.override_animation_state = function (animation_state_co
 	_override_states(animation_state_component, player_unit, first_person_unit, override_3p, override_1p)
 end
 
-function _set_anim_state_machine(unit, state_machine_name)
+function _set_anim_state_machine(unit, unit_3p, state_machine_name, initialization_variables_or_nil)
 	local state_machine_settings = PlayerUnitAnimationMachineSettings[state_machine_name]
 	local blend_time = state_machine_settings.blend_time
 
 	Unit.set_animation_state_machine_blend_base_layer(unit, state_machine_name, blend_time)
+
+	if initialization_variables_or_nil then
+		for variable_name, value in pairs(initialization_variables_or_nil) do
+			local variable_id = Unit.animation_find_variable(unit, variable_name)
+
+			if variable_id then
+				value = type(value) == "function" and value(unit_3p) or value
+
+				Unit.animation_set_variable(unit, variable_id, value)
+			end
+		end
+	end
 end
 
 function _record_times(animation_state_component, player_unit, first_person_unit)

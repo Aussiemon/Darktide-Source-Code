@@ -11,6 +11,128 @@ local dummy_exp_per_level = table.clone(WeaponExperienceSettings.experience_per_
 local cached_pattern_id_to_category_id, cached_category_id_to_pattern_id
 local Mastery = {}
 
+local function _is_reward_visible(reward_data)
+	if not reward_data then
+		return false
+	end
+
+	if reward_data.display and reward_data.display.visibility and reward_data.display.visibility == "hidden" then
+		return false
+	end
+
+	return true
+end
+
+local function _get_reward_type(mastery_id, reward_data, reward_name)
+	if not _is_reward_visible(reward_data) then
+		return ""
+	end
+
+	if reward_name ~= "mark_unlock_2" and reward_name ~= "trait_unlock" then
+		if string.find(reward_name, "perk_unlock") then
+			return "perk_unlock"
+		elseif string.find(reward_name, "mastery_points") then
+			return "mastery_points"
+		elseif string.find(reward_name, "expertise_point") then
+			return "expertise_point"
+		elseif string.find(reward_name, "currency") then
+			return "currency"
+		elseif string.find(reward_name, "mark_unlock") then
+			return "mark_unlock"
+		elseif string.find(reward_name, "cosmetic") then
+			return "cosmetic"
+		end
+
+		return reward_name
+	end
+
+	return ""
+end
+
+local function _get_marks_rewards(mastery_data)
+	local rewards = {}
+	local milestones = mastery_data and mastery_data.milestones
+
+	if not milestones then
+		return rewards
+	end
+
+	local mastery_id = mastery_data.mastery_id
+
+	if milestones then
+		for i = 1, #milestones do
+			local milestone = milestones[i]
+
+			if milestone and milestone.rewards then
+				for reward_name, reward_data in pairs(milestone.rewards) do
+					local is_mark_reward = string.find(reward_name, "mark_unlock")
+
+					if is_mark_reward then
+						rewards[#rewards + 1] = {
+							level = milestone.level,
+							reward = reward_data,
+						}
+					end
+				end
+			end
+		end
+	end
+
+	return rewards
+end
+
+local function _get_mastery_rewards_by_id(mastery_data, reward_type_id)
+	local rewards = {}
+	local milestones = mastery_data and mastery_data.milestones
+
+	if not milestones then
+		return rewards
+	end
+
+	local mastery_id = mastery_data.mastery_id
+
+	if milestones then
+		for i = 1, #milestones do
+			local milestone = milestones[i]
+
+			if milestone and milestone.rewards then
+				for reward_name, reward in pairs(milestone.rewards) do
+					local id = _get_reward_type(mastery_id, reward, reward_name)
+
+					if string.find(id, reward_type_id) then
+						rewards[#rewards + 1] = {
+							level = milestone.level,
+							reward = reward,
+						}
+					end
+				end
+			end
+		end
+	end
+
+	return rewards
+end
+
+local function _get_masteries_rewards_by_id(masteries_data, pattern_id, reward_type_id)
+	local rewards = {}
+
+	if not masteries_data or not pattern_id or not reward_type_id then
+		return rewards
+	end
+
+	if pattern_id and masteries_data[pattern_id] then
+		local mastery_data = masteries_data[pattern_id]
+
+		rewards = _get_mastery_rewards_by_id(mastery_data, reward_type_id)
+	elseif not pattern_id then
+		for pattern_id, mastery_data in pairs(masteries_data) do
+			rewards[pattern_id] = _get_mastery_rewards_by_id(mastery_data, reward_type_id)
+		end
+	end
+
+	return rewards
+end
+
 Mastery.get_trait_costs = function ()
 	local trait_costs = Managers.data_service.crafting:get_traits_mastery_costs() or {}
 
@@ -51,12 +173,15 @@ Mastery.get_max_points = function (mastery_data)
 		return points
 	end
 
+	local mastery_id = mastery_data.mastery_id
+
 	for i = 1, #milestones do
 		local milestone = milestones[i]
 
 		if milestone and milestone.rewards then
-			for id, data in pairs(milestone.rewards) do
-				local reward_points = data.stats and data.stats.points
+			for reward_name, reward in pairs(milestone.rewards) do
+				local id = _get_reward_type(mastery_id, reward, reward_name)
+				local reward_points = reward.stats and reward.stats.points
 
 				if id == "mastery_points" and type(reward_points) == "number" then
 					points = points + reward_points
@@ -75,12 +200,15 @@ Mastery.get_all_unlocked_points = function (mastery_data)
 		return points
 	end
 
+	local mastery_id = mastery_data.mastery_id
+
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
 		if milestone and milestone.rewards then
-			for id, data in pairs(milestone.rewards) do
-				local reward_points = data.stats and data.stats.points
+			for reward_name, reward in pairs(milestone.rewards) do
+				local reward_points = reward.stats and reward.stats.points
+				local id = _get_reward_type(mastery_id, reward, reward_name)
 
 				if id == "mastery_points" and type(reward_points) == "number" then
 					local added_points = reward_points > 0 and reward_points or 0
@@ -103,14 +231,17 @@ Mastery.get_max_blessing_rarity_unlocked_level = function (mastery_data)
 	end
 
 	local current_level = mastery_data.claimed_level and mastery_data.claimed_level + 1 or -1
+	local mastery_id = mastery_data.mastery_id
 
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
 		if milestone and milestone.rewards then
-			for id, data in pairs(milestone.rewards) do
+			for reward_name, reward in pairs(milestone.rewards) do
+				local id = _get_reward_type(mastery_id, reward, reward_name)
+
 				if id == "trait_unlock" then
-					local trait_rank = data.data and data.data.trait_rank and math.clamp(data.data.trait_rank, 0, RankSettings.max_trait_rank) or 1
+					local trait_rank = reward.data and reward.data.trait_rank and math.clamp(reward.data.trait_rank, 0, RankSettings.max_trait_rank) or 1
 
 					rarity = math.max(rarity, trait_rank)
 				end
@@ -153,14 +284,17 @@ Mastery.get_max_perk_rarity_unlocked_level = function (mastery_data)
 	end
 
 	local current_level = mastery_data.claimed_level and mastery_data.claimed_level + 1 or -1
+	local mastery_id = mastery_data.mastery_id
 
 	for i = 1, current_level do
 		local milestone = milestones[i]
 
 		if milestone and milestone.rewards then
-			for id, data in pairs(milestone.rewards) do
+			for reward_name, reward in pairs(milestone.rewards) do
+				local id = _get_reward_type(mastery_id, reward, reward_name)
+
 				if id == "perk_unlock" then
-					local perk_rank = data.data and data.data.perk_rank and math.clamp(data.data.perk_rank, 0, RankSettings.max_perk_rank) or 1
+					local perk_rank = reward.data and reward.data.perk_rank and math.clamp(reward.data.perk_rank, 0, RankSettings.max_perk_rank) or 1
 
 					rarity = math.max(rarity, perk_rank)
 				end
@@ -230,55 +364,54 @@ Mastery.get_mastery_max_level = function (mastery_data)
 	return math.min(max_level, #exp_per_level)
 end
 
-Mastery.get_masteries_rewards_by_id = function (masteries_data, pattern_id, reward_type_id)
-	local rewards = {}
+Mastery.get_milestones_ui_data = function (mastery_data)
+	local milestones_data = {}
+	local milestones = mastery_data.milestones
+	local claimed_level = mastery_data.claimed_level or -1
 
-	if not masteries_data or not pattern_id or not reward_type_id then
-		return rewards
-	end
+	for i = 1, #milestones do
+		local milestone = milestones[i]
+		local unlocked_level = milestone.level and milestone.level - 1 or 0
+		local mastery_id = mastery_data.mastery_id
+		local milestones_ui_data = Mastery.get_milestone_ui_data(mastery_id, milestone)
+		local start_claim, end_claim = Mastery.get_levels_to_claim(mastery_data)
 
-	if pattern_id and masteries_data[pattern_id] then
-		local mastery_data = masteries_data[pattern_id]
+		for f = 1, #milestones_ui_data do
+			local milestone_ui_data = milestones_ui_data[f]
 
-		rewards = Mastery.get_mastery_rewards_by_id(mastery_data, reward_type_id)
-	elseif not pattern_id then
-		for pattern_id, mastery_data in pairs(masteries_data) do
-			rewards[pattern_id] = Mastery.get_mastery_rewards_by_id(mastery_data, reward_type_id)
+			milestones_data[#milestones_data + 1] = {
+				icon = milestone_ui_data.icon,
+				level = milestone.level,
+				display_name = milestone_ui_data.display_name,
+				unlocked = unlocked_level <= claimed_level,
+				can_unlock = start_claim <= end_claim and unlocked_level == start_claim,
+				text = milestone_ui_data.text,
+				icon_size = milestone_ui_data.icon_size,
+				icon_color = milestone_ui_data.icon_color,
+				icon_material_values = milestone_ui_data.icon_material_values,
+				type = milestone_ui_data.type,
+				sort_order = milestone_ui_data.sort_order,
+			}
 		end
 	end
 
-	return rewards
-end
+	table.sort(milestones_data, function (a, b)
+		local a_level = a.level or 0
+		local b_level = b.level or 0
+		local a_sort_order = a.sort_order or math.huge
+		local b_sort_order = b.sort_order or math.huge
 
-Mastery.get_mastery_rewards_by_id = function (mastery_data, reward_type_id)
-	local rewards = {}
-	local milestones = mastery_data and mastery_data.milestones
-
-	if not milestones then
-		return rewards
-	end
-
-	if milestones then
-		for i = 1, #milestones do
-			local milestone = milestones[i]
-
-			if milestone and milestone.rewards then
-				for id, reward in pairs(milestone.rewards) do
-					if string.find(id, reward_type_id) then
-						rewards[#rewards + 1] = {
-							level = milestone.level,
-							reward = reward,
-						}
-					end
-				end
-			end
+		if a_level == b_level then
+			return a_sort_order < b_sort_order
+		else
+			return a_level < b_level
 		end
-	end
+	end)
 
-	return rewards
+	return milestones_data
 end
 
-Mastery.get_milestone_ui_data = function (milestone)
+Mastery.get_milestone_ui_data = function (mastery_id, milestone)
 	local milestone_rewards = {}
 
 	if not milestone then
@@ -286,11 +419,11 @@ Mastery.get_milestone_ui_data = function (milestone)
 	end
 
 	if milestone.rewards then
-		for id, data in pairs(milestone.rewards) do
-			local reward = Mastery.get_reward_ui_data(id, data)
+		for reward_name, reward in pairs(milestone.rewards) do
+			local reward_ui_data = Mastery.get_reward_ui_data(mastery_id, reward, reward_name)
 
-			if not table.is_empty(reward) then
-				milestone_rewards[#milestone_rewards + 1] = reward
+			if not table.is_empty(reward_ui_data) then
+				milestone_rewards[#milestone_rewards + 1] = reward_ui_data
 			end
 		end
 	end
@@ -306,27 +439,28 @@ Mastery.get_milestone_ui_data = function (milestone)
 	return milestone_rewards
 end
 
-Mastery.get_reward_ui_data = function (id, reward)
-	local sort_order = {
-		cosmetic = 2,
-		currency = 5,
-		expertise_point = 3,
-		mark_unlock = 1,
-		mastery_points = 4,
-		perk_unlock = 6,
-		trait_unlock = 6,
-	}
+local sort_order = {
+	cosmetic = 2,
+	currency = 5,
+	expertise_point = 3,
+	mark_unlock = 1,
+	mastery_points = 4,
+	perk_unlock = 6,
+	trait_unlock = 6,
+}
+
+Mastery.get_reward_ui_data = function (mastery_id, reward, reward_name)
 	local reward_data = {}
 
 	if not reward then
 		return reward_data
 	end
 
-	local reward_type = id
+	local reward_type = _get_reward_type(mastery_id, reward, reward_name)
 	local default_icon = "content/ui/materials/icons/weapons/hud/combat_blade_01"
 	local sort_id
 
-	if string.find(reward_type, "perk_unlock") then
+	if reward_type == "perk_unlock" then
 		local reward_rarity = reward.data and reward.data.perk_rank and math.clamp(reward.data.perk_rank, 0, RankSettings.max_perk_rank) or 0
 
 		reward_data.icon = RankSettings[reward_rarity].perk_icon
@@ -338,7 +472,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 			32,
 		}
 		sort_id = "perk_unlock"
-	elseif string.find(reward_type, "trait_unlock") then
+	elseif reward_type == "trait_unlock" then
 		local reward_rarity = reward.data and reward.data.trait_rank and math.clamp(reward.data.trait_rank, 0, RankSettings.max_trait_rank) or 0
 
 		reward_data.icon = "content/ui/materials/icons/traits/traits_container"
@@ -354,21 +488,21 @@ Mastery.get_reward_ui_data = function (id, reward)
 		}
 		reward_data.icon_color = Color.terminal_text_body(255, true)
 		sort_id = "trait_unlock"
-	elseif string.find(reward_type, "mastery_points") then
+	elseif reward_type == "mastery_points" then
 		reward_data.display_name = Localize("loc_mastery_reward_mastery_points")
 
 		local points = reward.stats and reward.stats.points or 0
 
 		reward_data.text = string.format("\n+%s", points)
 		sort_id = "mastery_points"
-	elseif string.find(reward_type, "expertise_point") then
+	elseif reward_type == "expertise_point" then
 		reward_data.display_name = Localize("loc_mastery_reward_expertise_cap")
 
 		local expertise_cap = reward.data and reward.data.expertise_cap and reward.data.expertise_cap * Items.get_expertise_multiplier() or 0
 
 		reward_data.text = string.format("\n%s", expertise_cap)
 		sort_id = "expertise_point"
-	elseif string.find(reward_type, "currency") then
+	elseif reward_type == "currency" then
 		local currency_data = WalletSettings[reward.type]
 
 		reward_data.icon = currency_data.icon_texture_big
@@ -379,7 +513,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 		}
 		reward_data.text = reward.value
 		sort_id = "currency"
-	elseif string.find(reward_type, "cosmetic") then
+	elseif reward_type == "cosmetic" then
 		reward_data.icon = default_icon
 		reward_data.display_name = reward_type
 		reward_data.icon_size = {
@@ -389,7 +523,7 @@ Mastery.get_reward_ui_data = function (id, reward)
 		sort_id = "cosmetic"
 
 		return reward_data
-	elseif string.find(reward_type, "mark_unlock") then
+	elseif reward_type == "mark_unlock" then
 		local item = Mastery.get_mark_item(reward)
 
 		if item then
@@ -407,8 +541,10 @@ Mastery.get_reward_ui_data = function (id, reward)
 		end
 	end
 
-	reward_data.type = reward_type
-	reward_data.sort_order = sort_id and sort_order[sort_id] or math.huge
+	if not table.is_empty(reward_data) then
+		reward_data.type = reward_type
+		reward_data.sort_order = sort_id and sort_order[sort_id] or math.huge
+	end
 
 	return reward_data
 end
@@ -443,7 +579,7 @@ Mastery.get_current_expertise_cap = function (mastery_data)
 		return default_expertise
 	end
 
-	local rewards_data = Mastery.get_mastery_rewards_by_id(mastery_data, "expertise_point")
+	local rewards_data = _get_mastery_rewards_by_id(mastery_data, "expertise_point")
 	local current_level = mastery_data.claimed_level + 1 or -1
 
 	if table.is_empty(rewards_data) then
@@ -474,7 +610,7 @@ Mastery.get_max_expertise_cap = function (mastery_data)
 		return 0
 	end
 
-	local rewards_data = Mastery.get_mastery_rewards_by_id(mastery_data, "expertise_point")
+	local rewards_data = _get_mastery_rewards_by_id(mastery_data, "expertise_point")
 
 	if table.is_empty(rewards_data) then
 		return 0
@@ -571,7 +707,7 @@ Mastery.get_all_mastery_marks = function (mastery_data)
 		return {}
 	end
 
-	local mark_milestones = Mastery.get_mastery_rewards_by_id(mastery_data, "mark_unlock")
+	local mark_milestones = _get_marks_rewards(mastery_data)
 	local marks_data = {}
 
 	if mark_milestones then
@@ -966,6 +1102,45 @@ Mastery.get_unclaimed_rewards = function (mastery_data)
 	end
 
 	return result
+end
+
+Mastery.filter_valid_milestones = function (mastery_data)
+	local filtered_milestones = {}
+
+	if not mastery_data then
+		return filtered_milestones
+	end
+
+	local milestones = mastery_data.milestones
+
+	if not milestones then
+		return filtered_milestones
+	end
+
+	local mastery_id = mastery_data.mastery_id
+
+	for i = 1, #milestones do
+		local milestone = milestones[i]
+		local filtered_rewards = {}
+
+		if milestone.rewards then
+			for reward_name, reward in pairs(milestone.rewards) do
+				local id = _get_reward_type(mastery_id, reward, reward_name)
+
+				if id then
+					filtered_rewards[#filtered_rewards + 1] = reward
+				end
+			end
+		end
+
+		if not table.is_empty(filtered_rewards) then
+			milestone = table.clone(milestone)
+			milestone.rewards = filtered_rewards
+			filtered_milestones[#filtered_milestones + 1] = milestone
+		end
+	end
+
+	return filtered_milestones
 end
 
 return Mastery

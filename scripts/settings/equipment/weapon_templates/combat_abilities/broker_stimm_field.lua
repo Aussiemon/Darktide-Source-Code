@@ -118,6 +118,7 @@ weapon_template.actions = {
 		remove_item_from_inventory = false,
 		start_input = nil,
 		try_until_placed = true,
+		uninterruptible = true,
 		use_ability_charge = true,
 		use_aim_date = false,
 		vo_tag = "ability_stimm",

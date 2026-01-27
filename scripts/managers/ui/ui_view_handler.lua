@@ -511,7 +511,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 			local view_name = active_views_array[i]
 			local view_data = active_views_data[view_name]
 
-			if view_data.marked_for_destruction then
+			if view_data and view_data.marked_for_destruction then
 				self:_force_close(view_name)
 			end
 		end
@@ -690,6 +690,13 @@ end
 UIViewHandler._open = function (self, view_name, opening_duration, context, settings_override)
 	local active_views_array = self._active_views_array
 	local active_views_data = self._active_views_data
+
+	if active_views_data[view_name] then
+		Log.error("UIViewHandler", "View with name: %s is already active.", view_name)
+
+		return
+	end
+
 	local t = self:_get_time()
 	local view_list = self._view_list
 	local view_settings = view_list[view_name]

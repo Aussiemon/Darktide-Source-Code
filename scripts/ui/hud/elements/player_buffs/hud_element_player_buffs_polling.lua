@@ -502,9 +502,18 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 			end
 
 			if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil then
-				content.text = show_stack_count and tostring(stack_count) or nil
-
 				local text_style = style.text
+
+				if not show_stack_count then
+					content.text, text_style.font_size = nil, 20
+				elseif buff_template.stack_hud_data_formatter then
+					local text, optional_font_size = buff_template.stack_hud_data_formatter(buff_data, stack_count, buff_template, text_style)
+
+					content.text, text_style.font_size = text, optional_font_size or 20
+				else
+					content.text = tostring(stack_count) or nil
+					text_style.font_size = 20
+				end
 
 				if content.text and content.text ~= "" then
 					local buff_size = widget.size or {

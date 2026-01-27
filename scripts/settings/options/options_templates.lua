@@ -5,7 +5,6 @@ local category_settings = {
 		path = "scripts/settings/options/interface_settings",
 	},
 	{
-		dofile = true,
 		path = "scripts/settings/options/sound_settings",
 	},
 	{

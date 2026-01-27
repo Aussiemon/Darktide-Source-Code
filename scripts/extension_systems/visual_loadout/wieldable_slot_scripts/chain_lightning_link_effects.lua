@@ -67,7 +67,7 @@ FxData.init = function (self, index)
 	self._effects = effects
 end
 
-FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_node, target_unit, target_node)
+FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_node, target_unit, target_node, particle_group)
 	local num_effects = self._num_effects + 1
 
 	if num_effects > MAX_NUM_EFFECTS_PER_TABLE then
@@ -84,7 +84,7 @@ FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_
 	local direction, length = Vector3_direction_length(line)
 	local rotation = Quaternion_look(direction)
 	local particle_length = Vector3(length, 1, 1)
-	local effect_id = World_create_particles(world, link_effect_name, source_pos, rotation)
+	local effect_id = World_create_particles(world, link_effect_name, source_pos, rotation, nil, particle_group)
 	local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
 
 	World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
@@ -100,7 +100,7 @@ FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_
 	entry.skip_length_variable = SET_LENGTH_VARIABLE
 end
 
-FxData.spawn_vfx_world_position = function (self, world, source_unit, source_node, target_pos, target_normal, effect_name, use_target_pos, use_impact_normal_rotation, skip_length_variable)
+FxData.spawn_vfx_world_position = function (self, world, source_unit, source_node, target_pos, target_normal, effect_name, use_target_pos, use_impact_normal_rotation, skip_length_variable, particle_group)
 	local num_effects = self._num_effects + 1
 
 	if num_effects > MAX_NUM_EFFECTS_PER_TABLE then
@@ -117,7 +117,7 @@ FxData.spawn_vfx_world_position = function (self, world, source_unit, source_nod
 	local rotation = Quaternion_look(direction)
 	local particle_length = Vector3(length, 1, 1)
 	local rotation_to_use = use_impact_normal_rotation and target_normal and Quaternion_look(target_normal) or rotation
-	local effect_id = World_create_particles(world, effect_name, source_pos, rotation_to_use)
+	local effect_id = World_create_particles(world, effect_name, source_pos, rotation_to_use, nil, particle_group)
 
 	if not skip_length_variable then
 		local length_variable_index = World_find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
@@ -267,6 +267,10 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._no_target_normal = Vector3Box(0, 0, 0)
 	self._charge_level = false
 
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	local weapon_chain_settings = weapon_template.chain_settings
 	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
 	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
@@ -292,6 +296,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 		weapon_action_component = self._weapon_action_component,
 		weapon_template = self._weapon_template,
 		weapon_actions = self._weapon_actions,
+		particle_group = self._particle_group_id,
 	}
 
 	self:_create_chain_root_node()
@@ -429,17 +434,17 @@ ChainLightningLinkEffects._find_no_target = function (self, t)
 			if spawn_left then
 				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
 
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE)
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE, context.particle_group)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE, context.particle_group)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE, context.particle_group)
 			end
 
 			if spawn_right then
 				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
 
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE)
-				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, link_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE, context.particle_group)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, impact_effect_name, USE_TARGET_POS, USE_IMPACT_NORMAL_ROTATION, SKIP_LENGTH_VARIABLE, context.particle_group)
+				fx_data_table:spawn_vfx_world_position(context.world, parent_unit, source_node_index, target_pos, target_normal, to_target_effect_name, USE_SOURCE_POS, USE_TO_TARGET_ROTATION, SET_LENGTH_VARIABLE, context.particle_group)
 			end
 
 			chain_root_node:set_value("fx_data", fx_data_table)
@@ -621,7 +626,7 @@ function _on_add_func(node, context)
 		local fx_data_table = context.fx_data_tables:next_table()
 		local link_effect_name = _link_effect_name(context)
 
-		fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+		fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index, context.particle_group)
 		node:set_value("fx_data", fx_data_table)
 	end
 
@@ -642,15 +647,15 @@ function _root_on_add_func(node, context)
 		if spawn_left then
 			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
 
-			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
-			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index, context.particle_group)
+			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index, context.particle_group)
 		end
 
 		if spawn_right then
 			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
 
-			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
-			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index, context.particle_group)
+			fx_data_table:spawn_vfx(context.world, to_target_effect_name, parent_unit, source_node_index, child_unit, target_node_index, context.particle_group)
 		end
 
 		node:set_value("fx_data", fx_data_table)

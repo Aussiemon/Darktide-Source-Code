@@ -35,7 +35,7 @@ local effect_template = {
 		template_data.was_camera_following_target = Effect.update_targeted_by_ranged_minion_wwise_parameters(target_unit, wwise_world, source_id, nil)
 
 		local world, position, pose = template_context.world, Vector3.zero(), Matrix4x4.identity()
-		local particle_id = World.create_particles(world, SHOOT_VFX, position)
+		local particle_id = World.create_particles(world, SHOOT_VFX, position, nil, nil, template_data.particle_group)
 
 		World.link_particles(world, particle_id, attachment_unit, node_index, pose, ORPHANED_POLICY)
 

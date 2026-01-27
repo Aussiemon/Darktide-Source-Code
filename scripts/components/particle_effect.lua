@@ -18,6 +18,8 @@ ParticleEffect.init = function (self, unit)
 		self._particle_node = Unit.node(unit, particle_node_name)
 	end
 
+	self._particle_group = World.create_particle_group(self._world)
+
 	local create_particle_on_spawn = self:get_data(unit, "create_particle_on_spawn")
 
 	Unit.flow_event(unit, "particle_effect_component_init")
@@ -79,6 +81,8 @@ ParticleEffect.destroy = function (self, unit)
 	if self._particle_id ~= nil then
 		self:_destroy_particle()
 	end
+
+	World.destroy_particle_group(self._world, self._particle_group)
 end
 
 ParticleEffect._create_particle = function (self)
@@ -94,7 +98,13 @@ ParticleEffect._create_particle = function (self)
 	local world_position = Unit.world_position(unit, 1)
 	local world_rotation = Unit.world_rotation(unit, 1)
 	local world_scale = Unit.world_scale(unit, 1)
-	local particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
+	local particle_group
+
+	if GameParameters and GameParameters.destroy_unmanaged_particles then
+		particle_group = self._particle_group
+	end
+
+	local particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale, particle_group)
 
 	World.link_particles(world, particle_id, unit, self._particle_node, Matrix4x4.identity(), "unlink")
 

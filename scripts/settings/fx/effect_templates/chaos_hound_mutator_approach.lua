@@ -28,7 +28,7 @@ local effect_template = {
 		local world = template_context.world
 		local unit = template_data.unit
 		local unit_position = POSITION_LOOKUP[unit]
-		local particle_id = World.create_particles(world, PARTICLE_NAME, unit_position)
+		local particle_id = World.create_particles(world, PARTICLE_NAME, unit_position, nil, nil, template_data.particle_group)
 
 		template_data.particle_id = particle_id
 
@@ -37,7 +37,7 @@ local effect_template = {
 
 		World.link_particles(world, particle_id, unit, node_1, Matrix4x4.identity(), orphaned_policy)
 
-		local particle_2_id = World.create_particles(world, PARTICLE_2_NAME, unit_position)
+		local particle_2_id = World.create_particles(world, PARTICLE_2_NAME, unit_position, nil, nil, template_data.particle_group)
 
 		template_data.particle_2_id = particle_2_id
 
@@ -45,7 +45,7 @@ local effect_template = {
 
 		World.link_particles(world, particle_2_id, unit, node_2, Matrix4x4.identity(), orphaned_policy)
 
-		local particle_3_id = World.create_particles(world, PARTICLE_3_NAME, unit_position)
+		local particle_3_id = World.create_particles(world, PARTICLE_3_NAME, unit_position, nil, nil, template_data.particle_group)
 
 		template_data.particle_3_id = particle_3_id
 

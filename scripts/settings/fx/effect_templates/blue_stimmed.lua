@@ -37,7 +37,7 @@ local effect_template = {
 		local node_2 = Unit.has_node(unit, PARTICLE_2_NODE) and Unit.node(unit, PARTICLE_2_NODE)
 
 		if node_2 then
-			local particle_2_id = World.create_particles(world, PARTICLE_2_NAME, unit_position)
+			local particle_2_id = World.create_particles(world, PARTICLE_2_NAME, unit_position, nil, nil, template_data.particle_group)
 
 			template_data.particle_2_id = particle_2_id
 
@@ -49,7 +49,7 @@ local effect_template = {
 		local node_3 = Unit.has_node(unit, PARTICLE_3_NODE) and Unit.node(unit, PARTICLE_3_NODE)
 
 		if node_3 then
-			local particle_3_id = World.create_particles(world, PARTICLE_3_NAME, unit_position)
+			local particle_3_id = World.create_particles(world, PARTICLE_3_NAME, unit_position, nil, nil, template_data.particle_group)
 
 			template_data.particle_3_id = particle_3_id
 

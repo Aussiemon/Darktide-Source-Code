@@ -627,7 +627,7 @@ templates.adamant_companion_counts_for_coherency = {
 	end,
 	check_proc_func = function (params, template_data, template_context)
 		local is_companion_ours = params.owner_unit and params.owner_unit == template_context.unit
-		local is_arbites_companion_dog = params.companion_breed == "companion_dog"
+		local is_arbites_companion_dog = params.companion_breed_name == "companion_dog"
 
 		return is_companion_ours and is_arbites_companion_dog
 	end,

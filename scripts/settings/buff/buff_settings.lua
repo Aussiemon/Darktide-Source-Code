@@ -87,7 +87,7 @@ buff_settings.proc_event_validation = {
 		warp_charge_percent = "number",
 	},
 	on_player_companion_spawn = {
-		companion_breed = "string",
+		companion_breed_name = "string",
 		companion_unit = "unit",
 		owner_unit = "unit",
 	},

@@ -159,6 +159,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_face_cowl_keep_ears_b = {
+		property_overrides = {
+			positive_mask = {
+				0,
+				0,
+				0,
+				0.818,
+			},
+			negative_mask = {
+				0,
+				0.899,
+				0,
+				0.308,
+			},
+		},
+	},
 	mask_face_cowl_hide_mouth = {
 		property_overrides = {
 			positive_mask = {

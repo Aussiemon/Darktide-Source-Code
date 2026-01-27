@@ -433,6 +433,23 @@ local material_overrides = {
 			},
 		},
 	},
+	hair_headgear_blonde_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_blonde_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.13,
+			},
+			hair_rgb = {
+				0.65,
+				0.53,
+				0.28,
+			},
+		},
+	},
 	hair_color_2_red_black_01 = {
 		texture_overrides = {
 			hair_color_gradient = {
@@ -608,6 +625,48 @@ local material_overrides = {
 				0.29,
 				0.19,
 				0.427,
+			},
+		},
+	},
+	hair_color_2_red_black_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_color_gray_01",
+			},
+			two_color_blend_mask = {
+				resource = "content/characters/player/human/attachments_base/hair/shared/textures/hair_material_mask/hair_material_mask_01",
+			},
+		},
+		property_overrides = {
+			two_color_blend_bool = {
+				1,
+			},
+			two_color_blend_color_a = {
+				0.1,
+				0,
+				0,
+			},
+			two_color_blend_color_b = {
+				0.6,
+				0.01,
+				0,
+			},
+		},
+	},
+	hair_cosmetic_blonde_01 = {
+		texture_overrides = {
+			hair_color_gradient = {
+				resource = "content/textures/colors/hair_cosmetic_color_blonde_01",
+			},
+		},
+		property_overrides = {
+			hair_scatter = {
+				0.13,
+			},
+			hair_rgb = {
+				0.65,
+				0.53,
+				0.28,
 			},
 		},
 	},

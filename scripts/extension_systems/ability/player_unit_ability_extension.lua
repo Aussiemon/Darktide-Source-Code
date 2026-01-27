@@ -81,6 +81,12 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 		is_server = is_server,
 	}
 
+	if GameParameters.destroy_unmanaged_particles then
+		local player_particle_group = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit]
+
+		self._equipped_ability_effect_scripts_context.player_particle_group_id = player_particle_group
+	end
+
 	if is_server then
 		self:_init_sync_data(game_object_data_or_game_session)
 	end

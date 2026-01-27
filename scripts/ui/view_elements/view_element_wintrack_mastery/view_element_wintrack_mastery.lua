@@ -36,25 +36,10 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 	for i = 1, amount do
 		local reward = rewards[i]
 		local items = reward.items
-		local filtered_items = {}
-		local removed_types = {
-			mark_unlock_2 = true,
-			trait_unlock = true,
-		}
-
-		for ii = 1, #items do
-			local item = items[ii]
-			local type = item.type
-
-			if not type or type and not removed_types[type] then
-				filtered_items[#filtered_items + 1] = item
-			end
-		end
-
 		local item_index = 1
 
-		if not table.is_empty(filtered_items) then
-			local first_item = filtered_items[item_index]
+		if not table.is_empty(items) then
+			local first_item = items[item_index]
 			local index = #item_widgets + 1
 			local reward_item_widget_name = "reward_item_widget_" .. index
 			local required_points = reward.points_required
@@ -62,7 +47,7 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 				hide_tooltip = false,
 				show_icon = true,
 				item = first_item,
-				items = filtered_items,
+				items = items,
 				required_points = required_points,
 				size = {
 					reward_item_width,
@@ -96,8 +81,8 @@ ViewElementWintrackMastery._create_reward_widgets = function (self, rewards, ui_
 			widget.content.required_points = required_points
 			mastery_item_widget.style.style_id_1.on_pressed_sound = nil
 
-			if #filtered_items > 1 then
-				widget.content.reward_count = "+" .. tostring(#filtered_items - 1)
+			if #items > 1 then
+				widget.content.reward_count = "+" .. tostring(#items - 1)
 			end
 
 			widgets[index] = widget

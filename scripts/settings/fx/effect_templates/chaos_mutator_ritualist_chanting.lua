@@ -155,14 +155,14 @@ local function _start_effects(template_data, template_context)
 			local node_name = entry.node_name
 			local target_effect_name = entry.target_effect_name
 			local start_position = Unit.world_position(unit, Unit.node(unit, node_name))
-			local particle_id = World.create_particles(world, effect_name, start_position, Quaternion.identity())
+			local particle_id = World.create_particles(world, effect_name, start_position, Quaternion.identity(), nil, template_data.particle_group)
 
 			if not entry.align_to_target then
 				World.link_particles(world, particle_id, unit, Unit.node(unit, node_name), Matrix4x4.identity(), "stop")
 			end
 
 			if target_effect_name then
-				local target_particle_id = World.create_particles(world, target_effect_name, start_position, Quaternion.identity())
+				local target_particle_id = World.create_particles(world, target_effect_name, start_position, Quaternion.identity(), nil, template_data.particle_group)
 
 				data.target_particle_id = target_particle_id
 			end

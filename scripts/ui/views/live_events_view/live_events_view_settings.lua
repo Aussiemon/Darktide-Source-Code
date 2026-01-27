@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/live_events_view/live_events_view_settings.lua
 
+local InputDevice = require("scripts/managers/input/input_device")
 local Settings = {}
 
 Settings.currency_reward_icons = {
@@ -42,6 +43,38 @@ Settings.ui_item_display_offsets = {
 		32.3,
 		8.299999999999997,
 		12,
+	},
+}
+Settings.input_legend_entries = {
+	{
+		alignment = "right_alignment",
+		display_name = "loc_lobby_legend_tooltip_visibility_on",
+		input_action = "mission_board_group_finder_open",
+		on_pressed_callback = "_callback_show_reward_tooltip",
+		visibility_function = function (parent)
+			if not InputDevice.gamepad_active then
+				return false
+			end
+
+			local active_view_instance = parent._active_view_instance
+
+			return active_view_instance and not active_view_instance._show_reward_tooltip
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_lobby_legend_tooltip_visibility_off",
+		input_action = "mission_board_group_finder_open",
+		on_pressed_callback = "_callback_hide_reward_tooltip",
+		visibility_function = function (parent)
+			if not InputDevice.gamepad_active then
+				return false
+			end
+
+			local active_view_instance = parent._active_view_instance
+
+			return active_view_instance and active_view_instance._show_reward_tooltip
+		end,
 	},
 }
 

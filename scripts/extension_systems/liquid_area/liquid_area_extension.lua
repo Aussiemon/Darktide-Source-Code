@@ -27,6 +27,9 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 
 	local unit_position = POSITION_LOOKUP[unit]
 	local nav_mesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, NAV_MESH_LATERAL, DISTANCE_FROM_NAV_MESH)
+
+	self._particle_group = World.create_particle_group(world)
+
 	local template = extension_init_data.template
 	local cell_size = template.cell_size
 	local max_liquid = extension_init_data.optional_max_liquid or template.max_liquid
@@ -128,7 +131,13 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	local additional_unit_vfx = template.additional_unit_vfx
 
 	if additional_unit_vfx then
-		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, unit_position)
+		local particle_group
+
+		if GameParameters.destroy_unmanaged_particles then
+			particle_group = self._particle_group
+		end
+
+		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, unit_position, nil, nil, particle_group)
 	end
 
 	local real_index_max_size = NetworkConstants.liquid_real_index_array_max_size
@@ -240,7 +249,13 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 	local vfx_name_rim = self._vfx_name_rim
 
 	if vfx_name_rim then
-		particle_id = World.create_particles(self._world, vfx_name_rim, from, rotation)
+		local particle_group
+
+		if GameParameters.destroy_unmanaged_particles then
+			particle_group = self._particle_group
+		end
+
+		particle_id = World.create_particles(self._world, vfx_name_rim, from, rotation, nil, particle_group)
 	end
 
 	local is_filled = false
@@ -287,7 +302,13 @@ LiquidAreaExtension._set_filled = function (self, real_index)
 		if self._drawer then
 			liquid.particle_id = self._drawer:add_cell(position, rotation)
 		else
-			liquid.particle_id = World.create_particles(world, vfx_name_filled, position, rotation)
+			local particle_group
+
+			if GameParameters.destroy_unmanaged_particles then
+				particle_group = self._particle_group
+			end
+
+			liquid.particle_id = World.create_particles(world, vfx_name_filled, position, rotation, nil, particle_group)
 		end
 	else
 		liquid.particle_id = nil
@@ -445,6 +466,8 @@ LiquidAreaExtension.destroy = function (self)
 			end
 		end
 	end
+
+	World.destroy_particle_group(world, self._particle_group)
 end
 
 LiquidAreaExtension.source_side_name = function (self)

@@ -322,9 +322,21 @@ CutsceneCharacterExtension._start_weapon_specific_walk_animation = function (sel
 
 	if self._current_state_machine ~= AnimationType.Weapon then
 		local weapon_template = WeaponTemplates[self._equipped_weapon.weapon_template]
-		local state_machine_3p, _ = WeaponTemplate.state_machines(weapon_template, self._breed_name)
+		local state_machine_3p, _, initialization_variables_or_nil = WeaponTemplate.state_machines(weapon_template, self._breed_name)
 
 		Unit.set_animation_state_machine(unit, state_machine_3p)
+
+		if initialization_variables_or_nil then
+			for variable_name, value in pairs(initialization_variables_or_nil) do
+				local variable_id = Unit.animation_find_variable(unit, variable_name)
+
+				if variable_id then
+					value = type(value) == "function" and value(unit) or value
+
+					Unit.animation_set_variable(unit, variable_id, value)
+				end
+			end
+		end
 
 		self._current_state_machine = AnimationType.Weapon
 	end

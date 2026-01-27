@@ -64,7 +64,9 @@ WeaponTemplate.state_machines = function (weapon_template, breed_name)
 		anim_state_machine_1p = weapon_template.anim_state_machine_1p
 	end
 
-	return anim_state_machine_3p, anim_state_machine_1p
+	local initialization_variables_or_nil = weapon_template.state_machine_initialization_variables
+
+	return anim_state_machine_3p, anim_state_machine_1p, initialization_variables_or_nil
 end
 
 return WeaponTemplate

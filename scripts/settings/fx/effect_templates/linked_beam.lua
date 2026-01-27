@@ -81,9 +81,9 @@ local effect_template = {
 
 		local t = Managers.time:time("gameplay")
 
-		Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, template_data.data)
+		Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, template_data.data, template_data.particle_group)
 
-		local recharge_particle_id = World.create_particles(world, recharge_particle_name, source_pos)
+		local recharge_particle_id = World.create_particles(world, recharge_particle_name, source_pos, nil, nil, template_data.particle_group)
 
 		template_data.recharge_particle_id = recharge_particle_id
 	end,
@@ -118,11 +118,11 @@ local effect_template = {
 			}
 			template_data.data = data
 
-			Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, data)
+			Flamer.start_shooting_fx(t, unit, vfx, sfx, wwise_world, world, data, template_data.particle_group)
 		end
 
 		if not template_data.recharge_particle_id then
-			local recharge_particle_id = World.create_particles(world, recharge_particle_name, linked_beam_position)
+			local recharge_particle_id = World.create_particles(world, recharge_particle_name, linked_beam_position, nil, nil, template_data.particle_group)
 
 			template_data.recharge_particle_id = recharge_particle_id
 		end
@@ -133,7 +133,7 @@ local effect_template = {
 
 		local control_point_1 = source_pos
 
-		Flamer.update_shooting_fx(t, unit, vfx, sfx, wwise_world, world, physics_world, linked_beam_position, control_point_1, source_pos, data)
+		Flamer.update_shooting_fx(t, unit, vfx, sfx, wwise_world, world, physics_world, linked_beam_position, control_point_1, source_pos, data, template_data.particle_group)
 	end,
 	stop = function (template_data, template_context)
 		local wwise_world = template_context.wwise_world

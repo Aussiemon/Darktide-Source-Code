@@ -24,6 +24,7 @@ CorruptorArmExtension.init = function (self, extension_init_context, unit, exten
 	self._is_extending = false
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
+	self._particle_group = World.create_particle_group(self._world)
 end
 
 CorruptorArmExtension.extensions_ready = function (self, world, unit)
@@ -65,6 +66,8 @@ CorruptorArmExtension.destroy = function (self)
 	if self._is_extending then
 		self:_stop_extending()
 	end
+
+	World.destroy_particle_group(self._world, self._particle_group)
 end
 
 CorruptorArmExtension.activate = function (self)
@@ -234,7 +237,13 @@ CorruptorArmExtension._start_extending = function (self)
 
 	self._source_id = source_id
 
-	local particle_id = World.create_particles(self._world, ARM_EXTENDING_PARTICLE_NAME, position, Quaternion.identity())
+	local particle_group
+
+	if GameParameters.destroy_unmanaged_particles then
+		particle_group = self._particle_group
+	end
+
+	local particle_id = World.create_particles(self._world, ARM_EXTENDING_PARTICLE_NAME, position, Quaternion.identity(), nil, particle_group)
 
 	self._particle_id = particle_id
 	self._is_extending = true

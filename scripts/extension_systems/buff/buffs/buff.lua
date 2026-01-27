@@ -70,6 +70,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		buff = self,
 		start_frame = FixedFrame.get_latest_fixed_frame(),
 		added_during_server_correction = context.undergoing_server_correction,
+		particle_group = context.particle_group,
 	}
 	local additional_arguments = {}
 
