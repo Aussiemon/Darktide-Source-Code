@@ -339,7 +339,9 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 	end
 
 	if self._run_looping_sound then
-		self._fx_extension:run_looping_sound(self._looping_shoot_sfx_alias, self:_muzzle_fx_source(), nil, frame)
+		local ignore_source_check = true
+
+		self._fx_extension:run_looping_sound(self._looping_shoot_sfx_alias, self:_muzzle_fx_source(), nil, frame, ignore_source_check)
 	end
 end
 

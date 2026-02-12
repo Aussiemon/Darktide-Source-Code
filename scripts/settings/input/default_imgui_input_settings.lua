@@ -74,7 +74,7 @@ local default_imgui_input_settings = {
 			bindable = false,
 		},
 		toggle_main_view = {
-			"keyboard_f7",
+			"keyboard_left ctrl+keyboard_left shift+keyboard_f7",
 			bindable = false,
 		},
 		hotkey_ui_tool_gui = {

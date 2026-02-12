@@ -14,9 +14,17 @@ damage_settings.permanent_heal_types = {
 	[heal_types.buff_corruption_healing] = true,
 	[heal_types.blessing_syringe] = true,
 }
-damage_settings.ranged_close = 12.5
-damage_settings.ranged_far = 30
-damage_settings.in_melee_range = 8
+
+local CLOSE_RANGE = 12.5
+local FAR_RANGE = 12.5
+local MELEE_RANGE = 8
+
+damage_settings.ranged_close = CLOSE_RANGE
+damage_settings.ranged_close_squared = CLOSE_RANGE * CLOSE_RANGE
+damage_settings.ranged_far = FAR_RANGE
+damage_settings.ranged_far_squared = FAR_RANGE * FAR_RANGE
+damage_settings.in_melee_range = MELEE_RANGE
+damage_settings.in_melee_range_squared = MELEE_RANGE * MELEE_RANGE
 
 local damage_types = damage_settings.damage_types
 

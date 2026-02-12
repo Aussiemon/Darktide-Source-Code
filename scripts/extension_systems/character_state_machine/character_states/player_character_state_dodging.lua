@@ -58,11 +58,11 @@ local function _calculate_dodge_diminishing_return(dodge_character_state_compone
 	return diminishing_return
 end
 
-local function _find_speed_settings_index(time_in_dodge, start_index, dodge_speed_at_times, distance_scale)
+local function _find_speed_settings_index(time_in_dodge, start_index, dodge_speed_at_times, unbuffed_distance_scale)
 	local speed_settings_index = #dodge_speed_at_times
 
 	for index = start_index, #dodge_speed_at_times do
-		if dodge_speed_at_times[index].time_in_dodge >= time_in_dodge / distance_scale then
+		if dodge_speed_at_times[index].time_in_dodge >= time_in_dodge / unbuffed_distance_scale then
 			speed_settings_index = index - 1
 
 			break
@@ -72,7 +72,7 @@ local function _find_speed_settings_index(time_in_dodge, start_index, dodge_spee
 	return speed_settings_index
 end
 
-local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
+local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, unbuffed_distance_scale, buffed_distance_scale)
 	local speed
 	local num_dodge_speed_at_times = #dodge_speed_at_times
 	local total_modifier = speed_modifier * diminishing_return_factor
@@ -86,17 +86,17 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 		local current_setting_speed = current_speed_settings.speed
 
 		if current_setting_speed > 4 then
-			current_setting_speed = current_setting_speed * distance_scale
+			current_setting_speed = current_setting_speed * unbuffed_distance_scale
 		end
 
 		local next_setting_speed = next_speed_settings.speed
 
 		if next_setting_speed > 4 then
-			next_setting_speed = next_setting_speed * distance_scale
+			next_setting_speed = next_setting_speed * unbuffed_distance_scale
 		end
 
 		local time_between_settings = next_time_in_setting - current_time_in_setting
-		local time_in_setting = time_in_dodge / distance_scale - current_time_in_setting
+		local time_in_setting = time_in_dodge / unbuffed_distance_scale - current_time_in_setting
 		local percentage_in_between = time_in_setting / time_between_settings
 
 		speed = math.lerp(current_setting_speed, next_setting_speed, percentage_in_between) * total_modifier
@@ -107,7 +107,7 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 		speed = current_setting_speed * total_modifier
 	end
 
-	return speed
+	return speed * (buffed_distance_scale / unbuffed_distance_scale)
 end
 
 local function _calculate_dodge_total_time(base_dodge_template, diminishing_return_factor, weapon_dodge_template, buff_extension)
@@ -118,10 +118,12 @@ local function _calculate_dodge_total_time(base_dodge_template, diminishing_retu
 	local stat_buffs = buff_extension:stat_buffs()
 	local weapon_speed_modifier = weapon_dodge_template and weapon_dodge_template.speed_modifier or 1
 	local buff_speed_modifier = stat_buffs.dodge_speed_multiplier
+	local buff_distance_modifier = stat_buffs.dodge_distance_modifier
 	local speed_modifier = weapon_speed_modifier * buff_speed_modifier
-	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local unbuffed_distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local buffed_distance_scale = diminishing_return_factor * buff_distance_modifier
 	local base_distance = weapon_dodge_template and weapon_dodge_template.base_distance or base_dodge_template.base_distance
-	local dodge_distance = base_distance * distance_scale
+	local dodge_distance = base_distance * buffed_distance_scale
 
 	if dodge_distance <= 0 then
 		return 0
@@ -133,8 +135,8 @@ local function _calculate_dodge_total_time(base_dodge_template, diminishing_retu
 		time_in_dodge = time_in_dodge + time_step
 
 		local start_point = 1
-		local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, dodge_speed_at_times, distance_scale)
-		local speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
+		local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, dodge_speed_at_times, unbuffed_distance_scale)
+		local speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, dodge_speed_at_times, speed_modifier, diminishing_return_factor, unbuffed_distance_scale, buffed_distance_scale)
 
 		distance_travelled = distance_travelled + speed * time_step
 
@@ -197,10 +199,12 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	end
 
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local buff_distance_modifier = stat_buffs.dodge_distance_modifier
 	local base_distance = weapon_dodge_template and weapon_dodge_template.base_distance or base_dodge_template.base_distance
 	local sticky_factor = _calculate_sticky_factor(self._action_sweep_component, self._weapon_action_component)
 
-	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor * sticky_factor
+	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * buff_distance_modifier * diminishing_return_factor * sticky_factor
 	dodge_character_state_component.jump_override_time = t + base_dodge_template.dodge_jump_override_timer
 
 	local movement_state = self._movement_state_component
@@ -379,10 +383,11 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local buff_distance_modifier = stat_buffs.dodge_distance_modifier
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
-	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * buff_distance_modifier * diminishing_return_factor
-	local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, speed_at_times, distance_scale)
+	local unbuffed_distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local buffed_distance_scale = unbuffed_distance_scale * buff_distance_modifier
+	local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, speed_at_times, unbuffed_distance_scale)
 	local speed_modifier = weapon_dodge_template and weapon_dodge_template.speed_modifier or 1
-	local base_speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
+	local base_speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, speed_at_times, speed_modifier, diminishing_return_factor, unbuffed_distance_scale, buffed_distance_scale)
 	local buff_speed_modifier = stat_buffs.dodge_speed_multiplier
 	local speed = base_speed * buff_speed_modifier
 	local unit_rotation = self._first_person_component.rotation

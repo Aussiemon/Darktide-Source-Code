@@ -7958,6 +7958,34 @@ stat_definitions.live_event_stimms_used_team = {
 		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
 	end,
 }
+stat_definitions.abhuman_explosions_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			abhuman_explosions = true,
+			abhuman_explosions_darkness = true,
+			abhuman_explosions_gas = true,
+			abhuman_explosions_hunt_grou = true,
+			abhuman_explosions_more_res = true,
+			abhuman_explosions_ventilation = true,
+			abhuman_explosions_waves_spec = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
 stat_definitions = _stat_data
 
 for _, stat in pairs(stat_definitions) do

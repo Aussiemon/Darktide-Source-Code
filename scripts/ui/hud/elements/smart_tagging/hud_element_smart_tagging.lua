@@ -465,6 +465,11 @@ HudElementSmartTagging._handle_input = function (self, t, dt, ui_renderer, rende
 
 	local service_type = "Ingame"
 	local input_service = Managers.input:get_input_service(service_type)
+
+	if Managers.imgui and Managers.imgui:using_input() then
+		input_service = input_service:null_service()
+	end
+
 	local ignore_hud_input = true
 	local is_input_blocked = Managers.ui:using_input(ignore_hud_input)
 

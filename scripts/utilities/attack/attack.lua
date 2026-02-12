@@ -36,7 +36,8 @@ local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
 local damage_types = DamageSettings.damage_types
 local toughness_replenish_types = ToughnessSettings.replenish_types
-local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS
+local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_training_grounds_events, _add_buffs_to_target, ARGS, NUM_ARGS
+local EMPTY_TABLE = {}
 local Attack = {}
 local attack_args_temp = {}
 
@@ -541,6 +542,8 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 		overkill_damage = attacked_health_extension_or_nil:damage_taken() - attacked_health_extension_or_nil:max_health()
 	end
 
+	local damage_profile_buffs = damage_profile.buffs
+	local t = FixedFrame.get_latest_fixed_time()
 	local should_proc = not damage_type or not damage_types_no_proc[damage_type]
 
 	if should_proc and attacker_owner_buff_extension_or_nil and not damage_profile.skip_on_hit_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_hit) then
@@ -582,6 +585,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.close_explosion_hit = close_explosion_hit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
+			_add_buffs_to_target(t, target_buff_extension_or_nil, attacking_owner_unit, damage_profile_buffs, proc_events.on_hit)
 		end
 	end
 
@@ -661,14 +665,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.close_explosion_hit = close_explosion_hit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_damage_dealt, attacker_param_table)
-
-			if target_buff_extension_or_nil and damage_profile.buff_on_damage then
-				for i = 1, damage_profile.num_buffs_on_damage or 1 do
-					local t = FixedFrame.get_latest_fixed_time()
-
-					target_buff_extension_or_nil:add_internally_controlled_buff(damage_profile.buff_on_damage, t, "owner_unit", attacking_owner_unit)
-				end
-			end
+			_add_buffs_to_target(t, target_buff_extension_or_nil, attacking_owner_unit, damage_profile_buffs, proc_events.on_damage_dealt)
 		end
 	end
 
@@ -707,7 +704,6 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 end
 
 local _attack_table = {}
-local _empty_table = {}
 
 function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, attacker_owner_breed_or_nil, target_breed_or_nil, damage_type, attacker_owner_buff_extension, target_buff_extension, hit_weakspot, is_backstab, is_critical_hit, stagger_result, stagger_type)
 	local did_damage = damage_dealt > 0
@@ -747,7 +743,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 
 		_attack_table.attack_result = attack_result
 		_attack_table.attack_type = attack_type
-		_attack_table.attacker_owner_buff_keywords = attacker_owner_buff_keywords or _empty_table
+		_attack_table.attacker_owner_buff_keywords = attacker_owner_buff_keywords or EMPTY_TABLE
 		_attack_table.attacker_health_percent = attacking_health_percent
 		_attack_table.attacking_unit = attacking_unit
 		_attack_table.damage_dealt = damage_dealt
@@ -765,7 +761,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		_attack_table.target_action = attacked_action
 		_attack_table.target_blackboard = attacked_unit_blackboard
 		_attack_table.target_breed_name = target_breed_name_or_nil
-		_attack_table.target_buff_keywords = target_buff_keywords or _empty_table
+		_attack_table.target_buff_keywords = target_buff_keywords or EMPTY_TABLE
 		_attack_table.target_unit_id = attacked_unit_id
 		_attack_table.weapon_template_name = weapon_template_name
 		_attack_table.is_heavy_attack = damage_profile and damage_profile.melee_attack_strength == "heavy"
@@ -1013,6 +1009,22 @@ function _trigger_training_grounds_events(item, attack_direction, attack_result,
 	tg_on_attack_execute_data.is_critical_strike = is_critical_strike
 
 	Managers.event:trigger("tg_on_attack_execute", tg_on_attack_execute_data)
+end
+
+function _add_buffs_to_target(t, target_buff_extension_or_nil, attacking_owner_unit, damage_profile_buffs, proc_type)
+	if not target_buff_extension_or_nil then
+		return
+	end
+
+	local buffs = damage_profile_buffs and damage_profile_buffs[proc_type]
+
+	if not buffs then
+		return
+	end
+
+	for buff_name, num_stacks in pairs(buffs) do
+		target_buff_extension_or_nil:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t, "owner_unit", attacking_owner_unit)
+	end
 end
 
 return Attack

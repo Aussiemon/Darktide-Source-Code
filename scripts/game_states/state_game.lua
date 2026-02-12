@@ -24,6 +24,7 @@ local FrameTableManager = require("scripts/foundation/managers/frame_table/frame
 local FreeFlightManager = require("scripts/foundation/managers/free_flight/free_flight_manager")
 local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
 local GRPCManager = require("scripts/managers/grpc/grpc_manager")
+local ImguiManager = require("scripts/managers/imgui/imgui_manager")
 local InputManager = require("scripts/managers/input/input_manager")
 local LiveEventManager = require("scripts/managers/live_event/live_event_manager")
 local LoadingManager = require("scripts/managers/loading/loading_manager")
@@ -208,6 +209,8 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	Managers.input:load_settings()
 
+	Managers.imgui = ImguiManager:new()
+
 	if not DEDICATED_SERVER then
 		Managers.chat = ChatManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
@@ -320,6 +323,13 @@ StateGame.on_exit = function (self, exit_params)
 
 	self._sm:delete(exit_params)
 	self._vo_sources_cache:destroy()
+
+	if self._imgui_init then
+		Managers.imgui:disable_view_group("StateGame")
+
+		self._imgui_init = false
+	end
+
 	Managers.event:unregister(self, "on_pre_suspend")
 	Managers:destroy()
 	self._approve_channel_delegate:delete()
@@ -334,6 +344,7 @@ StateGame.on_reload = function (self, refreshed_resources)
 	Managers.backend:on_reload(refreshed_resources)
 	Managers.input:on_reload(refreshed_resources)
 	Managers.player:on_reload(refreshed_resources)
+	Managers.imgui:on_reload(refreshed_resources)
 	self._sm:on_reload(refreshed_resources)
 end
 
@@ -360,6 +371,13 @@ StateGame.update = function (self, dt)
 		Testify:poll_requests_through_handler(StateGameTestify, self)
 	end
 
+	if not self._imgui_init then
+		self._imgui_init = true
+
+		Managers.imgui:enable_view_group("StateGame")
+	end
+
+	Managers.imgui:update(dt, t)
 	self._sm:update(dt, t)
 
 	local ui_manager = Managers.ui

@@ -9,6 +9,7 @@ local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionRagdoll = require("scripts/managers/minion/minion_ragdoll")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Vo = require("scripts/utilities/vo")
+local attack_results = AttackSettings.attack_results
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local MinionDeathManager = class("MinionDeathManager")
@@ -364,6 +365,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.dying_unit = unit
 				param_table.attacking_unit = attacking_unit_or_nil
 				param_table.attack_type = attack_type_or_nil
+				param_table.attack_result = attack_results.died
 				param_table.damage_profile_name = damage_profile.name
 				param_table.damage_type = damage_type_or_nil
 				param_table.breed_name = breed.name
@@ -384,6 +386,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 					param_table.dying_unit = unit
 					param_table.attacking_unit = attacking_unit_or_nil
 					param_table.attack_type = attack_type_or_nil
+					param_table.attack_result = attack_results.died
 					param_table.damage_profile_name = damage_profile.name
 					param_table.damage_type = damage_type_or_nil
 					param_table.breed_name = breed.name

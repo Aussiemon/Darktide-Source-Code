@@ -34,15 +34,26 @@ local function _init_network_client(account_id)
 	end
 end
 
+local function update_user_setting(parameter_value, ...)
+	local keys = {
+		...,
+	}
+	local current_value = Application.user_setting(unpack(keys))
+
+	if parameter_value ~= current_value then
+		Log.info("AccountService", "Updated user setting '%s' from '%s' to '%s'", table.concat(keys, "."), tostring(current_value), tostring(parameter_value))
+
+		keys[#keys + 1] = parameter_value
+
+		Application.set_user_setting(unpack(keys))
+		Application.save_user_settings()
+	end
+end
+
 local function user_settings_apply_backend_game_settings()
 	if REAL_PLATFORM == "win32" then
-		local parameter_value = GameParameters.subresource_tlsf_allocator_win32
-		local current_value = Application.user_setting("render_settings", "subresource_tlsf_allocator")
-
-		if parameter_value ~= current_value then
-			Application.set_user_setting("render_settings", "subresource_tlsf_allocator", parameter_value)
-			Application.save_user_settings()
-		end
+		update_user_setting(GameParameters.subresource_tlsf_allocator_win32, "render_settings", "subresource_tlsf_allocator")
+		update_user_setting(GameParameters.enable_direct_storage_debug_map, "direct_storage", "debug_map")
 	end
 end
 

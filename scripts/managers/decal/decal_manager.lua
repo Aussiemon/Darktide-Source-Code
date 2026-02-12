@@ -18,6 +18,7 @@ DecalManager.init = function (self, world)
 	self._blood_pool_size = blood_pool_size
 	self._footstep_pool_size = footstep_pool_size
 	self._decal_unit_id_reference_counts = {}
+	self._pinned_packages = {}
 end
 
 DecalManager.init_settings = function (self, lifetime, impact_pool_size, blood_pool_size, footstep_pool_size)
@@ -42,21 +43,27 @@ DecalManager.destroy = function (self)
 	EngineOptimizedManagers.decal_manager_destroy(self._decal_system)
 
 	self._decal_system = nil
+
+	for _, package_handle in pairs(self._pinned_packages) do
+		Managers.package:release(package_handle)
+	end
+
+	self._pinned_packages = nil
 end
+
+local _delete_units_scratch = {}
 
 DecalManager.delete_units = function (self)
 	local decal_unit_id_reference_counts = self._decal_unit_id_reference_counts
-	local num_decal_unit_ids = table.size(decal_unit_id_reference_counts)
 
-	if num_decal_unit_ids == 0 then
+	if table.is_empty(decal_unit_id_reference_counts) then
 		return
 	end
 
-	local decal_unit_ids = Script.new_array(num_decal_unit_ids)
-
-	table.keys(decal_unit_id_reference_counts, decal_unit_ids)
-	EngineOptimizedManagers.decal_manager_destroy_decal_ids(self._decal_system, unpack(decal_unit_ids))
+	table.keys(decal_unit_id_reference_counts, _delete_units_scratch)
+	self:_destroy_and_release_units(_delete_units_scratch)
 	table.clear(decal_unit_id_reference_counts)
+	table.clear(_delete_units_scratch)
 end
 
 DecalManager.update = function (self, dt, t)
@@ -65,7 +72,17 @@ DecalManager.update = function (self, dt, t)
 end
 
 DecalManager.add_projection_decal = function (self, decal_unit_name, decal_position, decal_rotation, decal_normal, decal_extents, hit_actor, hit_unit, t)
+	local has_package = Application.can_get_resource("package", decal_unit_name)
+
+	if not has_package then
+		Crashify.print_exception("DecalManager", string.format("Decal %s is missing a package with the same name. Unable to pin its resource.", decal_unit_name))
+	end
+
 	local decal_unit = EngineOptimizedManagers.decal_manager_add_decal(self._decal_system, decal_unit_name, decal_position, decal_rotation, decal_normal, decal_extents, hit_actor, hit_unit, t)
+
+	if has_package then
+		self._pinned_packages[decal_unit] = self._pinned_packages[decal_unit] or Managers.package:load(decal_unit_name, "DecalManager")
+	end
 
 	Unit.flow_event(decal_unit, "spawned")
 end
@@ -86,11 +103,9 @@ DecalManager.register_decal_unit_ids = function (self, unit_ids)
 	end
 end
 
-local decal_unit_ids = {}
+local _unregister_decal_unit_ids_scratch = {}
 
 DecalManager.unregister_decal_unit_ids = function (self, unit_ids)
-	table.clear(decal_unit_ids)
-
 	for i = 1, #unit_ids do
 		local unit_id = unit_ids[i]
 		local reference_count = self._decal_unit_id_reference_counts[unit_id]
@@ -98,14 +113,30 @@ DecalManager.unregister_decal_unit_ids = function (self, unit_ids)
 
 		if new_reference_count == 0 then
 			self._decal_unit_id_reference_counts[unit_id] = nil
-			decal_unit_ids[#decal_unit_ids + 1] = unit_id
+			_unregister_decal_unit_ids_scratch[#_unregister_decal_unit_ids_scratch + 1] = unit_id
 		else
 			self._decal_unit_id_reference_counts[unit_id] = new_reference_count
 		end
 	end
 
-	if next(decal_unit_ids) then
-		EngineOptimizedManagers.decal_manager_destroy_decal_ids(self._decal_system, unpack(decal_unit_ids))
+	if not table.is_empty(_unregister_decal_unit_ids_scratch) then
+		self:_destroy_and_release_units(_unregister_decal_unit_ids_scratch)
+	end
+
+	table.clear(_unregister_decal_unit_ids_scratch)
+end
+
+DecalManager._destroy_and_release_units = function (self, units)
+	local pinned_packages = self._pinned_packages
+	local n_destroyed_units, destroyed_units = EngineOptimizedManagers.decal_manager_destroy_decal_ids(self._decal_system, units)
+
+	for i = 1, n_destroyed_units do
+		local destroyed_unit = destroyed_units[i]
+		local pinned_package = pinned_packages[destroyed_unit]
+
+		pinned_packages[destroyed_unit] = nil
+
+		Managers.package:release(pinned_package)
 	end
 end
 

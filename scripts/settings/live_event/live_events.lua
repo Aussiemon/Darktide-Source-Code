@@ -25,5 +25,6 @@ _add_live_event("stolen_rations")
 _add_live_event("saints")
 _add_live_event("broker_stimms")
 _add_live_event("survival")
+_add_live_event("abhuman_explosions")
 
 return settings("LiveEvents", live_events)

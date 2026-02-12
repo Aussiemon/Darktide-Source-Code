@@ -1794,7 +1794,7 @@ PlayerUnitFxExtension.spawn_exclusive_particle = function (self, particle_name, 
 	end
 end
 
-PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_source_name, optional_attachment_name, frame)
+PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_source_name, optional_attachment_name, frame, ignore_source_check)
 	if not self._is_local_unit and not self._is_server then
 		return
 	end
@@ -1803,7 +1803,7 @@ PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_
 
 	optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
 
-	if not looping_sound.is_playing or looping_sound.source_name ~= optional_source_name or looping_sound.source_attach_name ~= optional_attachment_name then
+	if not looping_sound.is_playing or not ignore_source_check and (looping_sound.source_name ~= optional_source_name or looping_sound.source_attach_name ~= optional_attachment_name) then
 		local trigger_data = self._looping_sound_trigger_data[sound_alias]
 
 		trigger_data.should_trigger, trigger_data.source_name, trigger_data.source_attach_name = true, optional_source_name, optional_attachment_name

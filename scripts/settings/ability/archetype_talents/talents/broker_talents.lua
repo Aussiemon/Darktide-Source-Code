@@ -214,7 +214,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_ability_punk_rage = {
-		description = "loc_talent_broker_ability_punk_rage_desc_2",
+		description = "loc_talent_broker_ability_punk_rage_desc_3",
 		display_name = "loc_talent_broker_ability_punk_rage",
 		icon = "content/ui/textures/icons/talents/broker/broker_talent_ability_punk_rage",
 		name = "",
@@ -285,7 +285,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_ability_punk_rage_sub_1 = {
-		description = "loc_talent_broker_ability_punk_rage_sub_1_desc",
+		description = "loc_talent_broker_ability_punk_rage_sub_1_desc_02",
 		display_name = "loc_talent_broker_ability_punk_rage_sub_1",
 		name = "broker_ability_punk_rage_sub_1",
 		format_values = {
@@ -379,7 +379,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_ability_punk_rage_sub_3 = {
-		description = "loc_talent_broker_ability_punk_rage_sub_3_desc",
+		description = "loc_talent_broker_ability_punk_rage_sub_3_desc_02",
 		display_name = "loc_talent_broker_ability_punk_rage_sub_3",
 		name = "broker_ability_punk_rage_sub_3",
 		format_values = {
@@ -515,7 +515,7 @@ archetype_talents.talents = {
 			},
 			stacks = {
 				format_type = "number",
-				value = math.max(DamageProfileTemplates.broker_stimm_field_close.num_buffs_on_damage, DamageProfileTemplates.broker_stimm_field.num_buffs_on_damage),
+				value = math.max(DamageProfileTemplates.broker_stimm_field_close.buffs.on_damage_dealt.neurotoxin_interval_buff3, DamageProfileTemplates.broker_stimm_field.buffs.on_damage_dealt.neurotoxin_interval_buff3),
 			},
 			toxin = {
 				format_type = "loc_string",
@@ -626,7 +626,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_blitz_tox_grenade = {
-		description = "loc_talent_broker_blitz_tox_grenade_desc",
+		description = "loc_talent_broker_blitz_tox_grenade_desc_02",
 		display_name = "loc_talent_broker_blitz_tox_grenade",
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 		icon = "content/ui/textures/icons/talents/zealot_3/zealot_3_tactical",
@@ -639,6 +639,20 @@ archetype_talents.talents = {
 			max_charges = {
 				format_type = "number",
 				value = talent_settings.blitz.tox_grenade.max_charges,
+			},
+			duration = {
+				format_type = "number",
+				value = 15,
+			},
+			max_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_tox_grenade_in_liquid_buff",
+					find_value_type = "buff_template",
+					path = {
+						"toxin_max_stacks",
+					},
+				},
 			},
 		},
 		player_ability = {
@@ -1012,19 +1026,36 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_improved_dodges = {
-		description = "loc_talent_broker_passive_improved_dodges_desc",
+		description = "loc_talent_broker_passive_improved_dodges_desc_02",
 		display_name = "loc_talent_broker_passive_improved_dodges",
 		name = "",
 		format_values = {
 			dodge_distance_modifier = {
 				format_type = "percentage",
 				prefix = "+",
-				value = talent_settings.broker_passive_improved_dodges.dodge_distance_modifier,
+				find_value = {
+					buff_template_name = "broker_passive_improved_dodges",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.dodge_speed_multiplier,
+					},
+				},
+				value_manipulation = function (value)
+					return (value - 1) * 100
+				end,
 			},
 			dodge_linger_time = {
-				format_type = "percentage",
+				format_type = "number",
 				prefix = "+",
-				value = talent_settings.broker_passive_improved_dodges.dodge_linger_time_modifier,
+				find_value = {
+					buff_template_name = "broker_passive_improved_dodges",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.dodge_linger_time,
+					},
+				},
 			},
 		},
 		passive = {
@@ -1908,14 +1939,31 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_damage_vs_heavy_staggered = {
-		description = "loc_talent_broker_passive_damage_vs_heavy_staggered_desc",
+		description = "loc_talent_broker_passive_damage_vs_heavy_staggered_desc_02",
 		display_name = "loc_talent_broker_passive_damage_vs_heavy_staggered",
 		name = "",
 		format_values = {
-			multiplier = {
+			power_light = {
 				format_type = "percentage",
 				prefix = "+",
-				value = talent_settings.broker_passive_damage_vs_heavy_staggered.multiplier,
+				find_value = {
+					buff_template_name = "broker_passive_damage_vs_heavy_staggered",
+					find_value_type = "buff_template",
+					path = {
+						"damage_vs_staggered",
+					},
+				},
+			},
+			power_heavy = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_damage_vs_heavy_staggered",
+					find_value_type = "buff_template",
+					path = {
+						"damage_vs_medium_staggered",
+					},
+				},
 			},
 		},
 		passive = {
@@ -2033,7 +2081,6 @@ archetype_talents.talents = {
 		format_values = {
 			ammo_threshold = {
 				format_type = "percentage",
-				prefix = "+",
 				find_value = {
 					buff_template_name = "broker_passive_low_ammo_regen",
 					find_value_type = "buff_template",
@@ -2054,7 +2101,7 @@ archetype_talents.talents = {
 		name = "broker_passive_melee_attacks_apply_toxin",
 		format_values = {
 			stacks = {
-				format_type = "value",
+				format_type = "number",
 				find_value = {
 					buff_template_name = "broker_passive_melee_attacks_apply_toxin",
 					find_value_type = "buff_template",
@@ -2074,23 +2121,58 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_blitz_inflicts_toxin = {
-		description = "loc_talent_broker_passive_blitz_inflicts_toxin_desc",
+		description = "loc_talent_broker_passive_blitz_inflicts_toxin_desc_02",
 		display_name = "loc_talent_broker_passive_blitz_inflicts_toxin",
 		name = "broker_passive_blitz_inflicts_toxin",
 		format_values = {
-			stacks = {
-				format_type = "value",
+			toxin = {
+				format_type = "loc_string",
+				value = "loc_term_glossary_broker_toxin",
+			},
+			blinder = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_blitz_flash_grenade_improved",
+			},
+			blinder_stacks = {
+				format_type = "number",
 				find_value = {
 					buff_template_name = "broker_passive_blitz_inflicts_toxin",
 					find_value_type = "buff_template",
 					path = {
 						"stacks_to_add",
+						special_rules.quick_flash_grenade,
 					},
 				},
 			},
-			toxin = {
+			missile_launcher = {
 				format_type = "loc_string",
-				value = "loc_term_glossary_broker_toxin",
+				value = "loc_talent_broker_blitz_missile_launcher",
+			},
+			missile_launcher_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_blitz_inflicts_toxin",
+					find_value_type = "buff_template",
+					path = {
+						"stacks_to_add",
+						special_rules.broker_missile_launcher,
+					},
+				},
+			},
+			chem_grenade = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_blitz_tox_grenade",
+			},
+			chem_grenade_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_blitz_inflicts_toxin",
+					find_value_type = "buff_template",
+					path = {
+						"stacks_to_add",
+						special_rules.tox_grenade,
+					},
+				},
 			},
 		},
 		passive = {

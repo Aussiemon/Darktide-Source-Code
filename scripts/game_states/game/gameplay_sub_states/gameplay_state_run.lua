@@ -25,6 +25,9 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	self._delayed_disconnects = {}
 
 	self:_register_run_network_events(is_server)
+	Managers.imgui:enable_view_group("GameplayStateRun", {
+		world = self._shared_state.world,
+	})
 	Managers.event:trigger("event_loading_finished")
 
 	if not DEDICATED_SERVER then
@@ -52,6 +55,7 @@ GameplayStateRun.on_exit = function (self, exit_params)
 
 	Managers.telemetry_events:memory_usage("mission_end")
 	Managers.telemetry_events:gameplay_stopped()
+	Managers.imgui:disable_view_group("GameplayStateRun")
 
 	local on_shutdown = exit_params and exit_params.on_shutdown
 

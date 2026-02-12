@@ -166,6 +166,7 @@ talent_settings.broker = {
 			sub_1_rending_threshold_t = 0.5,
 			sub_4_duration_extend_elite = 1,
 			sub_4_duration_max_improved = 30,
+			use_exhaust = false,
 		},
 		stimm_field = {
 			buff_to_add = "syringe_broker_buff_stimm_field",
@@ -197,6 +198,7 @@ talent_settings.broker = {
 		},
 		tox_grenade = {
 			max_charges = 3,
+			toxin_max_stacks = 6,
 		},
 		missile_launcher = {
 			max_charges = 3,
@@ -253,8 +255,8 @@ talent_settings.broker = {
 		proc_chance = 1,
 	},
 	broker_passive_improved_dodges = {
-		dodge_distance_modifier = 0.25,
-		dodge_linger_time_modifier = 0.5,
+		dodge_linger_time = 0.15,
+		dodge_speed_multiplier = 1.25,
 	},
 	broker_passive_dodge_melee_on_slide = {},
 	broker_passive_restore_toughness_on_close_ranged_kill = {
@@ -371,9 +373,6 @@ talent_settings.broker = {
 		cleanse_amount = 0.01,
 		cleanse_threshold = 0.5,
 	},
-	broker_passive_damage_vs_heavy_staggered = {
-		multiplier = 0.15,
-	},
 	broker_passive_stun_on_max_toxin_stacks = {
 		cooldown = 0,
 		duration = 3,
@@ -415,6 +414,10 @@ talent_settings.broker = {
 		base_damage = 0.02,
 		damage_per_ammo_stage = 0.02,
 		duration = 7,
+	},
+	broker_passive_stimm_cd_on_kill = {
+		restore = 0.01,
+		restore_toxined = 0.02,
 	},
 	broker_keystone_vultures_mark_on_kill = {
 		crit_chance = 0.05,
@@ -626,53 +629,88 @@ _generate_stimm_talent("broker_stimm_combat_5c", "loc_talent_broker_stimm_combat
 	prefix = "+",
 	value = 0.1,
 })
-_generate_stimm_talent("broker_stimm_durability_1", "loc_talent_broker_stimm_durability_a", 1, nil, stimm_icons.durability_a).stat(stat_buffs.toughness_regen_rate_modifier, {
-	format_type = "percentage",
-	prefix = "+",
-	value = 0.2,
-}).stat(stat_buffs.damage_taken_modifier, {
-	format_type = "percentage",
-	value = -0.04,
-})
-_generate_stimm_talent("broker_stimm_durability_2", "loc_talent_broker_stimm_durability_a", 2, nil, stimm_icons.durability_a).stat(stat_buffs.toughness_regen_rate_modifier, {
-	format_type = "percentage",
-	prefix = "+",
-	value = 0.2,
-}).stat(stat_buffs.damage_taken_modifier, {
-	format_type = "percentage",
-	value = -0.04,
-})
-_generate_stimm_talent("broker_stimm_durability_3", "loc_talent_broker_stimm_durability_a", 3, nil, stimm_icons.durability_a).stat(stat_buffs.toughness_regen_rate_modifier, {
-	format_type = "percentage",
-	prefix = "+",
-	value = 0.2,
-}).stat(stat_buffs.damage_taken_modifier, {
-	format_type = "percentage",
-	value = -0.04,
-})
-_generate_stimm_talent("broker_stimm_durability_4", "loc_talent_broker_stimm_durability_a", 4, nil, stimm_icons.durability_a).buff("broker_syringe_toughness_restore", {
-	toughness_amount = 0.25,
+_generate_stimm_talent("broker_stimm_durability_1", "loc_talent_broker_stimm_durability_a", 1, nil).buff("broker_syringe_toughness_restore", {
+	toughness_amount = 0.0625,
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
-	value = 0.25,
-}).stat(stat_buffs.toughness_regen_rate_modifier, {
+	value = 0.0625,
+}).stat(stat_buffs.toughness_replenish_modifier, {
 	format_type = "percentage",
 	prefix = "+",
-	value = 0.2,
-}).stat(stat_buffs.damage_taken_modifier, {
-	format_type = "percentage",
-	value = -0.04,
-})
-_generate_stimm_talent("broker_stimm_durability_5a", "loc_talent_broker_stimm_durability_b", nil, nil, stimm_icons.durability_b).stat(stat_buffs.toughness_regen_rate_modifier, {
+	value = 0.05,
+}).stat(stat_buffs.damage_taken_multiplier, {
 	format_type = "percentage",
 	prefix = "+",
-	value = 0.2,
+	value = 0.96,
+	value_manipulation = function (value)
+		return math.round(math.abs((value - 1) * 100))
+	end,
 })
-_generate_stimm_talent("broker_stimm_durability_5b", "loc_talent_broker_stimm_durability_c", nil, nil, stimm_icons.durability_c).buff("broker_syringe_toughness_restore", {
-	toughness_amount = 0.25,
+_generate_stimm_talent("broker_stimm_durability_2", "loc_talent_broker_stimm_durability_a", 2, nil).buff("broker_syringe_toughness_restore", {
+	toughness_amount = 0.0625,
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
-	value = 0.25,
+	value = 0.0625,
+}).stat(stat_buffs.toughness_replenish_modifier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.05,
+}).stat(stat_buffs.damage_taken_multiplier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.96,
+	value_manipulation = function (value)
+		return math.round(math.abs((value - 1) * 100))
+	end,
+})
+_generate_stimm_talent("broker_stimm_durability_3", "loc_talent_broker_stimm_durability_a", 3, nil).buff("broker_syringe_toughness_restore", {
+	toughness_amount = 0.0625,
+}, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
+	format_type = "percentage",
+	value = 0.0625,
+}).stat(stat_buffs.toughness_replenish_modifier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.05,
+}).stat(stat_buffs.damage_taken_multiplier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.96,
+	value_manipulation = function (value)
+		return math.round(math.abs((value - 1) * 100))
+	end,
+})
+_generate_stimm_talent("broker_stimm_durability_4", "loc_talent_broker_stimm_durability_a", 4, nil).buff("broker_syringe_toughness_restore", {
+	toughness_amount = 0.0625,
+}, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
+	format_type = "percentage",
+	value = 0.0625,
+}).stat(stat_buffs.toughness_replenish_modifier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.05,
+}).stat(stat_buffs.damage_taken_multiplier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.96,
+	value_manipulation = function (value)
+		return math.round(math.abs((value - 1) * 100))
+	end,
+})
+_generate_stimm_talent("broker_stimm_durability_5a", "loc_talent_broker_stimm_durability_b", nil, nil).stat(stat_buffs.toughness_replenish_modifier, {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.3,
+})
+_generate_stimm_talent("broker_stimm_durability_5b", "loc_talent_broker_stimm_durability_c", nil, nil).buff("broker_syringe_toughness_over_time", {
+	toughness_amount = 0.05,
+}, "loc_talent_buff_toughness_during_stimm", "toughness_amount", {
+	format_type = "percentage",
+	prefix = "+",
+	value = 0.05,
+}, "interval", {
+	format_type = "number",
+	value = 1,
 })
 _generate_stimm_talent("broker_stimm_concentration_1", "loc_talent_broker_stimm_concentration_a", 1, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
 	format_type = "percentage",

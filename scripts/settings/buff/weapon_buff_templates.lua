@@ -1452,6 +1452,8 @@ templates.broker_tox_grenade_in_liquid_buff = {
 
 					if current_stacks < toxin_max_stacks then
 						buff_extension:add_internally_controlled_buff(toxins[i], t, "owner_unit", template_context.owner_unit)
+					elseif current_stacks == toxin_max_stacks then
+						buff_extension:refresh_duration_of_stacking_buff(toxins[i], t)
 					end
 				end
 			end

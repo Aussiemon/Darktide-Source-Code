@@ -131,6 +131,12 @@ end
 
 function render()
 	Main:render()
+
+	local imgui_manager = rawget(_G, "Managers") and Managers.imgui
+
+	if imgui_manager then
+		imgui_manager:post_render()
+	end
 end
 
 function on_reload(refreshed_resources)

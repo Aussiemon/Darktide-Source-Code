@@ -1,0 +1,37 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/live_event_abhuman_explosions_circumstance_template.lua
+
+local BaseLiveEventTemplate = require("scripts/settings/circumstance/templates/base_live_event_template")
+local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circumstance_utils")
+local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
+local core_mutators = {
+	"mutator_live_abhuman_trickle",
+	"mutator_live_abhuman_monster",
+	"mutator_live_abhuman_explosions_replacement",
+	"mutator_drop_ogryn_grenade_on_death",
+	"mutator_poxwalker_bombers",
+	"mutator_extra_grenadiers",
+	"mutator_abhuman_explosions_grenade_regen_on_elite_kill",
+}
+local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
+	"all_explosive_barrels",
+}, "abhuman_explosions")
+local circumstance_templates = table.reduce({
+	base_templates,
+}, table.merge, {})
+
+circumstance_templates.abhuman_explosions.ui.display_name = "loc_circumstance_abhuman_explosions_default_title"
+circumstance_templates.abhuman_explosions.ui.description = "loc_circumstance_abhuman_explosions_default_description"
+circumstance_templates.abhuman_explosions_more_res.ui.display_name = "loc_circumstance_abhuman_explosions_increased_resistance_title"
+circumstance_templates.abhuman_explosions_more_res.ui.description = "loc_circumstance_abhuman_explosions_increased_resistance_description"
+circumstance_templates.abhuman_explosions_waves_spec.ui.display_name = "loc_circumstance_abhuman_explosions_waves_of_specials_title"
+circumstance_templates.abhuman_explosions_waves_spec.ui.description = "loc_circumstance_abhuman_explosions_waves_of_specials_description"
+circumstance_templates.abhuman_explosions_hunt_grou.ui.display_name = "loc_circumstance_abhuman_explosions_hunting_grounds_title"
+circumstance_templates.abhuman_explosions_hunt_grou.ui.description = "loc_circumstance_abhuman_explosions_hunting_grounds_description"
+circumstance_templates.abhuman_explosions_darkness.ui.display_name = "loc_circumstance_abhuman_explosions_darkness_title"
+circumstance_templates.abhuman_explosions_darkness.ui.description = "loc_circumstance_abhuman_explosions_darkness_description"
+circumstance_templates.abhuman_explosions_ventilation.ui.display_name = "loc_circumstance_abhuman_explosions_ventilation_title"
+circumstance_templates.abhuman_explosions_ventilation.ui.description = "loc_circumstance_abhuman_explosions_ventilation_description"
+circumstance_templates.abhuman_explosions_gas.ui.display_name = "loc_circumstance_abhuman_explosions_gas_title"
+circumstance_templates.abhuman_explosions_gas.ui.description = "loc_circumstance_abhuman_explosions_gas_description"
+
+return circumstance_templates

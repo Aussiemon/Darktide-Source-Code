@@ -104,10 +104,10 @@ local hud_element_prologue_tutorial_info_box_settings = {
 		drop_shadow = false,
 		font_size = 20,
 		font_type = "proxima_nova_bold",
-		text_horizontal_alignment = "left",
+		text_horizontal_alignment = "center",
 		text_vertical_alignment = "center",
 		size = {
-			50,
+			60,
 			50,
 		},
 	},

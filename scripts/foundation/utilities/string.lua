@@ -191,3 +191,29 @@ string.pad_right = function (str, target_length, pad_str, cache)
 
 	return str .. padding
 end
+
+local chunk_scratch = {}
+
+string.chunk_from_right = function (str, step_n, sep)
+	sep = sep or " "
+
+	local str_len = #str
+	local chunk_part_n = math.floor(str_len / step_n)
+	local offset = 0
+	local rest = str_len % step_n
+
+	if rest > 0 then
+		chunk_scratch[1] = string.sub(str, 1, rest)
+		offset = 1
+	end
+
+	for i = 1, chunk_part_n do
+		chunk_scratch[chunk_part_n - i + 1 + offset] = string.sub(str, -i * step_n, -(i - 1) * step_n - 1)
+	end
+
+	local res = table.concat(chunk_scratch, sep)
+
+	table.clear(chunk_scratch)
+
+	return res
+end

@@ -115,6 +115,7 @@ _create_entry("scripts/settings/buff/archetype_buff_templates/zealot_buff_templa
 _create_entry("scripts/settings/buff/live_event_buff_templates/live_event_stolen_rations_buff_templates", buff_categories.live_event)
 _create_entry("scripts/settings/buff/live_event_buff_templates/live_event_saints_buff_templates", buff_categories.live_event)
 _create_entry("scripts/settings/buff/live_event_buff_templates/live_event_broker_stimms_buff_templates", buff_categories.live_event)
+_create_entry("scripts/settings/buff/live_event_buff_templates/live_event_abhuman_explosions_buff_templates", buff_categories.live_event)
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
 local BrokerBuffUtils = require("scripts/settings/buff/broker_buff_utils")

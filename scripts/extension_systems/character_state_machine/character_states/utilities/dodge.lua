@@ -135,9 +135,17 @@ Dodge.is_dodging = function (unit, attack_type)
 	local base_dodge_template = archetype.dodge
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
 	local dodge_linger_time_modifier = 1
+	local dodge_linger_time_bonus = 0
 
 	if stat_buffs then
 		dodge_linger_time_modifier = stat_buffs.dodge_linger_time_modifier or 1
+		dodge_linger_time_bonus = stat_buffs.dodge_linger_time or 0
+
+		if is_ranged then
+			dodge_linger_time_bonus = dodge_linger_time_bonus + (stat_buffs.dodge_linger_time_vs_ranged or 0)
+		elseif is_melee then
+			dodge_linger_time_bonus = dodge_linger_time_bonus + (stat_buffs.dodge_linger_time_vs_melee or 0)
+		end
 	end
 
 	local dodge_linger_time
@@ -147,6 +155,8 @@ Dodge.is_dodging = function (unit, attack_type)
 	else
 		dodge_linger_time = 0
 	end
+
+	dodge_linger_time = dodge_linger_time + dodge_linger_time_bonus
 
 	local dodge_linger_end_time = dodge_time + dodge_linger_time
 

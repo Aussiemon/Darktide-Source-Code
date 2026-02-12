@@ -361,7 +361,7 @@ local function create_entry_widget(scenegraph_id)
 	local counter_text_style = info_box_settings.counter_text_style
 
 	counter_text_style.offset = {
-		30,
+		15,
 		0,
 		6,
 	}

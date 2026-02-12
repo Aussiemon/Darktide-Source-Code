@@ -3,18 +3,13 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local ForcedLookSettings = require("scripts/settings/damage/forced_look_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local PushSettings = require("scripts/settings/damage/push_settings")
-local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local armor_types = ArmorSettings.types
+local damage_types = DamageSettings.damage_types
+local gib_push_force = GibbingSettings.gib_push_force
 local gibbing_power = GibbingSettings.gibbing_power
 local gibbing_types = GibbingSettings.gibbing_types
-local gib_push_force = GibbingSettings.gib_push_force
-local damage_types = DamageSettings.damage_types
-local push_templates = PushSettings.push_templates
 local damage_templates = {}
 local overrides = {}
 
@@ -285,7 +280,6 @@ damage_templates.broker_missile_launcher_impact = {
 	},
 }
 damage_templates.missile_launcher_knockback = {
-	buff_on_damage = "flamer_assault",
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
 	suppression_value = 200,
@@ -349,14 +343,90 @@ damage_templates.missile_launcher_knockback = {
 			near = 200,
 		},
 	},
+	buffs = {
+		on_damage_dealt = {
+			flamer_assault = 1,
+		},
+	},
 	targets = {
 		default_target = {},
 	},
 }
-damage_templates.broker_stimm_field = {
-	buff_on_damage = "neurotoxin_interval_buff3",
+damage_templates.broker_tox_grenade = {
+	gibbing_power = 0,
 	ignore_stagger_reduction = true,
-	num_buffs_on_damage = 7,
+	ragdoll_push_force = 200,
+	stagger_category = "explosion",
+	suppression_value = 10,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 1,
+			near = 2,
+		},
+		impact = {
+			far = 2.5,
+			near = 5,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	gibbing_type = gibbing_types.explosion,
+}
+damage_templates.broker_stimm_field = {
+	ignore_stagger_reduction = true,
 	ragdoll_push_force = 100,
 	stagger_category = "explosion",
 	suppression_value = 10,
@@ -393,6 +463,11 @@ damage_templates.broker_stimm_field = {
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	buffs = {
+		on_damage_dealt = {
+			neurotoxin_interval_buff3 = 7,
 		},
 	},
 	gibbing_type = gibbing_types.explosion,

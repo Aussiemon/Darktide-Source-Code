@@ -439,6 +439,15 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 			damage_stat_buffs = damage_stat_buffs + owner_stat + target_stat
 		end
+
+		local target_is_medium_staggered = stagger_impact >= StaggerSettings.stagger_impact_comparison[stagger_types.medium]
+
+		if target_is_medium_staggered then
+			local owner_stat = (attacker_stat_buffs.damage_vs_medium_staggered or 1) - 1
+			local target_stat = (target_stat_buffs.damage_vs_medium_staggered or 1) - 1
+
+			damage_stat_buffs = damage_stat_buffs + owner_stat + target_stat
+		end
 	end
 
 	local is_attacker_taunted = attacker_buff_extension and attacker_buff_extension:has_keyword(keywords.taunted)

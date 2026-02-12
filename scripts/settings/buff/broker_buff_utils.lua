@@ -107,6 +107,7 @@ BrokerBuffUtils.bespoke_needlepistol_close_range_kill_start = function (template
 	local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
 
 	template_data.inventory = unit_data_extension:read_component("inventory")
+	template_data.buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
 end
 
 local GRACE_FRAMES = 1
@@ -172,7 +173,7 @@ BrokerBuffUtils.bespoke_needle_pistol_close_range_kill_check_proc_minion_death =
 	end
 
 	local attacking_unit = params.attacking_unit
-	local close_range_squared = DamageSettings.ranged_close^2
+	local close_range_squared = DamageSettings.ranged_close_squared
 	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
 	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
 	local is_within_distance = distance_squared <= close_range_squared

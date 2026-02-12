@@ -10,6 +10,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BrokerBuffUtils = require("scripts/settings/buff/broker_buff_utils")
 local CheckProcFunctions = require("scripts/settings/buff/helper_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
+local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -45,6 +46,7 @@ local slot_configuration = PlayerCharacterConstants.slot_configuration
 local special_rules = SpecialRulesSettings.special_rules
 local stagger_results = AttackSettings.stagger_results
 local stat_buffs = BuffSettings.stat_buffs
+local buff_proc_events = BuffSettings.proc_events
 local talent_settings = TalentSettings.broker
 local stimm_talent_settings = TalentSettings.broker_stimm
 local grenade_explosion_damage_types = DamageProfileSettings.grenade_explosion_damage_types
@@ -64,11 +66,21 @@ end
 
 local _can_show_outline, _update_show_outlines, _start_outlines, _update_enemies_to_tag, _update_outlines, _end_outlines
 local OUTLINE_NAME = "broker_proximity_target"
-local DISTANCE_LIMIT = DamageSettings.ranged_close
-local DISTANCE_LIMIT_SQUARED = DISTANCE_LIMIT * DISTANCE_LIMIT
+local DISTANCE_LIMIT_SQUARED = DamageSettings.ranged_close_squared
 local HIGHLIGHT_OFFSET = talent_settings.combat_ability.focus.outline_highlight_offset
 local HIGHLIGHT_OFFSET_TOTAL_MAX_TIME = talent_settings.combat_ability.focus.outline_highlight_offset_total_max_time
 local EXTERNAL_PROPERTIES = {}
+local allowed_breed_tags = table.set({
+	"close",
+	"roamer",
+	"special",
+	"far",
+	"melee",
+	"ranged",
+	"captain",
+	"monster",
+	"elite",
+})
 
 function _can_show_outline(breed, template_data)
 	local breed_tags = breed and breed.tags
@@ -77,7 +89,13 @@ function _can_show_outline(breed, template_data)
 		return false
 	end
 
-	return true
+	for tag in pairs(breed_tags) do
+		if allowed_breed_tags[tag] then
+			return true
+		end
+	end
+
+	return false
 end
 
 function _update_show_outlines(template_data, template_context)
@@ -364,6 +382,11 @@ templates.broker_focus_stance = {
 		Ammo.move_clip_to_reserve(slot_secondary_component)
 		Ammo.set_current_ammo_in_clips(slot_secondary_component, Ammo.max_ammo_in_clips(slot_secondary_component))
 
+		local buff_extension = template_context.buff_extension
+		local param_table_on_reload = buff_extension:request_proc_event_param_table()
+
+		buff_extension:add_proc_event(buff_proc_events.on_reload, param_table_on_reload)
+
 		local player = Managers.player:player_by_unit(unit)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 		local camera_handler = player and player.camera_handler
@@ -570,16 +593,7 @@ templates.broker_punk_rage_stance = {
 	},
 	conditional_stat_buffs_funcs = {
 		[stat_buffs.melee_heavy_rending_multiplier] = function (template_data, template_context)
-			if not template_data.rending_talent then
-				return false
-			end
-
-			local buff = template_context.buff
-			local start_time = buff:start_time()
-			local duration = buff:duration()
-			local time_into_buff = (FixedFrame.get_latest_fixed_time() - start_time) / duration
-
-			return time_into_buff < template_context.template.sub_1_rending_threshold_t
+			return template_data.rending_talent
 		end,
 		[stat_buffs.max_hit_mass_attack_modifier] = function (template_data)
 			return template_data.cleave_talent
@@ -700,7 +714,9 @@ templates.broker_punk_rage_stance = {
 			return
 		end
 
-		template_context.buff_extension:add_internally_controlled_buff("broker_punk_rage_exhaustion", template_data.t)
+		if talent_settings.combat_ability.punk_rage.use_exhaust then
+			template_context.buff_extension:add_internally_controlled_buff("broker_punk_rage_exhaustion", template_data.t)
+		end
 
 		if template_context.is_server then
 			local current_time = Managers.time:time("gameplay")
@@ -1081,8 +1097,8 @@ templates.broker_passive_improved_dodges = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.dodge_distance_modifier] = talent_settings.broker_passive_improved_dodges.dodge_distance_modifier,
-		[stat_buffs.dodge_linger_time_modifier] = talent_settings.broker_passive_improved_dodges.dodge_linger_time_modifier,
+		[stat_buffs.dodge_speed_multiplier] = talent_settings.broker_passive_improved_dodges.dodge_speed_multiplier,
+		[stat_buffs.dodge_linger_time] = talent_settings.broker_passive_improved_dodges.dodge_linger_time,
 	},
 }
 templates.broker_passive_dodge_melee_on_slide = {
@@ -1338,20 +1354,54 @@ templates.broker_passive_reload_on_crit = {
 		end
 	end,
 }
+
+local function _broker_passive_reload_speed_on_close_kill_proc_func(params, template_data, template_context, t)
+	local buff_extension = template_data.buff_extension
+
+	if not buff_extension then
+		return
+	end
+
+	buff_extension:add_internally_controlled_buff("broker_passive_reload_speed_on_close_kill_effect", t)
+end
+
 templates.broker_passive_reload_speed_on_close_kill = {
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
+	hide_icon_in_hud = true,
+	max_stacks = 1,
+	predicted = false,
+	start_func = _bespoke_needlepistol_close_range_kill_start,
+	update_func = _bespoke_needlepistol_close_range_kill_update,
+	proc_events = {
+		[proc_events.on_kill] = 1,
+		[proc_events.on_hit] = 1,
+		[proc_events.on_minion_death] = 1,
+	},
+	specific_check_proc_funcs = {
+		[proc_events.on_kill] = CheckProcFunctions.on_ranged_close_kill,
+		[proc_events.on_hit] = _bespoke_needlepistol_close_range_kill_check_proc_hit,
+		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death,
+	},
+	specific_proc_func = {
+		[proc_events.on_kill] = _broker_passive_reload_speed_on_close_kill_proc_func,
+		[proc_events.on_hit] = _bespoke_needle_pistol_close_range_kill_proc_hit,
+		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
+			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
+			_broker_passive_reload_speed_on_close_kill_proc_func(params, template_data, template_context, t)
+		end,
+	},
+}
+templates.broker_passive_reload_speed_on_close_kill_effect = {
+	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_passive_reload_speed_on_close_kill",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 1,
 	max_stacks = 1,
 	predicted = false,
-	active_duration = talent_settings.broker_passive_reload_speed_on_close_kill.duration,
-	check_proc_func = CheckProcFunctions.on_ranged_close_kill,
-	proc_events = {
-		[proc_events.on_hit] = 1,
-	},
-	proc_stat_buffs = {
+	refresh_duration_on_stack = true,
+	duration = talent_settings.broker_passive_reload_speed_on_close_kill.duration,
+	stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings.broker_passive_reload_speed_on_close_kill.reload_speed,
 	},
 }
@@ -1984,6 +2034,7 @@ templates.broker_passive_damage_on_reload_buff = {
 	max_stacks = 1,
 	max_stacks_cap = 1,
 	predicted = false,
+	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	duration = talent_settings.broker_passive_damage_on_reload.duration,
 	base_damage = talent_settings.broker_passive_damage_on_reload.base_damage,
@@ -2161,11 +2212,13 @@ templates.broker_passive_melee_cleave_on_melee_kill_buff = {
 }
 templates.broker_passive_damage_vs_heavy_staggered = {
 	class_name = "buff",
+	damage_vs_medium_staggered = 0.15,
+	damage_vs_staggered = 0.1,
 	predicted = false,
-	stat_buffs = {
-		[stat_buffs.damage_vs_heavy_staggered] = talent_settings.broker_passive_damage_vs_heavy_staggered.multiplier,
-	},
+	stat_buffs = {},
 }
+templates.broker_passive_damage_vs_heavy_staggered.stat_buffs[stat_buffs.damage_vs_staggered] = templates.broker_passive_damage_vs_heavy_staggered.damage_vs_staggered
+templates.broker_passive_damage_vs_heavy_staggered.stat_buffs[stat_buffs.damage_vs_medium_staggered] = templates.broker_passive_damage_vs_heavy_staggered.damage_vs_medium_staggered - templates.broker_passive_damage_vs_heavy_staggered.damage_vs_staggered
 templates.broker_passive_cleave_on_cleave = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -2228,8 +2281,8 @@ templates.broker_passive_increased_aura_size = {
 templates.broker_passive_stimm_cd_on_kill = {
 	class_name = "proc_buff",
 	predicted = false,
-	restore = 0.01,
-	restore_toxined = 0.02,
+	restore = talent_settings.broker_passive_stimm_cd_on_kill.restore,
+	restore_toxined = talent_settings.broker_passive_stimm_cd_on_kill.restore_toxined,
 	proc_events = {
 		[proc_events.on_kill] = 1,
 	},
@@ -2735,6 +2788,7 @@ templates.broker_passive_melee_damage_carry_over = {
 	end,
 }
 templates.broker_passive_low_ammo_regen = {
+	ammo_return = 0.2,
 	ammo_threshold = 0.2,
 	class_name = "proc_buff",
 	force_predicted_proc = true,
@@ -2753,6 +2807,8 @@ templates.broker_passive_low_ammo_regen = {
 			local clip_percentage = current_ammo_reserve / max_reserve
 
 			if clip_percentage < threshold then
+				local ammo_return = template_data.ammo_return
+
 				Ammo.add_to_reserve(slot_secondary_component, math.max(math.floor(max_reserve * threshold) - current_ammo_reserve, 1))
 			end
 		end
@@ -2760,6 +2816,7 @@ templates.broker_passive_low_ammo_regen = {
 	start_func = function (template_data, template_context)
 		template_data.unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
 		template_data.ammo_threshold = template_context.template.ammo_threshold
+		template_data.ammo_return = template_context.template.ammo_return
 	end,
 }
 templates.broker_passive_melee_attacks_apply_toxin = {
@@ -2788,12 +2845,17 @@ templates.broker_passive_blitz_inflicts_toxin = {
 	buff_to_add = "neurotoxin_interval_buff3",
 	class_name = "proc_buff",
 	predicted = false,
-	stacks_to_add = 3,
+	stacks_to_add = {
+		[special_rules.quick_flash_grenade] = 3,
+		[special_rules.broker_missile_launcher] = 6,
+		[special_rules.tox_grenade] = 10,
+	},
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
+		template_data.talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
@@ -2814,7 +2876,17 @@ templates.broker_passive_blitz_inflicts_toxin = {
 		local buff_ext = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
 
 		if buff_ext then
-			local stacks_to_add = template_context.template.stacks_to_add
+			local stacks_to_add = 0
+			local talent_extension = template_data.talent_extension
+
+			for special_rule, value in pairs(template_context.template.stacks_to_add) do
+				if talent_extension:has_special_rule(special_rule) then
+					stacks_to_add = value
+
+					break
+				end
+			end
+
 			local buff_to_add = template_context.template.buff_to_add
 
 			for j = 1, stacks_to_add do
@@ -2823,6 +2895,19 @@ templates.broker_passive_blitz_inflicts_toxin = {
 		end
 	end,
 }
+
+local function _broker_keystone_vultures_mark_on_kill_proc_func(params, template_data, template_context, t)
+	if not template_context.is_server then
+		return
+	end
+
+	template_data.buff_extension:add_internally_controlled_buff("vultures_mark", t)
+
+	if template_context.player then
+		Managers.stats:record_private("hook_broker_stack_of_vulture_keystone", template_context.player)
+	end
+end
+
 templates.broker_keystone_vultures_mark_on_kill = {
 	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_vultures_mark",
@@ -2831,22 +2916,24 @@ templates.broker_keystone_vultures_mark_on_kill = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_kill] = 1,
+		[proc_events.on_hit] = 1,
+		[proc_events.on_minion_death] = 1,
 	},
-	check_proc_func = CheckProcFunctions.combine(CheckProcFunctions.on_elite_or_special_kill, CheckProcFunctions.on_ranged_kill),
-	start_func = function (template_data, template_context)
-		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
-	end,
-	proc_func = function (params, template_data, template_context, t)
-		if not template_context.is_server then
-			return
-		end
-
-		template_data.buff_extension:add_internally_controlled_buff("vultures_mark", t)
-
-		if template_context.player then
-			Managers.stats:record_private("hook_broker_stack_of_vulture_keystone", template_context.player)
-		end
-	end,
+	start_func = _bespoke_needlepistol_close_range_kill_start,
+	update_func = _bespoke_needlepistol_close_range_kill_update,
+	specific_check_proc_funcs = {
+		[proc_events.on_kill] = CheckProcFunctions.combine(CheckProcFunctions.on_elite_or_special_kill, CheckProcFunctions.on_ranged_kill),
+		[proc_events.on_hit] = CheckProcFunctions.combine(CheckProcFunctions.on_elite_or_special_hit, _bespoke_needlepistol_close_range_kill_check_proc_hit),
+		[proc_events.on_minion_death] = _bespoke_needle_pistol_close_range_kill_check_proc_minion_death,
+	},
+	specific_proc_func = {
+		[proc_events.on_kill] = _broker_keystone_vultures_mark_on_kill_proc_func,
+		[proc_events.on_hit] = _bespoke_needle_pistol_close_range_kill_proc_hit,
+		[proc_events.on_minion_death] = function (params, template_data, template_context, t)
+			_bespoke_needle_pistol_close_range_kill_proc_on_minion_death(params, template_data, template_context, t)
+			_broker_keystone_vultures_mark_on_kill_proc_func(params, template_data, template_context, t)
+		end,
+	},
 }
 templates.vultures_mark = {
 	class_name = "proc_buff",
@@ -3382,6 +3469,46 @@ templates.broker_syringe_health_restore = {
 			local amount = stimm_talent_settings.broker_stimm_med_vitality.buff_data.buff_params.heal_amount
 
 			template_data.health_extension:add_heal(amount * template_data.health_extension:max_health(), DamageSettings.heal_types.syringe)
+		end
+	end,
+}
+templates.broker_syringe_toughness_over_time = {
+	class_name = "interval_buff",
+	interval = 1,
+	predicted = false,
+	skip_tactical_overlay = true,
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+		local talent = ArchetypeTalents.broker[template_context.from_talent]
+		local toughness_amount
+
+		for _, format_values in pairs(talent.format_values_per_index) do
+			toughness_amount = format_values.toughness_amount.value
+		end
+
+		template_data.toughness_amount = toughness_amount
+		template_data.stimm_provider = template_context.buff:owner_unit()
+		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+	end,
+	interval_func = function (template_data, template_context, template)
+		if not template_context.is_server then
+			return
+		end
+
+		local character_state_component = template_data.character_state_component
+
+		if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
+			return
+		end
+
+		local recovered_tougness = Toughness.replenish_percentage(template_context.unit, template_data.toughness_amount, false, "broker_syringe")
+
+		if recovered_tougness > 0 then
+			Managers.stats:record_private("hook_broker_stimm_restored_tougness", template_context.player, recovered_tougness, template_context.player)
 		end
 	end,
 }

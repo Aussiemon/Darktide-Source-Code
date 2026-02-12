@@ -143,9 +143,9 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = true,
 		min_radius = 0.25,
-		radius = 1,
+		radius = 4,
 		static_power_level = 600,
-		damage_profile = DamageProfileTemplates.default_grenade,
+		damage_profile = DamageProfileTemplates.broker_tox_grenade,
 		damage_type = damage_types.laser,
 		broadphase_explosion_filter = {
 			"heroes",
@@ -156,7 +156,7 @@ local explosion_templates = {
 			distance = 10,
 			instant_aggro = true,
 			suppression_falloff = true,
-			suppression_value = 12,
+			suppression_value = 4,
 		},
 		vfx = {
 			"content/fx/particles/weapons/grenades/chem_grenade/chem_grenade_player_initial_blast",

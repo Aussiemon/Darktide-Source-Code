@@ -13,8 +13,7 @@ local attack_results = AttackSettings.attack_results
 local stagger_results = AttackSettings.stagger_results
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
-local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
-local CLOSE_RANGE_RANGED_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
+local CLOSE_RANGE_RANGED_SQUARED = DamageSettings.ranged_close_squared
 local CheckProcFunctions = {}
 local _is_within_close_distance
 
@@ -123,6 +122,18 @@ CheckProcFunctions.on_elite_or_special_kill = function (params, template_data, t
 		return false
 	end
 
+	if not params.tags then
+		return false
+	end
+
+	if not params.tags.elite and not params.tags.special then
+		return false
+	end
+
+	return true
+end
+
+CheckProcFunctions.on_elite_or_special_hit = function (params, template_data, template_context, t)
 	if not params.tags then
 		return false
 	end
@@ -322,6 +333,12 @@ CheckProcFunctions.on_crit_kills = function (params, template_data, template_con
 	return params.is_critical_strike and params.attack_result == attack_results.died
 end
 
+CheckProcFunctions.on_melee_non_crit = function (params, template_data, template_context, t)
+	local is_melee_attack = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
+
+	return is_melee_attack and not CheckProcFunctions.on_crit(params, template_data, template_context, t)
+end
+
 CheckProcFunctions.on_ranged_hit = function (params, template_data, template_context, t)
 	local is_ranged_attack = params.attack_type == attack_types.ranged or params.damage_profile and params.damage_profile.count_as_ranged_attack
 
@@ -455,6 +472,16 @@ end
 
 CheckProcFunctions.on_weakspot_crit = function (params, template_data, template_context, t)
 	return params.hit_weakspot and params.is_critical_strike
+end
+
+CheckProcFunctions.on_ranged_weakspot_crit = function (params, template_data, template_context, t)
+	local is_ranged_attack = params.attack_type == attack_types.ranged or params.damage_profile and params.damage_profile.count_as_ranged_attack
+
+	return is_ranged_attack and params.hit_weakspot and params.is_critical_strike
+end
+
+CheckProcFunctions.on_melee_weakspot_crit = function (params, template_data, template_context, t)
+	return params.hit_weakspot and params.is_critical_strike and params.attack_type == attack_types.melee
 end
 
 CheckProcFunctions.on_ranged_weakspot_kills = function (params, template_data, template_context, t)
