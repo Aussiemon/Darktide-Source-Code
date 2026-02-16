@@ -16,7 +16,7 @@ damage_settings.permanent_heal_types = {
 }
 
 local CLOSE_RANGE = 12.5
-local FAR_RANGE = 12.5
+local FAR_RANGE = 30
 local MELEE_RANGE = 8
 
 damage_settings.ranged_close = CLOSE_RANGE

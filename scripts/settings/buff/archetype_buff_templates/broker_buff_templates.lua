@@ -626,6 +626,7 @@ templates.broker_punk_rage_stance = {
 		template_data.rending_talent = talent_extension:has_special_rule("broker_rage_rending")
 		template_data.cleave_talent = talent_extension:has_special_rule("broker_rage_cleave")
 		template_data.duration_extend_talent = talent_extension:has_special_rule("broker_rage_duration_extend")
+		template_data.shout_talent = talent_extension:has_special_rule("broker_rage_improved_shout")
 		template_data.inventory_component = template_data.unit_data_extension:read_component("inventory")
 		template_data.start_t = Managers.time:time("gameplay")
 
@@ -635,7 +636,7 @@ templates.broker_punk_rage_stance = {
 
 		template_data.mood_handler = mood_handler
 
-		if HEALTH_ALIVE[unit] and template_context.is_server and talent_extension:has_special_rule("broker_rage_improved_shout") then
+		if HEALTH_ALIVE[unit] and template_context.is_server and template_data.shout_talent then
 			local shout_radius = talent_settings.combat_ability.punk_rage.shout_radius
 
 			_apply_punk_rage_shout(unit, unit_data_extension, shout_radius, template_data.start_t)
@@ -714,8 +715,15 @@ templates.broker_punk_rage_stance = {
 			return
 		end
 
-		if talent_settings.combat_ability.punk_rage.use_exhaust then
-			template_context.buff_extension:add_internally_controlled_buff("broker_punk_rage_exhaustion", template_data.t)
+		if HEALTH_ALIVE[template_context.unit] and template_context.is_server then
+			if talent_settings.combat_ability.punk_rage.use_exhaust then
+				template_context.buff_extension:add_internally_controlled_buff("broker_punk_rage_exhaustion", template_data.t)
+			elseif template_data.shout_talent then
+				local shout_radius = talent_settings.combat_ability.punk_rage.shout_radius
+				local t = FixedFrame.get_latest_fixed_time()
+
+				_apply_punk_rage_shout(template_context.unit, template_data.unit_data_extension, shout_radius, t)
+			end
 		end
 
 		if template_context.is_server then
