@@ -74,8 +74,8 @@ local mission_vo_dm_rise_psyker_male_a = {
 			"loc_psyker_male_a__region_habculum_03",
 		},
 		sound_events_duration = {
-			4.298729,
-			6.468,
+			3.944417,
+			6.687188,
 			3.644604,
 		},
 		sound_event_weights = {

@@ -75,8 +75,8 @@ local veteran_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_accuracy_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.804,
-			[2] = 3.958667,
+			[1] = 2.80401,
+			[2] = 3.958677,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +88,8 @@ local veteran_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_discipline_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.298667,
-			[2] = 6.668,
+			[1] = 2.298677,
+			[2] = 6.66801,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +101,8 @@ local veteran_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_emperor_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.141333,
-			[2] = 4.938667,
+			[1] = 5.141344,
+			[2] = 4.938677,
 		},
 		randomize_indexes = {},
 	},

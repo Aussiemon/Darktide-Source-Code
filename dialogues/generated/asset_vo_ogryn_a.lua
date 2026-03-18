@@ -60,8 +60,8 @@ local asset_vo_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_goo_02",
 		},
 		sound_events_duration = {
-			[1] = 2.134313,
-			[2] = 2.500771,
+			[1] = 3.217938,
+			[2] = 5.418479,
 		},
 		sound_event_weights = {
 			[1] = 0.5,

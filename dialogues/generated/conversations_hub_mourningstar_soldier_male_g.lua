@@ -120,7 +120,7 @@ local conversations_hub_mourningstar_soldier_male_g = {
 			[1] = "loc_mourningstar_soldier_male_g__oval_hub_conversation_25_c_01",
 		},
 		sound_events_duration = {
-			[1] = 1.603417,
+			[1] = 1.603396,
 		},
 		randomize_indexes = {},
 	},

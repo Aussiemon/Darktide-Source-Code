@@ -8,7 +8,7 @@ local veteran_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_veteran_c_03_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.435208,
+			[1] = 1.384177,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local veteran_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_veteran_c_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.819958,
+			[1] = 2.724615,
 		},
 		randomize_indexes = {},
 	},
@@ -30,7 +30,7 @@ local veteran_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_veteran_c_11_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.407688,
+			[1] = 1.326073,
 		},
 		randomize_indexes = {},
 	},

@@ -73,7 +73,7 @@ local mission_vo_dm_propaganda_veteran_female_c = {
 			[1] = "loc_veteran_female_c__mission_propaganda_elevator_conversation_two_a_01",
 		},
 		sound_events_duration = {
-			[1] = 2.181396,
+			[1] = 2.198958,
 		},
 		randomize_indexes = {},
 	},

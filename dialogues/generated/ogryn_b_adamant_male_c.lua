@@ -130,8 +130,8 @@ local ogryn_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_bored_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.011333,
-			[2] = 3.458667,
+			[1] = 3.011344,
+			[2] = 3.458677,
 		},
 		randomize_indexes = {},
 	},
@@ -143,8 +143,8 @@ local ogryn_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_bullets_tickle_b_02",
 		},
 		sound_events_duration = {
-			[1] = 6.766667,
-			[2] = 1.792,
+			[1] = 6.766677,
+			[2] = 1.79201,
 		},
 		randomize_indexes = {},
 	},
@@ -156,7 +156,7 @@ local ogryn_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_forgetful_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.993,
+			[1] = 2.99301,
 			[2] = 2.846667,
 		},
 		randomize_indexes = {},
@@ -169,8 +169,8 @@ local ogryn_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_homesick_b_02",
 		},
 		sound_events_duration = {
-			[1] = 1.879333,
-			[2] = 6.063333,
+			[1] = 1.879344,
+			[2] = 6.063344,
 		},
 		randomize_indexes = {},
 	},
@@ -183,7 +183,7 @@ local ogryn_b_adamant_male_c = {
 		},
 		sound_events_duration = {
 			[1] = 3.468,
-			[2] = 4.576667,
+			[2] = 4.576677,
 		},
 		randomize_indexes = {},
 	},

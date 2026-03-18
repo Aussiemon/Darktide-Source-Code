@@ -187,12 +187,14 @@ local mission_vo_dm_propaganda_ogryn_a = {
 	},
 	mission_propaganda_start_banter_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 1,
+		sound_events_n = 2,
 		sound_events = {
 			[1] = "loc_ogryn_a__mission_propaganda_start_banter_a_01",
+			[2] = "loc_ogryn_a__mission_propaganda_start_banter_a_02",
 		},
 		sound_events_duration = {
 			[1] = 3.078781,
+			[2] = 2.939406,
 		},
 		randomize_indexes = {},
 	},

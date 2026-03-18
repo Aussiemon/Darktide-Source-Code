@@ -496,6 +496,23 @@ local on_demand_vo_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_adamant_female_c__smart_tag_vo_enemy_houndmaster_01",
+			"loc_adamant_female_c__smart_tag_vo_enemy_houndmaster_02",
+			"loc_adamant_female_c__smart_tag_vo_enemy_houndmaster_03",
+			"loc_adamant_female_c__smart_tag_vo_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			0.961802,
+			0.984406,
+			1.047271,
+			0.969281,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

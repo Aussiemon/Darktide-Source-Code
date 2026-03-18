@@ -9,8 +9,8 @@ local mission_vo_hm_cartel_adamant_male_c = {
 			[2] = "loc_adamant_male_c__zone_watertown_acid_clouds_02",
 		},
 		sound_events_duration = {
-			[1] = 4.009333,
-			[2] = 5.411,
+			[1] = 4.009344,
+			[2] = 5.41101,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -84,8 +84,8 @@ local mission_vo_hm_cartel_adamant_male_c = {
 			"loc_adamant_male_c__zone_watertown_03",
 		},
 		sound_events_duration = {
-			3.014667,
-			2.793333,
+			3.014677,
+			2.793344,
 			3.386,
 		},
 		sound_event_weights = {

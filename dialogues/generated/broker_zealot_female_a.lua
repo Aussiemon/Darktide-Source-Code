@@ -94,7 +94,7 @@ local broker_zealot_female_a = {
 		sound_events_duration = {
 			2.337729,
 			1.868375,
-			2.975521,
+			3.457479,
 			2.882333,
 			2.975521,
 		},

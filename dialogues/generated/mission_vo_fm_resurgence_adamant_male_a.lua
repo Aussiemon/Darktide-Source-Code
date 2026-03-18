@@ -9,8 +9,8 @@ local mission_vo_fm_resurgence_adamant_male_a = {
 			[2] = "loc_adamant_male_a__luggable_mission_pick_up_02",
 		},
 		sound_events_duration = {
-			[1] = 3.4,
-			[2] = 4.954667,
+			[1] = 3.40001,
+			[2] = 4.954677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -52,14 +52,14 @@ local mission_vo_fm_resurgence_adamant_male_a = {
 			"loc_adamant_male_a__guidance_starting_area_08",
 		},
 		sound_events_duration = {
-			1.677333,
-			3.262667,
-			3.306667,
-			4.317333,
-			3.72,
-			4.964,
-			2.613333,
-			5.453333,
+			1.677344,
+			3.262677,
+			3.306677,
+			4.317344,
+			3.72001,
+			4.96401,
+			2.613344,
+			5.453344,
 		},
 		sound_event_weights = {
 			0.125,

@@ -63,7 +63,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 6.322802,
+			[1] = 2.98424,
 		},
 		randomize_indexes = {},
 	},
@@ -85,7 +85,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 5.864625,
+			[1] = 3.865292,
 		},
 		randomize_indexes = {},
 	},
@@ -107,7 +107,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_06_b_01",
 		},
 		sound_events_duration = {
-			[1] = 6.185344,
+			[1] = 3.956844,
 		},
 		randomize_indexes = {},
 	},
@@ -118,7 +118,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_07_b_01",
 		},
 		sound_events_duration = {
-			[1] = 8.063854,
+			[1] = 5.053375,
 		},
 		randomize_indexes = {},
 	},
@@ -129,7 +129,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_08_b_01",
 		},
 		sound_events_duration = {
-			[1] = 7.926406,
+			[1] = 2.884979,
 		},
 		randomize_indexes = {},
 	},
@@ -140,7 +140,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_09_b_01",
 		},
 		sound_events_duration = {
-			[1] = 7.376594,
+			[1] = 3.757198,
 		},
 		randomize_indexes = {},
 	},
@@ -151,7 +151,7 @@ local broker_b_zealot_male_c = {
 			[1] = "loc_zealot_male_c__combat_pause_quirk_broker_b_trait_10_b_01",
 		},
 		sound_events_duration = {
-			[1] = 6.231167,
+			[1] = 5.024875,
 		},
 		randomize_indexes = {},
 	},

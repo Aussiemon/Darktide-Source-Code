@@ -88,8 +88,8 @@ local zealot_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_impatient_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.156,
-			[2] = 3.622,
+			[1] = 4.15601,
+			[2] = 3.62201,
 		},
 		randomize_indexes = {},
 	},

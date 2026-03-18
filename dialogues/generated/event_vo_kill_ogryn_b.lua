@@ -12,7 +12,7 @@ local event_vo_kill_ogryn_b = {
 		},
 		sound_events_duration = {
 			2.046656,
-			2.649438,
+			2.649427,
 			2.010229,
 			1.946208,
 		},

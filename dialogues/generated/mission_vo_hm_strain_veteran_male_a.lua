@@ -258,7 +258,7 @@ local mission_vo_hm_strain_veteran_male_a = {
 			"loc_veteran_male_a__zone_dust_03",
 		},
 		sound_events_duration = {
-			5.981667,
+			5.852125,
 			2.45425,
 			3.468083,
 			3.317438,

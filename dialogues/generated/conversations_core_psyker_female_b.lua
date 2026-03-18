@@ -1937,7 +1937,7 @@ local conversations_core_psyker_female_b = {
 			[2] = "loc_psyker_female_b__lore_hive_cities_two_c_02",
 		},
 		sound_events_duration = {
-			[1] = 5.686729,
+			[1] = 5.492125,
 			[2] = 4.113313,
 		},
 		randomize_indexes = {},

@@ -166,8 +166,8 @@ local psyker_b_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_togetherness_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.628667,
-			[2] = 4.388667,
+			[1] = 4.628677,
+			[2] = 4.388677,
 		},
 		randomize_indexes = {},
 	},

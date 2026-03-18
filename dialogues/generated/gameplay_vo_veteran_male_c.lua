@@ -1143,6 +1143,23 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__enemy_kill_houndmaster_01",
+			"loc_veteran_male_c__enemy_kill_houndmaster_02",
+			"loc_veteran_male_c__enemy_kill_houndmaster_03",
+			"loc_veteran_male_c__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.176292,
+			1.69651,
+			0.941094,
+			1.403844,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4409,6 +4426,23 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_c__heard_enemy_houndmaster_01",
+			"loc_veteran_male_c__heard_enemy_houndmaster_02",
+			"loc_veteran_male_c__heard_enemy_houndmaster_03",
+			"loc_veteran_male_c__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.303292,
+			1.770969,
+			1.300365,
+			1.518917,
+		},
+		randomize_indexes = {},
+	},
 	seen_enemy_mutant_charger = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4518,7 +4552,7 @@ local gameplay_vo_veteran_male_c = {
 			1.016417,
 			1.960875,
 			2.533427,
-			0.88074,
+			0.955813,
 		},
 		randomize_indexes = {},
 	},

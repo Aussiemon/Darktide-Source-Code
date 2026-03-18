@@ -198,7 +198,7 @@ local mission_vo_prologue_psyker_male_b = {
 			[1] = "loc_psyker_male_b__ranged_gameplay_04_01",
 		},
 		sound_events_duration = {
-			[1] = 2.97575,
+			[1] = 2.975781,
 		},
 		randomize_indexes = {},
 	},

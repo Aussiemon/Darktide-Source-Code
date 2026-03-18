@@ -90,7 +90,7 @@ local conversations_hub_purser_a = {
 			[1] = "loc_purser_a__hub_idle_2nd_phase_conversation_fortytwo_c_01",
 		},
 		sound_events_duration = {
-			[1] = 4.860583,
+			[1] = 4.860563,
 		},
 		randomize_indexes = {},
 	},
@@ -255,7 +255,7 @@ local conversations_hub_purser_a = {
 			[1] = "loc_purser_a__hub_idle_2nd_phase_conversation_thirtyone_c_01",
 		},
 		sound_events_duration = {
-			[1] = 5.249958,
+			[1] = 5.249938,
 		},
 		randomize_indexes = {},
 	},
@@ -848,7 +848,7 @@ local conversations_hub_purser_a = {
 			[1] = "loc_purser_a__shipmistress_hub_announcement_d_30_d_01",
 		},
 		sound_events_duration = {
-			[1] = 6.455729,
+			[1] = 6.45575,
 		},
 		randomize_indexes = {},
 	},

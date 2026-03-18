@@ -11,9 +11,9 @@ local circumstance_vo_ventilation_purge_adamant_male_c = {
 			"loc_adamant_male_c__vent_circumstance_start_b_04",
 		},
 		sound_events_duration = {
-			2.797333,
-			2.737333,
-			3.288,
+			2.797344,
+			2.737344,
+			3.28801,
 			4.309333,
 		},
 		randomize_indexes = {},

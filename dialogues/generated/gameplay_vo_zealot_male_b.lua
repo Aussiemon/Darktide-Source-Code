@@ -1108,6 +1108,23 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_male_b__enemy_kill_houndmaster_01",
+			"loc_zealot_male_b__enemy_kill_houndmaster_02",
+			"loc_zealot_male_b__enemy_kill_houndmaster_03",
+			"loc_zealot_male_b__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.250083,
+			2.651354,
+			3.878458,
+			3.256563,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4345,6 +4362,23 @@ local gameplay_vo_zealot_male_b = {
 			0.902625,
 			0.878813,
 			1.022625,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_male_b__heard_enemy_houndmaster_01",
+			"loc_zealot_male_b__heard_enemy_houndmaster_02",
+			"loc_zealot_male_b__heard_enemy_houndmaster_03",
+			"loc_zealot_male_b__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.880958,
+			2.305313,
+			2.345104,
+			2.149896,
 		},
 		randomize_indexes = {},
 	},

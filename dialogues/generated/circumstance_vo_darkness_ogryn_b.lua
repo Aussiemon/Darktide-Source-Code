@@ -11,7 +11,7 @@ local circumstance_vo_darkness_ogryn_b = {
 		},
 		sound_events_duration = {
 			2.870938,
-			2.820344,
+			2.820333,
 			2.042885,
 		},
 		sound_event_weights = {

@@ -1999,7 +1999,7 @@ local ogryn_b_ogryn_b = {
 		sound_events_duration = {
 			2.925563,
 			3.5785,
-			6.759125,
+			6.759135,
 		},
 		randomize_indexes = {},
 	},
@@ -2012,7 +2012,7 @@ local ogryn_b_ogryn_b = {
 		},
 		sound_events_duration = {
 			[1] = 2.315083,
-			[2] = 2.870906,
+			[2] = 2.870917,
 		},
 		randomize_indexes = {},
 	},

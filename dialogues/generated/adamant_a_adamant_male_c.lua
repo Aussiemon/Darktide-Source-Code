@@ -8,7 +8,7 @@ local adamant_a_adamant_male_c = {
 			[1] = "loc_adamant_male_c__combat_pause_limited_adamant_a_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.10374,
+			[1] = 2.134406,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local adamant_a_adamant_male_c = {
 			[1] = "loc_adamant_male_c__combat_pause_limited_adamant_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.541375,
+			[1] = 5.073094,
 		},
 		randomize_indexes = {},
 	},
@@ -118,7 +118,7 @@ local adamant_a_adamant_male_c = {
 			[1] = "loc_adamant_male_c__combat_pause_limited_bolt_on_a_adamant_a_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.565115,
+			[1] = 4.565125,
 		},
 		randomize_indexes = {},
 	},

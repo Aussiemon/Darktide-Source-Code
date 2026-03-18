@@ -8,7 +8,7 @@ local zealot_a_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_zealot_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.833719,
+			[1] = 2.792698,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local zealot_a_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_zealot_a_13_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.93001,
+			[1] = 2.984125,
 		},
 		randomize_indexes = {},
 	},
@@ -30,7 +30,7 @@ local zealot_a_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_zealot_a_17_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.329323,
+			[1] = 2.314344,
 		},
 		randomize_indexes = {},
 	},
@@ -41,7 +41,7 @@ local zealot_a_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_zealot_a_19_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.636948,
+			[1] = 1.625646,
 		},
 		randomize_indexes = {},
 	},

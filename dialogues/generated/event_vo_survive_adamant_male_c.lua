@@ -30,7 +30,7 @@ local event_vo_survive_adamant_male_c = {
 		sound_events_duration = {
 			3.235406,
 			2.1,
-			3.363719,
+			3.69851,
 			2.929948,
 		},
 		randomize_indexes = {},

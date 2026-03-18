@@ -430,6 +430,19 @@ local on_demand_vo_broker_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_broker_female_c__smart_tag_vo_enemy_houndmaster_a_01",
+			[2] = "loc_broker_female_c__smart_tag_vo_enemy_houndmaster_a_02",
+		},
+		sound_events_duration = {
+			[1] = 1.102542,
+			[2] = 1.100042,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

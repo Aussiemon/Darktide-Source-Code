@@ -73,9 +73,9 @@ local mission_vo_fm_cargo_adamant_male_c = {
 			"loc_adamant_male_c__zone_tank_foundry_03",
 		},
 		sound_events_duration = {
-			3.808,
+			3.80801,
 			4.590667,
-			4.961333,
+			4.961344,
 		},
 		sound_event_weights = {
 			0.3333333,

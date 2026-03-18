@@ -92,8 +92,8 @@ local psyker_c_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_tertium_splendour_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.092667,
-			[2] = 2.582667,
+			[1] = 3.092677,
+			[2] = 2.582677,
 		},
 		randomize_indexes = {},
 	},

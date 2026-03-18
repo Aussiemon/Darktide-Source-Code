@@ -175,8 +175,8 @@ local mission_vo_km_enforcer_psyker_male_a = {
 			"loc_psyker_male_a__zone_watertown_03",
 		},
 		sound_events_duration = {
-			4.298729,
-			6.468,
+			3.944417,
+			6.687188,
 			3.644604,
 			4.666917,
 			6.669729,

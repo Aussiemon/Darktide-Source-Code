@@ -8,7 +8,7 @@ local psyker_a_veteran_male_a = {
 			[1] = "loc_veteran_male_a__combat_pause_limited_psyker_a_03_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.376854,
+			[1] = 2.926604,
 		},
 		randomize_indexes = {},
 	},

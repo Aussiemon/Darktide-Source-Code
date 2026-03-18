@@ -3993,6 +3993,66 @@ return function ()
 	define_rule({
 		category = "enemy_alerts_prio_1",
 		database = "gameplay_vo",
+		name = "enemy_kill_houndmaster",
+		response = "enemy_kill_houndmaster",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill",
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_houndmaster",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+			{
+				"faction_memory",
+				"enemy_houndmaster",
+				OP.TIMEDIFF,
+				OP.GT,
+				3,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_houndmaster",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_1",
+		database = "gameplay_vo",
 		name = "enemy_kill_monster",
 		response = "enemy_kill_monster",
 		wwise_route = 0,
@@ -17295,6 +17355,51 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_heavy_gunner",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "players",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_alerts_prio_0",
+		database = "gameplay_vo",
+		name = "seen_enemy_houndmaster",
+		response = "seen_enemy_houndmaster",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"seen_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"chaos_ogryn_houndmaster",
+				},
+			},
+			{
+				"faction_memory",
+				"enemy_houndmaster",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"enemy_houndmaster",
 				OP.TIMESET,
 			},
 		},

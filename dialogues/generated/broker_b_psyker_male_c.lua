@@ -30,7 +30,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.416792,
+			[1] = 4.868083,
 		},
 		randomize_indexes = {},
 	},
@@ -52,7 +52,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_03_b_01",
 		},
 		sound_events_duration = {
-			[1] = 5.14076,
+			[1] = 2.546813,
 		},
 		randomize_indexes = {},
 	},
@@ -74,7 +74,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_05_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.212292,
+			[1] = 3.94924,
 		},
 		randomize_indexes = {},
 	},
@@ -96,7 +96,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_07_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.504885,
+			[1] = 2.034708,
 		},
 		randomize_indexes = {},
 	},
@@ -107,7 +107,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_08_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.324292,
+			[1] = 6.263667,
 		},
 		randomize_indexes = {},
 	},
@@ -118,7 +118,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_09_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.179208,
+			[1] = 3.331948,
 		},
 		randomize_indexes = {},
 	},
@@ -129,7 +129,7 @@ local broker_b_psyker_male_c = {
 			[1] = "loc_psyker_male_c__combat_pause_quirk_broker_b_trait_10_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.407917,
+			[1] = 2.03374,
 		},
 		randomize_indexes = {},
 	},

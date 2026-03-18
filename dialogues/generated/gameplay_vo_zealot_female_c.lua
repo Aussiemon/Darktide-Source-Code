@@ -1108,6 +1108,23 @@ local gameplay_vo_zealot_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__enemy_kill_houndmaster_01",
+			"loc_zealot_female_c__enemy_kill_houndmaster_02",
+			"loc_zealot_female_c__enemy_kill_houndmaster_03",
+			"loc_zealot_female_c__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.365938,
+			1.782969,
+			3.116229,
+			2.325167,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4327,6 +4344,23 @@ local gameplay_vo_zealot_female_c = {
 			1.058823,
 			0.892094,
 			1.13725,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__heard_enemy_houndmaster_01",
+			"loc_zealot_female_c__heard_enemy_houndmaster_02",
+			"loc_zealot_female_c__heard_enemy_houndmaster_03",
+			"loc_zealot_female_c__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.854698,
+			2.713594,
+			2.170615,
+			1.795979,
 		},
 		randomize_indexes = {},
 	},

@@ -3,10 +3,9 @@
 local adamant_adamant_female_c = {
 	ability_charge_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 7,
 		sound_events = {
 			"loc_adamant_female_c__ability_charge_a_01",
-			"loc_adamant_female_c__ability_charge_a_02",
 			"loc_adamant_female_c__ability_charge_a_03",
 			"loc_adamant_female_c__ability_charge_a_04",
 			"loc_adamant_female_c__ability_charge_a_05",
@@ -16,7 +15,6 @@ local adamant_adamant_female_c = {
 		},
 		sound_events_duration = {
 			1.180271,
-			1.01876,
 			1.233917,
 			1.422667,
 			1.008813,

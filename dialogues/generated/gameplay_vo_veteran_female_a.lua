@@ -1132,6 +1132,23 @@ local gameplay_vo_veteran_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_houndmaster_01",
+			"loc_veteran_female_a__enemy_kill_houndmaster_02",
+			"loc_veteran_female_a__enemy_kill_houndmaster_03",
+			"loc_veteran_female_a__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.537208,
+			1.402875,
+			1.284229,
+			1.337125,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4426,6 +4443,23 @@ local gameplay_vo_veteran_female_a = {
 			1.299417,
 			1.295229,
 			0.632,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_a__heard_enemy_houndmaster_01",
+			"loc_veteran_female_a__heard_enemy_houndmaster_02",
+			"loc_veteran_female_a__heard_enemy_houndmaster_03",
+			"loc_veteran_female_a__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.326375,
+			3.041708,
+			1.074458,
+			1.636292,
 		},
 		randomize_indexes = {},
 	},

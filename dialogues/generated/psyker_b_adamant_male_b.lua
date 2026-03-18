@@ -8,7 +8,7 @@ local psyker_b_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_psyker_b_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.854729,
+			[1] = 1.77701,
 		},
 		randomize_indexes = {},
 	},

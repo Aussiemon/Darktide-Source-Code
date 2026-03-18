@@ -112,8 +112,8 @@ local mission_vo_hm_strain_zealot_female_c = {
 			[2] = "loc_zealot_female_c__mission_strain_mid_elevator_conversation_one_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.077146,
-			[2] = 3.406833,
+			[1] = 2.145469,
+			[2] = 3.894156,
 		},
 		randomize_indexes = {},
 	},
@@ -164,8 +164,8 @@ local mission_vo_hm_strain_zealot_female_c = {
 			[2] = "loc_zealot_female_c__mission_strain_mid_event_conversation_one_a_02",
 		},
 		sound_events_duration = {
-			[1] = 3.644198,
-			[2] = 3.864417,
+			[1] = 4.035052,
+			[2] = 4.07575,
 		},
 		randomize_indexes = {},
 	},

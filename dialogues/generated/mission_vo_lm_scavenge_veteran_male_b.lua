@@ -43,7 +43,7 @@ local mission_vo_lm_scavenge_veteran_male_b = {
 			"loc_veteran_male_b__zone_dust_03",
 		},
 		sound_events_duration = {
-			5.690438,
+			5.880271,
 			5.947583,
 			3.321479,
 			2.179521,

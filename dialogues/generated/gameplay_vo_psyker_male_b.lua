@@ -1163,6 +1163,23 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_b__enemy_kill_houndmaster_01",
+			"loc_psyker_male_b__enemy_kill_houndmaster_02",
+			"loc_psyker_male_b__enemy_kill_houndmaster_03",
+			"loc_psyker_male_b__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.070979,
+			2.819563,
+			2.817958,
+			2.647063,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4748,6 +4765,23 @@ local gameplay_vo_psyker_male_b = {
 			0.718271,
 			0.946375,
 			2.895229,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_b__heard_enemy_houndmaster_01",
+			"loc_psyker_male_b__heard_enemy_houndmaster_02",
+			"loc_psyker_male_b__heard_enemy_houndmaster_03",
+			"loc_psyker_male_b__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.748938,
+			3.502,
+			1.789792,
+			2.822208,
 		},
 		randomize_indexes = {},
 	},

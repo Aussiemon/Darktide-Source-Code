@@ -8,7 +8,7 @@ local psyker_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_psyker_c_05_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.843292,
+			[1] = 1.894448,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local psyker_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_psyker_c_13_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.654885,
+			[1] = 2.598302,
 		},
 		randomize_indexes = {},
 	},
@@ -30,7 +30,7 @@ local psyker_c_broker_female_a = {
 			[1] = "loc_broker_female_a__combat_pause_limited_psyker_c_19_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.228458,
+			[1] = 2.216406,
 		},
 		randomize_indexes = {},
 	},

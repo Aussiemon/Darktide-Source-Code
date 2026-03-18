@@ -2626,7 +2626,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_01_a_01",
 		},
 		sound_events_duration = {
-			[1] = 3.230906,
+			[1] = 3.13001,
 		},
 		randomize_indexes = {},
 	},
@@ -2637,7 +2637,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_01_c_01",
 		},
 		sound_events_duration = {
-			[1] = 3.1425,
+			[1] = 2.933677,
 		},
 		randomize_indexes = {},
 	},
@@ -2648,7 +2648,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_02_a_01",
 		},
 		sound_events_duration = {
-			[1] = 4.540875,
+			[1] = 4.839677,
 		},
 		randomize_indexes = {},
 	},
@@ -2659,7 +2659,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_02_c_01",
 		},
 		sound_events_duration = {
-			[1] = 1.906219,
+			[1] = 1.805344,
 		},
 		randomize_indexes = {},
 	},
@@ -2670,7 +2670,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_03_a_01",
 		},
 		sound_events_duration = {
-			[1] = 1.94026,
+			[1] = 2.19301,
 		},
 		randomize_indexes = {},
 	},
@@ -2681,7 +2681,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_03_c_01",
 		},
 		sound_events_duration = {
-			[1] = 3.104354,
+			[1] = 2.687677,
 		},
 		randomize_indexes = {},
 	},
@@ -2692,7 +2692,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.792073,
+			[1] = 3.395344,
 		},
 		randomize_indexes = {},
 	},
@@ -2703,7 +2703,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_04_d_01",
 		},
 		sound_events_duration = {
-			[1] = 2.005979,
+			[1] = 1.71001,
 		},
 		randomize_indexes = {},
 	},
@@ -2714,7 +2714,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_05_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.042219,
+			[1] = 2.00001,
 		},
 		randomize_indexes = {},
 	},
@@ -2725,7 +2725,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_05_d_01",
 		},
 		sound_events_duration = {
-			[1] = 3.218323,
+			[1] = 2.92401,
 		},
 		randomize_indexes = {},
 	},
@@ -2736,7 +2736,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_06_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.882302,
+			[1] = 2.10801,
 		},
 		randomize_indexes = {},
 	},
@@ -2747,7 +2747,7 @@ local broker_female_a_broker_female_a = {
 			[1] = "loc_broker_female_a__broker_female_a_veteran_bonding_conversation_06_d_01",
 		},
 		sound_events_duration = {
-			[1] = 1.804781,
+			[1] = 1.662677,
 		},
 		randomize_indexes = {},
 	},

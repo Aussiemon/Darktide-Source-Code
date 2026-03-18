@@ -210,8 +210,8 @@ local mission_vo_dm_propaganda_zealot_male_a = {
 			"loc_zealot_male_a__zone_dust_03",
 		},
 		sound_events_duration = {
-			6.940479,
-			9.714375,
+			5.468354,
+			7.989,
 			5.982813,
 			3.632938,
 			4.659271,

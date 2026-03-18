@@ -56,8 +56,8 @@ local mission_vo_dm_stockpile_adamant_male_c = {
 			"loc_adamant_male_c__zone_watertown_03",
 		},
 		sound_events_duration = {
-			3.014667,
-			2.793333,
+			3.014677,
+			2.793344,
 			3.386,
 		},
 		sound_event_weights = {

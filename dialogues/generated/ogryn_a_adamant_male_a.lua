@@ -210,8 +210,8 @@ local ogryn_a_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_tank_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.388,
-			[2] = 2.452667,
+			[1] = 2.38801,
+			[2] = 2.452677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,

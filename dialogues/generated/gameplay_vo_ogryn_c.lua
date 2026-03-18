@@ -1154,6 +1154,23 @@ local gameplay_vo_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_c__enemy_kill_houndmaster_01",
+			"loc_ogryn_c__enemy_kill_houndmaster_02",
+			"loc_ogryn_c__enemy_kill_houndmaster_03",
+			"loc_ogryn_c__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.019438,
+			2.833667,
+			2.396802,
+			4.850188,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4616,6 +4633,23 @@ local gameplay_vo_ogryn_c = {
 			1.640906,
 			1.980854,
 			1.112729,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_c__heard_enemy_houndmaster_01",
+			"loc_ogryn_c__heard_enemy_houndmaster_02",
+			"loc_ogryn_c__heard_enemy_houndmaster_03",
+			"loc_ogryn_c__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.128052,
+			2.867063,
+			2.639917,
+			2.674146,
 		},
 		randomize_indexes = {},
 	},

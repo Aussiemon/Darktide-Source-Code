@@ -692,6 +692,23 @@ local on_demand_vo_zealot_male_c = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_male_c__smart_tag_vo_enemy_houndmaster_01",
+			"loc_zealot_male_c__smart_tag_vo_enemy_houndmaster_02",
+			"loc_zealot_male_c__smart_tag_vo_enemy_houndmaster_03",
+			"loc_zealot_male_c__smart_tag_vo_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.181823,
+			1.071354,
+			1.073802,
+			1.45424,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

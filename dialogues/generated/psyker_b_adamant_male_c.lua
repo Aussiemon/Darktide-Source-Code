@@ -75,8 +75,8 @@ local psyker_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_competence_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.938667,
-			[2] = 2.914667,
+			[1] = 3.938677,
+			[2] = 2.914677,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +88,8 @@ local psyker_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_dead_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.337333,
-			[2] = 4.953333,
+			[1] = 5.337344,
+			[2] = 4.953344,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +101,8 @@ local psyker_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_dream_b_02",
 		},
 		sound_events_duration = {
-			[1] = 6.445333,
-			[2] = 4.432667,
+			[1] = 6.445344,
+			[2] = 4.432677,
 		},
 		randomize_indexes = {},
 	},
@@ -115,7 +115,7 @@ local psyker_b_adamant_male_c = {
 		},
 		sound_events_duration = {
 			[1] = 3.392,
-			[2] = 5.534667,
+			[2] = 5.534677,
 		},
 		randomize_indexes = {},
 	},
@@ -127,8 +127,8 @@ local psyker_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_fractal_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.61,
-			[2] = 3.058667,
+			[1] = 5.61001,
+			[2] = 3.058677,
 		},
 		randomize_indexes = {},
 	},
@@ -140,8 +140,8 @@ local psyker_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_heights_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.046,
-			[2] = 2.753333,
+			[1] = 3.04601,
+			[2] = 2.753344,
 		},
 		randomize_indexes = {},
 	},

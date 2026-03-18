@@ -735,6 +735,23 @@ local gameplay_vo_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_adamant_female_c__enemy_kill_houndmaster_01",
+			"loc_adamant_female_c__enemy_kill_houndmaster_02",
+			"loc_adamant_female_c__enemy_kill_houndmaster_03",
+			"loc_adamant_female_c__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			3.223073,
+			1.845635,
+			2.442146,
+			1.797063,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
@@ -2857,6 +2874,23 @@ local gameplay_vo_adamant_female_c = {
 			2.546927,
 			1.125219,
 			3.196969,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_adamant_female_c__heard_enemy_houndmaster_01",
+			"loc_adamant_female_c__heard_enemy_houndmaster_02",
+			"loc_adamant_female_c__heard_enemy_houndmaster_03",
+			"loc_adamant_female_c__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			1.931958,
+			1.892135,
+			2.55051,
+			2.716396,
 		},
 		randomize_indexes = {},
 	},

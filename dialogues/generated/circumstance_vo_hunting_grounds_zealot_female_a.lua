@@ -86,7 +86,7 @@ local circumstance_vo_hunting_grounds_zealot_female_a = {
 			1.156458,
 			0.651333,
 			0.829208,
-			1.221854,
+			1.221875,
 			1.6965,
 			1.170604,
 			1.344521,
@@ -125,7 +125,7 @@ local circumstance_vo_hunting_grounds_zealot_female_a = {
 		sound_events_duration = {
 			1.286292,
 			1.347292,
-			1.915229,
+			1.797167,
 			1.488646,
 			1.800479,
 			1.402375,

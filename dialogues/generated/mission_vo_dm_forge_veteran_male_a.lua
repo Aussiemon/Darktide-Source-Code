@@ -217,8 +217,8 @@ local mission_vo_dm_forge_veteran_male_a = {
 			"loc_veteran_male_a__region_mechanicus_03",
 		},
 		sound_events_duration = {
-			3.744833,
-			4.738667,
+			3.947563,
+			5.073729,
 			3.130417,
 		},
 		sound_event_weights = {
@@ -277,7 +277,7 @@ local mission_vo_dm_forge_veteran_male_a = {
 		},
 		sound_events_duration = {
 			6.115313,
-			4.919458,
+			6.32875,
 			4.368208,
 		},
 		sound_event_weights = {

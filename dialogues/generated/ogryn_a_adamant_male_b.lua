@@ -129,7 +129,7 @@ local ogryn_a_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_ogryn_a_07_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.05051,
+			[1] = 2.363167,
 		},
 		randomize_indexes = {},
 	},

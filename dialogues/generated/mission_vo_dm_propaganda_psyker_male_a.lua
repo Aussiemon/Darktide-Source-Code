@@ -210,8 +210,8 @@ local mission_vo_dm_propaganda_psyker_male_a = {
 			"loc_psyker_male_a__zone_dust_03",
 		},
 		sound_events_duration = {
-			8.436646,
-			9.641417,
+			8.113771,
+			8.782792,
 			6.800167,
 			5.273604,
 			6.111688,

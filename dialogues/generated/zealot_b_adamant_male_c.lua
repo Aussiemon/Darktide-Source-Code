@@ -75,8 +75,8 @@ local zealot_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_ammo_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.580667,
-			[2] = 2.694,
+			[1] = 2.580677,
+			[2] = 2.69401,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +88,8 @@ local zealot_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_anger_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.994,
-			[2] = 4.254,
+			[1] = 3.99401,
+			[2] = 4.25401,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +101,8 @@ local zealot_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_defend_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.186,
-			[2] = 3.746667,
+			[1] = 4.18601,
+			[2] = 3.746677,
 		},
 		randomize_indexes = {},
 	},
@@ -115,7 +115,7 @@ local zealot_b_adamant_male_c = {
 		},
 		sound_events_duration = {
 			[1] = 7.458,
-			[2] = 5.013333,
+			[2] = 5.013344,
 		},
 		randomize_indexes = {},
 	},
@@ -127,8 +127,8 @@ local zealot_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_endless_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.529333,
-			[2] = 4.24,
+			[1] = 4.529344,
+			[2] = 4.24001,
 		},
 		randomize_indexes = {},
 	},
@@ -140,8 +140,8 @@ local zealot_b_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_flame_b_02",
 		},
 		sound_events_duration = {
-			[1] = 6.84,
-			[2] = 7.956667,
+			[1] = 6.84001,
+			[2] = 7.956677,
 		},
 		randomize_indexes = {},
 	},

@@ -198,7 +198,7 @@ local mission_vo_prologue_veteran_male_b = {
 			[1] = "loc_veteran_male_b__ranged_gameplay_04_01",
 		},
 		sound_events_duration = {
-			[1] = 1.95075,
+			[1] = 1.950792,
 		},
 		randomize_indexes = {},
 	},

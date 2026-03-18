@@ -485,7 +485,7 @@ local guidance_vo_ogryn_b = {
 			"loc_ogryn_b__guidance_correct_path_up_10",
 		},
 		sound_events_duration = {
-			0.522823,
+			0.522833,
 			0.631125,
 			1.024708,
 			1.510479,

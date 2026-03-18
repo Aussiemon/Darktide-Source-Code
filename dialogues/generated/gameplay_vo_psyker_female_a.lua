@@ -1182,6 +1182,23 @@ local gameplay_vo_psyker_female_a = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_female_a__enemy_kill_houndmaster_01",
+			"loc_psyker_female_a__enemy_kill_houndmaster_02",
+			"loc_psyker_female_a__enemy_kill_houndmaster_03",
+			"loc_psyker_female_a__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.868063,
+			2.733479,
+			2.436104,
+			2.048313,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4744,6 +4761,23 @@ local gameplay_vo_psyker_female_a = {
 			0.990396,
 			1.575396,
 			1.883833,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_female_a__heard_enemy_houndmaster_01",
+			"loc_psyker_female_a__heard_enemy_houndmaster_02",
+			"loc_psyker_female_a__heard_enemy_houndmaster_03",
+			"loc_psyker_female_a__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.071521,
+			3.365354,
+			2.591813,
+			2.405979,
 		},
 		randomize_indexes = {},
 	},

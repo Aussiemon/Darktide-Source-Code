@@ -112,8 +112,8 @@ local mission_vo_hm_strain_veteran_female_c = {
 			[2] = "loc_veteran_female_c__mission_strain_mid_elevator_conversation_one_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.096625,
-			[2] = 0.991615,
+			[1] = 2.120823,
+			[2] = 0.998188,
 		},
 		randomize_indexes = {},
 	},
@@ -164,7 +164,7 @@ local mission_vo_hm_strain_veteran_female_c = {
 			[2] = "loc_veteran_female_c__mission_strain_mid_event_conversation_one_a_02",
 		},
 		sound_events_duration = {
-			[1] = 4.26651,
+			[1] = 3.71751,
 			[2] = 3.302813,
 		},
 		randomize_indexes = {},
@@ -177,8 +177,8 @@ local mission_vo_hm_strain_veteran_female_c = {
 			[2] = "loc_veteran_female_c__mission_strain_mid_event_conversation_one_c_02",
 		},
 		sound_events_duration = {
-			[1] = 1.607927,
-			[2] = 2.13326,
+			[1] = 2.146802,
+			[2] = 2.396833,
 		},
 		randomize_indexes = {},
 	},

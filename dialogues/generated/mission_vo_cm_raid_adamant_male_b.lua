@@ -15,13 +15,13 @@ local mission_vo_cm_raid_adamant_male_b = {
 			"loc_adamant_male_b__guidance_starting_area_08",
 		},
 		sound_events_duration = {
-			3.049573,
+			2.332313,
 			2.328073,
 			3.58425,
 			2.881646,
 			4.426927,
 			3.423719,
-			2.998333,
+			2.085021,
 			3.458031,
 		},
 		sound_event_weights = {

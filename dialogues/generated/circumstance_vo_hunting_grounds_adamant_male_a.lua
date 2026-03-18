@@ -36,7 +36,7 @@ local circumstance_vo_hunting_grounds_adamant_male_a = {
 		sound_events_duration = {
 			4.108,
 			4.529333,
-			2.978667,
+			2.978677,
 			2.428667,
 		},
 		randomize_indexes = {},

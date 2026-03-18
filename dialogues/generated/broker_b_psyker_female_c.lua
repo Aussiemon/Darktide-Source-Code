@@ -41,7 +41,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.373531,
+			[1] = 4.031927,
 		},
 		randomize_indexes = {},
 	},
@@ -63,7 +63,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.576875,
+			[1] = 2.897281,
 		},
 		randomize_indexes = {},
 	},
@@ -85,7 +85,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_06_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.319667,
+			[1] = 3.300146,
 		},
 		randomize_indexes = {},
 	},
@@ -107,7 +107,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_08_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.885802,
+			[1] = 6.424969,
 		},
 		randomize_indexes = {},
 	},
@@ -118,7 +118,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_09_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.41701,
+			[1] = 3.009604,
 		},
 		randomize_indexes = {},
 	},
@@ -129,7 +129,7 @@ local broker_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_quirk_broker_b_trait_10_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.060177,
+			[1] = 2.123385,
 		},
 		randomize_indexes = {},
 	},

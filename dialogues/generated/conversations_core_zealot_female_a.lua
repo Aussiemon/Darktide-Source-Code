@@ -155,7 +155,7 @@ local conversations_core_zealot_female_a = {
 		sound_events_duration = {
 			3.226563,
 			2.326333,
-			2.568375,
+			2.266375,
 			3.267333,
 		},
 		randomize_indexes = {},
@@ -238,7 +238,7 @@ local conversations_core_zealot_female_a = {
 		},
 		sound_events_duration = {
 			[1] = 3.840917,
-			[2] = 2.287521,
+			[2] = 2.287542,
 		},
 		randomize_indexes = {},
 	},
@@ -341,7 +341,7 @@ local conversations_core_zealot_female_a = {
 			[2] = "loc_zealot_female_a__conversation_sergeant_one_02_02",
 		},
 		sound_events_duration = {
-			[1] = 5.320875,
+			[1] = 5.320896,
 			[2] = 2.757083,
 		},
 		randomize_indexes = {},

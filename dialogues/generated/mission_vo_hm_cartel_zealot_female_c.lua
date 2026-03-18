@@ -52,7 +52,7 @@ local mission_vo_hm_cartel_zealot_female_c = {
 			[2] = "loc_zealot_female_c__mission_cartel_elevator_conversation_three_line_one_02",
 		},
 		sound_events_duration = {
-			[1] = 6.259104,
+			[1] = 4.721802,
 			[2] = 3.339917,
 		},
 		randomize_indexes = {},

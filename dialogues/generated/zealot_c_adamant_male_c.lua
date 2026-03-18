@@ -64,8 +64,8 @@ local zealot_c_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_hymnal_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.210667,
-			[2] = 2.872667,
+			[1] = 4.210677,
+			[2] = 2.872677,
 		},
 		randomize_indexes = {},
 	},

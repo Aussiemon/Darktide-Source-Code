@@ -64,8 +64,8 @@ local psyker_c_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_concerning_enforcers_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.106667,
-			[2] = 3.108,
+			[1] = 3.106677,
+			[2] = 3.10801,
 		},
 		randomize_indexes = {},
 	},

@@ -10,8 +10,8 @@ local mission_vo_cm_habs_psyker_male_a = {
 			"loc_psyker_male_a__region_habculum_03",
 		},
 		sound_events_duration = {
-			4.298729,
-			6.468,
+			3.944417,
+			6.687188,
 			3.644604,
 		},
 		sound_event_weights = {
@@ -89,8 +89,8 @@ local mission_vo_cm_habs_psyker_male_a = {
 			"loc_psyker_male_a__zone_transit_03",
 		},
 		sound_events_duration = {
-			4.298729,
-			6.468,
+			3.944417,
+			6.687188,
 			3.644604,
 			7.510313,
 			3.483229,

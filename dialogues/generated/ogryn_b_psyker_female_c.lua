@@ -41,7 +41,7 @@ local ogryn_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_limited_ogryn_b_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.47475,
+			[1] = 2.811188,
 		},
 		randomize_indexes = {},
 	},
@@ -52,7 +52,7 @@ local ogryn_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_limited_ogryn_b_07_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.540896,
+			[1] = 2.984635,
 		},
 		randomize_indexes = {},
 	},
@@ -63,7 +63,7 @@ local ogryn_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_limited_ogryn_b_12_b_01",
 		},
 		sound_events_duration = {
-			[1] = 5.317313,
+			[1] = 5.442917,
 		},
 		randomize_indexes = {},
 	},
@@ -85,7 +85,7 @@ local ogryn_b_psyker_female_c = {
 			[1] = "loc_psyker_female_c__combat_pause_limited_ogryn_b_17_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.467979,
+			[1] = 4.444052,
 		},
 		randomize_indexes = {},
 	},

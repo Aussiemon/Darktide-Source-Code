@@ -9,8 +9,8 @@ local event_vo_hacking_adamant_male_c = {
 			[2] = "loc_adamant_male_c__response_to_hacking_fix_decode_02",
 		},
 		sound_events_duration = {
-			[1] = 1.749333,
-			[2] = 1.955333,
+			[1] = 1.749344,
+			[2] = 1.955344,
 		},
 		randomize_indexes = {},
 	},

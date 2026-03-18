@@ -218,8 +218,8 @@ local conversations_core_ogryn_b = {
 			[2] = "loc_ogryn_b__conversation_pilot_two_01_02",
 		},
 		sound_events_duration = {
-			[1] = 3.545083,
-			[2] = 3.993604,
+			[1] = 3.256198,
+			[2] = 3.304208,
 		},
 		randomize_indexes = {},
 	},

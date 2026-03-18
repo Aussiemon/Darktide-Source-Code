@@ -175,8 +175,8 @@ local mission_vo_km_enforcer_veteran_male_a = {
 			"loc_veteran_male_a__zone_watertown_03",
 		},
 		sound_events_duration = {
-			5.870667,
-			4.34875,
+			6.942063,
+			5.343479,
 			4.6865,
 			2.152354,
 			3.111042,

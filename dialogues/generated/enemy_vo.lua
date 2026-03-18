@@ -2195,6 +2195,403 @@ return function ()
 	define_rule({
 		category = "enemy_vo_prio_1",
 		database = "enemy_vo",
+		name = "hound_master_alerted",
+		response = "hound_master_alerted",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"alerted_idle",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_alerted",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"hound_master_alerted",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_alerted",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_alerted",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_alerted_through_stealth",
+		response = "hound_master_alerted_through_stealth",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"ability_pious_stabber",
+					"ability_shock_trooper",
+				},
+			},
+			{
+				"user_memory",
+				"hound_master_alerted_through_stealth",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_alerted_through_stealth",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_call_hounds",
+		response = "hound_master_call_hounds",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"summon_minions",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_call_hounds",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"hound_master_call_hounds",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_call_hounds",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_call_hounds",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_combat_taunt",
+		response = "hound_master_combat_taunt",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"assault",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_combat_taunt",
+				OP.TIMEDIFF,
+				OP.GT,
+				20,
+			},
+			{
+				"faction_memory",
+				"hound_master_combat_taunt",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_combat_taunt",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_combat_taunt",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_hound_attack",
+		response = "hound_master_hound_attack",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"owner_call_attack",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_hound_attack",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_attack",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_hound_attack",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_attack",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_hound_dead",
+		response = "hound_master_hound_dead",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"owner_call_dead",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_hound_dead",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_dead",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_hound_dead",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_dead",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
+		name = "hound_master_hound_pounce_success",
+		response = "hound_master_hound_pounce_success",
+		wwise_route = 57,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event",
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"owner_call_pounced",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"hound_master_hound_pounce_success",
+				OP.TIMEDIFF,
+				OP.GT,
+				10,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_pounce_success",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"hound_master_hound_pounce_success",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"hound_master_hound_pounce_success",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "disabled",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "enemy_vo_prio_1",
+		database = "enemy_vo",
 		name = "plasma_gunner_alerted_idle",
 		response = "plasma_gunner_alerted_idle",
 		wwise_route = 58,

@@ -90,8 +90,8 @@ local veteran_c_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_trust_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.982667,
-			[2] = 2.421333,
+			[1] = 2.982677,
+			[2] = 2.421344,
 		},
 		randomize_indexes = {},
 	},
@@ -103,8 +103,8 @@ local veteran_c_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_turncoat_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.04,
-			[2] = 3.825333,
+			[1] = 5.04001,
+			[2] = 3.825344,
 		},
 		randomize_indexes = {},
 	},

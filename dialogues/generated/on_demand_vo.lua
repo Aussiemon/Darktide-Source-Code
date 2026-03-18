@@ -1574,6 +1574,54 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_houndmaster",
+		response = "smart_tag_vo_enemy_houndmaster",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_ogryn_houndmaster",
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_houndmaster",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
 		name = "smart_tag_vo_enemy_netgunner",
 		response = "smart_tag_vo_enemy_netgunner",
 		wwise_route = 0,

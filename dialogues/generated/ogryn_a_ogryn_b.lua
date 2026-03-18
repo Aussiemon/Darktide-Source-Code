@@ -182,7 +182,7 @@ local ogryn_a_ogryn_b = {
 		},
 		sound_events_duration = {
 			[1] = 1.60676,
-			[2] = 3.895635,
+			[2] = 3.895625,
 		},
 		randomize_indexes = {},
 	},
@@ -194,7 +194,7 @@ local ogryn_a_ogryn_b = {
 			[2] = "loc_ogryn_b__combat_pause_quirk_tank_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.307135,
+			[1] = 2.307146,
 			[2] = 2.632177,
 		},
 		sound_event_weights = {

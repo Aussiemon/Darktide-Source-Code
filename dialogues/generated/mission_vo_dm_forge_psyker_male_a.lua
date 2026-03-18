@@ -217,7 +217,7 @@ local mission_vo_dm_forge_psyker_male_a = {
 			"loc_psyker_male_a__region_mechanicus_03",
 		},
 		sound_events_duration = {
-			5.343021,
+			5.294938,
 			5.895708,
 			7.462833,
 		},

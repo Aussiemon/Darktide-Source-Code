@@ -1171,6 +1171,23 @@ local gameplay_vo_veteran_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	enemy_kill_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_b__enemy_kill_houndmaster_01",
+			"loc_veteran_male_b__enemy_kill_houndmaster_02",
+			"loc_veteran_male_b__enemy_kill_houndmaster_03",
+			"loc_veteran_male_b__enemy_kill_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.117813,
+			2.397833,
+			2.103625,
+			3.190583,
+		},
+		randomize_indexes = {},
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -4424,6 +4441,23 @@ local gameplay_vo_veteran_male_b = {
 			1.288979,
 			1.184813,
 			0.741583,
+		},
+		randomize_indexes = {},
+	},
+	seen_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_male_b__heard_enemy_houndmaster_01",
+			"loc_veteran_male_b__heard_enemy_houndmaster_02",
+			"loc_veteran_male_b__heard_enemy_houndmaster_03",
+			"loc_veteran_male_b__heard_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			2.371125,
+			1.390417,
+			2.138854,
+			1.843208,
 		},
 		randomize_indexes = {},
 	},

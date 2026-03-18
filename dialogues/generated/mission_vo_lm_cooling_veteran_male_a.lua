@@ -159,8 +159,8 @@ local mission_vo_lm_cooling_veteran_male_a = {
 			"loc_veteran_male_a__region_mechanicus_03",
 		},
 		sound_events_duration = {
-			3.744833,
-			4.738667,
+			3.947563,
+			5.073729,
 			3.130417,
 		},
 		sound_event_weights = {

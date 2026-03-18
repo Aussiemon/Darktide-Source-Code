@@ -163,7 +163,7 @@ local mission_vo_lm_cooling_zealot_male_b = {
 		},
 		sound_events_duration = {
 			4.659271,
-			3.046958,
+			3.851521,
 			6.379708,
 		},
 		sound_event_weights = {

@@ -22,8 +22,8 @@ local mission_vo_cm_habs_remake_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_apartments_02",
 		},
 		sound_events_duration = {
-			[1] = 1.191458,
-			[2] = 0.692292,
+			[1] = 1.649083,
+			[2] = 0.865208,
 		},
 		randomize_indexes = {},
 	},
@@ -35,7 +35,7 @@ local mission_vo_cm_habs_remake_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_apartments_response_02",
 		},
 		sound_events_duration = {
-			[1] = 1.748688,
+			[1] = 2.761885,
 			[2] = 1.02724,
 		},
 		randomize_indexes = {},
@@ -48,8 +48,8 @@ local mission_vo_cm_habs_remake_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_collapse_02",
 		},
 		sound_events_duration = {
-			[1] = 1.029438,
-			[2] = 1.046583,
+			[1] = 1.100615,
+			[2] = 0.979104,
 		},
 		randomize_indexes = {},
 	},
@@ -61,8 +61,8 @@ local mission_vo_cm_habs_remake_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_corpse_02",
 		},
 		sound_events_duration = {
-			[1] = 1.786896,
-			[2] = 2.89425,
+			[1] = 2.659344,
+			[2] = 2.950792,
 		},
 		randomize_indexes = {},
 	},
@@ -74,8 +74,8 @@ local mission_vo_cm_habs_remake_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_security_02",
 		},
 		sound_events_duration = {
-			[1] = 2.912917,
-			[2] = 2.307875,
+			[1] = 2.947479,
+			[2] = 2.520635,
 		},
 		randomize_indexes = {},
 	},

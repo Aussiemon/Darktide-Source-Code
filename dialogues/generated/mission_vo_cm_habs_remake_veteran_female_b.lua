@@ -36,7 +36,7 @@ local mission_vo_cm_habs_remake_veteran_female_b = {
 		},
 		sound_events_duration = {
 			[1] = 3.304958,
-			[2] = 3.055271,
+			[2] = 3.098083,
 		},
 		randomize_indexes = {},
 	},

@@ -30,7 +30,7 @@ local veteran_c_veteran_female_a = {
 			[1] = "loc_veteran_female_a__combat_pause_limited_veteran_c_17_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.021146,
+			[1] = 3.639021,
 		},
 		randomize_indexes = {},
 	},

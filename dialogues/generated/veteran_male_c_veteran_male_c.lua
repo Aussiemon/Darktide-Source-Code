@@ -481,7 +481,7 @@ local veteran_male_c_veteran_male_c = {
 			[1] = "loc_veteran_male_c__bonding_conversation_heavy_injury_21_c_01",
 		},
 		sound_events_duration = {
-			[1] = 1.901854,
+			[1] = 1.901833,
 		},
 		randomize_indexes = {},
 	},
@@ -525,7 +525,7 @@ local veteran_male_c_veteran_male_c = {
 			[1] = "loc_veteran_male_c__bonding_conversation_heavy_injury_23_c_01",
 		},
 		sound_events_duration = {
-			[1] = 2.272875,
+			[1] = 2.272854,
 		},
 		randomize_indexes = {},
 	},

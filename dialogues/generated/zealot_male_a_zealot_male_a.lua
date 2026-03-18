@@ -1295,7 +1295,7 @@ local zealot_male_a_zealot_male_a = {
 			[1] = "loc_zealot_male_a__oval_bonding_conversation_scale_a_01",
 		},
 		sound_events_duration = {
-			[1] = 5.437917,
+			[1] = 4.561833,
 		},
 		randomize_indexes = {},
 	},
@@ -1581,7 +1581,7 @@ local zealot_male_a_zealot_male_a = {
 			[1] = "loc_zealot_male_a__oval_world_conversation_fingal_swagger_six_a_01",
 		},
 		sound_events_duration = {
-			[1] = 5.184417,
+			[1] = 5.007917,
 		},
 		randomize_indexes = {},
 	},

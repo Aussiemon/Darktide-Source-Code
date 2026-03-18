@@ -182,7 +182,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -207,7 +207,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -242,7 +242,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -277,7 +277,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -312,7 +312,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -347,7 +347,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -382,7 +382,7 @@ local guidance_vo_adamant_male_b = {
 		sound_events_duration = {
 			1.831677,
 			1.738958,
-			2.323344,
+			1.685438,
 			2.191948,
 			1.596531,
 			1.929292,
@@ -730,13 +730,13 @@ local guidance_vo_adamant_male_b = {
 			"loc_adamant_male_b__guidance_starting_area_08",
 		},
 		sound_events_duration = {
-			3.049573,
+			2.332313,
 			2.328073,
 			3.58425,
 			2.881646,
 			4.426927,
 			3.423719,
-			2.998333,
+			2.085021,
 			3.458031,
 		},
 		randomize_indexes = {},

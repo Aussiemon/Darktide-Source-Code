@@ -2508,7 +2508,7 @@ local conversations_core_zealot_male_c = {
 		},
 		sound_events_duration = {
 			[1] = 5.573844,
-			[2] = 5.549229,
+			[2] = 4.585302,
 		},
 		randomize_indexes = {},
 	},

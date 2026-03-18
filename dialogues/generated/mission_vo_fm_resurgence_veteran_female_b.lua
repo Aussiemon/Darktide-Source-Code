@@ -98,8 +98,8 @@ local mission_vo_fm_resurgence_veteran_female_b = {
 			[2] = "loc_veteran_female_b__mission_resurgence_defence_conversation_a_02",
 		},
 		sound_events_duration = {
-			[1] = 2.13975,
-			[2] = 4.371729,
+			[1] = 4.127813,
+			[2] = 3.705958,
 		},
 		randomize_indexes = {},
 	},

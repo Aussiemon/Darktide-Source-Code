@@ -147,7 +147,7 @@ local broker_broker_female_a = {
 			1.186677,
 			1.568406,
 			1.561573,
-			2.87674,
+			1.414958,
 		},
 		randomize_indexes = {},
 	},

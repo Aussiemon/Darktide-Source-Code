@@ -19,7 +19,7 @@ local veteran_b_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_veteran_b_05_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.848927,
+			[1] = 3.011063,
 		},
 		randomize_indexes = {},
 	},
@@ -41,7 +41,7 @@ local veteran_b_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_veteran_b_11_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.776438,
+			[1] = 3.928906,
 		},
 		randomize_indexes = {},
 	},
@@ -63,7 +63,7 @@ local veteran_b_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_veteran_b_20_b_01",
 		},
 		sound_events_duration = {
-			[1] = 1.560406,
+			[1] = 1.59125,
 		},
 		randomize_indexes = {},
 	},

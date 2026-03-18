@@ -56,9 +56,9 @@ local mission_vo_hm_complex_adamant_male_c = {
 			"loc_adamant_male_c__zone_throneside_03",
 		},
 		sound_events_duration = {
-			4.334,
-			5.767333,
-			4.346667,
+			4.33401,
+			5.767344,
+			4.346677,
 		},
 		sound_event_weights = {
 			0.3333333,

@@ -140,8 +140,8 @@ local zealot_a_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_stench_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.184,
-			[2] = 3.330667,
+			[1] = 5.18401,
+			[2] = 3.330677,
 		},
 		randomize_indexes = {},
 	},
@@ -167,7 +167,7 @@ local zealot_a_adamant_male_a = {
 		},
 		sound_events_duration = {
 			[1] = 3.681333,
-			[2] = 2.479333,
+			[2] = 2.479344,
 		},
 		randomize_indexes = {},
 	},

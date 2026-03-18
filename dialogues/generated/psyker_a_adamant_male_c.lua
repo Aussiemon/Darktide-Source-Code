@@ -75,7 +75,7 @@ local psyker_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_bad_feeling_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.321333,
+			[1] = 4.321344,
 			[2] = 2.872,
 		},
 		randomize_indexes = {},
@@ -88,8 +88,8 @@ local psyker_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_cold_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.102,
-			[2] = 5.425333,
+			[1] = 3.10201,
+			[2] = 5.425344,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +101,8 @@ local psyker_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_dislikes_grenades_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.636,
-			[2] = 4.700667,
+			[1] = 4.63601,
+			[2] = 4.700677,
 		},
 		randomize_indexes = {},
 	},
@@ -114,8 +114,8 @@ local psyker_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_expendable_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.200667,
-			[2] = 1.380667,
+			[1] = 2.200677,
+			[2] = 1.380677,
 		},
 		randomize_indexes = {},
 	},
@@ -127,8 +127,8 @@ local psyker_a_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_hates_poxwalkers_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.666,
-			[2] = 3.06,
+			[1] = 4.66601,
+			[2] = 3.06001,
 		},
 		randomize_indexes = {},
 	},

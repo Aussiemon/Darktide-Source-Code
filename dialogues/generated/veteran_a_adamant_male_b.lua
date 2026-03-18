@@ -8,7 +8,7 @@ local veteran_a_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_veteran_a_02_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.502635,
+			[1] = 2.135135,
 		},
 		randomize_indexes = {},
 	},

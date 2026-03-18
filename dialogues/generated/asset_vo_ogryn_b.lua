@@ -47,7 +47,7 @@ local asset_vo_ogryn_b = {
 		sound_events_duration = {
 			4.179844,
 			5.512719,
-			4.911594,
+			4.911583,
 			8.135229,
 		},
 		randomize_indexes = {},
@@ -105,7 +105,7 @@ local asset_vo_ogryn_b = {
 			"loc_ogryn_b__asset_unnatural_dark_a_04",
 		},
 		sound_events_duration = {
-			1.917688,
+			1.917698,
 			1.690344,
 			2.215906,
 			1.79751,
@@ -124,7 +124,7 @@ local asset_vo_ogryn_b = {
 		sound_events_duration = {
 			1.469667,
 			2.870938,
-			2.820344,
+			2.820333,
 			2.042885,
 		},
 		randomize_indexes = {},

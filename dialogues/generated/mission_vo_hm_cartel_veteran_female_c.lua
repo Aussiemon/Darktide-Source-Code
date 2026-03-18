@@ -52,7 +52,7 @@ local mission_vo_hm_cartel_veteran_female_c = {
 			[2] = "loc_veteran_female_c__mission_cartel_elevator_conversation_three_line_one_02",
 		},
 		sound_events_duration = {
-			[1] = 4.002083,
+			[1] = 3.865427,
 			[2] = 3.756271,
 		},
 		randomize_indexes = {},

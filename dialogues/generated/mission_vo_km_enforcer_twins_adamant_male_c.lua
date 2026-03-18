@@ -13,12 +13,12 @@ local mission_vo_km_enforcer_twins_adamant_male_c = {
 			"loc_adamant_male_c__enemy_kill_monster_08",
 		},
 		sound_events_duration = {
-			4.773333,
-			4.128,
-			2.366,
-			2.966667,
-			4.781333,
-			3.44,
+			4.773344,
+			4.12801,
+			2.36601,
+			2.966677,
+			4.781344,
+			3.44001,
 		},
 		sound_event_weights = {
 			0.1666667,

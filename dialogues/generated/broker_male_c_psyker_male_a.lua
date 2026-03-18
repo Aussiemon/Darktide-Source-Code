@@ -118,7 +118,7 @@ local broker_male_c_psyker_male_a = {
 			[1] = "loc_psyker_male_a__broker_male_c_psyker_bonding_conversation_06_a_01",
 		},
 		sound_events_duration = {
-			[1] = 9.433021,
+			[1] = 7.760604,
 		},
 		randomize_indexes = {},
 	},

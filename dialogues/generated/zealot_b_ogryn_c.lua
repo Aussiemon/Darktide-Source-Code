@@ -87,7 +87,7 @@ local zealot_b_ogryn_c = {
 			[2] = "loc_ogryn_c__combat_pause_quirk_drink_b_02",
 		},
 		sound_events_duration = {
-			[1] = 2.260458,
+			[1] = 2.049448,
 			[2] = 2.85426,
 		},
 		randomize_indexes = {},

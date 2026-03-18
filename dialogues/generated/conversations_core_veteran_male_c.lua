@@ -257,7 +257,7 @@ local conversations_core_veteran_male_c = {
 			"loc_veteran_male_c__conversation_pilot_two_02_04",
 		},
 		sound_events_duration = {
-			4.320667,
+			5.58525,
 			3.63725,
 			3.470333,
 			3.125604,

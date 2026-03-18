@@ -344,7 +344,7 @@ local conversations_hub_sergeant_a = {
 			[1] = "loc_sergeant_a__hub_rumours_vox_03_c_01",
 		},
 		sound_events_duration = {
-			[1] = 2.163083,
+			[1] = 2.163104,
 		},
 		randomize_indexes = {},
 	},

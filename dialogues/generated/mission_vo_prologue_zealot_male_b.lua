@@ -198,7 +198,7 @@ local mission_vo_prologue_zealot_male_b = {
 			[1] = "loc_zealot_male_b__ranged_gameplay_04_01",
 		},
 		sound_events_duration = {
-			[1] = 1.890604,
+			[1] = 1.890646,
 		},
 		randomize_indexes = {},
 	},

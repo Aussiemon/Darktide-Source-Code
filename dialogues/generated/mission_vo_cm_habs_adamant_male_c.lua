@@ -30,9 +30,9 @@ local mission_vo_cm_habs_adamant_male_c = {
 			"loc_adamant_male_c__zone_transit_03",
 		},
 		sound_events_duration = {
-			3.849333,
-			5.022667,
-			3.636,
+			3.849344,
+			5.022677,
+			3.63601,
 		},
 		sound_event_weights = {
 			0.3333333,

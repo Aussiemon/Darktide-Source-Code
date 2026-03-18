@@ -166,7 +166,7 @@ local zealot_b_adamant_male_a = {
 			[2] = "loc_adamant_male_a__combat_pause_quirk_trial_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.288667,
+			[1] = 4.288677,
 			[2] = 4.149333,
 		},
 		randomize_indexes = {},

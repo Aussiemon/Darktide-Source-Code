@@ -10,8 +10,8 @@ local mission_vo_cm_habs_veteran_male_a = {
 			"loc_veteran_male_a__region_habculum_03",
 		},
 		sound_events_duration = {
-			5.870667,
-			4.34875,
+			6.942063,
+			5.343479,
 			4.6865,
 		},
 		sound_event_weights = {
@@ -89,8 +89,8 @@ local mission_vo_cm_habs_veteran_male_a = {
 			"loc_veteran_male_a__zone_transit_03",
 		},
 		sound_events_duration = {
-			5.870667,
-			4.34875,
+			6.942063,
+			5.343479,
 			4.6865,
 			2.078854,
 			2.180833,

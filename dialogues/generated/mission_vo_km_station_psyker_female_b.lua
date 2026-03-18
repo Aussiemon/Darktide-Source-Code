@@ -163,7 +163,7 @@ local mission_vo_km_station_psyker_female_b = {
 		},
 		sound_events_duration = {
 			[1] = 3.140229,
-			[2] = 6.013271,
+			[2] = 3.640563,
 		},
 		randomize_indexes = {},
 	},

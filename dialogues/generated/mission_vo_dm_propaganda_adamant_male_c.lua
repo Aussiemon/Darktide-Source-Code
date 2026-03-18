@@ -95,9 +95,9 @@ local mission_vo_dm_propaganda_adamant_male_c = {
 			5.05324,
 			5.20225,
 			4.028521,
-			2.378667,
-			4.020667,
-			4.002,
+			2.378677,
+			4.020677,
+			4.00201,
 		},
 		sound_event_weights = {
 			0.1666667,

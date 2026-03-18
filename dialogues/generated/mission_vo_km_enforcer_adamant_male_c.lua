@@ -62,8 +62,8 @@ local mission_vo_km_enforcer_adamant_male_c = {
 			5.100792,
 			3.458396,
 			3.785479,
-			3.014667,
-			2.793333,
+			3.014677,
+			2.793344,
 			3.386,
 		},
 		sound_event_weights = {

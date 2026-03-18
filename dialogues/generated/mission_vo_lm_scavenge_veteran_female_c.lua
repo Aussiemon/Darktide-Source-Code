@@ -94,8 +94,8 @@ local mission_vo_lm_scavenge_veteran_female_c = {
 			[2] = "loc_veteran_female_c__mission_scavenge_elevator_conversation_three_line_one_02",
 		},
 		sound_events_duration = {
-			[1] = 2.98149,
-			[2] = 2.368896,
+			[1] = 3.303635,
+			[2] = 2.36924,
 		},
 		randomize_indexes = {},
 	},

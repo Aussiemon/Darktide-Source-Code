@@ -8,7 +8,7 @@ local psyker_a_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_psyker_a_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 6.537667,
+			[1] = 7.185708,
 		},
 		randomize_indexes = {},
 	},
@@ -41,7 +41,7 @@ local psyker_a_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_psyker_a_12_b_01",
 		},
 		sound_events_duration = {
-			[1] = 6.038354,
+			[1] = 5.087479,
 		},
 		randomize_indexes = {},
 	},
@@ -52,7 +52,7 @@ local psyker_a_adamant_male_b = {
 			[1] = "loc_adamant_male_b__combat_pause_limited_psyker_a_16_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.835781,
+			[1] = 2.72824,
 		},
 		randomize_indexes = {},
 	},

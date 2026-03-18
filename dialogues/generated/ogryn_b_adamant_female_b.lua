@@ -8,7 +8,7 @@ local ogryn_b_adamant_female_b = {
 			[1] = "loc_adamant_female_b__adamant_female_b_ogryn_bonding_conversation_16_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.715229,
+			[1] = 2.725125,
 		},
 		randomize_indexes = {},
 	},
@@ -19,7 +19,7 @@ local ogryn_b_adamant_female_b = {
 			[1] = "loc_adamant_female_b__adamant_female_b_ogryn_bonding_conversation_16_d_01",
 		},
 		sound_events_duration = {
-			[1] = 2.067219,
+			[1] = 3.040135,
 		},
 		randomize_indexes = {},
 	},

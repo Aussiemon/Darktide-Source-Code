@@ -28,7 +28,7 @@ local event_vo_survive_adamant_male_b = {
 			"loc_adamant_male_b__event_survive_keep_coming_a_04",
 		},
 		sound_events_duration = {
-			2.515896,
+			2.193583,
 			2.496563,
 			3.730042,
 			3.906323,

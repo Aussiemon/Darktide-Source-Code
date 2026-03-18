@@ -53,8 +53,8 @@ local veteran_c_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_dead_already_b_02",
 		},
 		sound_events_duration = {
-			[1] = 5.337333,
-			[2] = 6.32,
+			[1] = 5.337344,
+			[2] = 6.32001,
 		},
 		randomize_indexes = {},
 	},
@@ -66,8 +66,8 @@ local veteran_c_adamant_male_c = {
 			[2] = "loc_adamant_male_c__combat_pause_quirk_doomed_b_02",
 		},
 		sound_events_duration = {
-			[1] = 4.790667,
-			[2] = 4.936,
+			[1] = 4.790677,
+			[2] = 4.93601,
 		},
 		randomize_indexes = {},
 	},

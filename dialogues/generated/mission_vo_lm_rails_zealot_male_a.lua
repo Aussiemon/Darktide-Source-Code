@@ -171,8 +171,8 @@ local mission_vo_lm_rails_zealot_male_a = {
 			"loc_zealot_male_a__zone_transit_03",
 		},
 		sound_events_duration = {
-			5.763042,
-			11.39183,
+			4.772854,
+			8.109188,
 			3.9235,
 			3.125521,
 			2.909563,
@@ -213,8 +213,8 @@ local mission_vo_lm_rails_zealot_male_a = {
 			"loc_zealot_male_a__zone_transit_03",
 		},
 		sound_events_duration = {
-			5.763042,
-			11.39183,
+			4.772854,
+			8.109188,
 			3.9235,
 			3.125521,
 			2.909563,

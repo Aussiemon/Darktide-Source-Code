@@ -9,8 +9,8 @@ local event_vo_delivery_adamant_male_a = {
 			[2] = "loc_adamant_male_a__luggable_mission_pick_up_02",
 		},
 		sound_events_duration = {
-			[1] = 3.4,
-			[2] = 4.954667,
+			[1] = 3.40001,
+			[2] = 4.954677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -26,8 +26,8 @@ local event_vo_delivery_adamant_male_a = {
 			[2] = "loc_adamant_male_a__luggable_mission_pick_up_02",
 		},
 		sound_events_duration = {
-			[1] = 3.4,
-			[2] = 4.954667,
+			[1] = 3.40001,
+			[2] = 4.954677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -43,8 +43,8 @@ local event_vo_delivery_adamant_male_a = {
 			[2] = "loc_adamant_male_a__luggable_mission_pick_up_02",
 		},
 		sound_events_duration = {
-			[1] = 3.4,
-			[2] = 4.954667,
+			[1] = 3.40001,
+			[2] = 4.954677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -60,8 +60,8 @@ local event_vo_delivery_adamant_male_a = {
 			[2] = "loc_adamant_male_a__luggable_mission_pick_up_02",
 		},
 		sound_events_duration = {
-			[1] = 3.4,
-			[2] = 4.954667,
+			[1] = 3.40001,
+			[2] = 4.954677,
 		},
 		sound_event_weights = {
 			[1] = 0.5,

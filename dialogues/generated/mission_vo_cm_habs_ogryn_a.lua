@@ -42,8 +42,8 @@ local mission_vo_cm_habs_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_b_response_b_02",
 		},
 		sound_events_duration = {
-			[1] = 0.822313,
-			[2] = 0.874896,
+			[1] = 1.042052,
+			[2] = 1.253781,
 		},
 		randomize_indexes = {},
 	},
@@ -55,8 +55,8 @@ local mission_vo_cm_habs_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_market_response_02",
 		},
 		sound_events_duration = {
-			[1] = 2.694375,
-			[2] = 0.80875,
+			[1] = 4.163365,
+			[2] = 1.31151,
 		},
 		randomize_indexes = {},
 	},
@@ -68,8 +68,8 @@ local mission_vo_cm_habs_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_void_02",
 		},
 		sound_events_duration = {
-			[1] = 1.939688,
-			[2] = 1.983729,
+			[1] = 2.21624,
+			[2] = 3.363396,
 		},
 		sound_event_weights = {
 			[1] = 0.5,
@@ -115,7 +115,7 @@ local mission_vo_cm_habs_ogryn_a = {
 		},
 		sound_events_duration = {
 			[1] = 0.640521,
-			[2] = 1.997646,
+			[2] = 2.426427,
 		},
 		randomize_indexes = {},
 	},
@@ -168,8 +168,8 @@ local mission_vo_cm_habs_ogryn_a = {
 			[2] = "loc_ogryn_a__level_hab_block_vista_02",
 		},
 		sound_events_duration = {
-			[1] = 1.267167,
-			[2] = 1.845604,
+			[1] = 1.382479,
+			[2] = 1.946948,
 		},
 		randomize_indexes = {},
 	},

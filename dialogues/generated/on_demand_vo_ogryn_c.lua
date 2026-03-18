@@ -704,6 +704,23 @@ local on_demand_vo_ogryn_c = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_c__smart_tag_vo_enemy_houndmaster_01",
+			"loc_ogryn_c__smart_tag_vo_enemy_houndmaster_02",
+			"loc_ogryn_c__smart_tag_vo_enemy_houndmaster_03",
+			"loc_ogryn_c__smart_tag_vo_enemy_houndmaster_04",
+		},
+		sound_events_duration = {
+			0.968917,
+			1.338667,
+			0.909,
+			1.666458,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
